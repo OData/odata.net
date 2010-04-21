@@ -57,7 +57,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="AssemblyAttributes.cs" />
+    
+    
     <Compile Include="..\Client\System\Data\Services\Client\DataServiceQueryContinuation.cs">
       <Link>System\Data\Services\Client\DataServiceQueryContinuation.cs</Link>
     </Compile>
@@ -417,7 +418,6 @@
     <Compile Include="System\Data\Services\Http\XHRWebHeaderCollection.cs" />
     <Compile Include="System.Data.Services.Client.cs" />
     <Compile Include="Parameterized.System.Data.Services.Client.cs" />
-    <Compile Include="..\Client\ShippingAssemblyAttributes.cs" />
     <Compile Include="AssemblyAttributes.cs" />
   </ItemGroup>
   <ItemGroup>

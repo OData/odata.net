@@ -23,8 +23,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>   
-	<DefineConstants>TRACE;DEBUG;TEXTRES_ONLYGETSTRING;MICROSOFT_ASTORIA;ASTORIA_CLIENT;</DefineConstants>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;TEXTRES_ONLYGETSTRING;MICROSOFT_ASTORIA;ASTORIA_CLIENT;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -87,7 +87,6 @@
       <Link>System\Data\Services\XmlConstants.cs</Link>
     </Compile>
     <Compile Include="AssemblyAttributes.cs" />
-    <Compile Include="AssemblyRefs.cs" />
     <Compile Include="Parameterized.System.Data.Services.Client.cs" />
     <Compile Include="System.Data.Services.Client.cs" />
     <Compile Include="System\Data\Services\Client\ALinq\DataServiceExpressionVisitor.cs" />
