@@ -16,7 +16,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TEXTRES_ONLYGETSTRING;MICROSOFT_ASTORIA;ASTORIA_CLIENT;</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TEXTRES_ONLYGETSTRING;ASTORIA_CLIENT;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -24,7 +24,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TEXTRES_ONLYGETSTRING;MICROSOFT_ASTORIA;ASTORIA_CLIENT;</DefineConstants>
+    <DefineConstants>TRACE;TEXTRES_ONLYGETSTRING;ASTORIA_CLIENT;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>

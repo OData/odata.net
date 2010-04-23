@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TEXTRES_ONLYGETSTRING;MICROSOFT_ASTORIA;ASTORIA_CLIENT;ASTORIA_LIGHT</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TEXTRES_ONLYGETSTRING;ASTORIA_CLIENT;ASTORIA_LIGHT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -27,7 +27,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-	<DefineConstants>TRACE;DEBUG;TEXTRES_ONLYGETSTRING;MICROSOFT_ASTORIA;ASTORIA_CLIENT;ASTORIA_LIGHT</DefineConstants>
+    <DefineConstants>TRACE;TEXTRES_ONLYGETSTRING;ASTORIA_CLIENT;ASTORIA_LIGHT</DefineConstants>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
@@ -57,8 +57,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    
-    
     <Compile Include="..\Client\System\Data\Services\Client\DataServiceQueryContinuation.cs">
       <Link>System\Data\Services\Client\DataServiceQueryContinuation.cs</Link>
     </Compile>

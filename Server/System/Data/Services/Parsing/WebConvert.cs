@@ -16,11 +16,7 @@ namespace System.Data.Services.Parsing
     using System.Diagnostics;
     using System.Text;
     using System.Xml;
-#if ASTORIA_CLIENT
     using System.Data.Services.Client;
-#else
-    using System.Globalization;
-#endif
 
     internal static class WebConvert
     {
@@ -58,12 +54,6 @@ namespace System.Data.Services.Parsing
             {
                 result = ConvertByteArrayToKeyString((byte[])value);
             }
-#if !ASTORIA_CLIENT
-            else if (value.GetType() == typeof(System.Data.Linq.Binary))
-            {
-                return TryKeyPrimitiveToString(((System.Data.Linq.Binary)value).ToArray(), out result);
-            }
-#endif
             else
             {
                 if (!TryXmlPrimitiveToString(value, out result))

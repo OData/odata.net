@@ -14,14 +14,8 @@ namespace System.Data.Services.Common
 {
     using System.Collections.Generic;
     using System.Diagnostics;
-
-#if !ASTORIA_CLIENT
-    using System.ServiceModel.Syndication;
-    using System.Data.Services.Providers;
-#else
     using System.Data.Services.Client;
     using System.Xml;
-#endif
 
     internal sealed class EpmCustomContentSerializer : EpmContentSerializerBase, IDisposable
     {
@@ -29,19 +23,11 @@ namespace System.Data.Services.Common
 
         private Dictionary<EpmTargetPathSegment, EpmCustomContentWriterNodeData> visitorContent;
 
-#if ASTORIA_CLIENT
         internal EpmCustomContentSerializer(EpmTargetTree targetTree, object element, XmlWriter target)
             : base(targetTree, false, element, target)
         {
             this.InitializeVisitorContent();
         }
-#else
-        internal EpmCustomContentSerializer(EpmTargetTree targetTree, object element, SyndicationItem target, EpmContentSerializer.EpmNullValuedPropertyTree nullValuedProperties, DataServiceProviderWrapper provider)
-            : base(targetTree, false, element, target)
-        {
-            this.InitializeVisitorContent(nullValuedProperties, provider);
-        }
-#endif
 
         public void Dispose()
         {
@@ -63,11 +49,7 @@ namespace System.Data.Services.Common
             }
         }
 
-#if ASTORIA_CLIENT
         protected override void Serialize(EpmTargetPathSegment targetSegment, EpmSerializationKind kind)
-#else
-        protected override void Serialize(EpmTargetPathSegment targetSegment, EpmSerializationKind kind, DataServiceProviderWrapper provider)
-#endif
         {
             if (targetSegment.IsAttribute)
             {
@@ -75,11 +57,7 @@ namespace System.Data.Services.Common
             }
             else
             {
-#if ASTORIA_CLIENT
                 this.WriteElement(targetSegment);
-#else
-                this.WriteElement(targetSegment, provider);
-#endif
             }
         }
 
@@ -95,11 +73,7 @@ namespace System.Data.Services.Common
                                     currentContent.Data);
         }
 
-#if ASTORIA_CLIENT
         private void WriteElement(EpmTargetPathSegment targetSegment)
-#else
-        private void WriteElement(EpmTargetPathSegment targetSegment, DataServiceProviderWrapper provider)
-#endif
         {
             EpmCustomContentWriterNodeData currentContent = this.visitorContent[targetSegment];
 
@@ -108,11 +82,7 @@ namespace System.Data.Services.Common
                 targetSegment.SegmentName,
                 targetSegment.SegmentNamespaceUri);
 
-#if ASTORIA_CLIENT
             base.Serialize(targetSegment, EpmSerializationKind.Attributes);
-#else
-            base.Serialize(targetSegment, EpmSerializationKind.Attributes, provider);
-#endif
 
             if (targetSegment.HasContent)
             {
@@ -120,16 +90,12 @@ namespace System.Data.Services.Common
                 currentContent.XmlContentWriter.WriteString(currentContent.Data);
             }
 
-#if ASTORIA_CLIENT
             base.Serialize(targetSegment, EpmSerializationKind.Elements);
-#else
-            base.Serialize(targetSegment, EpmSerializationKind.Elements, provider);
-#endif
 
             currentContent.XmlContentWriter.WriteEndElement();
         }
 
-#if ASTORIA_CLIENT
+
         private void InitializeVisitorContent()
         {
             this.visitorContent = new Dictionary<EpmTargetPathSegment, EpmCustomContentWriterNodeData>(ReferenceEqualityComparer<EpmTargetPathSegment>.Instance);
@@ -149,26 +115,6 @@ namespace System.Data.Services.Common
                 this.InitializeSubSegmentVisitorContent(segment);
             }
         }
-#else
-        private void InitializeVisitorContent(EpmContentSerializer.EpmNullValuedPropertyTree nullValuedProperties, DataServiceProviderWrapper provider)
-        {
-            this.visitorContent = new Dictionary<EpmTargetPathSegment, EpmCustomContentWriterNodeData>(ReferenceEqualityComparer<EpmTargetPathSegment>.Instance);
 
-            foreach (EpmTargetPathSegment subSegmentOfRoot in this.Root.SubSegments)
-            {
-                this.visitorContent.Add(subSegmentOfRoot, new EpmCustomContentWriterNodeData(subSegmentOfRoot, this.Element, nullValuedProperties, provider));
-                this.InitializeSubSegmentVisitorContent(subSegmentOfRoot, nullValuedProperties, provider);
-            }
-        }
-
-        private void InitializeSubSegmentVisitorContent(EpmTargetPathSegment subSegment, EpmContentSerializer.EpmNullValuedPropertyTree nullValuedProperties, DataServiceProviderWrapper provider)
-        {
-            foreach (EpmTargetPathSegment segment in subSegment.SubSegments)
-            {
-                this.visitorContent.Add(segment, new EpmCustomContentWriterNodeData(this.visitorContent[subSegment], segment, this.Element, nullValuedProperties, provider));
-                this.InitializeSubSegmentVisitorContent(segment, nullValuedProperties, provider);
-            }
-        }
-#endif
     }
 }

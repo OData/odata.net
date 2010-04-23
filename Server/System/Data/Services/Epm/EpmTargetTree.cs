@@ -15,11 +15,7 @@ namespace System.Data.Services.Common
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-#if ASTORIA_CLIENT
     using System.Data.Services.Client;
-#else
-    using System.Data.Services;
-#endif
 
     internal sealed class EpmTargetTree
     {

@@ -26,25 +26,10 @@ namespace System.Data.Services.Common
             set;
         }
 
-#if ASTORIA_CLIENT
         public Type DefiningType
         { 
             get; 
             set; 
         }
-#else
-        public System.Data.Services.Providers.ResourceType DefiningType 
-        { 
-            get; 
-            set; 
-        }
-        
-        public bool IsEFProvider
-        {
-            get;
-            set;
-        }
-        
-#endif
     }
 }

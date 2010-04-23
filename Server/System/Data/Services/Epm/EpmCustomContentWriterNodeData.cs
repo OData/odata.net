@@ -15,50 +15,28 @@ namespace System.Data.Services.Common
     using System;
     using System.IO;
     using System.Xml;
-
-#if !ASTORIA_CLIENT
-    using System.ServiceModel.Syndication;
-    using System.Data.Services.Serializers;
-    using System.Data.Services.Providers;
-#else
     using System.Data.Services.Client;
-#endif
 
     internal sealed class EpmCustomContentWriterNodeData : IDisposable
     {
         private bool disposed;
 
-#if ASTORIA_CLIENT
         internal EpmCustomContentWriterNodeData(EpmTargetPathSegment segment, object element)
-#else
-        internal EpmCustomContentWriterNodeData(EpmTargetPathSegment segment, object element, EpmContentSerializer.EpmNullValuedPropertyTree nullValuedProperties, DataServiceProviderWrapper provider)
-#endif
         {
             this.XmlContentStream = new MemoryStream();
             XmlWriterSettings customContentWriterSettings = new XmlWriterSettings();
             customContentWriterSettings.OmitXmlDeclaration = true;
             customContentWriterSettings.ConformanceLevel = ConformanceLevel.Fragment;
             this.XmlContentWriter = XmlWriter.Create(this.XmlContentStream, customContentWriterSettings);
-#if ASTORIA_CLIENT
             this.PopulateData(segment, element);
-#else
-            this.PopulateData(segment, element, nullValuedProperties, provider);
-#endif
         }
 
-#if ASTORIA_CLIENT
         internal EpmCustomContentWriterNodeData(EpmCustomContentWriterNodeData parentData, EpmTargetPathSegment segment, object element)
-#else
-        internal EpmCustomContentWriterNodeData(EpmCustomContentWriterNodeData parentData, EpmTargetPathSegment segment, object element, EpmContentSerializer.EpmNullValuedPropertyTree nullValuedProperties, DataServiceProviderWrapper provider)
-#endif
         {
             this.XmlContentStream = parentData.XmlContentStream;
             this.XmlContentWriter = parentData.XmlContentWriter;
-#if ASTORIA_CLIENT
             this.PopulateData(segment, element);
-#else
-            this.PopulateData(segment, element, nullValuedProperties, provider);
-#endif
+
         }
 
         internal MemoryStream XmlContentStream
@@ -99,11 +77,7 @@ namespace System.Data.Services.Common
             }
         }
 
-#if ASTORIA_CLIENT
         internal void AddContentToTarget(XmlWriter target)
-#else
-        internal void AddContentToTarget(SyndicationItem target)
-#endif
         {
             this.XmlContentWriter.Close();
             this.XmlContentWriter = null;
@@ -112,18 +86,10 @@ namespace System.Data.Services.Common
             customContentReaderSettings.ConformanceLevel = ConformanceLevel.Fragment;
             XmlReader reader = XmlReader.Create(this.XmlContentStream, customContentReaderSettings);
             this.XmlContentStream = null;
-#if ASTORIA_CLIENT
             target.WriteNode(reader, false);
-#else
-            target.ElementExtensions.Add(reader);
-#endif
         }
 
-#if ASTORIA_CLIENT
         private void PopulateData(EpmTargetPathSegment segment, object element)
-#else
-        private void PopulateData(EpmTargetPathSegment segment, object element, EpmContentSerializer.EpmNullValuedPropertyTree nullValuedProperties, DataServiceProviderWrapper provider)
-#endif
         {
             if (segment.EpmInfo != null)
             {
@@ -131,38 +97,17 @@ namespace System.Data.Services.Common
 
                 try
                 {
-#if ASTORIA_CLIENT
-                    propertyValue = segment.EpmInfo.PropValReader.DynamicInvoke(element);
-#else
-                    propertyValue = segment.EpmInfo.PropValReader.DynamicInvoke(element, provider);
-#endif
+                   propertyValue = segment.EpmInfo.PropValReader.DynamicInvoke(element);
+
                 }
-                catch 
-#if ASTORIA_CLIENT
+                catch
                 (System.Reflection.TargetInvocationException)
-#else
-                (System.Reflection.TargetInvocationException e)
-#endif
                 {
-#if !ASTORIA_CLIENT
-                    ErrorHandler.HandleTargetInvocationException(e);
-#endif
                     throw;
                 }
 
-#if ASTORIA_CLIENT
-                this.Data = propertyValue == null ? String.Empty : ClientConvert.ToString(propertyValue, false );
-#else
-                if (propertyValue == null || propertyValue == DBNull.Value)
-                {
-                    this.Data = String.Empty;
-                    nullValuedProperties.Add(segment.EpmInfo);
-                }
-                else
-                {
-                    this.Data = PlainXmlSerializer.PrimitiveToString(propertyValue);
-                }
-#endif
+               this.Data = propertyValue == null ? String.Empty : ClientConvert.ToString(propertyValue, false );
+
             }
         }
     }

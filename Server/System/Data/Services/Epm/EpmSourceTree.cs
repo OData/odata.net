@@ -15,11 +15,8 @@ namespace System.Data.Services.Common
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-#if ASTORIA_CLIENT
     using System.Data.Services.Client;
-#else
-    using System.Data.Services;
-#endif
+
 
     internal sealed class EpmSourceTree
     {
@@ -81,20 +78,11 @@ namespace System.Data.Services.Common
             if (foundProperty != null)
             {
                 Debug.Assert(Object.ReferenceEquals(foundProperty, currentProperty), "currentProperty variable should have been updated already to foundProperty");
-
-#if !ASTORIA_CLIENT
-                Debug.Assert(foundProperty.SubProperties.Count == 0, "If non-leaf, it means we allowed complex type to be a leaf node");
-                if (foundProperty.EpmInfo.DefiningType == epmInfo.DefiningType)
-                {
-                    throw new InvalidOperationException(Strings.EpmSourceTree_DuplicateEpmAttrsWithSameSourceName(epmInfo.Attribute.SourcePath, epmInfo.DefiningType.Name));
-                }
-#else                
+             
                 if (foundProperty.EpmInfo.DefiningType.Name == epmInfo.DefiningType.Name)
                 {
                     throw new InvalidOperationException(Strings.EpmSourceTree_DuplicateEpmAttrsWithSameSourceName(epmInfo.Attribute.SourcePath, epmInfo.DefiningType.Name));
                 }
-#endif
-
                 this.epmTargetTree.Remove(foundProperty.EpmInfo);
             }
 

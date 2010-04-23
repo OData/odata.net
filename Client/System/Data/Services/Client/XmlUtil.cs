@@ -10,11 +10,7 @@
 //See the License for the specific language governing permissions and limitations under the License.
 
 
-#if ASTORIA_CLIENT
 namespace System.Data.Services.Client
-#else
-namespace System.Data.Services
-#endif
 {
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -25,20 +21,6 @@ namespace System.Data.Services
 
     internal static partial class UriUtil
     {
-#if !ASTORIA_CLIENT
-        private static Uri CreateBaseComparableUri(Uri uri)
-        {
-            Debug.Assert(uri != null, "uri != null");
-
-            uri = new Uri(uri.OriginalString.ToUpper(CultureInfo.InvariantCulture), UriKind.RelativeOrAbsolute);
-
-            UriBuilder builder = new UriBuilder(uri);
-            builder.Host = "h";
-            builder.Port = 80;
-            builder.Scheme = "http";
-            return builder.Uri;
-        }
-#endif
 
         internal static string GetNameFromAtomLinkRelationAttribute(string value)
         {
@@ -65,22 +47,7 @@ namespace System.Data.Services
 
             return name;
         }
-#if !ASTORIA_CLIENT
-        internal static bool IsBaseOf(Uri baseUriWithSlash, Uri requestUri)
-        {
-            return baseUriWithSlash.IsBaseOf(requestUri);
-        }
-        internal static bool UriInvariantInsensitiveIsBaseOf(Uri current, Uri uri)
-        {
-            Debug.Assert(current != null, "current != null");
-            Debug.Assert(uri != null, "uri != null");
 
-            Uri upperCurrent = CreateBaseComparableUri(current);
-            Uri upperUri = CreateBaseComparableUri(uri);
-
-            return UriUtil.IsBaseOf(upperCurrent, upperUri);
-        }
-#endif
     }
 
     internal static partial class XmlUtil
@@ -93,20 +60,16 @@ namespace System.Data.Services
             table.Add(XmlConstants.DataWebMetadataNamespace);
 
             table.Add(XmlConstants.AtomContentElementName);
-#if ASTORIA_CLIENT
             table.Add(XmlConstants.AtomContentSrcAttributeName);
-#endif
             table.Add(XmlConstants.AtomEntryElementName);
             table.Add(XmlConstants.AtomETagAttributeName);
             table.Add(XmlConstants.AtomFeedElementName);
-#if ASTORIA_CLIENT
+
             table.Add(XmlConstants.AtomIdElementName);
-#endif
+
             table.Add(XmlConstants.AtomInlineElementName);
-#if ASTORIA_CLIENT
             table.Add(XmlConstants.AtomLinkElementName);
             table.Add(XmlConstants.AtomLinkRelationAttributeName);
-#endif
             table.Add(XmlConstants.AtomNullAttributeName);
             table.Add(XmlConstants.AtomPropertiesElementName);
             table.Add(XmlConstants.AtomTitleElementName);
@@ -126,9 +89,7 @@ namespace System.Data.Services
 
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.CheckCharacters = false;
-#if ASTORIA_CLIENT
             settings.CloseInput = true;
-#endif
             settings.IgnoreWhitespace = true;
             settings.NameTable = XmlUtil.CreateAtomNameTable();
 
@@ -166,7 +127,6 @@ namespace System.Data.Services
             return writer;
         }
 
-#if ASTORIA_CLIENT
         internal static string GetAttributeEx(this XmlReader reader, string attributeName, string namespaceUri)
         {
             return reader.GetAttribute(attributeName, namespaceUri) ?? reader.GetAttribute(attributeName);
@@ -200,6 +160,5 @@ namespace System.Data.Services
                 }
             }
         }
-#endif
     }
 }

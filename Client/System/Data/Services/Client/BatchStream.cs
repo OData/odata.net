@@ -10,11 +10,7 @@
 //See the License for the specific language governing permissions and limitations under the License.
 
 
-#if ASTORIA_CLIENT
 namespace System.Data.Services.Client
-#else
-namespace System.Data.Services
-#endif
 {
     using System;
     using System.Collections.Generic;
@@ -23,12 +19,10 @@ namespace System.Data.Services
     using System.IO;
     using System.Text;
 
-#if ASTORIA_CLIENT
 #if !ASTORIA_LIGHT    
     using System.Net;
 #else
     using System.Data.Services.Http;
-#endif
 #endif
 
     internal class BatchStream : Stream
@@ -235,24 +229,7 @@ namespace System.Data.Services
             return (null != boundary);
         }
 
-#if !ASTORIA_CLIENT
-        internal static bool IsBatchStream(Stream stream)
-        {
-            return (stream is StreamWithDelimiter || stream is StreamWithLength);
-        }
 
-        internal Exception ValidateNoDataBeyondEndOfBatch()
-        {
-            if (this.reader.ReadByte() >= 0)
-            {
-                return Error.BatchStreamMoreDataAfterEndOfBatch();
-            }
-
-            return null;
-        }
-#endif
-
-#if ASTORIA_CLIENT
         internal string GetResponseVersion()
         {
             string result;
@@ -264,7 +241,6 @@ namespace System.Data.Services
         {
             return (HttpStatusCode)(null != this.statusCode ? Int32.Parse(this.statusCode, CultureInfo.InvariantCulture) : 500);
         }
-#endif
 
         internal bool MoveNext()
         {
@@ -335,9 +311,7 @@ namespace System.Data.Services
             Debug.Assert(null == this.contentHeaders, "non-null content headers");
             Debug.Assert(null == this.contentStream, "non-null content stream");
 
-#if ASTORIA_CLIENT
             Debug.Assert(null == this.statusCode, "non-null statusCode");
-#endif
 
             Debug.Assert(
                 this.batchState == BatchStreamState.EndBatch ||
@@ -670,9 +644,7 @@ namespace System.Data.Services
             this.contentHeaders = null;
             this.contentStream = null;
 
-#if ASTORIA_CLIENT
             this.statusCode = null;
-#endif
         }
 
         private void Append(ref byte[] buffer, int count)
@@ -1133,9 +1105,7 @@ namespace System.Data.Services
             else
             {
                 state = (BatchStreamState.EndBatch == this.batchState) ? BatchStreamState.GetResponse : BatchStreamState.ChangeResponse;
-#if ASTORIA_CLIENT
                 this.statusCode = segment2;
-#endif
             }
 
             #region validate state change

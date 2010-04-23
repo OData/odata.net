@@ -11,11 +11,7 @@
 
 
 
-#if ASTORIA_CLIENT
 namespace System.Data.Services.Client
-#else
-namespace System.Data.Services
-#endif
 {
     #region Namespaces.
 

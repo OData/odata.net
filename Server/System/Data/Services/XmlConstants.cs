@@ -10,11 +10,7 @@
 //See the License for the specific language governing permissions and limitations under the License.
 
 
-#if ASTORIA_CLIENT
 namespace System.Data.Services.Client
-#else
-namespace System.Data.Services
-#endif
 {
     internal static class XmlConstants
     {
@@ -85,11 +81,9 @@ namespace System.Data.Services
         internal const string HttpRequestIfNoneMatch = "If-None-Match";
 
         internal const string HttpMultipartBoundary = "boundary";
-#if ASTORIA_CLIENT
         internal const string HttpMultipartBoundaryBatch = "batch";
 
         internal const string HttpMultipartBoundaryChangeSet = "changeset";
-#endif
 
         internal const string HttpResponseAllow = "Allow";
 
@@ -155,7 +149,6 @@ namespace System.Data.Services
 
         internal const string BatchRequestContentTransferEncoding = "binary";
 
-#if ASTORIA_CLIENT
         internal const string LinkMimeTypeFeed = "application/atom+xml;type=feed";
 
         internal const string LinkMimeTypeEntry = "application/atom+xml;type=entry";
@@ -163,7 +156,6 @@ namespace System.Data.Services
         internal const string Utf8Encoding = "UTF-8";
 
         internal const string MimeTypeUtf8Encoding = ";charset=" + Utf8Encoding;
-#endif
         #endregion MIME constants.
 
         #region URI constants.
@@ -199,7 +191,6 @@ namespace System.Data.Services
 
         internal const string AtomFeedElementName = "feed";
 
-#if ASTORIA_CLIENT
         internal const string AtomAuthorElementName = "author";
 
         internal const string AtomContributorElementName = "contributor";
@@ -220,7 +211,6 @@ namespace System.Data.Services
 
         internal const string AtomLinkNextAttributeString = "next";
 
-#endif
         internal const string MetadataAttributeEpmContentKind = "FC_ContentKind";
 
         internal const string MetadataAttributeEpmKeepInContent = "FC_KeepInContent";

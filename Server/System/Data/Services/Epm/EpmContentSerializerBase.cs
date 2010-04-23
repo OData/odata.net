@@ -15,12 +15,7 @@ namespace System.Data.Services.Common
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-#if ASTORIA_CLIENT
     using System.Xml;
-#else
-    using System.ServiceModel.Syndication;
-    using System.Data.Services.Providers;
-#endif
 
     internal enum EpmSerializationKind
     {
@@ -33,11 +28,7 @@ namespace System.Data.Services.Common
     
     internal abstract class EpmContentSerializerBase
     {
-#if ASTORIA_CLIENT
         protected EpmContentSerializerBase(EpmTargetTree tree, bool isSyndication, object element, XmlWriter target)
-#else
-        protected EpmContentSerializerBase(EpmTargetTree tree, bool isSyndication, object element, SyndicationItem target)
-#endif
         {
             this.Root = isSyndication ? tree.SyndicationRoot : tree.NonSyndicationRoot;
             this.Element = element;
@@ -57,11 +48,7 @@ namespace System.Data.Services.Common
             private set;
         }
 
-#if ASTORIA_CLIENT
         protected XmlWriter Target
-#else
-        protected SyndicationItem Target
-#endif
         {
             get;
             private set;
@@ -73,29 +60,18 @@ namespace System.Data.Services.Common
             private set;
         }
 
-#if ASTORIA_CLIENT
         internal void Serialize()
-#else
-        internal void Serialize(DataServiceProviderWrapper provider)
-#endif
         {
             foreach (EpmTargetPathSegment targetSegment in this.Root.SubSegments)
             {
-#if ASTORIA_CLIENT
+
                 this.Serialize(targetSegment, EpmSerializationKind.All);
-#else
-                this.Serialize(targetSegment, EpmSerializationKind.All, provider);
-#endif
             }
             
             this.Success = true;
         }
 
-#if ASTORIA_CLIENT
         protected virtual void Serialize(EpmTargetPathSegment targetSegment, EpmSerializationKind kind)
-#else
-        protected virtual void Serialize(EpmTargetPathSegment targetSegment, EpmSerializationKind kind, DataServiceProviderWrapper provider)
-#endif
         {
             IEnumerable<EpmTargetPathSegment> segmentsToSerialize;
             switch (kind)
@@ -114,11 +90,7 @@ namespace System.Data.Services.Common
 
             foreach (EpmTargetPathSegment segment in segmentsToSerialize)
             {
-#if ASTORIA_CLIENT
                 this.Serialize(segment, kind);
-#else
-                this.Serialize(segment, kind, provider);
-#endif
             }
         }
     }

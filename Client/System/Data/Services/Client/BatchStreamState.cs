@@ -10,11 +10,7 @@
 //See the License for the specific language governing permissions and limitations under the License.
 
 
-#if ASTORIA_CLIENT
 namespace System.Data.Services.Client
-#else
-namespace System.Data.Services
-#endif
 {
     internal enum BatchStreamState
     {

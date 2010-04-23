@@ -122,9 +122,7 @@ namespace System.Data.Services.Client
                 case ExpressionType.MultiplyChecked:
                 case ExpressionType.Divide:
                 case ExpressionType.Modulo:
-#if !ASTORIA_CLIENT
-                case ExpressionType.Power:
-#endif
+
                 case ExpressionType.And:
                 case ExpressionType.AndAlso:
                 case ExpressionType.Or:
