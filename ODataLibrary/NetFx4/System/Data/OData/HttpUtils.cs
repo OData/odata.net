@@ -1,0 +1,975 @@
+//   Copyright 2011 Microsoft Corporation
+//
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+
+namespace System.Data.OData
+{
+    #region Namespaces
+    using System;
+    using System.Collections.Generic;
+    using System.Data.OData.Query;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Text;
+    #endregion Namespaces
+
+    /// <summary>
+    /// Class with utility methods to work with HTTP concepts
+    /// </summary>
+    internal static class HttpUtils
+    {
+        /// <summary>Reads a Content-Type header and extracts the media type's name (type/subtype) and encoding.</summary>
+        /// <param name="contentType">The Content-Type header.</param>
+        /// <param name="mediaTypeName">The media type in standard type/subtype form, without parameters.</param>
+        /// <param name="encoding">Encoding (possibly null).</param>
+        /// <returns>parameters of content type</returns>
+        internal static IList<KeyValuePair<string, string>> ReadContentType(string contentType, out string mediaTypeName, out Encoding encoding)
+        {
+            DebugUtils.CheckNoExternalCallers();
+            if (String.IsNullOrEmpty(contentType))
+            {
+                throw new ODataException(Strings.HttpUtils_ContentTypeMissing);
+            }
+
+            MediaType mediaType = ReadMediaTypes(contentType)[0];
+            mediaTypeName = mediaType.TypeName;
+            encoding = mediaType.SelectEncoding();
+            return mediaType.Parameters;
+        }
+
+        /// <summary>Builds a Content-Type header which includes media type and encoding information.</summary>
+        /// <param name="mediaType">Media type to be used.</param>
+        /// <param name="encoding">Encoding to be used in response, possibly null.</param>
+        /// <returns>The value for the Content-Type header.</returns>
+        internal static string BuildContentType(MediaType mediaType, Encoding encoding)
+        {
+            DebugUtils.CheckNoExternalCallers();
+            Debug.Assert(mediaType != null, "mediaType != null");
+
+            string mediaTypeAsText = mediaType.ToText();
+            if (encoding == null)
+            {
+                return mediaTypeAsText;
+            }
+            else
+            {
+                return string.Concat(mediaTypeAsText, ";", HttpConstants.Charset, "=", encoding.WebName);
+            }
+        }
+
+        /// <summary>Returns all media types from the specified (non-blank) <paramref name='text' />.</summary>
+        /// <param name='text'>Non-blank text, as it appears on an HTTP Accepts header.</param>
+        /// <returns>An enumerable object with media type descriptions.</returns>
+        internal static IList<MediaType> MediaTypesFromAcceptHeader(string text)
+        {
+            DebugUtils.CheckNoExternalCallers();
+
+            if (string.IsNullOrEmpty(text))
+            {
+                return null;
+            }
+
+            return ReadMediaTypes(text);
+        }
+
+        /// <summary>
+        /// Checks whether the specified <paramref name="mediaTypeName"/>
+        /// is a valid media type name (media type with no parameters).
+        /// </summary>
+        /// <param name="mediaTypeName">Simple media type without parameters.</param>
+        /// <returns>
+        /// true if the specified <paramref name="mediaTypeName"/> is valid; 
+        /// false otherwise.
+        /// </returns>
+        /// <remarks>
+        /// See http://tools.ietf.org/html/rfc2045#section-5.1 for futher details.
+        /// </remarks>
+        internal static bool IsValidMediaTypeName(string mediaTypeName)
+        {
+            DebugUtils.CheckNoExternalCallers();
+            Debug.Assert(mediaTypeName != null, "mediaTypeName != null");
+
+            const string Tspecials = "()<>@,;:\\\"/[]?=";
+            bool partFound = false;
+            bool slashFound = false;
+            bool subTypeFound = false;
+            foreach (char c in mediaTypeName)
+            {
+                Debug.Assert(partFound || !slashFound, "partFound || !slashFound -- slashFound->partFound");
+                Debug.Assert(slashFound || !subTypeFound, "slashFound || !subTypeFound -- subTypeFound->slashFound");
+
+                if (c == '/')
+                {
+                    if (!partFound || slashFound)
+                    {
+                        return false;
+                    }
+
+                    slashFound = true;
+                }
+                else if (c < '\x20' || c > '\x7F' || c == ' ' || Tspecials.IndexOf(c) >= 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    if (slashFound)
+                    {
+                        subTypeFound = true;
+                    }
+                    else
+                    {
+                        partFound = true;
+                    }
+                }
+            }
+
+            return subTypeFound;
+        }
+
+        /// <summary>
+        /// Does an ordinal ignore case comparision of the given media type names.
+        /// </summary>
+        /// <param name="mediaTypeName1">First media type name.</param>
+        /// <param name="mediaTypeName2">Second media type name.</param>
+        /// <returns>returns true if the media type names are the same.</returns>
+        internal static bool CompareMediaTypeNames(string mediaTypeName1, string mediaTypeName2)
+        {
+            DebugUtils.CheckNoExternalCallers();
+
+            return String.Equals(mediaTypeName1, mediaTypeName2, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>Gets the best encoding available for the specified charset request.</summary>
+        /// <param name="acceptableCharsets">
+        /// The Accept-Charset header value (eg: "iso-8859-5, unicode-1-1;q=0.8").
+        /// </param>
+        /// <param name="mediaType">The media type used to compute the default encoding for the payload.</param>
+        /// <param name="utf8Encoding">The encoding to use for UTF-8 charsets; we use the one without the BOM.</param>
+        /// <param name="defaultEncoding">The encoding to use if no encoding could be computed from the <paramref name="acceptableCharsets"/> or <paramref name="mediaType"/>.</param>
+        /// <returns>An Encoding object appropriate to the specifed charset request.</returns>
+        internal static Encoding EncodingFromAcceptableCharsets(string acceptableCharsets, MediaType mediaType, Encoding utf8Encoding, Encoding defaultEncoding)
+        {
+            DebugUtils.CheckNoExternalCallers();
+            Debug.Assert(mediaType != null, "mediaType != null");
+
+            // Determines the appropriate encoding mapping according to
+            // RFC 2616.14.2 (http://tools.ietf.org/html/rfc2616#section-14.2).
+            Encoding result = null;
+            if (!string.IsNullOrEmpty(acceptableCharsets))
+            {
+                // PERF: in the future if we find that computing the encoding from the accept charsets is
+                //       too expensive we could introduce a cache of original strings to resolved encoding.
+                List<CharsetPart> parts = new List<CharsetPart>(AcceptCharsetParts(acceptableCharsets));
+                parts.Sort(delegate(CharsetPart x, CharsetPart y)
+                {
+                    return y.Quality - x.Quality;
+                });
+
+                foreach (CharsetPart part in parts)
+                {
+                    if (part.Quality > 0)
+                    {
+                        // When UTF-8 is specified, select the version that doesn't use the BOM.
+                        if (String.Compare("utf-8", part.Charset, StringComparison.OrdinalIgnoreCase) == 0)
+                        {
+                            result = utf8Encoding;
+                            break;
+                        }
+                        else
+                        {
+                            result = GetEncodingFromCharsetName(part.Charset);
+                            if (result != null)
+                            {
+                                break;
+                            }
+
+                            // If the charset is not supported it is ignored so other possible charsets are evaluated.
+                        }
+                    }
+                }
+            }
+
+            // No Charset was specifed, or if charsets were specified, no valid charset was found.
+            // Returning a different charset is also valid. Get the default encoding for the media type.
+            if (result == null)
+            {
+                result = mediaType.SelectEncoding();
+                if (result == null)
+                {
+                    return defaultEncoding;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Reads the numeric part of a quality value substring, normalizing it to 0-1000
+        /// rather than the standard 0.000-1.000 ranges.
+        /// </summary>
+        /// <param name="text">Text to read qvalue from.</param>
+        /// <param name="textIndex">Index into text where the qvalue starts.</param>
+        /// <param name="qualityValue">After the method executes, the normalized qvalue.</param>
+        /// <remarks>
+        /// For more information, see RFC 2616.3.8.
+        /// </remarks>
+        internal static void ReadQualityValue(string text, ref int textIndex, out int qualityValue)
+        {
+            DebugUtils.CheckNoExternalCallers();
+
+            char digit = text[textIndex++];
+            if (digit == '0')
+            {
+                qualityValue = 0;
+            }
+            else if (digit == '1')
+            {
+                qualityValue = 1;
+            }
+            else
+            {
+                throw new ODataException(Strings.HttpUtils_InvalidQualityValueStartChar(text, digit));
+            }
+
+            if (textIndex < text.Length && text[textIndex] == '.')
+            {
+                textIndex++;
+
+                int adjustFactor = 1000;
+                while (adjustFactor > 1 && textIndex < text.Length)
+                {
+                    char c = text[textIndex];
+                    int charValue = DigitToInt32(c);
+                    if (charValue >= 0)
+                    {
+                        textIndex++;
+                        adjustFactor /= 10;
+                        qualityValue *= 10;
+                        qualityValue += charValue;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                qualityValue = qualityValue *= adjustFactor;
+                if (qualityValue > 1000)
+                {
+                    // Too high of a value in qvalue.
+                    throw new ODataException(Strings.HttpUtils_InvalidQualityValue(qualityValue / 1000, text));
+                }
+            }
+            else
+            {
+                qualityValue *= 1000;
+            }
+        }
+
+        /// <summary>
+        /// Converts the given <see cref="MediaType"/> to a string representation suitable for use in a content-type header.
+        /// </summary>
+        /// <param name="mediaType">The media type to convert to text.</param>
+        /// <returns>The string representation of the provided <paramref name="mediaType"/>.</returns>
+        internal static string ToText(this MediaType mediaType)
+        {
+            DebugUtils.CheckNoExternalCallers();
+
+            // TODO: for now we include all the parameters since we know that we will not have accept parameters (after the quality value)
+            //       that needed to be ignored.
+            if (mediaType.Parameters == null || mediaType.Parameters.Count == 0)
+            {
+                return mediaType.TypeName;
+            }
+            else
+            {
+                StringBuilder builder = new StringBuilder(mediaType.TypeName);
+                for (int i = 0; i < mediaType.Parameters.Count; ++i)
+                {
+                    KeyValuePair<string, string> parameter = mediaType.Parameters[i];
+                    builder.Append(";");
+                    builder.Append(parameter.Key);
+                    builder.Append("=");
+                    builder.Append(parameter.Value);
+                }
+
+                return builder.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Converts a <see cref="HttpMethod"/> to its string representation.
+        /// </summary>
+        /// <param name="method">The <see cref="HttpMethod"/> to convert.</param>
+        /// <returns>The string representation of the <paramref name="method"/>.</returns>
+        internal static string ToText(this HttpMethod method)
+        {
+            DebugUtils.CheckNoExternalCallers();
+
+            switch (method)
+            {
+                case HttpMethod.Get:
+                    return HttpConstants.HttpMethodGet;
+                case HttpMethod.Post:
+                    return HttpConstants.HttpMethodPost;
+                case HttpMethod.Put:
+                    return HttpConstants.HttpMethodPut;
+                case HttpMethod.Delete:
+                    return HttpConstants.HttpMethodDelete;
+                case HttpMethod.Patch:
+                    return HttpConstants.HttpMethodPatch;
+                case HttpMethod.Merge:
+                    return HttpConstants.HttpMethodMerge;
+                default:
+                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchWriterUtils_HttpMethod_ToText_UnreachableCodePath));
+            }
+        }
+
+        /// <summary>
+        /// Gets the string status message for a given Http response status code.
+        /// </summary>
+        /// <param name="statusCode">The status code to get the status message for.</param>
+        /// <returns>The string status message for the <paramref name="statusCode"/>.</returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "This is a large switch on all the Http response codes; no complexity here.")]
+        internal static string GetStatusMessage(int statusCode)
+        {
+            DebugUtils.CheckNoExternalCallers();
+
+            // Non-localized messages for status codes.
+            // These are the recommended reason phrases as per HTTP RFC 2616, Section 6.1.1
+            switch (statusCode)
+            {
+                case 100:
+                    return "Continue";
+                case 101:
+                    return "Switching Protocols";
+                case 200:
+                    return "OK";
+                case 201:
+                    return "Created";
+                case 202:
+                    return "Accepted";
+                case 203:
+                    return "Non-Authoritative Information";
+                case 204:
+                    return "No Content";
+                case 205:
+                    return "Reset Content";
+                case 206:
+                    return "Partial Content";
+                case 300:
+                    return "Multiple Choices";
+                case 301:
+                    return "Moved Permanently";
+                case 302:
+                    return "Found";
+                case 303:
+                    return "See Other";
+                case 304:
+                    return "Not Modified";
+                case 305:
+                    return "Use Proxy";
+                case 307:
+                    return "Temporary Redirect";
+                case 400:
+                    return "Bad Request";
+                case 401:
+                    return "Unauthorized";
+                case 402:
+                    return "Payment Required";
+                case 403:
+                    return "Forbidden";
+                case 404:
+                    return "Not Found";
+                case 405:
+                    return "Method Not Allowed";
+                case 406:
+                    return "Not Acceptable";
+                case 407:
+                    return "Proxy Authentication Required";
+                case 408:
+                    return "Request Time-out";
+                case 409:
+                    return "Conflict";
+                case 410:
+                    return "Gone";
+                case 411:
+                    return "Length Required";
+                case 412:
+                    return "Precondition Failed";
+                case 413:
+                    return "Request Entity Too Large";
+                case 414:
+                    return "Request-URI Too Large";
+                case 415:
+                    return "Unsupported Media Type";
+                case 416:
+                    return "Requested range not satisfiable";
+                case 417:
+                    return "Expectation Failed";
+                case 500:
+                    return "Internal Server Error";
+                case 501:
+                    return "Not Implemented";
+                case 502:
+                    return "Bad Gateway";
+                case 503:
+                    return "Service Unavailable";
+                case 504:
+                    return "Gateway Time-out";
+                case 505:
+                    return "HTTP Version not supported";
+                default:
+                    return "Unknown Status Code";
+            }
+        }
+
+        /// <summary>
+        /// Parses query options from a specified URI into a dictionary.
+        /// </summary>
+        /// <param name="uri">The uri to get the query options from.</param>
+        /// <returns>The parsed query options.</returns>
+        /// <remarks>This method returns <see cref="List&lt;QueryOptionQueryToken&gt;"/> with all the query options.
+        /// Note that it is valid to include multiple query options with the same name.</remarks>
+        internal static List<QueryOptionQueryToken> ParseQueryOptions(Uri uri)
+        {
+            DebugUtils.CheckNoExternalCallers();
+            Debug.Assert(uri != null, "uri != null");
+
+            List<QueryOptionQueryToken> queryOptions = new List<QueryOptionQueryToken>();
+
+            string queryString = uri.Query;
+            int length;
+            if (queryString != null)
+            {
+                if (queryString.Length > 0 && queryString[0] == '?')
+                {
+                    queryString = queryString.Substring(1);
+                }
+
+                length = queryString.Length;
+            }
+            else
+            {
+                length = 0;
+            }
+
+            for (int i = 0; i < length; i++)
+            {
+                int startIndex = i;
+                int equalSignIndex = -1;
+                while (i < length)
+                {
+                    char ch = queryString[i];
+                    if (ch == '=')
+                    {
+                        if (equalSignIndex < 0)
+                        {
+                            equalSignIndex = i;
+                        }
+                    }
+                    else if (ch == '&')
+                    {
+                        break;
+                    }
+
+                    i++;
+                }
+
+                string queryOptionsName = null;
+                string queryOptionValue = null;
+                if (equalSignIndex >= 0)
+                {
+                    queryOptionsName = queryString.Substring(startIndex, equalSignIndex - startIndex);
+                    queryOptionValue = queryString.Substring(equalSignIndex + 1, (i - equalSignIndex) - 1);
+                }
+                else
+                {
+                    queryOptionValue = queryString.Substring(startIndex, i - startIndex);
+                }
+
+                queryOptionsName = queryOptionsName == null ? null : Uri.UnescapeDataString(queryOptionsName);
+                queryOptionValue = queryOptionValue == null ? null : Uri.UnescapeDataString(queryOptionValue);
+
+                queryOptions.Add(new QueryOptionQueryToken { Name = queryOptionsName, Value = queryOptionValue });
+
+                if ((i == (length - 1)) && (queryString[i] == '&'))
+                {
+                    queryOptions.Add(new QueryOptionQueryToken { Name = null, Value = string.Empty });
+                }
+            }
+
+            return queryOptions;
+        }
+
+        /// <summary>
+        /// Returns the encoding object for the specified charset name.
+        /// </summary>
+        /// <param name="charsetName">The of the charset to get the encoding for.</param>
+        /// <returns>The encoding object or null if such encoding is not supported.</returns>
+        internal static Encoding GetEncodingFromCharsetName(string charsetName)
+        {
+            DebugUtils.CheckNoExternalCallers();
+
+            try
+            {
+#if SILVERLIGHT
+                // The default behavior without the fallbacks is to use either replacement or best-fit for unencodable characters.
+                // That would be the wrong behavior for us. On the other hand in Silverlight the only supported encodings
+                // are UTF-8 and UTF-16 (LE and BE), all of which can encode any character, so the fallbacks are never used.
+                // Thus it's OK to use the default behavior here.
+                return Encoding.GetEncoding(charsetName);
+#else
+                return Encoding.GetEncoding(charsetName, new EncoderExceptionFallback(), new DecoderExceptionFallback());
+#endif
+            }
+            catch (ArgumentException)
+            {
+                // This exception is thrown when the character
+                // set isn't supported.
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Enumerates each charset part in the specified Accept-Charset header.
+        /// </summary>
+        /// <param name="headerValue">Non-null and non-empty header value for Accept-Charset.</param>
+        /// <returns>
+        /// A (non-sorted) enumeration of CharsetPart elements, which include
+        /// a charset name and a quality (preference) value, normalized to 0-1000.
+        /// </returns>
+        private static IEnumerable<CharsetPart> AcceptCharsetParts(string headerValue)
+        {
+            DebugUtils.CheckNoExternalCallers();
+            Debug.Assert(!String.IsNullOrEmpty(headerValue), "!String.IsNullOrEmpty(headerValuer)");
+
+            // PERF: optimize for common patterns.
+            bool commaRequired = false; // Whether a comma should be found
+            int headerIndex = 0;        // Index of character being procesed on headerValue.
+            int headerStart;            // Index into headerValue for the start of the charset name.
+            int headerNameEnd;          // Index into headerValue for the end of the charset name (+1).
+            int headerEnd;              // Index into headerValue for this charset part (+1).
+            int qualityValue;           // Normalized qvalue for this charset.
+
+            while (headerIndex < headerValue.Length)
+            {
+                if (SkipWhitespace(headerValue, ref headerIndex))
+                {
+                    yield break;
+                }
+
+                if (headerValue[headerIndex] == ',')
+                {
+                    commaRequired = false;
+                    headerIndex++;
+                    continue;
+                }
+
+                if (commaRequired)
+                {
+                    // Comma missing between charset elements.
+                    throw new ODataException(Strings.HttpUtils_MissingSeparatorBetweenCharsets(headerValue));
+                }
+
+                headerStart = headerIndex;
+                headerNameEnd = headerStart;
+
+                bool endReached = ReadToken(headerValue, ref headerNameEnd);
+                if (headerNameEnd == headerIndex)
+                {
+                    // Invalid (empty) charset name.
+                    throw new ODataException(Strings.HttpUtils_InvalidCharsetName(headerValue));
+                }
+
+                if (endReached)
+                {
+                    qualityValue = 1000;
+                    headerEnd = headerNameEnd;
+                }
+                else
+                {
+                    char afterNameChar = headerValue[headerNameEnd];
+                    if (IsHttpSeparator(afterNameChar))
+                    {
+                        if (afterNameChar == ';')
+                        {
+                            if (ReadLiteral(headerValue, headerNameEnd, ";q="))
+                            {
+                                // Unexpected end of qvalue.
+                                throw new ODataException(Strings.HttpUtils_UnexpectedEndOfQValue(headerValue));
+                            }
+
+                            headerEnd = headerNameEnd + 3;
+                            ReadQualityValue(headerValue, ref headerEnd, out qualityValue);
+                        }
+                        else
+                        {
+                            qualityValue = 1000;
+                            headerEnd = headerNameEnd;
+                        }
+                    }
+                    else
+                    {
+                        // Invalid separator character.
+                        throw new ODataException(Strings.HttpUtils_InvalidSeparatorBetweenCharsets(headerValue));
+                    }
+                }
+
+                yield return new CharsetPart(headerValue.Substring(headerStart, headerNameEnd - headerStart), qualityValue);
+
+                // Prepare for next charset; we require at least one comma before we process it.
+                commaRequired = true;
+                headerIndex = headerEnd;
+            }
+        }
+
+        /// <summary>Read a parameter for a media type/range.</summary>
+        /// <param name="text">Text to read from.</param>
+        /// <param name="textIndex">Pointer in text.</param>
+        /// <param name="parameters">Array with parameters to grow as necessary.</param>
+        private static void ReadMediaTypeParameter(string text, ref int textIndex, ref List<KeyValuePair<string, string>> parameters)
+        {
+            int startIndex = textIndex;
+            bool eof = ReadToken(text, ref textIndex);
+            string parameterName = text.Substring(startIndex, textIndex - startIndex);
+
+            if (parameterName.Length == 0)
+            {
+                throw new ODataException(Strings.HttpUtils_MediaTypeMissingParameterName);
+            }
+
+            if (eof)
+            {
+                throw new ODataException(Strings.HttpUtils_MediaTypeMissingParameterValue(parameterName));
+            }
+
+            if (text[textIndex] != '=')
+            {
+                throw new ODataException(Strings.HttpUtils_MediaTypeMissingParameterValue(parameterName));
+            }
+
+            textIndex++;
+
+            string parameterValue = ReadQuotedParameterValue(parameterName, text, ref textIndex);
+
+            // Add the parameter name/value pair to the list.
+            if (parameters == null)
+            {
+                parameters = new List<KeyValuePair<string, string>>(1);
+            }
+
+            parameters.Add(new KeyValuePair<string, string>(parameterName, parameterValue));
+        }
+
+        /// <summary>Reads the type and subtype specifications for a media type name.</summary>
+        /// <param name='mediaTypeName'>Text in which specification exists.</param>
+        /// <param name='textIndex'>Pointer into text.</param>
+        /// <param name='type'>Type of media found.</param>
+        /// <param name='subType'>Subtype of media found.</param>
+        private static void ReadMediaTypeAndSubtype(string mediaTypeName, ref int textIndex, out string type, out string subType)
+        {
+            Debug.Assert(mediaTypeName != null, "text != null");
+            int textStart = textIndex;
+            if (ReadToken(mediaTypeName, ref textIndex))
+            {
+                throw new ODataException(Strings.HttpUtils_MediaTypeUnspecified(mediaTypeName));
+            }
+
+            if (mediaTypeName[textIndex] != '/')
+            {
+                throw new ODataException(Strings.HttpUtils_MediaTypeRequiresSlash(mediaTypeName));
+            }
+
+            type = mediaTypeName.Substring(textStart, textIndex - textStart);
+            textIndex++;
+
+            int subTypeStart = textIndex;
+            ReadToken(mediaTypeName, ref textIndex);
+
+            if (textIndex == subTypeStart)
+            {
+                throw new ODataException(Strings.HttpUtils_MediaTypeRequiresSubType(mediaTypeName));
+            }
+
+            subType = mediaTypeName.Substring(subTypeStart, textIndex - subTypeStart);
+        }
+
+        /// <summary>Reads a media type definition as used in a Content-Type header.</summary>
+        /// <param name="text">Text to read.</param>
+        /// <returns>The <see cref="MediaType"/> defined by the specified <paramref name="text"/></returns>
+        /// <remarks>All syntactic errors will produce a 400 - Bad Request status code.</remarks>
+        private static IList<MediaType> ReadMediaTypes(string text)
+        {
+            Debug.Assert(text != null, "text != null");
+
+            string type = null;
+            string subType = null;
+            List<KeyValuePair<string, string>> parameters = null;
+            List<MediaType> mediaTypes = new List<MediaType>();
+            int textIndex = 0;
+
+            while (!SkipWhitespace(text, ref textIndex))
+            {
+                ReadMediaTypeAndSubtype(text, ref textIndex, out type, out subType);
+
+                while (!SkipWhitespace(text, ref textIndex))
+                {
+                    if (text[textIndex] == ',')
+                    {
+                        textIndex++;
+                        break;
+                    }
+
+                    if (text[textIndex] != ';')
+                    {
+                        throw new ODataException(Strings.HttpUtils_MediaTypeRequiresSemicolonBeforeParameter(text));
+                    }
+
+                    textIndex++;
+                    if (SkipWhitespace(text, ref textIndex))
+                    {
+                        // ';' should be a leading separator, but we choose to be a 
+                        // bit permissive and allow it as a final delimiter as well.
+                        break;
+                    }
+
+                    ReadMediaTypeParameter(text, ref textIndex, ref parameters);
+                }
+
+                mediaTypes.Add(new MediaType(type, subType, parameters == null ? null : parameters.ToArray()));
+                parameters = null;
+            }
+
+            return mediaTypes;
+        }
+
+        /// <summary>
+        /// Reads media type parameter value for a particular parameter in the Content-Type/Accept headers.
+        /// </summary>
+        /// <param name="parameterName">Name of parameter.</param>
+        /// <param name="headerText">Header text.</param>
+        /// <param name="textIndex">Parsing index in <paramref name="headerText"/>.</param>
+        /// <returns>String representing the value of the <paramref name="parameterName"/> parameter.</returns>
+        private static string ReadQuotedParameterValue(string parameterName, string headerText, ref int textIndex)
+        {
+            StringBuilder parameterValue = new StringBuilder();
+
+            // Check if the value is quoted.
+            bool valueIsQuoted = false;
+            if (textIndex < headerText.Length)
+            {
+                if (headerText[textIndex] == '\"')
+                {
+                    textIndex++;
+                    valueIsQuoted = true;
+                }
+            }
+
+            while (textIndex < headerText.Length)
+            {
+                char currentChar = headerText[textIndex];
+
+                if (currentChar == '\\' || currentChar == '\"')
+                {
+                    if (!valueIsQuoted)
+                    {
+                        throw new ODataException(Strings.HttpUtils_EscapeCharWithoutQuotes(parameterName));
+                    }
+
+                    textIndex++;
+
+                    // End of quoted parameter value.
+                    if (currentChar == '\"')
+                    {
+                        valueIsQuoted = false;
+                        break;
+                    }
+
+                    if (textIndex >= headerText.Length)
+                    {
+                        throw new ODataException(Strings.HttpUtils_EscapeCharAtEnd(parameterName));
+                    }
+
+                    currentChar = headerText[textIndex];
+                }
+                else
+                    if (!IsHttpToken(currentChar))
+                    {
+                        // If the given character is special, we stop processing.
+                        break;
+                    }
+
+                parameterValue.Append(currentChar);
+                textIndex++;
+            }
+
+            if (valueIsQuoted)
+            {
+                throw new ODataException(Strings.HttpUtils_ClosingQuoteNotFound(parameterName));
+            }
+
+            return parameterValue.ToString();
+        }
+        
+        /// <summary>
+        /// Determines whether the specified character is a valid HTTP header token character.
+        /// </summary>
+        /// <param name="c">Character to verify.</param>
+        /// <returns>true if c is a valid HTTP header token character; false otherwise.</returns>
+        private static bool IsHttpToken(char c)
+        {
+            // A token character is any character (0-127) except control (0-31) or
+            // separators. 127 is DEL, a control character.
+            return c < '\x7F' && c > '\x1F' && !IsHttpSeparator(c);
+        }
+
+        /// <summary>
+        /// Determines whether the specified character is a valid HTTP separator.
+        /// </summary>
+        /// <param name="c">Character to verify.</param>
+        /// <returns>true if c is a separator; false otherwise.</returns>
+        /// <remarks>
+        /// See RFC 2616 2.2 for further information.
+        /// </remarks>
+        private static bool IsHttpSeparator(char c)
+        {
+            return
+                c == '(' || c == ')' || c == '<' || c == '>' || c == '@' ||
+                c == ',' || c == ';' || c == ':' || c == '\\' || c == '"' ||
+                c == '/' || c == '[' || c == ']' || c == '?' || c == '=' ||
+                c == '{' || c == '}' || c == ' ' || c == '\x9';
+        }
+
+        /// <summary>
+        /// Reads a token on the specified text by advancing an index on it.
+        /// </summary>
+        /// <param name="text">Text to read token from.</param>
+        /// <param name="textIndex">Index for the position being scanned on text.</param>
+        /// <returns>true if the end of the text was reached; false otherwise.</returns>
+        private static bool ReadToken(string text, ref int textIndex)
+        {
+            while (textIndex < text.Length && IsHttpToken(text[textIndex]))
+            {
+                textIndex++;
+            }
+
+            return (textIndex == text.Length);
+        }
+
+        /// <summary>
+        /// Skips whitespace in the specified text by advancing an index to
+        /// the next non-whitespace character.
+        /// </summary>
+        /// <param name="text">Text to scan.</param>
+        /// <param name="textIndex">Index to begin scanning from.</param>
+        /// <returns>true if the end of the string was reached, false otherwise.</returns>
+        private static bool SkipWhitespace(string text, ref int textIndex)
+        {
+            Debug.Assert(text != null, "text != null");
+            Debug.Assert(text.Length >= 0, "text >= 0");
+            Debug.Assert(textIndex <= text.Length, "text <= text.Length");
+
+            while (textIndex < text.Length && Char.IsWhiteSpace(text, textIndex))
+            {
+                textIndex++;
+            }
+
+            return (textIndex == text.Length);
+        }
+
+        /// <summary>
+        /// Converts the specified character from the ASCII range to a digit.
+        /// </summary>
+        /// <param name="c">Character to convert.</param>
+        /// <returns>
+        /// The Int32 value for c, or -1 if it is an element separator.
+        /// </returns>
+        private static int DigitToInt32(char c)
+        {
+            if (c >= '0' && c <= '9')
+            {
+                return (int)(c - '0');
+            }
+            else
+            {
+                if (IsHttpElementSeparator(c))
+                {
+                    return -1;
+                }
+                else
+                {
+                    throw new ODataException(Strings.HttpUtils_CannotConvertCharToInt(c));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Verfies whether the specified character is a valid separator in
+        /// an HTTP header list of element.
+        /// </summary>
+        /// <param name="c">Character to verify.</param>
+        /// <returns>true if c is a valid character for separating elements; false otherwise.</returns>
+        private static bool IsHttpElementSeparator(char c)
+        {
+            return c == ',' || c == ' ' || c == '\t';
+        }
+
+        /// <summary>
+        /// "Reads" a literal from the specified string by verifying that
+        /// the exact text can be found at the specified position.
+        /// </summary>
+        /// <param name="text">Text within which a literal should be checked.</param>
+        /// <param name="textIndex">Index in text where the literal should be found.</param>
+        /// <param name="literal">Literal to check at the specified position.</param>
+        /// <returns>true if the end of string is found; false otherwise.</returns>
+        private static bool ReadLiteral(string text, int textIndex, string literal)
+        {
+            if (String.Compare(text, textIndex, literal, 0, literal.Length, StringComparison.Ordinal) != 0)
+            {
+                // Failed to find expected literal.
+                throw new ODataException(Strings.HttpUtils_ExpectedLiteralNotFoundInString(literal, textIndex, text));
+            }
+
+            return textIndex + literal.Length == text.Length;
+        }
+
+        /// <summary>
+        /// Structure to represent a charset name with a quality value.
+        /// </summary>
+        private struct CharsetPart
+        {
+            /// <summary>Name of the charset.</summary>
+            internal readonly string Charset;
+
+            /// <summary>Charset quality (desirability), normalized to 0-1000.</summary>
+            internal readonly int Quality;
+
+            /// <summary>
+            /// Initializes a new CharsetPart with the specified values.
+            /// </summary>
+            /// <param name="charset">Name of charset.</param>
+            /// <param name="quality">Charset quality (desirability), normalized to 0-1000.</param>
+            internal CharsetPart(string charset, int quality)
+            {
+                Debug.Assert(charset != null, "charset != null");
+                Debug.Assert(charset.Length > 0, "charset.Length > 0");
+                Debug.Assert(0 <= quality && quality <= 1000, "0 <= quality && quality <= 1000");
+
+                this.Charset = charset;
+                this.Quality = quality;
+            }
+        }
+    }
+}
