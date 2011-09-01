@@ -1,0 +1,211 @@
+//   Copyright 2011 Microsoft Corporation
+//
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+
+namespace Microsoft.Data.OData.Metadata
+{
+    #region Namespaces
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Services.Common;
+    using System.Diagnostics;
+    using System.Linq;
+    using Microsoft.Data.Edm;
+    using Microsoft.Data.OData;
+    #endregion Namespaces
+
+    /// <summary>
+    /// Annotation stored on an entity type to hold entity property mapping information.
+    /// </summary>
+    internal sealed class ODataEntityPropertyMappingCache
+    {
+        /// <summary>
+        /// A list of the EPM mappings this cache was constructed for. 
+        /// Used to determine whether the cache is dirty or not.
+        /// </summary>
+        private readonly List<EntityPropertyMappingAttribute> mappings;
+
+        /// <summary>
+        /// Inherited EntityPropertyMapping attributes.
+        /// </summary>
+        private List<EntityPropertyMappingAttribute> mappingsForInheritedProperties;
+
+        /// <summary>
+        /// Own EntityPropertyMapping attributes.
+        /// </summary>
+        private List<EntityPropertyMappingAttribute> mappingsForDeclaredProperties;
+
+        /// <summary>
+        /// EPM source tree for the type this annotation belongs to.
+        /// </summary>
+        private EpmSourceTree epmSourceTree;
+
+        /// <summary>
+        /// EPM target tree for the type this annotation belongs to.
+        /// </summary>
+        private EpmTargetTree epmTargetTree;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="mappings">The EPM mappings to create the cache for.</param>
+        internal ODataEntityPropertyMappingCache(ODataEntityPropertyMappingCollection mappings)
+        {
+            DebugUtils.CheckNoExternalCallers();
+
+            this.mappings = mappings == null ? null : new List<EntityPropertyMappingAttribute>(mappings);
+
+            // Note that we new up everything here eagerly because we will only create the EPM annotation for types
+            // for which we know for sure that they have EPM and thus we will need all of these anyway.
+            this.mappingsForInheritedProperties = new List<EntityPropertyMappingAttribute>();
+            this.mappingsForDeclaredProperties = mappings == null
+                ? new List<EntityPropertyMappingAttribute>()
+                : new List<EntityPropertyMappingAttribute>(mappings);
+            this.epmTargetTree = new EpmTargetTree();
+            this.epmSourceTree = new EpmSourceTree(this.epmTargetTree);
+        }
+
+        /// <summary>
+        /// Inherited EntityPropertyMapping attributes.
+        /// </summary>
+        internal List<EntityPropertyMappingAttribute> MappingsForInheritedProperties
+        {
+            get
+            {
+                DebugUtils.CheckNoExternalCallers();
+                return this.mappingsForInheritedProperties;
+            }
+        }
+
+        /// <summary>
+        /// Own EntityPropertyMapping attributes.
+        /// </summary>
+        internal List<EntityPropertyMappingAttribute> MappingsForDeclaredProperties
+        {
+            get
+            {
+                DebugUtils.CheckNoExternalCallers();
+                return this.mappingsForDeclaredProperties;
+            }
+        }
+
+        /// <summary>
+        /// EPM source tree for the type this annotation belongs to.
+        /// </summary>
+        internal EpmSourceTree EpmSourceTree
+        {
+            get
+            {
+                DebugUtils.CheckNoExternalCallers();
+                return this.epmSourceTree;
+            }
+        }
+
+        /// <summary>
+        /// EPM target tree for the type this annotation belongs to.
+        /// </summary>
+        internal EpmTargetTree EpmTargetTree
+        {
+            get
+            {
+                DebugUtils.CheckNoExternalCallers();
+                return this.epmTargetTree;
+            }
+        }
+
+        /// <summary>
+        /// All EntityPropertyMapping attributes.
+        /// </summary>
+        internal IEnumerable<EntityPropertyMappingAttribute> AllMappings
+        {
+            get
+            {
+                DebugUtils.CheckNoExternalCallers();
+                return this.MappingsForDeclaredProperties.Concat(this.MappingsForInheritedProperties);
+            }
+        }
+
+        /// <summary>
+        /// Initializes the EPM annotation with EPM information from the specified type.
+        /// </summary>
+        /// <param name="definingEntityType">Entity type to use the EPM infromation from.</param>
+        /// <param name="affectedEntityType">Entity type for this the EPM information is being built.</param>
+        internal void BuildEpmForType(IEdmEntityType definingEntityType, IEdmEntityType affectedEntityType)
+        {
+            DebugUtils.CheckNoExternalCallers();
+            Debug.Assert(definingEntityType != null, "definingEntityType != null");
+            Debug.Assert(affectedEntityType != null, "affectedEntityType != null");
+
+            if (definingEntityType.BaseType != null)
+            {
+                this.BuildEpmForType(definingEntityType.BaseEntityType(), affectedEntityType);
+            }
+
+            ODataEntityPropertyMappingCollection mappingsForType = definingEntityType.GetEntityPropertyMappings();
+            if (mappingsForType == null)
+            {
+                return;
+            }
+
+            foreach (EntityPropertyMappingAttribute mapping in mappingsForType)
+            {
+                this.epmSourceTree.Add(new EntityPropertyMappingInfo(mapping, definingEntityType, affectedEntityType));
+
+                if (definingEntityType == affectedEntityType)
+                {
+                    if (!PropertyExistsOnType(affectedEntityType, mapping))
+                    {
+                        this.MappingsForInheritedProperties.Add(mapping);
+                        this.MappingsForDeclaredProperties.Remove(mapping);
+                    }
+                    else
+                    {
+                        Debug.Assert(
+                            this.MappingsForDeclaredProperties.SingleOrDefault(attr => object.ReferenceEquals(mapping, attr)) != null,
+                            "Own epmInfo should already have the given instance");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks whether the current cache is dirty with respect to the <paramref name="propertyMappings"/>.
+        /// </summary>
+        /// <param name="propertyMappings">The EPM mappings to check this cache against.</param>
+        /// <returns>true if the <paramref name="propertyMappings"/> are not the same as the ones the cache has been created for (or have changed).</returns>
+        internal bool IsDirty(ODataEntityPropertyMappingCollection propertyMappings)
+        {
+            DebugUtils.CheckNoExternalCallers();
+         
+            // NOTE: we only allow adding more mappings to an existing collection; so if the 
+            // references are the same and the counts are the same there has been no change.
+            return this.mappings != null || propertyMappings != null;
+        }
+
+        /// <summary>
+        /// Does given property in the attribute exist in the specified type.
+        /// </summary>
+        /// <param name="structuredType">The type to inspect.</param>
+        /// <param name="epmAttribute">Attribute which has PropertyName.</param>
+        /// <returns>true if property exists in the specified type, false otherwise.</returns>
+        private static bool PropertyExistsOnType(IEdmStructuredType structuredType, EntityPropertyMappingAttribute epmAttribute)
+        {
+            Debug.Assert(structuredType != null, "structuredType != null");
+            Debug.Assert(epmAttribute != null, "epmAttribute != null");
+
+            int indexOfSeparator = epmAttribute.SourcePath.IndexOf('/');
+            String propertyToLookFor = indexOfSeparator == -1 ? epmAttribute.SourcePath : epmAttribute.SourcePath.Substring(0, indexOfSeparator);
+            return structuredType.DeclaredProperties.Any(p => p.Name == propertyToLookFor);
+        }
+     }
+}

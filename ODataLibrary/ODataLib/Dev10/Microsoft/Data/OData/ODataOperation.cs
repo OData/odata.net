@@ -1,0 +1,60 @@
+//   Copyright 2011 Microsoft Corporation
+//
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+
+namespace Microsoft.Data.OData
+{
+    using System;
+
+    /// <summary>
+    /// Represents a function or an action.
+    /// </summary>
+    public abstract class ODataOperation : ODataAnnotatable
+    {
+        /// <summary>
+        /// The URI that identifies the <see cref="ODataAction"/> or the <see cref="ODataFunction"/>.
+        /// </summary>
+        public string Relation
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// A human-readable description of the <see cref="ODataAction"/> or the <see cref="ODataFunction"/>.
+        /// </summary>
+        public string Title
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The URI to invoke the <see cref="ODataAction"/> or the <see cref="ODataFunction"/>.
+        /// </summary>
+        public Uri Target
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The URI to get metadata for the <see cref="ODataAction"/> or the <see cref="ODataFunction"/>
+        /// </summary>
+        public Uri Metadata
+        {
+            get;
+            set;
+        }
+    }
+}
