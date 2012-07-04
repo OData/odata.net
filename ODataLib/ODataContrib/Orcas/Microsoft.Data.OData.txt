@@ -1,0 +1,122 @@
+;   Copyright 2011 Microsoft Corporation
+;
+;   Licensed under the Apache License, Version 2.0 (the "License");
+;   you may not use this file except in compliance with the License.
+;   You may obtain a copy of the License at
+;
+;       http://www.apache.org/licenses/LICENSE-2.0
+;
+;   Unless required by applicable law or agreed to in writing, software
+;   distributed under the License is distributed on an "AS IS" BASIS,
+;   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;   See the License for the specific language governing permissions and
+;   limitations under the License.
+
+ODataQueryUtils_DidNotFindServiceOperation=A service operation with name '{0}' could not be found in the provided model.
+ODataQueryUtils_FoundMultipleServiceOperations=Found multiple service operations with name '{0}' in a single entity container. Service operation overloads are not supported.
+ODataQueryUtils_CannotSetMetadataAnnotationOnPrimitiveType=Setting a metadata annotation on a primitive type is not supported.
+ODataQueryUtils_DidNotFindEntitySet=An entity set with name '{0}' could not be found in the provided model.
+
+BinaryOperatorQueryNode_InvalidOperandType=Only operands with primitive types are allowed in binary operators. Found operand types '{0}' and '{1}'.
+BinaryOperatorQueryNode_OperandsMustHaveSameTypes=Both operands of a binary operators must have the same type. Found different operand types '{0}' and '{1}'.
+QueryExpressionTranslator_UnsupportedQueryNodeKind=An unsupported query node kind '{0}' was found.
+QueryExpressionTranslator_UnsupportedExtensionNode=An unsupported extension query node was found.
+QueryExpressionTranslator_NodeTranslatedToNull=A query node of kind '{0}' was translated to a null expression. Translation of any query node must return a non-null expression.
+QueryExpressionTranslator_NodeTranslatedToWrongType=A query node of kind '{0}' was translated to an expression of type '{1}' but an expression of type '{2}' was expected.
+QueryExpressionTranslator_CollectionQueryNodeWithoutItemType=A CollectionQueryNode of kind '{0}' with null ItemType was found. Only a CollectionQueryNode with non-null ItemType can be translated into an expression.
+QueryExpressionTranslator_SingleValueQueryNodeWithoutTypeReference=A SingleValueQueryNode of kind '{0}' with null TypeReference was found. A SingleValueQueryNode can only be translated into an expression if it has a non-null type or statically represents the null value.
+QueryExpressionTranslator_ConstantNonPrimitive=A ConstantQueryNode of type '{0}' was found. Only a ConstantQueryNode of a primitive type can be translated to an expression.
+QueryExpressionTranslator_KeyLookupOnlyOnEntities=A KeyLookupQueryNode is being applied to a collection of type '{0}' which is of kind '{1}'. KeyLookupQueryNode can only be applied to a collection of entity types.
+QueryExpressionTranslator_KeyLookupOnlyOnQueryable=A KeyLookupQueryNode is being applied to an expression of incompatible type '{0}'. This KeyLookupQueryNode can only be applied to a collection which translates to an expression of type '{1}'.
+QueryExpressionTranslator_KeyLookupWithoutKeyProperty=A KeyLookupQueryNode is either missing or has more than one value for a key property '{0}' on type '{1}'. There must be exactly one value for the key property.
+QueryExpressionTranslator_KeyLookupWithNoKeyValues=A KeyLookupQueryNode with no key property values was found. Only a KeyLookupQueryNode with at least one key property value can be translated into an expression.
+QueryExpressionTranslator_KeyPropertyValueWithoutProperty=A KeyPropertyValue instance without a valid key property was found. The KeyPropertyValue.KeyProperty must specify a key property.
+QueryExpressionTranslator_KeyPropertyValueWithWrongValue=A KeyPropertyValue instance for key property '{0}' has a value of a wrong type. The KeyPropertyValue.KeyValue must be of the same type as the key property.
+QueryExpressionTranslator_FilterCollectionOfWrongType=A FilterQueryNode input collection was translated to an expression of type '{0}', but type '{1}' is expected.
+QueryExpressionTranslator_FilterExpressionOfWrongType=A FilterQueryNode.Expression was translated to an expression of type '{0}', but the expression must evaluate to a boolean value.
+QueryExpressionTranslator_UnaryNotOperandNotBoolean=The operand for the unary not operator is being applied to an expression of type '{0}'. A unary not operator can only be applied to an operand of type bool or bool?.
+QueryExpressionTranslator_PropertyAccessSourceWrongType=The source of a PropertyAccessQueryNode was translated to an expression of type '{0}', but type '{1}' is required in order to translate the property access.
+QueryExpressionTranslator_PropertyAccessSourceNotStructured=The source of a PropertyAccessQueryNode is of kind '{0}'. Properties are only supported for type kinds 'Complex' and 'Entity'.
+QueryExpressionTranslator_ParameterNotDefinedInScope=A ParameterQueryNode which is not defined in the current scope was found.
+QueryExpressionTranslator_OrderByCollectionOfWrongType=An OrderByQueryNode input collection was translated to an expression of type '{0}', but type '{1}' is expected.
+QueryExpressionTranslator_UnknownFunction=An unknown function with name '{0}' was found.
+QueryExpressionTranslator_FunctionArgumentNotSingleValue=The argument for an invocation of a function with name '{0}' is not a single value. All arguments for this function must be single values.
+QueryExpressionTranslator_NoApplicableFunctionFound=No function signature for the function with name '{0}' matches the specified arguments. The function signatures considered are: {1}.
+
+QueryDescriptorQueryToken_UriMustBeAbsolute=The specified URI '{0}' must be absolute.
+QueryDescriptorQueryToken_MaxDepthInvalid=The maximum depth setting must be a number greater than zero.
+QueryDescriptorQueryToken_InvalidSkipQueryOptionValue=Invalid value '{0}' for $skip query option found. The $skip query option requires a non-negative integer value.
+QueryDescriptorQueryToken_InvalidTopQueryOptionValue=Invalid value '{0}' for $top query option found. The $top query option requires a non-negative integer value.
+QueryDescriptorQueryToken_InvalidInlineCountQueryOptionValue=Invalid value '{0}' for $inlinecount query option found. Valid values are '{1}'.
+
+QueryOptionUtils_QueryParameterMustBeSpecifiedOnce=Query option '{0}' was specified more than once, but it must be specified at most once.
+
+UriBuilder_NotSupportedClrLiteral=The CLR literal of type '{0}' is not supported to be written as a Uri part.
+UriBuilder_NotSupportedQueryToken=QueryToken '{0}' is not supported to be written as a Uri part.
+
+UriQueryExpressionParser_TooDeep=Recursion depth exceeded allowed limit.
+UriQueryExpressionParser_ExpressionExpected=Expression expected at position {0} in '{1}'.
+UriQueryExpressionParser_OpenParenExpected='(' expected at position {0} in '{1}'.
+UriQueryExpressionParser_CloseParenOrCommaExpected=')' or ',' expected at position {0} in '{1}'.
+UriQueryExpressionParser_CloseParenOrOperatorExpected=')' or operator expected at position {0} in '{1}'.
+
+UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri=The URI '{0}' is not valid because it is not based on '{1}'.
+UriQueryPathParser_SyntaxError=Bad Request: there was an error in the query syntax.
+UriQueryPathParser_TooManySegments=Too many segments in URI.
+UriQueryPathParser_InvalidKeyValueLiteral=The key value '{0}' was not recognized as a valid literal.
+
+PropertyInfoTypeAnnotation_CannotFindProperty=Unable to find property '{2}' on the instance type '{1}' of the structured type '{0}'.
+
+MetadataBinder_UnsupportedQueryTokenKind=An unsupported query token kind '{0}' was found.
+MetadataBinder_UnsupportedExtensionToken=An unsupported extension query token was found.
+MetadataBinder_RootSegmentResourceNotFound=Could not find an entity set for root segment '{0}'.
+MetadataBinder_KeyValueApplicableOnlyToEntityType=Type '{0}' is not an entity type. Key value can only be applied to an entity type.
+MetadataBinder_PropertyNotDeclared=Type '{0}' does not have a property '{1}'.
+MetadataBinder_PropertyNotDeclaredOrNotKeyInKeyValue=Property '{0}' is not declared on type '{1}' or is not a key property. Only key properties can be used in key lookups.
+MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties=An unnamed key value was used in a key lookup on a type '{0}' which has more than one key property. Unnamed key value can only be used on a type with one key property.
+MetadataBinder_DuplicitKeyPropertyInKeyValues=A key property '{0}' was found twice in a key lookup. Each key property can be specified just once in a key lookup.
+MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues=A key lookup on type '{0}' didn't specify values for all key properties. All key properties must be specified in a key lookup.
+MetadataBinder_CannotConvertToType=Expression of type '{0}' cannot be converted to type '{1}'.
+MetadataBinder_NonQueryableServiceOperationWithKeyLookup=Segment '{0}' which is a service operation returning non-queryable result has a key lookup. Only service operations returning queryable results can have a key lookup applied to them.
+MetadataBinder_QueryServiceOperationOfNonEntityType=Service operation '{0}' of kind '{1}' returns type '{2}' which is not an entity type. Service operations of kind QueryWithMultipleResults or QueryWithSingleResult can only return entity types.
+MetadataBinder_ServiceOperationParameterMissing=Service operation '{0}' is missing the required parameter '{1}'.
+MetadataBinder_ServiceOperationParameterInvalidType=The parameter '{0}' with value '{1}' for the service operation '{2}' is not a valid literal of type '{3}'.
+MetadataBinder_FilterNotApplicable=The $filter query option cannot be applied to the query path. Filter can only be applied to a collection of entities.
+MetadataBinder_FilterExpressionNotSingleValue=The $filter expression must evaluate to a single boolean value.
+MetadataBinder_OrderByNotApplicable=The $orderby query option cannot be applied to the query path. Ordering can only be applied to a collection of entities.
+MetadataBinder_OrderByExpressionNotSingleValue=The $orderby expression must evaluate to a single value of primitive type.
+MetadataBinder_SkipNotApplicable=The $skip query option cannot be applied to the query path. Skip can only be applied to a collection of entities.
+MetadataBinder_TopNotApplicable=The $top query option cannot be applied to the query path. Top can only be applied to a collection of entities.
+MetadataBinder_PropertyAccessWithoutParentParameter=A PropertyAccessQueryToken without a parent was encountered outside of $filter or $orderby expression. The PropertyAccessQueryToken without a parent token is only allowed inside $filter or $orderby expressions.
+MetadataBinder_MultiValuePropertyNotSupportedInExpression=The MultiValue property '{0}' cannot be used in $filter or $orderby query expression. MultiValue properties are not supported with these query options.
+MetadataBinder_BinaryOperatorOperandNotSingleValue=The operand for a binary operator '{0}' is not a single value. Binary operators require both operands to be single values.
+MetadataBinder_UnaryOperatorOperandNotSingleValue=The operand for a unary operator '{0}' is not a single value. Unary operators require the operand to be a single value.
+MetadataBinder_PropertyAccessSourceNotSingleValue=The parent value for a property access of a property '{0}' is not a single value. Property access can only be applied to a single value.
+MetadataBinder_IncompatibleOperandsError=A binary operator with incompatible types was detected. Found operand types '{0}' and '{1}' for operator kind '{2}'.
+MetadataBinder_IncompatibleOperandError=A unary operator with an incompatible type was detected. Found operand type '{0}' for operator kind '{1}'.
+MetadataBinder_UnknownFunction=An unknown function with name '{0}' was found.
+MetadataBinder_FunctionArgumentNotSingleValue=The argument for an invocation of a function with name '{0}' is not a single value. All arguments for this function must be single values.
+MetadataBinder_NoApplicableFunctionFound=No function signature for the function with name '{0}' matches the specified arguments. The function signatures considered are: {1}.
+MetadataBinder_UnsupportedSystemQueryOption=The system query option '{0}' is not supported.
+MetadataBinder_BoundNodeCannotBeNull=A token of kind '{0}' was bound to the value null; this is invalid. A query token must always be bound to a non-null query node.
+MetadataBinder_TopRequiresNonNegativeInteger=The value '{0}' is not a non-negative integer value. In OData, the $top query option must specify a non-negative integer value.
+MetadataBinder_SkipRequiresNonNegativeInteger=The value '{0}' is not a non-negative integer value. In OData, the $skip query option must specify a non-negative integer value.
+MetadataBinder_ServiceOperationWithoutResultKind= The service operation '{0}' does not have an associated result kind. Without a result kind, a service operation cannot be bound.
+
+; Note: The below list of error messages are common to both the OData and the OData.Query project.
+General_InternalError=An internal error '{0}' occurred.
+
+ExceptionUtils_CheckIntegerNotNegative=A non-negative integer value was expected, but the value '{0}' is not a valid non-negative integer.
+ExceptionUtils_CheckIntegerPositive=A positive integer value was expected, but the value '{0}' is not a valid positive integer.
+ExceptionUtils_CheckLongPositive=A positive long value was expected; however, the value '{0}' is not a valid positive long value.
+ExceptionUtils_ArgumentStringNullOrEmpty=Value cannot be null or empty.
+
+ExpressionToken_IdentifierExpected=An identifier was expected at position {0}.
+
+ExpressionLexer_UnterminatedStringLiteral=There is an unterminated string literal at position {0} in '{1}'.
+ExpressionLexer_InvalidCharacter=Syntax error: character '{0}' is not valid at position {1} in '{2}'.
+ExpressionLexer_SyntaxError=Syntax error at position {0} in '{1}'.
+ExpressionLexer_UnterminatedLiteral=There is an unterminated literal at position {0} in '{1}'.
+ExpressionLexer_DigitExpected=A digit was expected at position {0} in '{1}'.
+
+UriQueryExpressionParser_UnrecognizedLiteral=Unrecognized '{0}' literal '{1}' at '{2}' in '{3}'.

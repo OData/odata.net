@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2a6bd505-1f8f-427f-ad95-5e0f7892b998}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Data.OData.Contrib</RootNamespace>
+    <AssemblyName>Microsoft.Data.OData.Contrib</AssemblyName>
+    <DefineConstants>SILVERLIGHT;ODATALIB</DefineConstants>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\Spatial\Silverlight\System.Spatial.csproj">
+      <Project>{2C123656-AD5F-4360-93C2-C7F159E160D9}</Project>
+      <Name>System.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OData\Orcas\Microsoft.Data.OData.csproj">
+      <Project>{0F0FE3FE-7A09-461C-85D4-2D4CBF58113F}</Project>
+      <Name>Microsoft.Data.OData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EdmLib\Silverlight\Microsoft.Data.Edm.csproj">
+      <Project>{50A5667C-6663-440A-8F86-609A4E565159}</Project>
+      <Name>Microsoft.Data.Edm</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="InternalsVisibleTo.cs" />
+    <Compile Include="Microsoft\Data\OData\InternalErrorCodes.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\Metadata\ODataQueryEdmTypeAnnotation.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\Metadata\ODataQueryEdmServiceOperationAnnotation.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\Metadata\ODataQueryEdmPropertyAnnotation.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\Metadata\ODataServiceOperationResultKind.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\ODataQueryUtils.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\BinaryOperator.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\BinaryOperatorQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\BinaryOperatorKind.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\BinaryOperatorUriBuilder.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\BuiltInFunctions.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\BuiltInFunctionSignature.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\CollectionQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\CollectionServiceOperationQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\ConstantQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\ConvertQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\BinaryOperatorQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\UriUtilsCommon.cs" />
+    <Compile Include="Microsoft\Data\OData\DebugUtils.cs" />
+    <Compile Include="Microsoft\Data\OData\InternalErrorCodesCommon.cs" />
+    <Compile Include="Microsoft\Data\OData\Atom\AtomConstants.cs" />
+    <Compile Include="Microsoft\Data\OData\Metadata\EdmConstants.cs" />
+    <Compile Include="Microsoft\Data\OData\Metadata\MetadataUtilsCommon.cs" />
+    <Compile Include="Microsoft\Data\OData\ExceptionUtils.cs" />
+    <Compile Include="Microsoft\Data\OData\ReferenceEqualityComparer.cs" />
+    <Compile Include="Microsoft\Data\OData\TypeUtils.cs" />
+    <Compile Include="Microsoft\Data\OData\Metadata\EdmLibraryExtensions.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\ExpandQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\ExpressionConstants.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\InlineCountKind.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\KeywordKind.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\KeywordSegmentQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\LiteralUtils.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\ODataUriBuilder.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\ODataUriBuilderUtils.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\OpenTypeMethods.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\QueryOptionQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\CustomQueryOptionQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\QueryTokenUtils.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\ReadOnlyEnumerable.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\SelectQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\SingleValueFunctionCallQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\FunctionSignature.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\StarQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\TypePromotionUtils.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\PropertyInfoExtensionMethods.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\PropertyInfoTypeAnnotation.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\QueryExpressionTranslator.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\OrderByQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\PropertyAccessQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\UnaryOperatorQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\QueryNodeUtils.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\TopQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\SkipQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\ExpressionLexer.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\ExpressionToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\ExpressionTokenKind.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\FilterQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\FunctionCallQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\KeyLookupQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\KeyPropertyValue.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\NamedValue.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\LiteralQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\MetadataBinder.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\OrderByDirection.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\OrderByQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\ParameterQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\PropertyAccessQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\QueryDescriptorQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\QueryDescriptorQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\QueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\QueryNodeKind.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\QueryOptionUtils.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\EntitySetQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\SingleValueQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\SingleValueServiceOperationQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\UncomposableServiceOperationQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\UriPrimitiveTypeParser.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\QueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\QueryTokenKind.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\SegmentQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\UnaryOperatorQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\UnaryOperatorKind.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\UriQueryConstants.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\UriQueryExpressionParser.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\UriQueryPathParser.cs" />
+    <Compile Include="Microsoft\Data\OData\UriUtils.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\DataServiceProviderMethods.cs" />
+    <Compile Include="Microsoft\Data\OData\PlatformHelper.cs" />
+    <Compile Include="Microsoft.Data.OData.cs">
+      <Visible>False</Visible>
+    </Compile>
+    <Compile Include="Parameterized.Microsoft.Data.OData.cs">
+      <Visible>False</Visible>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Microsoft.Data.OData.Query.resources">
+      <Visible>False</Visible>
+      <LogicalName>Microsoft.Data.OData.Query.resources</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Microsoft.Data.OData.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="BeforeBuild">
+    <GenerateResource Sources="Microsoft.Data.OData.txt" OutputResources="Microsoft.Data.OData.Query.resources" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

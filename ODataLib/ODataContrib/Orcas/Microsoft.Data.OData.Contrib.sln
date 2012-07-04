@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{570322b0-6f8d-47bc-901c-0b1f5a62f6eb}") = "Microsoft.Data.OData.Contrib", "Microsoft.Data.OData.Contrib.csproj", "{eb058f41-2594-43c1-8cd6-9602a8ef366c}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.OData", "..\..\OData\Orcas\Microsoft.Data.OData.csproj", "{BB5BFBA0-A4D7-4EE8-8FE9-F9B6421A250D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.Edm", "..\..\EdmLib\Orcas\Microsoft.Data.Edm.csproj", "{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Spatial", "..\..\Spatial\Orcas\System.Spatial.csproj", "{A1EBA295-EC08-48d4-8C6D-C8A2289B7C40}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{eb058f41-2594-43c1-8cd6-9602a8ef366c}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{eb058f41-2594-43c1-8cd6-9602a8ef366c}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{eb058f41-2594-43c1-8cd6-9602a8ef366c}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{eb058f41-2594-43c1-8cd6-9602a8ef366c}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB5BFBA0-A4D7-4EE8-8FE9-F9B6421A250D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB5BFBA0-A4D7-4EE8-8FE9-F9B6421A250D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB5BFBA0-A4D7-4EE8-8FE9-F9B6421A250D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB5BFBA0-A4D7-4EE8-8FE9-F9B6421A250D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1EBA295-EC08-48d4-8C6D-C8A2289B7C40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1EBA295-EC08-48d4-8C6D-C8A2289B7C40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1EBA295-EC08-48d4-8C6D-C8A2289B7C40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1EBA295-EC08-48d4-8C6D-C8A2289B7C40}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
