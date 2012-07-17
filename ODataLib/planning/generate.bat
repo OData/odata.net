@@ -1,1 +1,1 @@
-java -jar rabu.jar < estimates.rabu > projection.html
+java -jar rabu.jar < estimates.rabu.js > projection.html
