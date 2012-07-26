@@ -33,7 +33,7 @@ namespace Microsoft.Data.OData.Query
         /// <summary>
         /// The query token to write to Uri.
         /// </summary>
-        private readonly QueryToken queryToken;
+        private readonly QueryDescriptorQueryToken queryToken;
 
         /// <summary>
         /// The string builder to write the query token to.
@@ -44,7 +44,7 @@ namespace Microsoft.Data.OData.Query
         /// Create a new Uri builder for the given token.
         /// </summary>
         /// <param name="queryToken">The token to write out as Uri.</param>
-        protected ODataUriBuilder(QueryToken queryToken)
+        protected ODataUriBuilder(QueryDescriptorQueryToken queryToken)
         {
             this.queryToken = queryToken;
         }
@@ -60,7 +60,7 @@ namespace Microsoft.Data.OData.Query
         /// <summary>
         /// The string builder to write the query token to.
         /// </summary>
-        protected QueryToken QueryToken 
+        protected QueryDescriptorQueryToken QueryToken 
         { 
             get { return this.queryToken; } 
         }
@@ -211,7 +211,7 @@ namespace Microsoft.Data.OData.Query
         /// Write the query token as URI part to this builder.
         /// </summary>
         /// <param name="query">To write as URI part.</param>
-        protected internal virtual void WriteQuery(QueryToken query)
+        protected internal void WriteQuery(QueryToken query)
         {
             ExceptionUtils.CheckArgumentNotNull(query, "query");
 
@@ -232,17 +232,15 @@ namespace Microsoft.Data.OData.Query
                 case QueryTokenKind.PropertyAccess:
                     this.WritePropertyAccess((PropertyAccessQueryToken)query);
                     break;
-
+                case QueryTokenKind.NonRootSegment:
+                    this.WriteNavigationProperty((NavigationPropertyToken)query);
+                    break;
                 case QueryTokenKind.Star:
                     this.WriteStar((StarQueryToken)query);
                     break;
 
                 case QueryTokenKind.UnaryOperator:
                     this.WriteUnary((UnaryOperatorQueryToken)query);
-                    break;
-
-                case QueryTokenKind.QueryDescriptor:
-                    this.WriteQueryDescriptor((QueryDescriptorQueryToken)query);
                     break;
 
                 case QueryTokenKind.KeywordSegment:
@@ -275,7 +273,7 @@ namespace Microsoft.Data.OData.Query
         /// <returns>The Uri part representing the queryToken.</returns>
         protected virtual string Build()
         {
-            this.WriteQuery(this.queryToken);
+            this.WriteQueryDescriptor(this.queryToken);
             return this.builder.ToString();
         }
 
@@ -413,7 +411,7 @@ namespace Microsoft.Data.OData.Query
         }
 
         /// <summary>
-        /// Write the propert access token as URI part to this builder.
+        /// Write the property access token as URI part to this builder.
         /// </summary>
         /// <param name="propertyAccess">To write as URI part.</param>
         protected virtual void WritePropertyAccess(PropertyAccessQueryToken propertyAccess)
@@ -427,6 +425,23 @@ namespace Microsoft.Data.OData.Query
             }
 
             this.builder.Append(propertyAccess.Name);
+        }
+
+        /// <summary>
+        /// Write the navigation property token as URI part to this builder.
+        /// </summary>
+        /// <param name="navigation">To write as URI part.</param>
+        protected virtual void WriteNavigationProperty(NavigationPropertyToken navigation)
+        {
+            ExceptionUtils.CheckArgumentNotNull(navigation, "navigation");
+
+            if (navigation.Parent != null)
+            {
+                this.WriteQuery(navigation.Parent);
+                this.builder.Append(ExpressionConstants.SymbolForwardSlash);
+            }
+
+            this.builder.Append(navigation.Name);
         }
 
         /// <summary>

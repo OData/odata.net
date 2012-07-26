@@ -29,11 +29,6 @@ namespace Microsoft.Data.OData.Query
         Extension = 0,
 
         /// <summary>
-        /// The root, the entire query.
-        /// </summary>
-        QueryDescriptor = 1,
-
-        /// <summary>
         /// The segment of a query path.
         /// </summary>
         Segment = 2,
@@ -92,5 +87,35 @@ namespace Microsoft.Data.OData.Query
         /// The Expand query.
         /// </summary>
         Expand = 13,
+
+        /// <summary>
+        /// Type segment.
+        /// </summary>
+        TypeSegment = 14,
+
+        /// <summary>
+        /// Any query.
+        /// </summary>
+        Any = 15,
+
+        /// <summary>
+        /// Non root segment.
+        /// </summary>
+        NonRootSegment = 16,
+
+        /// <summary>
+        /// Cast segment.
+        /// </summary>
+        Cast = 17,
+
+        /// <summary>
+        /// Parameter token.
+        /// </summary>
+        Parameter = 18,
+
+        /// <summary>
+        /// All query.
+        /// </summary>
+        All = 19,
     }
 }

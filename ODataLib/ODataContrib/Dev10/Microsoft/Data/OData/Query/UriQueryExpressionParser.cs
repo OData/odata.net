@@ -16,13 +16,12 @@ namespace Microsoft.Data.OData.Query
 {
     #region Namespaces
     using System;
-    using System.Runtime.CompilerServices;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using System.Globalization;
     using Microsoft.Data.Edm;
     using Microsoft.Data.Edm.Library;
+
     #endregion Namespaces
 
     /// <summary>
@@ -44,6 +43,11 @@ namespace Microsoft.Data.OData.Query
         /// The lexer being used for the parsing.
         /// </summary>
         private ExpressionLexer lexer;
+
+        /// <summary>
+        /// The dictionary used to store mappings between Any visitor and corresponding segment paths
+        /// </summary>
+        private Dictionary<string, ParameterQueryToken> parameters = new Dictionary<string, ParameterQueryToken>();
 
         /// <summary>
         /// Constructor.
@@ -116,7 +120,6 @@ namespace Microsoft.Data.OData.Query
 
             this.recursionDepth = 0;
             this.lexer = new ExpressionLexer(filter, true /*moveToFirstToken*/);
-
             QueryToken result = this.ParseExpression();
             this.lexer.ValidateToken(ExpressionTokenKind.End);
 
@@ -480,13 +483,46 @@ namespace Microsoft.Data.OData.Query
         private QueryToken ParsePrimary()
         {
             this.RecurseEnter();
-            QueryToken expr = this.ParsePrimaryStart();
+            QueryToken expr;
+            var tok = this.lexer.PeekNextToken();
+            if (tok.Kind == ExpressionTokenKind.Dot)
+            {
+                expr = this.ParseTypeSegment(null);
+            }
+            else if (tok.Kind == ExpressionTokenKind.Slash)
+            {
+                expr = this.ParseSegment(null);
+            }
+            else
+            {
+                expr = this.ParsePrimaryStart();
+            }
+
             while (true)
             {
                 if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Slash)
                 {
                     this.lexer.NextToken();
-                    expr = this.ParseMemberAccess(expr);
+                    if (this.lexer.CurrentToken.Text == "any")
+                    {
+                        expr = this.ParseAny(expr);
+                    }
+                    else if (this.lexer.CurrentToken.Text == "all")
+                    {
+                        expr = this.ParseAll(expr);
+                    }
+                    else if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Slash)
+                    {
+                        expr = this.ParseSegment(expr);
+                    }
+                    else if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)
+                    {
+                        expr = this.ParseTypeSegment(expr);
+                    }
+                    else
+                    {
+                        expr = this.ParseMemberAccess(expr);
+                    }
                 }
                 else
                 {
@@ -630,6 +666,101 @@ namespace Microsoft.Data.OData.Query
         }
 
         /// <summary>
+        /// Parses the Any portion of the query
+        /// </summary>
+        /// <param name="parent">The parent of the Any node.</param>
+        /// <returns>The lexical token representing the Any query.</returns>
+        private QueryToken ParseAny(QueryToken parent)
+        {
+            NavigationPropertyToken parentNav = (NavigationPropertyToken)parent;
+            parentNav.AnyAllParent = true;
+            this.lexer.NextToken();
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
+            {
+                throw ParseError(Strings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            // When faced with Any(), return the same thing as if you encountered Any(a : true)
+            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseParen)
+            {
+                this.lexer.NextToken();
+                return new AnyQueryToken(new LiteralQueryToken(true, "True"), "a", parent);
+            }
+
+            ParameterQueryToken paramToken = new ParameterQueryToken(parentNav, this.lexer.CurrentToken.GetIdentifier());
+            this.parameters.Add(this.lexer.CurrentToken.GetIdentifier(), paramToken);
+            string tmp = this.lexer.CurrentToken.GetIdentifier();
+            this.lexer.NextToken();
+            this.lexer.NextToken();
+            QueryToken expr = this.ParseExpression();
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
+            {
+                throw ParseError(Strings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+            return new AnyQueryToken(expr, tmp, parent);
+        }
+
+        /// <summary>
+        /// Parses the All portion of the query
+        /// </summary>
+        /// <param name="parent">The parent of the All node.</param>
+        /// <returns>The lexical token representing the All query.</returns>
+        private QueryToken ParseAll(QueryToken parent)
+        {
+            NavigationPropertyToken parentNav = (NavigationPropertyToken)parent;
+            parentNav.AnyAllParent = true;
+            this.lexer.NextToken();
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
+            {
+                throw ParseError(Strings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            // When faced with All(), return the same thing as if you encountered All(a : true)
+            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseParen)
+            {
+                this.lexer.NextToken();
+                return new AllQueryToken(new LiteralQueryToken(true, "True"), "a", parent);
+            }
+
+            ParameterQueryToken paramToken = new ParameterQueryToken(parentNav, this.lexer.CurrentToken.GetIdentifier());
+            this.parameters.Add(this.lexer.CurrentToken.GetIdentifier(), paramToken);
+            string tmp = this.lexer.CurrentToken.GetIdentifier();
+            this.lexer.NextToken();
+            this.lexer.NextToken();
+            QueryToken expr = this.ParseExpression();
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
+            {
+                throw ParseError(Strings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+            return new AllQueryToken(expr, tmp, parent);
+        }
+
+        /// <summary>
+        /// Parses a segment.
+        /// </summary>
+        /// <param name="parent">The parent of the segment node.</param>
+        /// <returns>The lexical token representing the segment.</returns>
+        private QueryToken ParseSegment(QueryToken parent)
+        {
+            string propertyName = this.lexer.CurrentToken.GetIdentifier();
+            this.lexer.NextToken();
+            if (this.parameters.ContainsKey(propertyName) && parent == null)
+            {
+                return this.parameters[propertyName];
+            }
+
+            return new NavigationPropertyToken(propertyName, parent, null);
+        }
+
+        /// <summary>
         /// Parses member access.
         /// </summary>
         /// <param name="instance">Instance being accessed.</param>
@@ -642,8 +773,28 @@ namespace Microsoft.Data.OData.Query
             }
 
             string propertyName = this.lexer.CurrentToken.GetIdentifier();
+            if (this.parameters.ContainsKey(propertyName) && instance == null)
+            {
+                propertyName = this.parameters[propertyName].Parent.Name;
+            }
+
             this.lexer.NextToken();
             return new PropertyAccessQueryToken(propertyName, instance);
+        }
+
+        /// <summary>
+        /// Parses a segment which represents a cast.
+        /// </summary>
+        /// <param name="parent">Parent of the segment</param>
+        /// <returns>The lexical token representing the cast.</returns>
+        private QueryToken ParseTypeSegment(QueryToken parent)
+        {
+            string space = this.lexer.CurrentToken.GetIdentifier();
+            this.lexer.NextToken();
+            this.lexer.NextToken();
+            string name = this.lexer.CurrentToken.GetIdentifier();
+            this.lexer.NextToken();
+            return new CastToken(space, name, parent);
         }
 
         /// <summary>

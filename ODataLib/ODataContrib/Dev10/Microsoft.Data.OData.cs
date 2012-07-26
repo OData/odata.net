@@ -156,6 +156,10 @@ namespace Microsoft.Data.OData {
         internal const string MetadataBinder_TopRequiresNonNegativeInteger = "MetadataBinder_TopRequiresNonNegativeInteger";
         internal const string MetadataBinder_SkipRequiresNonNegativeInteger = "MetadataBinder_SkipRequiresNonNegativeInteger";
         internal const string MetadataBinder_ServiceOperationWithoutResultKind = "MetadataBinder_ServiceOperationWithoutResultKind";
+        internal const string MetadataBinder_HierarchyNotFollowed = "MetadataBinder_HierarchyNotFollowed";
+        internal const string MetadataBinder_MustBeCalledOnRoot = "MetadataBinder_MustBeCalledOnRoot";
+        internal const string MetadataBinder_NoTypeSupported = "MetadataBinder_NoTypeSupported";
+        internal const string MetadataBinder_InvalidAnyAllHead = "MetadataBinder_InvalidAnyAllHead";
         internal const string General_InternalError = "General_InternalError";
         internal const string ExceptionUtils_CheckIntegerNotNegative = "ExceptionUtils_CheckIntegerNotNegative";
         internal const string ExceptionUtils_CheckIntegerPositive = "ExceptionUtils_CheckIntegerPositive";

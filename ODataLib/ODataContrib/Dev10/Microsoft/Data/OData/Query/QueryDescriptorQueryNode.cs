@@ -24,26 +24,15 @@ namespace Microsoft.Data.OData.Query
     /// The root node of a query. Holds the query itself plus additional metadata about the query.
     /// </summary>
 #if INTERNAL_DROP
-    internal sealed class QueryDescriptorQueryNode : QueryNode
+    internal sealed class QueryDescriptorQueryNode
 #else
-    public sealed class QueryDescriptorQueryNode : QueryNode
+    public sealed class QueryDescriptorQueryNode
 #endif
     {
         /// <summary>
         /// The default setting for the max depth.
         /// </summary>
         private const int DefaultMaxDepth = 800;
-
-        /// <summary>
-        /// The kind of the query node.
-        /// </summary>
-        public override QueryNodeKind Kind
-        {
-            get
-            {
-                return QueryNodeKind.QueryDescriptor;
-            }
-        }
 
         /// <summary>
         /// The query tree.

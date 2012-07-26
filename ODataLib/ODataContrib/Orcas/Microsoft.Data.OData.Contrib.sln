@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.OData", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.Edm", "..\..\EdmLib\Orcas\Microsoft.Data.Edm.csproj", "{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Spatial", "..\..\Spatial\Orcas\System.Spatial.csproj", "{A1EBA295-EC08-48d4-8C6D-C8A2289B7C40}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Spatial", "..\..\Spatial\Orcas\System.Spatial.csproj", "{A1EBA295-EC08-48D4-8C6D-C8A2289B7C40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +27,10 @@ Global
 		{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1EBA295-EC08-48d4-8C6D-C8A2289B7C40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1EBA295-EC08-48d4-8C6D-C8A2289B7C40}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1EBA295-EC08-48d4-8C6D-C8A2289B7C40}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1EBA295-EC08-48d4-8C6D-C8A2289B7C40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1EBA295-EC08-48D4-8C6D-C8A2289B7C40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1EBA295-EC08-48D4-8C6D-C8A2289B7C40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1EBA295-EC08-48D4-8C6D-C8A2289B7C40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1EBA295-EC08-48D4-8C6D-C8A2289B7C40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

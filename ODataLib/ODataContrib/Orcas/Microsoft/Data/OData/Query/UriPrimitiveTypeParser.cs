@@ -363,15 +363,14 @@ namespace Microsoft.Data.OData.Query
         /// <remarks>Copy of WebConvert.TryKeyStringToDateTime.</remarks>
         private static bool TryUriStringToDateTime(string text, out DateTime targetValue)
         {
+            targetValue = default(DateTime);
             if (!TryRemoveLiteralPrefix(ExpressionConstants.LiteralPrefixDateTime, ref text))
             {
-                targetValue = default(DateTime);
                 return false;
             }
 
             if (!TryRemoveQuotes(ref text))
             {
-                targetValue = default(DateTime);
                 return false;
             }
 
@@ -382,7 +381,6 @@ namespace Microsoft.Data.OData.Query
             }
             catch (FormatException)
             {
-                targetValue = default(DateTime);
                 return false;
             }
         }
@@ -396,15 +394,14 @@ namespace Microsoft.Data.OData.Query
         /// <remarks>Copy of WebConvert.TryKeyStringToDateTimeOffset.</remarks>
         private static bool TryUriStringToDateTimeOffset(string text, out DateTimeOffset targetValue)
         {
+            targetValue = default(DateTimeOffset);
             if (!TryRemoveLiteralPrefix(ExpressionConstants.LiteralPrefixDateTimeOffset, ref text))
             {
-                targetValue = default(DateTimeOffset);
                 return false;
             }
 
             if (!TryRemoveQuotes(ref text))
             {
-                targetValue = default(DateTimeOffset);
                 return false;
             }
 
@@ -415,7 +412,6 @@ namespace Microsoft.Data.OData.Query
             }
             catch (FormatException)
             {
-                targetValue = default(DateTimeOffset);
                 return false;
             }
         }

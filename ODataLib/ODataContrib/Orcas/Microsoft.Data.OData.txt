@@ -102,6 +102,10 @@ MetadataBinder_BoundNodeCannotBeNull=A token of kind '{0}' was bound to the valu
 MetadataBinder_TopRequiresNonNegativeInteger=The value '{0}' is not a non-negative integer value. In OData, the $top query option must specify a non-negative integer value.
 MetadataBinder_SkipRequiresNonNegativeInteger=The value '{0}' is not a non-negative integer value. In OData, the $skip query option must specify a non-negative integer value.
 MetadataBinder_ServiceOperationWithoutResultKind= The service operation '{0}' does not have an associated result kind. Without a result kind, a service operation cannot be bound.
+MetadataBinder_HierarchyNotFollowed=Encountered invalid type cast. '{0}' is not assignable from '{1}'.
+MetadataBinder_MustBeCalledOnRoot=Encountered Root segment in non-root location.
+MetadataBinder_NoTypeSupported=A segment without an associated type was given as input.
+MetadataBinder_InvalidAnyAllHead=Only collection navigation properties may head Any/All queries.
 
 ; Note: The below list of error messages are common to both the OData and the OData.Query project.
 General_InternalError=An internal error '{0}' occurred.

@@ -629,6 +629,40 @@ namespace Microsoft.Data.OData {
         }
 
         /// <summary>
+        /// A string like "Encountered invalid type cast. '{0}' is not assignable from '{1}'."
+        /// </summary>
+        internal static string MetadataBinder_HierarchyNotFollowed(object p0, object p1) {
+            return Microsoft.Data.OData.TextRes.GetString(Microsoft.Data.OData.TextRes.MetadataBinder_HierarchyNotFollowed,p0,p1);
+        }
+
+        /// <summary>
+        /// A string like "Encountered Root segment in non-root location."
+        /// </summary>
+        internal static string MetadataBinder_MustBeCalledOnRoot {
+            get {
+                return Microsoft.Data.OData.TextRes.GetString(Microsoft.Data.OData.TextRes.MetadataBinder_MustBeCalledOnRoot);
+            }
+        }
+
+        /// <summary>
+        /// A string like "A segment without an associated type was given as input."
+        /// </summary>
+        internal static string MetadataBinder_NoTypeSupported {
+            get {
+                return Microsoft.Data.OData.TextRes.GetString(Microsoft.Data.OData.TextRes.MetadataBinder_NoTypeSupported);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Only collection navigation properties may head Any/All queries."
+        /// </summary>
+        internal static string MetadataBinder_InvalidAnyAllHead {
+            get {
+                return Microsoft.Data.OData.TextRes.GetString(Microsoft.Data.OData.TextRes.MetadataBinder_InvalidAnyAllHead);
+            }
+        }
+
+        /// <summary>
         /// A string like "An internal error '{0}' occurred."
         /// </summary>
         internal static string General_InternalError(object p0) {

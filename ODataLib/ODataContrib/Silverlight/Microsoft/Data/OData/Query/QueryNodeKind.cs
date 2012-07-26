@@ -29,11 +29,6 @@ namespace Microsoft.Data.OData.Query
         Extension = 0,
 
         /// <summary>
-        /// The query descriptor.
-        /// </summary>
-        QueryDescriptor = 1,
-
-        /// <summary>
         /// The entity set node.
         /// </summary>
         EntitySet = 2,
@@ -117,5 +112,30 @@ namespace Microsoft.Data.OData.Query
         /// Custom query option.
         /// </summary>
         CustomQueryOption = 18,
+
+        /// <summary>
+        /// Any query.
+        /// </summary>
+        Any = 19,
+
+        /// <summary>
+        /// Type segment query.
+        /// </summary>
+        TypeSegment = 20,
+
+        /// <summary>
+        /// Segment query.
+        /// </summary>
+        Segment = 21,
+
+        /// <summary>
+        /// Cast query.
+        /// </summary>
+        Cast = 22,
+
+        /// <summary>
+        /// All query.
+        /// </summary>
+        All = 23,
     }
 }

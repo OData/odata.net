@@ -96,36 +96,36 @@ namespace Microsoft.Data.OData.Query
         /// <summary>Token being processed.</summary>
         internal ExpressionToken CurrentToken
         {
-            get 
+            get
             {
                 DebugUtils.CheckNoExternalCallers();
-                return this.token; 
+                return this.token;
             }
 
-            set 
+            set
             {
                 DebugUtils.CheckNoExternalCallers();
-                this.token = value; 
+                this.token = value;
             }
         }
 
         /// <summary>Text being parsed.</summary>
         internal string ExpressionText
         {
-            get 
+            get
             {
                 DebugUtils.CheckNoExternalCallers();
-                return this.text; 
+                return this.text;
             }
         }
 
         /// <summary>Position on text being parsed.</summary>
         internal int Position
         {
-            get 
+            get
             {
                 DebugUtils.CheckNoExternalCallers();
-                return this.token.Position; 
+                return this.token.Position;
             }
         }
 
@@ -140,7 +140,7 @@ namespace Microsoft.Data.OData.Query
         {
             DebugUtils.CheckNoExternalCallers();
 
-            return 
+            return
                 id == ExpressionTokenKind.IntegerLiteral || id == ExpressionTokenKind.DecimalLiteral ||
                 id == ExpressionTokenKind.DoubleLiteral || id == ExpressionTokenKind.Int64Literal ||
                 id == ExpressionTokenKind.SingleLiteral;
@@ -239,7 +239,7 @@ namespace Microsoft.Data.OData.Query
                 }
 
                 builder.Append('.');
-                builder.Append(this.CurrentToken.Text);                
+                builder.Append(this.CurrentToken.Text);
                 this.NextToken();
             }
 
@@ -332,12 +332,12 @@ namespace Microsoft.Data.OData.Query
                     return IsInfinityLiteralDouble(tokenText);
                 }
                 else
-                if (tokenText[0] == ExpressionConstants.NaNLiteral[0])
-                {
-                    return String.CompareOrdinal(tokenText, 0, ExpressionConstants.NaNLiteral, 0, 3) == 0;
-                }
+                    if (tokenText[0] == ExpressionConstants.NaNLiteral[0])
+                    {
+                        return String.CompareOrdinal(tokenText, 0, ExpressionConstants.NaNLiteral, 0, 3) == 0;
+                    }
             }
-            
+
             return false;
         }
 
@@ -368,11 +368,11 @@ namespace Microsoft.Data.OData.Query
                 }
                 else if (tokenText[0] == ExpressionConstants.NaNLiteral[0])
                 {
-                    return (tokenText[3] == ExpressionLexer.SingleSuffixLower || tokenText[3] == ExpressionLexer.SingleSuffixUpper) && 
+                    return (tokenText[3] == ExpressionLexer.SingleSuffixLower || tokenText[3] == ExpressionLexer.SingleSuffixUpper) &&
                             String.CompareOrdinal(tokenText, 0, ExpressionConstants.NaNLiteral, 0, 3) == 0;
                 }
             }
-            
+
             return false;
         }
 
@@ -503,7 +503,7 @@ namespace Microsoft.Data.OData.Query
                     t = ExpressionTokenKind.Star;
                     break;
                 default:
-                    if (Char.IsLetter(this.ch) || this.ch == '_')
+                    if (Char.IsLetter(this.ch) || this.ch == '_' || this.ch == '$')
                     {
                         this.ParseIdentifier();
                         t = ExpressionTokenKind.Identifier;
@@ -591,7 +591,7 @@ namespace Microsoft.Data.OData.Query
             {
                 id = ExpressionTokenKind.GuidLiteral;
             }
-            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixBinary, StringComparison.OrdinalIgnoreCase) || 
+            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixBinary, StringComparison.OrdinalIgnoreCase) ||
                 String.Equals(tokenText, ExpressionConstants.LiteralPrefixShortBinary, StringComparison.OrdinalIgnoreCase))
             {
                 id = ExpressionTokenKind.BinaryLiteral;
@@ -698,21 +698,21 @@ namespace Microsoft.Data.OData.Query
                     this.NextChar();
                 }
                 else
-                if (this.ch == 'd' || this.ch == 'D')
-                {
-                    result = ExpressionTokenKind.DoubleLiteral;
-                    this.NextChar();
-                }
-                else if (this.ch == 'L' || this.ch == 'l')
-                {
-                    result = ExpressionTokenKind.Int64Literal;
-                    this.NextChar();
-                }
-                else if (this.ch == 'f' || this.ch == 'F')
-                {
-                    result = ExpressionTokenKind.SingleLiteral;
-                    this.NextChar();
-                }
+                    if (this.ch == 'd' || this.ch == 'D')
+                    {
+                        result = ExpressionTokenKind.DoubleLiteral;
+                        this.NextChar();
+                    }
+                    else if (this.ch == 'L' || this.ch == 'l')
+                    {
+                        result = ExpressionTokenKind.Int64Literal;
+                        this.NextChar();
+                    }
+                    else if (this.ch == 'f' || this.ch == 'F')
+                    {
+                        result = ExpressionTokenKind.SingleLiteral;
+                        this.NextChar();
+                    }
             }
 
             return result;
@@ -721,15 +721,15 @@ namespace Microsoft.Data.OData.Query
         /// <summary>Parses an identifier by advancing the current character.</summary>
         private void ParseIdentifier()
         {
-            Debug.Assert(Char.IsLetter(this.ch) || this.ch == '_', "Char.IsLetter(this.ch) || this.ch == '_'");
+            Debug.Assert(Char.IsLetter(this.ch) || this.ch == '_' || this.ch == '$', "Char.IsLetter(this.ch) || this.ch == '_' || this.ch == '$'");
             do
             {
                 this.NextChar();
             }
-            while (Char.IsLetterOrDigit(this.ch) || this.ch == '_');
+            while (Char.IsLetterOrDigit(this.ch) || this.ch == '_' || this.ch == '$');
         }
 
- #if ODATALIB
+#if ODATALIB
         /// <summary>
         /// Parses null literals.
         /// </summary>

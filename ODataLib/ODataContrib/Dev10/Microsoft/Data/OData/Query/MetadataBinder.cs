@@ -23,6 +23,7 @@ namespace Microsoft.Data.OData.Query
     using System.Globalization;
     using System.Linq;
     using Microsoft.Data.Edm;
+    using Microsoft.Data.Edm.Library;
     using Microsoft.Data.OData.Metadata;
     using Microsoft.Data.OData.Query.Metadata;
     #endregion Namespaces
@@ -82,7 +83,7 @@ namespace Microsoft.Data.OData.Query
         {
             ExceptionUtils.CheckArgumentNotNull(queryDescriptorQueryToken, "queryDescriptorQueryToken");
 
-            return (QueryDescriptorQueryNode)this.Bind(queryDescriptorQueryToken);
+            return this.BindQueryDescriptor(queryDescriptorQueryToken);
         }
 
         /// <summary>
@@ -100,11 +101,17 @@ namespace Microsoft.Data.OData.Query
                 case QueryTokenKind.Extension:
                     result = this.BindExtension(token);
                     break;
-                case QueryTokenKind.QueryDescriptor:
-                    result = this.BindQueryDescriptor((QueryDescriptorQueryToken)token);
+                case QueryTokenKind.Any:
+                    result = this.BindAny((AnyQueryToken)token);
+                    break;
+                case QueryTokenKind.All:
+                    result = this.BindAll((AllQueryToken)token);
                     break;
                 case QueryTokenKind.Segment:
                     result = this.BindSegment((SegmentQueryToken)token);
+                    break;
+                case QueryTokenKind.NonRootSegment:
+                    result = this.BindNavigationProperty((NavigationPropertyToken)token);
                     break;
                 case QueryTokenKind.Literal:
                     result = this.BindLiteral((LiteralQueryToken)token);
@@ -124,6 +131,12 @@ namespace Microsoft.Data.OData.Query
                 case QueryTokenKind.QueryOption:
                     result = this.BindQueryOption((QueryOptionQueryToken)token);
                     break;
+                case QueryTokenKind.Cast:
+                    result = this.BindCast((CastToken)token);
+                    break;
+                case QueryTokenKind.Parameter:
+                    result = this.BindParameter((ParameterQueryToken)token);
+                    break;
                 default:
                     throw new ODataException(Strings.MetadataBinder_UnsupportedQueryTokenKind(token.Kind));
             }
@@ -137,6 +150,23 @@ namespace Microsoft.Data.OData.Query
         }
 
         /// <summary>
+        /// Binds a parameter token.
+        /// </summary>
+        /// <param name="parameterQueryToken">The parameter token to bind.</param>
+        /// <returns>The bound query node.</returns>
+        protected virtual QueryNode BindParameter(ParameterQueryToken parameterQueryToken)
+        {
+            ExceptionUtils.CheckArgumentNotNull(parameterQueryToken, "extensionToken");
+
+            QueryNode source = this.Bind(parameterQueryToken.Parent);
+            IEdmType type = GetType(source);
+            return new ParameterQueryNode
+            {
+                ParameterType = type.ToTypeReference()
+            };
+        }
+
+        /// <summary>
         /// Binds an extension token.
         /// </summary>
         /// <param name="extensionToken">The extension token to bind.</param>
@@ -146,6 +176,27 @@ namespace Microsoft.Data.OData.Query
             ExceptionUtils.CheckArgumentNotNull(extensionToken, "extensionToken");
 
             throw new ODataException(Strings.MetadataBinder_UnsupportedExtensionToken);
+        }
+
+        /// <summary>
+        /// Need to revert this.
+        /// </summary>
+        /// <param name="segmentToken">Need to revert this.</param>
+        /// <returns>Need to revert this.</returns>
+        protected virtual QueryNode BindSegment(SegmentQueryToken segmentToken)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segmentToken, "segmentToken");
+            ExceptionUtils.CheckArgumentNotNull(segmentToken.Name, "segmentToken.Name");
+
+            if (segmentToken.Parent == null)
+            {
+                return this.BindRootSegment(segmentToken);
+            }
+            else
+            {
+                // TODO: return this.BindNonRootSegment(segmentToken);
+                throw new NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -183,27 +234,6 @@ namespace Microsoft.Data.OData.Query
             Debug.Assert(this.queryOptions == null, "this.queryOptions == null");
 
             return queryDescriptorNode;
-        }
-
-        /// <summary>
-        /// Binds a <see cref="SegmentQueryToken"/>.
-        /// </summary>
-        /// <param name="segmentToken">The segment token to bind.</param>
-        /// <returns>The bound node.</returns>
-        protected virtual QueryNode BindSegment(SegmentQueryToken segmentToken)
-        {
-            ExceptionUtils.CheckArgumentNotNull(segmentToken, "segmentToken");
-            ExceptionUtils.CheckArgumentNotNull(segmentToken.Name, "segmentToken.Name");
-
-            if (segmentToken.Parent == null)
-            {
-                return this.BindRootSegment(segmentToken);
-            }
-            else
-            {
-                // TODO: return this.BindNonRootSegment(segmentToken);
-                throw new NotImplementedException();
-            }
         }
 
         /// <summary>
@@ -304,6 +334,77 @@ namespace Microsoft.Data.OData.Query
         }
 
         /// <summary>
+        /// Binds a type segment token.
+        /// </summary>
+        /// <param name="castToken">The type segment token to bind.</param>
+        /// <returns>The bound type segment token.</returns>
+        protected virtual QueryNode BindCast(CastToken castToken)
+        {
+            ExceptionUtils.CheckArgumentNotNull(castToken, "typeSegmentToken");
+
+            var childType = this.model.FindType(castToken.SegmentSpace + "." + castToken.SegmentName);
+
+            // Check whether childType is a derived type of the type of its parent node
+            QueryNode parent;
+            IEdmType parentType;
+            if (castToken.Source == null)
+            {
+                parent = null;
+                parentType = this.parameter.ParameterType.Definition;
+            }
+            else
+            {
+                parent = this.Bind(castToken.Source);
+                parentType = GetType(parent);
+            }
+
+            if (!childType.IsOrInheritsFrom(parentType))
+            {
+                throw new ODataException(Strings.MetadataBinder_HierarchyNotFollowed(childType.FullName(), parentType.ODataFullName()));
+            }
+
+            return new CastNode()
+            {
+                EdmType = childType,
+                Source = (SingleValueQueryNode)parent
+            };
+        }
+
+        /// <summary>
+        /// Binds Any token.
+        /// </summary>
+        /// <param name="anyQueryToken">The Any token to bind.</param>
+        /// <returns>The bound Any node.</returns>
+        protected virtual QueryNode BindAny(AnyQueryToken anyQueryToken)
+        {
+            ExceptionUtils.CheckArgumentNotNull(anyQueryToken, "anyQueryToken");
+            QueryNode property = this.Bind(anyQueryToken.Parent);
+            QueryNode expr = this.Bind(anyQueryToken.Expression);
+            return new AnyQueryNode()
+            {
+                Body = expr,
+                Source = property
+            };
+        }
+
+        /// <summary>
+        /// Binds All token.
+        /// </summary>
+        /// <param name="allQueryToken">The All token to bind.</param>
+        /// <returns>The bound All node.</returns>
+        protected virtual QueryNode BindAll(AllQueryToken allQueryToken)
+        {
+            ExceptionUtils.CheckArgumentNotNull(allQueryToken, "allQueryToken");
+            QueryNode property = this.Bind(allQueryToken.Parent);
+            QueryNode expr = this.Bind(allQueryToken.Expression);
+            return new AllQueryNode()
+            {
+                Body = expr,
+                Source = property
+            };
+        }
+
+        /// <summary>
         /// Binds a property access token.
         /// </summary>
         /// <param name="propertyAccessToken">The property access token to bind.</param>
@@ -314,6 +415,10 @@ namespace Microsoft.Data.OData.Query
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(propertyAccessToken.Name, "propertyAccessToken.Name");
 
             SingleValueQueryNode parentNode;
+            SingleValueQueryNode navigationPath = null;
+
+            // Set the parentNode (get the parent type, so you can check whether the Name inside propertyAccessToken really is legit offshoot of the parent type)
+            QueryNode parent = null;
             if (propertyAccessToken.Parent == null)
             {
                 if (this.parameter == null)
@@ -322,20 +427,56 @@ namespace Microsoft.Data.OData.Query
                 }
 
                 parentNode = this.parameter;
+                parent = this.parameter;
             }
             else
             {
-                // TODO: Do we really want to fail with cast exception if the parent is a collection (for example)?
-                parentNode = this.Bind(propertyAccessToken.Parent) as SingleValueQueryNode;
-                if (parentNode == null)
-                {
-                    throw new ODataException(Strings.MetadataBinder_PropertyAccessSourceNotSingleValue(propertyAccessToken.Name));
-                }
+                    parent = this.Bind(propertyAccessToken.Parent) as SingleValueQueryNode;
+                    if (parent == null)
+                    {
+                        throw new ODataException(Strings.MetadataBinder_PropertyAccessSourceNotSingleValue(propertyAccessToken.Name));
+                    }
+
+                    NavigationPropertyNode parentNav = parent as NavigationPropertyNode;
+                    CastNode parentCast = parent as CastNode;
+                    PropertyAccessQueryNode parentProperty = parent as PropertyAccessQueryNode;
+
+                    if (parentProperty != null)
+                    {
+                        navigationPath = parentProperty;
+                        var propertyPath = (IEdmStructuralProperty)parentProperty.Property;
+                        parentNode = new ParameterQueryNode()
+                                         {
+                                             ParameterType = propertyPath.Type
+                                         };
+                    }
+                    else if (parentCast != null)
+                    {
+                        IEdmType entityType = parentCast.EdmType;
+                        parentNode = new ParameterQueryNode()
+                        {
+                            ParameterType = entityType.ToTypeReference()
+                        };
+                    }
+                    else if (parentNav != null)
+                    {
+                        navigationPath = parentNav;
+                        IEdmEntityType entityType = parentNav.NavigationProperty.ToEntityType();
+                        parentNode = new ParameterQueryNode()
+                        {
+                            ParameterType = new EdmEntityTypeReference(entityType, true)
+                        };
+                    }
+                    else
+                    {
+                        parentNode = this.Bind(propertyAccessToken.Parent) as SingleValueQueryNode;
+                    }
             }
 
-            IEdmStructuredTypeReference structuredParentType = 
+            // Now that we have the parent type, can find its corresponding EDM type
+            IEdmStructuredTypeReference structuredParentType =
                 parentNode.TypeReference == null ? null : parentNode.TypeReference.AsStructuredOrNull();
-            IEdmProperty property = 
+            IEdmProperty property =
                 structuredParentType == null ? null : structuredParentType.FindProperty(propertyAccessToken.Name);
 
             if (property != null)
@@ -353,9 +494,14 @@ namespace Microsoft.Data.OData.Query
                     throw new NotImplementedException();
                 }
 
+                if (navigationPath != null)
+                {
+                    parentNode = navigationPath;
+                }
+
                 return new PropertyAccessQueryNode()
                 {
-                    Source = parentNode,
+                    Source = (SingleValueQueryNode)parent,
                     Property = property
                 };
             }
@@ -474,6 +620,52 @@ namespace Microsoft.Data.OData.Query
         }
 
         /// <summary>
+        /// Binds a string to its associated type.
+        /// </summary>
+        /// <param name="parentReference">The parent type to be used to find binding options.</param>
+        /// <param name="propertyName">The string designated the property name to be bound.</param>
+        /// <returns>The property associated with string and parent type.</returns>
+        private static IEdmProperty BindProperty(IEdmTypeReference parentReference, string propertyName)
+        {
+            IEdmStructuredTypeReference structuredParentType =
+                parentReference == null ? null : parentReference.AsStructuredOrNull();
+            return structuredParentType == null ? null : structuredParentType.FindProperty(propertyName);
+        }
+
+        /// <summary>
+        /// Retrieves type associated to a segment.
+        /// </summary>
+        /// <param name="segment">The segment to be bound.</param>
+        /// <returns>The bound node.</returns>
+        private static IEdmType GetType(QueryNode segment)
+        {
+            NavigationPropertyNode segmentNav = segment as NavigationPropertyNode;
+            CastNode segmentCast = segment as CastNode;
+            PropertyAccessQueryNode segmentProperty = segment as PropertyAccessQueryNode;
+            ParameterQueryNode segmentParam = segment as ParameterQueryNode;
+            if (segmentCast != null)
+            {
+                return segmentCast.EdmType;
+            }
+            else if (segmentNav != null)
+            {
+                return segmentNav.NavigationProperty.ToEntityType();
+            }
+            else if (segmentProperty != null)
+            {
+                return segmentProperty.TypeReference.Definition;
+            }
+            else if (segmentParam != null)
+            {
+                return segmentParam.TypeReference.Definition;
+            }
+            else
+            {
+                throw new ODataException(Strings.MetadataBinder_NoTypeSupported);
+            }
+        }
+
+        /// <summary>
         /// Processes the skip operator (if any) and returns the combined query.
         /// </summary>
         /// <param name="query">The query tree constructed so far.</param>
@@ -548,6 +740,18 @@ namespace Microsoft.Data.OData.Query
         }
 
         /// <summary>
+        /// Determines if a segment is a complex type.
+        /// </summary>
+        /// <param name="instance">Segment to be checked.</param>
+        /// <param name="parentType">The type of the parent segment.</param>
+        /// <returns>True if segment represents a complex type and false otherwise.</returns>
+        private static Boolean IsDerivedComplexType(NavigationPropertyToken instance, IEdmType parentType)
+        {
+            IEdmProperty property = BindProperty(parentType.ToTypeReference(), instance.Name);
+            return property.Type.IsODataComplexTypeKind();
+        }
+
+        /// <summary>
         /// Checks if the source is of the specified type and if not tries to inject a convert.
         /// </summary>
         /// <param name="source">The source node to apply the convertion to.</param>
@@ -584,6 +788,65 @@ namespace Microsoft.Data.OData.Query
                 Source = source,
                 TargetType = targetTypeReference
             };
+        }
+
+        /// <summary>
+        /// Binds a <see cref="NavigationPropertyToken"/>.
+        /// </summary>
+        /// <param name="segmentToken">The segment token to bind.</param>
+        /// <returns>The bound node.</returns>
+        private SingleValueQueryNode BindNavigationProperty(NavigationPropertyToken segmentToken)
+        {
+            QueryNode source = null;
+            IEdmNavigationProperty property;
+            if (segmentToken.Parent != null)
+            {
+                source = this.Bind(segmentToken.Parent);
+                IEdmType entityType = null;
+                if (IsDerivedComplexType(segmentToken, GetType(source)))
+                {
+                    IEdmProperty returnProperty = BindProperty(GetType(source).ToTypeReference(), segmentToken.Name);
+                    return new PropertyAccessQueryNode()
+                    {
+                        Source = (SingleValueQueryNode)source,
+                        Property = returnProperty
+                    };
+                }
+                else
+                {
+                    entityType = GetType(source);
+                }
+
+                ParameterQueryNode parentNode = new ParameterQueryNode
+                                                    { ParameterType = entityType.ToTypeReference() };
+                property = (IEdmNavigationProperty)BindProperty(parentNode.TypeReference, segmentToken.Name);
+            }
+            else
+            {
+                if (IsDerivedComplexType(segmentToken, this.parameter.TypeReference.Definition))
+                {
+                    IEdmProperty returnProperty = BindProperty(new EdmEntityTypeReference((IEdmEntityType)this.parameter.TypeReference.Definition, true), segmentToken.Name);
+                    return new PropertyAccessQueryNode
+                    {
+                        Source = this.parameter,
+                        Property = returnProperty
+                    };
+                }
+
+                property = (IEdmNavigationProperty)BindProperty(this.parameter.TypeReference, segmentToken.Name);
+            }
+
+                // Ensure that only collections head Any queries and nothing else
+                if (property.OwnMultiplicity() == EdmMultiplicity.Many && segmentToken.AnyAllParent == false)
+                {
+                    throw new ODataException(Strings.MetadataBinder_PropertyAccessSourceNotSingleValue(segmentToken.Name));
+                }
+                else if (property.OwnMultiplicity() != EdmMultiplicity.Many && segmentToken.AnyAllParent == true)
+                {
+                    throw new ODataException(Strings.MetadataBinder_InvalidAnyAllHead);
+                }
+
+                return new NavigationPropertyNode() { Source = source, NavigationProperty = property };
         }
 
         /// <summary>

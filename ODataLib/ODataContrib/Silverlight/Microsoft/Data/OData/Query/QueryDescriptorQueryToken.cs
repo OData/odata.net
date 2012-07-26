@@ -24,9 +24,9 @@ namespace Microsoft.Data.OData.Query
     /// Lexical token representing the entire query.
     /// </summary>
 #if INTERNAL_DROP
-    internal sealed class QueryDescriptorQueryToken : QueryToken
+    internal sealed class QueryDescriptorQueryToken
 #else
-    public sealed class QueryDescriptorQueryToken : QueryToken
+    public sealed class QueryDescriptorQueryToken
 #endif
     {
         /// <summary>
@@ -123,14 +123,6 @@ namespace Microsoft.Data.OData.Query
             this.inlineCount = inlineCount;
             this.format = format;
             this.queryOptions = new ReadOnlyEnumerable<QueryOptionQueryToken>(queryOptions ?? new QueryOptionQueryToken[0]);
-        }
-
-        /// <summary>
-        /// The kind of the query token.
-        /// </summary>
-        public override QueryTokenKind Kind
-        {
-            get { return QueryTokenKind.QueryDescriptor; }
         }
 
         /// <summary>

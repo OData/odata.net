@@ -66,10 +66,15 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="InternalsVisibleTo.cs" />
     <Compile Include="Microsoft\Data\OData\InternalErrorCodes.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\AllQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\AllQueryToken.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\AnyQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\AnyQueryToken.cs" />
     <Compile Include="Microsoft\Data\OData\Query\Metadata\ODataQueryEdmTypeAnnotation.cs" />
     <Compile Include="Microsoft\Data\OData\Query\Metadata\ODataQueryEdmServiceOperationAnnotation.cs" />
     <Compile Include="Microsoft\Data\OData\Query\Metadata\ODataQueryEdmPropertyAnnotation.cs" />
     <Compile Include="Microsoft\Data\OData\Query\Metadata\ODataServiceOperationResultKind.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\NavigationPropertyToken.cs" />
     <Compile Include="Microsoft\Data\OData\Query\ODataQueryUtils.cs" />
     <Compile Include="Microsoft\Data\OData\Query\BinaryOperator.cs" />
     <Compile Include="Microsoft\Data\OData\Query\BinaryOperatorQueryToken.cs" />
@@ -101,10 +106,12 @@
     <Compile Include="Microsoft\Data\OData\Query\ODataUriBuilder.cs" />
     <Compile Include="Microsoft\Data\OData\Query\ODataUriBuilderUtils.cs" />
     <Compile Include="Microsoft\Data\OData\Query\OpenTypeMethods.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\ParameterQueryToken.cs" />
     <Compile Include="Microsoft\Data\OData\Query\QueryOptionQueryToken.cs" />
     <Compile Include="Microsoft\Data\OData\Query\CustomQueryOptionQueryNode.cs" />
     <Compile Include="Microsoft\Data\OData\Query\QueryTokenUtils.cs" />
     <Compile Include="Microsoft\Data\OData\Query\ReadOnlyEnumerable.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\NavigationPropertyNode.cs" />
     <Compile Include="Microsoft\Data\OData\Query\SelectQueryToken.cs" />
     <Compile Include="Microsoft\Data\OData\Query\SingleValueFunctionCallQueryNode.cs" />
     <Compile Include="Microsoft\Data\OData\Query\FunctionSignature.cs" />
@@ -115,6 +122,8 @@
     <Compile Include="Microsoft\Data\OData\Query\QueryExpressionTranslator.cs" />
     <Compile Include="Microsoft\Data\OData\Query\OrderByQueryNode.cs" />
     <Compile Include="Microsoft\Data\OData\Query\PropertyAccessQueryNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\CastNode.cs" />
+    <Compile Include="Microsoft\Data\OData\Query\CastToken.cs" />
     <Compile Include="Microsoft\Data\OData\Query\UnaryOperatorQueryNode.cs" />
     <Compile Include="Microsoft\Data\OData\Query\QueryNodeUtils.cs" />
     <Compile Include="Microsoft\Data\OData\Query\TopQueryNode.cs" />

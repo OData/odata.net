@@ -1361,6 +1361,24 @@ namespace Microsoft.Data.Edm
         }
 
         /// <summary>
+        /// Gets the multiplicity of a navigation property.
+        /// </summary>
+        /// <param name="property">Reference to the calling object.</param>
+        /// <returns>The multiplicity of the navigation property in question.</returns>
+        public static EdmMultiplicity OwnMultiplicity(this IEdmNavigationProperty property)
+        {
+            EdmUtil.CheckArgumentNull(property, "property");
+
+                IEdmTypeReference type = property.Type;
+                if (type.IsCollection())
+                {
+                    return EdmMultiplicity.Many;
+                }
+
+                return type.IsNullable ? EdmMultiplicity.ZeroOrOne : EdmMultiplicity.One;
+        }
+
+        /// <summary>
         /// Gets the entity type targeted by this navigation property.
         /// </summary>
         /// <param name="property">Reference to the calling object.</param>
