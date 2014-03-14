@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Microsoft\Data\Edm\Csdl\CsdlLocation.cs" />
+    <Compile Include="Microsoft\Data\Edm\Csdl\EdmParseException.cs" />
     <Compile Include="Microsoft\Data\Edm\Csdl\EdmxTarget.cs" />
     <Compile Include="Microsoft\Data\Edm\Csdl\Internal\EdmValueParser.cs" />
     <Compile Include="Microsoft\Data\Edm\Csdl\Internal\EdmValueWriter.cs" />

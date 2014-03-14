@@ -12,6 +12,10 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
+using System.Diagnostics;
+using System.Globalization;
+using System.Text.RegularExpressions;
+
 #if ASTORIA_CLIENT
 namespace System.Data.Services.Client
 #else
@@ -29,9 +33,13 @@ namespace Microsoft.Data.Edm
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+#if PORTABLELIB
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+#endif
     using System.Reflection;
     using System.Xml;
-
 
     /// <summary>
     /// Helper methods that provide a common API surface on all platforms.
@@ -44,6 +52,17 @@ namespace Microsoft.Data.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static readonly Type[] EmptyTypes = new Type[0];
 
+#if PORTABLELIB
+        /// <summary>
+        /// Replacement for Uri.UriSchemeHttp, which does not exist on.
+        /// </summary>
+        internal static readonly string UriSchemeHttp = "http";
+
+        /// <summary>
+        /// Replacement for Uri.UriSchemeHttps, which does not exist on.
+        /// </summary>
+        internal static readonly string UriSchemeHttps = "https";
+#else
         /// <summary>
         /// Use this instead of Uri.UriSchemeHttp.
         /// </summary>
@@ -55,7 +74,7 @@ namespace Microsoft.Data.Edm
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static readonly string UriSchemeHttps = Uri.UriSchemeHttps;
-
+#endif
 
         #region Helper methods for properties
 
@@ -243,7 +262,11 @@ namespace Microsoft.Data.Edm
 #if ODATALIB
             DebugUtils.CheckNoExternalCallers();
 #endif
+#if PORTABLELIB
+            return new ReadOnlyCollection<T>(array);
+#else
             return Array.AsReadOnly(array);
+#endif
         }
 
         /// <summary>
@@ -257,7 +280,117 @@ namespace Microsoft.Data.Edm
 #if ODATALIB
             DebugUtils.CheckNoExternalCallers();
 #endif
+
+            // Workaround for XmlConvert.ToDateTime issue which is not able to convert string without seconds to DateTime, So the seconds part is added as zeros.
+            text = AddSecondsPaddingIfMissing(text);
+#if PORTABLELIB
+            // DateTimeOffset always applies an offset (using the local one if one is not present in the input), but the old XmlConvert methods
+            // would produce a DateTime value with InternalKind=DateTimeKind.Unspecified and no offset applied if none was specified in the input string.
+            // Before we convert to DateTimeOffset, we need to determine what kind of input we have so we can still produce the same kind of DateTime
+            // instances that we would have gotten on other platforms with XmlConvert.ToDateTime.
+            // 
+            // The XML DateTime pattern is described here: http://www.w3.org/TR/xmlschema-2/#dateTime
+            // For example:
+            //      No timezone specified: "2012-12-21T15:01:23.1234567"
+            //      UTC timezone: "2012-12-21T15:01:23.1234567Z"
+            //      Timezone offset from UTC: "2012-12-21T15:01:23.1234567-08:00" or "2012-12-21T15:01:23.1234567+08:00"
+            // If timezone is specified, the indicator will always be at the same place from the end of the string as in the examples above, so we can look there for the Z or +/-.
+            DateTimeKind inputKind;
+            const int TimeZoneSignOffset = 6;
+            if (text[text.Length - 1] == 'Z')
+            {
+                inputKind = DateTimeKind.Utc;
+            }
+            else if (text[text.Length - TimeZoneSignOffset] == '-' || text[text.Length - TimeZoneSignOffset] == '+')
+            {
+                inputKind = DateTimeKind.Local;
+            }
+            else
+            {
+                // To prevent ToDateTimeOffset from applying the local offset in this case, we will append the Z to indicate UTC time
+                inputKind = DateTimeKind.Unspecified;
+                text = text + "Z";
+            }
+
+            var dateTimeOffset = XmlConvert.ToDateTimeOffset(text);
+            switch (inputKind)
+            {
+                case DateTimeKind.Local:
+                    return dateTimeOffset.LocalDateTime;
+                case DateTimeKind.Utc:
+                    return dateTimeOffset.UtcDateTime;
+                default:
+                    Debug.Assert(inputKind == DateTimeKind.Unspecified, "All dates must be Utc, Local, or Unspecified.");
+                    return dateTimeOffset.DateTime;
+            }
+#else
             return XmlConvert.ToDateTime(text, XmlDateTimeSerializationMode.RoundtripKind);
+#endif
+        }
+
+        /// <summary>
+        /// Converts a string to a DateTimeOffset.
+        /// </summary>
+        /// <param name="text">String to be converted.</param>
+        /// <returns>See documentation for method being accessed in the body of the method.</returns>
+        internal static DateTimeOffset ConvertStringToDateTimeOffset(string text)
+        {
+#if ODATALIB
+            DebugUtils.CheckNoExternalCallers();
+#endif
+            text = AddSecondsPaddingIfMissing(text);
+            return XmlConvert.ToDateTimeOffset(text);
+        }
+
+        /// <summary>
+        /// Adds the seconds padding as zeros to the date time string if seconds part is missing.
+        /// </summary>
+        /// <param name="text">String that needs seconds padding</param>
+        /// <returns>DateTime string after adding seconds padding</returns>
+        internal static string AddSecondsPaddingIfMissing(string text)
+        {
+#if ODATALIB
+            DebugUtils.CheckNoExternalCallers();
+#endif
+            int indexOfT = text.IndexOf("T", System.StringComparison.Ordinal);
+            const int ColonBeforeSecondsOffset = 6;
+            int indexOfColonBeforeSeconds = indexOfT + ColonBeforeSecondsOffset;
+
+            // check if the string is in the format of yyyy-mm-ddThh:mm or in the format of yyyy-mm-ddThh:mm[- or +]hh:mm 
+            if (indexOfT > 0 && (text.Length <= indexOfColonBeforeSeconds || text[indexOfColonBeforeSeconds] != ':'))
+            {
+                text = text.Insert(indexOfColonBeforeSeconds, ":00");
+            }
+            
+            return text;
+        }
+
+        /// <summary>
+        /// Converts the DateTime to a string, internal method.
+        /// </summary>
+        /// <param name="dateTime">DateTime to convert to String.</param>
+        /// <returns>Converted String.</returns>
+        internal static string ConvertDateTimeToStringInternal(DateTime dateTime)
+        {
+#if ODATALIB
+            DebugUtils.CheckNoExternalCallers();
+#endif
+            if (dateTime.Kind == DateTimeKind.Unspecified)
+            {
+                // If we just cast to DateTimeOffset here, the local offset will be applied, which can alter the meaning of the value.
+                // Instead we need to create a new DateTimeOffset with the timezone explicitly set to UTC, which will prevent
+                // any offset from being used. The resulting string does have the Z on it in that case, but we want to leave the timezone
+                // unspecified here, so we will just remove that.
+                DateTimeOffset dateTimeOffset = new DateTimeOffset(dateTime, TimeSpan.Zero);
+                string outputWithZ = XmlConvert.ToString(dateTimeOffset);
+                Debug.Assert(outputWithZ[outputWithZ.Length - 1] == 'Z', "Expected DateTimeOffset to be a UTC value.");
+                return outputWithZ.TrimEnd('Z');
+            }
+            else
+            {
+                // For Utc and Local kinds, ToString produces the same string that the old XmlConvert methods would produce.
+                return XmlConvert.ToString((DateTimeOffset)dateTime);
+            }    
         }
 
         /// <summary>
@@ -271,7 +404,11 @@ namespace Microsoft.Data.Edm
 #if ODATALIB
             DebugUtils.CheckNoExternalCallers();
 #endif
+#if PORTABLELIB
+            return ConvertDateTimeToStringInternal(dateTime);
+#else
             return XmlConvert.ToString(dateTime, XmlDateTimeSerializationMode.RoundtripKind);
+#endif
         }
 
         /// <summary>
@@ -303,9 +440,27 @@ namespace Microsoft.Data.Edm
             return Type.GetTypeCode(type);
         }
 
-#endregion
+        #endregion
 
         #region Methods to replace other changed functionality where the replacement doesn't map exactly to an existing method on other platforms
+
+        /// <summary>
+        /// Gets the Unicode Category of the specified character.
+        /// </summary>
+        /// <param name="c">Character to get category of.</param>
+        /// <returns>Category of the character.</returns>
+        internal static UnicodeCategory GetUnicodeCategory(Char c)
+        {
+#if ODATALIB
+            DebugUtils.CheckNoExternalCallers();
+#endif
+            // Portable Library platform doesn't have Char.GetUnicodeCategory, its on CharUnicodeInfo instead.
+#if PORTABLELIB
+            return CharUnicodeInfo.GetUnicodeCategory(c);
+#else
+            return Char.GetUnicodeCategory(c);
+#endif
+        }
 
         /// <summary>
         /// Replacement for usage of MemberInfo.MemberType property.
@@ -318,7 +473,11 @@ namespace Microsoft.Data.Edm
 #if ODATALIB
             DebugUtils.CheckNoExternalCallers();
 #endif
+#if PORTABLELIB
+            return member is PropertyInfo;
+#else
             return member.MemberType == MemberTypes.Property;
+#endif
         }
 
         /// <summary>
@@ -360,7 +519,31 @@ namespace Microsoft.Data.Edm
 #if ODATALIB
             DebugUtils.CheckNoExternalCallers();
 #endif
+#if PORTABLELIB
+            return member is MethodInfo;
+#else
             return member.MemberType == MemberTypes.Method;
+#endif
+        }
+
+        /// <summary>
+        /// Compares two methodInfos and returns true if they represent the same method.
+        /// Need this for Windows Phone as the method Infos of the same method are not always instance equivalent.
+        /// </summary>
+        /// <param name="member1">MemberInfo to compare.</param>
+        /// <param name="member2">MemberInfo to compare.</param>
+        /// <returns>True if the specified member is a method, otherwise false.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
+        internal static bool AreMembersEqual(MemberInfo member1, MemberInfo member2)
+        {
+#if ODATALIB
+            DebugUtils.CheckNoExternalCallers();
+#endif
+#if PORTABLELIB
+            return member1 == member2;
+#else 
+            return member1.MetadataToken == member2.MetadataToken; 
+#endif
         }
 
         /// <summary>
@@ -435,9 +618,38 @@ namespace Microsoft.Data.Edm
 #if ODATALIB
             DebugUtils.CheckNoExternalCallers();
 #endif
+#if PORTABLELIB
+            return GetInstanceConstructors(type, isPublic).SingleOrDefault(c => CheckTypeArgs(c, argTypes));
+#endif
+#if !PORTABLELIB
             BindingFlags bindingFlags = BindingFlags.Instance;
             bindingFlags |= isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
             return type.GetConstructor(bindingFlags, null, argTypes, null);
+#endif
+        }
+
+        /// <summary>
+        /// Tries to the get method from the type, returns null if not found.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="parameterTypes">The parameter types.</param>
+        /// <returns>Returns True if found.</returns>
+        internal static bool TryGetMethod(this Type type, string name, Type[] parameterTypes, out MethodInfo foundMethod)
+        {
+#if ODATALIB
+            DebugUtils.CheckNoExternalCallers();
+#endif
+            foundMethod = null;
+            try
+            {
+                foundMethod = type.GetMethod(name, parameterTypes);
+                return foundMethod != null;
+            }
+            catch (ArgumentNullException)
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -454,10 +666,21 @@ namespace Microsoft.Data.Edm
 #if ODATALIB
             DebugUtils.CheckNoExternalCallers();
 #endif
+            // PortableLib: The BindingFlags enum and all related reflection method overloads have been removed from . Instead of trying to provide
+            // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
+            // still allow for the same functionality as needed by the calling code.
+           
+#if PORTABLELIB
+            BindingFlags bindingFlags = isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
+            bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;
+            return type.GetMethod(name, bindingFlags);
+#endif
+#if !PORTABLELIB
             BindingFlags bindingFlags = BindingFlags.Default;
             bindingFlags |= isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
             bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;
             return type.GetMethod(name, bindingFlags);
+#endif
         }
 
         /// <summary>
@@ -475,10 +698,21 @@ namespace Microsoft.Data.Edm
 #if ODATALIB
             DebugUtils.CheckNoExternalCallers();
 #endif
+#if PORTABLELIB
+            MethodInfo methodInfo = type.GetMethod(name, types);
+            if (isPublic == methodInfo.IsPublic && isStatic == methodInfo.IsStatic)
+            {
+                return methodInfo;
+            }
+
+            return null;
+#endif
+#if !PORTABLELIB
             BindingFlags bindingFlags = BindingFlags.Default;
             bindingFlags |= isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
             bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;
             return type.GetMethod(name, bindingFlags, null, types, null);
+#endif
         }
 
         /// <summary>
@@ -510,5 +744,59 @@ namespace Microsoft.Data.Edm
         }
         #endregion
 
+#if PORTABLELIB
+        /// <summary>
+        /// Checks if the specified constructor takes arguments of the specified types.
+        /// </summary>
+        /// <param name="constructorInfo">ConstructorInfo on which to call this helper method.</param>
+        /// <param name="types">Array of type arguments to check against the constructor parameters.</param>
+        /// <returns>True if the constructor takes arguments of the specified types, otherwise false.</returns>
+        private static bool CheckTypeArgs(ConstructorInfo constructorInfo, Type[] types)
+        {
+            Debug.Assert(types != null, "Types should not be null, use a different overload of the calling method if you don't care about the parameter types.");
+
+            ParameterInfo[] parameters = constructorInfo.GetParameters();
+            if (parameters.Length != types.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                if (parameters[i].ParameterType != types[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+#endif
+
+        /// <summary>
+        /// Creates a Compiled Regex expression
+        /// </summary>
+        /// <param name="pattern">Pattern to match.</param>
+        /// <param name="options">Options to use.</param>
+        /// <returns>Regex expression to match supplied patter</returns>
+        /// <remarks>Is marked as compiled option only in platforms otherwise RegexOption.None is used</remarks>
+        public static Regex CreateCompiled(string pattern, RegexOptions options)
+        {
+#if SILVERLIGHT || ORCAS || PORTABLELIB
+            options = options | RegexOptions.None;
+#else
+            options = options | RegexOptions.Compiled;
+#endif
+            return new Regex(pattern, options);
+        }
+
+        public static string[] GetSegments(this Uri uri)
+        {
+#if SILVERLIGHT || PORTABLELIB
+            return uri.AbsolutePath.Split('/');
+#else
+            return uri.Segments;
+#endif
+        }
     }
 }
