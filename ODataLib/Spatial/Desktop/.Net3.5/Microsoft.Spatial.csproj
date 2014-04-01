@@ -39,9 +39,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Microsoft\Spatial\PlatformHelper.cs" />
+    <Compile Include="Microsoft\Spatial\WrappedGeoJsonWriter.cs" />
     <Compile Include="Microsoft\Spatial\GeoJsonObjectFormatterImplementation.cs" />
     <Compile Include="Microsoft\Spatial\GeoJsonObjectWriter.cs" />
     <Compile Include="Microsoft\Spatial\GeoJsonWriterBase.cs" />
+    <Compile Include="Microsoft\Spatial\IGeoJsonWriter.cs" />
     <Compile Include="Microsoft\Spatial\TypeWashedToGeographyLatLongPipeline.cs" />
     <Compile Include="Microsoft\Spatial\TypeWashedToGeographyLongLatPipeline.cs" />
     <Compile Include="Microsoft\Spatial\GeoJsonObjectReader.cs" />
@@ -96,7 +98,6 @@
     <Compile Include="Microsoft\Spatial\SpatialPipeline.cs" />
     <Compile Include="Microsoft\Spatial\GeographyOperationsExtensions.cs" />
     <Compile Include="Microsoft\Spatial\GeometryOperationsExtensions.cs" />
-    <Compile Include="Microsoft\Spatial\PriorityQueue.cs" />
     <Compile Include="Microsoft\Spatial\SpatialImplementation.cs" />
     <Compile Include="Microsoft\Spatial\SpatialOperations.cs" />
     <Compile Include="Microsoft\Spatial\OrcasExtensions.cs" />

@@ -16,11 +16,16 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Serialization;
 using Microsoft.OData.Edm.Expressions;
 using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm.Library.Annotations;
+using Microsoft.OData.Edm.Library.Expressions;
+using Microsoft.OData.Edm.Library.Values;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularis;
 using ErrorStrings = Microsoft.OData.Edm.Strings;
 
 namespace Microsoft.OData.Edm
@@ -73,7 +78,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-            return FindAcrossModels(model, qualifiedName, findType, RegistrationHelper.CreateAmbiguousTypeBinding);
+            return FindAcrossModels(model, qualifiedName, findType, RegistrationHelper.CreateAmbiguousTypeBinding);  // search built-in EdmCoreModel and CoreVocabularyModel.
         }
 
         /// <summary>
@@ -275,7 +280,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
             EdmUtil.CheckArgumentNull(termName, "termName");
-            
+
             // Look up annotations on the element by name. There's no particular advantage in searching for a term first.
             string name;
             string namespaceName;
@@ -665,6 +670,34 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Gets description for term Core.Description from a target annotatable
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="target">The target Annotatable to find annotation</param>
+        /// <returns>Description for term Core.Description</returns>
+        public static string GetDescriptionAnnotation(this IEdmModel model, IEdmVocabularyAnnotatable target)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+
+            string fullName = EdmUtil.FullyQualifiedName(target);
+            if (fullName != null)
+            {
+                IEdmVocabularyAnnotation annotation = model.VocabularyAnnotations.FirstOrDefault(p => EdmUtil.FullyQualifiedName(p.Target) == fullName && p.Term.FullName() == CoreVocabularyConstants.CoreDescription);
+                if (annotation is IEdmValueAnnotation)
+                {
+                    IEdmStringConstantExpression stringConstant = (annotation as IEdmValueAnnotation).Value as IEdmStringConstantExpression;
+                    if (stringConstant != null)
+                    {
+                        return stringConstant.Value;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets all schema elements from the model, and models referenced by it.
         /// </summary>
         /// <param name="model">Model to search for elements</param>
@@ -752,7 +785,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
-           
+
             return model.DirectValueAnnotationsManager.GetDirectValueAnnotations(element);
         }
 
@@ -768,9 +801,9 @@ namespace Microsoft.OData.Edm
             entitySet = null;
             string containerName = null;
             string simpleEntitySetName = null;
-            
-            if (containerQualifiedEntitySetName != null && 
-                containerQualifiedEntitySetName.IndexOf(".", StringComparison.Ordinal) > -1 && 
+
+            if (containerQualifiedEntitySetName != null &&
+                containerQualifiedEntitySetName.IndexOf(".", StringComparison.Ordinal) > -1 &&
                 EdmUtil.TryParseContainerQualifiedElementName(containerQualifiedEntitySetName, out containerName, out simpleEntitySetName))
             {
                 if (model.ExistsContainer(containerName))
@@ -928,6 +961,48 @@ namespace Microsoft.OData.Edm
             }
 
             return foundOperationImports;
+        }
+
+        #endregion
+
+        #region EdmModel
+
+        /// <summary>
+        /// Set annotation Core.OptimisticConcurrencyControl to EntitySet
+        /// </summary>
+        /// <param name="model">The model to add annotation</param>
+        /// <param name="target">The target entitySet to set the inline annotation</param>
+        /// <param name="properties">The PropertyPath for annotation</param>
+        public static void SetOptimisticConcurrencyControlAnnotation(this EdmModel model, IEdmEntitySet target, IEnumerable<IEdmStructuralProperty> properties)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+            EdmUtil.CheckArgumentNull(properties, "properties");
+
+            IEdmCollectionExpression collectionExpression = new EdmCollectionExpression(properties.Select(p => new EdmPropertyPathExpression(p.Name)).ToArray());
+            IEdmValueTerm term = CoreVocabularyModel.ConcurrencyControlTerm;
+
+            Debug.Assert(term != null, "term!=null");
+            EdmAnnotation annotation = new EdmAnnotation(target, term, collectionExpression);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+        }
+
+        /// <summary>
+        /// Set Core.Description to target.
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="target">The target Annotatable to add annotation.</param>
+        /// <param name="description">Decription to be added.</param>
+        public static void SetDescriptionAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, string description)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+            EdmUtil.CheckArgumentNull(description, "description");
+
+            EdmAnnotation annotation = new EdmAnnotation(target, CoreVocabularyModel.DescriptionTerm, new EdmStringConstant(description));
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
         }
 
         #endregion
@@ -1787,7 +1862,7 @@ namespace Microsoft.OData.Edm
 
             if (parameterType.TypeKind == EdmTypeKind.Collection)
             {
-                 // covariance applies here, so IEnumerable<A> is applicable to IEnumerable<B> where B:A
+                // covariance applies here, so IEnumerable<A> is applicable to IEnumerable<B> where B:A
                 IEdmCollectionType parameterCollectionType = (IEdmCollectionType)parameterType;
                 IEdmCollectionType bindingCollectionType = (IEdmCollectionType)bindingType;
 
@@ -1867,7 +1942,7 @@ namespace Microsoft.OData.Edm
             if (entitySetBase != null)
             {
                 IEdmCollectionType collectionType = entitySetBase.Type as IEdmCollectionType;
-                
+
                 if (collectionType != null)
                 {
                     return collectionType.ElementType.Definition as IEdmEntityType;
@@ -1886,6 +1961,56 @@ namespace Microsoft.OData.Edm
         }
 
         #endregion
+
+        /// <summary>
+        /// Searches for a type with the given name in the model and its main/sibling/referenced models, returns null if no such type exists.
+        /// </summary>
+        /// <param name="model">The model to search for type.</param>
+        /// <param name="qualifiedName">The qualified name of the type being found.</param>
+        /// <remarks>when searching, will ignore built-in types in EdmCoreModel and CoreVocabularyModel.</remarks>
+        /// <returns>The requested type, or null if no such type exists.</returns>
+        internal static IEdmSchemaType FindTypeInAllModels(this CsdlSemanticsModel model, string qualifiedName)
+        {
+            // find type in current model only
+            IEdmSchemaType result = model.FindDeclaredType(qualifiedName);
+            IEdmSchemaType candidate;
+
+            // now find type in main model and current model's sibling models.
+            if (model.MainModel != null)
+            {
+                // main model:
+                if ((candidate = model.MainModel.FindDeclaredType(qualifiedName)) != null)
+                {
+                    result = (result == null) ? candidate : RegistrationHelper.CreateAmbiguousTypeBinding(result, candidate);
+                }
+
+                // current model's sibling models :
+                foreach (var tmp in model.MainModel.ReferencedModels)
+                {
+                    // doesn't search the current model again
+                    if ((tmp != EdmCoreModel.Instance) && (tmp != CoreVocabularyModel.Instance)
+                        && tmp != model)
+                    {
+                        if ((candidate = tmp.FindDeclaredType(qualifiedName)) != null)
+                        {
+                            result = (result == null) ? candidate : RegistrationHelper.CreateAmbiguousTypeBinding(result, candidate);
+                        }
+                    }
+                }
+            }
+
+            // then find type in referenced models
+            foreach (var tmp in model.ReferencedModels)
+            {
+                candidate = tmp.FindDeclaredType(qualifiedName);
+                if (candidate != null)
+                {
+                    result = (result == null) ? candidate : RegistrationHelper.CreateAmbiguousTypeBinding(result, candidate);
+                }
+            }
+
+            return result;
+        }
 
         internal static bool TryGetRelativeEntitySetPath(IEdmElement element, Collection<EdmError> foundErrors, IEdmPathExpression pathExpression, IEdmModel model, IEnumerable<IEdmOperationParameter> parameters, out IEdmOperationParameter parameter, out IEnumerable<IEdmNavigationProperty> relativePath, out IEdmEntityType lastEntityType)
         {
@@ -1915,10 +2040,10 @@ namespace Microsoft.OData.Edm
             {
                 foundErrors.Add(
                     new EdmError(
-                        element.Location(), 
-                        EdmErrorCode.InvalidPathFirstPathParameterNotMatchingFirstParameterName, 
+                        element.Location(),
+                        EdmErrorCode.InvalidPathFirstPathParameterNotMatchingFirstParameterName,
                         Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathWithFirstPathParameterNotMatchingFirstParameterName(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), bindingParameterName, parameter.Name)));
-                
+
                 foundRelativePath = false;
             }
 
@@ -1968,10 +2093,10 @@ namespace Microsoft.OData.Edm
                     {
                         foundErrors.Add(
                             new EdmError(
-                                element.Location(), 
-                                EdmErrorCode.InvalidPathTypeCastSegmentMustBeEntityType, 
+                                element.Location(),
+                                EdmErrorCode.InvalidPathTypeCastSegmentMustBeEntityType,
                                 Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathTypeCastSegmentMustBeEntityType(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), foundType.FullName())));
-                        
+
                         foundRelativePath = false;
                         break;
                     }
@@ -1980,10 +2105,10 @@ namespace Microsoft.OData.Edm
                     {
                         foundErrors.Add(
                             new EdmError(
-                                element.Location(), 
-                                EdmErrorCode.InvalidPathInvalidTypeCastSegment, 
+                                element.Location(),
+                                EdmErrorCode.InvalidPathInvalidTypeCastSegment,
                                 Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathInvalidTypeCastSegment(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), lastEntityType.FullName(), foundEntityTypeCast.FullName())));
-                        
+
                         foundRelativePath = false;
                         break;
                     }
@@ -1997,10 +2122,10 @@ namespace Microsoft.OData.Edm
                     {
                         foundErrors.Add(
                             new EdmError(
-                                element.Location(), 
-                                EdmErrorCode.InvalidPathUnknownNavigationProperty, 
+                                element.Location(),
+                                EdmErrorCode.InvalidPathUnknownNavigationProperty,
                                 Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownNavigationProperty(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), pathSegment)));
-                        
+
                         foundRelativePath = false;
                         break;
                     }
@@ -2013,7 +2138,7 @@ namespace Microsoft.OData.Edm
             relativePath = navigationProperties;
             return foundRelativePath;
         }
-       
+
         /// <summary>
         /// This method is only used for the operation import entity set path parsing.
         /// </summary>

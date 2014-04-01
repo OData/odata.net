@@ -71,7 +71,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             return lambdaNode;
         }
-
+        
         /// <summary>
         /// Bind the parent of the LambdaToken
         /// </summary>
@@ -91,9 +91,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     throw new ODataException(ODataErrorStrings.MetadataBinder_LambdaParentMustBeCollection);
                 }
 
-                // TODO: Add support for open collection properties here by replacing
-                //      with something like an OpenCollectionNode.
-                throw new ODataException(ODataErrorStrings.MetadataBinder_CollectionOpenPropertiesNotSupportedInThisRelease);
+                // support open collection properties 
+                return new CollectionOpenPropertyAccessNode(parentOpenPropertyNode.Source, parentOpenPropertyNode.Name);
             }
 
             return parentCollectionNode;

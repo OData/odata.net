@@ -70,6 +70,16 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
 
         /// <summary>
+        /// Visit an CollectionOpenPropertyAccessNode
+        /// </summary>
+        /// <param name="nodeIn">the node to visit</param>
+        /// <returns>Defined by the implementer</returns>
+        public virtual T Visit(CollectionOpenPropertyAccessNode nodeIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Visit a ConstantNode
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
@@ -225,6 +235,16 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
         public virtual T Visit(ParameterAliasNode nodeIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visit a SearchTermNode
+        /// </summary>
+        /// <param name="nodeIn">The node to visit</param>
+        /// <returns>The translated expression</returns>
+        public virtual T Visit(SearchTermNode nodeIn)
         {
             throw new NotImplementedException();
         }

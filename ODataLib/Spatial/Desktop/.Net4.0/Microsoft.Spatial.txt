@@ -8,9 +8,6 @@
 
 ;   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
-PriorityQueueDoesNotContainItem=The queue doesn't contain an item with the priority {0}.
-PriorityQueueOperationNotValidOnEmptyQueue=The operation is not valid on an empty queue.
-
 SpatialImplementation_NoRegisteredOperations=No operations are registered. Please provide operations using SpatialImplementation.CurrentImplementation.Operations property.
 
 InvalidPointCoordinate=The value '{0}' is not valid for the coordinate '{1}'.

@@ -16,12 +16,12 @@ namespace Microsoft.OData.Edm
     public enum EdmConcurrencyMode
     {
         /// <summary>
-        /// Denotes a property that should be used for optimistic concurrency checks.
+        /// Denotes a property that should not be used for optimistic concurrency checks.
         /// </summary>
         None = 0,
 
         /// <summary>
-        /// Denotes a property that should not be used for optimistic concurrency checks.
+        /// Denotes a property that should be used for optimistic concurrency checks.
         /// </summary>
         Fixed
     }

@@ -417,6 +417,8 @@ namespace Microsoft.OData.Edm
         protected virtual void ProcessModel(IEdmModel model)
         {
             this.ProcessElement(model);
+
+            // TODO challenh also visit referneced models?
             this.VisitSchemaElements(model.SchemaElements);
             this.VisitVocabularyAnnotations(model.VocabularyAnnotations);
         }
@@ -425,6 +427,7 @@ namespace Microsoft.OData.Edm
 
         protected virtual void ProcessElement(IEdmElement element)
         {
+            // TODO challenh: DirectValueAnnotationsInMainSechema (not including those in referenced schemas)
             this.VisitAnnotations(this.Model.DirectValueAnnotations(element));
         }
 

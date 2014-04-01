@@ -26,25 +26,34 @@ namespace Microsoft.OData.Edm.Vocabularis
         /// <summary>
         /// The EDM model with core vocabularies.
         /// </summary>
-        public static readonly IEdmModel Instance = ParseCoreVocabularyModel();
+        public static readonly IEdmModel Instance;
+
+        /// <summary>
+        /// The concurrency control term.
+        /// </summary>
+        public static readonly IEdmValueTerm ConcurrencyControlTerm;
+
+        /// <summary>
+        /// The description term.
+        /// </summary>
+        public static readonly IEdmValueTerm DescriptionTerm;
 
         /// <summary>
         /// Parse Core Vocabulary Model from CoreVocabularies.xml
         /// </summary>
-        /// <returns>Core Vocabulary Model</returns>
-        private static IEdmModel ParseCoreVocabularyModel()
+        static CoreVocabularyModel()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
 
-            IEdmModel model;
             using (Stream stream = assembly.GetManifestResourceStream("CoreVocabularies.xml"))
             {
                 IEnumerable<EdmError> errors;
                 Debug.Assert(stream != null, "CoreVocabularies.xml: stream!=null");
-                CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out model, out errors);
+                CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
             }
-            
-            return model;
+
+            ConcurrencyControlTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.CoreOptimisticConcurrencyControl);
+            DescriptionTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.CoreDescription);
         }
     }
 }

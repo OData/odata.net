@@ -18,14 +18,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     internal class CsdlEntityType : CsdlNamedStructuredType
     {
         private readonly CsdlKey key;
-        private readonly bool isOpen;
         private readonly bool hasStream;
         private readonly List<CsdlNavigationProperty> navigationProperties;
 
         public CsdlEntityType(string name, string baseTypeName, bool isAbstract, bool isOpen, bool hasStream, CsdlKey key, IEnumerable<CsdlProperty> properties, IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, baseTypeName, isAbstract, properties, documentation, location)
+            : base(name, baseTypeName, isAbstract, isOpen, properties, documentation, location)
         {
-            this.isOpen = isOpen;
             this.key = key;
             this.hasStream = hasStream;
 
@@ -40,11 +38,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         public CsdlKey Key
         {
             get { return this.key; }
-        }
-
-        public bool IsOpen
-        {
-            get { return this.isOpen; }
         }
 
         public bool HasStream 

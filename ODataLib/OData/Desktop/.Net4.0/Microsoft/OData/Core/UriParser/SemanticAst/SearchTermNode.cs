@@ -77,5 +77,18 @@ namespace Microsoft.OData.Core.UriParser.Semantic
                 return InternalQueryNodeKind.SearchTerm;
             }
         }
+
+        /// <summary>
+        /// Accept a <see cref="QueryNodeVisitor{T}"/> that walk a tree of <see cref="QueryNode"/>s.
+        /// </summary>
+        /// <typeparam name="T">Type that the visitor will return after visiting this token.</typeparam>
+        /// <param name="visitor">An implementation of the visitor interface.</param>
+        /// <returns>An object whose type is determined by the type parameter of the visitor.</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input visitor is null.</exception>
+        public override T Accept<T>(QueryNodeVisitor<T> visitor)
+        {
+            ExceptionUtils.CheckArgumentNotNull(visitor, "visitor");
+            return visitor.Visit(this);
+        }
     }
 }

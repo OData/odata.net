@@ -176,6 +176,9 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary> the levels query option </summary>
         internal const string QueryOptionLevels = "$levels";
 
+        /// <summary> the search query option</summary>
+        internal const string QueryOptionSearch = "$search";
+
         /// <summary> the select query option </summary>
         internal const string QueryOptionSelect = "$select";
 
@@ -186,7 +189,7 @@ namespace Microsoft.OData.Core.UriParser
         internal const string SearchKeywordAnd = "AND";
 
         /// <summary>"NOT" keyword for search option.</summary>
-        internal const string SearchKeywordNOT = "NOT";
+        internal const string SearchKeywordNot = "NOT";
 
         /// <summary>"OR" keyword for search option.</summary>
         internal const string SearchKeywordOr = "OR";

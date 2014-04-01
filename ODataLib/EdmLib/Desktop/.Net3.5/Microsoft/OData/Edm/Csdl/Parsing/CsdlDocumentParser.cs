@@ -504,9 +504,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         {
             string name = Required(CsdlConstants.Attribute_Name);
             string baseType = OptionalQualifiedName(CsdlConstants.Attribute_BaseType);
+            bool isOpen = OptionalBoolean(CsdlConstants.Attribute_OpenType) ?? CsdlConstants.Default_OpenType;
             bool isAbstract = OptionalBoolean(CsdlConstants.Attribute_Abstract) ?? CsdlConstants.Default_Abstract;
 
-            return new CsdlComplexType(name, baseType, isAbstract, childValues.ValuesOfType<CsdlProperty>(), Documentation(childValues), element.Location);
+            return new CsdlComplexType(name, baseType, isAbstract, isOpen, childValues.ValuesOfType<CsdlProperty>(), Documentation(childValues), element.Location);
         }
 
         private CsdlEntityType OnEntityTypeElement(XmlElementInfo element, XmlElementValueCollection childValues)

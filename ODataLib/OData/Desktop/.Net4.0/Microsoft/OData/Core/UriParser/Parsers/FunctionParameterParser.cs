@@ -16,6 +16,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
@@ -32,12 +33,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>
         /// Tries to parse a collection of function parameters. Allows path and filter to share the core algorithm while representing parameters differently.
         /// </summary>
-        /// <param name="lexer">The lexer to read from.</param>
+        /// <param name="parser">The UriQueryExpressionParser to read from.</param>
         /// <param name="splitParameters">The parameters if they were successfully split.</param>
         /// <returns>Whether the parameters could be split.</returns>
-        internal static bool TrySplitFunctionParameters(this ExpressionLexer lexer, out ICollection<FunctionParameterToken> splitParameters)
+        internal static bool TrySplitFunctionParameters(this UriQueryExpressionParser parser, out ICollection<FunctionParameterToken> splitParameters)
         {
-            return lexer.TrySplitOperationParameters(ExpressionTokenKind.CloseParen, out splitParameters);
+            return parser.TrySplitOperationParameters(ExpressionTokenKind.CloseParen, out splitParameters);
         }
 
         /// <summary>
@@ -45,42 +46,35 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>     
         /// <param name="functionName">The function name to use in error messages.</param>
         /// <param name="parenthesisExpression">The contents of the parentheses portion of the current path segment.</param>
+        /// <param name="configuration">The ODataUriParserConfiguration to create a UriQueryExpressionParser.</param>
         /// <param name="splitParameters">The parameters if they were successfully split.</param>
         /// <returns>Whether the parameters could be split.</returns>
-        internal static bool TrySplitOperationParameters(string functionName, string parenthesisExpression, out ICollection<FunctionParameterToken> splitParameters)
+        internal static bool TrySplitOperationParameters(string functionName, string parenthesisExpression, ODataUriParserConfiguration configuration, out ICollection<FunctionParameterToken> splitParameters)
         {
-            Debug.Assert(!string.IsNullOrEmpty(parenthesisExpression), "!string.IsNullOrEmpty(parenthesisExpression)");
-            var lexer = new ExpressionLexer(parenthesisExpression, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
+            ExpressionLexer lexer = new ExpressionLexer(parenthesisExpression, true /*moveToFirstToken*/, false /*useSemicolonDelimeter*/, true /*parsingFunctionParameters*/);
+            UriQueryExpressionParser parser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, lexer);
+            var ret = parser.TrySplitOperationParameters(ExpressionTokenKind.End, out splitParameters);
 
-            if (lexer.CurrentToken.IsFunctionParameterToken)
+            // check duplicate names
+            if (splitParameters.Select(t => t.ParameterName).Distinct().Count() != splitParameters.Count)
             {
-                splitParameters = null;
-                return false;
+                throw new ODataException(ODataErrorStrings.FunctionCallParser_DuplicateParameterName);
             }
 
-            string funcFullStr = string.Format(CultureInfo.InvariantCulture, "({0})", parenthesisExpression);
-            lexer = new ExpressionLexer(funcFullStr, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
-            UriQueryExpressionParser.Parser parseMethod = () =>
-            {
-                throw new ODataException(" ParseArgumentList");
-            }; // ParseArgumentList method should never call this parseMethod
-            FunctionCallParser functionCallBinder = new FunctionCallParser(lexer, parseMethod);
-            splitParameters = functionCallBinder.ParseArgumentList();
-            lexer.ValidateToken(ExpressionTokenKind.End);
-            return true;
+            return ret;
         }
 
         /// <summary>
         /// Tries to parse a collection of function parameters. Allows path and filter to share the core algorithm while representing parameters differently.
         /// </summary>
-        /// <param name="lexer">The lexer to read from.</param>
+        /// <param name="parser">The UriQueryExpressionParser to read from.</param>
         /// <param name="endTokenKind">The token kind that marks the end of the parameters.</param>
         /// <param name="splitParameters">The parameters if they were successfully split.</param>
         /// <returns>Whether the parameters could be split.</returns>
-        private static bool TrySplitOperationParameters(this ExpressionLexer lexer, ExpressionTokenKind endTokenKind, out ICollection<FunctionParameterToken> splitParameters)
+        private static bool TrySplitOperationParameters(this UriQueryExpressionParser parser, ExpressionTokenKind endTokenKind, out ICollection<FunctionParameterToken> splitParameters)
         {
-            Debug.Assert(lexer != null, "lexer != null");
-
+            Debug.Assert(parser != null, "parser != null");
+            var lexer = parser.Lexer;
             var parameters = new List<FunctionParameterToken>();
             splitParameters = parameters;
 
@@ -104,22 +98,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 lexer.ValidateToken(ExpressionTokenKind.Equal);
                 lexer.NextToken();
 
-                // TODO challenh: 1. currently maxDepth=10 supports only simple value, 2. per ABNF, should support commeon expression
+                // the below UriQueryExpressionParser.ParseExpression() is able to parse common expression per ABNF:
                 //      functionExprParameter  = parameterName EQ ( parameterAlias / parameterValue )
                 //      parameterValue = arrayOrObject
                 //                       / commonExpr
-                UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(10);
-                QueryToken parameterValue = expressionParser.ParseExpressionText(lexer.CurrentToken.Text);
-
-                // if (!TryCreateParameterValueToken(lexer, out parameterValue))
-                // {
-                //     throw new ODataException(ODataErrorStrings.ExpressionLexer_SyntaxError(lexer.Position, lexer.ExpressionText));
-                // }
+                QueryToken parameterValue = parser.ParseExpression();
                 parameters.Add(new FunctionParameterToken(identifier, parameterValue));
 
-                // Read the next parameterToken. We should be at the end, or find
-                // we have a comma followed by something.
-                lexer.NextToken();
+                // the above parser.ParseExpression() already moves to the next token, now get CurrentToken checking a comma followed by something
                 currentToken = lexer.CurrentToken;
                 if (currentToken.Kind == ExpressionTokenKind.Comma)
                 {

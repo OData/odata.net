@@ -167,8 +167,8 @@ namespace Microsoft.OData.Core.JsonLight
             // type inferred from metadata.
             IEdmComplexTypeReference complexValueTypeReference = (IEdmComplexTypeReference)TypeNameOracle.ResolveAndValidateTypeNameForValue(this.Model, metadataTypeReference, complexValue, isOpenPropertyType);
             Debug.Assert(
-                metadataTypeReference == null || complexValueTypeReference == null || metadataTypeReference.Definition.IsEquivalentTo(complexValueTypeReference.Definition),
-                "Complex property types must be the same as the ones from metadata (unless open).");
+                metadataTypeReference == null || complexValueTypeReference == null || EdmLibraryExtensions.IsAssignableFrom(metadataTypeReference, complexValueTypeReference),
+                "Complex property types must be the same as or inherit from the ones from metadata (unless open).");
 
             typeName = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(complexValue, metadataTypeReference, complexValueTypeReference, isOpenPropertyType);
             if (typeName != null)

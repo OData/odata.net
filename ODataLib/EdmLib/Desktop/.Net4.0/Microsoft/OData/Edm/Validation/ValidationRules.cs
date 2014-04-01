@@ -931,7 +931,24 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         /// <summary>
+        /// Validates that a open complex type can not have closed derived complex type.
+        /// </summary>
+        public static readonly ValidationRule<IEdmComplexType> OpenComplexTypeCannotHaveClosedDerivedComplexType =
+            new ValidationRule<IEdmComplexType>(
+                (context, complexType) =>
+                {
+                    if (complexType.BaseType != null && complexType.BaseType.IsOpen && !complexType.IsOpen)
+                    {
+                        context.AddError(
+                            complexType.Location(),
+                            EdmErrorCode.InvalidAbstractComplexType,
+                            Strings.EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind);
+                    }
+                });
+
+        /// <summary>
         /// Validates that a complex type does not inherit.
+        /// Note: Because we support complex type inheritance now, this rule should be deprecated.
         /// </summary>
         public static readonly ValidationRule<IEdmComplexType> ComplexTypeInvalidPolymorphicComplexType =
             new ValidationRule<IEdmComplexType>(

@@ -9,29 +9,36 @@
 //   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Expressions;
 using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Annotations;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
     /// <summary>
-    /// Provides semantics for CsdlMetadataModel.
+    /// Provides semantics for one CsdlModel and its referenced CsdlModels.
     /// </summary>
     internal class CsdlSemanticsModel : EdmModelBase, IEdmCheckable
     {
-        private readonly CsdlModel astModel;
+        private readonly IEdmModel mainEdmModel;    // parent IEdmModel
+        private readonly CsdlModel astModel;        // current internal CsdlModel
         private readonly List<CsdlSemanticsSchema> schemata = new List<CsdlSemanticsSchema>();
         private readonly Dictionary<string, List<CsdlSemanticsAnnotations>> outOfLineAnnotations = new Dictionary<string, List<CsdlSemanticsAnnotations>>();
         private readonly Dictionary<CsdlAnnotation, CsdlSemanticsVocabularyAnnotation> wrappedAnnotations = new Dictionary<CsdlAnnotation, CsdlSemanticsVocabularyAnnotation>();
         private readonly Dictionary<string, List<IEdmStructuredType>> derivedTypeMappings = new Dictionary<string, List<IEdmStructuredType>>();
 
-        public CsdlSemanticsModel(CsdlModel astModel, EdmDirectValueAnnotationsManager annotationsManager, IEnumerable<IEdmModel> referencedModels)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="astModel">The raw CsdlModel.</param>
+        /// <param name="annotationsManager">The IEdmDirectValueAnnotationsManager.</param>
+        /// <param name="referencedModels">The IEdmModels to be referenced. if any element or namespce is not supposed to be include, you should have removed it before passing to this constructor.</param>
+        public CsdlSemanticsModel(CsdlModel astModel, IEdmDirectValueAnnotationsManager annotationsManager, IEnumerable<IEdmModel> referencedModels)
             : base(referencedModels, annotationsManager)
         {
             this.astModel = astModel;
@@ -39,6 +46,70 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             foreach (CsdlSchema schema in this.astModel.Schemata)
             {
                 this.AddSchema(schema);
+            }
+        }
+
+        /// <summary>
+        /// Constroctur
+        /// </summary>
+        /// <param name="mainCsdlModel">The main raw CsdlModel.</param>
+        /// <param name="annotationsManager">The IEdmDirectValueAnnotationsManager.</param>
+        /// <param name="referencedCsdlModels">The referenced raw CsdlModels.</param>
+        public CsdlSemanticsModel(CsdlModel mainCsdlModel, IEdmDirectValueAnnotationsManager annotationsManager, IEnumerable<CsdlModel> referencedCsdlModels)
+            : base(Enumerable.Empty<IEdmModel>(), annotationsManager)
+        {
+            this.astModel = mainCsdlModel;
+
+            // 1. build semantics for referenced models
+            foreach (var tmp in referencedCsdlModels)
+            {
+                foreach (var include in tmp.Includes)
+                {
+                    this.SetNamespaceAlias(include.Namespace, include.Alias);
+                }
+
+                this.AddReferencedModel(new CsdlSemanticsModel(tmp, this.DirectValueAnnotationsManager, this));
+            }
+
+            // 2. build semantics for current model
+            foreach (CsdlSchema schema in this.astModel.Schemata)
+            {
+                this.AddSchema(schema);
+            }
+        }
+
+        /// <summary>
+        /// Constructor for creating a referenced model, is private and only called by the above constructor.
+        /// </summary>
+        /// <param name="referencedCsdlModel">The referenced raw CsdlModel.</param>
+        /// <param name="annotationsManager">The IEdmDirectValueAnnotationsManager.</param>
+        /// <param name="mainCsdlSemanticsModel">The CsdlSemanticsModel that will reference this new CsdlSemanticsModel. </param>
+        private CsdlSemanticsModel(CsdlModel referencedCsdlModel, IEdmDirectValueAnnotationsManager annotationsManager, CsdlSemanticsModel mainCsdlSemanticsModel)
+            : base(Enumerable.Empty<IEdmModel>(), annotationsManager)
+        {
+            this.mainEdmModel = mainCsdlSemanticsModel;
+            Debug.Assert(referencedCsdlModel.Includes.Any() || referencedCsdlModel.IncludeAnnotations.Any(), "referencedCsdlModel.Includes.Any() || referencedCsdlModel.IncludeAnnotations.Any()");
+
+            foreach (var tmp in referencedCsdlModel.Includes)
+            {
+                string includeNs = tmp.Namespace;
+                if (!referencedCsdlModel.Schemata.Any(s => s.Namespace == includeNs))
+                {
+                    // edmx:include must be an existing namespace
+                    // TODO challenh REF throw exception
+                }
+            }
+
+            foreach (var schema in referencedCsdlModel.Schemata)
+            {
+                string schemaNamespace = schema.Namespace;
+                IEdmInclude edmInclude = referencedCsdlModel.Includes.FirstOrDefault(s => s.Namespace == schemaNamespace);
+                if (edmInclude != null)
+                {
+                    this.AddSchema(schema, false /*addAnnotations*/);
+                }
+
+                // TODO challenh REF add annotations
             }
         }
 
@@ -73,7 +144,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public override IEnumerable<string> DeclaredNamespaces
         {
-            get { return this.GetUsedNamespaces(); }
+            get { return this.schemata.Select(s => s.Namespace); }
         }
 
         public override IEnumerable<IEdmVocabularyAnnotation> VocabularyAnnotations
@@ -143,7 +214,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 List<EdmError> errors = new List<EdmError>();
 
                 HashSetInternal<string> usedAlias = new HashSetInternal<string>();
-                var usedNamespaces = this.GetUsedNamespaces();
+                var usedNamespaces = this.GetUsedNamespacesHavingAlias();
                 var mappings = this.GetNamespaceAliases();
 
                 if (usedNamespaces != null && mappings != null)
@@ -165,6 +236,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
                 return errors;
             }
+        }
+
+        /// <summary>
+        /// Gets the main model that is referencing this model. The value may be null.
+        /// </summary>
+        internal IEdmModel MainModel
+        {
+            get { return this.mainEdmModel; }
         }
 
         /// <summary>
@@ -197,23 +276,33 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
 
             return inlineAnnotations;
+
+            // TODO challenh REF
+            // find annotation in referenced models
         }
 
         public override IEnumerable<IEdmStructuredType> FindDirectlyDerivedTypes(IEdmStructuredType baseType)
         {
+            List<IEdmStructuredType> ret = new List<IEdmStructuredType>();
             List<IEdmStructuredType> candidates;
             if (this.derivedTypeMappings.TryGetValue(((IEdmSchemaType)baseType).Name, out candidates))
             {
-                return candidates.Where(t => t.BaseType == baseType);
+                ret.AddRange(candidates.Where(t => t.BaseType == baseType));
             }
 
-            return Enumerable.Empty<IEdmStructuredType>();
+            // find derived type in referenced models
+            foreach (var tmp in this.ReferencedModels)
+            {
+                ret.AddRange(tmp.FindDirectlyDerivedTypes(baseType));
+            }
+
+            return ret;
         }
 
         public string ReplaceAlias(string name)
         {
             var mappings = this.GetNamespaceAliases();
-            var list = this.GetUsedNamespaces();
+            var list = this.GetUsedNamespacesHavingAlias();
 
             if (list != null && mappings != null && name.Contains("."))
             {
@@ -223,6 +312,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
 
             return null;
+        }
+
+        internal void AddToReferencedModels(IEnumerable<IEdmModel> models)
+        {
+            foreach (var edmModel in models)
+            {
+                this.AddReferencedModel(edmModel);
+            }
         }
 
         internal static IEdmExpression WrapExpression(CsdlExpressionBase expression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
@@ -398,16 +495,20 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
 
             result = (CsdlSemanticsVocabularyAnnotation)new CsdlSemanticsValueAnnotation(schema, targetContext, annotationsContext, annotation, qualifier);
-            
+
             this.wrappedAnnotations[annotation] = result;
             return result;
         }
 
         private void AddSchema(CsdlSchema schema)
         {
+            this.AddSchema(schema, true);
+        }
+
+        private void AddSchema(CsdlSchema schema, bool addAnnotations)
+        {
             CsdlSemanticsSchema schemaWrapper = new CsdlSemanticsSchema(this, schema);
             this.schemata.Add(schemaWrapper);
-
             foreach (IEdmSchemaType type in schemaWrapper.Types)
             {
                 CsdlSemanticsStructuredTypeDefinition structuredType = type as CsdlSemanticsStructuredTypeDefinition;
@@ -428,7 +529,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                                 this.derivedTypeMappings[baseTypeName] = derivedTypes;
                             }
 
-                            derivedTypes.Add(structuredType);
+                            derivedTypes.Add(structuredType); // TODO challenh REF referenced derived types
                         }
                     }
                 }
@@ -456,23 +557,26 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 this.SetNamespaceAlias(schema.Namespace, schema.Alias);
             }
 
-            foreach (CsdlAnnotations schemaOutOfLineAnnotations in schema.OutOfLineAnnotations)
+            if (addAnnotations)
             {
-                string target = schemaOutOfLineAnnotations.Target;
-                string replaced = this.ReplaceAlias(target);
-                if (replaced != null)
+                foreach (CsdlAnnotations schemaOutOfLineAnnotations in schema.OutOfLineAnnotations)
                 {
-                    target = replaced;
-                }
+                    string target = schemaOutOfLineAnnotations.Target;
+                    string replaced = this.ReplaceAlias(target);
+                    if (replaced != null)
+                    {
+                        target = replaced;
+                    }
 
-                List<CsdlSemanticsAnnotations> annotations;
-                if (!this.outOfLineAnnotations.TryGetValue(target, out annotations))
-                {
-                    annotations = new List<CsdlSemanticsAnnotations>();
-                    this.outOfLineAnnotations[target] = annotations;
-                }
+                    List<CsdlSemanticsAnnotations> annotations;
+                    if (!this.outOfLineAnnotations.TryGetValue(target, out annotations))
+                    {
+                        annotations = new List<CsdlSemanticsAnnotations>();
+                        this.outOfLineAnnotations[target] = annotations;
+                    }
 
-                annotations.Add(new CsdlSemanticsAnnotations(schemaWrapper, schemaOutOfLineAnnotations));
+                    annotations.Add(new CsdlSemanticsAnnotations(schemaWrapper, schemaOutOfLineAnnotations));
+                }
             }
 
             var edmVersion = this.GetEdmVersion();

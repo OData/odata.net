@@ -63,10 +63,31 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
+        /// <param name="lexer">The ExpressionLexer containing text to be parsed.</param>
+        internal UriQueryExpressionParser(int maxDepth, ExpressionLexer lexer)
+        {
+            Debug.Assert(maxDepth >= 0, "maxDepth >= 0");
+            Debug.Assert(lexer != null, "lexer != null");
+            this.maxDepth = maxDepth;
+            this.lexer = lexer;
+        }
+
+        /// <summary>
         /// Delegate for a function that parses an expression and translates it into a QueryToken.
         /// </summary>
         /// <returns>A QueryToken</returns>
         internal delegate QueryToken Parser();
+
+        /// <summary>
+        /// Reference to the lexer.
+        /// </summary>
+        internal ExpressionLexer Lexer
+        {
+            get { return this.lexer; }
+        }
 
         /// <summary>
         /// Parses a literal.
@@ -192,6 +213,18 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
+        /// Parses the expression.
+        /// </summary>
+        /// <returns>The lexical token representing the expression.</returns>
+        internal QueryToken ParseExpression()
+        {
+            this.RecurseEnter();
+            QueryToken token = this.ParseLogicalOr();
+            this.RecurseLeave();
+            return token;
+        }
+
+        /// <summary>
         /// Creates a new <see cref="ExpressionLexer"/> for the given filter or orderby expression.
         /// </summary>
         /// <param name="expression">The expression.</param>
@@ -263,18 +296,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             lexer.NextToken();
             return result;
-        }
-
-        /// <summary>
-        /// Parses the expression.
-        /// </summary>
-        /// <returns>The lexical token representing the expression.</returns>
-        private QueryToken ParseExpression()
-        {
-            this.RecurseEnter();
-            QueryToken token = this.ParseLogicalOr();
-            this.RecurseLeave();
-            return token;
         }
 
         /// <summary>
@@ -506,7 +527,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     }
                     else
                     {
-                        IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this.ParseExpression));
+                        IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this));
                         expr = identifierTokenizer.ParseIdentifier(expr);
                     }
                 }
@@ -535,7 +556,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
                 case ExpressionTokenKind.Identifier:
                     {
-                        IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this.ParseExpression));
+                        IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this));
                         return identifierTokenizer.ParseIdentifier(null);
                     }
 
@@ -546,7 +567,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
                 case ExpressionTokenKind.Star:
                     {
-                        IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this.ParseExpression));
+                        IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this));
                         return identifierTokenizer.ParseStarMemberAccess(null);
                     }
 

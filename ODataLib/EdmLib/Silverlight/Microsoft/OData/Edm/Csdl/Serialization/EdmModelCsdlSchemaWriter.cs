@@ -58,6 +58,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, complexType.Name, EdmValueWriter.StringAsXml);
             this.WriteOptionalAttribute(CsdlConstants.Attribute_BaseType, complexType.BaseComplexType(), this.TypeDefinitionAsXml);
             this.WriteOptionalAttribute(CsdlConstants.Attribute_Abstract, complexType.IsAbstract, CsdlConstants.Default_Abstract, EdmValueWriter.BooleanAsXml);
+            this.WriteOptionalAttribute(CsdlConstants.Attribute_OpenType, complexType.IsOpen, CsdlConstants.Default_OpenType, EdmValueWriter.BooleanAsXml);
         }
 
         internal void WriteEnumTypeElementHeader(IEdmEnumType enumType)
@@ -104,7 +105,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteOptionalAttribute(CsdlConstants.Attribute_BaseType, entityType.BaseEntityType(), this.TypeDefinitionAsXml);
             this.WriteOptionalAttribute(CsdlConstants.Attribute_Abstract, entityType.IsAbstract, CsdlConstants.Default_Abstract, EdmValueWriter.BooleanAsXml);
             this.WriteOptionalAttribute(CsdlConstants.Attribute_OpenType, entityType.IsOpen, CsdlConstants.Default_OpenType, EdmValueWriter.BooleanAsXml);
-            
+
             // HasStream value should be inherited.  Only have it on base type is sufficient.
             bool writeHasStream = entityType.HasStream && (entityType.BaseEntityType() == null || (entityType.BaseEntityType() != null && !entityType.BaseEntityType().HasStream));
             this.WriteOptionalAttribute(CsdlConstants.Attribute_HasStream, writeHasStream, CsdlConstants.Default_HasStream, EdmValueWriter.BooleanAsXml);
@@ -204,7 +205,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             {
                 this.WriteRequiredAttribute(CsdlConstants.Attribute_MaxLength, CsdlConstants.Value_Max, EdmValueWriter.StringAsXml);
             }
-            else 
+            else
             {
                 this.WriteOptionalAttribute(CsdlConstants.Attribute_MaxLength, reference.MaxLength, EdmValueWriter.IntAsXml);
             }
@@ -212,7 +213,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal void WriteDecimalTypeAttributes(IEdmDecimalTypeReference reference)
         {
-            this.WriteOptionalAttribute(CsdlConstants.Attribute_Precision, reference.Precision, EdmValueWriter.IntAsXml); 
+            this.WriteOptionalAttribute(CsdlConstants.Attribute_Precision, reference.Precision, EdmValueWriter.IntAsXml);
             this.WriteOptionalAttribute(CsdlConstants.Attribute_Scale, reference.Scale, CsdlConstants.Default_Scale, ScaleAsXml);
         }
 
@@ -254,6 +255,15 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal void WriteReferentialConstraintPair(EdmReferentialConstraintPropertyPair pair)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_ReferentialConstraint);
+
+            // <EntityType Name="Product">
+            //   ...
+            //   <Property Name="CategoryID" Type="Edm.String" Nullable="false"/>
+            //  <NavigationProperty Name="Category" Type="Self.Category" Nullable="false">
+            //     <ReferentialConstraint Property="CategoryID" ReferencedProperty="ID" />
+            //   </NavigationProperty>
+            // </EntityType>
+            // the above CategoryID is DependentProperty, ID is PrincipalProperty.
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Property, pair.DependentProperty.Name, EdmValueWriter.StringAsXml);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_ReferencedProperty, pair.PrincipalProperty.Name, EdmValueWriter.StringAsXml);
             this.WriteEndElement();

@@ -109,7 +109,6 @@ ODataCollectionWriterCore_WriteEndCalledInInvalidState=ODataCollectionWriter.Wri
 ODataCollectionWriterCore_SyncCallOnAsyncWriter=A synchronous operation was called on an asynchronous collection writer. All calls on a collection writer instance must be either synchronous or asynchronous.
 ODataCollectionWriterCore_AsyncCallOnSyncWriter=An asynchronous operation was called on a synchronous collection writer. All calls on a collection writer instance must be either synchronous or asynchronous.
 
-ODataBatch_InvalidHttpMethodForQueryOperation=An invalid HTTP method '{0}' was detected for a query operation. Query operations only support the HTTP 'GET' method.
 ODataBatch_InvalidHttpMethodForChangeSetRequest=An invalid HTTP method '{0}' was detected for a request in a change set. Requests in change sets only support the HTTP methods 'POST', 'PUT', 'DELETE', and 'PATCH'.
 
 ODataBatchOperationHeaderDictionary_KeyNotFound=The header with name '{0}' was not present in the header collection of the batch operation.
@@ -248,7 +247,6 @@ ReaderValidationUtils_NullNamedValueForNonNullableType=A null value was found fo
 ReaderValidationUtils_EntityReferenceLinkMissingUri=No URI value was found for an entity reference link. A single URI value was expected.
 ReaderValidationUtils_ValueWithoutType=A value without a type name was found and no expected type is available. When the model is specified, each value in the payload must have a type which can be either specified in the payload, explicitly by the caller or implicitly inferred from the parent value.
 ReaderValidationUtils_EntryWithoutType=An entry without a type name was found, but no expected type was specified. To allow entries without type information, the expected type must also be specified when the model is specified.
-ReaderValidationUtils_DerivedComplexTypesAreNotAllowed=Complex type '{1}' is a subtype of a base type '{0}'. Derived complex types are not supported.
 ReaderValidationUtils_CannotConvertPrimitiveValue=Cannot convert a primitive value to the expected type '{0}'. See the inner exception for more details.
 ReaderValidationUtils_MessageReaderSettingsBaseUriMustBeNullOrAbsolute=The base URI '{0}' specified in ODataMessageReaderSettings.BaseUri is invalid; it must be either null or an absolute URI.
 ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest=The ODataMessageReaderSettings.UndeclaredPropertyBehaviorKinds is not set to ODataUndeclaredPropertyBehaviorKinds.None. When reading request payloads, the ODataMessageReaderSettings.UndeclaredPropertyBehaviorKinds property must be set to ODataUndeclaredPropertyBehaviorKinds.None; other values are not supported.
@@ -791,7 +789,7 @@ ExpandItemBinder_PropertyIsNotANavigationProperty=Property '{0}' on type '{1}' i
 ExpandItemBinder_TypeSegmentNotFollowedByPath=Found a path within a select or expand query option that isn't ended by a non-type segment.
 ExpandItemBinder_PathTooDeep=Trying to parse a type segment path that is too long.
 ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath=Found a path traversing multiple navigation properties. Please rephrase the query such that each expand path contains only type segments and navigation properties.
-ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType=The $level option on navigation property '{0}' is not allowed, because the related entity type '{1}' cound not be cast to source entity type '{2}'.
+ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType=The $level option on navigation property '{0}' is not allowed, because the related entity type '{1}' could not be cast to source entity type '{2}'.
 
 Nodes_CollectionNavigationNode_MustHaveSingleMultiplicity=The navigation property must have a target multiplicity of 'One' or 'ZeroOrOne' to create a SingleNavigationNode.
 Nodes_NonentityParameterQueryNodeWithEntityType=An entity type '{0}' was given to NonEntityParameterQueryNode. Use EntityParameterQueryNode instead.
@@ -807,10 +805,10 @@ Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum=An inst
 ExpandTreeNormalizer_NonPathInPropertyChain=Found a segment that isn't a path while parsing the path within a select or expand query option.
 
 UriSelectParser_TermIsNotValid=Term '{0}' is not valid in a $select or $expand expression.
-UriSelectParser_InvalidTopOption=Top option must be an integer, it is set to '{0}' instead.
-UriSelectParser_InvalidSkipOption=Skip option must be an integer, it is set to '{0}' instead.
+UriSelectParser_InvalidTopOption=Top option must be a non-negative integer, it is set to '{0}' instead.
+UriSelectParser_InvalidSkipOption=Skip option must be a non-negative integer, it is set to '{0}' instead.
 UriSelectParser_InvalidCountOption=Count option must be a boolean value, it is set to '{0}' instead.
-UriSelectParser_InvalidLevelsOption=Levels option must be an integer or 'max', it is set to '{0}' instead.
+UriSelectParser_InvalidLevelsOption=Levels option must be a non-negative integer or 'max', it is set to '{0}' instead.
 UriSelectParser_SystemTokenInSelectExpand=Found system token '{0}' in select or expand clause '{1}'.
 UriParser_MissingExpandOption=Missing expand option on navigation property '{0}'. If a parenthesis expression follows an expanded navigation property, then at least one expand option must be provided.
 
@@ -819,7 +817,7 @@ UriParser_UriMustBeAbsolute=The URI '{0}' must be an absolute URI.
 UriParser_NegativeLimit=The limit must be greater than or equal to zero
 UriParser_ExpandCountExceeded=The result of parsing $expand contained at least {0} items, but the maximum allowed is {1}.
 UriParser_ExpandDepthExceeded=The result of parsing $expand was at least {0} items deep, but the maximum allowed is {1}.
-
+UriParser_TypeInvalidForSelectExpand=The type '{0}' is not valid for $select or $expand, only structured types are allowed.
 PathParser_EntityReferenceNotSupported=The request URI is not valid. $ref cannot be applied to the segment '{0}' since $ref can only follow an entity segment or entity collection segment.
 PathParser_CannotUseValueOnCollection=$value cannot be applied to a collection.
 PathParser_TypeMustBeRelatedToSet=The type '{0}' does not inherit from and is not a base type of '{1}'. The type of '{2}' must be related to the Type of the EntitySet.
@@ -865,7 +863,6 @@ RequestUriProcessor_CannotQueryCollections=The request URI is not valid. Since t
 RequestUriProcessor_SegmentDoesNotSupportKeyPredicates=The request URI is not valid. The segment '{0}' cannot include key predicates, however it may end with empty parenthesis.
 RequestUriProcessor_ValueSegmentAfterScalarPropertySegment=The segment '{1}' in the request URI is not valid. The segment '{0}' refers to a primitive property, function, or service operation, so the only supported value from the next segment is '$value'.
 RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType=The type '{0}' specified in the URI is neither a base type nor a sub-type of the previously-specified type '{1}'.
-ResourceType_ComplexTypeCannotBeOpen=Complex types can not be marked as 'Open'. Error occurred for type '{0}'.
 OpenNavigationPropertiesNotSupportedOnOpenTypes=Open navigation properties are not supported on OpenTypes. Property name: '{0}'.
 BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation=Error processing request stream. In batch mode, a resource can be cross-referenced only for bind/unbind operations. 
 DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion=The response requires that version {0} of the protocol be used, but the MaxProtocolVersion of the data service is set to {1}.

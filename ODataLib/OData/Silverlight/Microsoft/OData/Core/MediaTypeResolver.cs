@@ -197,6 +197,17 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// Accesses the version of the media type resolver.
+        /// </summary>
+        internal ODataVersion Version
+        {
+            get
+            {
+                return this.version;
+            }
+        }
+
+        /// <summary>
         /// Creates a new media type resolver for writers with the mappings for the specified version.
         /// </summary>
         /// <param name="version">The version used to write the payload.</param>

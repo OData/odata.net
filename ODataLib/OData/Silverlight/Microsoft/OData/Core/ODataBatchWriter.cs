@@ -559,14 +559,7 @@ namespace Microsoft.OData.Core
             }
 
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(method, "method");
-            if (this.changeSetBoundary == null)
-            {
-                if (!HttpUtils.IsQueryMethod(method))
-                {
-                    this.ThrowODataException(Strings.ODataBatch_InvalidHttpMethodForQueryOperation(method));
-                }
-            }
-            else
+            if (this.changeSetBoundary != null)
             {
                 if (HttpUtils.IsQueryMethod(method))
                 {

@@ -15,6 +15,9 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Annotations;
+    using Microsoft.OData.Edm.Expressions;
+    using Microsoft.OData.Edm.Vocabularis;
 
     /// <summary>
     /// Default implementation of <see cref="IODataEntryMetadataContext"/>
@@ -441,12 +444,21 @@ namespace Microsoft.OData.Core.Evaluation
                 {
                     if (this.etagProperties == null)
                     {
-                        IEnumerable<IEdmStructuralProperty> properties = this.actualEntityType.StructuralProperties();
-                        this.etagProperties = properties != null
-                            ? properties
-                                .Where(p => p.ConcurrencyMode == EdmConcurrencyMode.Fixed)
-                                .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.entry, p.Name, this.ActualEntityTypeName, /*isKeyProperty*/false))).ToArray()
-                            : EmptyProperties;
+                        IEnumerable<IEdmStructuralProperty> properties = this.ComputeETagPropertiesFromAnnotation();
+                        if (properties.Any())
+                        {
+                            this.etagProperties = properties
+                                .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.entry, p.Name, this.ActualEntityTypeName, /*isKeyProperty*/false))).ToArray();
+                        }
+                        else
+                        {
+                            properties = this.actualEntityType.StructuralProperties();
+                            this.etagProperties = properties != null 
+                                ? properties
+                                    .Where(p => p.ConcurrencyMode == EdmConcurrencyMode.Fixed)
+                                    .Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.entry, p.Name, this.ActualEntityTypeName, /*isKeyProperty*/false))).ToArray() 
+                                : EmptyProperties;
+                        }
                     }
 
                     return this.etagProperties;
@@ -494,6 +506,43 @@ namespace Microsoft.OData.Core.Evaluation
                     }
 
                     return this.selectedBindableOperations;
+                }
+            }
+
+            /// <summary>
+            /// Compute ETag from Annotation Core.OptimisticConcurrencyControl on EntitySet
+            /// </summary>
+            /// <returns>Enumerable of IEdmStructuralProperty</returns>
+            private IEnumerable<IEdmStructuralProperty> ComputeETagPropertiesFromAnnotation()
+            {
+                IEdmModel model = this.metadataContext.Model;
+                IEdmEntitySet entitySet = model.FindDeclaredEntitySet(this.typeContext.NavigationSourceName);
+
+                if (entitySet != null)
+                {
+                    IEdmVocabularyAnnotation annotation = model.FindDeclaredVocabularyAnnotations(entitySet)
+                        .SingleOrDefault(t => t.Term.FullName().Equals(CoreVocabularyConstants.CoreOptimisticConcurrencyControl, StringComparison.Ordinal));
+                    if (annotation is IEdmValueAnnotation)
+                    {
+                        IEdmExpression collectionExpression = (annotation as IEdmValueAnnotation).Value;
+                        if (collectionExpression is IEdmCollectionExpression)
+                        {
+                            IEnumerable<IEdmExpression> pathExpressions = (collectionExpression as IEdmCollectionExpression).Elements.Where(p => p is IEdmPathExpression);
+                            foreach (IEdmPathExpression pathExpression in pathExpressions)
+                            {
+                                // TODO: 
+                                //  1. Add support for Complex type
+                                //  2. Add new exception when collectionExpression is not IEdmCollectionExpression: CoreOptimisticConcurrencyControl must be followed by collection expression
+                                IEdmStructuralProperty property = this.actualEntityType.StructuralProperties().FirstOrDefault(p => p.Name == pathExpression.Path.LastOrDefault());
+                                if (property == null)
+                                {
+                                    throw new ODataException(Core.Strings.EdmValueUtils_PropertyDoesntExist(this.ActualEntityTypeName, pathExpression.Path.LastOrDefault()));
+                                }
+
+                                yield return property;
+                            }
+                        }
+                    }
                 }
             }
         }

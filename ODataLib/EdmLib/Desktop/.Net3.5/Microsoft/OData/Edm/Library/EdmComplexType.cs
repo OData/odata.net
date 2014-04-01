@@ -30,14 +30,38 @@ namespace Microsoft.OData.Edm.Library
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmComplexType"/> class.
-        /// Note: Complex type inheritance is not supported in EDM version 3.0 and above.
+        /// </summary>
+        /// <param name="namespaceName">The namespace this type belongs to.</param>
+        /// <param name="name">The name of this type within its namespace.</param>
+        /// <param name="baseType">The base type of this complex type.</param>
+        public EdmComplexType(string namespaceName, string name, IEdmComplexType baseType)
+            : this(namespaceName, name, baseType, false, false)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdmComplexType"/> class.
         /// </summary>
         /// <param name="namespaceName">The namespace this type belongs to.</param>
         /// <param name="name">The name of this type within its namespace.</param>
         /// <param name="baseType">The base type of this complex type.</param>
         /// <param name="isAbstract">Denotes whether this complex type is abstract.</param>
         public EdmComplexType(string namespaceName, string name, IEdmComplexType baseType, bool isAbstract)
-            : base(isAbstract, false, baseType)
+            : this(namespaceName, name, baseType, isAbstract, false)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdmComplexType"/> class.
+        /// Note: Complex type inheritance is not supported in EDM version 3.0 and above.
+        /// </summary>
+        /// <param name="namespaceName">The namespace this type belongs to.</param>
+        /// <param name="name">The name of this type within its namespace.</param>
+        /// <param name="baseType">The base type of this complex type.</param>
+        /// <param name="isAbstract">Denotes whether this complex type is abstract.</param>
+        /// <param name="isOpen">Denotes if the type is open.</param>
+        public EdmComplexType(string namespaceName, string name, IEdmComplexType baseType, bool isAbstract, bool isOpen)
+            : base(isAbstract, isOpen, baseType)
         {
             EdmUtil.CheckArgumentNull(namespaceName, "namespaceName");
             EdmUtil.CheckArgumentNull(name, "name");

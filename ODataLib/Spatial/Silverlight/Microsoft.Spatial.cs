@@ -73,8 +73,6 @@ namespace Microsoft.Spatial {
     /// </summary>
     
     internal sealed class TextRes {
-        internal const string PriorityQueueDoesNotContainItem = "PriorityQueueDoesNotContainItem";
-        internal const string PriorityQueueOperationNotValidOnEmptyQueue = "PriorityQueueOperationNotValidOnEmptyQueue";
         internal const string SpatialImplementation_NoRegisteredOperations = "SpatialImplementation_NoRegisteredOperations";
         internal const string InvalidPointCoordinate = "InvalidPointCoordinate";
         internal const string Point_AccessCoordinateWhenEmpty = "Point_AccessCoordinateWhenEmpty";

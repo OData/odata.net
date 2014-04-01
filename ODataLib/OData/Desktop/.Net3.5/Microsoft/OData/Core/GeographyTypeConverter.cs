@@ -15,6 +15,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.IO;
     using System.Xml;
+    using Microsoft.Data.Spatial;
     using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Core.Json;
     using Microsoft.Spatial;
@@ -74,8 +75,8 @@ namespace Microsoft.OData.Core
         /// <param name="jsonWriter">Instance of JsonWriter.</param>
         public void WriteJsonLight(object instance, IJsonWriter jsonWriter)
         {
-            IDictionary<string, object> jsonObject = GeoJsonObjectFormatter.Create().Write((ISpatial)instance);
-            jsonWriter.WriteJsonObjectValue(jsonObject, /*injectPropertyAction*/ null);
+            IGeoJsonWriter adapter = new GeoJsonWriterAdapter(jsonWriter);
+            ((Geography)instance).SendTo(GeoJsonObjectFormatter.Create().CreateWriter(adapter));
         }
     }
 }

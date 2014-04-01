@@ -24,22 +24,12 @@ namespace Microsoft.OData.Core.Json
     /// <summary>
     /// Writes text indented as per the indentation level setting
     /// </summary>
-    internal sealed class IndentedTextWriter : TextWriter
+    internal sealed class IndentedTextWriter : TextWriterWrapper
     {
         /// <summary>
         /// The indentation string to prepand to each line for each indentation level.
         /// </summary>
         private const string IndentationString = "  ";
-
-        /// <summary>
-        /// The underlying writer to write to.
-        /// </summary>
-        private readonly TextWriter writer;
-
-        /// <summary>
-        /// Set to true if the writer should actually indent or not.
-        /// </summary>
-        private readonly bool enableIndentation;
 
         /// <summary>
         /// Number which specifies the level of indentation. Starts with 0 which means no indentation.
@@ -55,40 +45,16 @@ namespace Microsoft.OData.Core.Json
         /// Constructor
         /// </summary>
         /// <param name="writer">The underlying writer to wrap.</param>
-        /// <param name="enableIndentation">Set to true if the writer should actually indent or not.</param>
-        public IndentedTextWriter(TextWriter writer, bool enableIndentation)
+        public IndentedTextWriter(TextWriter writer)
             : base(writer.FormatProvider)
         {
             this.writer = writer;
-            this.enableIndentation = enableIndentation;
-        }
-
-        /// <summary>
-        /// Returns the Encoding for the given writer.
-        /// </summary>
-        public override Encoding Encoding
-        {
-            get
-            {
-                return this.writer.Encoding;
-            }
-        }
-
-        /// <summary>
-        /// Returns the new line character.
-        /// </summary>
-        public override string NewLine
-        {
-            get
-            {
-                return this.writer.NewLine;
-            }
         }
 
         /// <summary>
         /// Increases the level of indentation applied to the output.
         /// </summary>
-        public void IncreaseIndentation()
+        public override void IncreaseIndentation()
         {
             this.indentLevel++;
         }
@@ -96,7 +62,7 @@ namespace Microsoft.OData.Core.Json
         /// <summary>
         /// Decreases the level of indentation applied to the output.
         /// </summary>
-        public void DecreaseIndentation()
+        public override void DecreaseIndentation()
         {
             Debug.Assert(this.indentLevel > 0, "Trying to decrease indentation below zero.");
             if (this.indentLevel < 1)
@@ -118,15 +84,6 @@ namespace Microsoft.OData.Core.Json
             InternalCloseOrDispose();
         }
 #endif
-
-        /// <summary>
-        /// Clears the buffer of the current writer.
-        /// </summary>
-        public override void Flush()
-        {
-            this.writer.Flush();
-        }
-
         /// <summary>
         /// Writes the given string value to the underlying writer.
         /// </summary>
@@ -152,24 +109,8 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         public override void WriteLine()
         {
-            if (this.enableIndentation)
-            {
-                base.WriteLine();
-            }
-
+            base.WriteLine();
             this.indentationPending = true;
-        }
-
-        /// <summary>
-        /// Closes or disposes the underlying writer.
-        /// </summary>
-        private static void InternalCloseOrDispose()
-        {
-            Debug.Assert(false, "Should never call Close or Dispose on the TextWriter.");
-
-            // This is done to make sure we don't accidently close or dispose the underlying stream.
-            // Since we don't own the stream, we should never close or dispose it.
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -177,7 +118,7 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         private void WriteIndentation()
         {
-            if (!this.enableIndentation || !this.indentationPending)
+            if (!this.indentationPending)
             {
                 return;
             }

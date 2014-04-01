@@ -36,7 +36,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             var structuredType = edmType as IEdmStructuredType;
             if (structuredType != null)
             {
-                ThrowIfOpenComplexType(edmType);
                 return structuredType.IsOpen;
             }
 
@@ -187,23 +186,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Throws an exception if the given type is an open complex type.
-        /// </summary>
-        /// <param name="edmType">The type to check.</param>
-        private static void ThrowIfOpenComplexType(IEdmType edmType)
-        {
-            Debug.Assert(edmType != null, "edmType != null");
-            if (edmType.TypeKind == EdmTypeKind.Complex)
-            {
-                var complexType = ((IEdmComplexType)edmType);
-                if (complexType.IsOpen)
-                {
-                    throw new InvalidOperationException(ErrorStrings.ResourceType_ComplexTypeCannotBeOpen(complexType.FullName()));
-                }
-            }
         }
     }
 }

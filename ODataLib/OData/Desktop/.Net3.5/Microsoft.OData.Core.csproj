@@ -50,13 +50,17 @@
     <Compile Include="Microsoft\OData\Core\Evaluation\LiteralFormatter.cs" />
     <Compile Include="Microsoft\OData\Core\Evaluation\KeySerializer.cs" />
     <Compile Include="Microsoft\OData\Core\Evaluation\UrlConvention.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\NonIndentedTextWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\GeoJsonWriterAdapter.cs" />
     <Compile Include="Microsoft\OData\Core\ODataContextUrlInfo.cs" />
     <Compile Include="Microsoft\OData\Core\ODataContextUrlLevel.cs" />
     <Compile Include="Microsoft\OData\Core\ODataFunctionImportInfo.cs" />
     <Compile Include="Microsoft\OData\Core\ODataSingletonInfo.cs" />
     <Compile Include="Microsoft\OData\Core\ODataContextUriBuilder.cs" />
     <Compile Include="Microsoft\OData\Core\ODataServiceDocumentElement.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ODataQueryOptionParser.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SearchBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\UriTemplateParser.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\SearchLexer.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\Parsers\BinaryOperatorBinder.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\Parsers\BindingState.cs" />
@@ -81,6 +85,7 @@
     <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectExpandSyntacticUnifier.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectExpandTermParser.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectTreeNormalizer.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\CollectionOpenPropertyAccessNode.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SearchTermNode.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\LevelsClause.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ParameterAliasNode.cs" />
@@ -89,6 +94,7 @@
     <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SingletonSegment.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\EntityIdSegment.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\OperationImportSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\UriTemplateExpression.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\StringLiteralToken.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\Visitors\SplitEndingSegmentOfTypeHandler.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\Visitors\PathSegmentToResourcePathTranslator.cs" />
@@ -416,6 +422,7 @@
     <Compile Include="Microsoft\OData\Core\Json\BufferingJsonReader.cs" />
     <Compile Include="Microsoft\OData\Core\Json\IJsonWriter.cs" />
     <Compile Include="Microsoft\OData\Core\Json\IndentedTextWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\TextWriterWrapper.cs" />
     <Compile Include="Microsoft\OData\Core\Json\IODataJsonOperationsDeserializerContext.cs" />
     <Compile Include="Microsoft\OData\Core\Json\JsonConstants.cs" />
     <Compile Include="Microsoft\OData\Core\Json\JsonLightInstanceAnnotationWriter.cs" />

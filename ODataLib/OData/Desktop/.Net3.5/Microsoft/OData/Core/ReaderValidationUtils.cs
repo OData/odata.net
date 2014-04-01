@@ -843,8 +843,12 @@ namespace Microsoft.OData.Core
                     // in any way. In that case we will just use the expected type because we are in lax mode. 
                     if (payloadType != null && expectedTypeKind == payloadType.TypeKind)
                     {
-                        // Just verify that it's not a derived complex type, in all other cases simply use the expected type.
+                        // Verify if it's a derived complex type, in all other cases simply use the expected type.
                         VerifyComplexType(expectedTypeReference, payloadType, /* failIfNotRelated */ false);
+                        if (EdmLibraryExtensions.IsAssignableFrom(expectedTypeReference.AsComplex().ComplexDefinition(), (IEdmComplexType)payloadType))
+                        {
+                            return payloadType.ToTypeReference(/*nullable*/ true);
+                        }
                     }
 
                     break;
@@ -900,7 +904,11 @@ namespace Microsoft.OData.Core
                 case EdmTypeKind.Complex:
                     if (payloadType != null)
                     {
+                        // The payload type must be compatible to the expected type.
                         VerifyComplexType(expectedTypeReference, payloadType, /* failIfNotRelated */ true);
+
+                        // Use the payload type
+                        return payloadType.ToTypeReference(/*nullable*/ true);
                     }
 
                     break;
@@ -963,8 +971,8 @@ namespace Microsoft.OData.Core
         /// <param name="failIfNotRelated">true if the method should fail if the <paramref name="payloadType"/> doesn't match the <paramref name="expectedTypeReference"/>;
         /// false if the method should just return in that case.</param>
         /// <remarks>
-        /// The method verifies that the <paramref name="payloadType"/> is not a derived complex type of the <paramref name="expectedTypeReference"/>
-        /// and always fails in that case.
+        /// The method verifies that the <paramref name="payloadType"/> equals to or derives from the <paramref name="expectedTypeReference"/>
+        /// and always fails in other cases.
         /// </remarks>
         private static void VerifyComplexType(IEdmTypeReference expectedTypeReference, IEdmType payloadType, bool failIfNotRelated)
         {
@@ -974,15 +982,9 @@ namespace Microsoft.OData.Core
             // Note that we compare the type definitions, since we want to ignore nullability (the payload type doesn't specify nullability).
             IEdmStructuredType structuredExpectedType = expectedTypeReference.AsStructured().StructuredDefinition();
             IEdmStructuredType structuredPayloadType = (IEdmStructuredType)payloadType;
-            if (!structuredExpectedType.IsEquivalentTo(structuredPayloadType))
+            
+            if (!EdmLibraryExtensions.IsAssignableFrom(structuredExpectedType, structuredPayloadType))
             {
-                // We want a specific error message in case of inheritance.
-                if (EdmLibraryExtensions.IsAssignableFrom(structuredExpectedType, structuredPayloadType))
-                {
-                    // We don't allow type inheritance on complex types.
-                    throw new ODataException(Strings.ReaderValidationUtils_DerivedComplexTypesAreNotAllowed(structuredExpectedType.ODataFullName(), structuredPayloadType.ODataFullName()));
-                }
-
                 if (failIfNotRelated)
                 {
                     // And now the generic one when the types are not related at all.
@@ -997,7 +999,7 @@ namespace Microsoft.OData.Core
         /// <param name="expectedTypeReference">The expected type reference.</param>
         /// <param name="payloadType">The payload type.</param>
         /// <remarks>
-        /// This method verifies that item type is not a derived complex type, we want to explicitly disallow that case for possible future enablement.
+        /// This method verifies that item type is compatible with expected type.
         /// </remarks>
         private static void VerifyCollectionComplexItemType(IEdmTypeReference expectedTypeReference, IEdmType payloadType)
         {
@@ -1015,8 +1017,6 @@ namespace Microsoft.OData.Core
                 if (payloadItemTypeReference != null && payloadItemTypeReference.IsODataComplexTypeKind())
                 {
                     // Note that this method is called from both strict and lax code paths, so we must not fail if the types are not related.
-                    // The strict caller will fail if the types are not equal after this method returns. We use this method there to only get
-                    // a more specific error message if the derived complex types are used.
                     VerifyComplexType(expectedItemTypeReference, payloadItemTypeReference.Definition, /* failIfNotRelated */ false);
                 }
             }

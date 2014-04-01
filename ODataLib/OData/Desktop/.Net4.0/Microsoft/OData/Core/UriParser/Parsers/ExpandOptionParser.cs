@@ -60,6 +60,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             long? skipOption = null;
             bool? countOption = null;
             long? levelsOption = null;
+            QueryToken searchOption = null;
             SelectToken selectOption = null;
             ExpandToken expandOption = null;
 
@@ -109,9 +110,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 this.lexer.NextToken();
                                 string topText = this.ReadQueryOption();
 
-                                // TryParse requires a non-nullable long.
+                                // TryParse requires a non-nullable non-negative long.
                                 long top;
-                                if (!long.TryParse(topText, out top))
+                                if (!long.TryParse(topText, out top) || top < 0)
                                 {
                                     throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidTopOption(topText));
                                 }
@@ -126,9 +127,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 this.lexer.NextToken();
                                 string skipText = this.ReadQueryOption();
 
-                                // TryParse requires a non-nullable long.
+                                // TryParse requires a non-nullable non-negative long.
                                 long skip;
-                                if (!long.TryParse(skipText, out skip))
+                                if (!long.TryParse(skipText, out skip) || skip < 0)
                                 {
                                     throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidSkipOption(skipText));
                                 }
@@ -176,14 +177,27 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 {
                                     levelsOption = long.MinValue;
                                 }
-                                else if (long.TryParse(levelsText, out level))
-                                {
-                                    levelsOption = level;
-                                }
-                                else
+                                else if (!long.TryParse(levelsText, out level) || level < 0)
                                 {
                                     throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidLevelsOption(levelsText));
                                 }
+                                else
+                                {
+                                    levelsOption = level;
+                                }
+
+                                break;
+                            }
+
+                        case ExpressionConstants.QueryOptionSearch:
+                            {
+                                // advance to the equal sign
+                                this.lexer.NextToken();
+                                string searchText = this.ReadQueryOption();
+
+                                // TODO using the wrong max depth here - should use searchs's. We need the settings object.
+                                SearchParser searchParser = new SearchParser(this.maxRecursionDepth);
+                                searchOption = searchParser.ParseSearch(searchText);
 
                                 break;
                             }
@@ -229,7 +243,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
             }
 
-            return new ExpandTermToken(pathToken, filterOption, orderByOptions, topOption, skipOption, countOption, levelsOption, selectOption, expandOption);
+            return new ExpandTermToken(pathToken, filterOption, orderByOptions, topOption, skipOption, countOption, levelsOption, searchOption, selectOption, expandOption);
         }
 
         /// <summary>

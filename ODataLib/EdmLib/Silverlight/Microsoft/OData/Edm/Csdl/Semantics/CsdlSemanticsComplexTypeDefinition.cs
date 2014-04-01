@@ -51,6 +51,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.complex.IsAbstract; }
         }
 
+        public override bool IsOpen
+        {
+            get { return this.complex.IsOpen; }
+        }
+
         public string Name
         {
             get { return this.complex.Name; }

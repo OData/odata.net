@@ -12,6 +12,7 @@ namespace Microsoft.OData.Core.UriParser
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Edm;
@@ -28,11 +29,19 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>The parser's configuration. </summary>
         private readonly ODataUriParserConfiguration configuration;
 
+        /// <summary>
+        /// Absolute URI of the service root.
+        /// </summary>
+        private readonly Uri serviceRoot;
+
         /// <summary>The full Uri to be parsed. </summary>
         private readonly Uri fullUri;
 
         /// <summary>Query option list</summary>
         private readonly List<CustomQueryOptionToken> queryOptions;
+
+        /// <summary>Parser for query option.</summary>
+        private ODataQueryOptionParser queryOptionParser;
 
         /// <summary>Target Edm type. </summary>
         private IEdmType targetEdmType;
@@ -43,20 +52,8 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>OData Path.</summary>
         private ODataPath odataPath;
 
-        /// <summary>Filter clause.</summary>
-        private FilterClause filterClause;
-
-        /// <summary>Orderby clause.</summary>
-        private OrderByClause orderByClause;
-
-        /// <summary>SelectAndExpand clause.</summary>
-        private SelectExpandClause selectExpandClause;
-
         /// <summary>EntityId Segment.</summary>
         private EntityIdSegment entityIdSegment;
-
-        /// <summary>Search clause.</summary>
-        private SearchClause searchClause;
         #endregion
 
         /// <summary>
@@ -78,21 +75,10 @@ namespace Microsoft.OData.Core.UriParser
                 throw new ODataException(ODataErrorStrings.UriParser_UriMustBeAbsolute(serviceRoot));
             }
 
-            this.configuration = new ODataUriParserConfiguration(model, serviceRoot);
+            this.configuration = new ODataUriParserConfiguration(model);
+            this.serviceRoot = Core.UriUtils.EnsureTaillingSlash(serviceRoot);
             this.fullUri = fullUri.IsAbsoluteUri ? fullUri : Core.UriUtils.UriToAbsoluteUri(this.ServiceRoot, fullUri);
             this.queryOptions = UriUtils.ParseQueryOptions(this.fullUri);
-        }
-
-        /// <summary>
-        /// Build an ODataUriParser
-        /// </summary>
-        /// <param name="model">Model to use for metadata binding.</param>
-        /// <param name="serviceRoot">Absolute URI of the service root.</param>
-        /// <exception cref="System.ArgumentNullException">Throws if input model is null.</exception>
-        /// <exception cref="ArgumentException">Throws if the input serviceRoot is not an AbsoluteUri</exception>
-        internal ODataUriParser(IEdmModel model, Uri serviceRoot)
-        {
-            this.configuration = new ODataUriParserConfiguration(model, serviceRoot);
         }
 
         /// <summary>
@@ -116,7 +102,7 @@ namespace Microsoft.OData.Core.UriParser
         /// </summary>
         public Uri ServiceRoot
         {
-            get { return this.configuration.ServiceRoot; }
+            get { return this.serviceRoot; }
         }
 
         /// <summary>
@@ -140,11 +126,25 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
+        /// Whether Uri template parsing is enabled. Uri template for keys and function parameters are supported.
+        /// See <see cref="UriTemplateParser"/> class for detail.
+        /// </summary>
+        public bool EnableUriTemplateParsing
+        {
+            get { return this.configuration.EnableUriTemplateParsing; }
+            set { this.configuration.EnableUriTemplateParsing = value; }
+        }
+
+        /// <summary>
         /// Get the parameter alias nodes info.
         /// </summary>
         public IDictionary<string, SingleValueNode> ParameterAliasNodes
         {
-            get { return this.ParameterAliasValueAccessor.ParameterAliasValueNodesCached; }
+            get
+            {
+                this.Initialize();
+                return this.ParameterAliasValueAccessor.ParameterAliasValueNodesCached;
+            }
         }
 
         /// <summary>
@@ -173,20 +173,8 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>A <see cref="FilterClause"/> representing the metadata bound filter expression.</returns>
         public FilterClause ParseFilter()
         {
-            if (this.filterClause != null)
-            {
-                return this.filterClause;
-            }
-
             this.Initialize();
-            string filterQuery = queryOptions.GetQueryOptionValue(UriQueryConstants.FilterQueryOption);
-            if (string.IsNullOrEmpty(filterQuery) || this.targetEdmType == null)
-            {
-                return null;
-            }
-
-            this.filterClause = this.ParseFilterImplementation(filterQuery, this.targetEdmType, this.targetNavigationSource);
-            return this.filterClause;
+            return queryOptionParser.ParseFilter();
         }
 
         /// <summary>
@@ -196,20 +184,8 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>A <see cref="OrderByClause"/> representing the metadata bound orderby expression.</returns>
         public OrderByClause ParseOrderBy()
         {
-            if (this.orderByClause != null)
-            {
-                return this.orderByClause;
-            }
-
             this.Initialize();
-            string orderByQuery = queryOptions.GetQueryOptionValue(UriQueryConstants.OrderByQueryOption);
-            if (string.IsNullOrEmpty(orderByQuery) || this.targetEdmType == null)
-            {
-                return null;
-            }
-
-            this.orderByClause = this.ParseOrderByImplementation(orderByQuery, this.targetEdmType, this.targetNavigationSource);
-            return this.orderByClause;
+            return this.queryOptionParser.ParseOrderBy();
         }
 
         /// <summary>
@@ -218,21 +194,8 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>A SelectExpandClause with the semantic representation of select and expand terms</returns>
         public SelectExpandClause ParseSelectAndExpand()
         {
-            if (this.selectExpandClause != null)
-            {
-                return this.selectExpandClause;
-            }
-
             this.Initialize();
-            string selectQuery = queryOptions.GetQueryOptionValue(UriQueryConstants.SelectQueryOption);
-            string expandQuery = queryOptions.GetQueryOptionValue(UriQueryConstants.ExpandQueryOption);
-            if (selectQuery == null && expandQuery == null || this.targetEdmType == null)
-            {
-                return null;
-            }
-
-            this.selectExpandClause = this.ParseSelectAndExpandImplementation(selectQuery, expandQuery, this.targetEdmType as IEdmStructuredType, this.targetNavigationSource);
-            return this.selectExpandClause;
+            return this.queryOptionParser.ParseSelectAndExpand();
         }
 
         /// <summary>
@@ -265,145 +228,43 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
+        /// Parses a $top query option
+        /// </summary>
+        /// <returns>A value representing that top option, null if $top query does not exist.</returns>
+        public long? ParseTop()
+        {
+            this.Initialize();
+            return this.queryOptionParser.ParseTop();
+        }
+
+        /// <summary>
+        /// Parses a $skip query option
+        /// </summary>
+        /// <returns>A value representing that skip option, null if $skip query does not exist.</returns>
+        public long? ParseSkip()
+        {
+            this.Initialize();
+            return this.queryOptionParser.ParseSkip();
+        }
+
+        /// <summary>
+        /// Parses a $count query option
+        /// </summary>
+        /// <returns>An count representing that count option, null if $count query does not exist.</returns>
+        public bool? ParseCount()
+        {
+            this.Initialize();
+            return this.queryOptionParser.ParseCount();
+        }
+
+        /// <summary>
         /// Parses the $search.
         /// </summary>
         /// <returns>SearchClause representing $search.</returns>
         public SearchClause ParseSearch()
         {
-            if (this.searchClause != null)
-            {
-                return this.searchClause;
-            }
-
             this.Initialize();
-            string searchQuery = queryOptions.GetQueryOptionValue(UriQueryConstants.SearchQueryOption);
-
-            if (searchQuery == null)
-            {
-                return null;
-            }
-
-            this.searchClause = this.ParseSearchImplementation(searchQuery);
-            return searchClause;
-        }
-
-        /// <summary>
-        /// Parses a <paramref name="filter"/> clause on the given <paramref name="elementType"/>, binding
-        /// the text into semantic nodes using the provided <paramref name="model"/>.
-        /// </summary>
-        /// <param name="filter">String representation of the filter expression.</param>
-        /// <param name="model">Model to use for metadata binding.</param>
-        /// <param name="elementType">Type that the filter clause refers to.</param>
-        /// <returns>A <see cref="FilterClause"/> representing the metadata bound filter expression.</returns>
-        internal static FilterClause ParseFilter(string filter, IEdmModel model, IEdmType elementType)
-        {
-            ODataUriParser parser = new ODataUriParser(model, null);
-            return parser.ParseFilter(filter, elementType, null);
-        }
-
-        /// <summary>
-        /// Parses a <paramref name="filter"/> clause on the given <paramref name="elementType"/>, binding
-        /// the text into semantic nodes using the provided <paramref name="model"/>.
-        /// </summary>
-        /// <param name="filter">String representation of the filter expression.</param>
-        /// <param name="model">Model to use for metadata binding.</param>
-        /// <param name="elementType">Type that the filter clause refers to.</param>
-        /// <param name="navigationSource">NavigationSource that the elements beign filtered are from.</param>
-        /// <returns>A <see cref="FilterClause"/> representing the metadata bound filter expression.</returns>
-        internal static FilterClause ParseFilter(string filter, IEdmModel model, IEdmType elementType, IEdmNavigationSource navigationSource)
-        {
-            ODataUriParser parser = new ODataUriParser(model, null);
-            return parser.ParseFilter(filter, elementType, navigationSource);
-        }
-
-        /// <summary>
-        /// Parses a <paramref name="orderBy"/> clause on the given <paramref name="elementType"/>, binding
-        /// the text into semantic nodes using the provided <paramref name="model"/>.
-        /// </summary>
-        /// <param name="orderBy">String representation of the orderby expression.</param>
-        /// <param name="model">Model to use for metadata binding.</param>
-        /// <param name="elementType">Type that the orderby clause refers to.</param>
-        /// <returns>A <see cref="OrderByClause"/> representing the metadata bound orderby expression.</returns>
-        internal static OrderByClause ParseOrderBy(string orderBy, IEdmModel model, IEdmType elementType)
-        {
-            ODataUriParser parser = new ODataUriParser(model, null);
-            return parser.ParseOrderBy(orderBy, elementType, null);
-        }
-
-        /// <summary>
-        /// Parses a <paramref name="orderBy "/> clause on the given <paramref name="elementType"/>, binding
-        /// the text into semantic nodes using the provided <paramref name="model"/>.
-        /// </summary>
-        /// <param name="orderBy">String representation of the orderby expression.</param>
-        /// <param name="model">Model to use for metadata binding.</param>
-        /// <param name="elementType">Type that the orderby clause refers to.</param>
-        /// <param name="navigationSource">Navigation source that the elements beign filtered are from.</param>
-        /// <returns>A <see cref="OrderByClause"/> representing the metadata bound orderby expression.</returns>
-        internal static OrderByClause ParseOrderBy(string orderBy, IEdmModel model, IEdmType elementType, IEdmNavigationSource navigationSource)
-        {
-            ODataUriParser parser = new ODataUriParser(model, null);
-            return parser.ParseOrderBy(orderBy, elementType, navigationSource);
-        }
-
-        /// <summary>
-        /// Parse a filter clause from an instantiated class.
-        /// </summary>
-        /// <param name="filter">the filter clause to parse</param>
-        /// <param name="elementType">Type that the select and expand clauses are projecting.</param>
-        /// <param name="navigationSource">Navigation source that the elements being filtered are from.</param>
-        /// <returns>A FilterClause representing the metadata bound filter expression.</returns>
-        internal FilterClause ParseFilter(string filter, IEdmType elementType, IEdmNavigationSource navigationSource)
-        {
-            return this.ParseFilterImplementation(filter, elementType, navigationSource);
-        }
-
-        /// <summary>
-        /// Parse an orderby clause from an instance of this class
-        /// </summary>
-        /// <param name="orderBy">the orderby clause to parse</param>
-        /// <param name="elementType">Type that the select and expand clauses are projecting.</param>
-        /// <param name="navigationSource">Navigation source that the elements being filtered are from.</param>
-        /// <returns>An OrderByClause representing the metadata bound orderby expression.</returns>
-        internal OrderByClause ParseOrderBy(string orderBy, IEdmType elementType, IEdmNavigationSource navigationSource)
-        {
-            return this.ParseOrderByImplementation(orderBy, elementType, navigationSource);
-        }
-
-        /// <summary>
-        /// Parses a <paramref name="pathUri"/> into a semantic <see cref="ODataPath"/> object. 
-        /// </summary>
-        /// <remarks>
-        /// This is designed to parse the Path of a URL. If it is used to parse paths that are contained
-        /// within other places, such as $filter expressions, then it may not enforce correct rules.
-        /// </remarks>
-        /// <param name="pathUri">The absolute URI which holds the path to parse.</param>
-        /// <returns>An <see cref="ODataPath"/> representing the metadata-bound path expression.</returns>
-        /// <exception cref="ODataException">Throws if the input path is not an absolute uri.</exception>
-        internal ODataPath ParsePath(Uri pathUri)
-        {
-            ExceptionUtils.CheckArgumentNotNull(pathUri, "pathUri");
-
-            if (!pathUri.IsAbsoluteUri)
-            {
-                throw new ODataException(ODataErrorStrings.UriParser_UriMustBeAbsolute(pathUri));
-            }
-
-            UriPathParser pathParser = new UriPathParser(this.Settings.PathLimit);
-            var rawSegments = pathParser.ParsePathIntoSegments(pathUri, this.configuration.ServiceRoot);
-            return ODataPathFactory.BindPath(rawSegments, this.configuration);
-        }
-
-        /// <summary>
-        /// ParseSelectAndExpand from an instantiated class
-        /// </summary>
-        /// <param name="select">the select to parse</param>
-        /// <param name="expand">the expand to parse</param>
-        /// <param name="elementType">Type that the select and expand clauses are projecting.</param>
-        /// <param name="navigationSource">Navigation source that the elements being filtered are from. This can be null, if so that null will propagate through the resulting SelectExpandClause.</param>
-        /// <returns>A SelectExpandClause with the semantic representation of select and expand terms</returns>
-        internal SelectExpandClause ParseSelectAndExpand(string select, string expand, IEdmStructuredType elementType, IEdmNavigationSource navigationSource)
-        {
-            return this.ParseSelectAndExpandImplementation(select, expand, elementType, navigationSource);
+            return this.queryOptionParser.ParseSearch();
         }
 
         /// <summary>
@@ -417,13 +278,27 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Parses a query count option
+        /// Parses a the fullUri into a semantic <see cref="ODataPath"/> object. 
         /// </summary>
-        /// <param name="count">The count string from the query</param>
-        /// <returns>An count representing that count option.</returns>
-        internal bool ParseCount(string count)
+        /// <remarks>
+        /// This is designed to parse the Path of a URL. If it is used to parse paths that are contained
+        /// within other places, such as $filter expressions, then it may not enforce correct rules.
+        /// </remarks>
+        /// <returns>An <see cref="ODataPath"/> representing the metadata-bound path expression.</returns>
+        /// <exception cref="ODataException">Throws if the input path is not an absolute uri.</exception>
+        private ODataPath ParsePathImplementation()
         {
-            return this.ParseQueryCountImplementation(count);
+            Uri pathUri = this.fullUri;
+            ExceptionUtils.CheckArgumentNotNull(pathUri, "pathUri");
+
+            if (!pathUri.IsAbsoluteUri)
+            {
+                throw new ODataException(ODataErrorStrings.UriParser_UriMustBeAbsolute(pathUri));
+            }
+
+            UriPathParser pathParser = new UriPathParser(this.Settings.PathLimit);
+            var rawSegments = pathParser.ParsePathIntoSegments(pathUri, this.ServiceRoot);
+            return ODataPathFactory.BindPath(rawSegments, this.configuration);
         }
 
         /// <summary>
@@ -437,7 +312,8 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             this.ParameterAliasValueAccessor = new ParameterAliasValueAccessor(queryOptions.GetParameterAliases());
-            this.odataPath = this.ParsePath(this.fullUri);
+
+            this.odataPath = this.ParsePathImplementation();
             ODataPathSegment lastSegment = this.odataPath.LastSegment;
             ODataPathSegment previous = null;
             var segs = odataPath.GetEnumerator();
@@ -459,13 +335,25 @@ namespace Microsoft.OData.Core.UriParser
                 this.targetEdmType = lastSegment.TargetEdmType;
                 if (this.targetEdmType != null)
                 {
-                    IEdmEntityType type;
-                    if (this.targetEdmType.IsEntityOrEntityCollectionType(out type))
+                    IEdmCollectionType collectionType = this.targetEdmType as IEdmCollectionType;
+                    if (collectionType != null)
                     {
-                        this.targetEdmType = type;
+                        this.targetEdmType = collectionType.ElementType.Definition;
                     }
                 }
             }
+
+            IDictionary<string, string> queryOptionDic = queryOptions == null ?
+                                                            new Dictionary<string, string>(StringComparer.Ordinal) :
+                                                            queryOptions.Where(_ => !string.IsNullOrEmpty(_.Name))
+                                                                .ToDictionary(
+                                                                    customQueryOptionToken => customQueryOptionToken.Name,
+                                                                    customQueryOptionToken => queryOptions.GetQueryOptionValue(customQueryOptionToken.Name));
+
+            this.queryOptionParser = new ODataQueryOptionParser(this.Model, this.targetEdmType, this.targetNavigationSource, queryOptionDic)
+                                        {
+                                            Configuration = this.configuration
+                                        };
         }
 
         /// <summary>
@@ -475,143 +363,15 @@ namespace Microsoft.OData.Core.UriParser
         private ODataUri ParseUriImplementation()
         {
             ExceptionUtils.CheckArgumentNotNull(this.configuration.Model, "model");
-            ExceptionUtils.CheckArgumentNotNull(this.configuration.ServiceRoot, "serviceRoot");
+            ExceptionUtils.CheckArgumentNotNull(this.ServiceRoot, "serviceRoot");
             ExceptionUtils.CheckArgumentNotNull(this.fullUri, "fullUri");
 
-            SyntacticTree syntax = SyntacticTree.ParseUri(this.fullUri, this.configuration.ServiceRoot, this.Settings.FilterLimit);
+            SyntacticTree syntax = SyntacticTree.ParseUri(this.fullUri, this.ServiceRoot, this.Settings.FilterLimit);
             ExceptionUtils.CheckArgumentNotNull(syntax, "syntax");
             BindingState state = new BindingState(this.configuration);
             MetadataBinder binder = new MetadataBinder(state);
             ODataUriSemanticBinder uriBinder = new ODataUriSemanticBinder(state, binder.Bind);
             return uriBinder.BindTree(syntax);
-        }
-
-        /// <summary>
-        /// Parses a <paramref name="filter"/> clause on the given <paramref name="elementType"/>, binding
-        /// the text into semantic nodes using the provided.
-        /// </summary>
-        /// <param name="filter">String representation of the filter expression.</param>
-        /// <param name="elementType">Type that the filter clause refers to.</param>
-        /// <param name="navigationSource">Navigation source that the elements beign filtered are from.</param>
-        /// <returns>A <see cref="FilterClause"/> representing the metadata bound filter expression.</returns>
-        private FilterClause ParseFilterImplementation(string filter, IEdmType elementType, IEdmNavigationSource navigationSource)
-        {
-            ExceptionUtils.CheckArgumentNotNull(this.configuration, "this.configuration");
-            ExceptionUtils.CheckArgumentNotNull(elementType, "elementType");
-            ExceptionUtils.CheckArgumentNotNull(filter, "filter");
-
-            // Get the syntactic representation of the filter expression
-            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(this.Settings.FilterLimit);
-            QueryToken filterToken = expressionParser.ParseFilter(filter);
-
-            // Bind it to metadata
-            BindingState state = new BindingState(this.configuration);
-            state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(elementType.ToTypeReference(), navigationSource);
-            state.RangeVariables.Push(state.ImplicitRangeVariable);
-            MetadataBinder binder = new MetadataBinder(state);
-            FilterBinder filterBinder = new FilterBinder(binder.Bind, state);
-            FilterClause boundNode = filterBinder.BindFilter(filterToken);
-
-            return boundNode;
-        }
-
-        /// <summary>
-        /// Parses a <paramref name="orderBy "/> clause on the given <paramref name="elementType"/>, binding
-        /// the text into semantic nodes using the provided model.
-        /// </summary>
-        /// <param name="orderBy">String representation of the orderby expression.</param>
-        /// <param name="elementType">Type that the orderby clause refers to.</param>
-        /// <param name="navigationSource">avigationSource that the elements beign filtered are from.</param>
-        /// <returns>A <see cref="OrderByClause"/> representing the metadata bound orderby expression.</returns>
-        private OrderByClause ParseOrderByImplementation(string orderBy, IEdmType elementType, IEdmNavigationSource navigationSource)
-        {
-            ExceptionUtils.CheckArgumentNotNull(this.configuration.Model, "model");
-            ExceptionUtils.CheckArgumentNotNull(elementType, "elementType");
-            ExceptionUtils.CheckArgumentNotNull(orderBy, "orderBy");
-
-            // Get the syntactic representation of the filter expression
-            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(this.Settings.OrderByLimit);
-            var orderByQueryTokens = expressionParser.ParseOrderBy(orderBy);
-
-            // Bind it to metadata
-            BindingState state = new BindingState(this.configuration);
-            state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(elementType.ToTypeReference(), navigationSource);
-            state.RangeVariables.Push(state.ImplicitRangeVariable);
-            MetadataBinder binder = new MetadataBinder(state);
-            OrderByBinder orderByBinder = new OrderByBinder(binder.Bind);
-            OrderByClause orderByClause = orderByBinder.BindOrderBy(state, orderByQueryTokens);
-
-            return orderByClause;
-        }
-
-        /// <summary>
-        /// Parses the <paramref name="select"/> and <paramref name="expand"/> clauses on the given <paramref name="elementType"/>, binding
-        /// the text into a metadata-bound list of properties to be selected using the provided model.
-        /// </summary>
-        /// <param name="select">String representation of the select expression from the URI.</param>
-        /// <param name="expand">String representation of the expand expression from the URI.</param>
-        /// <param name="elementType">Type that the select and expand clauses are projecting.</param>
-        /// <param name="navigationSource">Navigation source that the elements being filtered are from.</param>
-        /// <returns>A <see cref="SelectExpandClause"/> representing the metadata bound select and expand expression.</returns>
-        private SelectExpandClause ParseSelectAndExpandImplementation(string select, string expand, IEdmStructuredType elementType, IEdmNavigationSource navigationSource)
-        {
-            ExceptionUtils.CheckArgumentNotNull(this.configuration.Model, "model");
-            ExceptionUtils.CheckArgumentNotNull(elementType, "elementType");
-
-            ExpandToken expandTree;
-            SelectToken selectTree;
-
-            // syntactic pass
-            SelectExpandSyntacticParser.Parse(select, expand, this.configuration, out expandTree, out selectTree);
-
-            // semantic pass
-            SelectExpandSemanticBinder binder = new SelectExpandSemanticBinder();
-            return binder.Bind(elementType, navigationSource, expandTree, selectTree, this.configuration);
-        }
-
-        /// <summary>
-        /// Parses a query count option
-        /// Valid Samples: $count=true; $count=false
-        /// Invalid Samples: $count=True; $count=ture
-        /// </summary>
-        /// <param name="count">The count string from the query</param>
-        /// <returns>query count true of false</returns>
-        /// <exception cref="ODataException">Throws if the input count is not a valid $count value.</exception>
-        private bool ParseQueryCountImplementation(string count)
-        {
-            count = count.Trim();
-
-            switch (count)
-            {
-                case ExpressionConstants.KeywordTrue:
-                    return true;
-                case ExpressionConstants.KeywordFalse:
-                    return false;
-                default:
-                    throw new ODataException(ODataErrorStrings.ODataUriParser_InvalidCount(count));
-            }
-        }
-
-        /// <summary>
-        /// Parses the <paramref name="search"/> clause, binding
-        /// the text into a metadata-bound list of properties to be selected using the provided model.
-        /// </summary>
-        /// <param name="search">String representation of the search expression from the URI.</param>
-        /// <returns>A <see cref="SearchClause"/> representing the metadata bound search expression.</returns>
-        private SearchClause ParseSearchImplementation(string search)
-        {
-            ExceptionUtils.CheckArgumentNotNull(this.configuration.Model, "model");
-            ExceptionUtils.CheckArgumentNotNull(search, "searh");
-
-            SearchParser searchParser = new SearchParser(this.Settings.SearchLimit);
-            QueryToken queryToken = searchParser.ParseSearch(search);
-
-            // Bind it to metadata
-            BindingState state = new BindingState(this.configuration);
-            MetadataBinder binder = new MetadataBinder(state);
-            SearchBinder searchBinder = new SearchBinder(binder.Bind);
-            
-            return searchBinder.BindSearch(queryToken);
         }
     }
 }

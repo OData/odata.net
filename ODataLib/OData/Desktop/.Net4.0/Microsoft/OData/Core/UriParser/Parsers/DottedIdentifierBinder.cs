@@ -50,17 +50,20 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             ExceptionUtils.CheckArgumentNotNull(dottedIdentifierToken, "castToken");
             ExceptionUtils.CheckArgumentNotNull(state, "state");
 
-            QueryNode parent;
-            IEdmType parentType;
-            if (dottedIdentifierToken.NextToken == null)
+            QueryNode parent = null;
+            IEdmType parentType = null;
+            if (state.ImplicitRangeVariable != null)
             {
-                parent = NodeFactory.CreateRangeVariableReferenceNode(state.ImplicitRangeVariable);
-                parentType = state.ImplicitRangeVariable.TypeReference.Definition;
-            }
-            else
-            {
-                parent = this.bindMethod(dottedIdentifierToken.NextToken);
-                parentType = parent.GetEdmType();
+                if (dottedIdentifierToken.NextToken == null)
+                {
+                    parent = NodeFactory.CreateRangeVariableReferenceNode(state.ImplicitRangeVariable);
+                    parentType = state.ImplicitRangeVariable.TypeReference.Definition;
+                }
+                else
+                {
+                    parent = this.bindMethod(dottedIdentifierToken.NextToken);
+                    parentType = parent.GetEdmType();
+                }
             }
 
             SingleEntityNode parentAsSingleValue = parent as SingleEntityNode;

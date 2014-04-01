@@ -162,7 +162,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             ICollection<FunctionParameterToken> splitParameters = null;
             if (!String.IsNullOrEmpty(parenthesisExpression))
             {
-                if (!FunctionParameterParser.TrySplitOperationParameters(identifier, parenthesisExpression, out splitParameters))
+                if (!FunctionParameterParser.TrySplitOperationParameters(identifier, parenthesisExpression, configuration, out splitParameters))
                 {
                     IEdmOperationImport possibleMatchingOperationImport = null;
 
@@ -228,7 +228,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             ICollection<FunctionParameterToken> splitParameters;
             if (!String.IsNullOrEmpty(parenthesisExpression))
             {
-                if (!FunctionParameterParser.TrySplitOperationParameters(identifier, parenthesisExpression, out splitParameters))
+                if (!FunctionParameterParser.TrySplitOperationParameters(identifier, parenthesisExpression, configuration, out splitParameters))
                 {
                     IEdmOperation possibleMatchingOperation = null;
 
@@ -402,7 +402,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             KeySegment previousKeySegment = this.FindPreviousKeySegment();
 
             KeySegment keySegment;
-            if (!this.nextSegmentMustReferToMetadata && SegmentKeyHandler.TryHandleSegmentAsKey(segmentText, previous, previousKeySegment, this.configuration.UrlConventions.UrlConvention, out keySegment))
+            if (!this.nextSegmentMustReferToMetadata && SegmentKeyHandler.TryHandleSegmentAsKey(segmentText, previous, previousKeySegment, this.configuration.UrlConventions.UrlConvention, out keySegment, this.configuration.EnableUriTemplateParsing))
             {
                 this.parsedSegments.Add(keySegment);
                 return true;
@@ -618,7 +618,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             ODataPathSegment keySegment;
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
             KeySegment previousKeySegment = this.FindPreviousKeySegment();
-            if (!SegmentKeyHandler.TryCreateKeySegmentFromParentheses(previous, previousKeySegment, parenthesesSection, out keySegment))
+            if (!SegmentKeyHandler.TryCreateKeySegmentFromParentheses(previous, previousKeySegment, parenthesesSection, out keySegment, this.configuration.EnableUriTemplateParsing))
             {
                 return false;
             }

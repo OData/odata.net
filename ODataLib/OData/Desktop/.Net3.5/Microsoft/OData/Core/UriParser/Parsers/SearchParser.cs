@@ -114,9 +114,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             this.RecurseEnter();
             QueryToken left = this.ParseUnary();
-            while (this.TokenIdentifierIs(ExpressionConstants.SearchKeywordAnd) || this.lexer.CurrentToken.Kind == ExpressionTokenKind.StringLiteral)
+            while (this.TokenIdentifierIs(ExpressionConstants.SearchKeywordAnd)
+                || this.TokenIdentifierIs(ExpressionConstants.SearchKeywordNot)
+                || this.lexer.CurrentToken.Kind == ExpressionTokenKind.StringLiteral
+                || this.lexer.CurrentToken.Kind == ExpressionTokenKind.OpenParen)
             {
-                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.StringLiteral)
+                // Handle A NOT B, A (B)
+                // Bypass only when next token is AND
+                if (this.TokenIdentifierIs(ExpressionConstants.SearchKeywordAnd))
                 {
                     this.lexer.NextToken();
                 }
@@ -136,7 +141,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private QueryToken ParseUnary()
         {
             this.RecurseEnter();
-            if (this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.SearchKeywordNOT))
+            if (this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.SearchKeywordNot))
             {
                 this.lexer.NextToken();
                 QueryToken operand = this.ParseUnary();

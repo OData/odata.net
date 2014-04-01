@@ -60,6 +60,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private readonly LevelsClause levelsOption;
 
         /// <summary>
+        /// The search option for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
+        /// </summary>
+        private readonly SearchClause searchOption;
+
+        /// <summary>
         /// The select that applies to this level, and any sub expand levels below this one.
         /// </summary>
         private readonly SelectExpandClause selectAndExpand;
@@ -72,7 +77,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="selectExpandOption">This level select and any sub expands for this expand item.</param>
         /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
         public ExpandedNavigationSelectItem(ODataExpandPath pathToNavigationProperty, IEdmNavigationSource navigationSource, SelectExpandClause selectExpandOption)
-            : this(pathToNavigationProperty, navigationSource, null, null, null, null, null, null, selectExpandOption)
+            : this(pathToNavigationProperty, navigationSource, null, null, null, null, null, null, null, selectExpandOption)
         {
         }
 
@@ -87,6 +92,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="skipOption">A skip clause for this expand (can be null)</param>
         /// <param name="countOption">An query count clause for this expand (can be null)</param>
         /// <param name="levelsOption">An levels clause for this expand (can be null)</param>
+        /// <param name="searchOption">An levels clause for this expand (can be null)</param>
         /// <param name="selectAndExpand">This level select and any sub expands for this expand item.</param>
         /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
         internal ExpandedNavigationSelectItem(
@@ -98,6 +104,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
              long? skipOption,
              bool? countOption,
              LevelsClause levelsOption,
+             SearchClause searchOption,
              SelectExpandClause selectAndExpand)
         {
             ExceptionUtils.CheckArgumentNotNull(pathToNavigationProperty, "navigationProperty");
@@ -110,6 +117,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             this.skipOption = skipOption;
             this.countOption = countOption;
             this.levelsOption = levelsOption;
+            this.searchOption = searchOption;
             this.selectAndExpand = selectAndExpand;
         }
 
@@ -166,6 +174,17 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             get
             {
                 return this.levelsOption;
+            }
+        }
+
+        /// <summary>
+        /// Gets the levels clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
+        /// </summary>
+        public SearchClause SearchOption
+        {
+            get
+            {
+                return this.searchOption;
             }
         }
 

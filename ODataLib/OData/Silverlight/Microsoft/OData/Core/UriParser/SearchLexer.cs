@@ -44,13 +44,15 @@ namespace Microsoft.OData.Core.UriParser
         /// From ABNF rule:
         /// searchWord   = 1*ALPHA ; Actually: any character from the Unicode categories L or Nl, 
         ///               ; but not the words AND, OR, and NOT
+        /// 
+        /// \p{L} means any kind of letter from any language, include [Lo] such as CJK single character.
         /// </summary>
-        private static readonly Regex SearchWordPattern = new Regex(@"([^\p{L}\p{Nl}])");
+        private static readonly Regex InvalidWordPattern = new Regex(@"([^\p{L}\p{Nl}])");
 
         /// <summary>
         /// Keeps all keywords can be used in search query.
         /// </summary>
-        private static readonly HashSet<string> KeyWords = new HashSet<string>(StringComparer.Ordinal) { ExpressionConstants.SearchKeywordAnd, ExpressionConstants.SearchKeywordOr, ExpressionConstants.SearchKeywordNOT };
+        private static readonly HashSet<string> KeyWords = new HashSet<string>(StringComparer.Ordinal) { ExpressionConstants.SearchKeywordAnd, ExpressionConstants.SearchKeywordOr, ExpressionConstants.SearchKeywordNot };
 
         /// <summary>
         /// Indicate whether current char is escaped.
@@ -93,7 +95,7 @@ namespace Microsoft.OData.Core.UriParser
 
                     if (this.textPos == this.TextLen)
                     {
-                        error = ParseError(Strings.ExpressionLexer_UnterminatedStringLiteral(this.textPos, this.Text));
+                        throw ParseError(Strings.ExpressionLexer_UnterminatedStringLiteral(this.textPos, this.Text));
                     }
 
                     this.NextChar();
@@ -132,7 +134,7 @@ namespace Microsoft.OData.Core.UriParser
 
             if ((this.token.Kind == ExpressionTokenKind.Identifier) && !KeyWords.Contains(this.token.Text))
             {
-                Match match = SearchWordPattern.Match(this.token.Text);
+                Match match = InvalidWordPattern.Match(this.token.Text);
                 if (match.Success)
                 {
                     int index = match.Groups[0].Index;

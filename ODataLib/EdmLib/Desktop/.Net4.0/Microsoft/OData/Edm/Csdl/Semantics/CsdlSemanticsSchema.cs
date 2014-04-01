@@ -124,7 +124,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return FindSchemaElement<IEdmEntityContainer>(name, FindEntityContainer);
         }
 
-        public T FindSchemaElement<T>(string name, Func<IEdmModel, string, T> modelFinder)
+        public T FindSchemaElement<T>(string name, Func<CsdlSemanticsModel, string, T> modelFinder)
         {
             string candidateName = ReplaceAlias(name);
             if (candidateName == null)
@@ -186,9 +186,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return model.FindOperations(name);
         }
 
-        private static IEdmSchemaType FindType(IEdmModel model, string name)
+        private static IEdmSchemaType FindType(CsdlSemanticsModel model, string name)
         {
-            return model.FindType(name);
+            return model.FindTypeInAllModels(name);
         }
 
         private static IEdmValueTerm FindValueTerm(IEdmModel model, string name)

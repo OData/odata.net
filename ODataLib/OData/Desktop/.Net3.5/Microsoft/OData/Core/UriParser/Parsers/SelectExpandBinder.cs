@@ -263,7 +263,15 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             LevelsClause levelsOption = this.ParseLevels(tokenIn.LevelsOption, this.EdmType, currentNavProp);
 
-            return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, levelsOption, subSelectExpand);
+            SearchClause searchOption = null;
+            if (tokenIn.SearchOption != null)
+            {
+                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource);
+                SearchBinder searchBinder = new SearchBinder(binder.Bind);
+                searchOption = searchBinder.BindSearch(tokenIn.SearchOption);
+            }
+
+            return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, levelsOption, searchOption, subSelectExpand);
         }
 
         /// <summary>

@@ -12,6 +12,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
@@ -83,6 +84,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             true /*isPublic*/,
             true /*isStatic*/);
 
+        /// <summary>MethodInfo for IEnumerable&lt;object&gt; OpenTypeMethods.GetCollectionValue(this object value, string propertyName).</summary>
+        internal static readonly MethodInfo GetCollectionValueOpenPropertyMethodInfo = typeof(OpenTypeMethods).GetMethod(
+            "GetCollectionValue",
+            new Type[] { typeof(object), typeof(string) },
+            true /*isPublic*/,
+            true /*isStatic*/);
+
         #endregion Internal fields.
 
         #region Property Accessor
@@ -93,6 +101,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The requested value; null if not found.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", Justification = "Parameters will be used in the actual impl")]
         public static object GetValue(object value, string propertyName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Gets a named collection value from the specified object.</summary>
+        /// <param name='value'>Object to get value from.</param>
+        /// <param name='propertyName'>Name of property to get.</param>
+        /// <returns>The requested collection value; null if not found.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", Justification = "Parameters will be used in the actual impl")]
+        public static IEnumerable<object> GetCollectionValue(object value, string propertyName)
         {
             throw new NotImplementedException();
         }

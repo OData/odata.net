@@ -149,8 +149,11 @@
     <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmAction.cs" />
     <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmFunction.cs" />
     <Compile Include="Microsoft\OData\Edm\Interfaces\Expressions\IEdmDurationConstantExpression.cs" />
+    <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmInclude.cs" />
+    <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmIncludeAnnotations.cs" />
     <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmNavigationPropertyBinding.cs" />
     <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmNavigationSource.cs" />
+    <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmReference.cs" />
     <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmReferentialConstraint.cs" />
     <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmSingleton.cs" />
     <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmUnknownEntitySet.cs" />
@@ -160,7 +163,10 @@
     <Compile Include="Microsoft\OData\Edm\Library\AmbiguousSingletonBinding.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\EdmContainedEntitySet.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\EdmEntitySetBase.cs" />
+    <Compile Include="Microsoft\OData\Edm\Library\EdmInclude.cs" />
+    <Compile Include="Microsoft\OData\Edm\Library\EdmIncludeAnnotations.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\EdmNavigationSource.cs" />
+    <Compile Include="Microsoft\OData\Edm\Library\EdmReference.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\EdmSingleton.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\EdmUnknownEntitySet.cs" />
     <Compile Include="Microsoft\OData\Edm\Memoizer.cs" />
@@ -210,6 +216,7 @@
     <Compile Include="Microsoft\OData\Edm\Library\CyclicComplexType.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\CyclicEntityContainer.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\CyclicEntityType.cs" />
+    <Compile Include="Microsoft\OData\Edm\Vocabularies\CoreVocabularyConstants.cs" />
     <Compile Include="Microsoft\OData\Edm\Vocabularies\CoreVocabularyModel.cs" />
     <Compile Include="Microsoft\OData\Edm\Validation\DuplicateOperationValidator.cs" />
     <Compile Include="Microsoft\OData\Edm\VersioningDictionary.cs" />

@@ -64,6 +64,11 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         private readonly long? levelsOption;
 
         /// <summary>
+        /// the search option for this expand term
+        /// </summary>
+        private readonly QueryToken searchOption;
+
+        /// <summary>
         /// the select option for this expand term.
         /// </summary>
         private readonly SelectToken selectOption;
@@ -78,17 +83,8 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// </summary>
         /// <param name="pathToNavProp">the path to the navigation property</param>
         public ExpandTermToken(PathSegmentToken pathToNavProp)
+            : this(pathToNavProp, null, null)
         {
-            ExceptionUtils.CheckArgumentNotNull(pathToNavProp, "pathToNavigationProperty");
-            this.pathToNavProp = pathToNavProp;
-            this.filterOption = null;
-            this.orderByOptions = null;
-            this.topOption = null;
-            this.skipOption = null;
-            this.countQueryOption = null;
-            this.levelsOption = null;
-            this.selectOption = null;
-            this.expandOption = null;
         }
 
         /// <summary>
@@ -98,17 +94,8 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// <param name="selectOption">the sub select for this token</param>
         /// <param name="expandOption">the sub expand for this token</param>
         public ExpandTermToken(PathSegmentToken pathToNavProp, SelectToken selectOption, ExpandToken expandOption)
+            : this(pathToNavProp, null, null, null, null, null, null, null, selectOption, expandOption)
         {
-            ExceptionUtils.CheckArgumentNotNull(pathToNavProp, "pathToNavigationProperty");
-            this.pathToNavProp = pathToNavProp;
-            this.filterOption = null;
-            this.orderByOptions = null;
-            this.topOption = null;
-            this.skipOption = null;
-            this.countQueryOption = null;
-            this.levelsOption = null;
-            this.selectOption = selectOption;
-            this.expandOption = expandOption;
         }
 
         /// <summary>
@@ -120,10 +107,11 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// <param name="topOption">the top option for this expand term</param>
         /// <param name="skipOption">the skip option for this expand term</param>
         /// <param name="countQueryOption">the query count option for this expand term</param>
-        /// <param name="levelsOption">the levels count option for this expand term</param>
+        /// <param name="levelsOption">the levels option for this expand term</param>
+        /// <param name="searchOption">the search option for this expand term</param>
         /// <param name="selectOption">the select option for this expand term</param>
         /// <param name="expandOption">the expand option for this expand term</param>
-        public ExpandTermToken(PathSegmentToken pathToNavProp, QueryToken filterOption, IEnumerable<OrderByToken> orderByOptions, long? topOption, long? skipOption, bool? countQueryOption, long? levelsOption, SelectToken selectOption, ExpandToken expandOption)
+        public ExpandTermToken(PathSegmentToken pathToNavProp, QueryToken filterOption, IEnumerable<OrderByToken> orderByOptions, long? topOption, long? skipOption, bool? countQueryOption, long? levelsOption, QueryToken searchOption, SelectToken selectOption, ExpandToken expandOption)
         {
             ExceptionUtils.CheckArgumentNotNull(pathToNavProp, "property");
 
@@ -134,6 +122,7 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
             this.skipOption = skipOption;
             this.countQueryOption = countQueryOption;
             this.levelsOption = levelsOption;
+            this.searchOption = searchOption;
             this.selectOption = selectOption;
             this.expandOption = expandOption;
         }
@@ -194,6 +183,13 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
             get { return this.levelsOption; }
         }
 
+        /// <summary>
+        /// the search option for this expand term.
+        /// </summary>
+        public QueryToken SearchOption
+        {
+            get { return this.searchOption; }
+        }
 
         /// <summary>
         /// the select option for this expand term.

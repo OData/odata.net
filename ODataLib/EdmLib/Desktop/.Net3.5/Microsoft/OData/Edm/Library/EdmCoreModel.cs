@@ -35,7 +35,7 @@ namespace Microsoft.OData.Edm.Library
 
         private readonly EdmValidCoreModelPrimitiveType[] primitiveTypes;
         private const string EdmNamespace = "Edm";
-        
+
         private readonly Dictionary<string, EdmPrimitiveTypeKind> primitiveTypeKinds = new Dictionary<string, EdmPrimitiveTypeKind>();
         private readonly Dictionary<EdmPrimitiveTypeKind, EdmValidCoreModelPrimitiveType> primitiveTypesByKind = new Dictionary<EdmPrimitiveTypeKind, EdmValidCoreModelPrimitiveType>();
         private readonly Dictionary<string, EdmValidCoreModelPrimitiveType> primitiveTypeByName = new Dictionary<string, EdmValidCoreModelPrimitiveType>();
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Edm.Library
                 primitiveGeometryMultiLineString,
                 primitiveGeometryMultiPoint
             };
-            
+
             foreach (var primitive in this.primitiveTypes)
             {
                 this.primitiveTypeKinds[primitive.Name] = primitive.PrimitiveKind;
@@ -194,7 +194,7 @@ namespace Microsoft.OData.Edm.Library
         }
 
         /// <summary>
-        /// Searches for a type with the given name in this model and returns null if no such type exists.
+        /// Searches for a type with the given name in this model only and returns null if no such type exists.
         /// </summary>
         /// <param name="qualifiedName">The qualified name of the type being found.</param>
         /// <returns>The requested type, or null if no such type exists.</returns>
@@ -604,7 +604,7 @@ namespace Microsoft.OData.Edm.Library
         {
             return Enumerable.Empty<IEdmVocabularyAnnotation>();
         }
-        
+
         /// <summary>
         /// Finds a list of types that derive from the supplied type.
         /// </summary>

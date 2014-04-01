@@ -198,6 +198,8 @@ namespace Microsoft.OData.Core.Metadata
         /// <param name="operations">The operations.</param>
         /// <param name="bindingType">Type of the binding.</param>
         /// <returns>The closest Bound Operations to the specified binding type.</returns>
+        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
+            Justification = "Parameter type is needed to get binding type.")]
         internal static IEnumerable<IEdmOperation> FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(this IEnumerable<IEdmOperation> operations, IEdmType bindingType)
         {
             Debug.Assert(operations != null, "operations");
@@ -233,13 +235,13 @@ namespace Microsoft.OData.Core.Metadata
                     IEdmCollectionType operationBindingCollectionType = operationBindingType as IEdmCollectionType;
                     operationBindingStructuralType = operationBindingCollectionType.ElementType.Definition as IEdmStructuredType;
                 }
-
-                if (operationBindingStructuralType == null || !operationBindingStructuralType.IsOrInheritsFrom(nonCollectionBindingType))
+                
+                if (operationBindingStructuralType == null || !nonCollectionBindingType.IsOrInheritsFrom(operationBindingStructuralType))
                 {
                     continue;
                 }
 
-                int inheritanceLevelsFromBase = operationBindingStructuralType.InheritanceLevelFromSpecifiedInheritedType(nonCollectionBindingType);
+                int inheritanceLevelsFromBase = nonCollectionBindingType.InheritanceLevelFromSpecifiedInheritedType(operationBindingStructuralType);
 
                 if (currentInheritanceLevelsFromBase > inheritanceLevelsFromBase)
                 {
@@ -2062,6 +2064,8 @@ namespace Microsoft.OData.Core.Metadata
         /// </summary>
         /// <param name="operation">Operation in question.</param>
         /// <returns>Comma separated operation parameter types enclosed in parantheses.</returns>
+        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
+            Justification = "This method is used for matching the name of the operation to something written by the server. So using the name is safe without resolving the type from the client.")]
         private static string ParameterTypesToString(this IEdmOperation operation)
         {
             // TODO:1631831 Resolve duplication of operationImport and operation

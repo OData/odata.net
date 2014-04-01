@@ -98,7 +98,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             IEdmTypeReference elementType = nodeToIterateOver.ItemType;
 
-            if (elementType.IsEntity())
+            if (elementType != null && elementType.IsEntity())
             {
                 var entityCollectionNode = nodeToIterateOver as EntityCollectionNode;
                 Debug.Assert(entityCollectionNode != null, "IF the element type was entity, the node type should be an entity collection");

@@ -17,22 +17,6 @@ namespace Microsoft.Spatial {
     /// </summary>
     internal static class Strings {
         /// <summary>
-        /// A string like "The queue doesn't contain an item with the priority {0}."
-        /// </summary>
-        internal static string PriorityQueueDoesNotContainItem(object p0) {
-            return Microsoft.Spatial.TextRes.GetString(Microsoft.Spatial.TextRes.PriorityQueueDoesNotContainItem,p0);
-        }
-
-        /// <summary>
-        /// A string like "The operation is not valid on an empty queue."
-        /// </summary>
-        internal static string PriorityQueueOperationNotValidOnEmptyQueue {
-            get {
-                return Microsoft.Spatial.TextRes.GetString(Microsoft.Spatial.TextRes.PriorityQueueOperationNotValidOnEmptyQueue);
-            }
-        }
-
-        /// <summary>
         /// A string like "No operations are registered. Please provide operations using SpatialImplementation.CurrentImplementation.Operations property."
         /// </summary>
         internal static string SpatialImplementation_NoRegisteredOperations {

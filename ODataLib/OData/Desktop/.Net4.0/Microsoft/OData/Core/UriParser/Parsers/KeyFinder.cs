@@ -51,16 +51,35 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 return rawKeyValuesFromUri;
             }
-
+            
+            // TODO p2 merge the below 2 pieces of codes
             // find out if any target entity key properties have referential constraints that link them to the previous rawKeyValuesFromUri.
             List<EdmReferentialConstraintPropertyPair> keysFromReferentialIntegrityConstraint = ExtractMatchingPropertyPairsFromNavProp(currentNavigationProperty, targetKeyPropertyList).ToList();
-            
+
+            foreach (EdmReferentialConstraintPropertyPair keyFromReferentialIntegrityConstraint in keysFromReferentialIntegrityConstraint)
+            {
+                KeyValuePair<string, object> valueFromParent = keySegmentOfParentEntity.Keys.SingleOrDefault(x => x.Key == keyFromReferentialIntegrityConstraint.DependentProperty.Name);
+                if (valueFromParent.Key != null)
+                {
+                    // if the key from the referential integrity constraint is one of the target key properties
+                    // and that key property isn't already populated in the raw key values from the uri, then
+                    // we set that value to the value from the parent key segment.
+                    if (targetKeyPropertyList.Any(x => x.Name == keyFromReferentialIntegrityConstraint.PrincipalProperty.Name))
+                    {
+                        rawKeyValuesFromUri.AddNamedValue(
+                            keyFromReferentialIntegrityConstraint.PrincipalProperty.Name,
+                            valueFromParent.Value.ToString());
+                    }
+                }
+            }
+
             // also need to look to see if any nav props exist in the target set that refer back to this same set, which might have 
             // referential constraints also.
+            keysFromReferentialIntegrityConstraint.Clear();
             IEdmNavigationProperty reverseNavProp = currentNavigationProperty.Partner;
             if (reverseNavProp != null)
             {
-                keysFromReferentialIntegrityConstraint.AddRange(ExtractMatchingPropertyPairsFromNavProp(reverseNavProp, targetKeyPropertyList));
+                keysFromReferentialIntegrityConstraint.AddRange(ExtractMatchingPropertyPairsFromReversedNavProp(reverseNavProp, targetKeyPropertyList));
             }
 
             foreach (EdmReferentialConstraintPropertyPair keyFromReferentialIntegrityConstraint in keysFromReferentialIntegrityConstraint)
@@ -121,6 +140,28 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             if (currentNavigationProperty != null && currentNavigationProperty.ReferentialConstraint != null)
             {
+                // currentNavigationProperty.ReferentialConstraint has mapping of source property(dependent)-> target referencedProperty(principal)
+                // so check PrincipalProperty against targetKeyPropertyList
+                return currentNavigationProperty.ReferentialConstraint.PropertyPairs.Where(x => targetKeyPropertyList.Any(y => y == x.PrincipalProperty));
+            }
+            else
+            {
+                return new List<EdmReferentialConstraintPropertyPair>();
+            }
+        }
+
+        /// <summary>
+        /// Find any referential constraint property pairs in a given reversed nav prop that match any of the provided key properties.
+        /// </summary>
+        /// <param name="currentNavigationProperty">The navigation property to search</param>
+        /// <param name="targetKeyPropertyList">The list of key properties that we're searching for</param>
+        /// <returns>All referential constraint property pairs that match the list of target key properties.</returns>
+        private static IEnumerable<EdmReferentialConstraintPropertyPair> ExtractMatchingPropertyPairsFromReversedNavProp(IEdmNavigationProperty currentNavigationProperty, IEnumerable<IEdmStructuralProperty> targetKeyPropertyList)
+        {
+            if (currentNavigationProperty != null && currentNavigationProperty.ReferentialConstraint != null)
+            {
+                // currentNavigationProperty.ReferentialConstraint has mapping of target property(dependent)-> source referencedProperty(principal)
+                // so check DependentProperty against targetKeyPropertyList
                 return currentNavigationProperty.ReferentialConstraint.PropertyPairs.Where(x => targetKeyPropertyList.Any(y => y == x.DependentProperty));
             }
             else

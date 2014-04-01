@@ -32,8 +32,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="previousKeySegment">The parent node's key segment.</param>
         /// <param name="parenthesisExpression">Parenthesis expression of segment.</param>
         /// <param name="keySegment">The key segment that was created if the key was non-empty.</param>
+        /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>Whether the key was non-empty.</returns>
-        internal static bool TryCreateKeySegmentFromParentheses(ODataPathSegment previous, KeySegment previousKeySegment, string parenthesisExpression, out ODataPathSegment keySegment)
+        internal static bool TryCreateKeySegmentFromParentheses(ODataPathSegment previous, KeySegment previousKeySegment, string parenthesisExpression, out ODataPathSegment keySegment, bool enableUriTemplateParsing = false)
         {
             Debug.Assert(parenthesisExpression != null, "parenthesisExpression != null");
             Debug.Assert(previous != null, "segment!= null");
@@ -41,7 +42,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             ExceptionUtil.ThrowSyntaxErrorIfNotValid(!previous.SingleResult);
 
             SegmentArgumentParser key;
-            ExceptionUtil.ThrowSyntaxErrorIfNotValid(SegmentArgumentParser.TryParseKeysFromUri(parenthesisExpression, out key));
+            ExceptionUtil.ThrowSyntaxErrorIfNotValid(SegmentArgumentParser.TryParseKeysFromUri(parenthesisExpression, out key, enableUriTemplateParsing));
 
             // People/NS.Employees() is OK, just like People() is OK
             if (key.IsEmpty)
@@ -62,8 +63,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="previousKeySegment">The parent node's key segment.</param>
         /// <param name="urlConvention">The current url convention for the server.</param>
         /// <param name="keySegment">The key segment that was created if the segment could be interpreted as a key.</param>
+        /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>Whether or not the segment was interpreted as a key.</returns>
-        internal static bool TryHandleSegmentAsKey(string segmentText, ODataPathSegment previous, KeySegment previousKeySegment, UrlConvention urlConvention, out KeySegment keySegment)
+        internal static bool TryHandleSegmentAsKey(string segmentText, ODataPathSegment previous, KeySegment previousKeySegment, UrlConvention urlConvention, out KeySegment keySegment, bool enableUriTemplateParsing = false)
         {
             Debug.Assert(previous != null, "previous != null");
             Debug.Assert(urlConvention != null, "urlConvention != null");
@@ -75,7 +77,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 return false;
             }
-            
+
             // Keys only apply to collections, so if the prior segment is already a singleton, do not treat this segment as a key.
             if (previous.SingleResult)
             {
@@ -105,7 +107,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             // At this point it must be treated as a key, so fail if it is malformed.
             Debug.Assert(keyProperties.Count == 1, "keyProperties.Count == 1");
-            keySegment = CreateKeySegment(previous, previousKeySegment, SegmentArgumentParser.FromSegment(segmentText));
+            keySegment = CreateKeySegment(previous, previousKeySegment, SegmentArgumentParser.FromSegment(segmentText, enableUriTemplateParsing));
 
             return true;
         }
@@ -126,7 +128,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 return false;
             }
-            
+
             // if the 2nd character is also a '$' then its an escaped key, not a system segment;
             return segmentText.Length < 2 || segmentText[1] != '$';
         }

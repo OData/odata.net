@@ -19,6 +19,7 @@ namespace Microsoft.OData.Edm
     /// This interface, and all interfaces reachable from it, preserve certain invariants:
     ///    -- The backing implementation of an element can be loaded or created on demand.
     ///    -- No direct element mutation occurs through the interfaces.
+    /// Only the MainModel and ReferencedModels properties are for referneced models scenario. all other properties and methods only focus on this model, not main/sibling/referenced models .
     /// </remarks>
     public interface IEdmModel : IEdmElement
     {
@@ -41,7 +42,7 @@ namespace Microsoft.OData.Edm
         /// Gets the collection of namespaces that schema elements use contained in this model.
         /// </summary>
         IEnumerable<string> DeclaredNamespaces { get; }
-        
+
         /// <summary>
         /// Gets the model's annotations manager.
         /// </summary>
@@ -53,7 +54,7 @@ namespace Microsoft.OData.Edm
         IEdmEntityContainer EntityContainer { get; }
 
         /// <summary>
-        /// Searches for a type with the given name in this model and returns null if no such type exists.
+        /// Searches for a type with the given name in this model only and returns null if no such type exists.
         /// </summary>
         /// <param name="qualifiedName">The qualified name of the type being found.</param>
         /// <returns>The requested type, or null if no such type exists.</returns>

@@ -71,7 +71,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     subExpandTree = null;
                 }
 
-                ExpandTermToken newTerm = new ExpandTermToken(reversedPath, term.FilterOption, term.OrderByOptions, term.TopOption, term.SkipOption, term.CountQueryOption, term.LevelsOption, newSelectToken, subExpandTree);
+                ExpandTermToken newTerm = new ExpandTermToken(reversedPath, term.FilterOption, term.OrderByOptions, term.TopOption, term.SkipOption, term.CountQueryOption, term.LevelsOption, term.SearchOption, newSelectToken, subExpandTree);
                 updatedTerms.Add(newTerm);
             }
 
@@ -100,6 +100,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                                               termToken.SkipOption,
                                                               termToken.CountQueryOption,
                                                               termToken.LevelsOption,
+                                                              termToken.SearchOption,
                                                               this.RemoveDuplicateSelect(termToken.SelectOption),
                                                               newSubExpand);
                 }
@@ -130,6 +131,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     existingToken.SkipOption,
                     existingToken.CountQueryOption,
                     existingToken.LevelsOption,
+                    existingToken.SearchOption,
                     combinedSelects,
                     new ExpandToken(childNodes));
         }

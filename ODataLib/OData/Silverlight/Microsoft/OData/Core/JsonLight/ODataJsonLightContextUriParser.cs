@@ -290,12 +290,12 @@ namespace Microsoft.OData.Core.JsonLight
 
                 Uri serviceRoot = new Uri(metadataDocumentStr.Substring(0, metadataDocumentStr.Length - ODataConstants.UriMetadataSegment.Length));
 
-                ODataUriParser odataUriParser = new ODataUriParser(this.model, serviceRoot);
+                ODataUriParser odataUriParser = new ODataUriParser(this.model, serviceRoot, new Uri(serviceRoot, fragment));
 
                 ODataPath path;
                 try
                 {
-                    path = odataUriParser.ParsePath(new Uri(serviceRoot, fragment));
+                    path = odataUriParser.ParsePath();
                 }
                 catch (ODataException)
                 {

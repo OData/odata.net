@@ -104,6 +104,11 @@ namespace Microsoft.OData.Edm
 
         internal static IEdmSchemaType CreateAmbiguousTypeBinding(IEdmSchemaType first, IEdmSchemaType second)
         {
+            if (first == second)
+            {
+                return first;
+            }
+
             var ambiguous = first as AmbiguousTypeBinding;
             if (ambiguous != null)
             {

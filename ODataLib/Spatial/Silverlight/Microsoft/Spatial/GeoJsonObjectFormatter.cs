@@ -12,7 +12,7 @@ namespace Microsoft.Spatial
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
+    using Microsoft.Data.Spatial;
 
     /// <summary>Represents a formatter for Json object.</summary>
     public abstract class GeoJsonObjectFormatter
@@ -34,5 +34,10 @@ namespace Microsoft.Spatial
         /// <returns>The json object.</returns>
         /// <param name="value">The spatial value.</param>
         public abstract IDictionary<String, Object> Write(ISpatial value);
+
+        /// <summary> Creates the writerStream. </summary>
+        /// <returns>The writerStream that was created.</returns>
+        /// <param name="writer">The actual stream to write Json.</param>
+        public abstract SpatialPipeline CreateWriter(IGeoJsonWriter writer);
     }
 }

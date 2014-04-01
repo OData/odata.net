@@ -41,11 +41,6 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
-            if (value is ODataCollectionValue)
-            {
-                throw new ODataException(Strings.ValidationUtils_OpenCollectionProperty(propertyName));
-            }
-
             if (value is ODataStreamReferenceValue)
             {
                 throw new ODataException(Strings.ValidationUtils_OpenStreamProperty(propertyName));
@@ -99,6 +94,24 @@ namespace Microsoft.OData.Core
             if (!EdmLibraryExtensions.IsAssignableFrom(expectedEntityTypeReference.EntityDefinition(), payloadEntityTypeReference.EntityDefinition()))
             {
                 throw new ODataException(Strings.ValidationUtils_EntryTypeNotAssignableToExpectedType(payloadEntityTypeReference.ODataFullName(), expectedEntityTypeReference.ODataFullName()));
+            }
+        }
+
+        /// <summary>
+        /// Validates that the <paramref name="payloadComplexType"/> is assignable to the <paramref name="expectedComplexType"/>
+        /// and fails if it's not.
+        /// </summary>
+        /// <param name="expectedComplexType">The expected complex type reference, the base type of the ComplexType expected.</param>
+        /// <param name="payloadComplexType">The payload complex type reference to validate.</param>
+        internal static void ValidateComplexTypeIsAssignable(IEdmComplexType expectedComplexType, IEdmComplexType payloadComplexType)
+        {
+            Debug.Assert(expectedComplexType != null, "expectedComplexType != null");
+            Debug.Assert(payloadComplexType != null, "payloadComplexType != null");
+
+            // Complex types could be assignable
+            if (!EdmLibraryExtensions.IsAssignableFrom(expectedComplexType, payloadComplexType))
+            {
+                throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadComplexType.ODataFullName(), expectedComplexType.ODataFullName()));
             }
         }
 

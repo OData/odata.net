@@ -54,6 +54,16 @@ namespace Microsoft.OData.Core
         /// </remarks>
         private static readonly UTF8Encoding encodingUtf8NoPreamble = new UTF8Encoding(false, true);
 
+        /// <summary>
+        /// Max size to cache match info.
+        /// </summary>
+        private const int MatchInfoCacheMaxSize = 1024;
+
+        /// <summary>
+        /// Concurrent cache to cache match info.
+        /// </summary>
+        private static MatchInfoConcurrentCache MatchInfoCache = new MatchInfoConcurrentCache(MatchInfoCacheMaxSize);
+
         /// <summary>UTF-8 encoding, without the BOM preamble.</summary>
         /// <remarks>
         /// While a BOM preamble on UTF8 is generally benign, it seems that some MIME handlers under IE6 will not 
@@ -407,7 +417,15 @@ namespace Microsoft.OData.Core
 
                 // match the specified media types against the supported/default ones
                 // and get the format
-                MediaTypeMatchInfo matchInfo = MatchMediaTypes(supportedMediaTypes.Select(smt => smt.MediaType), new MediaType[] { mediaType });
+                var cacheKey = new MatchInfoCacheKey(mediaTypeResolver.Version, supportedPayloadKind, contentTypeName);
+                MediaTypeMatchInfo matchInfo;
+
+                if (!MatchInfoCache.TryGetValue(cacheKey, out matchInfo))
+                {
+                    matchInfo = MatchMediaTypes(supportedMediaTypes.Select(smt => smt.MediaType), new[] { mediaType });
+                    MatchInfoCache.Add(cacheKey, matchInfo);
+                }
+
                 if (matchInfo != null)
                 {
                     Debug.Assert(matchInfo.TargetTypeIndex == 0, "Invalid target type index detected.");
@@ -454,7 +472,7 @@ namespace Microsoft.OData.Core
         /// <returns>The default media type for the given payload kind and format.</returns>
         private static MediaType GetDefaultMediaType(
             IList<MediaTypeWithFormat> supportedMediaTypes,
-            ODataFormat specifiedFormat, 
+            ODataFormat specifiedFormat,
             out ODataFormat actualFormat)
         {
             for (int i = 0; i < supportedMediaTypes.Count; ++i)
@@ -488,9 +506,9 @@ namespace Microsoft.OData.Core
             }
 
             return HttpUtils.EncodingFromAcceptableCharsets(
-                acceptCharsetHeader, 
-                mediaType, 
-                /*utf8Encoding*/ encodingUtf8NoPreamble, 
+                acceptCharsetHeader,
+                mediaType,
+                /*utf8Encoding*/ encodingUtf8NoPreamble,
                 /*useDefaultEncoding*/ useDefaultEncoding ? encodingUtf8NoPreamble : null);
         }
 
@@ -528,7 +546,7 @@ namespace Microsoft.OData.Core
                         {
                             selectedMatchInfo = currentMatchInfo;
                         }
-                        else 
+                        else
                         {
                             int comparisonResult = selectedMatchInfo.CompareTo(currentMatchInfo);
                             if (comparisonResult < 0)
@@ -648,35 +666,35 @@ namespace Microsoft.OData.Core
             /// <summary>
             /// Represents the number of non-* matching type name parts or -1 if not matching at all.
             /// </summary>
-            public int MatchingTypeNamePartCount 
-            { 
-                get; 
-                private set; 
+            public int MatchingTypeNamePartCount
+            {
+                get;
+                private set;
             }
 
             /// <summary>
             /// Represents the number of matching parameters or -1 if neither the source type nor the target type have parameters.
             /// </summary>
-            public int MatchingParameterCount 
-            { 
-                get; 
-                private set; 
+            public int MatchingParameterCount
+            {
+                get;
+                private set;
             }
 
             /// <summary>The quality value of the target type (or -1 if none is specified).</summary>
-            public int QualityValue 
-            { 
-                get; 
-                private set; 
+            public int QualityValue
+            {
+                get;
+                private set;
             }
 
             /// <summary>
             /// The number of parameters of the source type that are used for comparison. All accept-parameters are ignored.
             /// </summary>
-            public int SourceTypeParameterCountForMatching 
-            { 
-                get; 
-                private set; 
+            public int SourceTypeParameterCountForMatching
+            {
+                get;
+                private set;
             }
 
             /// <summary>
@@ -891,11 +909,130 @@ namespace Microsoft.OData.Core
                 // if the source does not have parameters or it only has accept extensions 
                 // (parameters after the q value) or we match all the paramters we 
                 // have a perfect parameter match.
-                if (!sourceHasParams || 
-                    this.SourceTypeParameterCountForMatching == 0 || 
+                if (!sourceHasParams ||
+                    this.SourceTypeParameterCountForMatching == 0 ||
                     this.MatchingParameterCount == this.SourceTypeParameterCountForMatching)
                 {
                     this.MatchingParameterCount = -1;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Class representing key of match info cache.
+        /// </summary>
+        private sealed class MatchInfoCacheKey
+        {
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            /// <param name="version">Version of the mediaTypeResolver.</param>
+            /// <param name="payloadKind">Kind of the payload.</param>
+            /// <param name="contentTypeName">Name of content type.</param>
+            public MatchInfoCacheKey(ODataVersion version, ODataPayloadKind payloadKind, string contentTypeName)
+            {
+                this.Version = version;
+                this.PayloadKind = payloadKind;
+                this.ContentTypeName = contentTypeName;
+            }
+
+            /// <summary>
+            /// Version of the mediaTypeResolver.
+            /// </summary>
+            public ODataVersion Version { get; set; }
+
+            /// <summary>
+            /// Kind of the payload.
+            /// </summary>
+            public ODataPayloadKind PayloadKind { get; set; }
+
+            /// <summary>
+            /// Name of content type.
+            /// </summary>
+            public string ContentTypeName { get; set; }
+
+            /// <summary>
+            /// Returns a value indicating whether this instance is equal to a specified object.
+            /// </summary>
+            /// <param name="obj">An object to compare with this instance.</param>
+            /// <returns>true if obj is equal to this instance; otherwise, false.</returns>
+            public override bool Equals(object obj)
+            {
+                MatchInfoCacheKey cacheKey = obj as MatchInfoCacheKey;
+                return cacheKey != null &&
+                    this.Version == cacheKey.Version &&
+                    this.PayloadKind == cacheKey.PayloadKind &&
+                    this.ContentTypeName == cacheKey.ContentTypeName;
+            }
+
+            /// <summary>
+            /// Returns the hash code for the value of this instance.
+            /// </summary>
+            /// <returns>A 32-bit signed integer hash code.</returns>
+            public override int GetHashCode()
+            {
+                int result = this.Version.GetHashCode() ^ this.PayloadKind.GetHashCode();
+                return this.ContentTypeName != null ? result ^ this.ContentTypeName.GetHashCode() : result;
+            }
+        }
+
+        /// <summary>
+        /// Class representing the concurrent cache for match info.
+        /// </summary>
+        private sealed class MatchInfoConcurrentCache
+        {
+            /// <summary>
+            /// Max size of the elements that the cache can contain.
+            /// </summary>
+            private readonly int maxSize;
+
+            /// <summary>
+            /// The dictionary to save elements.
+            /// </summary>
+            private IDictionary<MatchInfoCacheKey, MediaTypeMatchInfo> dict;
+
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            /// <param name="maxSize">Max size of the elements that the cache can contain.</param>
+            public MatchInfoConcurrentCache(int maxSize)
+            {
+                this.maxSize = maxSize;
+                this.dict = new Dictionary<MatchInfoCacheKey, MediaTypeMatchInfo>(maxSize + 1);
+            }
+
+            /// <summary>
+            /// Gets the value associated with the specified key.
+            /// </summary>
+            /// <param name="key">The key whose value to get.</param>
+            /// <param name="value">The value associated with the specified key, if the key is found; otherwise, null.</param>
+            /// <returns>true if the cache contains an element with the specified key; otherwise, false.</returns>
+            public bool TryGetValue(MatchInfoCacheKey key, out MediaTypeMatchInfo value)
+            {
+                lock (this.dict)
+                {
+                    return dict.TryGetValue(key, out value);
+                }
+            }
+
+            /// <summary>
+            /// Adds an element with the provided key and value to the cache.
+            /// </summary>
+            /// <param name="key">The key of the element to add.</param>
+            /// <param name="value">The value of the element to add.</param>
+            public void Add(MatchInfoCacheKey key, MediaTypeMatchInfo value)
+            {
+                lock (this.dict)
+                {
+                    if (!dict.ContainsKey(key))
+                    {
+                        if (dict.Count == maxSize)
+                        {
+                            dict.Clear();
+                        }
+
+                        dict.Add(key, value);
+                    }
                 }
             }
         }

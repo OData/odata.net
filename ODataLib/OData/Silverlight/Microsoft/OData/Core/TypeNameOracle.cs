@@ -222,9 +222,13 @@ namespace Microsoft.OData.Core
             {
                 ValidationUtils.ValidateEntityTypeIsAssignable((IEdmEntityTypeReference)typeReferenceFromMetadata, (IEdmEntityTypeReference)typeReferenceFromValue);
             }
+            else if (typeReferenceFromMetadata.IsComplex())
+            {
+                ValidationUtils.ValidateComplexTypeIsAssignable(typeReferenceFromMetadata.Definition as IEdmComplexType, typeReferenceFromValue.Definition as IEdmComplexType);
+            }
             else
             {
-                // Complex and collection types must match exactly
+                // Collection types must match exactly
                 if (typeReferenceFromMetadata.ODataFullName() != typeReferenceFromValue.ODataFullName())
                 {
                     throw new ODataException(Strings.ValidationUtils_IncompatibleType(typeReferenceFromValue.ODataFullName(), typeReferenceFromMetadata.ODataFullName()));

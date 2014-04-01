@@ -19,12 +19,14 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     {
         protected string baseTypeName;
         protected bool isAbstract;
+        protected bool isOpen;
         protected string name;
 
-        protected CsdlNamedStructuredType(string name, string baseTypeName, bool isAbstract, IEnumerable<CsdlProperty> properties, CsdlDocumentation documentation, CsdlLocation location)
+        protected CsdlNamedStructuredType(string name, string baseTypeName, bool isAbstract, bool isOpen, IEnumerable<CsdlProperty> properties, CsdlDocumentation documentation, CsdlLocation location)
             : base(properties, documentation, location)
         {
             this.isAbstract = isAbstract;
+            this.isOpen = isOpen;
             this.name = name;
             this.baseTypeName = baseTypeName;
         }
@@ -37,6 +39,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         public bool IsAbstract
         {
             get { return this.isAbstract; }
+        }
+
+        public bool IsOpen
+        {
+            get { return this.isOpen; }
         }
 
         public string Name

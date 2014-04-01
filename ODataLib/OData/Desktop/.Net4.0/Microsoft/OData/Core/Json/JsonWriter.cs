@@ -32,7 +32,7 @@ namespace Microsoft.OData.Core.Json
         /// <summary>
         /// Writer to write text into.
         /// </summary>
-        private readonly IndentedTextWriter writer;
+        private readonly TextWriterWrapper writer;
 
         /// <summary>
         /// Scope of the json text - object, array.
@@ -55,7 +55,16 @@ namespace Microsoft.OData.Core.Json
         internal JsonWriter(TextWriter writer, bool indent, ODataFormat jsonFormat, bool isIeee754Compatible)
         {
             Debug.Assert(jsonFormat == ODataFormat.Json, "Expected a json-based format.");
-            this.writer = new IndentedTextWriter(writer, indent);
+
+            if (indent == true)
+            {
+                this.writer = new IndentedTextWriter(writer);
+            }
+            else
+            {
+                this.writer = new NonIndentedTextWriter(writer);
+            }
+
             this.scopes = new Stack<Scope>();
             this.isIeee754Compatible = isIeee754Compatible;
         }
@@ -256,7 +265,7 @@ namespace Microsoft.OData.Core.Json
             }
             else
             {
-                JsonValueUtils.WriteValue(this.writer, value); 
+                JsonValueUtils.WriteValue(this.writer, value);
             }
         }
 

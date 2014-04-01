@@ -78,6 +78,16 @@ namespace Microsoft.OData.Core.JsonLight
                     return typeReferenceFromValue.ODataFullName();
                 }
 
+                // Note: When writing derived complexType value in a payload, we don't have the expected type. 
+                // So always write @odata.type for top-level derived complextype.
+                if (typeReferenceFromMetadata == null && typeReferenceFromValue.IsComplex())
+                {
+                    if ((typeReferenceFromValue as IEdmComplexTypeReference).ComplexDefinition().BaseType != null)
+                    {
+                        return typeReferenceFromValue.ODataFullName();
+                    }
+                }
+
                 // Do not write type name when the type is native json type.
                 if (typeReferenceFromValue.IsPrimitive() && JsonSharedUtils.ValueTypeMatchesJsonType((ODataPrimitiveValue)value, typeReferenceFromValue.AsPrimitive()))
                 {

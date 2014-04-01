@@ -1172,6 +1172,29 @@ namespace Microsoft.OData.Edm.Validation.Internal
             }
         }
 
+        private sealed class VisitorOfIEdmReference : VisitorOfT<IEdmReference>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmReference edmReference, List<object> followup, List<object> references)
+            {
+                return !edmReference.Includes.Any() && edmReference.IncludeAnnotations.Any() ? new EdmError[] { CreatePropertyMustNotBeNullError(edmReference, "Includes/IncludeAnnotations") } : null;
+            }
+        }
+
+        private sealed class VisitorOfIEdmInclude : VisitorOfT<IEdmInclude>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmInclude edmInclude, List<object> followup, List<object> references)
+            {
+                return string.IsNullOrEmpty(edmInclude.Namespace) ? new EdmError[] { CreatePropertyMustNotBeNullError(edmInclude, "Namespace") } : null;
+            }
+        }
+
+        private sealed class VisitorOfIEdmIncludeAnnotations : VisitorOfT<IEdmIncludeAnnotations>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmIncludeAnnotations edmIncludeAnnotations, List<object> followup, List<object> references)
+            {
+                return string.IsNullOrEmpty(edmIncludeAnnotations.TermNamespace) ? new EdmError[] { CreatePropertyMustNotBeNullError(edmIncludeAnnotations, "TermNamespace") } : null;
+            }
+        }
         #endregion
 
         #region Expressions

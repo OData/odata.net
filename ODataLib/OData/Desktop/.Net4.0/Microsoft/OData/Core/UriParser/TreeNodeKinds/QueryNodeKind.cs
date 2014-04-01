@@ -143,6 +143,11 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// The search term node.
         /// </summary>
         SearchTerm = InternalQueryNodeKind.SearchTerm,
+
+        /// <summary>
+        /// Node describing access to a open property which is a non-entity collection value.
+        /// </summary>
+        CollectionOpenPropertyAccess = InternalQueryNodeKind.CollectionOpenPropertyAccess,
     }
 
     /// <summary>
@@ -274,5 +279,10 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// The search Term.
         /// </summary>
         SearchTerm = 24,
+
+        /// <summary>
+        /// Node describing access to a open property which is a non-entity collection value.
+        /// </summary>
+        CollectionOpenPropertyAccess = 25,
     }
 }

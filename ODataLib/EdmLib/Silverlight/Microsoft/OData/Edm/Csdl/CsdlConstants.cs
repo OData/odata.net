@@ -158,7 +158,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Element_Duration = "Duration";
         internal const string Element_Term = "Term";
         internal const string Element_TypeRef = "TypeRef";
-                
+
         internal const string Value_Cascade = "Cascade";
         internal const string Value_Collection = "Collection";
         internal const string Value_EndMany = "*";
@@ -211,11 +211,17 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Prefix_Edmx = "edmx";
         internal const string Prefix_ODataMetadata = "m";
 
+        internal const string Attribute_TargetNamespace = "TargetNamespace";
+        internal const string Attribute_TermNamespace = "TermNamespace";
         internal const string Attribute_Version = "Version";
+        internal const string Attribute_Uri = "Uri";
 
         internal const string Element_ConceptualModels = "ConceptualModels";
         internal const string Element_Edmx = "Edmx";
         internal const string Element_Runtime = "Runtime";
+        internal const string Element_Reference = "Reference";  // e.g. <edmx:Reference Uri="http://vocabs.odata.org/capabilities/v1">
+        internal const string Element_Include = "Include";
+        internal const string Element_IncludeAnnotations = "IncludeAnnotations";
         internal const string Element_DataServices = "DataServices";
 
         #endregion

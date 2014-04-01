@@ -73,6 +73,14 @@ namespace Microsoft.Data.Spatial
             return writer.JsonObject;
         }
 
+        /// <summary> Creates the writerStream. </summary>
+        /// <returns>The writerStream that was created.</returns>
+        /// <param name="writer">The actual stream to write Json.</param>
+        public override SpatialPipeline CreateWriter(IGeoJsonWriter writer)
+        {
+            return new ForwardingSegment(new WrappedGeoJsonWriter(writer));
+        }
+
         /// <summary>
         /// Initialize the pipeline
         /// </summary>

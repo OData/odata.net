@@ -681,13 +681,6 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "An invalid HTTP method '{0}' was detected for a query operation. Query operations only support the HTTP 'GET' method."
-        /// </summary>
-        internal static string ODataBatch_InvalidHttpMethodForQueryOperation(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataBatch_InvalidHttpMethodForQueryOperation,p0);
-        }
-
-        /// <summary>
         /// A string like "An invalid HTTP method '{0}' was detected for a request in a change set. Requests in change sets only support the HTTP methods 'POST', 'PUT', 'DELETE', and 'PATCH'."
         /// </summary>
         internal static string ODataBatch_InvalidHttpMethodForChangeSetRequest(object p0) {
@@ -1603,13 +1596,6 @@ namespace Microsoft.OData.Core {
             get {
                 return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ReaderValidationUtils_EntryWithoutType);
             }
-        }
-
-        /// <summary>
-        /// A string like "Complex type '{1}' is a subtype of a base type '{0}'. Derived complex types are not supported."
-        /// </summary>
-        internal static string ReaderValidationUtils_DerivedComplexTypesAreNotAllowed(object p0, object p1) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ReaderValidationUtils_DerivedComplexTypesAreNotAllowed,p0,p1);
         }
 
         /// <summary>
@@ -4938,7 +4924,7 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "The $level option on navigation property '{0}' is not allowed, because the related entity type '{1}' cound not be cast to source entity type '{2}'."
+        /// A string like "The $level option on navigation property '{0}' is not allowed, because the related entity type '{1}' could not be cast to source entity type '{2}'."
         /// </summary>
         internal static string ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType(object p0, object p1, object p2) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType,p0,p1,p2);
@@ -5043,14 +5029,14 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "Top option must be an integer, it is set to '{0}' instead."
+        /// A string like "Top option must be a non-negative integer, it is set to '{0}' instead."
         /// </summary>
         internal static string UriSelectParser_InvalidTopOption(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriSelectParser_InvalidTopOption,p0);
         }
 
         /// <summary>
-        /// A string like "Skip option must be an integer, it is set to '{0}' instead."
+        /// A string like "Skip option must be a non-negative integer, it is set to '{0}' instead."
         /// </summary>
         internal static string UriSelectParser_InvalidSkipOption(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriSelectParser_InvalidSkipOption,p0);
@@ -5064,7 +5050,7 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "Levels option must be an integer or 'max', it is set to '{0}' instead."
+        /// A string like "Levels option must be a non-negative integer or 'max', it is set to '{0}' instead."
         /// </summary>
         internal static string UriSelectParser_InvalidLevelsOption(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriSelectParser_InvalidLevelsOption,p0);
@@ -5121,6 +5107,13 @@ namespace Microsoft.OData.Core {
         /// </summary>
         internal static string UriParser_ExpandDepthExceeded(object p0, object p1) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriParser_ExpandDepthExceeded,p0,p1);
+        }
+
+        /// <summary>
+        /// A string like "The type '{0}' is not valid for $select or $expand, only structured types are allowed."
+        /// </summary>
+        internal static string UriParser_TypeInvalidForSelectExpand(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriParser_TypeInvalidForSelectExpand,p0);
         }
 
         /// <summary>
@@ -5395,13 +5388,6 @@ namespace Microsoft.OData.Core {
         /// </summary>
         internal static string RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType(object p0, object p1) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType,p0,p1);
-        }
-
-        /// <summary>
-        /// A string like "Complex types can not be marked as 'Open'. Error occurred for type '{0}'."
-        /// </summary>
-        internal static string ResourceType_ComplexTypeCannotBeOpen(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ResourceType_ComplexTypeCannotBeOpen,p0);
         }
 
         /// <summary>

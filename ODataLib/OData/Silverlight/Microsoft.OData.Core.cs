@@ -155,7 +155,6 @@ namespace Microsoft.OData.Core {
         internal const string ODataCollectionWriterCore_WriteEndCalledInInvalidState = "ODataCollectionWriterCore_WriteEndCalledInInvalidState";
         internal const string ODataCollectionWriterCore_SyncCallOnAsyncWriter = "ODataCollectionWriterCore_SyncCallOnAsyncWriter";
         internal const string ODataCollectionWriterCore_AsyncCallOnSyncWriter = "ODataCollectionWriterCore_AsyncCallOnSyncWriter";
-        internal const string ODataBatch_InvalidHttpMethodForQueryOperation = "ODataBatch_InvalidHttpMethodForQueryOperation";
         internal const string ODataBatch_InvalidHttpMethodForChangeSetRequest = "ODataBatch_InvalidHttpMethodForChangeSetRequest";
         internal const string ODataBatchOperationHeaderDictionary_KeyNotFound = "ODataBatchOperationHeaderDictionary_KeyNotFound";
         internal const string ODataBatchOperationHeaderDictionary_DuplicateCaseInsensitiveKeys = "ODataBatchOperationHeaderDictionary_DuplicateCaseInsensitiveKeys";
@@ -274,7 +273,6 @@ namespace Microsoft.OData.Core {
         internal const string ReaderValidationUtils_EntityReferenceLinkMissingUri = "ReaderValidationUtils_EntityReferenceLinkMissingUri";
         internal const string ReaderValidationUtils_ValueWithoutType = "ReaderValidationUtils_ValueWithoutType";
         internal const string ReaderValidationUtils_EntryWithoutType = "ReaderValidationUtils_EntryWithoutType";
-        internal const string ReaderValidationUtils_DerivedComplexTypesAreNotAllowed = "ReaderValidationUtils_DerivedComplexTypesAreNotAllowed";
         internal const string ReaderValidationUtils_CannotConvertPrimitiveValue = "ReaderValidationUtils_CannotConvertPrimitiveValue";
         internal const string ReaderValidationUtils_MessageReaderSettingsBaseUriMustBeNullOrAbsolute = "ReaderValidationUtils_MessageReaderSettingsBaseUriMustBeNullOrAbsolute";
         internal const string ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest = "ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest";
@@ -740,6 +738,7 @@ namespace Microsoft.OData.Core {
         internal const string UriParser_NegativeLimit = "UriParser_NegativeLimit";
         internal const string UriParser_ExpandCountExceeded = "UriParser_ExpandCountExceeded";
         internal const string UriParser_ExpandDepthExceeded = "UriParser_ExpandDepthExceeded";
+        internal const string UriParser_TypeInvalidForSelectExpand = "UriParser_TypeInvalidForSelectExpand";
         internal const string PathParser_EntityReferenceNotSupported = "PathParser_EntityReferenceNotSupported";
         internal const string PathParser_CannotUseValueOnCollection = "PathParser_CannotUseValueOnCollection";
         internal const string PathParser_TypeMustBeRelatedToSet = "PathParser_TypeMustBeRelatedToSet";
@@ -776,7 +775,6 @@ namespace Microsoft.OData.Core {
         internal const string RequestUriProcessor_SegmentDoesNotSupportKeyPredicates = "RequestUriProcessor_SegmentDoesNotSupportKeyPredicates";
         internal const string RequestUriProcessor_ValueSegmentAfterScalarPropertySegment = "RequestUriProcessor_ValueSegmentAfterScalarPropertySegment";
         internal const string RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType = "RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType";
-        internal const string ResourceType_ComplexTypeCannotBeOpen = "ResourceType_ComplexTypeCannotBeOpen";
         internal const string OpenNavigationPropertiesNotSupportedOnOpenTypes = "OpenNavigationPropertiesNotSupportedOnOpenTypes";
         internal const string BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation = "BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation";
         internal const string DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion = "DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion";

@@ -581,15 +581,7 @@ namespace Microsoft.OData.Core
             HttpUtils.ValidateHttpMethod(httpMethod);
 
             // Validate the HTTP method when reading a request
-            if (this.batchStream.ChangeSetBoundary == null)
-            {
-                // only allow GET requests for query operations
-                if (!HttpUtils.IsQueryMethod(httpMethod))
-                {
-                    throw new ODataException(Strings.ODataBatch_InvalidHttpMethodForQueryOperation(httpMethod));
-                }
-            }
-            else
+            if (this.batchStream.ChangeSetBoundary != null)
             {
                 // allow all methods except for GET
                 if (HttpUtils.IsQueryMethod(httpMethod))

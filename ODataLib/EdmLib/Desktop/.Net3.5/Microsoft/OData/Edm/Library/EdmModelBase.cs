@@ -23,35 +23,36 @@ namespace Microsoft.OData.Edm.Library
     /// </summary>
     public abstract class EdmModelBase : EdmElement, IEdmModel
     {
-        private readonly EdmDirectValueAnnotationsManager annotationsManager;
+        private readonly List<IEdmModel> referencedEdmModels;
+        private readonly IEdmDirectValueAnnotationsManager annotationsManager;
         private readonly Dictionary<string, IEdmEntityContainer> containersDictionary = new Dictionary<string, IEdmEntityContainer>();
         private readonly Dictionary<string, IEdmSchemaType> schemaTypeDictionary = new Dictionary<string, IEdmSchemaType>();
         private readonly Dictionary<string, IEdmValueTerm> valueTermDictionary = new Dictionary<string, IEdmValueTerm>();
         private readonly Dictionary<string, IList<IEdmOperation>> functionDictionary = new Dictionary<string, IList<IEdmOperation>>();
-        private readonly List<IEdmModel> referencedModels;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmModelBase"/> class.
         /// </summary>
         /// <param name="referencedModels">Models to which this model refers.</param>
         /// <param name="annotationsManager">Annotations manager for the model to use.</param>
-        protected EdmModelBase(IEnumerable<IEdmModel> referencedModels, EdmDirectValueAnnotationsManager annotationsManager)
+        /// <remarks>Only either mainModel and referencedModels should have value.</remarks>
+        protected EdmModelBase(IEnumerable<IEdmModel> referencedModels, IEdmDirectValueAnnotationsManager annotationsManager)
         {
             EdmUtil.CheckArgumentNull(referencedModels, "referencedModels");
             EdmUtil.CheckArgumentNull(annotationsManager, "annotationsManager");
 
-            this.referencedModels = new List<IEdmModel>(referencedModels);
-            this.referencedModels.Add(EdmCoreModel.Instance);
+            this.referencedEdmModels = new List<IEdmModel>(referencedModels);
+            this.referencedEdmModels.Add(EdmCoreModel.Instance);
             if (CoreVocabularyModel.Instance != null)
             {
-                this.referencedModels.Add(CoreVocabularyModel.Instance);
+                this.referencedEdmModels.Add(CoreVocabularyModel.Instance);
             }
 
             this.annotationsManager = annotationsManager;
         }
 
         /// <summary>
-        /// Gets the collection of schema elements that are contained in this model.
+        /// Gets the collection of schema elements that are contained in this model and referenced models.
         /// </summary>
         public abstract IEnumerable<IEdmSchemaElement> SchemaElements
         {
@@ -79,7 +80,7 @@ namespace Microsoft.OData.Edm.Library
         /// </summary>
         public IEnumerable<IEdmModel> ReferencedModels
         {
-            get { return this.referencedModels; }
+            get { return this.referencedEdmModels; }
         }
 
         /// <summary>
@@ -97,9 +98,9 @@ namespace Microsoft.OData.Edm.Library
         {
             get { return this.containersDictionary.Values.FirstOrDefault(); }
         }
-       
+
         /// <summary>
-        /// Searches for a type with the given name in this model and returns null if no such type exists.
+        /// Searches for a type with the given name in this model only and returns null if no such type exists.
         /// </summary>
         /// <param name="qualifiedName">The qualified name of the type being found.</param>
         /// <returns>The requested type, or null if no such type exists.</returns>
@@ -201,7 +202,7 @@ namespace Microsoft.OData.Edm.Library
         protected void AddReferencedModel(IEdmModel model)
         {
             EdmUtil.CheckArgumentNull(model, "model");
-            this.referencedModels.Add(model);
+            this.referencedEdmModels.Add(model);
         }
     }
 }

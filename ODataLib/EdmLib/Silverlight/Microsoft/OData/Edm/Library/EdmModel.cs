@@ -35,10 +35,11 @@ namespace Microsoft.OData.Edm.Library
         }
 
         /// <summary>
-        /// Gets the collection of schema elements that are contained in this model.
+        /// Gets the collection of schema elements that are contained in this model and referenced models.
         /// </summary>
         public override IEnumerable<IEdmSchemaElement> SchemaElements
         {
+            // TODO challenh REF plus referneced elements
             get { return this.elements; }
         }
 
@@ -156,6 +157,29 @@ namespace Microsoft.OData.Edm.Library
             }
 
             return Enumerable.Empty<IEdmStructuredType>();
+        }
+
+        /// <summary>
+        /// Set a vocabulary annotation to this model.
+        /// </summary>
+        /// <param name="annotation">The annotation to be set.</param>
+        internal void SetVocabularyAnnotation(IEdmVocabularyAnnotation annotation)
+        {
+            EdmUtil.CheckArgumentNull(annotation, "annotation");
+            if (annotation.Target == null)
+            {
+                throw new InvalidOperationException(Strings.Constructable_VocabularyAnnotationMustHaveTarget);
+            }
+
+            List<IEdmVocabularyAnnotation> elementAnnotations;
+            if (!this.vocabularyAnnotationsDictionary.TryGetValue(annotation.Target, out elementAnnotations))
+            {
+                elementAnnotations = new List<IEdmVocabularyAnnotation>();
+                this.vocabularyAnnotationsDictionary.Add(annotation.Target, elementAnnotations);
+            }
+
+            elementAnnotations.RemoveAll(p => p.Term.FullName() == annotation.Term.FullName());
+            elementAnnotations.Add(annotation);
         }
     }
 }

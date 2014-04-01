@@ -228,7 +228,8 @@ namespace Microsoft.OData.Edm.Csdl
         #region NamespaceAliases
 
         /// <summary>
-        /// Sets the serialization alias for a given namespace
+        /// Sets the serialization alias for a given namespace(including current model's schemas namespace-alias, and referenced models' schemas namespace-alias)
+        /// TODO challenh REF make sure no duplicated alias.
         /// </summary>
         /// <param name="model">Model that will be serialized.</param>
         /// <param name="namespaceName">The namespace to set the alias for.</param>
@@ -286,7 +287,12 @@ namespace Microsoft.OData.Edm.Csdl
             return model.GetAnnotationValue<VersioningDictionary<string, string>>(model, EdmConstants.InternalUri, CsdlConstants.NamespaceAliasAnnotation);
         }
 
-        internal static VersioningList<string> GetUsedNamespaces(this IEdmModel model)
+        /// <summary>
+        /// Gets the namespaces in all schemas having alias, excluding those without alias.
+        /// </summary>
+        /// <param name="model">The IEdmModel.</param>
+        /// <returns>The namespaces in all schemas having alias.</returns>
+        internal static VersioningList<string> GetUsedNamespacesHavingAlias(this IEdmModel model)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             return model.GetAnnotationValue<VersioningList<string>>(model, EdmConstants.InternalUri, CsdlConstants.UsedNamespacesAnnotation);

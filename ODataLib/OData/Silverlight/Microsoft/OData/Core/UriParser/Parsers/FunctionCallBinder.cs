@@ -176,13 +176,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // Bind the parent, if present.
             // TODO: parent can be a collection as well, so we need to loosen this to QueryNode.
             QueryNode parent = null;
-            if (functionCallToken.Source != null)
+            if (state.ImplicitRangeVariable != null)
             {
-                parent = this.bindMethod(functionCallToken.Source);
-            }
-            else
-            {
-                parent = NodeFactory.CreateRangeVariableReferenceNode(state.ImplicitRangeVariable);
+                if (functionCallToken.Source != null)
+                {
+                    parent = this.bindMethod(functionCallToken.Source);
+                }
+                else
+                {
+                    parent = NodeFactory.CreateRangeVariableReferenceNode(state.ImplicitRangeVariable);
+                }
             }
 
             // First see if there is a custom function for this
@@ -389,10 +392,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="functionOrOpertion">The function or operation.</param>
         /// <param name="segmentParameterTokens">The parameter tokens to be binded.</param>
         /// <returns>The binded semantic nodes.</returns>
+        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
+             Justification = "Parameter type is needed here to check whether can be convert from source")]
         internal static List<OperationSegmentParameter> BindSegmentParameters(ODataUriParserConfiguration configuration, IEdmOperation functionOrOpertion, ICollection<FunctionParameterToken> segmentParameterTokens)
         {
             // TODO challenh: HandleComplexOrCollectionParameterValueIfExists  is temp work around for single copmlex or colleciton type, it can't handle nested complex or collection value.
-            ICollection<FunctionParameterToken> parametersParsed = FunctionCallBinder.HandleComplexOrCollectionParameterValueIfExists(configuration.Model, functionOrOpertion, segmentParameterTokens);
+            ICollection<FunctionParameterToken> parametersParsed = FunctionCallBinder.HandleComplexOrCollectionParameterValueIfExists(configuration.Model, functionOrOpertion, segmentParameterTokens, configuration.EnableUriTemplateParsing);
 
             // Bind it to metadata
             BindingState state = new BindingState(configuration);
@@ -423,11 +428,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 bool sourceIsNullOrOpenType = (sourceTypeReference == null);
                 if (!sourceIsNullOrOpenType)
                 {
-                    if (!TypePromotionUtils.CanConvertTo(boundNode, sourceTypeReference, functionParameter.Type))
-                    {
-                        throw new ODataException(ODataErrorStrings.MetadataBinder_CannotConvertToType(sourceTypeReference.ODataFullName(), functionParameter.Type.ODataFullName()));
-                    }
-
                     boundNode = MetadataBindingUtils.ConvertToTypeIfNeeded(boundNode, functionParameter.Type);
                 }
 
@@ -447,8 +447,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="model">The model.</param>
         /// <param name="functionOrOpertion">IEdmFunction or IEdmOperation</param>
         /// <param name="parameterTokens">The tokens to bind.</param>
+        /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>The FunctionParameterTokens with complex or collection values converted from string like "{...}", or "[..,..,..]".</returns>
-        private static ICollection<FunctionParameterToken> HandleComplexOrCollectionParameterValueIfExists(IEdmModel model, IEdmOperation functionOrOpertion, ICollection<FunctionParameterToken> parameterTokens)
+        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
+             Justification = "Parameter type is needed to convert from uri literal.")]
+        private static ICollection<FunctionParameterToken> HandleComplexOrCollectionParameterValueIfExists(IEdmModel model, IEdmOperation functionOrOpertion, ICollection<FunctionParameterToken> parameterTokens, bool enableUriTemplateParsing = false)
         {
             ICollection<FunctionParameterToken> partiallyParsedParametersWithComplexOrCollection = new Collection<FunctionParameterToken>();
             foreach (FunctionParameterToken funcParaToken in parameterTokens)
@@ -460,16 +463,27 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     var lexer = new ExpressionLexer(valueStr, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
                     if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression)
                     {
-                        // ExpressionTokenKind.BracketedExpression means text like [{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]
-                        // so now try convert it into complex or collection type value:
                         var functionParameter = functionOrOpertion.FindParameter(funcParaToken.ParameterName);
                         if (functionParameter == null)
                         {
                             throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(funcParaToken.ParameterName, functionOrOpertion.Name));
                         }
 
-                        object complexOrCollectionValue = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, functionParameter.Type);
-                        LiteralToken newValueToken = new LiteralToken(complexOrCollectionValue);
+                        object result;
+                        UriTemplateExpression expression;
+
+                        if (enableUriTemplateParsing && UriTemplateParser.TryParseLiteral(lexer.CurrentToken.Text, functionParameter.Type, out expression))
+                        {
+                            result = expression;
+                        }
+                        else
+                        {
+                            // ExpressionTokenKind.BracketedExpression means text like [{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]
+                            // so now try convert it into complex or collection type value:
+                            result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, functionParameter.Type);
+                        }
+
+                        LiteralToken newValueToken = new LiteralToken(result);
                         FunctionParameterToken newFuncParaToken = new FunctionParameterToken(funcParaToken.ParameterName, newValueToken);
                         partiallyParsedParametersWithComplexOrCollection.Add(newFuncParaToken);
                         continue;

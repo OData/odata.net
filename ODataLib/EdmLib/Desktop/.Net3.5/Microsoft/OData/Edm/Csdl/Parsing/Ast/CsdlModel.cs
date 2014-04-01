@@ -18,6 +18,27 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     internal class CsdlModel
     {
         private readonly List<CsdlSchema> schemata = new List<CsdlSchema>();
+        private readonly List<IEdmInclude> includes = new List<IEdmInclude>();
+        private readonly List<IEdmIncludeAnnotations> includeAnnotations = new List<IEdmIncludeAnnotations>();
+
+        /// <summary>
+        /// if count ==0, includes all types. 
+        /// It represents $lt;edmx:Include Namespace="Org.OData.Capabilities.V1" /&gt;
+        /// TODO challenh REF p2 rename it to 'ToBeExported'
+        /// </summary>
+        public IEnumerable<IEdmInclude> Includes
+        {
+            get { return includes; }
+        }
+
+        /// <summary>
+        /// if count ==0, includes all annotations.
+        /// It represents $lt;edmx:IncludeAnnotations ... /&gt;
+        /// </summary>
+        public IEnumerable<IEdmIncludeAnnotations> IncludeAnnotations
+        {
+            get { return includeAnnotations; }
+        }
 
         public IEnumerable<CsdlSchema> Schemata
         {
@@ -27,6 +48,16 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         public void AddSchema(CsdlSchema schema)
         {
             this.schemata.Add(schema);
+        }
+
+        public void AddIncludes(IEnumerable<IEdmInclude> includesToAdd)
+        {
+            this.includes.AddRange(includesToAdd);
+        }
+
+        public void AddIncludeAnnotations(IEnumerable<IEdmIncludeAnnotations> includeAnnotationsToAdd)
+        {
+            this.includeAnnotations.AddRange(includeAnnotationsToAdd);
         }
     }
 }

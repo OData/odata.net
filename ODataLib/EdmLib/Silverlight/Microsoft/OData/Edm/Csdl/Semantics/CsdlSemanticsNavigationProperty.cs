@@ -205,6 +205,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private EdmReferentialConstraintPropertyPair ComputeReferentialConstraintPropertyPair(CsdlReferentialConstraint csdlConstraint)
         {
+            // <EntityType Name="Product">
+            //   ...
+            //   <Property Name="CategoryID" Type="Edm.String" Nullable="false"/>
+            //  <NavigationProperty Name="Category" Type="Self.Category" Nullable="false">
+            //     <ReferentialConstraint Property="CategoryID" ReferencedProperty="ID" />
+            //   </NavigationProperty>
+            // </EntityType>
+            // the above CategoryID is DependentProperty, ID is PrincipalProperty.
             IEdmStructuralProperty dependentProperty = this.declaringType.FindProperty(csdlConstraint.PropertyName) as IEdmStructuralProperty ?? new UnresolvedProperty(this.declaringType, csdlConstraint.PropertyName, csdlConstraint.Location);
             IEdmStructuralProperty principalProperty = this.TargetEntityType.FindProperty(csdlConstraint.ReferencedPropertyName) as IEdmStructuralProperty ?? new UnresolvedProperty(this.ToEntityType(), csdlConstraint.ReferencedPropertyName, csdlConstraint.Location);
             return new EdmReferentialConstraintPropertyPair(dependentProperty, principalProperty);

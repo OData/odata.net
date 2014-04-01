@@ -98,7 +98,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             // create an enum node, enclosing an odata enum value
-            EdmEnumTypeReference enumTypeReference = new EdmEnumTypeReference(enumType, true);
+            EdmEnumTypeReference enumTypeReference = new EdmEnumTypeReference(enumType, false);
             boundEnum = new ConstantNode(enumValue, identifier, enumTypeReference);
 
             return true;

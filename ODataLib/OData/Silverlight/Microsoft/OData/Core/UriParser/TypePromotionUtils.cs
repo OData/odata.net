@@ -151,14 +151,14 @@ namespace Microsoft.OData.Core.UriParser
                     return true;
                 }
 
-                // enum supports equality operator for null operand:
-                if ((left == null) && (right != null) && (right.IsEnum()))
+                // enum and spatial type support equality operator for null operand:
+                if ((left == null) && (right != null) && (right.IsEnum() || right is IEdmSpatialTypeReference))
                 {
                     left = right;
                     return true;
                 }
 
-                if ((right == null) && (left != null) && left.IsEnum())
+                if ((right == null) && (left != null) && (left.IsEnum() || left is IEdmSpatialTypeReference))
                 {
                     right = left;
                     return true;
@@ -396,6 +396,16 @@ namespace Microsoft.OData.Core.UriParser
             //// {
             ////     return false;
             //// }
+
+            if (sourceReference.IsEnum() && targetReference.IsEnum())
+            {
+                if (sourceReference.Definition.IsEquivalentTo(targetReference.Definition))
+                {
+                    return targetReference.IsNullable() || (!sourceReference.IsNullable());
+                }
+
+                return false;
+            }
 
             IEdmPrimitiveTypeReference sourcePrimitiveTypeReference = sourceReference.AsPrimitiveOrNull();
             IEdmPrimitiveTypeReference targetPrimitiveTypeReference = targetReference.AsPrimitiveOrNull();

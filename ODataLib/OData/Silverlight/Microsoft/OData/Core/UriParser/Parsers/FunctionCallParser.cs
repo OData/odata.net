@@ -31,19 +31,27 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>
         /// Method used to parse arguments.
         /// </summary>
-        private readonly UriQueryExpressionParser.Parser parseMethod;
+        private readonly UriQueryExpressionParser parser;
 
         /// <summary>
         /// Create a new FunctionCallParser.
         /// </summary>
         /// <param name="lexer">Lexer positioned at a function identifier.</param>
-        /// <param name="parseMethod">Method to use for parsing individual arguments in the function.</param>
-        public FunctionCallParser(ExpressionLexer lexer, UriQueryExpressionParser.Parser parseMethod)
+        /// <param name="parser">The UriQueryExpressionParser.</param>
+        public FunctionCallParser(ExpressionLexer lexer, UriQueryExpressionParser parser)
         {
             ExceptionUtils.CheckArgumentNotNull(lexer, "lexer");
-            ExceptionUtils.CheckArgumentNotNull(parseMethod, "parseMethod");
+            ExceptionUtils.CheckArgumentNotNull(parser, "parser");
             this.lexer = lexer;
-            this.parseMethod = parseMethod;
+            this.parser = parser;
+        }
+
+        /// <summary>
+        /// Reference to the underlying UriQueryExpressionParser.
+        /// </summary>
+        public UriQueryExpressionParser UriQueryExpressionParser
+        {
+            get { return this.parser; }
         }
 
         /// <summary>
@@ -139,7 +147,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             List<FunctionParameterToken> argList = new List<FunctionParameterToken>();
             while (true)
             {
-                argList.Add(new FunctionParameterToken(null, this.parseMethod()));
+                argList.Add(new FunctionParameterToken(null, this.parser.ParseExpression()));
                 if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
                 {
                     break;
@@ -158,7 +166,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if the arguments were successfully read.</returns>
         private bool TryReadArgumentsAsNamedValues(out ICollection<FunctionParameterToken> argList)
         {
-            if (this.lexer.TrySplitFunctionParameters(out argList))
+            if (this.parser.TrySplitFunctionParameters(out argList))
             {
                 if (argList.Select(t => t.ParameterName).Distinct().Count() != argList.Count)
                 {
