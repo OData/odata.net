@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Microsoft.OData.Edm.Csdl.Internal.Serialization;
+using Microsoft.OData.Edm.Csdl.Serialization;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
 

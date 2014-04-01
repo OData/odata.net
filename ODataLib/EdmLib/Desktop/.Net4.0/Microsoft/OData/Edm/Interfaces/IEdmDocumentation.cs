@@ -13,7 +13,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents an EDM documentation.
     /// </summary>
-    public interface IEdmDocumentation
+    internal interface IEdmDocumentation
     {
         /// <summary>
         /// Gets a summary of this documentation.

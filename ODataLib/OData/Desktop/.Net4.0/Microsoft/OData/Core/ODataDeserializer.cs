@@ -42,7 +42,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.inputContext.UseServerFormatBehavior;
             }
         }
@@ -54,7 +53,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.inputContext.UseDefaultFormatBehavior;
             }
         }
@@ -66,7 +64,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.inputContext.MessageReaderSettings;
             }
         }
@@ -78,7 +75,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.inputContext.Version;
             }
         }
@@ -90,7 +86,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.inputContext.ReadingResponse;
             }
         }
@@ -102,7 +97,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.inputContext.Model;
             }
         }
@@ -113,8 +107,6 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created instance of duplicate property names checker.</returns>
         internal DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return this.inputContext.CreateDuplicatePropertyNamesChecker();
         }
     }

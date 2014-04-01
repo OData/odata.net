@@ -12,6 +12,7 @@ namespace Microsoft.OData.Core.Atom
 {
     #region Namespaces
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Xml;
     #endregion Namespaces
@@ -53,6 +54,17 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>The emtpy namespace used for attributes in no namespace.</summary>
         private readonly string EmptyNamespace;
 
+        /// <summary>Atomized string representation for the OData metadata namespace.</summary>
+        private readonly string ODataMetadataNamespace;
+
+        /// <summary>Atomized string representation of the element name used for function import </summary>
+        private readonly string ODataFunctionImportElementName;
+
+        /// <summary>Atomized string representation of the element name used for singleton name </summary>
+        private readonly string ODataSingletonElementName;
+
+        /// <summary>Atomized string representation of the name attribute. </summary>
+        private readonly string ODataNameAttribute;
         #endregion
 
         /// <summary>
@@ -68,7 +80,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomServiceDocumentDeserializer(ODataAtomInputContext atomInputContext)
             : base(atomInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
             XmlNameTable nameTable = this.XmlReader.NameTable;
             this.AtomPublishingServiceElementName = nameTable.Add(AtomConstants.AtomPublishingServiceElementName);
             this.AtomPublishingWorkspaceElementName = nameTable.Add(AtomConstants.AtomPublishingWorkspaceElementName);
@@ -80,6 +91,10 @@ namespace Microsoft.OData.Core.Atom
             this.AtomNamespace = nameTable.Add(AtomConstants.AtomNamespace);
             this.AtomTitleElementName = nameTable.Add(AtomConstants.AtomTitleElementName);
             this.EmptyNamespace = nameTable.Add(string.Empty);
+            this.ODataMetadataNamespace = nameTable.Add(AtomConstants.ODataMetadataNamespace);
+            this.ODataFunctionImportElementName = nameTable.Add(AtomConstants.AtomServiceDocumentFunctionImportElementName);
+            this.ODataSingletonElementName = nameTable.Add(AtomConstants.AtomServiceDocumentSingletonElementName);
+            this.ODataNameAttribute = nameTable.Add(AtomConstants.ODataNameAttribute);
         }
 
         /// <summary>
@@ -102,16 +117,15 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Reads a service document.
         /// This method reads the service document from the input and returns 
-        /// an <see cref="ODataWorkspace"/> that represents the read service document.
+        /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
-        /// <returns>An <see cref="ODataWorkspace"/> representing the read service document.</returns>
+        /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
         /// <remarks>
         /// Pre-Condition:   XmlNodeType.Element - The start element of the service document.
         /// Post-Condtion:   XmlNodeType.None    - The reader must be at the end of the input.
         /// </remarks>   
-        internal ODataWorkspace ReadServiceDocument()
+        internal ODataServiceDocument ReadServiceDocument()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.ReadingResponse, "Service document can only appear in a response message");
             Debug.Assert(this.XmlReader != null, "this.XmlReader != null");
 
@@ -126,16 +140,16 @@ namespace Microsoft.OData.Core.Atom
                     this.XmlReader.LocalName, this.XmlReader.NamespaceURI));
             }
 
-            ODataWorkspace workspace = null;
+            ODataServiceDocument serviceDocument = null;
 
             if (!this.XmlReader.IsEmptyElement)
             {
                 // read over the start tag of the 'service' element.
                 this.XmlReader.Read();
-                workspace = this.ReadWorkspace();
+                serviceDocument = this.ReadWorkspace();
             }
 
-            if (workspace == null)
+            if (serviceDocument == null)
             {
                 throw new ODataException(Strings.ODataAtomServiceDocumentDeserializer_MissingWorkspaceElement);
             }
@@ -150,7 +164,7 @@ namespace Microsoft.OData.Core.Atom
             {
                 Debug.Assert(this.XmlReader.NamespaceEquals(this.AtomPublishingNamespace), "The current Xml element should have been in the 'app' namespace");
 
-                // We only support a single workspace inside a service document.
+                // We only support a single serviceDocument inside a service document.
                 if (this.XmlReader.LocalNameEquals(this.AtomPublishingWorkspaceElementName))
                 {
                     throw new ODataException(Strings.ODataAtomServiceDocumentDeserializer_MultipleWorkspaceElementsFound);
@@ -165,18 +179,18 @@ namespace Microsoft.OData.Core.Atom
 
             this.ReadPayloadEnd();
 
-            return workspace;
+            return serviceDocument;
         }
 
         /// <summary>
         /// Reads a workspace of a service document.
         /// </summary>
-        /// <returns>An <see cref="ODataWorkspace"/> representing the workspace of a service document.</returns>
+        /// <returns>An <see cref="ODataServiceDocument"/> representing the workspace of a service document.</returns>
         /// <remarks>
         /// Pre-Condition:  Any    - the next node after the service element.
         /// Post-Condition: Any    - The next node after the workspace element. 
         /// </remarks>
-        private ODataWorkspace ReadWorkspace()
+        private ODataServiceDocument ReadWorkspace()
         {
             Debug.Assert(this.XmlReader != null, "this.XmlReader != null");
 
@@ -187,7 +201,7 @@ namespace Microsoft.OData.Core.Atom
 
             this.AssertXmlCondition(XmlNodeType.Element, XmlNodeType.EndElement);
 
-            // if we already found an EndElement, it means that there is no workspace.
+            // if we already found an EndElement, it means that there is no serviceDocument.
             if (this.XmlReader.NodeType == XmlNodeType.EndElement)
             {
                 return null;
@@ -201,7 +215,9 @@ namespace Microsoft.OData.Core.Atom
                 throw new ODataException(Strings.ODataAtomServiceDocumentDeserializer_UnexpectedElementInServiceDocument(this.XmlReader.LocalName));
             }
 
-            List<ODataResourceCollectionInfo> collections = new List<ODataResourceCollectionInfo>();
+            List<ODataEntitySetInfo> collections = new List<ODataEntitySetInfo>();
+            List<ODataFunctionImportInfo> functionImportInfos = new List<ODataFunctionImportInfo>();
+            List<ODataSingletonInfo> singletons = new List<ODataSingletonInfo>();
             AtomWorkspaceMetadata workspaceMetadata = null;
 
             if (enableAtomMetadataReading)
@@ -211,7 +227,7 @@ namespace Microsoft.OData.Core.Atom
 
             if (!this.XmlReader.IsEmptyElement)
             {
-                // read over the 'workspace' element.
+                // read over the 'serviceDocument' element.
                 this.XmlReader.ReadStartElement();
 
                 do
@@ -225,7 +241,7 @@ namespace Microsoft.OData.Core.Atom
                             {
                                 if (this.XmlReader.LocalNameEquals(this.AtomPublishingCollectionElementName))
                                 {
-                                    ODataResourceCollectionInfo collection = this.ReadCollectionElement();
+                                    ODataEntitySetInfo collection = this.ReadEntitySet();
                                     Debug.Assert(collection != null, "collection != null");
                                     collections.Add(collection);
                                 }
@@ -233,6 +249,26 @@ namespace Microsoft.OData.Core.Atom
                                 {
                                     // Throw error if we find anything other then a 'collection' element in the Atom publishing namespace.
                                     throw new ODataException(Strings.ODataAtomServiceDocumentDeserializer_UnexpectedElementInWorkspace(this.XmlReader.LocalName));
+                                }
+                            }
+                            else if (this.XmlReader.NamespaceEquals(this.ODataMetadataNamespace))
+                            {
+                                if (this.XmlReader.LocalNameEquals(this.ODataFunctionImportElementName))
+                                {
+                                    ODataFunctionImportInfo functionImportInfo = this.ReadFunctionImportInfo();
+                                    Debug.Assert(functionImportInfo != null, "functionImportInfo != null");
+                                    functionImportInfos.Add(functionImportInfo);
+                                }
+                                else if (this.XmlReader.LocalNameEquals(this.ODataSingletonElementName))
+                                {
+                                    ODataSingletonInfo singletonInfo = this.ReadSingletonInfo();
+                                    Debug.Assert(singletonInfo != null, "singletonInfo != null");
+                                    singletons.Add(singletonInfo);
+                                }
+                                else
+                                {
+                                    // Throw error if we find anything other then a 'function-import' or 'singleton' element in the odata metadata namespace.
+                                    throw new ODataException(Strings.ODataAtomServiceDocumentDeserializer_UnexpectedODataElementInWorkspace(this.XmlReader.LocalName));
                                 }
                             }
                             else if (enableAtomMetadataReading && this.XmlReader.NamespaceEquals(this.AtomNamespace))
@@ -255,7 +291,7 @@ namespace Microsoft.OData.Core.Atom
                             break;
 
                         case XmlNodeType.EndElement:
-                            // end of 'workspace' element.
+                            // end of 'serviceDocument' element.
                             break;
 
                         default:
@@ -267,44 +303,94 @@ namespace Microsoft.OData.Core.Atom
                 while (this.XmlReader.NodeType != XmlNodeType.EndElement);
             } // if (!this.XmlReader.IsEmptyElement)
 
-            // read over the end tag of the workspace element or the start tag if the workspace element is empty.
+            // read over the end tag of the serviceDocument element or the start tag if the serviceDocument element is empty.
             this.XmlReader.Read();
 
-            ODataWorkspace workspace = new ODataWorkspace
+            ODataServiceDocument serviceDocument = new ODataServiceDocument
             {
-                Collections = new ReadOnlyEnumerable<ODataResourceCollectionInfo>(collections)
+                EntitySets = new ReadOnlyEnumerable<ODataEntitySetInfo>(collections),
+                FunctionImports = new ReadOnlyCollection<ODataFunctionImportInfo>(functionImportInfos),
+                Singletons = new ReadOnlyCollection<ODataSingletonInfo>(singletons)
             };
 
             if (enableAtomMetadataReading)
             {
-                workspace.SetAnnotation<AtomWorkspaceMetadata>(workspaceMetadata);
+                serviceDocument.SetAnnotation<AtomWorkspaceMetadata>(workspaceMetadata);
             }
                 
-            return workspace;
+            return serviceDocument;
         }
 
         /// <summary>
-        /// Reads a resource collection element of a workspace of the service document.
+        /// Reads a entity set element of a service document.
         /// </summary>
-        /// <returns>An <see cref="ODataResourceCollectionInfo"/> representing the resource collection in a workspace of a service document.</returns>
+        /// <returns>An <see cref="ODataEntitySetInfo"/> representing the entity set in a service document.</returns>
         /// <remarks>
-        /// Pre-Condition:  XmlNodeType.Element - the collection element inside the workspace.
-        /// Post-Condition: Any    - The next node after the collection element. 
+        /// Pre-Condition:  XmlNodeType.Element - the collection element inside the service document.
+        /// Post-Condition: Any    - The next node after the entity set element. 
         /// </remarks>   
-        private ODataResourceCollectionInfo ReadCollectionElement()
+        private ODataEntitySetInfo ReadEntitySet()
         {
             Debug.Assert(this.XmlReader != null, "this.XmlReader != null");
             this.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(this.XmlReader.LocalNameEquals(this.AtomPublishingCollectionElementName), "Expected element named 'collection'.");
             Debug.Assert(this.XmlReader.NamespaceEquals(this.AtomPublishingNamespace), "Element 'collection' should be in the atom publishing namespace.");
 
-            ODataResourceCollectionInfo collectionInfo = new ODataResourceCollectionInfo();
+            return this.ReadServiceDocumentElement<ODataEntitySetInfo>();
+        }
 
+        /// <summary>
+        /// Reads a entity set element of a service document.
+        /// </summary>
+        /// <returns>An <see cref="ODataFunctionImportInfo"/> representing the functionImport in a service document.</returns>
+        /// <remarks>
+        /// Pre-Condition:  XmlNodeType.Element - the function import element inside the service document.
+        /// Post-Condition: Any    - The next node after the function import element. 
+        /// </remarks>   
+        private ODataFunctionImportInfo ReadFunctionImportInfo()
+        {
+            Debug.Assert(this.XmlReader != null, "this.XmlReader != null");
+            this.AssertXmlCondition(XmlNodeType.Element);
+            Debug.Assert(this.XmlReader.LocalNameEquals(this.ODataFunctionImportElementName), "Expected element named 'function-import'.");
+            Debug.Assert(this.XmlReader.NamespaceEquals(this.ODataMetadataNamespace), "Element 'collection' should be in the odata metadata namespace.");
+
+            return ReadServiceDocumentElement<ODataFunctionImportInfo>();
+        }
+
+        /// <summary>
+        /// Reads a entity set element of a service document.
+        /// </summary>
+        /// <returns>An <see cref="ODataSingletonInfo"/> representing the singleton in a service document.</returns>
+        /// <remarks>
+        /// Pre-Condition:  XmlNodeType.Element - the singleton element inside the service document.
+        /// Post-Condition: Any    - The next node after the singleton element. 
+        /// </remarks>   
+        private ODataSingletonInfo ReadSingletonInfo()
+        {
+            Debug.Assert(this.XmlReader != null, "this.XmlReader != null");
+            this.AssertXmlCondition(XmlNodeType.Element);
+            Debug.Assert(this.XmlReader.LocalNameEquals(this.ODataSingletonElementName), "Expected element named 'singleton'.");
+            Debug.Assert(this.XmlReader.NamespaceEquals(this.ODataMetadataNamespace), "Element 'collection' should be in the odata metadata namespace.");
+
+            return ReadServiceDocumentElement<ODataSingletonInfo>();
+        }
+
+        /// <summary>
+        /// Reads the service document element and returns the new element instance.
+        /// </summary>
+        /// <typeparam name="T">Type of service element to read.</typeparam>
+        /// <returns>Service Element instance.</returns>
+        private T ReadServiceDocumentElement<T>() where T : ODataServiceDocumentElement, new()
+        {
+            T serviceDocumentElement = new T();
             string href = this.XmlReader.GetAttribute(this.AtomHRefAttributeName, this.EmptyNamespace);
-            ValidationUtils.ValidateResourceCollectionInfoUrl(href);
+            ValidationUtils.ValidateServiceDocumentElementUrl(href);
 
-            collectionInfo.Url = ProcessUriFromPayload(href, this.XmlReader.XmlBaseUri);
+            serviceDocumentElement.Url = this.ProcessUriFromPayload(href, this.XmlReader.XmlBaseUri);
             bool enableAtomMetadataReading = this.MessageReaderSettings.EnableAtomMetadataReading;
+
+            string name = this.XmlReader.GetAttribute(this.ODataNameAttribute, this.ODataMetadataNamespace);
+            serviceDocumentElement.Name = name;
 
             AtomResourceCollectionMetadata collectionMetadata = null;
 
@@ -315,8 +401,10 @@ namespace Microsoft.OData.Core.Atom
 
             if (!this.XmlReader.IsEmptyElement)
             {
-                // read over the 'collection' element.
+                // read over the service document element.
                 this.XmlReader.ReadStartElement();
+
+                bool atomTitlesReadAlready = false;
 
                 do
                 {
@@ -357,7 +445,13 @@ namespace Microsoft.OData.Core.Atom
                             {
                                 if (this.XmlReader.LocalNameEquals(this.AtomTitleElementName))
                                 {
-                                    this.ServiceDocumentMetadataDeserializer.ReadTitleElementInCollection(collectionMetadata, collectionInfo);
+                                    if (atomTitlesReadAlready)
+                                    {
+                                        throw new ODataException(Strings.ODataAtomServiceDocumentMetadataDeserializer_MultipleTitleElementsFound(AtomConstants.AtomPublishingCollectionElementName));
+                                    }
+
+                                    this.ServiceDocumentMetadataDeserializer.ReadTitleElementInCollection(collectionMetadata, serviceDocumentElement);
+                                    atomTitlesReadAlready = true;
                                 }
                                 else
                                 {
@@ -374,7 +468,7 @@ namespace Microsoft.OData.Core.Atom
                             break;
 
                         case XmlNodeType.EndElement:
-                            // end of 'collection' element.
+                            // end of service document element.
                             break;
 
                         default:
@@ -382,21 +476,21 @@ namespace Microsoft.OData.Core.Atom
                             this.XmlReader.Skip();
                             break;
                     }
-                }
+                } 
                 while (this.XmlReader.NodeType != XmlNodeType.EndElement);
-            } // if (!this.XmlReader.IsEmptyElement)
+            }
 
             this.AssertXmlCondition(true, XmlNodeType.EndElement);
 
-            // read over the end tag of the collection element or the start tag if the collection element is empty.
+            // read over the end tag of the service document element or the start tag if the collection element is empty.
             this.XmlReader.Read();
 
             if (enableAtomMetadataReading)
             {
-                collectionInfo.SetAnnotation(collectionMetadata);
+                serviceDocumentElement.SetAnnotation(collectionMetadata);
             }
 
-            return collectionInfo;
+            return serviceDocumentElement;
         }
 
         /// <summary>
@@ -405,7 +499,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         private void SkipToElementInAtomPublishingNamespace()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
 
             while (true)

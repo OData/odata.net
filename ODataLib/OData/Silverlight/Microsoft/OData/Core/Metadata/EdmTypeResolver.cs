@@ -22,11 +22,11 @@ namespace Microsoft.OData.Core.Metadata
     internal abstract class EdmTypeResolver
     {
         /// <summary>
-        /// Returns the element type of the given entity set.
+        /// Returns the entity type of the given navigation source.
         /// </summary>
-        /// <param name="entitySet">The entity set to get the element type of.</param>
-        /// <returns>The <see cref="IEdmEntityType"/> representing the element type of the <paramref name="entitySet" />.</returns>
-        internal abstract IEdmEntityType GetElementType(IEdmEntitySet entitySet);
+        /// <param name="navigationSource">The navigation source to get the entity type of.</param>
+        /// <returns>The <see cref="IEdmEntityType"/> representing the entity type of the <paramref name="navigationSource" />.</returns>
+        internal abstract IEdmEntityType GetElementType(IEdmNavigationSource navigationSource);
 
         /// <summary>
         /// Returns the return type of the given operation import.

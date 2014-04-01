@@ -57,11 +57,10 @@ namespace Microsoft.OData.Core.Json
             IEdmModel model)
             : base(format, messageWriterSettings, false /*writingResponse*/, true /*synchronous*/, model, null /*urlResolver*/)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(textWriter != null, "textWriter != null");
 
             this.textWriter = textWriter;
-            this.jsonWriter = new JsonWriter(this.textWriter, messageWriterSettings.Indent, format);
+            this.jsonWriter = new JsonWriter(this.textWriter, messageWriterSettings.Indent, format, true /*isIeee754Compatible*/);
         }
 
         /// <summary>
@@ -73,6 +72,7 @@ namespace Microsoft.OData.Core.Json
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         /// <param name="writingResponse">true if writing a response message; otherwise false.</param>
         /// <param name="synchronous">true if the output should be written synchronously; false if it should be written asynchronously.</param>
+        /// <param name="isIeee754Compatible">true if it is IEEE754Compatible</param>
         /// <param name="model">The model to use.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
@@ -83,11 +83,11 @@ namespace Microsoft.OData.Core.Json
             ODataMessageWriterSettings messageWriterSettings,
             bool writingResponse,
             bool synchronous,
+            bool isIeee754Compatible,
             IEdmModel model,
             IODataUrlResolver urlResolver)
             : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(messageStream != null, "messageStream != null");
 
             try
@@ -106,8 +106,8 @@ namespace Microsoft.OData.Core.Json
                 }
 
                 this.textWriter = new StreamWriter(outputStream, encoding);
-
-                this.jsonWriter = new JsonWriter(this.textWriter, messageWriterSettings.Indent, format);
+                
+                this.jsonWriter = new JsonWriter(this.textWriter, messageWriterSettings.Indent, format, isIeee754Compatible);
             }
             catch (Exception e)
             {
@@ -128,7 +128,6 @@ namespace Microsoft.OData.Core.Json
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(this.jsonWriter != null, "Trying to get JsonWriter while none is available.");
                 return this.jsonWriter;
             }
@@ -140,7 +139,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         internal void VerifyNotDisposed()
         {
-            DebugUtils.CheckNoExternalCallers();
             if (this.messageOutputStream == null)
             {
                 throw new ObjectDisposedException(this.GetType().FullName);
@@ -152,7 +150,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         internal void Flush()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             // JsonWriter.Flush will call the underlying TextWriter.Flush.
@@ -169,7 +166,6 @@ namespace Microsoft.OData.Core.Json
         /// <remarks>The method should not throw directly if the flush operation itself fails, it should instead return a faulted task.</remarks>
         internal Task FlushAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(

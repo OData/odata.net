@@ -11,7 +11,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Internal;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm
@@ -79,17 +78,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Returns true if this reference refers to a row type.
-        /// </summary>
-        /// <param name="type">Type reference.</param>
-        /// <returns>This reference refers to a row type.</returns>
-        public static bool IsRow(this IEdmTypeReference type)
-        {
-            EdmUtil.CheckArgumentNull(type, "type");
-            return type.TypeKind() == EdmTypeKind.Row;
-        }
-
-        /// <summary>
         /// Returns true if this reference refers to a structured type.
         /// </summary>
         /// <param name="type">Type reference.</param>
@@ -101,7 +89,6 @@ namespace Microsoft.OData.Edm
             {
                 case EdmTypeKind.Entity:
                 case EdmTypeKind.Complex:
-                case EdmTypeKind.Row:
                     return true;
             }
 
@@ -119,7 +106,6 @@ namespace Microsoft.OData.Edm
             {
                 case EdmTypeKind.Entity:
                 case EdmTypeKind.Complex:
-                case EdmTypeKind.Row:
                     return true;
             }
 
@@ -180,23 +166,11 @@ namespace Microsoft.OData.Edm
             switch (typeKind)
             {
                 case EdmPrimitiveTypeKind.Duration:
-                case EdmPrimitiveTypeKind.DateTime:
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                     return true;
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Returns true if this reference refers to a DateTime type.
-        /// </summary>
-        /// <param name="type">Type reference.</param>
-        /// <returns>This reference refers to a DateTime type.</returns>
-        public static bool IsDateTime(this IEdmTypeReference type)
-        {
-            EdmUtil.CheckArgumentNull(type, "type");
-            return type.PrimitiveKind() == EdmPrimitiveTypeKind.DateTime;
         }
 
         /// <summary>
@@ -484,7 +458,7 @@ namespace Microsoft.OData.Edm
         #endregion
 
         // The As*** functions never return null -- if the supplied type does not have the appropriate shape, an encoding of a bad type is returned.
-        #region AsPrimitive, AsCollection, AsStructured, AsAssociation, ...
+        #region AsPrimitive, AsCollection, AsStructured, ...
         /// <summary>
         /// If this reference is of a primitive type, this will return a valid primitive type reference to the type definition. Otherwise, it will return a bad primitive type reference.
         /// </summary>
@@ -525,7 +499,6 @@ namespace Microsoft.OData.Edm
                         case EdmPrimitiveTypeKind.String:
                             return type.AsString();
                         case EdmPrimitiveTypeKind.Duration:
-                        case EdmPrimitiveTypeKind.DateTime:
                         case EdmPrimitiveTypeKind.DateTimeOffset:
                             return type.AsTemporal();
                         case EdmPrimitiveTypeKind.Geography:
@@ -578,7 +551,7 @@ namespace Microsoft.OData.Edm
             IEdmType typeDefinition = type.Definition;
             if (typeDefinition.TypeKind == EdmTypeKind.Collection)
             {
-                return new EdmCollectionTypeReference((IEdmCollectionType)typeDefinition, type.IsNullable);
+                return new EdmCollectionTypeReference((IEdmCollectionType)typeDefinition);
             }
 
             List<EdmError> errors = new List<EdmError>(type.Errors());
@@ -587,7 +560,7 @@ namespace Microsoft.OData.Edm
                 errors.AddRange(ConversionError(type.Location(), type.FullName(), EdmConstants.Type_Collection));
             }
 
-            return new EdmCollectionTypeReference(new BadCollectionType(errors), type.IsNullable);
+            return new EdmCollectionTypeReference(new BadCollectionType(errors));
         }
         
         /// <summary>
@@ -610,8 +583,6 @@ namespace Microsoft.OData.Edm
                     return type.AsEntity();
                 case EdmTypeKind.Complex:
                     return type.AsComplex();
-                case EdmTypeKind.Row:
-                    return type.AsRow();
             }
 
             string typeFullName = type.FullName();
@@ -692,7 +663,7 @@ namespace Microsoft.OData.Edm
             if (reference != null)
             {
                 return reference;
-            }
+            }   
 
             IEdmType typeDefinition = type.Definition;
             if (typeDefinition.TypeKind == EdmTypeKind.EntityReference)
@@ -737,35 +708,6 @@ namespace Microsoft.OData.Edm
             }
 
             return new BadComplexTypeReference(typeFullName, type.IsNullable, errors);
-        }
-
-        /// <summary>
-        /// If this reference is of a row type, this will return a valid row type reference to the type definition. Otherwise, it will return a bad row type reference.
-        /// </summary>
-        /// <param name="type">Reference to the calling object.</param>
-        /// <returns>A valid row type reference if the definition of the reference is of a row type. Otherwise a bad row type reference.</returns>
-        public static IEdmRowTypeReference AsRow(this IEdmTypeReference type)
-        {
-            EdmUtil.CheckArgumentNull(type, "type");
-            IEdmRowTypeReference reference = type as IEdmRowTypeReference;
-            if (reference != null)
-            {
-                return reference;
-            }
-
-            IEdmType typeDefinition = type.Definition;
-            if (typeDefinition.TypeKind == EdmTypeKind.Row)
-            {
-                return new EdmRowTypeReference((IEdmRowType)typeDefinition, type.IsNullable);
-            }
-
-            List<EdmError> errors = new List<EdmError>(type.Errors());
-            if (errors.Count == 0)
-            {
-                errors.AddRange(ConversionError(type.Location(), type.FullName(), EdmConstants.Type_Row));
-            }
-
-            return new EdmRowTypeReference(new BadRowType(errors), type.IsNullable);
         }
 
         /// <summary>
@@ -907,18 +849,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Returns a reference to this row type definition.
-        /// </summary>
-        /// <param name="rowType">Reference to the calling object.</param>
-        /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
-        /// <returns>A reference to this row type definition.</returns>
-        public static IEdmRowTypeReference ApplyType(this IEdmRowType rowType, bool isNullable)
-        {
-            EdmUtil.CheckArgumentNull(rowType, "type");
-            return new EdmRowTypeReference(rowType, isNullable);
-        }
-
-        /// <summary>
         /// Determines if the potential base type is in the inheritance hierarchy of the type being tested.
         /// </summary>
         /// <param name="type">Type to be tested for derivation from the other type.</param>
@@ -929,7 +859,7 @@ namespace Microsoft.OData.Edm
             do
             {
                 type = type.BaseType;
-                if (type.IsEquivalentTo(potentialBaseType))
+                if (type != null && type.IsEquivalentTo(potentialBaseType))
                 {
                     return true;
                 }
@@ -958,7 +888,7 @@ namespace Microsoft.OData.Edm
             }
 
             EdmTypeKind thisKind = thisType.TypeKind;
-            if (thisKind != otherType.TypeKind || !(thisKind == EdmTypeKind.Entity || thisKind == EdmTypeKind.Complex || thisKind == EdmTypeKind.Row))
+            if (thisKind != otherType.TypeKind || !(thisKind == EdmTypeKind.Entity || thisKind == EdmTypeKind.Complex))
             {
                 return false;
             }
@@ -987,7 +917,6 @@ namespace Microsoft.OData.Edm
                     return new EdmStringTypeReference(type, isNullable);
                 case EdmPrimitiveTypeKind.Decimal:
                     return new EdmDecimalTypeReference(type, isNullable);
-                case EdmPrimitiveTypeKind.DateTime:
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Duration:
                     return new EdmTemporalTypeReference(type, isNullable);

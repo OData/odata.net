@@ -13,6 +13,7 @@ namespace Microsoft.OData.Core.JsonLight
     #region Namespaces
     using System;
     using System.Collections.Generic;
+    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -24,48 +25,22 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>The context URI read from the payload in its unparsed form.</summary>
         private readonly Uri contextUriFromPayload;
 
-        /// <summary>The metadata document URI as read from the payload.</summary>
-        private Uri metadataDocumentUri;
-
-        /// <summary>The fragment portion of the metadata URI.</summary>
-        private string fragment;
-
-        /// <summary>The $select query option.</summary>
-        private string selectQueryOption;
-
-        /// <summary>The resolved entity set as specified in the metadata URI.</summary>
-        private IEdmEntitySet entitySet;
-
-        /// <summary>The resolved structured type as specified in the metadata URI.</summary>
-        private IEdmType edmType;
-
-        /// <summary>The navigation property as specified in the metadata URI.</summary>
-        private IEdmNavigationProperty navigationProperty;
-
-        /// <summary>The detected payload kinds from parsing the metadata URI.</summary>
-        private IEnumerable<ODataPayloadKind> detectedPayloadKinds;
-
-        /// <summary>true if we just parsed the metadata Uri for null properties, i.e. ~/$metadata#Edm.Null; false otherwise.</summary>
-        private bool isNullProperty;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ODataJsonLightContextUriParseResult"/> class.
         /// </summary>
-        /// <param name="contextUriFromPayload">The metadata URI read from the payload in its unparsed form.</param>
+        /// <param name="contextUriFromPayload">The context URI read from the payload in its unparsed form.</param>
         internal ODataJsonLightContextUriParseResult(Uri contextUriFromPayload)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.contextUriFromPayload = contextUriFromPayload;
         }
 
         /// <summary>
-        /// The metadata URI read from the payload in its unparsed form.
+        /// The context URI read from the payload in its unparsed form.
         /// </summary>
         internal Uri ContextUri
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.contextUriFromPayload;
             }
         }
@@ -73,146 +48,42 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// The metadata document URI as read from the payload.
         /// </summary>
-        /// <remarks>This is the metadata URI as read from the payload without the fragment.</remarks>
-        internal Uri MetadataDocumentUri
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.metadataDocumentUri;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.metadataDocumentUri = value;
-            }
-        }
+        /// <remarks>This is the metadata document URI as read from the payload without the fragment.</remarks>
+        internal Uri MetadataDocumentUri { get; set; }
 
         /// <summary>
-        /// The fragment portion of the metadata URI.
+        /// The fragment portion of the context URI.
         /// </summary>
-        internal string Fragment
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.fragment;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.fragment = value;
-            }
-        }
+        internal string Fragment { get; set; }
 
         /// <summary>
         /// The $select query option.
         /// </summary>
-        internal string SelectQueryOption
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.selectQueryOption;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.selectQueryOption = value;
-            }
-        }
+        internal string SelectQueryOption { get; set; }
 
         /// <summary>
-        /// The resolved entity set as specified in the metadata URI.
+        /// The resolved navigation source as specified in the context URI.
         /// </summary>
-        internal IEdmEntitySet EntitySet
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.entitySet;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.entitySet = value;
-            }
-        }
+        internal IEdmNavigationSource NavigationSource { get; set; }
 
         /// <summary>
-        /// The resolved structured type as specified in the metadata URI.
+        /// The resolved structured type as specified in the context URI.
         /// </summary>
-        internal IEdmType EdmType
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.edmType;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.edmType = value;
-            }
-        }
+        internal IEdmType EdmType { get; set; }
 
         /// <summary>
-        /// The navigation property as specified in the metadata URI.
+        /// The detected payload kinds from parsing the context URI.
         /// </summary>
-        internal IEdmNavigationProperty NavigationProperty
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.navigationProperty;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.navigationProperty = value;
-            }
-        }
+        internal IEnumerable<ODataPayloadKind> DetectedPayloadKinds { get; set; }
 
         /// <summary>
-        /// The detected payload kinds from parsing the metadata URI.
+        /// true if we just parsed the context Uri for null properties, i.e. ~/$metadata#Edm.Null; false otherwise.
         /// </summary>
-        internal IEnumerable<ODataPayloadKind> DetectedPayloadKinds
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.detectedPayloadKinds;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.detectedPayloadKinds = value;
-            }
-        }
+        internal bool IsNullProperty { get; set; }
 
         /// <summary>
-        /// true if we just parsed the metadata Uri for null properties, i.e. ~/$metadata#Edm.Null; false otherwise.
+        /// ODataPath parsed from context Url
         /// </summary>
-        internal bool IsNullProperty
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.isNullProperty;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.isNullProperty = value;
-            }
-        }
+        internal ODataPath Path { get; set; }
     }
 }

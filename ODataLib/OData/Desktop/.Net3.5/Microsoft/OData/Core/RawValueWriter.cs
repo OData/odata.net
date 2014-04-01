@@ -16,6 +16,7 @@ namespace Microsoft.OData.Core
     using System.IO;
     using System.Text;
     using Microsoft.OData.Core.Json;
+    using Microsoft.Spatial;
 
     /// <summary>
     /// Class that hanldes writing top level raw values to a stream.
@@ -26,7 +27,7 @@ namespace Microsoft.OData.Core
         /// Writer settings.
         /// </summary>
         private readonly ODataMessageWriterSettings settings;
-        
+
         /// <summary>
         /// Underlying stream. 
         /// </summary>
@@ -51,7 +52,6 @@ namespace Microsoft.OData.Core
         /// <param name="encoding">The encoding to use in the text writer.</param>
         internal RawValueWriter(ODataMessageWriterSettings settings, Stream stream, Encoding encoding)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.settings = settings;
             this.stream = stream;
             this.encoding = encoding;
@@ -65,7 +65,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.textWriter;
             }
         }
@@ -75,7 +74,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         public void Dispose()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.textWriter != null, "The text writer has not been initialized yet.");
 
             this.textWriter.Dispose();
@@ -87,7 +85,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void Start()
         {
-            DebugUtils.CheckNoExternalCallers();
             if (this.settings.HasJsonPaddingFunction())
             {
                 this.textWriter.Write(this.settings.JsonPCallback);
@@ -100,7 +97,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void End()
         {
-            DebugUtils.CheckNoExternalCallers();
             if (this.settings.HasJsonPaddingFunction())
             {
                 this.textWriter.Write(JsonConstants.EndPaddingFunctionScope);
@@ -109,23 +105,33 @@ namespace Microsoft.OData.Core
 
         /// <summary>
         /// Converts the specified <paramref name="value"/> into its raw format and writes it to the output.
-        /// The value has to be of primitive type. Only one WriteRawValue call should be made before this object gets disposed.
+        /// The value has to be of enumeration or primitive type. Only one WriteRawValue call should be made before this object gets disposed.
         /// </summary>
         /// <param name="value">The (non-binary) value to write.</param>
         /// <remarks>We do not accept binary values here; WriteBinaryValue should be used for binary data.</remarks>
         internal void WriteRawValue(object value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!(value is byte[]), "!(value is byte[])");
 
             string valueAsString;
-            if (!AtomValueUtils.TryConvertPrimitiveToString(value, out valueAsString))
+            ODataEnumValue enumValue = value as ODataEnumValue;
+            if (enumValue != null)
             {
-                // throw an exception because the value is not primitive
-                throw new ODataException(Strings.ODataUtils_CannotConvertValueToRawPrimitive(value.GetType().FullName));
+                this.textWriter.Write(enumValue.Value);
             }
-
-            this.textWriter.Write(valueAsString);
+            else if (value is Geometry || value is Geography)
+            {
+                PrimitiveConverter.Instance.TryWriteAtom(value, textWriter);
+            }
+            else if (AtomValueUtils.TryConvertPrimitiveToString(value, out valueAsString))
+            {
+                this.textWriter.Write(valueAsString);
+            }
+            else
+            {
+                // throw an exception because the value is neither enum nor primitive
+                throw new ODataException(Strings.ODataUtils_CannotConvertValueToRawString(value.GetType().FullName));
+            }
         }
 
         /// <summary>
@@ -135,8 +141,7 @@ namespace Microsoft.OData.Core
         /// In the async case the underlying stream is the async buffered stream, which ignores Flush call.
         /// </summary>
         internal void Flush()
-        {   
-            DebugUtils.CheckNoExternalCallers();
+        {
             if (this.TextWriter != null)
             {
                 this.TextWriter.Flush();

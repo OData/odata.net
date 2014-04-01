@@ -34,8 +34,6 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightCollectionDeserializer(ODataJsonLightInputContext jsonLightInputContext)
             : base(jsonLightInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
         }
 
@@ -60,7 +58,6 @@ namespace Microsoft.OData.Core.JsonLight
             IEdmTypeReference expectedItemTypeReference,
             out IEdmTypeReference actualItemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.JsonReader.AssertNotBuffering();
 
             actualItemTypeReference = expectedItemTypeReference;
@@ -182,7 +179,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal object ReadCollectionItem(IEdmTypeReference expectedItemTypeReference, CollectionWithoutExpectedTypeValidator collectionValidator)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(
                 expectedItemTypeReference == null ||
                 expectedItemTypeReference.IsODataPrimitiveTypeKind() ||
@@ -215,7 +211,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal void ReadCollectionEnd(bool isReadingNestedPayload)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.EndArray, "Pre-condition: JsonNodeType.EndArray");
             this.JsonReader.AssertNotBuffering();
 

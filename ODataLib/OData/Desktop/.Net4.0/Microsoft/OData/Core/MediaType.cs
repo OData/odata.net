@@ -41,7 +41,6 @@ namespace Microsoft.OData.Core
         internal MediaType(string type, string subType)
             : this(type, subType, null)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -53,7 +52,6 @@ namespace Microsoft.OData.Core
         internal MediaType(string type, string subType, params KeyValuePair<string, string>[] parameters)
             : this(type, subType, (IList<KeyValuePair<string, string>>)parameters)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -64,7 +62,6 @@ namespace Microsoft.OData.Core
         /// <param name="parameters">Parameters specified on the media type.</param>
         internal MediaType(string type, string subType, IList<KeyValuePair<string, string>> parameters)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(type != null, "type != null");
             Debug.Assert(subType != null, "subType != null");
 
@@ -78,7 +75,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return MediaTypeUtils.EncodingUtf8NoPreamble;
             }
         }
@@ -89,8 +85,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-#if SILVERLIGHT || WINDOWS_PHONE || PORTABLELIB  // ISO-8859-1 not available
+#if !ORCAS
                 return Encoding.UTF8;
 #else
                 return Encoding.GetEncoding("ISO-8859-1", new EncoderExceptionFallback(), new DecoderExceptionFallback());
@@ -103,7 +98,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.type + "/" + this.subType;
             }
         }
@@ -113,7 +107,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.subType;
             }
         }
@@ -123,7 +116,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.type;
             }
         }
@@ -133,7 +125,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.parameters;
             }
         }
@@ -152,7 +143,6 @@ namespace Microsoft.OData.Core
         /// </remarks>
         internal Encoding SelectEncoding()
         {
-            DebugUtils.CheckNoExternalCallers();
             if (this.parameters != null)
             {
                 foreach (string encodingName in
@@ -194,8 +184,6 @@ namespace Microsoft.OData.Core
         /// <returns>The string representation of media type.</returns>
         internal string ToText()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return ToText(null);
         }
 
@@ -206,8 +194,6 @@ namespace Microsoft.OData.Core
         /// <returns>The string representation of the current media type.</returns>
         internal string ToText(Encoding encoding)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // TODO: for now we include all the parameters since we know that we will not have accept parameters (after the quality value)
             //       that needed to be ignored.
             if (this.parameters == null || this.parameters.Count == 0)

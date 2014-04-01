@@ -61,7 +61,6 @@ namespace Microsoft.OData.Core
             IODataUrlResolver urlResolver)
             : base(format, messageReaderSettings, version, readingResponse, synchronous, model, urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(messageStream != null, "stream != null");
 
             ExceptionUtils.CheckArgumentNotNull(format, "format");
@@ -99,7 +98,6 @@ namespace Microsoft.OData.Core
         /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
         internal override IEdmModel ReadMetadataDocument()
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.ReadMetadataDocumentImplementation();
         }
 

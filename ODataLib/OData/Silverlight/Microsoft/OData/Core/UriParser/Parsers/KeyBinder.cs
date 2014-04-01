@@ -37,7 +37,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="keyValueBindMethod">Method to call to bind a value in a key.</param>
         internal KeyBinder(MetadataBinder.QueryTokenVisitor keyValueBindMethod)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             this.keyValueBindMethod = keyValueBindMethod;
         }
 
@@ -49,7 +48,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The bound key lookup.</returns>
         internal QueryNode BindKeyValues(EntityCollectionNode collectionNode, IEnumerable<NamedValue> namedValues)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             Debug.Assert(namedValues != null, "namedValues != null");
             Debug.Assert(collectionNode != null, "CollectionNode != null");
 

@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core.Atom
 {
     using System.Diagnostics;
     using System.Xml;
-#if !WINDOWS_PHONE && !SILVERLIGHT && !PORTABLELIB
+#if ORCAS
     using System.Xml.XPath;
 #endif
 
@@ -37,7 +37,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="writer">The writer to wrap.</param>
         internal DefaultNamespaceCompensatingXmlWriter(XmlWriter writer)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
             this.writer = writer;
         }
@@ -86,7 +85,7 @@ namespace Microsoft.OData.Core.Atom
             get { return this.writer.Settings; }
         }
 
-#if !WINDOWS_PHONE && !SILVERLIGHT && !PORTABLELIB
+#if ORCAS
         /// <summary>
         /// Copies everything from the <see cref="T:System.Xml.XPath.XPathNavigator"/> object to the writer. The position of the <see cref="T:System.Xml.XPath.XPathNavigator"/> remains unchanged.
         /// </summary>

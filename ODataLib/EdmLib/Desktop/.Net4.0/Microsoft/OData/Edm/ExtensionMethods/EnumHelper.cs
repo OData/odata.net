@@ -28,20 +28,22 @@ namespace Microsoft.OData.Edm
         private const int MaxHashElements = 100;
 
         /// <summary>
-        /// Parse enum to integer
+        /// Parse an enum literal value to integer. The literal value can be Enum member name (e.g. "Red"), underlying value (e.g. "2"), or combined values (e.g. "Red, Green, Blue", "1,2,4").
         /// </summary>
         /// <param name="enumType">edm enum type</param>
         /// <param name="value">input string value</param>
         /// <param name="ignoreCase">true if case insensitive, false if case sensitive</param>
         /// <param name="parseResult">parse result</param>
         /// <returns>true if parse succeeds, false if parse fails</returns>
-        public static bool TryParseEnum(this IEdmEnumType enumType, string value, bool ignoreCase, ref long parseResult)
+        public static bool TryParseEnum(this IEdmEnumType enumType, string value, bool ignoreCase, out long parseResult)
         {
             char[] enumSeperatorCharArray = new[] { ',' };
 
             string[] enumNames;
             ulong[] enumValues;
             IEdmEnumType type = enumType;
+
+            parseResult = 0L;
 
             if (value == null)
             {
@@ -55,69 +57,94 @@ namespace Microsoft.OData.Edm
             }
 
             ulong num = 0L;
-            if ((char.IsDigit(value[0]) || (value[0] == '-')) || (value[0] == '+'))
+            string[] values = value.Split(enumSeperatorCharArray);
+
+            if ((!enumType.IsFlags) && values.Length > 1)
             {
-                Type underlyingType = typeof(long);
-                try
-                {
-                    object obj = Convert.ChangeType(value, underlyingType, CultureInfo.InvariantCulture);
-                    parseResult = (long)obj;
-                    return true;
-                }
-                catch (FormatException)
-                {
-                    // will then parse as string
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
+                return false; // nonflags can only have 1 value
             }
 
-            string[] values = value.Split(enumSeperatorCharArray);
             type.GetCachedValuesAndNames(out enumValues, out enumNames, true, true);
-            for (int i = 0; i < values.Length; i++)
+
+            if ((char.IsDigit(value[0]) || (value[0] == '-')) || (value[0] == '+'))
             {
-                values[i] = values[i].Trim();
-                bool flag = false;
-                for (int j = 0; j < enumNames.Length; j++)
+                // computed for later use. only meaningful for Enum types with IsFlags=true.
+                ulong fullBits = 0;
+                for (int j = 0; j < enumValues.Length; j++)
                 {
-                    if (ignoreCase)
+                    fullBits |= enumValues[j];
+                }
+
+                // process each value
+                for (int i = 0; i < values.Length; i++)
+                {
+                    long itemValue;
+                    bool isValidValue = false;
+
+                    if (long.TryParse(values[i], out itemValue))
                     {
-                        if (string.Compare(enumNames[j], values[i], StringComparison.OrdinalIgnoreCase) != 0)
+                        if (enumType.IsFlags)
                         {
-                            continue;
+                            // if item value is contained in fullBits, it's a valid value
+                            if (((ulong)itemValue & fullBits) == (ulong)itemValue)
+                            {
+                                isValidValue = true;
+                            }
                         }
+                        else
+                        {
+                            isValidValue = enumValues.Any(v => v == (ulong)itemValue);
+                        }
+                    }
+
+                    if (isValidValue)
+                    {
+                        num |= (ulong)itemValue;
                     }
                     else
                     {
-                        if (!enumNames[j].Equals(values[i]))
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < values.Length; i++)
+                {
+                    values[i] = values[i].Trim();
+                    bool flag = false;
+                    for (int j = 0; j < enumNames.Length; j++)
+                    {
+                        if (ignoreCase)
                         {
-                            continue;
+                            if (string.Compare(enumNames[j], values[i], StringComparison.OrdinalIgnoreCase) != 0)
+                            {
+                                continue;
+                            }
                         }
+                        else
+                        {
+                            if (!enumNames[j].Equals(values[i]))
+                            {
+                                continue;
+                            }
+                        }
+
+                        ulong item = enumValues[j];
+                        num |= item;
+                        flag = true;
+                        break;
                     }
 
-                    ulong item = enumValues[j];
-                    num |= item;
-                    flag = true;
-                    break;
-                }
-
-                if (!flag)
-                {
-                    return false;
+                    if (!flag)
+                    {
+                        return false;
+                    }
                 }
             }
 
-            try
-            {
-                parseResult = (long)num;
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            parseResult = (long)num;
+            return true;
         }
 
         /// <summary>

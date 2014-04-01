@@ -35,7 +35,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="bindMethod">Method to use for binding the parent token, if needed.</param>
         internal DottedIdentifierBinder(MetadataBinder.QueryTokenVisitor bindMethod)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             ExceptionUtils.CheckArgumentNotNull(bindMethod, "bindMethod");
             this.bindMethod = bindMethod;
         }
@@ -48,7 +47,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A bound node representing the cast.</returns>
         internal QueryNode BindDottedIdentifier(DottedIdentifierToken dottedIdentifierToken, BindingState state)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             ExceptionUtils.CheckArgumentNotNull(dottedIdentifierToken, "castToken");
             ExceptionUtils.CheckArgumentNotNull(state, "state");
 
@@ -77,7 +75,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 {
                     return functionCallNode;
                 }
-                else
+                else if ((dottedIdentifierToken.Identifier != null)
+                    && (dottedIdentifierToken.Identifier.Length > 0)
+                    && (dottedIdentifierToken.Identifier[dottedIdentifierToken.Identifier.Length - 1] == '\''))
                 {
                     // check if it is enum or not
                     EnumBinder enumBinder = new EnumBinder(this.bindMethod);
@@ -86,8 +86,22 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     {
                         return enumNode;
                     }
-
-                    throw new ODataException(ODataErrorStrings.CastBinder_ChildTypeIsNotEntity(dottedIdentifierToken.Identifier));
+                    else
+                    {
+                        throw new ODataException(ODataErrorStrings.Binder_IsNotValidEnumConstant(dottedIdentifierToken.Identifier));
+                    }
+                }
+                else
+                {
+                    IEdmTypeReference edmTypeReference = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifierToken.Identifier).ToTypeReference();
+                    if (edmTypeReference is IEdmPrimitiveTypeReference)
+                    {
+                        return new ConstantNode(dottedIdentifierToken.Identifier);
+                    }
+                    else
+                    {
+                        throw new ODataException(ODataErrorStrings.CastBinder_ChildTypeIsNotEntity(dottedIdentifierToken.Identifier));
+                    }
                 }
             }
 

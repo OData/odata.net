@@ -23,7 +23,7 @@ namespace Microsoft.OData.Edm.Library
         /// <param name="definition">The type this reference refers to.</param>
         /// <param name="isNullable">Denotes whether the type can be nullable.</param>
         public EdmTemporalTypeReference(IEdmPrimitiveType definition, bool isNullable)
-            : this(definition, isNullable, null)
+            : this(definition, isNullable, 0)
         {
         }
 

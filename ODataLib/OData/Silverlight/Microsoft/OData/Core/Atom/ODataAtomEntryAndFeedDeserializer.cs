@@ -15,6 +15,7 @@ namespace Microsoft.OData.Core.Atom
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
@@ -109,14 +110,26 @@ namespace Microsoft.OData.Core.Atom
         private ODataAtomFeedMetadataDeserializer feedMetadataDeserializer;
 
         /// <summary>
+        /// null id regular expression
+        /// This is used to check if the id is a transient id in atom format
+        /// </summary>
+        private static readonly Regex transientIdRegex;
+
+        /// <summary>
+        /// Static Constructor.
+        /// </summary>
+        static ODataAtomEntryAndFeedDeserializer()
+        {
+            transientIdRegex = new Regex(AtomConstants.AtomTransientIdRegularExpression);
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="atomInputContext">The ATOM input context to read from.</param>
         internal ODataAtomEntryAndFeedDeserializer(ODataAtomInputContext atomInputContext)
             : base(atomInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             XmlNameTable nameTable = this.XmlReader.NameTable;
             this.AtomNamespace = nameTable.Add(AtomConstants.AtomNamespace);
             this.AtomEntryElementName = nameTable.Add(AtomConstants.AtomEntryElementName);
@@ -186,7 +199,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entryState">The reader entry state for the entry being read.</param>
         internal static void EnsureMediaResource(IODataAtomReaderEntryState entryState)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryState != null, "entryState != null");
 
             entryState.MediaLinkEntry = true;
@@ -203,7 +215,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void VerifyEntryStart()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
 
             if (this.XmlReader.NodeType != XmlNodeType.Element)
@@ -228,7 +239,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void ReadEntryStart(ODataEntry entry)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
 
             this.VerifyEntryStart();
@@ -262,7 +272,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal ODataAtomReaderNavigationLinkDescriptor ReadEntryContent(IODataAtomReaderEntryState entryState)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryState != null, "entryState != null");
             this.XmlReader.AssertNotBuffering();
             Debug.Assert(this.XmlReader.NodeType != XmlNodeType.Attribute, "The reader must be positioned on a child node of the atom:entry element.");
@@ -359,7 +368,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void ReadEntryEnd()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
             this.AssertXmlCondition(true, XmlNodeType.EndElement);
             Debug.Assert(
@@ -381,7 +389,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void ReadFeedStart()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
             this.AssertXmlCondition(XmlNodeType.Element);
 
@@ -407,7 +414,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal bool ReadFeedContent(IODataAtomReaderFeedState feedState, bool isExpandedLinkContent)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(feedState != null, "feedState != null");
             this.XmlReader.AssertNotBuffering();
             Debug.Assert(this.XmlReader.NodeType != XmlNodeType.Attribute, "The reader must be positioned on a child node of the atom:feed element.");
@@ -508,7 +514,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void ReadFeedEnd()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
             this.AssertXmlCondition(true, XmlNodeType.EndElement);
             Debug.Assert(
@@ -540,7 +545,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal ODataAtomDeserializerExpandedNavigationLinkContent ReadNavigationLinkContentBeforeExpansion()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
 
             if (this.ReadNavigationLinkContent())
@@ -580,7 +584,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>true if the reader is on m:inline end element or m:inline empty start element; false otherwise.</returns>
         internal bool IsReaderOnInlineEndElement()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
 
             return this.XmlReader.LocalNameEquals(this.ODataInlineElementName) && this.XmlReader.NamespaceEquals(this.XmlReader.ODataMetadataNamespace) &&
@@ -601,7 +604,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void SkipNavigationLinkContentOnExpansion()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(
                 !(this.XmlReader.NodeType == XmlNodeType.EndElement && this.XmlReader.LocalName == AtomConstants.AtomLinkElementName && this.XmlReader.NamespaceURI == AtomConstants.AtomNamespace),
                 "This method must not be called when the ReadNavigationLinkContentBeforeExpansion return ODataAtomDeserializerExpandedNavigationLinkContent.Noen.");
@@ -635,7 +637,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void ReadNavigationLinkContentAfterExpansion(bool emptyInline)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
 
             if (!emptyInline)
@@ -685,7 +686,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void ReadNavigationLinkEnd()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
             this.AssertXmlCondition(true, XmlNodeType.EndElement);
             Debug.Assert(
@@ -707,7 +707,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal string FindTypeName()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
             this.AssertXmlCondition(XmlNodeType.Element);
 
@@ -750,7 +749,7 @@ namespace Microsoft.OData.Core.Atom
                                             {
                                                 if (typeName == null)
                                                 {
-                                                    typeName = this.XmlReader.Value;
+                                                    typeName = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName(this.XmlReader.Value));
                                                 }
                                             }
                                         }
@@ -1111,7 +1110,21 @@ namespace Microsoft.OData.Core.Atom
 
             string idValue = this.XmlReader.ReadElementValue();
 
-            entryState.Entry.Id = idValue != null && idValue.Length == 0 ? null : idValue;
+            if (idValue != null && idValue.Length == 0)
+            {
+                entryState.Entry.Id = null;
+            }
+            else
+            {
+                if (idValue != null && IsTransientId(idValue))
+                {
+                    entryState.Entry.IsTransient = true;
+                }
+                else
+                {
+                    entryState.Entry.Id = UriUtils.CreateUriAsEntryOrFeedId(idValue, UriKind.Absolute);
+                }
+            }
 
             entryState.HasId = true;
         }
@@ -1622,23 +1635,17 @@ namespace Microsoft.OData.Core.Atom
                 throw new ODataException(ODataErrorStrings.ODataAtomEntryAndFeedDeserializer_InvalidTypeAttributeOnAssociationLink(associationLinkName));
             }
 
-            ODataAssociationLink associationLink = new ODataAssociationLink { Name = associationLinkName };
+            Uri associationLinkUrl = null;
 
             // Allow null (we won't set the Url property) and empty (relative URL) values.
             if (linkHRef != null)
             {
-                associationLink.Url = this.ProcessUriFromPayload(linkHRef, this.XmlReader.XmlBaseUri);
+                associationLinkUrl = this.ProcessUriFromPayload(linkHRef, this.XmlReader.XmlBaseUri);
             }
 
-            ReaderUtils.CheckForDuplicateAssociationLinkAndUpdateNavigationLink(entryState.DuplicatePropertyNamesChecker, associationLink);
-            entryState.Entry.AddAssociationLink(associationLink);
+            ReaderUtils.CheckForDuplicateAssociationLinkAndUpdateNavigationLink(entryState.DuplicatePropertyNamesChecker, associationLinkName, associationLinkUrl);
 
-            // Read and store ATOM link metadata (captures extra info like lang, title) if ATOM metadata reading is turned on.
-            AtomLinkMetadata atomLinkMetadata = this.EntryMetadataDeserializer.ReadAtomLinkElementInEntryContent(linkRelation, linkHRef);
-            if (atomLinkMetadata != null)
-            {
-                associationLink.SetAnnotation(atomLinkMetadata);
-            }
+            // TODO Task 1665240: Association Link - Add back support for customizing association link element in Atom
 
             this.XmlReader.Skip();
             return true;
@@ -1798,7 +1805,7 @@ namespace Microsoft.OData.Core.Atom
                 // just to be consistent.
                 string idValue = this.XmlReader.ReadElementValue();
 
-                feedState.Feed.Id = idValue;
+                feedState.Feed.Id = UriUtils.CreateUriAsEntryOrFeedId(idValue, UriKind.Absolute);
             }
             else
             {
@@ -2101,6 +2108,17 @@ namespace Microsoft.OData.Core.Atom
             }
 
             return contentType;
+        }
+
+        /// <summary>
+        /// Verifies if the input id is a transient id
+        /// </summary>
+        /// <param name="id">entry id</param>
+        /// <returns>if the entry id is a transient id</returns>
+        private static bool IsTransientId(string id)
+        {
+            Match isTransient = transientIdRegex.Match(id);
+            return isTransient.Success;
         }
     }
 }

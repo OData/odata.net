@@ -32,9 +32,6 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>XML attribute value to indicate the base URI for a document or element.</summary>
         internal const string XmlBaseAttributeName = "base";
 
-        /// <summary>Name of the xml:lang attribute.</summary>
-        internal const string XmlLangAttributeName = "lang";
-
         /// <summary>Name of the xml:space attribute.</summary>
         internal const string XmlSpaceAttributeName = "space";
 
@@ -129,10 +126,10 @@ namespace Microsoft.OData.Core.Atom
         internal const string ODataOperationTargetAttribute = "target";
 
         /// <summary>XML element name for the wrapper 'ref' element around a sequence of Uris in response to a ref request.</summary>
-        internal const string ODataLinksElementName = "ref";
+        internal const string ODataRefElementName = "ref";
 
-        /// <summary>XML element name for a Uri response to a $ref request.</summary>
-        internal const string ODataUriElementName = "uri";
+        /// <summary>XML element name for an Id response to a $ref request.</summary>
+        internal const string ODataIdElementName = "id";
 
         /// <summary>XML element name for a next link in a response to a $ref request.</summary>
         internal const string ODataNextLinkElementName = "next";
@@ -160,6 +157,9 @@ namespace Microsoft.OData.Core.Atom
 
         /// <summary>Attribute name for m:annotation/@float.</summary>
         internal const string ODataAnnotationFloatAttribute = "float";
+
+        /// <summary>Attribute name for m:name.</summary>
+        internal const string ODataNameAttribute = "name";
 
         #endregion OData constants
 
@@ -191,6 +191,12 @@ namespace Microsoft.OData.Core.Atom
 
         /// <summary>XML element name to mark id element in Atom.</summary>
         internal const string AtomIdElementName = "id";
+
+        /// <summary>Format for Atom transient id</summary>
+        internal const string AtomTransientIdFormat = @"odata:transient:{{{0}}}";
+
+        /// <summary>Regular expression for Atom transient id</summary>
+        internal const string AtomTransientIdRegularExpression = @"^odata:transient:{([\s\S]*)}$";
 
         /// <summary>XML element name to mark title element in Atom.</summary>
         internal const string AtomTitleElementName = "title";
@@ -243,6 +249,12 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>XML element name to mark the 'email' element in an Atom person construct.</summary>
         internal const string AtomPersonEmailElementName = "email";
 
+        /// <summary>The name of the 'singleton' element when writing service documents in Xml format.</summary>
+        internal const string AtomServiceDocumentSingletonElementName = "singleton";
+
+        /// <summary>The name of the 'function-import' element when writing service documents in Xml format.</summary>
+        internal const string AtomServiceDocumentFunctionImportElementName = "function-import";
+
         /// <summary>'updated' - XML element name for ATOM 'updated' element for entries.</summary>
         internal const string AtomUpdatedElementName = "updated";
 
@@ -263,6 +275,9 @@ namespace Microsoft.OData.Core.Atom
 
         /// <summary> Atom link relation attribute value for self links.</summary>
         internal const string AtomSelfRelationAttributeValue = "self";
+
+        /// <summary> Atom context attribute value for specifying context URLs.</summary>
+        internal const string AtomContextAttributeValue = "context";
 
         /// <summary>XML element name to mark link element in Atom.</summary>
         internal const string AtomLinkElementName = "link";

@@ -11,6 +11,7 @@
 namespace Microsoft.OData.Core
 {
     using Microsoft.OData.Core.Evaluation;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Interface used for substitutability, to answer basic questions regarding the type of the entry or feed.
@@ -21,14 +22,19 @@ namespace Microsoft.OData.Core
     internal interface IODataFeedAndEntryTypeContext
     {
         /// <summary>
-        /// The entity set name of the feed or entry.
+        /// The navigation source name of the feed or entry.
         /// </summary>
-        string EntitySetName { get; }
+        string NavigationSourceName { get; }
 
         /// <summary>
-        /// The element type name of the entity set of the feed or entry.
+        /// The entity type name of the navigation source of the feed or entry.
         /// </summary>
-        string EntitySetElementTypeName { get; }
+        string NavigationSourceEntityTypeName { get; }
+
+        /// <summary>
+        /// The kind of the navigation source of the feed or entry.
+        /// </summary>
+        EdmNavigationSourceKind NavigationSourceKind { get; }
 
         /// <summary>
         /// The expected entity type name of the entry.
@@ -41,6 +47,11 @@ namespace Microsoft.OData.Core
         /// true if the entry is an MLE, false otherwise.
         /// </summary>
         bool IsMediaLinkEntry { get; }
+
+        /// <summary>
+        /// The flag we use to identify if the current entry is from a navigation property with collection type or not.
+        /// </summary>
+        bool IsFromCollection { get; }
 
         /// <summary>
         /// The Url convention to use for the entity set.

@@ -19,7 +19,6 @@ namespace Microsoft.OData.Core.Evaluation
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Values;
     using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser;
     #endregion
 
     /// <summary>
@@ -43,7 +42,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <param name="urlConvention">The specific url convention to use.</param>
         internal ODataConventionalUriBuilder(Uri serviceBaseUri, UrlConvention urlConvention)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(serviceBaseUri != null && serviceBaseUri.IsAbsoluteUri, "serviceBaseUri != null && serviceBaseUri.IsAbsoluteUri");
             Debug.Assert(urlConvention != null, "urlConvention != null");
 
@@ -63,8 +61,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override Uri BuildBaseUri()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return this.serviceBaseUri;
         }
 
@@ -76,8 +72,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The entity set URI.</returns>
         internal override Uri BuildEntitySetUri(Uri baseUri, string entitySetName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             ValidateBaseUri(baseUri);
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(entitySetName, "entitySetName");
 
@@ -93,13 +87,11 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The entity instance URI.</returns>
         internal override Uri BuildEntityInstanceUri(Uri baseUri, ICollection<KeyValuePair<string, object>> keyProperties, string entityTypeName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             ValidateBaseUri(baseUri);
             Debug.Assert(keyProperties != null, "keyProperties != null");
             Debug.Assert(!string.IsNullOrEmpty(entityTypeName), "!string.IsNullOrEmpty(entityTypeName)");
 
-            StringBuilder builder = new StringBuilder(UriUtilsCommon.UriToString(baseUri));
+            StringBuilder builder = new StringBuilder(UriUtils.UriToString(baseUri));
 
             // TODO TASK 904843: What should be done about escaping the values.
             // TODO TASK 904842: What should happen if the URL does end with a slash?
@@ -118,8 +110,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The edit link for the stream.</returns>
         internal override Uri BuildStreamEditLinkUri(Uri baseUri, string streamPropertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             ValidateBaseUri(baseUri);
             ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
 
@@ -144,8 +134,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The read link for the stream.</returns>
         internal override Uri BuildStreamReadLinkUri(Uri baseUri, string streamPropertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             ValidateBaseUri(baseUri);
             ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
 
@@ -167,8 +155,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The navigation link URI for the navigation property.</returns>
         internal override Uri BuildNavigationLinkUri(Uri baseUri, string navigationPropertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             ValidateBaseUri(baseUri);
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
 
@@ -183,8 +169,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The association link URI for the navigation property.</returns>
         internal override Uri BuildAssociationLinkUri(Uri baseUri, string navigationPropertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             ValidateBaseUri(baseUri);
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
 
@@ -203,8 +187,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The target URI for the operation.</returns>
         internal override Uri BuildOperationTargetUri(Uri baseUri, string operationName, string bindingParameterTypeName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             ValidateBaseUri(baseUri);
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(operationName, "operationName");
 
@@ -225,8 +207,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The URI with the type segment appended.</returns>
         internal override Uri AppendTypeSegment(Uri baseUri, string typeName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             ValidateBaseUri(baseUri);
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(typeName, "typeName");
 
@@ -253,7 +233,7 @@ namespace Microsoft.OData.Core.Evaluation
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values passed to this method are model elements like property names or keywords.")]
         private static Uri AppendSegment(Uri baseUri, string segment, bool escapeSegment)
         {
-            string baseUriString = UriUtilsCommon.UriToString(baseUri);
+            string baseUriString = UriUtils.UriToString(baseUri);
 
             if (escapeSegment)
             {

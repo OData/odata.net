@@ -31,9 +31,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private readonly string name;
 
         /// <summary>
-        /// list of operation imports that this node represents.
+        /// list of functions that this node represents.
         /// </summary>
-        private readonly ReadOnlyCollection<IEdmOperationImport> operationImports;
+        private readonly ReadOnlyCollection<IEdmFunction> functions;
 
         /// <summary>
         /// list of parameters provided to this function
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// the set containing the entities returned by this function.
         /// </summary>
-        private readonly IEdmEntitySet entitySet;
+        private readonly IEdmEntitySetBase navigationSource;
 
         /// <summary>
         /// The semantically bound parent of this EntityCollectionFunctionCallNode.
@@ -64,24 +64,24 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Creates an EntityCollectionFunctionCallNode to represent a operation call that returns a collection of entities.
         /// </summary>
         /// <param name="name">The name of this operation.</param>
-        /// <param name="operationImports">the list of operation imports that this node represents.</param>
+        /// <param name="functions">the list of functions that this node should represent.</param>
         /// <param name="parameters">the list of parameters to this operation</param>
         /// <param name="returnedCollectionTypeReference">the type the entity collection returned by this operation. The element type must be an entity type.</param>
-        /// <param name="entitySet">the set containing entities returned by this operation</param>
+        /// <param name="navigationSource">the set containing entities returned by this operation</param>
         /// <param name="source">the semantically bound parent of this EntityCollectionFunctionCallNode.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the provided name is null.</exception>
         /// <exception cref="System.ArgumentNullException">Throws if the provided collection type reference is null.</exception>
         /// <exception cref="System.ArgumentException">Throws if the element type of the provided collection type reference is not an entity type.</exception>
         /// <exception cref="System.ArgumentNullException">Throws if the input operation imports is null</exception>
-        public EntityCollectionFunctionCallNode(string name, IEnumerable<IEdmOperationImport> operationImports, IEnumerable<QueryNode> parameters, IEdmCollectionTypeReference returnedCollectionTypeReference, IEdmEntitySet entitySet, QueryNode source)
+        public EntityCollectionFunctionCallNode(string name, IEnumerable<IEdmFunction> functions, IEnumerable<QueryNode> parameters, IEdmCollectionTypeReference returnedCollectionTypeReference, IEdmEntitySetBase navigationSource, QueryNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(returnedCollectionTypeReference, "returnedCollectionTypeReference");
             this.name = name;
-            this.operationImports = new ReadOnlyCollection<IEdmOperationImport>(operationImports == null ? new List<IEdmOperationImport>() : operationImports.ToList());
+            this.functions = new ReadOnlyCollection<IEdmFunction>(functions == null ? new List<IEdmFunction>() : functions.ToList());
             this.parameters = new ReadOnlyCollection<QueryNode>(parameters == null ? new List<QueryNode>() : parameters.ToList());
             this.returnedCollectionTypeReference = returnedCollectionTypeReference;
-            this.entitySet = entitySet;
+            this.navigationSource = navigationSource;
 
             this.entityTypeReference = returnedCollectionTypeReference.ElementType().AsEntityOrNull();
             if (this.entityTypeReference == null)
@@ -103,9 +103,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// Gets the list of operation imports that this node represents.
         /// </summary>
-        public IEnumerable<IEdmOperationImport> OperationImports
+        public IEnumerable<IEdmFunction> Functions
         {
-            get { return this.operationImports; }
+            get { return this.functions; }
         }
 
         /// <summary>
@@ -141,11 +141,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the entity set contaiing the entities returned by this function.
+        /// Gets the navigation source contaiing the entities returned by this function.
         /// </summary>
-        public override IEdmEntitySet EntitySet
+        public override IEdmNavigationSource NavigationSource
         {
-            get { return this.entitySet; }
+            get { return this.navigationSource; }
         }
 
         /// <summary>
@@ -163,7 +163,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return InternalQueryNodeKind.EntityCollectionFunctionCall;
             }
         }

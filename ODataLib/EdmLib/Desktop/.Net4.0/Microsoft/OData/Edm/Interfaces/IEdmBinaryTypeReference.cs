@@ -16,11 +16,6 @@ namespace Microsoft.OData.Edm
     public interface IEdmBinaryTypeReference : IEdmPrimitiveTypeReference
     {
         /// <summary>
-        /// Gets a value indicating whether this type specifies fixed length.
-        /// </summary>
-        bool? IsFixedLength { get; }
-
-        /// <summary>
         /// Gets a value indicating whether this type specifies the maximum allowed length.
         /// </summary>
         bool IsUnbounded { get; }

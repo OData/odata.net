@@ -10,14 +10,7 @@
 
 namespace Microsoft.Spatial
 {
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
-
     /// <summary>Represents the geography surface.</summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     public abstract class GeographySurface : Geography
     {
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeographySurface" /> class.</summary>

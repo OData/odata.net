@@ -19,7 +19,6 @@ namespace Microsoft.OData.Edm.Library
     {
         private readonly bool isUnbounded;
         private readonly int? maxLength;
-        private readonly bool? isFixedLength;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmBinaryTypeReference"/> class.
@@ -27,7 +26,7 @@ namespace Microsoft.OData.Edm.Library
         /// <param name="definition">The type this reference refers to.</param>
         /// <param name="isNullable">Denotes whether the type can be nullable.</param>
         public EdmBinaryTypeReference(IEdmPrimitiveType definition, bool isNullable)
-            : this(definition, isNullable, false, null, null)
+            : this(definition, isNullable, false, null)
         {
         }
 
@@ -38,8 +37,7 @@ namespace Microsoft.OData.Edm.Library
         /// <param name="isNullable">Denotes whether the type can be nullable.</param>
         /// <param name="isUnbounded">Denotes whether the max length is the maximum allowed value.</param>
         /// <param name="maxLength">Maximum length of a value of this type.</param>
-        /// <param name="isFixedLength">Denotes whether the length can vary. </param>
-        public EdmBinaryTypeReference(IEdmPrimitiveType definition, bool isNullable, bool isUnbounded, int? maxLength, bool? isFixedLength)
+        public EdmBinaryTypeReference(IEdmPrimitiveType definition, bool isNullable, bool isUnbounded, int? maxLength)
             : base(definition, isNullable)
         {
             if (isUnbounded && maxLength != null)
@@ -49,15 +47,6 @@ namespace Microsoft.OData.Edm.Library
 
             this.isUnbounded = isUnbounded;
             this.maxLength = maxLength;
-            this.isFixedLength = isFixedLength;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this type specifies fixed length.
-        /// </summary>
-        public bool? IsFixedLength
-        {
-            get { return this.isFixedLength; }
         }
 
         /// <summary>

@@ -109,6 +109,9 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>"true" keyword for expressions.</summary>
         internal const string KeywordTrue = "true";
 
+        /// <summary>"max" keyword for expressions.</summary>
+        internal const string KeywordMax = "max";
+
         /// <summary> "cast" function </summary>
         internal const string UnboundFunctionCast = "cast";
 
@@ -127,12 +130,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>"NaN" literal used to represent not-a-number values.</summary>
         internal const string NaNLiteral = "NaN";
 
-        /// <summary>'datetime' constant prefixed to datetime literals.</summary>
-        internal const string LiteralPrefixDateTime = "datetime";
-
-        /// <summary>'datetimeoffset' constant prefixed to datetimeoffset literals.</summary>
-        internal const string LiteralPrefixDateTimeOffset = "datetimeoffset";
-
         /// <summary>'duration' constant prefixed to duration literals.</summary>
         internal const string LiteralPrefixDuration = "duration";
 
@@ -142,11 +139,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>'geography' constant prefixed to geography literals.</summary>
         internal const string LiteralPrefixGeography = "geography";
 
-        /// <summary>'guid' constant prefixed to guid literals.</summary>
-        internal const string LiteralPrefixGuid = "guid";
-
-        /// <summary>'X': Prefix to binary type string representation.</summary>
-        internal const string LiteralPrefixShortBinary = "X";
 
         /// <summary>'binary' constant prefixed to binary literals.</summary>
         internal const string LiteralPrefixBinary = "binary";
@@ -181,10 +173,22 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary> the count query option </summary>
         internal const string QueryOptionCount = "$count";
 
+        /// <summary> the levels query option </summary>
+        internal const string QueryOptionLevels = "$levels";
+
         /// <summary> the select query option </summary>
         internal const string QueryOptionSelect = "$select";
 
         /// <summary> the expand query option </summary>
         internal const string QueryOptionExpand = "$expand";
+
+        /// <summary>"AND" keyword for search option.</summary>
+        internal const string SearchKeywordAnd = "AND";
+
+        /// <summary>"NOT" keyword for search option.</summary>
+        internal const string SearchKeywordNOT = "NOT";
+
+        /// <summary>"OR" keyword for search option.</summary>
+        internal const string SearchKeywordOr = "OR";
     }
 }

@@ -76,55 +76,40 @@ namespace Microsoft.OData.Core.Atom
             return linkMetadata;
         }
 
-        /// <summary>Determines an extension method to get the <see cref="T:System.Data.OData.Atom.AtomWorkspaceMetadata" /> for an annotatable workspace.</summary>
+        /// <summary>Determines an extension method to get the <see cref="T:System.Data.OData.Atom.AtomWorkspaceMetadata" /> for an annotatable serviceDocument.</summary>
         /// <returns>An <see cref="T:Microsoft.OData.Core.Atom.AtomWorkspaceMetadata" /> instance or null if no annotation of that type exists.</returns>
-        /// <param name="workspace">The workspace to get the annotation from.</param>
-        public static AtomWorkspaceMetadata Atom(this ODataWorkspace workspace)
+        /// <param name="serviceDocument">The serviceDocument to get the annotation from.</param>
+        public static AtomWorkspaceMetadata Atom(this ODataServiceDocument serviceDocument)
         {
-            ExceptionUtils.CheckArgumentNotNull(workspace, "workspace");
+            ExceptionUtils.CheckArgumentNotNull(serviceDocument, "serviceDocument");
 
-            AtomWorkspaceMetadata workspaceMetadata = workspace.GetAnnotation<AtomWorkspaceMetadata>();
+            AtomWorkspaceMetadata workspaceMetadata = serviceDocument.GetAnnotation<AtomWorkspaceMetadata>();
             if (workspaceMetadata == null)
             {
                 workspaceMetadata = new AtomWorkspaceMetadata();
-                workspace.SetAnnotation(workspaceMetadata);
+                serviceDocument.SetAnnotation(workspaceMetadata);
             }
 
             return workspaceMetadata;
         }
 
-        /// <summary>Determines an extension method to get the <see cref="T:Microsoft.OData.Core.Atom.AtomResourceCollectionMetadata" /> for an annotatable (resource) collection.</summary>
+        /// <summary>Determines an extension method to get the <see cref="T:Microsoft.OData.Core.Atom.AtomResourceCollectionMetadata" /> for an entity set in service document.</summary>
         /// <returns>An <see cref="T:Microsoft.OData.Core.Atom.AtomResourceCollectionMetadata" /> instance or null if no annotation of that type exists.</returns>
-        /// <param name="collection">The (resource) collection to get the annotation from.</param>
-        public static AtomResourceCollectionMetadata Atom(this ODataResourceCollectionInfo collection)
+        /// <param name="entitySet">The entity set in service document to get the annotation from.</param>
+        public static AtomResourceCollectionMetadata Atom(this ODataEntitySetInfo entitySet)
         {
-            ExceptionUtils.CheckArgumentNotNull(collection, "collection");
+            ExceptionUtils.CheckArgumentNotNull(entitySet, "entitySet");
 
-            AtomResourceCollectionMetadata collectionMetadata = collection.GetAnnotation<AtomResourceCollectionMetadata>();
+            AtomResourceCollectionMetadata collectionMetadata = entitySet.GetAnnotation<AtomResourceCollectionMetadata>();
             if (collectionMetadata == null)
             {
                 collectionMetadata = new AtomResourceCollectionMetadata();
-                collection.SetAnnotation(collectionMetadata);
+                entitySet.SetAnnotation(collectionMetadata);
             }
 
             return collectionMetadata;
         }
 
-        /// <summary>Determines an extension method to get the <see cref="T:Microsoft.OData.Core.Atom.AtomLinkMetadata" /> for an annotatable association link.</summary>
-        /// <returns>An <see cref="T:Microsoft.OData.Core.Atom.AtomLinkMetadata" /> instance or null if no annotation of that type exists.</returns>
-        /// <param name="associationLink">The association link to get the annotation from.</param>
-        public static AtomLinkMetadata Atom(this ODataAssociationLink associationLink)
-        {
-            ExceptionUtils.CheckArgumentNotNull(associationLink, "associationLink");
-
-            AtomLinkMetadata linkMetadata = associationLink.GetAnnotation<AtomLinkMetadata>();
-            if (linkMetadata == null)
-            {
-                linkMetadata = new AtomLinkMetadata();
-                associationLink.SetAnnotation(linkMetadata);
-            }
-
-            return linkMetadata;
-        }
+        // TODO Task 1665240: Association Link - Add back support for customizing association link element in Atom
     }
 }

@@ -44,7 +44,6 @@ namespace Microsoft.OData.Core
         /// <param name="typeNameOracle">The oracle to use to determine the type name to write for entries and values.</param>
         internal JsonLightInstanceAnnotationWriter(IODataJsonLightValueSerializer valueSerializer, JsonLightTypeNameOracle typeNameOracle)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(valueSerializer != null, "valueSerializer should not be null");
             this.valueSerializer = valueSerializer;
             this.typeNameOracle = typeNameOracle;
@@ -63,9 +62,9 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
         /// <param name="tracker">The tracker to track if instance annotations are written.</param>
-        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, InstanceAnnotationWriteTracker tracker)
+        /// <param name="ignoreFilter">Whether to ingore the filter in settings.</param>
+        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, InstanceAnnotationWriteTracker tracker, bool ignoreFilter = false)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             Debug.Assert(tracker != null, "tracker should not be null if we called this");
 
@@ -79,7 +78,7 @@ namespace Microsoft.OData.Core
 
                 if (!tracker.IsAnnotationWritten(annotation.Name))
                 {
-                    this.WriteInstanceAnnotation(annotation);
+                    this.WriteInstanceAnnotation(annotation, ignoreFilter);
                     tracker.MarkAnnotationWritten(annotation.Name);
                 }
             }
@@ -91,19 +90,27 @@ namespace Microsoft.OData.Core
         /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
         internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             this.WriteInstanceAnnotations(instanceAnnotations, new InstanceAnnotationWriteTracker());
+        }
+
+        /// <summary>
+        /// Writes all the instance annotations specified in <paramref name="instanceAnnotations"/> of error.
+        /// </summary>
+        /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
+        internal void WriteInstanceAnnotationsForError(IEnumerable<ODataInstanceAnnotation> instanceAnnotations)
+        {
+            Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
+            this.WriteInstanceAnnotations(instanceAnnotations, new InstanceAnnotationWriteTracker(), true);
         }
 
         /// <summary>
         /// Writes an instance annotation.
         /// </summary>
         /// <param name="instanceAnnotation">The instance annotation to write.</param>
-        internal void WriteInstanceAnnotation(ODataInstanceAnnotation instanceAnnotation)
+        /// <param name="ignoreFilter">Whether to ingore the filter in settings.</param>
+        internal void WriteInstanceAnnotation(ODataInstanceAnnotation instanceAnnotation, bool ignoreFilter = false)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             string name = instanceAnnotation.Name;
             ODataValue value = instanceAnnotation.Value;
             Debug.Assert(!string.IsNullOrEmpty(name), "name should not be null or empty");
@@ -112,7 +119,7 @@ namespace Microsoft.OData.Core
             Debug.Assert(!(value is ODataStreamReferenceValue), "!(value is ODataStreamReferenceValue) -- ODataInstanceAnnotation and InstanceAnnotationCollection will throw if the value is a stream value.");
             Debug.Assert(this.valueSerializer.Model != null, "this.valueSerializer.Model != null");
 
-            if (this.valueSerializer.Settings.ShouldSkipAnnotation(name))
+            if (!ignoreFilter && this.valueSerializer.Settings.ShouldSkipAnnotation(name))
             {
                 return;
             }
@@ -126,7 +133,7 @@ namespace Microsoft.OData.Core
                     throw new ODataException(ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(instanceAnnotation.Name, expectedType.ODataFullName()));
                 }
 
-                this.JsonWriter.WriteName(name);
+                this.JsonWriter.WriteInstanceAnnotationName(name);
                 this.valueSerializer.WriteNullValue();
                 return;
             }
@@ -139,7 +146,7 @@ namespace Microsoft.OData.Core
             ODataComplexValue complexValue = value as ODataComplexValue;
             if (complexValue != null)
             {
-                this.JsonWriter.WriteName(name);
+                this.JsonWriter.WriteInstanceAnnotationName(name);
                 this.valueSerializer.WriteComplexValue(complexValue, expectedType, false /*isTopLevel*/, treatLikeOpenProperty, this.valueSerializer.CreateDuplicatePropertyNamesChecker());
                 return;
             }
@@ -151,10 +158,10 @@ namespace Microsoft.OData.Core
                 string collectionTypeNameToWrite = this.typeNameOracle.GetValueTypeNameForWriting(collectionValue, expectedType, typeFromValue, treatLikeOpenProperty);
                 if (collectionTypeNameToWrite != null)
                 {
-                    ODataJsonLightWriterUtils.WriteODataTypePropertyAnnotation(this.JsonWriter, name, collectionTypeNameToWrite);                    
+                    ODataJsonLightWriterUtils.WriteODataTypePropertyAnnotation(this.JsonWriter, name, collectionTypeNameToWrite);
                 }
 
-                this.JsonWriter.WriteName(name);
+                this.JsonWriter.WriteInstanceAnnotationName(name);
                 this.valueSerializer.WriteCollectionValue(collectionValue, expectedType, false /*isTopLevelProperty*/, false /*isInUri*/, treatLikeOpenProperty);
                 return;
             }
@@ -168,7 +175,7 @@ namespace Microsoft.OData.Core
                 ODataJsonLightWriterUtils.WriteODataTypePropertyAnnotation(this.JsonWriter, name, primitiveTypeNameToWrite);
             }
 
-            this.JsonWriter.WriteName(name);
+            this.JsonWriter.WriteInstanceAnnotationName(name);
             this.valueSerializer.WritePrimitiveValue(primitiveValue.Value, expectedType);
         }
     }

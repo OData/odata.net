@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Annotations;
-using Microsoft.OData.Edm.Internal;
 using Microsoft.OData.Edm.Library.Annotations;
 
 namespace Microsoft.OData.Edm.Library
@@ -25,6 +24,7 @@ namespace Microsoft.OData.Edm.Library
         private readonly List<IEdmSchemaElement> elements = new List<IEdmSchemaElement>();
         private readonly Dictionary<IEdmVocabularyAnnotatable, List<IEdmVocabularyAnnotation>> vocabularyAnnotationsDictionary = new Dictionary<IEdmVocabularyAnnotatable, List<IEdmVocabularyAnnotation>>();
         private readonly Dictionary<IEdmStructuredType, List<IEdmStructuredType>> derivedTypeMappings = new Dictionary<IEdmStructuredType, List<IEdmStructuredType>>();
+        private readonly HashSet<string> declaredNamespaces = new HashSet<string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmModel"/> class.
@@ -40,6 +40,14 @@ namespace Microsoft.OData.Edm.Library
         public override IEnumerable<IEdmSchemaElement> SchemaElements
         {
             get { return this.elements; }
+        }
+
+        /// <summary>
+        /// Gets the collection of namespaces that schema elements use contained in this model.
+        /// </summary>
+        public override IEnumerable<string> DeclaredNamespaces
+        {
+            get { return this.declaredNamespaces; }
         }
 
         /// <summary>
@@ -65,6 +73,11 @@ namespace Microsoft.OData.Edm.Library
         /// <param name="element">Element to be added.</param>
         public void AddElement(IEdmSchemaElement element)
         {
+            if (!this.declaredNamespaces.Contains(element.Namespace))
+            {
+                this.declaredNamespaces.Add(element.Namespace);
+            }
+
             EdmUtil.CheckArgumentNull(element, "element");
             this.elements.Add(element);
             IEdmStructuredType structuredType = element as IEdmStructuredType;

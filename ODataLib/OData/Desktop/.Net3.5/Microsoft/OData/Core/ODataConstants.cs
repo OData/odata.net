@@ -56,15 +56,12 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Name of the OData 'OData-Version' HTTP header.
         /// </summary>
-        public const string DataServiceVersionHeader = "OData-Version";
+        public const string ODataVersionHeader = "OData-Version";
 
         /// <summary>
         /// Name of the HTTP content-ID header.
         /// </summary>
         public const string ContentIdHeader = "Content-ID";
-
-        /// <summary>The '$id' query option used to resolve entity-id </summary>
-        public const string EntityIdQueryOption = "$id";
 
         /// <summary>
         /// Name of the Content-Length HTTP header.
@@ -148,5 +145,45 @@ namespace Microsoft.OData.Core
 
         /// <summary>The '$value' segment name for the default stream value.</summary>
         internal const string DefaultStreamSegmentName = "$value";
+
+        /// <summary>The prefix of type name.</summary>
+        internal const string TypeNamePrefix = "#";
+
+        /// <summary>A segment name in a URI that indicates metadata is being requested.</summary>
+        internal const string UriMetadataSegment = "$metadata";
+
+        #region Context URL
+
+        /// <summary>
+        /// Constant "#Collection($ref)" used to represent collection of entity references in Context URL
+        /// Note that if a response is a collection of entity references, the context URL does not contain the type of the referenced entities
+        /// </summary>
+        internal const string CollectionOfEntityReferencesContextUrlSegment = "#Collection($ref)";
+
+        /// <summary>
+        /// Constant "#$ref"used to represent single entity reference in Context URL
+        /// Note that if a response is a collection of entity references, the context URL does not contain the type of the referenced entities
+        /// </summary>
+        internal const string SingleEntityReferencesContextUrlSegment = "#$ref";
+
+        /// <summary>The hash sign acting as fragment indicator in a context URI.</summary>
+        internal const char ContextUriFragmentIndicator = '#';
+
+        /// <summary>The $entity token that indicates that the payload is a single item from a set.</summary>
+        internal const string ContextUriFragmentItemSelector = "$entity";
+
+        /// <summary>The '(' used to mark the start of Select and Expand clauses in the fragment of a context URI.</summary>
+        internal const char ContextUriProjectionStart = '(';
+
+        /// <summary>The ')' used to mark the end of Select and Expand clauses in the fragment of a context URI.</summary>
+        internal const char ContextUriProjectionEnd = ')';
+
+        /// <summary>The "," used to split properties of Select and Expand fragment a context URI.</summary>
+        internal const string ContextUriProjectionPropertySeparator = ",";
+
+        /// <summary>The token that indicates the payload is a property with null value.</summary>
+        internal const string ContextUriFragmentNull = "Edm.Null";
+
+        #endregion Context URL
     }
 }

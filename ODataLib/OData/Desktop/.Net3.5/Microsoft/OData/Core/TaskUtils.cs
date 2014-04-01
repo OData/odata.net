@@ -45,7 +45,6 @@ namespace Microsoft.OData.Client
             get
             {
 #if ODATALIB
-                DebugUtils.CheckNoExternalCallers();
 #endif
                 // Note that in case of two threads competing here we would create two completed tasks, but only one 
                 // will be stored in the static variable. In any case, they are identical for all other purposes, 
@@ -71,8 +70,7 @@ namespace Microsoft.OData.Client
         /// <returns>An already completed task with the specified result.</returns>
         internal static Task<T> GetCompletedTask<T>(T value)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif
 
             TaskCompletionSource<T> taskCompletionSource = new TaskCompletionSource<T>();
@@ -89,8 +87,7 @@ namespace Microsoft.OData.Client
         /// <returns>An already completed task with the specified exception.</returns>
         internal static Task GetFaultedTask(Exception exception)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif
 
             // Since there's no non-generic version use a dummy object return value and cast to non-generic version.
@@ -105,8 +102,7 @@ namespace Microsoft.OData.Client
         /// <returns>An already completed task with the specified exception.</returns>
         internal static Task<T> GetFaultedTask<T>(Exception exception)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif
             TaskCompletionSource<T> taskCompletionSource = new TaskCompletionSource<T>();
             taskCompletionSource.SetException(exception);
@@ -127,7 +123,6 @@ namespace Microsoft.OData.Client
         internal static Task GetTaskForSynchronousOperation(Action synchronousOperation)
         {
 #if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
 #endif			
             Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
 
@@ -159,8 +154,7 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static Task<T> GetTaskForSynchronousOperation<T>(Func<T> synchronousOperation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
             Debug.Assert(!(typeof(Task).IsAssignableFrom(typeof(T))), "This method doesn't support operations returning Task instances.");
@@ -191,8 +185,7 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static Task GetTaskForSynchronousOperationReturningTask(Func<Task> synchronousOperation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif
 
             try
@@ -221,8 +214,7 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static Task<TResult> GetTaskForSynchronousOperationReturningTask<TResult>(Func<Task<TResult>> synchronousOperation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif
 
             try
@@ -252,8 +244,7 @@ namespace Microsoft.OData.Client
         /// <remarks>This method unlike ContinueWith will return a task which will fail if the antecedent task fails, thus it propagates failures.</remarks>
         internal static Task FollowOnSuccessWith(this Task antecedentTask, Action<Task> operation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             return FollowOnSuccessWithImplementation<object>(antecedentTask, t => { operation(t); return null; });
         }
@@ -272,8 +263,7 @@ namespace Microsoft.OData.Client
         /// </remarks>
         internal static Task<TFollowupTaskResult> FollowOnSuccessWith<TFollowupTaskResult>(this Task antecedentTask, Func<Task, TFollowupTaskResult> operation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             return FollowOnSuccessWithImplementation(antecedentTask, operation);
         }
@@ -289,8 +279,7 @@ namespace Microsoft.OData.Client
         /// <remarks>This method unlike ContinueWith will return a task which will fail if the antecedent task fails, thus it propagates failures.</remarks>
         internal static Task FollowOnSuccessWith<TAntecedentTaskResult>(this Task<TAntecedentTaskResult> antecedentTask, Action<Task<TAntecedentTaskResult>> operation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             return FollowOnSuccessWithImplementation<object>(antecedentTask, t => { operation((Task<TAntecedentTaskResult>)t); return null; });
         }
@@ -310,8 +299,7 @@ namespace Microsoft.OData.Client
         /// </remarks>
         internal static Task<TFollowupTaskResult> FollowOnSuccessWith<TAntecedentTaskResult, TFollowupTaskResult>(this Task<TAntecedentTaskResult> antecedentTask, Func<Task<TAntecedentTaskResult>, TFollowupTaskResult> operation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             return FollowOnSuccessWithImplementation(antecedentTask, t => operation((Task<TAntecedentTaskResult>)t));
         }
@@ -332,8 +320,7 @@ namespace Microsoft.OData.Client
         /// </remarks>
         internal static Task FollowOnSuccessWithTask(this Task antecedentTask, Func<Task, Task> operation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
             Debug.Assert(operation != null, "operation != null");
@@ -361,7 +348,6 @@ namespace Microsoft.OData.Client
         internal static Task<TFollowupTaskResult> FollowOnSuccessWithTask<TFollowupTaskResult>(this Task antecedentTask, Func<Task, Task<TFollowupTaskResult>> operation)
         {
 #if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
 #endif			
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
             Debug.Assert(operation != null, "operation != null");
@@ -388,8 +374,7 @@ namespace Microsoft.OData.Client
         /// </remarks>
         internal static Task FollowOnSuccessWithTask<TAntecedentTaskResult>(this Task<TAntecedentTaskResult> antecedentTask, Func<Task<TAntecedentTaskResult>, Task> operation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
             Debug.Assert(operation != null, "operation != null");
@@ -417,8 +402,7 @@ namespace Microsoft.OData.Client
         /// </remarks>
         internal static Task<TFollowupTaskResult> FollowOnSuccessWithTask<TAntecedentTaskResult, TFollowupTaskResult>(this Task<TAntecedentTaskResult> antecedentTask, Func<Task<TAntecedentTaskResult>, Task<TFollowupTaskResult>> operation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
             Debug.Assert(operation != null, "operation != null");
@@ -442,8 +426,7 @@ namespace Microsoft.OData.Client
         /// <remarks>This method unlike ContinueWith will return a task which will fail if the antecedent task fails, thus it propagates failures.</remarks>
         internal static Task FollowOnFaultWith(this Task antecedentTask, Action<Task> operation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             return FollowOnFaultWithImplementation<object>(antecedentTask, t => null, operation);
         }
@@ -459,8 +442,7 @@ namespace Microsoft.OData.Client
         /// <remarks>This method unlike ContinueWith will return a task which will fail if the antecedent task fails, thus it propagates failures.</remarks>
         internal static Task<TResult> FollowOnFaultWith<TResult>(this Task<TResult> antecedentTask, Action<Task<TResult>> operation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             return FollowOnFaultWithImplementation(antecedentTask, t => ((Task<TResult>)t).Result, t => operation((Task<TResult>)t));
         }
@@ -483,8 +465,7 @@ namespace Microsoft.OData.Client
             Func<TExceptionType, TResult> catchBlock)
             where TExceptionType : Exception
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             return FollowOnFaultAndCatchExceptionWithImplementation<TResult, TExceptionType>(antecedentTask, t => ((Task<TResult>)t).Result, catchBlock);
         }
@@ -504,8 +485,7 @@ namespace Microsoft.OData.Client
         /// Also if the operation fails, the resulting task fails. If both tasks fail, the antecedent task failure is reported only.</remarks>
         internal static Task FollowAlwaysWith(this Task antecedentTask, Action<Task> operation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             return FollowAlwaysWithImplementation<object>(antecedentTask, t => null, operation);
         }
@@ -524,8 +504,7 @@ namespace Microsoft.OData.Client
         /// Also if the operation fails, the resulting task fails. If both tasks fail, the antecedent task failure is reported only.</remarks>
         internal static Task<TResult> FollowAlwaysWith<TResult>(this Task<TResult> antecedentTask, Action<Task<TResult>> operation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             return FollowAlwaysWithImplementation(antecedentTask, t => ((Task<TResult>)t).Result, t => operation((Task<TResult>)t));
         }
@@ -538,8 +517,7 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", Justification = "Need to access t.Exception to invoke the getter which will mark the Task to not throw the exception.")]
         internal static Task IgnoreExceptions(this Task task)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif
 
             task.ContinueWith(
@@ -557,8 +535,7 @@ namespace Microsoft.OData.Client
         /// <returns>The scheduler for the specified factory.</returns>
         internal static TaskScheduler GetTargetScheduler(this TaskFactory factory)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             Debug.Assert(factory != null, "factory != null");
             return factory.Scheduler ?? TaskScheduler.Current;
@@ -579,8 +556,7 @@ namespace Microsoft.OData.Client
             this TaskFactory factory,
             IEnumerable<Task> source)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif
 
             // Validate/update parameters
@@ -709,8 +685,7 @@ namespace Microsoft.OData.Client
         /// <returns>A new Task which wraps both the <paramref name="antecedentTask"/> and the conditional execution of <paramref name="operation"/>.</returns>
         private static Task<TResult> FollowOnSuccessWithImplementation<TResult>(Task antecedentTask, Func<Task, TResult> operation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
             Debug.Assert(operation != null, "operation != null");
@@ -878,8 +853,7 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private static Task<TResult> FollowAlwaysWithImplementation<TResult>(this Task antecedentTask, Func<Task, TResult> getTaskResult, Action<Task> operation)
         {
-#if ODATALIB		
-            DebugUtils.CheckNoExternalCallers();
+#if ODATALIB
 #endif			
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
             Debug.Assert(operation != null, "operation != null");

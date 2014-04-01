@@ -103,7 +103,7 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// Placeholder node referencing a rangeVariable on the binding stack that references an entity.
         /// </summary>
         EntityRangeVariableReference = InternalQueryNodeKind.EntityRangeVariableReference,
-        
+
         /// <summary>
         /// Node the represents a function call that returns a single entity.
         /// </summary>
@@ -123,6 +123,26 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// Node that represents a named function parameter. 
         /// </summary>
         NamedFunctionParameter = InternalQueryNodeKind.NamedFunctionParameter,
+
+        /// <summary>
+        /// The parameter alias node.
+        /// </summary>
+        ParameterAlias = InternalQueryNodeKind.ParameterAlias,
+
+        /// <summary>
+        /// The entity set node.
+        /// </summary>
+        EntitySet = InternalQueryNodeKind.EntitySet,
+
+        /// <summary>
+        /// The key lookup on a collection.
+        /// </summary>
+        KeyLookup = InternalQueryNodeKind.KeyLookup,
+
+        /// <summary>
+        /// The search term node.
+        /// </summary>
+        SearchTerm = InternalQueryNodeKind.SearchTerm,
     }
 
     /// <summary>
@@ -219,7 +239,7 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// SingleEntityFunctionCall node.
         /// </summary>
         SingleEntityFunctionCall = 17,
-                
+
         /// <summary>
         /// Node that represents a function call that returns a collection.
         /// </summary>
@@ -236,13 +256,23 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         NamedFunctionParameter = 20,
 
         /// <summary>
+        /// The parameter alias node.
+        /// </summary>
+        ParameterAlias = 21,
+
+        /// <summary>
         /// The entity set node.
         /// </summary>
-        EntitySet = 21,
+        EntitySet = 22,
 
         /// <summary>
         /// The key lookup on a collection.
         /// </summary>
-        KeyLookup = 22,
+        KeyLookup = 23,
+
+        /// <summary>
+        /// The search Term.
+        /// </summary>
+        SearchTerm = 24,
     }
 }

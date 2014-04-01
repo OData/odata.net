@@ -11,18 +11,11 @@
 namespace Microsoft.Data.Spatial
 {
     using System;
-    using System.Linq;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
     using Microsoft.Spatial;
 
     /// <summary>
     /// This class is an implementation of Geography point.
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     internal class GeographyPointImplementation : GeographyPoint
     {
         /// <summary>
@@ -151,51 +144,6 @@ namespace Microsoft.Data.Spatial
             get { return this.m; }
         }
 
-#if WINDOWS_PHONE
-        /// <summary>
-        /// internal property used to save state when this instance is serialized
-        /// </summary>
-        [DataMember]
-        internal double LatitudeValue
-        {
-            get { return this.latitude; }
-
-            set { this.latitude = value; }
-        }
-
-        /// <summary>
-        /// internal property used to save state when this instance is serialized
-        /// </summary>
-        [DataMember]
-        internal double LongitudeValue
-        {
-            get { return this.longitude; }
-
-            set { this.longitude = value; }
-        }
-
-        /// <summary>
-        /// internal property used to save state when this instance is serialized
-        /// </summary>
-        [DataMember]
-        internal double? ZValue
-        {
-            get { return this.z; }
-
-            set { this.z = value; }
-        }
-
-        /// <summary>
-        /// internal property used to save state when this instance is serialized
-        /// </summary>
-        [DataMember]
-        internal double? MValue
-        {
-            get { return this.m; }
-
-            set { this.m = value; }
-        }
-#endif
         /// <summary>
         /// Sends the current spatial object to the given sink
         /// </summary>

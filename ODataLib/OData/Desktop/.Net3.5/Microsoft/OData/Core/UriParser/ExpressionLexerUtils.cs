@@ -17,7 +17,6 @@ namespace Microsoft.OData.Service.Parsing
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 
     #endregion Namespaces
@@ -38,8 +37,6 @@ namespace Microsoft.OData.Service.Parsing
         /// <returns>true if it's a numeric literal; false otherwise.</returns>
         internal static bool IsNumeric(ExpressionTokenKind id)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return
                 id == ExpressionTokenKind.IntegerLiteral || id == ExpressionTokenKind.DecimalLiteral ||
                 id == ExpressionTokenKind.DoubleLiteral || id == ExpressionTokenKind.Int64Literal ||
@@ -54,7 +51,6 @@ namespace Microsoft.OData.Service.Parsing
         /// <returns>true if match found, false otherwise.</returns>
         internal static bool IsInfinityOrNaNDouble(string tokenText)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(tokenText != null, "tokenText != null");
 
             if (tokenText.Length == 3)
@@ -83,7 +79,6 @@ namespace Microsoft.OData.Service.Parsing
         /// <returns>true if the substring is equal using an ordinal comparison; false otherwise.</returns>
         internal static bool IsInfinityLiteralDouble(string text)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(text != null, "text != null");
 
             return String.CompareOrdinal(text, 0, ExpressionConstants.InfinityLiteral, 0, text.Length) == 0;
@@ -97,7 +92,6 @@ namespace Microsoft.OData.Service.Parsing
         /// <returns>true if match found, false otherwise.</returns>
         internal static bool IsInfinityOrNanSingle(string tokenText)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(tokenText != null, "tokenText != null");
 
             if (tokenText.Length == 4)
@@ -124,7 +118,6 @@ namespace Microsoft.OData.Service.Parsing
         /// <returns>true if the substring is equal using an ordinal comparison; false otherwise.</returns>
         internal static bool IsInfinityLiteralSingle(string text)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(text != null, "text != null");
             return text.Length == 4 &&
                    (text[3] == SingleSuffixLower || text[3] == SingleSuffixUpper) &&

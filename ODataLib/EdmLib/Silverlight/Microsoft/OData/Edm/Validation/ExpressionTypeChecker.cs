@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Internal;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Values;
 
@@ -35,9 +34,9 @@ namespace Microsoft.OData.Edm.Validation
         /// <remarks>If the expression has an associated type, this function will check that it matches the expected type and stop looking further. 
         /// If an expression claims a type, it must be validated that the type is valid for the expression. If the expression does not claim a type
         /// this method will attempt to check the validity of the expression itself with the asserted type.</remarks>
-        public static bool TryAssertType(this IEdmExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        public static bool TryCast(this IEdmExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
         {
-            return TryAssertType(expression, type, null, false, out discoveredErrors);
+            return TryCast(expression, type, null, false, out discoveredErrors);
         }
         
         /// <summary>
@@ -52,7 +51,7 @@ namespace Microsoft.OData.Edm.Validation
         /// <remarks>If the expression has an associated type, this function will check that it matches the expected type and stop looking further. 
         /// If an expression claims a type, it must be validated that the type is valid for the expression. If the expression does not claim a type
         /// this method will attempt to check the validity of the expression itself with the asserted type.</remarks>
-        public static bool TryAssertType(this IEdmExpression expression, IEdmTypeReference type, IEdmType context, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
+        public static bool TryCast(this IEdmExpression expression, IEdmTypeReference type, IEdmType context, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
         {
             EdmUtil.CheckArgumentNull(expression, "expression");
 
@@ -69,7 +68,6 @@ namespace Microsoft.OData.Edm.Validation
                 case EdmExpressionKind.StringConstant:
                 case EdmExpressionKind.BinaryConstant:
                 case EdmExpressionKind.BooleanConstant:
-                case EdmExpressionKind.DateTimeConstant:
                 case EdmExpressionKind.DateTimeOffsetConstant:
                 case EdmExpressionKind.DecimalConstant:
                 case EdmExpressionKind.FloatingConstant:
@@ -81,19 +79,20 @@ namespace Microsoft.OData.Edm.Validation
                         return TestTypeReferenceMatch(primitiveValue.Type, type, expression.Location(), matchExactly, out discoveredErrors);
                     }
 
-                    return TryAssertPrimitiveAsType(primitiveValue, type, out discoveredErrors);
+                    return TryCastPrimitiveAsType(primitiveValue, type, out discoveredErrors);
                 case EdmExpressionKind.Null:
-                    return TryAssertNullAsType((IEdmNullExpression)expression, type, out discoveredErrors);
+                    return TryCastNullAsType((IEdmNullExpression)expression, type, out discoveredErrors);
                 case EdmExpressionKind.Path:
-                    return TryAssertPathAsType((IEdmPathExpression)expression, type, context, matchExactly, out discoveredErrors);
+                case EdmExpressionKind.PropertyPath:
+                    return TryCastPathAsType((IEdmPathExpression)expression, type, context, matchExactly, out discoveredErrors);
                 case EdmExpressionKind.OperationApplication:
                     IEdmApplyExpression applyExpression = (IEdmApplyExpression)expression;
                     if (applyExpression.AppliedOperation != null)
                     {
-                        IEdmFunctionBase function = applyExpression.AppliedOperation as IEdmFunctionBase;
-                        if (function != null)
+                        IEdmOperation operation = applyExpression.AppliedOperation as IEdmOperation;
+                        if (operation != null)
                         {
-                            return TestTypeReferenceMatch(function.ReturnType, type, expression.Location(), matchExactly, out discoveredErrors);
+                            return TestTypeReferenceMatch(operation.ReturnType, type, expression.Location(), matchExactly, out discoveredErrors);
                         }
                     }
 
@@ -101,7 +100,7 @@ namespace Microsoft.OData.Edm.Validation
                     discoveredErrors = Enumerable.Empty<EdmError>();
                     return true;
                 case EdmExpressionKind.If:
-                    return TryAssertIfAsType((IEdmIfExpression)expression, type, context, matchExactly, out discoveredErrors);
+                    return TryCastIfAsType((IEdmIfExpression)expression, type, context, matchExactly, out discoveredErrors);
                 case EdmExpressionKind.IsType:
                     return TestTypeReferenceMatch(EdmCoreModel.Instance.GetBoolean(false), type, expression.Location(), matchExactly, out discoveredErrors);
                 case EdmExpressionKind.Record:
@@ -111,7 +110,7 @@ namespace Microsoft.OData.Edm.Validation
                         return TestTypeReferenceMatch(recordExpression.DeclaredType, type, expression.Location(), matchExactly, out discoveredErrors);
                     }
 
-                    return TryAssertRecordAsType(recordExpression, type, context, matchExactly, out discoveredErrors);
+                    return TryCastRecordAsType(recordExpression, type, context, matchExactly, out discoveredErrors);
                 case EdmExpressionKind.Collection:
                     IEdmCollectionExpression collectionExpression = (IEdmCollectionExpression)expression;
                     if (collectionExpression.DeclaredType != null)
@@ -119,20 +118,20 @@ namespace Microsoft.OData.Edm.Validation
                         return TestTypeReferenceMatch(collectionExpression.DeclaredType, type, expression.Location(), matchExactly, out discoveredErrors);
                     }
 
-                    return TryAssertCollectionAsType(collectionExpression, type, context, matchExactly, out discoveredErrors);
+                    return TryCastCollectionAsType(collectionExpression, type, context, matchExactly, out discoveredErrors);
                 case EdmExpressionKind.Labeled:
-                    return TryAssertType(((IEdmLabeledExpression)expression).Expression, type, context, matchExactly, out discoveredErrors);
-                case EdmExpressionKind.AssertType:
-                    return TestTypeReferenceMatch(((IEdmAssertTypeExpression)expression).Type, type, expression.Location(), matchExactly, out discoveredErrors);
+                    return TryCast(((IEdmLabeledExpression)expression).Expression, type, context, matchExactly, out discoveredErrors);
+                case EdmExpressionKind.Cast:
+                    return TestTypeReferenceMatch(((IEdmCastExpression)expression).Type, type, expression.Location(), matchExactly, out discoveredErrors);
                 case EdmExpressionKind.LabeledExpressionReference:
-                    return TryAssertType(((IEdmLabeledExpressionReferenceExpression)expression).ReferencedLabeledExpression, type, out discoveredErrors);
+                    return TryCast(((IEdmLabeledExpressionReferenceExpression)expression).ReferencedLabeledExpression, type, out discoveredErrors);
                 default:
                     discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionNotValidForTheAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionNotValidForTheAssertedType) };
                     return false;
             }
         }
 
-        internal static bool TryAssertPrimitiveAsType(this IEdmPrimitiveValue expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        internal static bool TryCastPrimitiveAsType(this IEdmPrimitiveValue expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsPrimitive())
             {
@@ -143,32 +142,30 @@ namespace Microsoft.OData.Edm.Validation
             switch (expression.ValueKind)
             {
                 case EdmValueKind.Binary:
-                    return TryAssertBinaryConstantAsType((IEdmBinaryConstantExpression)expression, type, out discoveredErrors);
+                    return TryCastBinaryConstantAsType((IEdmBinaryConstantExpression)expression, type, out discoveredErrors);
                 case EdmValueKind.Boolean:
-                    return TryAssertBooleanConstantAsType((IEdmBooleanConstantExpression)expression, type, out discoveredErrors);
-                case EdmValueKind.DateTime:
-                    return TryAssertDateTimeConstantAsType((IEdmDateTimeConstantExpression)expression, type, out discoveredErrors);
+                    return TryCastBooleanConstantAsType((IEdmBooleanConstantExpression)expression, type, out discoveredErrors);
                 case EdmValueKind.DateTimeOffset:
-                    return TryAssertDateTimeOffsetConstantAsType((IEdmDateTimeOffsetConstantExpression)expression, type, out discoveredErrors);
+                    return TryCastDateTimeOffsetConstantAsType((IEdmDateTimeOffsetConstantExpression)expression, type, out discoveredErrors);
                 case EdmValueKind.Decimal:
-                    return TryAssertDecimalConstantAsType((IEdmDecimalConstantExpression)expression, type, out discoveredErrors);
+                    return TryCastDecimalConstantAsType((IEdmDecimalConstantExpression)expression, type, out discoveredErrors);
                 case EdmValueKind.Floating:
-                    return TryAssertFloatingConstantAsType((IEdmFloatingConstantExpression)expression, type, out discoveredErrors);
+                    return TryCastFloatingConstantAsType((IEdmFloatingConstantExpression)expression, type, out discoveredErrors);
                 case EdmValueKind.Guid:
-                    return TryAssertGuidConstantAsType((IEdmGuidConstantExpression)expression, type, out discoveredErrors);
+                    return TryCastGuidConstantAsType((IEdmGuidConstantExpression)expression, type, out discoveredErrors);
                 case EdmValueKind.Integer:
-                    return TryAssertIntegerConstantAsType((IEdmIntegerConstantExpression)expression, type, out discoveredErrors);
+                    return TryCastIntegerConstantAsType((IEdmIntegerConstantExpression)expression, type, out discoveredErrors);
                 case EdmValueKind.String:
-                    return TryAssertStringConstantAsType((IEdmStringConstantExpression)expression, type, out discoveredErrors);
+                    return TryCastStringConstantAsType((IEdmStringConstantExpression)expression, type, out discoveredErrors);
                 case EdmValueKind.Duration:
-                    return TryAssertDurationConstantAsType((IEdmDurationConstantExpression)expression, type, out discoveredErrors);
+                    return TryCastDurationConstantAsType((IEdmDurationConstantExpression)expression, type, out discoveredErrors);
                 default:
                     discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                     return false;
             }
         }
 
-        internal static bool TryAssertNullAsType(this IEdmNullExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        internal static bool TryCastNullAsType(this IEdmNullExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsNullable)
             {
@@ -180,7 +177,7 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        internal static bool TryAssertPathAsType(this IEdmPathExpression expression, IEdmTypeReference type, IEdmType context, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
+        internal static bool TryCastPathAsType(this IEdmPathExpression expression, IEdmTypeReference type, IEdmType context, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
         {
             IEdmStructuredType structuredContext = context as IEdmStructuredType;
             if (structuredContext != null)
@@ -214,12 +211,12 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        internal static bool TryAssertIfAsType(this IEdmIfExpression expression, IEdmTypeReference type, IEdmType context, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
+        internal static bool TryCastIfAsType(this IEdmIfExpression expression, IEdmTypeReference type, IEdmType context, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
         {
             IEnumerable<EdmError> ifTrueErrors;
             IEnumerable<EdmError> ifFalseErrors;
-            bool success = TryAssertType(expression.TrueExpression, type, context, matchExactly, out ifTrueErrors);
-            success = TryAssertType(expression.FalseExpression, type, context, matchExactly, out ifFalseErrors) && success;
+            bool success = TryCast(expression.TrueExpression, type, context, matchExactly, out ifTrueErrors);
+            success = TryCast(expression.FalseExpression, type, context, matchExactly, out ifFalseErrors) && success;
             if (!success)
             {
                 List<EdmError> errorList = new List<EdmError>(ifTrueErrors);
@@ -234,7 +231,7 @@ namespace Microsoft.OData.Edm.Validation
             return success;
         }
 
-        internal static bool TryAssertRecordAsType(this IEdmRecordExpression expression, IEdmTypeReference type, IEdmType context, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
+        internal static bool TryCastRecordAsType(this IEdmRecordExpression expression, IEdmTypeReference type, IEdmType context, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
         {
             EdmUtil.CheckArgumentNull(expression, "expression");
             EdmUtil.CheckArgumentNull(type, "type");
@@ -259,7 +256,7 @@ namespace Microsoft.OData.Edm.Validation
                 else
                 {
                     IEnumerable<EdmError> recursiveErrors;
-                    if (!expressionProperty.Value.TryAssertType(typeProperty.Type, context, matchExactly, out recursiveErrors))
+                    if (!expressionProperty.Value.TryCast(typeProperty.Type, context, matchExactly, out recursiveErrors))
                     {
                         foreach (EdmError error in recursiveErrors)
                         {
@@ -292,7 +289,7 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        internal static bool TryAssertCollectionAsType(this IEdmCollectionExpression expression, IEdmTypeReference type, IEdmType context, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
+        internal static bool TryCastCollectionAsType(this IEdmCollectionExpression expression, IEdmTypeReference type, IEdmType context, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsCollection())
             {
@@ -306,7 +303,7 @@ namespace Microsoft.OData.Edm.Validation
             IEnumerable<EdmError> recursiveErrors;
             foreach (IEdmExpression element in expression.Elements)
             {
-                success = TryAssertType(element, collectionElementType, context, matchExactly, out recursiveErrors) && success;
+                success = TryCast(element, collectionElementType, context, matchExactly, out recursiveErrors) && success;
                 errors.AddRange(recursiveErrors);
             }
 
@@ -314,7 +311,7 @@ namespace Microsoft.OData.Edm.Validation
             return success;
         }
 
-        private static bool TryAssertGuidConstantAsType(IEdmGuidConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        private static bool TryCastGuidConstantAsType(IEdmGuidConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsGuid())
             {
@@ -326,7 +323,7 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        private static bool TryAssertFloatingConstantAsType(IEdmFloatingConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        private static bool TryCastFloatingConstantAsType(IEdmFloatingConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsFloating())
             {
@@ -338,7 +335,7 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        private static bool TryAssertDecimalConstantAsType(IEdmDecimalConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        private static bool TryCastDecimalConstantAsType(IEdmDecimalConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsDecimal())
             {
@@ -350,7 +347,7 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        private static bool TryAssertDateTimeOffsetConstantAsType(IEdmDateTimeOffsetConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        private static bool TryCastDateTimeOffsetConstantAsType(IEdmDateTimeOffsetConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsDateTimeOffset())
             {
@@ -362,19 +359,7 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        private static bool TryAssertDateTimeConstantAsType(IEdmDateTimeConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
-        {
-            if (!type.IsDateTime())
-            {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
-                return false;
-            }
-
-            discoveredErrors = Enumerable.Empty<EdmError>();
-            return true;
-        }
-
-        private static bool TryAssertDurationConstantAsType(IEdmDurationConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        private static bool TryCastDurationConstantAsType(IEdmDurationConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsDuration())
             {
@@ -386,7 +371,7 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        private static bool TryAssertBooleanConstantAsType(IEdmBooleanConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        private static bool TryCastBooleanConstantAsType(IEdmBooleanConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsBoolean())
             {
@@ -398,7 +383,7 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        private static bool TryAssertStringConstantAsType(IEdmStringConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        private static bool TryCastStringConstantAsType(IEdmStringConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsString())
             {
@@ -417,7 +402,7 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        private static bool TryAssertIntegerConstantAsType(IEdmIntegerConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        private static bool TryCastIntegerConstantAsType(IEdmIntegerConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsIntegral())
             {
@@ -428,22 +413,22 @@ namespace Microsoft.OData.Edm.Validation
             switch (type.PrimitiveKind())
             {
                 case EdmPrimitiveTypeKind.Int64:
-                    return TryAssertIntegerConstantInRange(expression, Int64.MinValue, Int64.MaxValue, out discoveredErrors);
+                    return TryCastIntegerConstantInRange(expression, Int64.MinValue, Int64.MaxValue, out discoveredErrors);
                 case EdmPrimitiveTypeKind.Int32:
-                    return TryAssertIntegerConstantInRange(expression, Int32.MinValue, Int32.MaxValue, out discoveredErrors);
+                    return TryCastIntegerConstantInRange(expression, Int32.MinValue, Int32.MaxValue, out discoveredErrors);
                 case EdmPrimitiveTypeKind.Int16:
-                    return TryAssertIntegerConstantInRange(expression, Int16.MinValue, Int16.MaxValue, out discoveredErrors);
+                    return TryCastIntegerConstantInRange(expression, Int16.MinValue, Int16.MaxValue, out discoveredErrors);
                 case EdmPrimitiveTypeKind.Byte:
-                    return TryAssertIntegerConstantInRange(expression, Byte.MinValue, Byte.MaxValue, out discoveredErrors);
+                    return TryCastIntegerConstantInRange(expression, Byte.MinValue, Byte.MaxValue, out discoveredErrors);
                 case EdmPrimitiveTypeKind.SByte:
-                    return TryAssertIntegerConstantInRange(expression, SByte.MinValue, SByte.MaxValue, out discoveredErrors);
+                    return TryCastIntegerConstantInRange(expression, SByte.MinValue, SByte.MaxValue, out discoveredErrors);
                 default:
                     discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                     return false;
             }
         }
 
-        private static bool TryAssertIntegerConstantInRange(IEdmIntegerConstantExpression expression, long min, long max, out IEnumerable<EdmError> discoveredErrors)
+        private static bool TryCastIntegerConstantInRange(IEdmIntegerConstantExpression expression, long min, long max, out IEnumerable<EdmError> discoveredErrors)
         {
             if (expression.Value < min || expression.Value > max)
             {
@@ -455,7 +440,7 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        private static bool TryAssertBinaryConstantAsType(IEdmBinaryConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        private static bool TryCastBinaryConstantAsType(IEdmBinaryConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsBinary())
             {

@@ -8,30 +8,12 @@
 
 //   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
-using System.Collections.Generic;
-
 namespace Microsoft.OData.Edm
 {
     /// <summary>
     /// Represents an EDM entity set.
     /// </summary>
-    public interface IEdmEntitySet : IEdmEntityContainerElement
+    public interface IEdmEntitySet : IEdmEntitySetBase, IEdmEntityContainerElement
     {
-        /// <summary>
-        /// Gets the entity type contained in this entity set.
-        /// </summary>
-        IEdmEntityType ElementType { get; }
-
-        /// <summary>
-        /// Gets the navigation targets of this entity set.
-        /// </summary>
-        IEnumerable<IEdmNavigationTargetMapping> NavigationTargets { get; }
-
-        /// <summary>
-        /// Finds the entity set that a navigation property targets.
-        /// </summary>
-        /// <param name="navigationProperty">The navigation property.</param>
-        /// /// <returns>The entity set that the navigation propertion targets, or null if no such entity set exists.</returns>
-        IEdmEntitySet FindNavigationTarget(IEdmNavigationProperty navigationProperty);
     }
 }

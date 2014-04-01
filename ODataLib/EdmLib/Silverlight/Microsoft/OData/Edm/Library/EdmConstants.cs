@@ -49,16 +49,6 @@ namespace Microsoft.OData.Edm.Library
         internal const string InternalUri = "http://schemas.microsoft.com/ado/2011/04/edm/internal";
 
         /// <summary>
-        /// The local name of the annotation that stores the data services version attribute for EDMX serialization.
-        /// </summary>
-        internal const string DataServiceVersion = "DataServiceVersion";
-
-        /// <summary>
-        /// The local name of the annotation that stores the max data services version attribute for EDMX serialization.
-        /// </summary>
-        internal const string MaxDataServiceVersion = "MaxDataServiceVersion";
-
-        /// <summary>
         /// The local name of the annotation that stores EDM version of a model.
         /// </summary>
         internal const string EdmVersionAnnotation = "EdmVersion";
@@ -67,23 +57,21 @@ namespace Microsoft.OData.Edm.Library
         internal const string FacetName_Precision = "Precision";
         internal const string FacetName_Scale = "Scale";
         internal const string FacetName_MaxLength = "MaxLength";
-        internal const string FacetName_FixedLength = "FixedLength";
         internal const string FacetName_Unicode = "Unicode";
         internal const string FacetName_Collation = "Collation";
         internal const string FacetName_Srid = "SRID";
 
         internal const string Value_UnknownType = "UnknownType";
         internal const string Value_UnnamedType = "UnnamedType";
-        internal const string Value_Max = "Max";
+        internal const string Value_Max = "max";
         internal const string Value_SridVariable = "Variable";
+        internal const string Value_ScaleVariable = "Variable";
 
-        internal const string Type_Association = "Association";
         internal const string Type_Collection = "Collection";
         internal const string Type_Complex = "Complex";
         internal const string Type_Entity = "Entity";
         internal const string Type_EntityReference = "EntityReference";
         internal const string Type_Enum = "Enum";
-        internal const string Type_Row = "Row";
 
         internal const string Type_Primitive = "Primitive";
         internal const string Type_Binary = "Binary";
@@ -97,5 +85,8 @@ namespace Microsoft.OData.Edm.Library
 
         internal const int Max_Precision = Int32.MaxValue;
         internal const int Min_Precision = 0;
+
+        /// <summary>The attribute name used on service operations and primitive properties to indicate their MIME type.</summary>
+        internal const string MimeTypeAttributeName = "MimeType";
     }
 }

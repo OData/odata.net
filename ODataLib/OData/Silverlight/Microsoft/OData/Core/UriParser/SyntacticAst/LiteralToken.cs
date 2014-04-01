@@ -14,7 +14,6 @@ namespace Microsoft.OData.Client.ALinq.UriParser
 namespace Microsoft.OData.Core.UriParser.Syntactic
 #endif
 {
-    using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Core.UriParser.Visitors;
@@ -58,7 +57,6 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         internal LiteralToken(object value, string originalText)
             : this(value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.originalText = originalText;
         }
 
@@ -87,7 +85,6 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         {
             get 
             {
-                DebugUtils.CheckNoExternalCallers(); 
                 return this.originalText;
             }
         }

@@ -20,6 +20,7 @@ namespace Microsoft.OData.Core.UriParser
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -36,7 +37,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>Whether the <paramref name="tokenKind"/> is a literal type.</returns>
         internal static Boolean IsLiteralType(this ExpressionTokenKind tokenKind)
         {
-            DebugUtils.CheckNoExternalCallers();
             switch (tokenKind)
             {
                 case ExpressionTokenKind.BinaryLiteral:
@@ -65,8 +65,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The value represented by the next token.</returns>
         internal static object ReadLiteralToken(this ExpressionLexer expressionLexer)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             expressionLexer.NextToken();
 
             if (expressionLexer.CurrentToken.Kind.IsLiteralType())
@@ -87,17 +85,8 @@ namespace Microsoft.OData.Core.UriParser
             Debug.Assert(expressionLexer.CurrentToken.Kind == ExpressionTokenKind.NullLiteral, "this.lexer.CurrentToken.InternalKind == ExpressionTokenKind.NullLiteral");
 
             expressionLexer.NextToken();
-            ODataUriNullValue nullValue = new ODataUriNullValue();
-
-            if (expressionLexer.ExpressionText == ExpressionConstants.KeywordNull)
-            {
-                return nullValue;
-            }
-
-            int nullLiteralLength = ExpressionConstants.LiteralSingleQuote.Length * 2 + ExpressionConstants.KeywordNull.Length;
-            int startOfTypeIndex = ExpressionConstants.LiteralSingleQuote.Length + ExpressionConstants.KeywordNull.Length;
-            nullValue.TypeName = expressionLexer.ExpressionText.Substring(startOfTypeIndex, expressionLexer.ExpressionText.Length - nullLiteralLength);
-            return nullValue;   
+            ODataNullValue nullValue = new ODataNullValue();
+            return nullValue;
         }
 
         /// <summary>
@@ -131,15 +120,12 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The literal query token or null if something else was found.</returns>
         private static object TryParseLiteral(this ExpressionLexer expressionLexer)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(expressionLexer.CurrentToken.Kind.IsLiteralType(), "TryParseLiteral called when not at a literal type token");
 
             switch (expressionLexer.CurrentToken.Kind)
             {
                 case ExpressionTokenKind.BooleanLiteral:
                     return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetBoolean(false));
-                case ExpressionTokenKind.DateTimeLiteral:
-                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTime, false));
                 case ExpressionTokenKind.DecimalLiteral:
                     return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetDecimal(false));
                 case ExpressionTokenKind.NullLiteral:

@@ -10,7 +10,7 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Internal;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Edm.Library
 {

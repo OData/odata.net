@@ -40,9 +40,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private readonly EntityRangeVariable rangeVariable;
 
         /// <summary>
-        /// The entity set containing the collection that this range variable iterates over.
+        /// The navigation source containing the collection that this range variable iterates over.
         /// </summary>
-        private readonly IEdmEntitySet entitySet;
+        private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
         /// Creates an <see cref="EntityRangeVariableReferenceNode"/>.
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(rangeVariable, "rangeVariable");
             this.name = name;
-            this.entitySet = rangeVariable.EntitySet;
+            this.navigationSource = rangeVariable.NavigationSource;
             this.entityTypeReference = rangeVariable.EntityTypeReference;
             this.rangeVariable = rangeVariable;
         }
@@ -93,11 +93,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the entity set containing the collection that this range variable iterates over.
+        /// Gets the navigation source containing the collection that this range variable iterates over.
         /// </summary>
-        public override IEdmEntitySet EntitySet
+        public override IEdmNavigationSource NavigationSource
         {
-            get { return this.entitySet; }
+            get { return this.navigationSource; }
         }
 
         /// <summary>
@@ -107,7 +107,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return InternalQueryNodeKind.EntityRangeVariableReference;
             }
         }
@@ -121,7 +120,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <exception cref="System.ArgumentNullException">Throws if the input visitor is null.</exception>
         public override T Accept<T>(QueryNodeVisitor<T> visitor)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(visitor, "visitor");
             return visitor.Visit(this);
         }

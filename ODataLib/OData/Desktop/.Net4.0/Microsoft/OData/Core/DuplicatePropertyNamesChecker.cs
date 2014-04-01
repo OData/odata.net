@@ -14,7 +14,6 @@ namespace Microsoft.OData.Core
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using Microsoft.OData.Core.JsonLight;
 
     #endregion Namespaces
@@ -95,7 +94,6 @@ namespace Microsoft.OData.Core
         /// <param name="property">The property to be checked.</param>
         internal void CheckForDuplicatePropertyNames(ODataProperty property)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(property != null, "property != null");
 #if DEBUG
             Debug.Assert(this.startNavigationLinkName == null, "CheckForDuplicatePropertyNamesOnNavigationLinkStart was followed by a CheckForDuplicatePropertyNames(ODataProperty).");
@@ -119,7 +117,7 @@ namespace Microsoft.OData.Core
                 // If we don't allow duplication in the first place, fail, since there is no valid case where a simple property coexists with anything else with the same name.
                 if (existingDuplicationRecord.DuplicationKind == DuplicationKind.Prohibited ||
                     duplicationKind == DuplicationKind.Prohibited ||
-                    (existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty && existingDuplicationRecord.AssociationLink != null) ||
+                    (existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty && existingDuplicationRecord.AssociationLinkName != null) ||
                     !this.allowDuplicateProperties)
                 {
                     throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(propertyName));
@@ -141,7 +139,6 @@ namespace Microsoft.OData.Core
         /// <param name="navigationLink">The navigation link to be checked.</param>
         internal void CheckForDuplicatePropertyNamesOnNavigationLinkStart(ODataNavigationLink navigationLink)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationLink != null, "navigationLink != null");
 #if DEBUG
             this.startNavigationLinkName = navigationLink.Name;
@@ -166,10 +163,9 @@ namespace Microsoft.OData.Core
         /// <param name="navigationLink">The navigation link to be checked.</param>
         /// <param name="isExpanded">true if the link is expanded, false otherwise.</param>
         /// <param name="isCollection">true if the navigation link is a collection, false if it's a singleton or null if we don't know.</param>
-        /// <returns>The association link with the same name if there already was one.</returns>
-        internal ODataAssociationLink CheckForDuplicatePropertyNames(ODataNavigationLink navigationLink, bool isExpanded, bool? isCollection)
+        /// <returns>The association link uri with the same name if there already was one.</returns>
+        internal Uri CheckForDuplicatePropertyNames(ODataNavigationLink navigationLink, bool isExpanded, bool? isCollection)
         {
-            DebugUtils.CheckNoExternalCallers();
 #if DEBUG
             this.startNavigationLinkName = null;
 #endif
@@ -190,7 +186,7 @@ namespace Microsoft.OData.Core
 
                 if (existingDuplicationRecord.DuplicationKind == DuplicationKind.PropertyAnnotationSeen ||
                     (existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty &&
-                    existingDuplicationRecord.AssociationLink != null &&
+                    existingDuplicationRecord.AssociationLinkName != null &&
                     existingDuplicationRecord.NavigationLink == null))
                 {
                     // If the existing one is just an association link, update it to include the navigation link portion as well
@@ -230,35 +226,35 @@ namespace Microsoft.OData.Core
                     }
                 }
 
-                return existingDuplicationRecord.AssociationLink;
+                return existingDuplicationRecord.AssociationLinkUrl;
             }
         }
 
         /// <summary>
-        /// Check the <paramref name="associationLink"/> for duplicate property names in an entry or complex value.
+        /// Check the <paramref name="associationLinkName"/> for duplicate property names in an entry or complex value.
         /// If not explicitly allowed throw when duplicate properties are detected.
         /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames  
         /// or ODataReaderBehavior.AllowDuplicatePropertyNames for further details.
         /// </summary>
-        /// <param name="associationLink">The association link to be checked.</param>
+        /// <param name="associationLinkName">The name of association link to be checked.</param>
+        /// <param name="associationLinkUrl">The url of association link to be checked.</param>
         /// <returns>The navigation link with the same name as the association link if there's one.</returns>
-        internal ODataNavigationLink CheckForDuplicateAssociationLinkNames(ODataAssociationLink associationLink)
+        internal ODataNavigationLink CheckForDuplicateAssociationLinkNames(string associationLinkName, Uri associationLinkUrl)
         {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(associationLink != null, "associationLink != null");
+            Debug.Assert(associationLinkName != null, "associationLinkName != null");
 #if DEBUG
             Debug.Assert(this.startNavigationLinkName == null, "CheckForDuplicatePropertyNamesOnNavigationLinkStart was followed by a CheckForDuplicatePropertyNames(ODataProperty).");
 #endif
 
             DuplicationRecord existingDuplicationRecord;
-            string associationLinkName = associationLink.Name;
             if (!this.TryGetDuplicationRecord(associationLinkName, out existingDuplicationRecord))
             {
                 this.propertyNameCache.Add(
                     associationLinkName,
                     new DuplicationRecord(DuplicationKind.NavigationProperty)
                     {
-                        AssociationLink = associationLink
+                        AssociationLinkName = associationLinkName,
+                        AssociationLinkUrl = associationLinkUrl
                     });
 
                 return null;
@@ -266,13 +262,14 @@ namespace Microsoft.OData.Core
             else
             {
                 if (existingDuplicationRecord.DuplicationKind == DuplicationKind.PropertyAnnotationSeen ||
-                    (existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty && existingDuplicationRecord.AssociationLink == null))
+                    (existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty && existingDuplicationRecord.AssociationLinkName == null))
                 {
                     // The only valid case for a duplication with association link is if the existing record is for a navigation property
                     // which doesn't have its association link yet.
                     // In this case just mark the navigation property as having found its association link.
                     existingDuplicationRecord.DuplicationKind = DuplicationKind.NavigationProperty;
-                    existingDuplicationRecord.AssociationLink = associationLink;
+                    existingDuplicationRecord.AssociationLinkName = associationLinkName;
+                    existingDuplicationRecord.AssociationLinkUrl = associationLinkUrl;
                 }
                 else
                 {
@@ -289,8 +286,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void Clear()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (this.propertyNameCache != null)
             {
                 this.propertyNameCache.Clear();
@@ -305,7 +300,6 @@ namespace Microsoft.OData.Core
         /// <param name="annotationValue">The valud of the annotation to add.</param>
         internal void AddODataPropertyAnnotation(string propertyName, string annotationName, object annotationValue)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             Debug.Assert(JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName), "annotationName must be an OData annotation.");
@@ -337,7 +331,6 @@ namespace Microsoft.OData.Core
         /// <param name="annotationName">The name of the annotation to add.</param>
         internal void AddCustomPropertyAnnotation(string propertyName, string annotationName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             Debug.Assert(!JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName), "annotationName must not be an OData annotation.");
@@ -364,7 +357,6 @@ namespace Microsoft.OData.Core
         /// <returns>Enumeration of pairs of OData annotation name and and the annotation value, or null if there are no OData annotations for the property.</returns>
         internal Dictionary<string, object> GetODataPropertyAnnotations(string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(propertyName != null, "propertyName != null");
 
             DuplicationRecord duplicationRecord;
@@ -390,7 +382,6 @@ namespace Microsoft.OData.Core
         /// </remarks>
         internal void MarkPropertyAsProcessed(string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(propertyName != null, "propertyName != null");
 
             DuplicationRecord duplicationRecord;
@@ -402,24 +393,6 @@ namespace Microsoft.OData.Core
 
             ThrowIfPropertyIsProcessed(propertyName, duplicationRecord);
             duplicationRecord.PropertyODataAnnotations = propertyAnnotationsProcessedToken;
-        }
-
-        /// <summary>
-        /// Returns the names of all properties which have not been marked as processed through <see cref="MarkPropertyAsProcessed"/>.
-        /// </summary>
-        /// <returns>A set of property names.</returns>
-        internal IEnumerable<string> GetAllUnprocessedProperties()
-        {
-            DebugUtils.CheckNoExternalCallers();
-
-            if (this.propertyNameCache == null)
-            {
-                return Enumerable.Empty<string>();
-            }
-            
-            return this.propertyNameCache
-                .Where(IsPropertyUnprocessed)
-                .Select(property => property.Key);
         }
 
         /// <summary>
@@ -521,7 +494,7 @@ namespace Microsoft.OData.Core
         private void CheckNavigationLinkDuplicateNameForExistingDuplicationRecord(string propertyName, DuplicationRecord existingDuplicationRecord)
         {
             if (existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty &&
-                existingDuplicationRecord.AssociationLink != null &&
+                existingDuplicationRecord.AssociationLinkUrl != null &&
                 existingDuplicationRecord.NavigationLink == null)
             {
                 // Existing one is just an association link, so the new one is a navigation link portion which is OK always.
@@ -590,9 +563,14 @@ namespace Microsoft.OData.Core
             public ODataNavigationLink NavigationLink { get; set; }
 
             /// <summary>
-            /// The association link if it was already found for this property.
+            /// The association link name if it was already found for this property.
             /// </summary>
-            public ODataAssociationLink AssociationLink { get; set; }
+            public string AssociationLinkName { get; set; }
+
+            /// <summary>
+            /// The association link url if it was already found for this property.
+            /// </summary>
+            public Uri AssociationLinkUrl { get; set; }
 
             /// <summary>
             /// true if we know for sure that the navigation property with the property name is a collection,

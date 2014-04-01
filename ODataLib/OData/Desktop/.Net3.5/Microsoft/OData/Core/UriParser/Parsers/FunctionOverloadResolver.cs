@@ -10,13 +10,12 @@
 
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
+    using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Metadata;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>
@@ -26,55 +25,84 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     internal static class FunctionOverloadResolver
     {
         /// <summary>
-        /// Given a list of possible operations and a list of parameter names, choose a single operation that exactly matches
-        /// the parameter names. If more than one operation matches, throw.
+        /// Try to resolve a function from the given inputs.
         /// </summary>
-        /// <remarks>
-        /// Binding parameters will be ignored in this method. Only non-binding parameters are matched.
-        /// </remarks>
-        /// <param name="operationImports">The list of operation imports to search.</param>
-        /// <param name="parameters">The list of non-binding parameter names to match.</param>
-        /// <param name="operationName">Name of the operation. Only used for error strings.</param>
-        /// <returns>A single operation import that matches the parameter names exactly.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri parsing does not go through the same resolvers/settings that payload reading/writing does.")]
-        internal static IEdmOperationImport ResolveOverloadsByParameterNames(ICollection<IEdmOperationImport> operationImports, ICollection<string> parameters, string operationName)
+        /// <param name="identifier">The identifier of the function that we're trying to find</param>
+        /// <param name="parameterNames">the names of the parameters to search for.</param>
+        /// <param name="model">the model to use to look up the operation import</param>
+        /// <param name="matchingOperationImport">The single matching function found.</param>
+        /// <returns>True if a function was matched, false otherwise. Will throw if the model has illegal operation imports.</returns>
+        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
+        internal static bool ResolveOperationImportFromList(string identifier, IList<string> parameterNames, IEdmModel model, out IEdmOperationImport matchingOperationImport)
         {
-            DebugUtils.CheckNoExternalCallers();
-            IEdmOperationImport candidateFunction = null;
-            foreach (IEdmOperationImport operationImport in operationImports)
+            IList<IEdmOperationImport> candidateMatchingOperationImports = null;
+            IList<IEdmActionImport> foundActionImportsWhenLookingForFunctions = new List<IEdmActionImport>();
+
+            try
             {
-                IEnumerable<IEdmOperationParameter> parametersToMatch = operationImport.Parameters;
-
-                // bindable functions don't require the first parameter be specified, since its already implied in the path.
-                if (operationImport.IsBindable)
+                if (parameterNames.Count > 0)
                 {
-                    parametersToMatch = parametersToMatch.Skip(1);
-                }
-
-                // if any parameter count is different, don't consider it a match.
-                List<IEdmOperationParameter> functionImportParameters = parametersToMatch.ToList();
-                if (functionImportParameters.Count != parameters.Count)
-                {
-                    continue;
-                }
-
-                // if any parameter was missing, don't consider it a match.
-                if (functionImportParameters.Any(p => parameters.All(k => k != p.Name)))
-                {
-                    continue;
-                }
-
-                if (candidateFunction == null)
-                {
-                    candidateFunction = operationImport;
+                    // In this case we have to return a function so filter out actions because the number of parameters > 0.
+                    candidateMatchingOperationImports = model.FindDeclaredOperationImports(identifier).RemoveActionImports(out foundActionImportsWhenLookingForFunctions).FilterFunctionsByParameterNames(parameterNames).Cast<IEdmOperationImport>().ToList();
                 }
                 else
                 {
-                    throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_NoSingleMatchFound(operationName, string.Join(", ", parameters.ToArray())));
+                    candidateMatchingOperationImports = model.FindDeclaredOperationImports(identifier).ToList();
                 }
             }
+            catch (Exception exc)
+            {
+                if (!ExceptionUtils.IsCatchableExceptionType(exc))
+                {
+                    throw;
+                }
 
-            return candidateFunction;
+                throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_FoundInvalidOperationImport(identifier), exc);
+            }
+
+            if (foundActionImportsWhenLookingForFunctions.Count > 0)
+            {
+                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
+            }
+
+            // If any of the things returned are an action, it better be the only thing returned, and there can't be parameters in the URL
+            if (candidateMatchingOperationImports.Any(f => f.IsActionImport()))
+            {
+                if (candidateMatchingOperationImports.Count > 1)
+                {
+                    if (candidateMatchingOperationImports.Any(o => o.IsFunctionImport()))
+                    {
+                        throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads(identifier));
+                    }
+                    else
+                    {
+                        throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleActionImportOverloads(identifier));
+                    }
+                }
+
+                if (parameterNames.Count() != 0)
+                {
+                    throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
+                }
+
+                matchingOperationImport = candidateMatchingOperationImports.Single();
+                return true;
+            }
+
+            if (candidateMatchingOperationImports.Count == 0)
+            {
+                matchingOperationImport = null;
+                return false;
+            }
+            
+            if (candidateMatchingOperationImports.Count > 1)
+            {
+                throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads(identifier));
+            }
+
+            matchingOperationImport = candidateMatchingOperationImports.Single();
+
+            return matchingOperationImport != null;
         }
 
         /// <summary>
@@ -84,11 +112,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="parameterNames">the names of the parameters to search for.</param>
         /// <param name="bindingType">the type of the previous segment</param>
         /// <param name="model">the model to use to look up the operation import</param>
-        /// <param name="matchingFunctionImport">The single matching function found.</param>
+        /// <param name="matchingOperation">The single matching function found.</param>
         /// <returns>True if a function was matched, false otherwise. Will throw if the model has illegal operation imports.</returns>
-        internal static bool ResolveFunctionsFromList(string identifier, IList<string> parameterNames, IEdmType bindingType, IEdmModel model, out IEdmOperationImport matchingFunctionImport)
+        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
+        internal static bool ResolveOperationFromList(string identifier, IEnumerable<string> parameterNames, IEdmType bindingType, IEdmModel model, out IEdmOperation matchingOperation)
         {
-            DebugUtils.CheckNoExternalCallers();
+            // TODO: 1631831 - update code that is duplicate between operation and operation import, add more tests.
 
             // If the previous segment is an open type, the service action name is required to be fully qualified or else we always treat it as an open property name.
             if (bindingType != null)
@@ -96,47 +125,80 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 // TODO: look up actual container names here?
                 if (bindingType.IsOpenType() && !identifier.Contains("."))
                 {
-                    matchingFunctionImport = null;
+                    matchingOperation = null;
                     return false;
                 }
             }
 
-            // if the model implements the extensions interface, then leave resolution entirely up to the user.
-            var extendedModel = model as IODataUriParserModelExtensions;
-            if (extendedModel != null)
+            IList<IEdmOperation> candidateMatchingOperations = null;
+
+            // FindDeclaredBoundOperations can be implemented by anyone and it could throw any type of exception
+            // so catching all of them and simply putting it in the inner exception.
+            try
             {
-                matchingFunctionImport = extendedModel.FindFunctionImportByBindingParameterType(bindingType, identifier, parameterNames);
-                if (matchingFunctionImport == null)
+                if (bindingType != null)
                 {
-                    return false;
+                    candidateMatchingOperations = model.FindDeclaredBoundOperations(identifier, bindingType).ToList();
+                }
+                else
+                {
+                    candidateMatchingOperations = model.FindDeclaredOperations(identifier).ToList();
+                }
+            }
+            catch (Exception exc)
+            {
+                if (ExceptionUtils.IsCatchableExceptionType(exc))
+                {
+                    throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_FoundInvalidOperation(identifier), exc);
                 }
 
-                return true;
+                throw;
             }
 
-            // Get all the possible functions by name and binding type
-            // For this method to end up NOT throwing, this call must return a single action or 1 or more functions
-            IList<IEdmOperationImport> operationImports = model.FindFunctionImportsBySpecificBindingParameterType(bindingType, identifier).ToList();
-            if (operationImports.Count == 0)
+            IList<IEdmAction> foundActionsWhenLookingForFunctions = new List<IEdmAction>();
+            int parameterNamesCount = parameterNames.Count();
+
+            if (bindingType != null)
             {
-                matchingFunctionImport = null;
-                return false;
+                candidateMatchingOperations = candidateMatchingOperations.EnsureOperationsBoundWithBindingParameter().ToList();
             }
 
-            Debug.Assert(operationImports != null && operationImports.Count > 0, "Should have returned at least one operation import to get here.");
-            Debug.Assert(operationImports.All(f => f.Name == identifier.Split('.').Last()), "list of possible functions must have same name as identifier");
-
-            if (!operationImports.AllHaveEqualReturnTypeAndAttributes())
+            // If the number of parameters > 0 then this has to be a function as actions can't have parameters on the uri only in the payload. Filter further by parameters in this case, otherwise don't.
+            if (parameterNamesCount > 0)
             {
-                throw new ODataException(ODataErrorStrings.RequestUriProcessor_FoundInvalidFunctionImport(identifier));
+                // can only be a function as only functions have parameters on the uri.
+                candidateMatchingOperations = candidateMatchingOperations.RemoveActions(out foundActionsWhenLookingForFunctions).FilterFunctionsByParameterNames(parameterNames).Cast<IEdmOperation>().ToList();
+            }
+            else if (bindingType != null)
+            {
+                // Filter out functions with more than one parameter. Actions should not be filtered as the parameters are in the payload not the uri
+                candidateMatchingOperations = candidateMatchingOperations.Where(o => (o.IsFunction() && o.Parameters.Count() == 1) || o.IsAction()).ToList();
+            }
+            else
+            {
+                // Filter out functions with any parameters
+                candidateMatchingOperations = candidateMatchingOperations.Where(o => (o.IsFunction() && !o.Parameters.Any()) || o.IsAction()).ToList();
+            }
+
+            // Only filter if there is more than one and its needed.
+            if (candidateMatchingOperations.Count > 1)
+            {
+                candidateMatchingOperations = candidateMatchingOperations.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(bindingType).ToList();
             }
 
             // If any of the things returned are an action, it better be the only thing returned, and there can't be parameters in the URL
-            if (operationImports.Any(f => f.IsSideEffecting))
+            if (candidateMatchingOperations.Any(f => f.IsAction()))
             {
-                if (operationImports.Count > 1)
+                if (candidateMatchingOperations.Count > 1)
                 {
-                    throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleActionOverloads(identifier));
+                    if (candidateMatchingOperations.Any(o => o.IsFunction()))
+                    {
+                        throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationOverloads(identifier));
+                    }
+                    else
+                    {
+                        throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleActionOverloads(identifier));
+                    }
                 }
 
                 if (parameterNames.Count() != 0)
@@ -144,13 +206,22 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
                 }
 
-                matchingFunctionImport = operationImports.Single();
+                matchingOperation = candidateMatchingOperations.Single();
                 return true;
             }
 
-            // Functions - resolve overloads as needed
-            matchingFunctionImport = ResolveOverloadsByParameterNames(operationImports, parameterNames, identifier);
-            return matchingFunctionImport != null;
+            if (foundActionsWhenLookingForFunctions.Count > 0)
+            {
+                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
+            }
+
+            if (candidateMatchingOperations.Count > 1)
+            {
+                throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_NoSingleMatchFound(identifier, string.Join(",", parameterNames.ToArray())));
+            }
+
+            matchingOperation = candidateMatchingOperations.SingleOrDefault();
+            return matchingOperation != null;
         }
     }
 }

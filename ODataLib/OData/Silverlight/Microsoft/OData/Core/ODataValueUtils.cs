@@ -34,8 +34,6 @@ namespace Microsoft.OData.Core
         /// <returns>The given object as an ODataValue.</returns>
         internal static ODataValue ToODataValue(this object objectToConvert)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (objectToConvert == null)
             {
                 return new ODataNullValue();
@@ -60,8 +58,6 @@ namespace Microsoft.OData.Core
         /// <returns>The value behind the given ODataValue.</returns>
         internal static object FromODataValue(this ODataValue odataValue)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (odataValue is ODataNullValue)
             {
                 return null;

@@ -15,9 +15,10 @@ namespace Microsoft.OData.Core.Atom
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Xml;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -35,17 +36,16 @@ namespace Microsoft.OData.Core.Atom
         /// Constructor.
         /// </summary>
         /// <param name="atomInputContext">The input to read the payload from.</param>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read (in case of entry reader) or entries in the feed to be read (in case of feed reader).</param>
         /// <param name="readingFeed">true if the reader is created for reading a feed; false when it is created for reading an entry.</param>
         internal ODataAtomReader(
             ODataAtomInputContext atomInputContext, 
-            IEdmEntitySet entitySet, 
+            IEdmNavigationSource navigationSource, 
             IEdmEntityType expectedEntityType, 
             bool readingFeed)
             : base(atomInputContext, readingFeed, null /*listener*/)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(atomInputContext != null, "atomInputContext != null");
             Debug.Assert(
                 expectedEntityType == null || atomInputContext.Model.IsUserModel(),
@@ -54,7 +54,7 @@ namespace Microsoft.OData.Core.Atom
             this.atomInputContext = atomInputContext;
             this.atomEntryAndFeedDeserializer = new ODataAtomEntryAndFeedDeserializer(atomInputContext);
 
-            this.EnterScope(new Scope(ODataReaderState.Start, /*item*/ null, entitySet, expectedEntityType));
+            this.EnterScope(new Scope(ODataReaderState.Start, /*item*/ null, navigationSource, expectedEntityType, /*contextUri*/null));
         }
 
         /// <summary>
@@ -687,7 +687,7 @@ namespace Microsoft.OData.Core.Atom
 
                 var entityType = entryState.EntityType;
 
-                if (entryState.MediaLinkEntry == null && entityType != null && this.atomInputContext.Model.HasDefaultStream(entityType))
+                if (entryState.MediaLinkEntry == null && entityType != null && entityType.HasStream)
                 {
                     ODataAtomEntryAndFeedDeserializer.EnsureMediaResource(entryState);
                 }
@@ -881,7 +881,7 @@ namespace Microsoft.OData.Core.Atom
             ///                       or entries in the expanded feed).
             /// In all cases the specified type must be an entity type.</remarks>
             internal AtomScope(ODataReaderState state, ODataItem item, IEdmEntityType expectedEntityType)
-                : base(state, item, /*entitySet*/ null, expectedEntityType)
+                : base(state, item, /*navigationSource*/ null, expectedEntityType, /*contextUri*/null)
             {
             }
 

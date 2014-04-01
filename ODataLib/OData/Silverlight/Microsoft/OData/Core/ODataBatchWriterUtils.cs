@@ -29,7 +29,6 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created batch boundary as string.</returns>
         internal static string CreateBatchBoundary(bool isResponse)
         {
-            DebugUtils.CheckNoExternalCallers();
             string template = isResponse ? ODataConstants.BatchResponseBoundaryTemplate : ODataConstants.BatchRequestBoundaryTemplate;
             return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
         }
@@ -41,7 +40,6 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created changeset boundary as string.</returns>
         internal static string CreateChangeSetBoundary(bool isResponse)
         {
-            DebugUtils.CheckNoExternalCallers();
             string template = isResponse ? ODataConstants.ResponseChangeSetBoundaryTemplate : ODataConstants.RequestChangeSetBoundaryTemplate;
             return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
         }
@@ -53,7 +51,6 @@ namespace Microsoft.OData.Core
         /// <returns>The multipart/mixed content type with the specified boundary (if any).</returns>
         internal static string CreateMultipartMixedContentType(string boundary)
         {
-            DebugUtils.CheckNoExternalCallers();
             return string.Format(
                 CultureInfo.InvariantCulture,
                 "{0}; {1}={2}",
@@ -70,7 +67,6 @@ namespace Microsoft.OData.Core
         /// <param name="firstBoundary">true if this is the first start boundary.</param>
         internal static void WriteStartBoundary(TextWriter writer, string boundary, bool firstBoundary)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(boundary != null, "boundary != null");
 
@@ -93,7 +89,6 @@ namespace Microsoft.OData.Core
         /// <param name="missingStartBoundary">true if there was no start boundary written before this end boundary.</param>
         internal static void WriteEndBoundary(TextWriter writer, string boundary, bool missingStartBoundary)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(boundary != null, "boundary != null");
 
@@ -115,35 +110,45 @@ namespace Microsoft.OData.Core
         /// <param name="writer">Writer to write to.</param>
         /// <param name="httpMethod">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
-        internal static void WriteRequestPreamble(TextWriter writer, string httpMethod, Uri uri)
+        /// <param name="inChangeSetBound">Whether we are in ChangeSetBound.</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        internal static void WriteRequestPreamble(TextWriter writer, string httpMethod, Uri uri, bool inChangeSetBound, string contentId)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(uri != null, "uri != null");
-            Debug.Assert(uri.IsAbsoluteUri || UriUtilsCommon.UriToString(uri).StartsWith("$", StringComparison.Ordinal), "uri.IsAbsoluteUri || uri.OriginalString.StartsWith(\"$\")");
+            Debug.Assert(uri.IsAbsoluteUri || UriUtils.UriToString(uri).StartsWith("$", StringComparison.Ordinal), "uri.IsAbsoluteUri || uri.OriginalString.StartsWith(\"$\")");
 
             // write the headers
             writer.WriteLine("{0}: {1}", ODataConstants.ContentTypeHeader, MimeConstants.MimeApplicationHttp);
             writer.WriteLine("{0}: {1}", ODataConstants.ContentTransferEncoding, ODataConstants.BatchContentTransferEncoding);
+            if (inChangeSetBound && contentId != null)
+            {
+                writer.WriteLine("{0}: {1}", ODataConstants.ContentIdHeader, contentId);
+            }
 
             // write separator line between headers and the request line
             writer.WriteLine();
 
-            writer.WriteLine("{0} {1} {2}", httpMethod, UriUtilsCommon.UriToString(uri), ODataConstants.HttpVersionInBatching);
+            writer.WriteLine("{0} {1} {2}", httpMethod, UriUtils.UriToString(uri), ODataConstants.HttpVersionInBatching);
         }
 
         /// <summary>
         /// Writes the headers and response line.
         /// </summary>
         /// <param name="writer">Writer to write to.</param>
-        internal static void WriteResponsePreamble(TextWriter writer)
+        /// <param name="inChangeSetBound">Whether we are in ChangeSetBound.</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        internal static void WriteResponsePreamble(TextWriter writer, bool inChangeSetBound, string contentId)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             // write the headers
             writer.WriteLine("{0}: {1}", ODataConstants.ContentTypeHeader, MimeConstants.MimeApplicationHttp);
             writer.WriteLine("{0}: {1}", ODataConstants.ContentTransferEncoding, ODataConstants.BatchContentTransferEncoding);
+            if (inChangeSetBound && contentId != null)
+            {
+                writer.WriteLine("{0}: {1}", ODataConstants.ContentIdHeader, contentId);
+            }
 
             // write separator line between headers and the response line
             writer.WriteLine();
@@ -156,7 +161,6 @@ namespace Microsoft.OData.Core
         /// <param name="changeSetBoundary">The boundary string to use for the change set.</param>
         internal static void WriteChangeSetPreamble(TextWriter writer, string changeSetBoundary)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(changeSetBoundary != null, "changeSetBoundary != null");
 
             string multipartContentType = CreateMultipartMixedContentType(changeSetBoundary);

@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
 #if ODATALIB || ODATALIB_QUERY
 namespace Microsoft.OData.Core
 #else
-namespace Microsoft.OData.Edm.Csdl.Internal
+namespace Microsoft.OData.Edm.Csdl
 #endif
 #endif
 #endif
@@ -46,9 +46,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <exception cref="System.OverflowException">Throws if the given duration is greater than P10675199DT2H48M5.4775807S or less than P10675199DT2H48M5.4775807S</exception>
         internal static TimeSpan ParseDuration(string value)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             if (value == null || !DayTimeDurationValidator.IsMatch(value))
             {
                 throw new FormatException(Strings.ValueParser_InvalidDuration(value));
@@ -65,9 +62,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
         internal static bool TryParseBinary(string value, out byte[] result)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             if (value.Length % 2 != 0)
             {
                 result = null;
@@ -105,9 +99,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
         internal static bool TryParseBool(string value, out bool? result)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             switch (value.Length)
             {
                 case 4:
@@ -157,29 +148,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         }
 
         /// <summary>
-        /// Attempts to parse a DateTime value from the specified text.
-        /// </summary>
-        /// <param name="value">Input string</param>
-        /// <param name="result">The DateTime resulting from parsing the string value</param>
-        /// <returns>true if the value was parsed successfully, false otherwise</returns>
-        internal static bool TryParseDateTime(string value, out DateTime? result)
-        {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
-            try
-            {
-                result = PlatformHelper.ConvertStringToDateTime(value);
-                return true;
-            }
-            catch (FormatException)
-            {
-                result = null;
-                return false;
-            }
-        }
-
-        /// <summary>
         /// Attempts to parse a TimeSpan value from the specified text.
         /// </summary>
         /// <param name="value">Input string</param>
@@ -187,15 +155,17 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
         internal static bool TryParseDuration(string value, out TimeSpan? result)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             try
             {
                 result = EdmValueParser.ParseDuration(value);
                 return true;
             }
             catch (FormatException)
+            {
+                result = null;
+                return false;
+            }
+            catch (OverflowException)
             {
                 result = null;
                 return false;
@@ -210,15 +180,17 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
         internal static bool TryParseDateTimeOffset(string value, out DateTimeOffset? result)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             try
             {
                 result = PlatformHelper.ConvertStringToDateTimeOffset(value);
                 return true;
             }
             catch (FormatException)
+            {
+                result = null;
+                return false;
+            }
+            catch (ArgumentOutOfRangeException)
             {
                 result = null;
                 return false;
@@ -233,15 +205,17 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
         internal static bool TryParseInt(string value, out int? result)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             try
             {
                 result = XmlConvert.ToInt32(value);
                 return true;
             }
             catch (FormatException)
+            {
+                result = null;
+                return false;
+            }
+            catch (OverflowException)
             {
                 result = null;
                 return false;
@@ -256,15 +230,17 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
         internal static bool TryParseLong(string value, out long? result)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             try
             {
                 result = XmlConvert.ToInt64(value);
                 return true;
             }
             catch (FormatException)
+            {
+                result = null;
+                return false;
+            }
+            catch (OverflowException)
             {
                 result = null;
                 return false;
@@ -279,15 +255,17 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
         internal static bool TryParseDecimal(string value, out decimal? result)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             try
             {
                 result = XmlConvert.ToDecimal(value);
                 return true;
             }
             catch (FormatException)
+            {
+                result = null;
+                return false;
+            }
+            catch (OverflowException)
             {
                 result = null;
                 return false;
@@ -302,15 +280,17 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
         internal static bool TryParseFloat(string value, out double? result)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             try
             {
                 result = XmlConvert.ToDouble(value);
                 return true;
             }
             catch (FormatException)
+            {
+                result = null;
+                return false;
+            }
+            catch (OverflowException)
             {
                 result = null;
                 return false;
@@ -325,9 +305,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
         internal static bool TryParseGuid(string value, out Guid? result)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             try
             {
                 result = XmlConvert.ToGuid(value);
@@ -348,9 +325,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
         private static bool TryParseCharAsBinary(char c, out byte b)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             uint v = (uint)c - (uint)'0';
             if (v >= 0 && v <= 9)
             {

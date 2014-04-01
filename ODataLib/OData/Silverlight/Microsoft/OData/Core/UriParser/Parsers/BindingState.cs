@@ -15,13 +15,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
+    using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>
     /// Encapsulates the state of metadata binding.
     /// TODO finish moving fields from MetadataBinder here and see if anything can be removed.
     /// </summary>
     internal sealed class BindingState
-    {        
+    {
         /// <summary>
         /// The configuration used for binding.
         /// </summary>
@@ -39,6 +40,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private RangeVariable implicitRangeVariable;
 
         /// <summary>
+        /// The current recursion depth of binding.
+        /// </summary>
+        private int BindingRecursionDepth;
+
+        /// <summary>
         /// Collection of query option tokens associated with the currect query being processed.
         /// If a given query option is bound it should be removed from this collection.
         /// </summary>
@@ -50,9 +56,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="configuration">The configuration used for binding.</param>
         internal BindingState(ODataUriParserConfiguration configuration)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             this.configuration = configuration;
+            this.BindingRecursionDepth = 0;
         }
 
         /// <summary>
@@ -60,10 +66,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         internal IEdmModel Model
         {
-            get 
-            { 
-                DebugUtils.CheckNoExternalCallers(); 
-                return this.configuration.Model; 
+            get
+            {
+                return this.configuration.Model;
             }
         }
 
@@ -72,10 +77,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         internal ODataUriParserConfiguration Configuration
         {
-            get 
-            { 
-                DebugUtils.CheckNoExternalCallers(); 
-                return this.configuration; 
+            get
+            {
+                return this.configuration;
             }
         }
 
@@ -85,15 +89,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         internal RangeVariable ImplicitRangeVariable
         {
-            get 
-            { 
-                DebugUtils.CheckNoExternalCallers();
-                return this.implicitRangeVariable; 
+            get
+            {
+                return this.implicitRangeVariable;
             }
 
             set
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(this.implicitRangeVariable == null || value == null, "This should only get set once when first starting to bind a tree.");
                 this.implicitRangeVariable = value;
             }
@@ -106,7 +108,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers(); 
                 return this.rangeVariables;
             }
         }
@@ -119,15 +120,37 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.queryOptions;
             }
 
             set
             {
-                DebugUtils.CheckNoExternalCallers();
                 this.queryOptions = value;
             }
+        }
+
+        /// <summary>
+        /// Marks the fact that a recursive method was entered, and checks that the depth is allowed.
+        /// </summary>
+        internal void RecurseEnter()
+        {
+            this.BindingRecursionDepth++;
+
+            // TODO challenh: add BindingLimit, use uniform error message
+            if (this.BindingRecursionDepth > this.configuration.Settings.FilterLimit)
+            {
+                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            }
+        }
+
+        /// <summary>
+        /// Marks the fact that a recursive method is leaving.
+        /// </summary>
+        internal void RecurseLeave()
+        {
+            Debug.Assert(this.BindingRecursionDepth > 0, "Decreasing recursion depth below zero, imbalanced recursion calls.");
+
+            this.BindingRecursionDepth--;
         }
     }
 }

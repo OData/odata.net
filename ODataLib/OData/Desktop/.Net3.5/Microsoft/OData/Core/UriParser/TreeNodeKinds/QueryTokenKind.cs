@@ -115,8 +115,14 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         FunctionParameterAlias = 22,
 
         /// <summary>
+        /// TODO challenh: remove it (replaced by Bracketdtoken)
         /// RawFunctionParameterValue
         /// </summary>
         RawFunctionParameterValue = 23,
+
+        /// <summary>
+        /// the string literal for search query
+        /// </summary>
+        StringLiteral = 23,
     }
 }

@@ -14,12 +14,9 @@ namespace Microsoft.OData.Core.JsonLight
     using System;
     using System.Diagnostics;
     using System.Globalization;
-    using System.Linq;
-    using System.Xml;
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
     using ODataPlatformHelper = Microsoft.OData.Core.PlatformHelper;
     #endregion Namespaces
@@ -52,9 +49,6 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>The "message" property of either the error object or the inner error object.</summary>
             Message = 4,
 
-            /// <summary>The "lang" property of the message object.</summary>
-            MessageLanguage = 8,
-
             /// <summary>The "value" property of the message object.</summary>
             MessageValue = 16,
 
@@ -80,7 +74,6 @@ namespace Microsoft.OData.Core.JsonLight
             ref ODataJsonLightReaderUtils.ErrorPropertyBitMask propertiesFoundBitField,
             ODataJsonLightReaderUtils.ErrorPropertyBitMask propertyFoundBitMask)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(((int)propertyFoundBitMask & (((int)propertyFoundBitMask) - 1)) == 0, "propertyFoundBitMask is not a power of 2.");
 
             if ((propertiesFoundBitField & propertyFoundBitMask) == propertyFoundBitMask)
@@ -113,7 +106,6 @@ namespace Microsoft.OData.Core.JsonLight
             bool validateNullValue, 
             string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(primitiveTypeReference != null, "primitiveTypeReference != null");
 
             if (value == null)
@@ -141,6 +133,29 @@ namespace Microsoft.OData.Core.JsonLight
                 else if (value is Int32)
                 {
                     return ConvertInt32Value((int)value, targetType, primitiveTypeReference);
+                }
+                else if (value is Decimal)
+                {
+                    Decimal decimalValue = (Decimal)value;
+                    if (targetType == typeof(Int64))
+                    {
+                        return Convert.ToInt64(decimalValue);
+                    }
+
+                    if (targetType == typeof(Double))
+                    {
+                        return Convert.ToDouble(decimalValue);
+                    }
+
+                    if (targetType == typeof(Single))
+                    {
+                        return Convert.ToSingle(decimalValue);
+                    }
+
+                    if (targetType != typeof(Decimal))
+                    {
+                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDecimal(primitiveTypeReference.ODataFullName()));
+                    }
                 }
                 else if (value is Double)
                 {
@@ -199,8 +214,6 @@ namespace Microsoft.OData.Core.JsonLight
         internal static void EnsureInstance<T>(ref T instance)
             where T : class, new()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (instance == null)
             {
                 instance = new T();
@@ -214,7 +227,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>true if the property name is an OData annotation property name, false otherwise.</returns>
         internal static bool IsODataAnnotationName(string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             return propertyName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix, StringComparison.Ordinal);
@@ -230,20 +242,18 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal static bool IsAnnotationProperty(string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             return propertyName.IndexOf('.') >= 0;
         }
 
         /// <summary>
-        /// Validates that the annotation string value is valid.
+        /// Validates that the annotation value is valid.
         /// </summary>
         /// <param name="propertyValue">The value of the annotation.</param>
         /// <param name="annotationName">The name of the (instance or property) annotation (used for error reporting).</param>
-        internal static void ValidateAnnotationStringValue(string propertyValue, string annotationName)
+        internal static void ValidateAnnotationValue(object propertyValue, string annotationName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
 
             if (propertyValue == null)
@@ -259,8 +269,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The type name as read from the payload item (or constructed for primitive items).</returns>
         internal static string GetPayloadTypeName(object payloadItem)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (payloadItem == null)
             {
                 return null;
@@ -269,11 +277,10 @@ namespace Microsoft.OData.Core.JsonLight
             TypeCode typeCode = ODataPlatformHelper.GetTypeCode(payloadItem.GetType());
             switch (typeCode)
             {
-                // In JSON only boolean, DateTime, String, Int32 and Double are recognized as primitive types
+                // In JSON only boolean, String, Int32 and Double are recognized as primitive types
                 // (without additional type conversion). So only check for those; if not one of these primitive
                 // types it must be a complex, entity or collection value.
                 case TypeCode.Boolean: return Metadata.EdmConstants.EdmBooleanTypeName;
-                case TypeCode.DateTime: return Metadata.EdmConstants.EdmDateTimeTypeName;
                 case TypeCode.String: return Metadata.EdmConstants.EdmStringTypeName;
                 case TypeCode.Int32: return Metadata.EdmConstants.EdmInt32TypeName;
                 case TypeCode.Double: return Metadata.EdmConstants.EdmDoubleTypeName;
@@ -291,7 +298,7 @@ namespace Microsoft.OData.Core.JsonLight
             ODataCollectionValue collectionValue = payloadItem as ODataCollectionValue;
             if (collectionValue != null)
             {
-                return collectionValue.TypeName;
+                return EdmLibraryExtensions.GetCollectionTypeFullName(collectionValue.TypeName);
             }
 
             ODataEntry entry = payloadItem as ODataEntry;
@@ -325,12 +332,6 @@ namespace Microsoft.OData.Core.JsonLight
             if (targetType == typeof(TimeSpan))
             {
                 return EdmValueParser.ParseDuration(stringValue);
-            }
-
-            // DateTime needs to be read using the XML rules (as per the JSON Light spec).
-            if (targetType == typeof(DateTime))
-            {
-                return PlatformHelper.ConvertStringToDateTime(stringValue);
             }
 
             // DateTimeOffset needs to be read using the XML rules (as per the JSON Light spec).
@@ -377,10 +378,14 @@ namespace Microsoft.OData.Core.JsonLight
                 return Convert.ToDouble(intValue);
             }
 
-            if (targetType == typeof(Decimal) ||
-                targetType == typeof(Int64))
+            if (targetType == typeof(Decimal))
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertInt64OrDecimal);
+                return Convert.ToDecimal(intValue);
+            }
+
+            if (targetType == typeof(Int64))
+            {
+                return Convert.ToInt64(intValue);
             }
 
             if (targetType != typeof(Int32))

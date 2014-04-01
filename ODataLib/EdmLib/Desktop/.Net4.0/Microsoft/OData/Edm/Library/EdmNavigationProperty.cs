@@ -18,23 +18,28 @@ namespace Microsoft.OData.Edm.Library
     /// </summary>
     public sealed class EdmNavigationProperty : EdmProperty, IEdmNavigationProperty
     {
+        private readonly IEdmReferentialConstraint referentialConstraint;
         private readonly bool containsTarget;
         private readonly EdmOnDeleteAction onDelete;
         private EdmNavigationProperty partner;
-        private IEnumerable<IEdmStructuralProperty> dependentProperties;
 
         private EdmNavigationProperty(
             IEdmEntityType declaringType,
             string name,
             IEdmTypeReference type,
             IEnumerable<IEdmStructuralProperty> dependentProperties,
+            IEnumerable<IEdmStructuralProperty> principalProperties,
             bool containsTarget,
             EdmOnDeleteAction onDelete)
             : base(declaringType, name, type)
         {
-            this.dependentProperties = dependentProperties;
             this.containsTarget = containsTarget;
             this.onDelete = onDelete;
+
+            if (dependentProperties != null)
+            {
+                this.referentialConstraint = EdmReferentialConstraint.Create(dependentProperties, principalProperties);
+            }
         }
 
         /// <summary>
@@ -54,22 +59,11 @@ namespace Microsoft.OData.Edm.Library
         }
 
         /// <summary>
-        /// Gets the dependent properties of the association this navigation property expresses.
+        /// Gets the referential constraint for this navigation, returning null if this is the principal end or if there is no referential constraint.
         /// </summary>
-        public IEnumerable<IEdmStructuralProperty> DependentProperties
+        public IEdmReferentialConstraint ReferentialConstraint
         {
-            get { return this.dependentProperties; }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this navigation property is from the principal end of the association.
-        /// </summary>
-        public bool IsPrincipal
-        {
-            get
-            {
-                return this.DependentProperties == null && this.partner != null && this.partner.DependentProperties != null;
-            }
+            get { return this.referentialConstraint; }
         }
 
         /// <summary>
@@ -97,6 +91,28 @@ namespace Microsoft.OData.Edm.Library
         }
 
         /// <summary>
+        /// Creates a navigation property from the given information.
+        /// </summary>
+        /// <param name="declaringType">The type that declares this property.</param>
+        /// <param name="propertyInfo">Information to create the navigation property.</param>
+        /// <returns>Created navigation property.</returns>
+        public static EdmNavigationProperty CreateNavigationProperty(IEdmEntityType declaringType, EdmNavigationPropertyInfo propertyInfo)
+        {
+            EdmUtil.CheckArgumentNull(propertyInfo, "propertyInfo");
+            EdmUtil.CheckArgumentNull(propertyInfo.Name, "propertyInfo.Name");
+            EdmUtil.CheckArgumentNull(propertyInfo.Target, "propertyInfo.Target");
+
+            return new EdmNavigationProperty(
+                declaringType,
+                propertyInfo.Name,
+                CreateNavigationPropertyType(propertyInfo.Target, propertyInfo.TargetMultiplicity, "propertyInfo.TargetMultiplicity"),
+                propertyInfo.DependentProperties,
+                propertyInfo.PrincipalProperties,
+                propertyInfo.ContainsTarget,
+                propertyInfo.OnDelete);
+        }
+
+        /// <summary>
         /// Creates two navigation properties representing an association between two entity types.
         /// </summary>
         /// <param name="propertyInfo">Information to create the navigation property.</param>
@@ -116,6 +132,7 @@ namespace Microsoft.OData.Edm.Library
                 propertyInfo.Name,
                 CreateNavigationPropertyType(propertyInfo.Target, propertyInfo.TargetMultiplicity, "propertyInfo.TargetMultiplicity"),
                 propertyInfo.DependentProperties,
+                propertyInfo.PrincipalProperties,
                 propertyInfo.ContainsTarget,
                 propertyInfo.OnDelete);
 
@@ -124,6 +141,7 @@ namespace Microsoft.OData.Edm.Library
                 partnerInfo.Name,
                 CreateNavigationPropertyType(partnerInfo.Target, partnerInfo.TargetMultiplicity, "partnerInfo.TargetMultiplicity"),
                 partnerInfo.DependentProperties,
+                partnerInfo.PrincipalProperties,
                 partnerInfo.ContainsTarget,
                 partnerInfo.OnDelete);
 
@@ -138,11 +156,13 @@ namespace Microsoft.OData.Edm.Library
         /// <param name="propertyName">Navigation property name.</param>
         /// <param name="propertyType">Type of the navigation property.</param>
         /// <param name="dependentProperties">Dependent properties of the navigation source.</param>
+        /// <param name="principalProperties">Principal properties of the navigation source.</param>
         /// <param name="containsTarget">A value indicating whether the navigation source logically contains the navigation target.</param>
         /// <param name="onDelete">Action to take upon deletion of an instance of the navigation source.</param>
         /// <param name="partnerPropertyName">Navigation partner property name.</param>
         /// <param name="partnerPropertyType">Type of the navigation partner property.</param>
         /// <param name="partnerDependentProperties">Dependent properties of the navigation target.</param>
+        /// <param name="partnerPrincipalProperties">Principal properties of the navigation target.</param>
         /// <param name="partnerContainsTarget">A value indicating whether the navigation target logically contains the navigation source.</param>
         /// <param name="partnerOnDelete">Action to take upon deletion of an instance of the navigation target.</param>
         /// <returns>Navigation property.</returns>
@@ -150,11 +170,13 @@ namespace Microsoft.OData.Edm.Library
             string propertyName,
             IEdmTypeReference propertyType,
             IEnumerable<IEdmStructuralProperty> dependentProperties,
+            IEnumerable<IEdmStructuralProperty> principalProperties,
             bool containsTarget,
             EdmOnDeleteAction onDelete,
             string partnerPropertyName,
             IEdmTypeReference partnerPropertyType,
             IEnumerable<IEdmStructuralProperty> partnerDependentProperties,
+            IEnumerable<IEdmStructuralProperty> partnerPrincipalProperties,
             bool partnerContainsTarget,
             EdmOnDeleteAction partnerOnDelete)
         {
@@ -180,6 +202,7 @@ namespace Microsoft.OData.Edm.Library
                 propertyName,
                 propertyType,
                 dependentProperties,
+                principalProperties,
                 containsTarget,
                 onDelete);
 
@@ -188,6 +211,7 @@ namespace Microsoft.OData.Edm.Library
                 partnerPropertyName,
                 partnerPropertyType,
                 partnerDependentProperties,
+                partnerPrincipalProperties,
                 partnerContainsTarget,
                 partnerOnDelete);
 

@@ -26,8 +26,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="other">The <see cref="AtomCategoryMetadata"/> instance to copy the values from; can be null.</param>
         internal AtomCategoryMetadata(AtomCategoryMetadata other)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (other == null)
             {
                 return;

@@ -18,6 +18,7 @@ namespace Microsoft.OData.Core.Atom
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.Metadata;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -60,7 +61,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.target;
             }
         }
@@ -72,7 +72,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.term;
             }
         }
@@ -84,7 +83,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.value;
             }
         }
@@ -96,7 +94,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return string.IsNullOrEmpty(this.Target) || string.Equals(this.Target, ".", StringComparison.Ordinal);
             }
         }
@@ -110,7 +107,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The created AtomInstanceAnnotation.</returns>
         internal static AtomInstanceAnnotation CreateFrom(ODataInstanceAnnotation odataInstanceAnnotation, string target)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(odataInstanceAnnotation != null, "odataInstanceAnnotation != null");
 
             return new AtomInstanceAnnotation(target, odataInstanceAnnotation.Name, odataInstanceAnnotation.Value);
@@ -128,8 +124,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal static AtomInstanceAnnotation CreateFrom(ODataAtomInputContext inputContext, ODataAtomPropertyAndValueDeserializer propertyAndValueDeserializer)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             var xmlReader = inputContext.XmlReader;
             Debug.Assert(xmlReader != null, "xmlReader != null");
             Debug.Assert(xmlReader.NodeType == XmlNodeType.Element, "xmlReader must be positioned on an Element");
@@ -284,7 +278,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The name of the corresponding attribute.</returns>
         internal static string LookupAttributeValueNotationNameByEdmTypeKind(EdmPrimitiveTypeKind typeKind)
         {
-            DebugUtils.CheckNoExternalCallers();
             switch (typeKind)
             {
                 case EdmPrimitiveTypeKind.Int32:
@@ -309,7 +302,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>A nullable reference to the type represented by the attribute name, or null if the given name is not a valid attribute value notation name.</returns>
         internal static IEdmPrimitiveTypeReference LookupEdmTypeByAttributeValueNotationName(string attributeName)
         {
-            DebugUtils.CheckNoExternalCallers();
             switch (attributeName)
             {
                 // Note that we should return non-nullable type references from this method. This is so that the type reference we return here is compatible

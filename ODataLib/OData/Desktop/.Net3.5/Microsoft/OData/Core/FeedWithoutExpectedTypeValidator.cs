@@ -32,8 +32,7 @@ namespace Microsoft.OData.Core
         /// Constructor.
         /// </summary>
         internal FeedWithoutExpectedTypeValidator()
-        {   
-            DebugUtils.CheckNoExternalCallers();
+        {
         }
 
         /// <summary>
@@ -42,7 +41,6 @@ namespace Microsoft.OData.Core
         /// <param name="entityType">The type of the entry.</param>
         internal void ValidateEntry(IEdmEntityType entityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entityType != null, "entityType != null");
 
             // If we don't have a type, store the type of the first item.

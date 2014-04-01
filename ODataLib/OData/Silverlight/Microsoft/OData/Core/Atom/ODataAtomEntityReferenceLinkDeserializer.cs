@@ -24,8 +24,8 @@ namespace Microsoft.OData.Core.Atom
     internal sealed class ODataAtomEntityReferenceLinkDeserializer : ODataAtomDeserializer
     {
         #region Atomized strings
-        /// <summary>OData element name for the 'links' element</summary>
-        private readonly string ODataLinksElementName;
+        /// <summary>OData element name for the 'feed' element</summary>
+        private readonly string ODataFeedElementName;
 
         /// <summary>OData element name for the 'count' element</summary>
         private readonly string ODataCountElementName;
@@ -33,8 +33,8 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>OData element name for the 'next' element</summary>
         private readonly string ODataNextElementName;
 
-        /// <summary>OData element name for the 'uri' element</summary>
-        private readonly string ODataUriElementName;
+        /// <summary>OData element name for the 'ref' element</summary>
+        private readonly string ODataRefElementName;
         #endregion Atomized strings
 
         /// <summary>
@@ -44,13 +44,11 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomEntityReferenceLinkDeserializer(ODataAtomInputContext atomInputContext)
             : base(atomInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             XmlNameTable nameTable = this.XmlReader.NameTable;
-            this.ODataLinksElementName = nameTable.Add(AtomConstants.ODataLinksElementName);
+            this.ODataFeedElementName = nameTable.Add(AtomConstants.AtomFeedElementName);
             this.ODataCountElementName = nameTable.Add(AtomConstants.ODataCountElementName);
             this.ODataNextElementName = nameTable.Add(AtomConstants.ODataNextLinkElementName);
-            this.ODataUriElementName = nameTable.Add(AtomConstants.ODataUriElementName);
+            this.ODataRefElementName = nameTable.Add(AtomConstants.ODataRefElementName);
         }
 
         /// <summary>
@@ -62,10 +60,10 @@ namespace Microsoft.OData.Core.Atom
             /// <summary>No duplicates.</summary>
             None = 0,
 
-            /// <summary>The 'm:count' element of the 'links' element.</summary>
+            /// <summary>The 'm:count' element of the 'feed' element.</summary>
             Count = 1,
 
-            /// <summary>The 'd:next' element of the 'links' element.</summary>
+            /// <summary>The 'd:next' element of the 'feed' element.</summary>
             NextLink = 2,
         }
 
@@ -75,11 +73,10 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>An <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
         /// <remarks>
         /// Pre-Condition:  PayloadStart        - assumes that the XML reader has not been used yet.
-        /// Post-Condtion:  XmlNodeType.None    - The reader must be at the end of the input.
+        /// Post-Condition: XmlNodeType.None    - The reader must be at the end of the input.
         /// </remarks>
         internal ODataEntityReferenceLinks ReadEntityReferenceLinks()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.XmlReader != null, "this.XmlReader != null");
             this.XmlReader.AssertNotBuffering();
 
@@ -87,13 +84,13 @@ namespace Microsoft.OData.Core.Atom
             this.ReadPayloadStart();
             this.AssertXmlCondition(XmlNodeType.Element);
 
-            if (!this.XmlReader.NamespaceEquals(this.XmlReader.ODataNamespace) || !this.XmlReader.LocalNameEquals(this.ODataLinksElementName))
+            if (!this.XmlReader.NamespaceEquals(this.XmlReader.NamespaceURI) || !this.XmlReader.LocalNameEquals(this.ODataFeedElementName))
             {
                 throw new ODataException(
                     Strings.ODataAtomEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksStartElement(this.XmlReader.LocalName, this.XmlReader.NamespaceURI));
             }
 
-            ODataEntityReferenceLinks entityReferenceLinks = this.ReadLinksElement();
+            ODataEntityReferenceLinks entityReferenceLinks = this.ReadFeedElement();
 
             // Read the payload end
             this.ReadPayloadEnd();
@@ -108,27 +105,26 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>An <see cref="ODataEntityReferenceLink"/> instance representing the read entity reference link.</returns>
         /// <remarks>
         /// Pre-Condition:  PayloadStart        - assumes that the XML reader has not been used yet.
-        /// Post-Condtion:  XmlNodeType.None    - The reader must be at the end of the input.
+        /// Post-Condition: XmlNodeType.None    - The reader must be at the end of the input.
         /// </remarks>
         internal ODataEntityReferenceLink ReadEntityReferenceLink()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.XmlReader != null, "this.XmlReader != null");
 
             // Read the start of the payload up to the first element
             this.ReadPayloadStart();
             this.AssertXmlCondition(XmlNodeType.Element);
 
-            // We need to accept both OData and OData metadata namespace for the "uri" element due to backward compatibility.
+            // We need to accept both OData and OData metadata namespace for the "ref" element due to backward compatibility.
             // Per spec the element should be in OData namespace, by WCF DS client was using the metadata namespace, so it's easier to accept that here as well.
-            if ((!this.XmlReader.NamespaceEquals(this.XmlReader.ODataNamespace) && !this.XmlReader.NamespaceEquals(this.XmlReader.ODataMetadataNamespace)) ||
-                !this.XmlReader.LocalNameEquals(this.ODataUriElementName))
+            if ((!this.XmlReader.NamespaceEquals(this.XmlReader.ODataMetadataNamespace)) ||
+                !this.XmlReader.LocalNameEquals(this.ODataRefElementName))
             {
                 throw new ODataException(
                     Strings.ODataAtomEntityReferenceLinkDeserializer_InvalidEntityReferenceLinkStartElement(this.XmlReader.LocalName, this.XmlReader.NamespaceURI));
             }
 
-            ODataEntityReferenceLink entityReferenceLink = this.ReadUriElement();
+            ODataEntityReferenceLink entityReferenceLink = this.ReadEntityReferenceId();
 
             // Read the payload end
             this.ReadPayloadEnd();
@@ -166,15 +162,15 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         /// <returns>An <see cref="ODataEntityReferenceLinks"/> instance representing the read entity reference links.</returns>
         /// <remarks>
-        /// Pre-Condition:  XmlNodeType.Element - The 'd:links' element.
-        /// Post-Condtion:  any                 - The node after the 'd:links' end element (or empty 'd:links' element).
+        /// Pre-Condition:  XmlNodeType.Element - The 'feed' element.
+        /// Post-Condition:  any                - The node after the 'feed' end element (or empty 'feed' element).
         /// </remarks>
-        private ODataEntityReferenceLinks ReadLinksElement()
+        private ODataEntityReferenceLinks ReadFeedElement()
         {
             Debug.Assert(this.XmlReader != null, "this.XmlReader != null");
             this.AssertXmlCondition(XmlNodeType.Element);
-            Debug.Assert(this.XmlReader.NamespaceURI == this.XmlReader.ODataNamespace, "this.XmlReader.NamespaceURI == this.XmlReader.ODataNamespace");
-            Debug.Assert(this.XmlReader.LocalName == AtomConstants.ODataLinksElementName, "this.XmlReader.LocalName == AtomConstants.ODataLinksElementName");
+            Debug.Assert(this.XmlReader.NamespaceURI == AtomConstants.AtomNamespace, "this.XmlReader.NamespaceURI == AtomConstants.AtomNamespace");
+            Debug.Assert(this.XmlReader.LocalName == this.ODataFeedElementName, "this.XmlReader.LocalName == AtomConstants.ODataLinksElementName");
 
             ODataEntityReferenceLinks links = new ODataEntityReferenceLinks();
             List<ODataEntityReferenceLink> linkList = new List<ODataEntityReferenceLink>();
@@ -190,7 +186,7 @@ namespace Microsoft.OData.Core.Atom
                     switch (this.XmlReader.NodeType)
                     {
                         case XmlNodeType.EndElement:
-                            // end of the <links> element
+                            // end of the <feed> element
                             continue;
 
                         case XmlNodeType.Element:
@@ -214,34 +210,33 @@ namespace Microsoft.OData.Core.Atom
                                 continue;
                             }
 
-                            if (this.XmlReader.NamespaceEquals(this.XmlReader.ODataNamespace))
+                            // <m:ref>
+                            if (this.XmlReader.NamespaceEquals(this.XmlReader.ODataMetadataNamespace)
+                                && this.XmlReader.LocalNameEquals(this.ODataRefElementName))
                             {
-                                // <d:uri>
-                                if (this.XmlReader.LocalNameEquals(this.ODataUriElementName))
-                                {
-                                    ODataEntityReferenceLink link = this.ReadUriElement();
-                                    linkList.Add(link);
+                                ODataEntityReferenceLink link = this.ReadEntityReferenceId();
+                                linkList.Add(link);
 
-                                    continue;
-                                }
+                                continue;
+                            }
 
-                                // <d:next>
-                                if (this.XmlReader.LocalNameEquals(this.ODataNextElementName))
-                                {
-                                    VerifyEntityReferenceLinksElementNotFound(
-                                        ref elementsReadBitmask,
-                                        DuplicateEntityReferenceLinksElementBitMask.NextLink,
-                                        this.XmlReader.ODataNamespace,
-                                        AtomConstants.ODataNextLinkElementName);
+                            // <d:next>
+                            if (this.XmlReader.NamespaceEquals(this.XmlReader.ODataNamespace)
+                                && this.XmlReader.LocalNameEquals(this.ODataNextElementName))
+                            {
+                                VerifyEntityReferenceLinksElementNotFound(
+                                    ref elementsReadBitmask,
+                                    DuplicateEntityReferenceLinksElementBitMask.NextLink,
+                                    this.XmlReader.ODataNamespace,
+                                    AtomConstants.ODataNextLinkElementName);
 
-                                    // NOTE: get the base URI here before we read the content as string; reading the content as string will move the 
-                                    //       reader to the end element and thus we lose the xml:base definition on the element.
-                                    Uri xmlBaseUri = this.XmlReader.XmlBaseUri;
-                                    string uriString = this.XmlReader.ReadElementValue();
-                                    links.NextPageLink = this.ProcessUriFromPayload(uriString, xmlBaseUri);
+                                // NOTE: get the base URI here before we read the content as string; reading the content as string will move the 
+                                //       reader to the end element and thus we lose the xml:base definition on the element.
+                                Uri xmlBaseUri = this.XmlReader.XmlBaseUri;
+                                string uriString = this.XmlReader.ReadElementValue();
+                                links.NextPageLink = this.ProcessUriFromPayload(uriString, xmlBaseUri);
 
-                                    continue;
-                                }
+                                continue;
                             }
 
                             break;
@@ -266,28 +261,25 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         /// <returns>An instance of <see cref="ODataEntityReferenceLink"/> which was read.</returns>
         /// <remarks>
-        /// Pre-Condition:  XmlNodeType.Element - the 'd:uri' element to read.
-        /// Post-Condition: Any                 - the node after the 'd:uri' element which was read.
+        /// Pre-Condition:  XmlNodeType.Element - the 'm:ref' element to read.
+        /// Post-Condition: Any                 - the node after the 'm:ref' element which was read.
         /// </remarks>
-        private ODataEntityReferenceLink ReadUriElement()
+        private ODataEntityReferenceLink ReadEntityReferenceId()
         {
             Debug.Assert(this.XmlReader != null, "this.XmlReader != null");
             this.AssertXmlCondition(XmlNodeType.Element);
-            Debug.Assert(
-                this.XmlReader.NamespaceURI == this.XmlReader.ODataNamespace || this.XmlReader.NamespaceURI == this.XmlReader.ODataMetadataNamespace,
-                "this.XmlReader.NamespaceURI == this.XmlReader.ODataNamespace  || this.XmlReader.NamespaceURI == this.XmlReader.ODataMetadataNamespace");
-            Debug.Assert(this.XmlReader.LocalName == this.ODataUriElementName, "this.XmlReader.LocalName == this.ODataUriElementName");
+            Debug.Assert(this.XmlReader.NamespaceURI == this.XmlReader.ODataMetadataNamespace, "this.XmlReader.NamespaceURI == this.XmlReader.ODataMetadataNamespace");
+            Debug.Assert(this.XmlReader.LocalName == this.ODataRefElementName, "this.XmlReader.LocalName == this.ODataRefElementName");
 
             ODataEntityReferenceLink link = new ODataEntityReferenceLink();
 
-            // NOTE: get the base URI here before we read the content as string; reading the content as string will move the 
-            //       reader to the end element and thus we lose the xml:base definition on the element.
+            string uriString = this.XmlReader.GetAttribute(AtomConstants.AtomIdElementName);
+            Debug.Assert(uriString != null, "In ATOM a entity reference id attribute on ref element can never represent a null value.");
             Uri xmlBaseUri = this.XmlReader.XmlBaseUri;
-            string uriString = this.XmlReader.ReadElementValue();
-            Debug.Assert(uriString != null, "In ATOM a URI element can never represent a null value.");
             Uri uri = this.ProcessUriFromPayload(uriString, xmlBaseUri);
             link.Url = uri;
 
+            this.XmlReader.Skip();
             ReaderValidationUtils.ValidateEntityReferenceLink(link);
             return link;
         }

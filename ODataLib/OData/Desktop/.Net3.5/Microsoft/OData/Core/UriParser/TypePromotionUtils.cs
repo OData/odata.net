@@ -21,6 +21,7 @@ namespace Microsoft.OData.Core.UriParser
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Core.UriParser.Semantic;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces
@@ -84,8 +85,6 @@ namespace Microsoft.OData.Core.UriParser
             new FunctionSignature(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetBoolean(true)),
             new FunctionSignature(EdmCoreModel.Instance.GetGuid(false), EdmCoreModel.Instance.GetGuid(false)),
             new FunctionSignature(EdmCoreModel.Instance.GetGuid(true), EdmCoreModel.Instance.GetGuid(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTime, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTime, false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTime, true), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTime, true)),
             new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false)),
             new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, true), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, true)),
             new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, false)),
@@ -125,13 +124,16 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>Checks that the operands (possibly promoted) are valid for the specified operation.</summary>
         /// <param name="operatorKind">The operator kind to promote the operand types for.</param>
-        /// <param name="left">Type reference of left operand.</param>
-        /// <param name="right">Type reference of right operand.</param>
+        /// <param name="leftNode">The left operand node.</param>
+        /// <param name="rightNode">The right operand node.</param>
+        /// <param name="left">The left operand type after promotion.</param>
+        /// <param name="right">The right operand type after promotion.</param>
         /// <returns>True if a valid function signature was found that matches the given types after any necessary promotions are made.
         /// False if there is no binary operators </returns>
-        internal static bool PromoteOperandTypes(BinaryOperatorKind operatorKind, ref IEdmTypeReference left, ref IEdmTypeReference right)
+        internal static bool PromoteOperandTypes(BinaryOperatorKind operatorKind, SingleValueNode leftNode, SingleValueNode rightNode, out IEdmTypeReference left, out IEdmTypeReference right)
         {
-            DebugUtils.CheckNoExternalCallers();
+            left = leftNode.TypeReference;
+            right = rightNode.TypeReference;
 
             // The types for the operands can be null
             // if they (a) represent the null literal or (b) represent an open type/property.
@@ -148,12 +150,25 @@ namespace Microsoft.OData.Core.UriParser
                 {
                     return true;
                 }
+
+                // enum supports equality operator for null operand:
+                if ((left == null) && (right != null) && (right.IsEnum()))
+                {
+                    left = right;
+                    return true;
+                }
+
+                if ((right == null) && (left != null) && left.IsEnum())
+                {
+                    right = left;
+                    return true;
+                }
             }
 
-            // enum support
+            // enum support, check type full names
             if (left != null && right != null && left.IsEnum() && right.IsEnum())
             {
-                return true;
+                return string.Equals(left.FullName(), right.FullName(), StringComparison.Ordinal);
             }
 
             // Except for above, binary operators are only supported on primitive types
@@ -165,8 +180,9 @@ namespace Microsoft.OData.Core.UriParser
             // The following will match primitive argument types to build in function signatures, choosing the best one possible.
             FunctionSignature[] signatures = GetFunctionSignatures(operatorKind);
 
+            SingleValueNode[] argumentNodes = new SingleValueNode[] { leftNode, rightNode };
             IEdmTypeReference[] argumentTypes = new IEdmTypeReference[] { left, right };
-            bool success = FindBestSignature(signatures, argumentTypes) == 1;
+            bool success = FindBestSignature(signatures, argumentNodes, argumentTypes) == 1;
 
             if (success)
             {
@@ -192,8 +208,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>True if the type could be promoted; otherwise false.</returns>
         internal static bool PromoteOperandType(UnaryOperatorKind operatorKind, ref IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // The type for the operands can be null
             // if it (a) represents the null literal or (b) represents an open type/property.
             // If argument type is null we lack type information and cannot promote the argument type.
@@ -206,7 +220,7 @@ namespace Microsoft.OData.Core.UriParser
             FunctionSignature[] signatures = GetFunctionSignatures(operatorKind);
 
             IEdmTypeReference[] argumentTypes = new IEdmTypeReference[] { typeReference };
-            bool success = FindBestSignature(signatures, argumentTypes) == 1;
+            bool success = FindBestSignature(signatures, new SingleValueNode[] { null }, argumentTypes) == 1;
 
             if (success)
             {
@@ -218,11 +232,11 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>Finds the best fitting function for the specified arguments.</summary>
         /// <param name="functions">Functions to consider.</param>
-        /// <param name="argumentTypes">Types of the arguments for the function.</param>
+        /// <param name="argumentNodes">Nodes of the arguments for the function, can be new {null,null}.</param>
         /// <returns>The best fitting function; null if none found or ambiguous.</returns>
-        internal static FunctionSignatureWithReturnType FindBestFunctionSignature(FunctionSignatureWithReturnType[] functions, IEdmTypeReference[] argumentTypes)
+        internal static FunctionSignatureWithReturnType FindBestFunctionSignature(FunctionSignatureWithReturnType[] functions, SingleValueNode[] argumentNodes)
         {
-            DebugUtils.CheckNoExternalCallers();
+            IEdmTypeReference[] argumentTypes = argumentNodes.Select(s => s.TypeReference).ToArray();
             Debug.Assert(functions != null, "functions != null");
             Debug.Assert(argumentTypes != null, "argumentTypes != null");
             List<FunctionSignatureWithReturnType> applicableFunctions = new List<FunctionSignatureWithReturnType>(functions.Length);
@@ -238,7 +252,7 @@ namespace Microsoft.OData.Core.UriParser
                 bool argumentsMatch = true;
                 for (int i = 0; i < candidate.ArgumentTypes.Length; i++)
                 {
-                    if (!CanPromoteTo(argumentTypes[i], candidate.ArgumentTypes[i]))
+                    if (!CanPromoteNodeTo(argumentNodes[i], argumentTypes[i], candidate.ArgumentTypes[i]))
                     {
                         argumentsMatch = false;
                         break;
@@ -306,7 +320,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The exact fitting function; null if no exact match was found.</returns>
         internal static FunctionSignature FindExactFunctionSignature(FunctionSignature[] functions, IEdmTypeReference[] argumentTypes)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(functions != null, "functions != null");
             Debug.Assert(argumentTypes != null, "argumentTypes != null");
 
@@ -349,13 +362,13 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>Checks whether the source type is compatible with the target type.</summary>
+        /// <param name="sourceNodeOrNull">The actual argument node.</param>
         /// <param name="sourceReference">Source type.</param>
         /// <param name="targetReference">Target type.</param>
         /// <returns>true if source can be used in place of target; false otherwise.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "One method to describe all rules around converts.")]
-        internal static bool CanConvertTo(IEdmTypeReference sourceReference, IEdmTypeReference targetReference)
+        internal static bool CanConvertTo(SingleValueNode sourceNodeOrNull, IEdmTypeReference sourceReference, IEdmTypeReference targetReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(sourceReference != null, "sourceReference != null");
             Debug.Assert(targetReference != null, "targetReference != null");
 
@@ -392,7 +405,7 @@ namespace Microsoft.OData.Core.UriParser
                 return false;
             }
 
-            return MetadataUtilsCommon.CanConvertPrimitiveTypeTo(sourcePrimitiveTypeReference.PrimitiveDefinition(), targetPrimitiveTypeReference.PrimitiveDefinition());
+            return MetadataUtilsCommon.CanConvertPrimitiveTypeTo(sourceNodeOrNull, sourcePrimitiveTypeReference.PrimitiveDefinition(), targetPrimitiveTypeReference.PrimitiveDefinition());
         }
 
         /// <summary>
@@ -449,15 +462,16 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>Finds the best methods for the specified arguments given a candidate method enumeration.</summary>
         /// <param name="signatures">The candidate function signatures.</param>
+        /// <param name="argumentNodes">The argument nodes, can be new {null,null}.</param>
         /// <param name="argumentTypes">The argument type references to match.</param>
         /// <returns>The number of "best match" methods.</returns>
-        private static int FindBestSignature(FunctionSignature[] signatures, IEdmTypeReference[] argumentTypes)
+        private static int FindBestSignature(FunctionSignature[] signatures, SingleValueNode[] argumentNodes, IEdmTypeReference[] argumentTypes)
         {
             Debug.Assert(signatures != null, "signatures != null");
             Debug.Assert(argumentTypes != null, "argumentTypes != null");
             Debug.Assert(signatures.All(s => s.ArgumentTypes != null && s.ArgumentTypes.All(t => t.IsODataPrimitiveTypeKind())), "All signatures must have only primitive argument types.");
 
-            List<FunctionSignature> applicableSignatures = signatures.Where(signature => IsApplicable(signature, argumentTypes)).ToList();
+            List<FunctionSignature> applicableSignatures = signatures.Where(signature => IsApplicable(signature, argumentNodes, argumentTypes)).ToList();
             if (applicableSignatures.Count > 1)
             {
                 applicableSignatures = FindBestApplicableSignatures(applicableSignatures, argumentTypes);
@@ -492,7 +506,7 @@ namespace Microsoft.OData.Core.UriParser
 
                         // TODO: why is this necessary? We keep it here for now since the product has it but assert
                         //       that nothing new was found.
-                        int signatureCount = FindBestSignature(signatures, argumentTypes);
+                        int signatureCount = FindBestSignature(signatures, argumentNodes, argumentTypes);
                         Debug.Assert(signatureCount == 1, "signatureCount == 1");
                         Debug.Assert(argumentTypes[0] == nullableMethod.ArgumentTypes[0], "argumentTypes[0] == nullableMethod.ArgumentTypes[0]");
                         Debug.Assert(argumentTypes[1] == nullableMethod.ArgumentTypes[1], "argumentTypes[1] == nullableMethod.ArgumentTypes[1]");
@@ -506,9 +520,10 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>Checks whether the specified method is applicable given the argument expressions.</summary>
         /// <param name="signature">The candidate function signature to check.</param>
+        /// <param name="argumentNodes">The argument nodes, can be new {null,null}.</param>
         /// <param name="argumentTypes">The argument types to match.</param>
         /// <returns>An applicable function signature if all argument types can be promoted; 'null' otherwise.</returns>
-        private static bool IsApplicable(FunctionSignature signature, IEdmTypeReference[] argumentTypes)
+        private static bool IsApplicable(FunctionSignature signature, SingleValueNode[] argumentNodes, IEdmTypeReference[] argumentTypes)
         {
             Debug.Assert(signature != null, "signature != null");
             Debug.Assert(argumentTypes != null, "argumentTypes != null");
@@ -520,7 +535,7 @@ namespace Microsoft.OData.Core.UriParser
 
             for (int i = 0; i < argumentTypes.Length; ++i)
             {
-                if (!CanPromoteTo(argumentTypes[i], signature.ArgumentTypes[i]))
+                if (!CanPromoteNodeTo(argumentNodes[i], argumentTypes[i], signature.ArgumentTypes[i]))
                 {
                     return false;
                 }
@@ -530,10 +545,11 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>Promotes the specified expression to the given type if necessary.</summary>
+        /// <param name="sourceNodeOrNull">The actual argument node, may be null.</param>
         /// <param name="sourceType">The actual argument type.</param>
         /// <param name="targetType">The required type to promote to.</param>
         /// <returns>True if the <paramref name="sourceType"/> could be promoted; otherwise false.</returns>
-        private static bool CanPromoteTo(IEdmTypeReference sourceType, IEdmTypeReference targetType)
+        private static bool CanPromoteNodeTo(SingleValueNode sourceNodeOrNull, IEdmTypeReference sourceType, IEdmTypeReference targetType)
         {
             Debug.Assert(targetType != null, "targetType != null");
             Debug.Assert(targetType.IsODataPrimitiveTypeKind(), "Type promotion only supported for primitive types.");
@@ -550,16 +566,16 @@ namespace Microsoft.OData.Core.UriParser
                 return true;
             }
 
-            if (CanConvertTo(sourceType, targetType))
+            if (CanConvertTo(sourceNodeOrNull, sourceType, targetType))
             {
                 return true;
             }
 
-            // Allow promotion from nullable to non-nullable by directly accessing underlying value.
+            // Allow promotion from nullable<T> to non-nullable by directly accessing underlying value.
             if (sourceType.IsNullable && targetType.IsODataValueType())
             {
                 IEdmTypeReference nonNullableSourceType = sourceType.Definition.ToTypeReference(false);
-                if (CanConvertTo(nonNullableSourceType, targetType))
+                if (CanConvertTo(sourceNodeOrNull, nonNullableSourceType, targetType))
                 {
                     return true;
                 }
@@ -673,8 +689,8 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             // If one is compatible and the other is not, choose the compatible type.
-            bool compatibleT1AndT2 = CanConvertTo(targetA, targetB);
-            bool compatibleT2AndT1 = CanConvertTo(targetB, targetA);
+            bool compatibleT1AndT2 = CanConvertTo(null, targetA, targetB);
+            bool compatibleT2AndT1 = CanConvertTo(null, targetB, targetA);
             if (compatibleT1AndT2 && !compatibleT2AndT1)
             {
                 return 1;
@@ -710,17 +726,15 @@ namespace Microsoft.OData.Core.UriParser
                 return -1;
             }
 
-            // If both decimal and double are possible or if both decimal and single are possible, then prefer decimal
-            // since double and single should only be targets for single and double source if decimal is available.
-            // And since neither single not double convert to decimal, we don't need to handle that case here.
+            // If both decimal and double are possible or if both decimal and single are possible, then single/double is prefered (int32->long->single->double->decimal).
             if (IsDecimalType(targetA) && IsDoubleOrSingle(targetB))
             {
-                return 1;
+                return -1;
             }
 
             if (IsDecimalType(targetB) && IsDoubleOrSingle(targetA))
             {
-                return -1;
+                return 1;
             }
 
             return 0;
@@ -766,14 +780,14 @@ namespace Microsoft.OData.Core.UriParser
                     return true;
                 }
 
-                    // I think we shoudl just use IsAssignableFrom instead now
-                if (CanConvertTo(left, right))
+                // I think we should just use IsAssignableFrom instead now
+                if (CanConvertTo(null, left, right))
                 {
                     left = right;
                     return true;
                 }
 
-                if (CanConvertTo(right, left))
+                if (CanConvertTo(null, right, left))
                 {
                     right = left;
                     return true;
@@ -788,7 +802,7 @@ namespace Microsoft.OData.Core.UriParser
                 if (left == null)
                 {
                     left = right;
-                    return true; 
+                    return true;
                 }
 
                 return false;
@@ -869,7 +883,7 @@ namespace Microsoft.OData.Core.UriParser
 
                 case EdmPrimitiveTypeKind.Byte:
                     return NumericTypeKind.UnsignedIntegral;
-                    
+
                 default:
                     return NumericTypeKind.NotNumeric;
             }

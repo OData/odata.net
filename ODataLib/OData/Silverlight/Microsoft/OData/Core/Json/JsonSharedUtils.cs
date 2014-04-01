@@ -30,7 +30,6 @@ namespace Microsoft.OData.Core.Json
         internal static bool IsDoubleValueSerializedAsString(double value)
         {
 #if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
 #endif
             return Double.IsInfinity(value) || Double.IsNaN(value);
         }
@@ -45,7 +44,6 @@ namespace Microsoft.OData.Core.Json
         internal static bool ValueTypeMatchesJsonType(ODataPrimitiveValue primitiveValue, IEdmPrimitiveTypeReference valueTypeReference)
         {
 #if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
 #endif
 
             switch (valueTypeReference.PrimitiveKind())

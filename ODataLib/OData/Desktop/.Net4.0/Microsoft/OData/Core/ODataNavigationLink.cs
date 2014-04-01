@@ -48,10 +48,10 @@ namespace Microsoft.OData.Core
 
         /// <summary>Gets or sets the name of the link.</summary>
         /// <returns>The name of the link.</returns>
-        public string Name 
-        { 
-            get; 
-            set; 
+        public string Name
+        {
+            get;
+            set;
         }
 
         /// <summary>Gets or sets the URI representing the Unified Resource Locator (URL) of the link.</summary>
@@ -97,16 +97,25 @@ namespace Microsoft.OData.Core
             }
         }
 
-        /// <summary>
-        /// Sets the metadata builder for this navigation link.
-        /// </summary>
-        /// <param name="builder">The metadata builder used to compute values from model annotations.</param>
-        internal void SetMetadataBuilder(ODataEntityMetadataBuilder builder)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(builder != null, "builder != null");
+        /// <summary>Gets or sets the context url for this navigation link.</summary>
+        /// <returns>The URI representing the context url of the navigation link.</returns>
+        internal Uri ContextUrl { get; set; }
 
-            this.metadataBuilder = builder;
+        /// <summary>Gets or sets metadata builder for this navigation link.</summary>
+        /// <returns>The metadata builder used to compute values from model annotations.</returns>
+        internal ODataEntityMetadataBuilder MetadataBuilder
+        {
+            get
+            {
+                return this.metadataBuilder;
+            }
+
+            set
+            {
+                Debug.Assert(value != null, "MetadataBuilder != null");
+
+                this.metadataBuilder = value;
+            }
         }
     }
 }

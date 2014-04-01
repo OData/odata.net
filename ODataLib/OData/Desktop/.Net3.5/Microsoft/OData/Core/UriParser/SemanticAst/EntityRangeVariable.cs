@@ -32,9 +32,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private readonly EntityCollectionNode entityCollectionNode;
 
         /// <summary>
-        /// The Entity set of the collection this node iterates over.
+        /// The navigation source of the collection this node iterates over.
         /// </summary>
-        private readonly IEdmEntitySet entitySet;
+        private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
         /// The entity type of each item in the collection that this range variable iterates over.
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             this.name = name;
             this.entityTypeReference = entityType;
             this.entityCollectionNode = entityCollectionNode;
-            this.entitySet = entityCollectionNode != null ? entityCollectionNode.EntitySet : null;
+            this.navigationSource = entityCollectionNode != null ? entityCollectionNode.NavigationSource : null;
         }
 
         /// <summary>
@@ -63,16 +63,16 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         /// <param name="name"> The name of the associated any/all parameter (null if none)</param>
         /// <param name="entityType">The entity type of each item in the collection that this range variable iterates over.</param>
-        /// <param name="entitySet">The Entity set of the collection this node iterates over.</param>
+        /// <param name="navigationSource">The navigation source of the collection this node iterates over.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input name or entityType is null.</exception>
-        public EntityRangeVariable(string name, IEdmEntityTypeReference entityType, IEdmEntitySet entitySet)
+        public EntityRangeVariable(string name, IEdmEntityTypeReference entityType, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
             this.name = name;
             this.entityTypeReference = entityType;
             this.entityCollectionNode = null;
-            this.entitySet = entitySet;
+            this.navigationSource = navigationSource;
         }
 
         /// <summary>
@@ -92,11 +92,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the Entity set of the collection this node iterates over.
+        /// Gets the navigation source of the collection this node iterates over.
         /// </summary>
-        public IEdmEntitySet EntitySet
+        public IEdmNavigationSource NavigationSource
         {
-            get { return this.entitySet; }
+            get { return this.navigationSource; }
         }
 
         /// <summary>

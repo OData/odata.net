@@ -28,6 +28,23 @@ namespace Microsoft.Spatial
             return OperationsFor(operand1, operand2).IfValidReturningNullable(ops => ops.Distance(operand1, operand2));
         }
 
+        /// <summary>Determines the Length of the geography LineString.</summary>
+        /// <returns>The operation result.</returns>
+        /// <param name="operand">The LineString operand.</param>
+        public static double? Length(this Geography operand)
+        {
+            return OperationsFor(operand).IfValidReturningNullable(ops => ops.Length(operand));
+        }
+
+        /// <summary>Determines if geography point and polygon will intersect.</summary>
+        /// <returns>The operation result.</returns>
+        /// <param name="operand1">The first operand.</param>
+        /// <param name="operand2">The second operand.</param>
+        public static bool? Intersects(this Geography operand1, Geography operand2)
+        {
+            return OperationsFor(operand1, operand2).IfValidReturningNullable(ops => ops.Intersects(operand1, operand2));
+        }
+
         /// <summary>
         /// Finds the ops instance registered for the operands.
         /// </summary>

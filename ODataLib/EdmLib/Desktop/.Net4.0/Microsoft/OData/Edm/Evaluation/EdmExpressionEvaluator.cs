@@ -84,7 +84,7 @@ namespace Microsoft.OData.Edm.Evaluation
             EdmUtil.CheckArgumentNull(expression, "expression");
             EdmUtil.CheckArgumentNull(targetType, "targetType");
 
-            return AssertType(targetType, this.Eval(expression, context));
+            return Cast(targetType, this.Eval(expression, context));
         }
 
         private static bool InRange(Int64 value, Int64 min, Int64 max)
@@ -124,8 +124,6 @@ namespace Microsoft.OData.Edm.Evaluation
                     break;
                 case EdmValueKind.Boolean:
                     return targetType.IsBoolean();
-                case EdmValueKind.DateTime:
-                    return targetType.IsDateTime();
                 case EdmValueKind.DateTimeOffset:
                     return targetType.IsDateTimeOffset();
                 case EdmValueKind.Decimal:
@@ -199,7 +197,7 @@ namespace Microsoft.OData.Edm.Evaluation
             return false;
         }
 
-        private static IEdmValue AssertType(IEdmTypeReference targetType, IEdmValue operand)
+        private static IEdmValue Cast(IEdmTypeReference targetType, IEdmValue operand)
         {
             IEdmTypeReference operandType = operand.Type;
             EdmValueKind operandKind = operand.ValueKind;
@@ -217,7 +215,7 @@ namespace Microsoft.OData.Edm.Evaluation
                     if (targetType.IsCollection())
                     {
                         // Avoid enumerating the collection at this point.
-                        return new AssertTypeCollectionValue(targetType.AsCollection(), (IEdmCollectionValue)operand);
+                        return new CastCollectionValue(targetType.AsCollection(), (IEdmCollectionValue)operand);
                     }
                     else
                     {
@@ -260,12 +258,12 @@ namespace Microsoft.OData.Edm.Evaluation
         {
             // If the value has a nominal type, the target type must be derived from the nominal type for a type match to be possible.
             IEdmTypeReference operandType = structuredValue.Type;
-            if (operandType != null && operandType.TypeKind() != EdmTypeKind.Row && !structuredTargetType.StructuredDefinition().InheritsFrom(operandType.AsStructured().StructuredDefinition()))
+            if (operandType != null && !structuredTargetType.StructuredDefinition().InheritsFrom(operandType.AsStructured().StructuredDefinition()))
             {
                 return false;
             }
 
-            Internal.HashSetInternal<IEdmPropertyValue> visitedProperties = new Internal.HashSetInternal<IEdmPropertyValue>();
+            HashSetInternal<IEdmPropertyValue> visitedProperties = new HashSetInternal<IEdmPropertyValue>();
 
             foreach (IEdmProperty property in structuredTargetType.StructuralProperties())
             {
@@ -280,7 +278,7 @@ namespace Microsoft.OData.Edm.Evaluation
                 {
                     if (newProperties != null)
                     {
-                        newProperties.Add(new EdmPropertyValue(propertyValue.Name, AssertType(property.Type, propertyValue.Value)));
+                        newProperties.Add(new EdmPropertyValue(propertyValue.Name, Cast(property.Type, propertyValue.Value)));
                     }
                     else if (!MatchesType(property.Type, propertyValue.Value))
                     {
@@ -329,7 +327,7 @@ namespace Microsoft.OData.Edm.Evaluation
 
             return true;
         }
-                    
+
         private IEdmValue Eval(IEdmExpression expression, IEdmStructuredValue context)
         {
             switch (expression.ExpressionKind)
@@ -342,8 +340,6 @@ namespace Microsoft.OData.Edm.Evaluation
                     return (IEdmBinaryConstantExpression)expression;
                 case EdmExpressionKind.BooleanConstant:
                     return (IEdmBooleanConstantExpression)expression;
-                case EdmExpressionKind.DateTimeConstant:
-                    return (IEdmDateTimeConstantExpression)expression;
                 case EdmExpressionKind.DateTimeOffsetConstant:
                     return (IEdmDateTimeOffsetConstantExpression)expression;
                 case EdmExpressionKind.DecimalConstant:
@@ -357,6 +353,7 @@ namespace Microsoft.OData.Edm.Evaluation
                 case EdmExpressionKind.Null:
                     return (IEdmNullExpression)expression;
                 case EdmExpressionKind.Path:
+                case EdmExpressionKind.PropertyPath:
                     {
                         EdmUtil.CheckArgumentNull(context, "context");
 
@@ -436,14 +433,14 @@ namespace Microsoft.OData.Edm.Evaluation
                         return new EdmBooleanConstant(MatchesType(targetType, operand));
                     }
 
-                case EdmExpressionKind.AssertType:
+                case EdmExpressionKind.Cast:
                     {
-                        IEdmAssertTypeExpression assertType = (IEdmAssertTypeExpression)expression;
+                        IEdmCastExpression castType = (IEdmCastExpression)expression;
 
-                        IEdmValue operand = this.Eval(assertType.Operand, context);
-                        IEdmTypeReference targetType = assertType.Type;
+                        IEdmValue operand = this.Eval(castType.Operand, context);
+                        IEdmTypeReference targetType = castType.Type;
 
-                        return AssertType(targetType, operand);
+                        return Cast(targetType, operand);
                     }
 
                 case EdmExpressionKind.Record:
@@ -514,7 +511,7 @@ namespace Microsoft.OData.Edm.Evaluation
             {
                 //// If an expression has no label, there can be no references to it and so only the point of definition needs a mapping to a delayed value,
                 //// and so there is no need to cache the delayed value. The point of definition always supplies a context.
-                
+
                 System.Diagnostics.Debug.Assert(delayedContext != null, "Labeled element definition failed to supply an evaluation context.");
                 return new DelayedCollectionElement(delayedContext, expression);
             }
@@ -533,7 +530,7 @@ namespace Microsoft.OData.Edm.Evaluation
         private IEdmValue FindProperty(string name, IEdmValue context)
         {
             IEdmValue result = null;
-            
+
             IEdmStructuredValue structuredContext = context as IEdmStructuredValue;
             if (structuredContext != null)
             {
@@ -627,12 +624,12 @@ namespace Microsoft.OData.Edm.Evaluation
             }
         }
 
-        private class AssertTypeCollectionValue : Library.EdmElement, IEdmCollectionValue, IEnumerable<IEdmDelayedValue>
+        private class CastCollectionValue : Library.EdmElement, IEdmCollectionValue, IEnumerable<IEdmDelayedValue>
         {
             private readonly IEdmCollectionTypeReference targetCollectionType;
             private readonly IEdmCollectionValue collectionValue;
 
-            public AssertTypeCollectionValue(IEdmCollectionTypeReference targetCollectionType, IEdmCollectionValue collectionValue)
+            public CastCollectionValue(IEdmCollectionTypeReference targetCollectionType, IEdmCollectionValue collectionValue)
             {
                 this.targetCollectionType = targetCollectionType;
                 this.collectionValue = collectionValue;
@@ -655,20 +652,20 @@ namespace Microsoft.OData.Edm.Evaluation
 
             IEnumerator<IEdmDelayedValue> IEnumerable<IEdmDelayedValue>.GetEnumerator()
             {
-                return new AssertTypeCollectionValueEnumerator(this);
+                return new CastCollectionValueEnumerator(this);
             }
 
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
             {
-                return new AssertTypeCollectionValueEnumerator(this);
+                return new CastCollectionValueEnumerator(this);
             }
 
-            private class AssertTypeCollectionValueEnumerator : IEnumerator<IEdmDelayedValue>
+            private class CastCollectionValueEnumerator : IEnumerator<IEdmDelayedValue>
             {
-                private readonly AssertTypeCollectionValue value;
+                private readonly CastCollectionValue value;
                 private readonly IEnumerator<IEdmDelayedValue> enumerator;
 
-                public AssertTypeCollectionValueEnumerator(AssertTypeCollectionValue value)
+                public CastCollectionValueEnumerator(CastCollectionValue value)
                 {
                     this.value = value;
                     this.enumerator = value.collectionValue.Elements.GetEnumerator();
@@ -676,7 +673,7 @@ namespace Microsoft.OData.Edm.Evaluation
 
                 public IEdmDelayedValue Current
                 {
-                    get { return new DelayedAssertType(this.value.targetCollectionType.ElementType(), this.enumerator.Current); }
+                    get { return new DelayedCast(this.value.targetCollectionType.ElementType(), this.enumerator.Current); }
                 }
 
                 object System.Collections.IEnumerator.Current
@@ -699,13 +696,13 @@ namespace Microsoft.OData.Edm.Evaluation
                     this.enumerator.Dispose();
                 }
 
-                private class DelayedAssertType : IEdmDelayedValue
+                private class DelayedCast : IEdmDelayedValue
                 {
                     private readonly IEdmDelayedValue delayedValue;
                     private readonly IEdmTypeReference targetType;
                     private IEdmValue value;
 
-                    public DelayedAssertType(IEdmTypeReference targetType, IEdmDelayedValue value)
+                    public DelayedCast(IEdmTypeReference targetType, IEdmDelayedValue value)
                     {
                         this.delayedValue = value;
                         this.targetType = targetType;
@@ -717,7 +714,7 @@ namespace Microsoft.OData.Edm.Evaluation
                         {
                             if (this.value == null)
                             {
-                                this.value = EdmExpressionEvaluator.AssertType(this.targetType, this.delayedValue.Value);
+                                this.value = EdmExpressionEvaluator.Cast(this.targetType, this.delayedValue.Value);
                             }
 
                             return this.value;

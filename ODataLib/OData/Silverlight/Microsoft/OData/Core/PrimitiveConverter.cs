@@ -14,6 +14,7 @@ namespace Microsoft.OData.Core
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Xml;
     using Microsoft.OData.Core.Json;
     using Microsoft.Spatial;
@@ -63,7 +64,6 @@ namespace Microsoft.OData.Core
         /// <param name="spatialPrimitiveTypeConverters">Set of type converters to register for the ISpatial based values.</param>
         internal PrimitiveConverter(KeyValuePair<Type, IPrimitiveTypeConverter>[] spatialPrimitiveTypeConverters)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(spatialPrimitiveTypeConverters != null && spatialPrimitiveTypeConverters.Length != 0, "PrimitiveConverter requires a non-null and non-empty array of type converters for ISpatial.");
             this.spatialPrimitiveTypeConverters = new Dictionary<Type, IPrimitiveTypeConverter>(EqualityComparer<Type>.Default);
             foreach (KeyValuePair<Type, IPrimitiveTypeConverter> spatialPrimitiveTypeConverter in spatialPrimitiveTypeConverters)
@@ -77,7 +77,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return primitiveConverter;
             }
         }
@@ -91,7 +90,6 @@ namespace Microsoft.OData.Core
         /// <returns>True if the value was converted to the specified type, otherwise false.</returns>
         internal bool TryTokenizeFromXml(XmlReader reader, Type targetType, out object tokenizedPropertyValue)
         {
-            DebugUtils.CheckNoExternalCallers();
             tokenizedPropertyValue = null;
 
             Debug.Assert(reader != null, "Expected a non-null XmlReader.");
@@ -117,7 +115,6 @@ namespace Microsoft.OData.Core
         /// <returns>True if the value was written, otherwise false.</returns>
         internal bool TryWriteAtom(object instance, XmlWriter writer)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(instance != null, "Expected a non-null instance to write.");
             Debug.Assert(writer != null, "Expected a non-null XmlWriter.");
 
@@ -125,23 +122,17 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Try to write the Verbose JSON representation of <paramref name="instance"/> using a registered primitive type converter
+        /// Try to write the text representation of <paramref name="instance"/> to the specified <paramref name="writer"/>
         /// </summary>
-        /// <param name="instance">Object to convert to JSON representation.</param>
-        /// <param name="jsonWriter">JsonWriter instance to write to.</param>
-        /// <param name="typeName">Type name of the instance. If the type name is null, the type name is not written.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        internal void WriteVerboseJson(object instance, IJsonWriter jsonWriter, string typeName, ODataVersion odataVersion)
+        /// <param name="instance">Object to convert to text representation.</param>
+        /// <param name="writer">TextWriter to use to write the converted value.</param>
+        /// <returns>True if the value was written, otherwise false.</returns>
+        internal bool TryWriteAtom(object instance, TextWriter writer)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(instance != null, "Expected a non-null instance to write.");
+            Debug.Assert(writer != null, "Expected a non-null TextWriter.");
 
-            Type instanceType = instance.GetType();
-
-            IPrimitiveTypeConverter primitiveTypeConverter;
-            this.TryGetConverter(instanceType, out primitiveTypeConverter);
-            Debug.Assert(primitiveTypeConverter != null, "primitiveTypeConverter != null");
-            primitiveTypeConverter.WriteVerboseJson(instance, jsonWriter, typeName, odataVersion);
+            return this.TryWriteValue(instance, ptc => ptc.WriteAtom(instance, writer));
         }
 
         /// <summary>
@@ -149,10 +140,8 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="instance">Object to convert to JSON representation.</param>
         /// <param name="jsonWriter">JsonWriter instance to write to.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        internal void WriteJsonLight(object instance, IJsonWriter jsonWriter, ODataVersion odataVersion)
+        internal void WriteJsonLight(object instance, IJsonWriter jsonWriter)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(instance != null, "Expected a non-null instance to write.");
 
             Type instanceType = instance.GetType();
@@ -160,7 +149,7 @@ namespace Microsoft.OData.Core
             IPrimitiveTypeConverter primitiveTypeConverter;
             this.TryGetConverter(instanceType, out primitiveTypeConverter);
             Debug.Assert(primitiveTypeConverter != null, "primitiveTypeConverter != null");
-            primitiveTypeConverter.WriteJsonLight(instance, jsonWriter, odataVersion);
+            primitiveTypeConverter.WriteJsonLight(instance, jsonWriter);
         }
 
         /// <summary>

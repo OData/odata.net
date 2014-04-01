@@ -27,7 +27,6 @@ namespace Microsoft.OData.Core
                 ODataBehaviorKind.Default,
                 ODataBehaviorKind.Default,
                 /*allowDuplicatePropertyNames*/ false,
-                /*usesV1Provider*/ false,
                 /*typeResolver*/ null);
 
         /// <summary>The API behavior kind of this behavior.</summary>
@@ -48,9 +47,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         private bool allowDuplicatePropertyNames;
 
-        /// <summary>true if the server uses a V1 provider; otherwise false.</summary>
-        private bool usesV1Provider;
-
         /// <summary>The format behavior kind of this behavior.</summary>
         private ODataBehaviorKind formatBehaviorKind;
 
@@ -66,7 +62,6 @@ namespace Microsoft.OData.Core
         /// If set to true, allows the writers to write duplicate properties of entries and 
         /// complex values (i.e., properties that have the same name). Defaults to 'false'.
         /// </param>
-        /// <param name="usesV1Provider">true if the server uses a V1 provider; otherwise false.</param>
         /// <param name="typeResolver">Custom type resolver which takes both expected type and type name.
         /// This function is used instead of the IEdmModel.FindType is it's specified.
         /// The first parameter to the function is the expected type (the type infered from the parent property or specified by the external caller).
@@ -76,15 +71,11 @@ namespace Microsoft.OData.Core
             ODataBehaviorKind formatBehaviorKind,
             ODataBehaviorKind apiBehaviorKind,
             bool allowDuplicatePropertyNames,
-            bool usesV1Provider,
             Func<IEdmType, string, IEdmType> typeResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.formatBehaviorKind = formatBehaviorKind;
             this.apiBehaviorKind = apiBehaviorKind;
             this.allowDuplicatePropertyNames = allowDuplicatePropertyNames;
-            this.usesV1Provider = usesV1Provider;
             this.typeResolver = typeResolver;
         }
 
@@ -96,7 +87,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return defaultReaderBehavior;
             }
         }
@@ -114,20 +104,7 @@ namespace Microsoft.OData.Core
         {
             get 
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.allowDuplicatePropertyNames; 
-            }
-        }
-
-        /// <summary>
-        /// true if the server is using V1 provider; false otherwise.
-        /// </summary>
-        internal bool UseV1ProviderBehavior
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.usesV1Provider;
             }
         }
 
@@ -138,7 +115,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.typeResolver;
             }
         }
@@ -148,7 +124,6 @@ namespace Microsoft.OData.Core
         {
             get 
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.formatBehaviorKind; 
             }
         }
@@ -158,7 +133,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.apiBehaviorKind;
             }
         }
@@ -168,13 +142,11 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.operationsBoundToEntityTypeMustBeContainerQualified;
             }
 
             set
             {
-                DebugUtils.CheckNoExternalCallers();
                 this.operationsBoundToEntityTypeMustBeContainerQualified = value;
             }
         }
@@ -191,23 +163,19 @@ namespace Microsoft.OData.Core
         internal static ODataReaderBehavior CreateWcfDataServicesClientBehavior(
             Func<IEdmType, string, IEdmType> typeResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
-            return new ODataReaderBehavior(ODataBehaviorKind.WcfDataServicesClient, ODataBehaviorKind.WcfDataServicesClient, /*allowDuplicatePropertyNames*/ true, /*usesV1Provider*/ false, typeResolver);
+            return new ODataReaderBehavior(ODataBehaviorKind.WcfDataServicesClient, ODataBehaviorKind.WcfDataServicesClient, /*allowDuplicatePropertyNames*/ true, typeResolver);
         }
 
         /// <summary>
         /// Create the reader behavior for the WCF Data Services server.
         /// </summary>
-        /// <param name="usesV1Provider">true if the server uses a V1 provider; otherwise false.</param>
         /// <returns>The created reader behavior.</returns>
-        internal static ODataReaderBehavior CreateWcfDataServicesServerBehavior(bool usesV1Provider)
+        internal static ODataReaderBehavior CreateWcfDataServicesServerBehavior()
         {
-            DebugUtils.CheckNoExternalCallers();
             return new ODataReaderBehavior(
-                ODataBehaviorKind.WcfDataServicesServer,
-                ODataBehaviorKind.WcfDataServicesServer, 
+                ODataBehaviorKind.ODataServer,
+                ODataBehaviorKind.ODataServer, 
                 /*allowDuplicatePropertyNames*/ true, 
-                usesV1Provider, 
                 /*typeResolver*/ null);
         }
 
@@ -216,12 +184,10 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void ResetFormatBehavior()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.formatBehaviorKind = ODataBehaviorKind.Default;
 
             // Also reset all format knobs
             this.allowDuplicatePropertyNames = false;
-            this.usesV1Provider = false;
             this.operationsBoundToEntityTypeMustBeContainerQualified = null;
         }
     }

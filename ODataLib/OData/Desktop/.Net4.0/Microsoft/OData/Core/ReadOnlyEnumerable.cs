@@ -34,7 +34,6 @@ namespace Microsoft.OData.Core
         /// <param name="sourceEnumerable">The enumerable to wrap.</param>
         internal ReadOnlyEnumerable(IEnumerable sourceEnumerable)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(sourceEnumerable != null, "sourceEnumerable != null");
 
             this.sourceEnumerable = sourceEnumerable;

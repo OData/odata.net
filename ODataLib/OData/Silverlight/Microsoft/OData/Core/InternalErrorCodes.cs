@@ -33,9 +33,6 @@ namespace Microsoft.OData.Core
         /// <summary>Unreachable codepath in ODataUtils.VersionString</summary>
         ODataUtils_VersionString_UnreachableCodePath,
 
-        /// <summary>Unreachable codepath in ODataUtilsInternal.ToDataServiceVersion</summary>
-        ODataUtilsInternal_ToDataServiceVersion_UnreachableCodePath,
-
         /// <summary>Unreachable codepath in ODataUtilsInternal.IsPayloadKindSupported</summary>
         ODataUtilsInternal_IsPayloadKindSupported_UnreachableCodePath,
 
@@ -236,9 +233,6 @@ namespace Microsoft.OData.Core
 
         /// <summary>Unreachable codepath in ODataJsonLightParameterDeserializer.ReadNextParameter.</summary>
         ODataJsonLightParameterDeserializer_ReadNextParameter,
-
-        /// <summary>Unreachable codepath in ODataJsonLightAnnotationGroupDeserializer.ReadAnnotationGroupDeclaration.</summary>
-        ODataJsonLightAnnotationGroupDeserializer_ReadAnnotationGroupDeclaration,
 
         /// <summary>Unreachable codepath in EdmTypeWriterResolver.GetReturnType for operation import group.</summary>
         EdmTypeWriterResolver_GetReturnTypeForOperationImportGroup,

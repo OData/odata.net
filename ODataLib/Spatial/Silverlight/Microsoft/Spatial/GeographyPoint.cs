@@ -10,14 +10,7 @@
 
 namespace Microsoft.Spatial
 {
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
-
     /// <summary>Represents a geography point.</summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     public abstract class GeographyPoint : Geography
     {
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeographyPoint" /> class.</summary>

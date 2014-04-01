@@ -12,17 +12,11 @@ namespace Microsoft.Data.Spatial
 {
     using System;
     using System.Collections.ObjectModel;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
     using Microsoft.Spatial;
 
     /// <summary>
     /// Geography Collection
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     internal class GeographyCollectionImplementation : GeographyCollection
     {
         /// <summary>
@@ -71,18 +65,6 @@ namespace Microsoft.Data.Spatial
             get { return new ReadOnlyCollection<Geography>(this.geographyArray); }
         }
 
-#if WINDOWS_PHONE
-        /// <summary>
-        /// internal geography array property to support serializing and de-serializing this instance.
-        /// </summary>
-        [DataMember]
-        internal Geography[] GeographyArray
-        {
-            get { return this.geographyArray; }
-
-            set { this.geographyArray = value; }
-        }
-#endif
         /// <summary>
         /// Sends the current spatial object to the given pipeline
         /// </summary>

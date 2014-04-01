@@ -27,7 +27,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A semantic <see cref="ODataPath"/> object to describe the path.</returns>
         internal static ODataPath BindPath(ICollection<string> segments, ODataUriParserConfiguration configuration)
         {
-            DebugUtils.CheckNoExternalCallers();
             ODataPathParser semanticPathParser = new ODataPathParser(configuration);
             var intermediateSegments = semanticPathParser.ParsePath(segments);
             ODataPath path = new ODataPath(intermediateSegments);

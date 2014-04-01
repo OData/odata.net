@@ -16,6 +16,11 @@ namespace Microsoft.OData.Edm.Values
     public enum EdmValueKind
     {
         /// <summary>
+        /// Represents a value with an unknown or error kind.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
         /// Represents a value implementing <see cref="IEdmBinaryValue"/>. 
         /// </summary>
         Binary,
@@ -34,11 +39,6 @@ namespace Microsoft.OData.Edm.Values
         /// Represents a value implementing <see cref="IEdmDateTimeOffsetValue"/>. 
         /// </summary>
         DateTimeOffset,
-
-        /// <summary>
-        /// Represents a value implementing <see cref="IEdmDateTimeValue"/>. 
-        /// </summary>
-        DateTime,
 
         /// <summary>
         /// Represents a value implementing <see cref="IEdmDecimalValue"/>. 
@@ -84,11 +84,6 @@ namespace Microsoft.OData.Edm.Values
         /// Represents a value implementing <see cref="IEdmDurationValue"/>. 
         /// </summary>
         Duration,
-
-        /// <summary>
-        /// Represents a value with an unknown or error kind.
-        /// </summary>
-        None,
     }
 
     /// <summary>

@@ -8,124 +8,62 @@
 
 //   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
-using Microsoft.OData.Edm.Expressions;
-
 namespace Microsoft.OData.Edm.Library
 {
+    using Microsoft.OData.Edm.Expressions;
+
     /// <summary>
     /// Represents an EDM operation import.
     /// </summary>
-    public abstract class EdmOperationImport : EdmFunctionBase, IEdmOperationImport
+    public abstract class EdmOperationImport : EdmNamedElement, IEdmOperationImport
     {
-        private readonly IEdmEntityContainer container;
-        private readonly IEdmExpression entitySet;
-        private readonly bool isSideEffecting;
-        private readonly bool isComposable;
-        private readonly bool isBindable;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="EdmOperationImport"/> class (side-effecting, non-composable, non-bindable).
-        /// </summary>
-        /// <param name="container">An <see cref="IEdmEntityContainer"/> containing this operation import.</param>
-        /// <param name="name">Name of the operation import.</param>
-        /// <param name="returnType">Return type of the operation import.</param>
-        protected EdmOperationImport(IEdmEntityContainer container, string name, IEdmTypeReference returnType)
-            : this(container, name, returnType, null, true, false, false)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="EdmOperationImport"/> class (side-effecting, non-composable, non-bindable).
-        /// </summary>
-        /// <param name="container">An <see cref="IEdmEntityContainer"/> containing this operation import.</param>
-        /// <param name="name">Name of the operation import.</param>
-        /// <param name="returnType">Return type of the operation import.</param>
-        /// <param name="entitySet">An entity set containing entities returned by this operation import. 
-        /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
-        protected EdmOperationImport(IEdmEntityContainer container, string name, IEdmTypeReference returnType, IEdmExpression entitySet)
-            : this(container, name, returnType, entitySet, true, false, false)
-        {
-        }
-
         /// <summary>
         /// Initializes a new instance of <see cref="EdmOperationImport"/> class.
         /// </summary>
         /// <param name="container">An <see cref="IEdmEntityContainer"/> containing this operation import.</param>
+        /// <param name="operation">The operation of the import.</param>
         /// <param name="name">Name of the operation import.</param>
-        /// <param name="returnType">Return type of the operation import.</param>
         /// <param name="entitySet">An entity set containing entities returned by this operation import. 
         /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
-        /// <param name="isSideEffecting">A value indicating whether this operation import has side-effects.</param>
-        /// <param name="isComposable">A value indicating whether this operation import can be composed inside expressions.</param>
-        /// <param name="isBindable">A value indicating whether this operation import can be used as an extension method for the type of the first parameter of this operation import.</param>
         protected EdmOperationImport(
-            IEdmEntityContainer container, 
-            string name, 
-            IEdmTypeReference returnType, 
-            IEdmExpression entitySet, 
-            bool isSideEffecting, 
-            bool isComposable, 
-            bool isBindable)
-            : base(name, returnType)
+            IEdmEntityContainer container,
+            IEdmOperation operation,
+            string name,
+            IEdmExpression entitySet)
+            : base(name)
         {
             EdmUtil.CheckArgumentNull(container, "container");
-            EdmUtil.CheckArgumentNull(name, "name");
+            EdmUtil.CheckArgumentNull(operation, this.OperationArgumentNullParameterName());
 
-            this.container = container;
-            this.entitySet = entitySet;
-            this.isSideEffecting = isSideEffecting;
-            this.isComposable = isComposable;
-            this.isBindable = isBindable;
+            this.Container = container;
+            this.Operation = operation;
+            this.EntitySet = entitySet;
         }
 
         /// <summary>
-        /// Gets a value indicating whether this operation import has side-effects.
-        /// <see cref="IsSideEffecting"/> cannot be set to true if <see cref="IsComposable"/> is set to true.
+        /// Gets the operation.
         /// </summary>
-        public bool IsSideEffecting
-        {
-            get { return this.isSideEffecting; }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this operation import can be composed inside expressions.
-        /// <see cref="IsComposable"/> cannot be set to true if <see cref="IsSideEffecting"/> is set to true.
-        /// </summary>
-        public bool IsComposable
-        {
-            get { return this.isComposable; } 
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this operation import can be used as an extension method for the type of the first parameter of this operation import.
-        /// </summary>
-        public bool IsBindable
-        {
-            get { return this.isBindable; }
-        }
+        public IEdmOperation Operation { get; private set; }
 
         /// <summary>
         /// Gets the entity set containing entities returned by this operation import.
         /// </summary>
-        public IEdmExpression EntitySet
-        {
-            get { return this.entitySet; }
-        }
+        public IEdmExpression EntitySet { get; private set; }
 
         /// <summary>
         /// Gets the kind of this operation, which is always FunctionImport.
         /// </summary>
-        public EdmContainerElementKind ContainerElementKind
-        {
-            get { return EdmContainerElementKind.OperationImport; }
-        }
-
+        public abstract EdmContainerElementKind ContainerElementKind { get; }
+        
         /// <summary>
         /// Gets the container of this operation.
         /// </summary>
-        public IEdmEntityContainer Container
-        {
-            get { return this.container; }
-        }
+        public IEdmEntityContainer Container { get; private set; }
+
+        /// <summary>
+        /// Operations the name of the argument null parameter.
+        /// </summary>
+        /// <returns>A string that is the name of the operation parameter in the derived operation class.</returns>
+        protected abstract string OperationArgumentNullParameterName();
     }
 }

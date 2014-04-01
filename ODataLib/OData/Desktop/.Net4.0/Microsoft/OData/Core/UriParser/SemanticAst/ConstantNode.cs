@@ -51,6 +51,21 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Create a ConstantNode
         /// </summary>
         /// <param name="constantValue">This node's primitive value.</param>
+        /// <param name="literalText">The literal text for this node's value, formatted according to the OData URI literal formatting rules.</param>
+        /// <param name="typeReference">The typeReference of this node's value.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input literalText is null.</exception>
+        public ConstantNode(object constantValue, string literalText, IEdmTypeReference typeReference)
+            : this(constantValue)
+        {
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, "literalText");
+            this.LiteralText = literalText;
+            this.typeReference = typeReference;
+        }
+
+        /// <summary>
+        /// Create a ConstantNode
+        /// </summary>
+        /// <param name="constantValue">This node's primitive value.</param>
         public ConstantNode(object constantValue)
         {
             this.constantValue = constantValue;
@@ -91,7 +106,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return InternalQueryNodeKind.Constant;
             }
         }
@@ -105,7 +119,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <exception cref="System.ArgumentNullException">Throws if the input visitor is null.</exception>
         public override T Accept<T>(QueryNodeVisitor<T> visitor)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(visitor, "visitor");
             return visitor.Visit(this);
         }

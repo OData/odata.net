@@ -32,7 +32,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 throw new NotImplementedException();
             }
         }
@@ -45,7 +44,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <returns>An object whose type is determined by the type parameter of the visitor.</returns>
         public virtual T Accept<T>(QueryNodeVisitor<T> visitor)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
     }

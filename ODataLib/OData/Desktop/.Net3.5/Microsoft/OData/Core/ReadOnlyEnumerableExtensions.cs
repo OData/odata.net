@@ -29,7 +29,6 @@ namespace Microsoft.OData.Core
         /// <returns>Returns true if <paramref name="source"/> is the empty ReadOnlyEnumerableOfT. false otherwise.</returns>
         internal static bool IsEmptyReadOnlyEnumerable<T>(this IEnumerable<T> source)
         {
-            DebugUtils.CheckNoExternalCallers();
             return ReferenceEquals(source, ReadOnlyEnumerable<T>.Empty());
         }
 
@@ -42,7 +41,6 @@ namespace Microsoft.OData.Core
         /// <returns>The casted ReadOnlyEnumerableOfT.</returns>
         internal static ReadOnlyEnumerable<T> ToReadOnlyEnumerable<T>(this IEnumerable<T> source, string collectionName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!String.IsNullOrEmpty(collectionName), "!string.IsNullOrEmpty(collectionName)");
 
             ReadOnlyEnumerable<T> readonlyCollection = source as ReadOnlyEnumerable<T>;
@@ -65,7 +63,6 @@ namespace Microsoft.OData.Core
         /// a new instance of ReadOnlyEnumerableOfT if <paramref name="source"/> is the same instance as ReadOnlyEnumerableOfT.Empty().</returns>
         internal static ReadOnlyEnumerable<T> GetOrCreateReadOnlyEnumerable<T>(this IEnumerable<T> source, string collectionName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!String.IsNullOrEmpty(collectionName), "!string.IsNullOrEmpty(collectionName)");
 
             if (source.IsEmptyReadOnlyEnumerable())
@@ -86,53 +83,9 @@ namespace Microsoft.OData.Core
         /// <returns>Returns a ReadOnlyEnumerableOfT that is the result of <paramref name="source"/> plus <paramref name="item"/>.</returns>
         internal static ReadOnlyEnumerable<T> ConcatToReadOnlyEnumerable<T>(this IEnumerable<T> source, string collectionName, T item)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             ReadOnlyEnumerable<T> readOnlyEnumerable = source.GetOrCreateReadOnlyEnumerable(collectionName);
             readOnlyEnumerable.AddToSourceList(item);
             return readOnlyEnumerable;
-        }
-
-        /// <summary>
-        /// Adds an ODataAction to an entry.
-        /// </summary>
-        /// <param name="entry">The entry to add the action.</param>
-        /// <param name="action">The action to add.</param>
-        internal static void AddAction(this ODataEntry entry, ODataAction action)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(entry != null, "entry != null");
-            Debug.Assert(action != null, "action != null");
-            
-            entry.Actions = entry.Actions.ConcatToReadOnlyEnumerable("Actions", action);
-        }
-
-        /// <summary>
-        /// Adds an ODataFunction to an entry.
-        /// </summary>
-        /// <param name="entry">The entry to add the function.</param>
-        /// <param name="function">The function to add.</param>
-        internal static void AddFunction(this ODataEntry entry, ODataFunction function)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(entry != null, "entry != null");
-            Debug.Assert(function != null, "function != null");
-
-            entry.Functions = entry.Functions.ConcatToReadOnlyEnumerable("Functions", function);
-        }
-
-        /// <summary>
-        /// Adds an association link to an entry.
-        /// </summary>
-        /// <param name="entry">The entry to add the association link to.</param>
-        /// <param name="associationLink">The association link to add.</param>
-        internal static void AddAssociationLink(this ODataEntry entry, ODataAssociationLink associationLink)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(entry != null, "entry != null");
-            Debug.Assert(associationLink != null, "associationLink != null");
-
-            entry.AssociationLinks = entry.AssociationLinks.ConcatToReadOnlyEnumerable("AssociationLinks", associationLink);
         }
     }
 }

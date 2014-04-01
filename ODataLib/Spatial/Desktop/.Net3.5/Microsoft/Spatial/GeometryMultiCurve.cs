@@ -10,14 +10,7 @@
 
 namespace Microsoft.Spatial
 {
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
-
     /// <summary>Represents the geometry multi-curve.</summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     public abstract class GeometryMultiCurve : GeometryCollection
     {
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeometryMultiCurve" /> class.</summary>

@@ -32,7 +32,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The converted query node, or the original source node unchanged.</returns>
         internal static SingleValueNode ConvertToTypeIfNeeded(SingleValueNode source, IEdmTypeReference targetTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             Debug.Assert(source != null, "source != null");
 
             if (targetTypeReference == null)
@@ -47,15 +46,34 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     return source;
                 }
 
-                if (!TypePromotionUtils.CanConvertTo(source.TypeReference, targetTypeReference))
+                if (!TypePromotionUtils.CanConvertTo(source, source.TypeReference, targetTypeReference))
                 {
                     throw new ODataException(ODataErrorStrings.MetadataBinder_CannotConvertToType(source.TypeReference.ODataFullName(), targetTypeReference.ODataFullName()));
                 }
+                else
+                {
+                    object primitiveValue;
+                    if (MetadataUtilsCommon.TryGetConstantNodePrimitiveLDMF(source, out primitiveValue) && (primitiveValue != null))
+                    {
+                        // L F D M types : directly create a ConvertNode.
+                        // 1. NodeToExpressionTranslator.cs won't allow implicitly converting single/double to decimal, which should be done here at Node tree level.
+                        // 2. And prevent losing precision in float -> double, e.g. (double)1.234f => 1.2339999675750732d not 1.234d
+                        object primitiveValue2 = ODataUriConversionUtils.CoerceNumericType(primitiveValue, targetTypeReference.AsPrimitive().Definition as IEdmPrimitiveType);
+                        return new ConstantNode(primitiveValue2);
+                    }
+                    else
+                    {
+                        // other type conversion : ConvertNode
+                        return new ConvertNode(source, targetTypeReference);
+                    }
+                }
             }
-
-            // If the source doesn't have a type (possibly an open property), then it's possible to convert it
-            // cause we don't know for sure.
-            return new ConvertNode(source, targetTypeReference);
+            else
+            {
+                // If the source doesn't have a type (possibly an open property), then it's possible to convert it
+                // cause we don't know for sure.
+                return new ConvertNode(source, targetTypeReference);
+            }
         }
 
         /// <summary>
@@ -65,7 +83,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The type of the node, or item type for collections.</returns>
         internal static IEdmType GetEdmType(this QueryNode segment)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             SingleValueNode singleNode = segment as SingleValueNode;
 
             if (singleNode != null)
@@ -92,7 +109,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The Type reference of the node (item type reference for collections).</returns>
         internal static IEdmTypeReference GetEdmTypeReference(this QueryNode segment)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             SingleValueNode singleNode = segment as SingleValueNode;
 
             if (singleNode != null)

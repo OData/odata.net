@@ -9,7 +9,7 @@
 //   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Internal;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Values;
 
 namespace Microsoft.OData.Edm.Library
@@ -57,7 +57,7 @@ namespace Microsoft.OData.Edm.Library
             : this(namespaceName, name, EdmCoreModel.Instance.GetPrimitiveType(underlyingType), isFlags)
         {
         }
-       
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmEnumType"/> class.
         /// </summary>
@@ -120,7 +120,7 @@ namespace Microsoft.OData.Edm.Library
         /// <summary>
         /// Gets the members of this enumeration type.
         /// </summary>
-        public IEnumerable<IEdmEnumMember> Members
+        public virtual IEnumerable<IEdmEnumMember> Members
         {
             get { return this.members; }
         }

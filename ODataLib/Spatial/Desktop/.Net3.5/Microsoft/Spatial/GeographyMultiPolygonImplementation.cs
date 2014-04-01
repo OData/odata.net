@@ -12,17 +12,11 @@ namespace Microsoft.Data.Spatial
 {
     using System;
     using System.Collections.ObjectModel;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
     using Microsoft.Spatial;
 
     /// <summary>
     /// Geography Multi-Polygon
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     internal class GeographyMultiPolygonImplementation : GeographyMultiPolygon
     {
         /// <summary>
@@ -79,18 +73,6 @@ namespace Microsoft.Data.Spatial
             get { return new ReadOnlyCollection<GeographyPolygon>(this.polygons); }
         }
         
-#if WINDOWS_PHONE
-        /// <summary>
-        /// internal GeographyPolygon array property to support serializing and de-serializing this instance.
-        /// </summary>
-        [DataMember]
-        internal GeographyPolygon[] PolygonsArray
-        {
-            get { return this.polygons; }
-
-            set { this.polygons = value; }
-        }
-#endif
         /// <summary>
         /// Sends the current spatial object to the given sink
         /// </summary>

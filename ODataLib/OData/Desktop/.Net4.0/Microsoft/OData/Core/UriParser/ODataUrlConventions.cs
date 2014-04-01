@@ -60,7 +60,6 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.urlConvention;
             }
         }

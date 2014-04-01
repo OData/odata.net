@@ -30,7 +30,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomFeedMetadataSerializer(ODataAtomOutputContext atomOutputContext)
             : base(atomOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -43,19 +42,17 @@ namespace Microsoft.OData.Core.Atom
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Does not make sense to break up writing the various parts of feed metadata. Very linear code; complexity not high.")]
         internal void WriteFeedMetadata(AtomFeedMetadata feedMetadata, ODataFeed feed, string updatedTime, out bool authorWritten)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(feedMetadata != null, "Feed metadata must not be null!");
 
             // <atom:id>text</atom:id>
             // NOTE: this is the Id of the feed. For a regular feed this is stored on the feed itself;
             // if used in the context of an <atom:source> element it is stored in metadata
-            Debug.Assert(feed == null || !string.IsNullOrEmpty(feed.Id), "The feed Id should have been validated by now.");
-            string id = feed == null ? feedMetadata.SourceId : feed.Id;
+            Uri id = feed == null ? feedMetadata.SourceId : feed.Id;
             this.WriteElementWithTextContent(
                 AtomConstants.AtomNamespacePrefix,
                 AtomConstants.AtomIdElementName,
                 AtomConstants.AtomNamespace,
-                id);
+                id == null ? null : UriUtils.UriToString(id));
 
             // <atom:title>text</atom:title>
             // NOTE: write an empty element if no title is specified since the element is required

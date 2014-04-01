@@ -25,39 +25,29 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     internal static class SelectExpandClauseExtensions
     {
         /// <summary>
-        /// Gets the select and expand clauses as strings.
+        /// Get sub select and expand clause by property name, if the propertyname is in form of TypeCast/Property, the typeSegment would also be returned.
         /// </summary>
-        /// <param name="selectExpandClause">The select expand clause to get the paths from.</param>
-        /// <param name="selectClause">Returns the select clause.</param>
-        /// <param name="expandClause">Returns the expand clause.</param>
-        //// TODO 1466134 Get Rid of these and use only V4
-        internal static void GetV3SelectExpandPaths(this SelectExpandClause selectExpandClause, out string selectClause, out string expandClause)
+        /// <param name="clause">The root clause.</param>
+        /// <param name="propertyName">The property name to navigate to.</param>
+        /// <param name="subSelectExpand">The sub select and expand clause under sub property.</param>
+        /// <param name="typeSegment">Type cast segment, if exists.</param>
+        internal static void GetSubSelectExpandClause(this SelectExpandClause clause, string propertyName, out SelectExpandClause subSelectExpand, out TypeSegment typeSegment)
         {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(selectExpandClause != null, "selectExpandClause != null");
+            subSelectExpand = null;
+            typeSegment = null;
 
-            StringBuilder selectClauseBuilder, expandClauseBuilder;
-            selectExpandClause.GetV3SelectExpandPaths(out selectClauseBuilder, out expandClauseBuilder);
+            ExpandedNavigationSelectItem selectedItem = clause
+                                                        .SelectedItems
+                                                        .OfType<ExpandedNavigationSelectItem>()
+                                                        .FirstOrDefault(
+                                                            m => m.PathToNavigationProperty.LastSegment != null
+                                                                && m.PathToNavigationProperty.LastSegment.TranslateWith(PathSegmentToStringTranslator.Instance) == propertyName);
 
-            selectClause = selectClauseBuilder.ToString();
-            expandClause = expandClauseBuilder.ToString();
-        }
-
-        /// <summary>
-        /// Gets the select and expand clauses as <see cref="StringBuilder"/>.
-        /// </summary>
-        /// <param name="selectExpandClause">The select expand clause to get the paths from.</param>
-        /// <param name="selectClause">Returns the select clause.</param>
-        /// <param name="expandClause">Returns the expand clause.</param>
-        //// TODO 1466134 Get Rid of these and use only V4
-        internal static void GetV3SelectExpandPaths(this SelectExpandClause selectExpandClause, out StringBuilder selectClause, out StringBuilder expandClause)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(selectExpandClause != null, "selectExpandClause != null");
-
-            selectClause = new StringBuilder();
-            expandClause = new StringBuilder();
-            BuildSelectAndExpandPathsForNode(/*parentPathSegments*/new List<string>(), selectClause, expandClause, selectExpandClause);
+            if (selectedItem != null)
+            {
+                subSelectExpand = selectedItem.SelectAndExpand;
+                typeSegment = selectedItem.PathToNavigationProperty.FirstSegment as TypeSegment;
+            }
         }
 
         /// <summary>
@@ -66,13 +56,12 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="selectExpandClause">The select expand clause to get the paths from.</param>
         /// <param name="selectClause">Returns the select clause.</param>
         /// <param name="expandClause">Returns the expand clause.</param>
-        internal static void GetV4SelectExpandPaths(this SelectExpandClause selectExpandClause, out string selectClause, out string expandClause)
+        internal static void GetSelectExpandPaths(this SelectExpandClause selectExpandClause, out string selectClause, out string expandClause)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(selectExpandClause != null, "selectExpandCluase != null");
 
             StringBuilder selectClauseBuilder, expandClauseBuilder;
-            selectExpandClause.GetV4SelectExpandPaths(out selectClauseBuilder, out expandClauseBuilder);
+            selectExpandClause.GetSelectExpandPaths(out selectClauseBuilder, out expandClauseBuilder);
 
             selectClause = selectClauseBuilder.ToString();
             expandClause = expandClauseBuilder.ToString();
@@ -84,15 +73,56 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="selectExpandClause">The select expand clause to get the paths from.</param>
         /// <param name="selectClause">Returns the select clause.</param>
         /// <param name="expandClause">Returns the expand clause.</param>
-        internal static void GetV4SelectExpandPaths(this SelectExpandClause selectExpandClause, out StringBuilder selectClause, out StringBuilder expandClause)
+        internal static void GetSelectExpandPaths(this SelectExpandClause selectExpandClause, out StringBuilder selectClause, out StringBuilder expandClause)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(selectExpandClause != null, "selectExpandClause != null");
 
             selectClause = new StringBuilder();
             expandClause = new StringBuilder();
-            selectClause.Append(BuildV4TopLevelSelect(selectExpandClause));
-            expandClause.Append(BuildV4ExpandsForNode(selectExpandClause));
+            selectClause.Append(BuildTopLevelSelect(selectExpandClause));
+            expandClause.Append(BuildExpandsForNode(selectExpandClause));
+        }
+
+        /// <summary>
+        /// Gets a list of strings representing current selected property name in current level.
+        /// </summary>
+        /// <param name="selectExpandClause">The select expand clause used.</param>
+        /// <returns>String list generated from selected items</returns>
+        internal static List<string> GetCurrentLevelSelectList(this SelectExpandClause selectExpandClause)
+        {
+            return selectExpandClause.SelectedItems.Select(GetSelectString).Where(i => i != null).ToList();
+        }
+
+        /// <summary>
+        /// Traverse a SelectExpandClause using given functions.
+        /// </summary>
+        /// <typeparam name="T">Type of the sub processing result for expand items.</typeparam>
+        /// <param name="selectExpandClause">The select expand clause for evaluation.</param>
+        /// <param name="processSubResult">The method to deal with sub expand result.</param>
+        /// <param name="combineSelectAndExpand">The method to combine select and expand result lists.</param>
+        /// <param name="result">The result of the traversing.</param>
+        internal static void Traverse<T>(this SelectExpandClause selectExpandClause, Func<string, T, T> processSubResult, Func<IList<string>, IList<T>, T> combineSelectAndExpand, out T result)
+        {
+            List<string> selectList = selectExpandClause.GetCurrentLevelSelectList();
+            List<T> expandList = new List<T>();
+
+            foreach (ExpandedNavigationSelectItem expandSelectItem in selectExpandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>())
+            {
+                string currentExpandClause = String.Join("/", expandSelectItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
+                T subResult = default(T);
+                if (expandSelectItem.SelectAndExpand.SelectedItems.Any())
+                {
+                    Traverse(expandSelectItem.SelectAndExpand, processSubResult, combineSelectAndExpand, out subResult);
+                }
+
+                var expandItem = processSubResult(currentExpandClause, subResult);
+                if (expandItem != null)
+                {
+                    expandList.Add(expandItem);
+                }
+            }
+
+            result = combineSelectAndExpand(selectList, expandList);
         }
 
         /// <summary>
@@ -100,13 +130,12 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         /// <param name="selectExpandClause">top level select expand clause.</param>
         /// <returns>the string representation of the top level select clause.</returns>
-        private static string BuildV4TopLevelSelect(SelectExpandClause selectExpandClause)
+        private static string BuildTopLevelSelect(SelectExpandClause selectExpandClause)
         {
             // Special case to build the top level select clause (this it the only time that we actualy
             // modify the selectClause because in V4 the the top level select clause can only modify the top
             // level).
-            List<string> selects = selectExpandClause.SelectedItems.Select(GetSelectString).Where(i => i != null).ToList();
-            return String.Join(",", selects.ToArray());
+            return String.Join(",", selectExpandClause.GetCurrentLevelSelectList().ToArray());
         }
 
         /// <summary>
@@ -117,16 +146,16 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private static string GetSelectString(SelectItem selectedItem)
         {
             WildcardSelectItem wildcardSelect = selectedItem as WildcardSelectItem;
-            ContainerQualifiedWildcardSelectItem containerQualifiedWildcard = selectedItem as ContainerQualifiedWildcardSelectItem;
+            NamespaceQualifiedWildcardSelectItem namespaceQualifiedWildcard = selectedItem as NamespaceQualifiedWildcardSelectItem;
             PathSelectItem pathSelectItem = selectedItem as PathSelectItem;
-            
+
             if (wildcardSelect != null)
             {
                 return "*";
             }
-            else if (containerQualifiedWildcard != null)
+            else if (namespaceQualifiedWildcard != null)
             {
-                return containerQualifiedWildcard.Container.Name + ".*";
+                return namespaceQualifiedWildcard.Namespace + ".*";
             }
             else if (pathSelectItem != null)
             {
@@ -143,117 +172,57 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         /// <param name="selectExpandClause">the current level select expand clause</param>
         /// <returns>the expand clause for this level.</returns>
-        private static string BuildV4ExpandsForNode(SelectExpandClause selectExpandClause)
+        private static string BuildExpandsForNode(SelectExpandClause selectExpandClause)
         {
             List<string> currentLevelExpandClauses = new List<string>();
-            foreach (SelectItem selectedItem in selectExpandClause.SelectedItems)
+            foreach (ExpandedNavigationSelectItem expandItem in selectExpandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>())
             {
-                ExpandedNavigationSelectItem expandItem = selectedItem as ExpandedNavigationSelectItem;
-                if (expandItem != null)
+                string currentExpandClause = String.Join("/", expandItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
+                string expandStr;
+                expandItem.SelectAndExpand.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, out expandStr);
+                if (!string.IsNullOrEmpty(expandStr))
                 {
-                    string currentExpandClause = String.Join("/", expandItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
-                    if (expandItem.SelectAndExpand.SelectedItems.Any())
-                    {
-                        currentExpandClause += "(";
-                        List<string> selectsForThisLevel = expandItem.SelectAndExpand.SelectedItems.Select(GetSelectString).Where(i => i != null).ToList();
-                        if (selectsForThisLevel.Count > 0)
-                        {
-                            currentExpandClause += "$select=" + String.Join(",", selectsForThisLevel.ToArray()) + ";";
-                        }
-
-                        // then recurse to build sub levels
-                        string subExpand = BuildV4ExpandsForNode(expandItem.SelectAndExpand);
-                        if (subExpand != "")
-                        {
-                            currentExpandClause += "$expand=" + subExpand;
-                        }
-
-                        currentExpandClause += ")";
-                    }
-
-                    currentLevelExpandClauses.Add(currentExpandClause);
+                    currentExpandClause += "(" + expandStr + ")";
                 }
+
+                currentLevelExpandClauses.Add(currentExpandClause);
             }
 
             return String.Join(",", currentLevelExpandClauses.ToArray());
         }
 
-        /// <summary>Recursive method which builds the $expand and $select paths for the specified node.</summary>
-        /// <param name="parentPathSegments">List of path segments which lead up to this node. 
-        /// So for example if the specified node is Orders/OrderDetails the list will contains two strings
-        /// "Orders" and "OrderDetails".</param>
-        /// <param name="selectClause">The result to which the select paths are appended as a comma separated list.</param>
-        /// <param name="expandClause">The result to which the expand paths are appended as a comma separated list.</param>
-        /// <param name="selectExpandClause">The select expand clause inspect.</param>
-        private static void BuildSelectAndExpandPathsForNode(List<string> parentPathSegments, StringBuilder selectClause, StringBuilder expandClause, SelectExpandClause selectExpandClause)
+        /// <summary>Process sub expand node, contact with subexpad result</summary>
+        /// <param name="expandNode">The current expanded node.</param>
+        /// <param name="subExpand">Generated sub expand node.</param>
+        /// <returns>The generated expand string.</returns>
+        private static string ProcessSubExpand(string expandNode, string subExpand)
         {
-            foreach (var selectItem in selectExpandClause.SelectedItems)
-            {
-                if (selectItem is WildcardSelectItem)
-                {
-                    AppendSelectOrExpandPath(selectClause, parentPathSegments, "*");
-                    continue;
-                }
-
-                ContainerQualifiedWildcardSelectItem containerQualifiedWildcardSelectItem = selectItem as ContainerQualifiedWildcardSelectItem;
-                if (containerQualifiedWildcardSelectItem != null)
-                {
-                    AppendSelectOrExpandPath(selectClause, parentPathSegments, containerQualifiedWildcardSelectItem.Container.Name + ".*");
-                    continue;
-                }
-
-                string path;
-
-                var expandItem = selectItem as ExpandedNavigationSelectItem;
-                if (expandItem != null)
-                {
-                    path = String.Join("/", expandItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
-
-                    // If the next level is AllSelected and the current level is partially selected, add the expanded navigation property to the select clause.
-                    if (expandItem.SelectAndExpand.AllSelected && !selectExpandClause.AllSelected)
-                    {
-                        AppendSelectOrExpandPath(selectClause, parentPathSegments, path);                        
-                    }
-
-                    // If the expanded nav prop has no deeper expansions, add the path to $expand.
-                    if (!expandItem.SelectAndExpand.SelectedItems.OfType<ExpandedNavigationSelectItem>().Any())
-                    {
-                        AppendSelectOrExpandPath(expandClause, parentPathSegments, path);
-                    }
-
-                    // Build path for nested select and expand clause.
-                    parentPathSegments.Add(path);
-                    BuildSelectAndExpandPathsForNode(parentPathSegments, selectClause, expandClause, expandItem.SelectAndExpand);
-                    parentPathSegments.RemoveAt(parentPathSegments.Count - 1);
-
-                    continue;
-                }
-                
-                PathSelectItem pathSelectionItem = selectItem as PathSelectItem;
-                Debug.Assert(pathSelectionItem != null, "Unexpeced selection item type: " + selectItem.GetType());
-
-                path = String.Join("/", pathSelectionItem.SelectedPath.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
-                AppendSelectOrExpandPath(selectClause, parentPathSegments, path);
-            }
+            return string.IsNullOrEmpty(subExpand) ? expandNode : expandNode + "(" + subExpand + ")";
         }
 
-        /// <summary>Helper method to append a path to the $expand or $select path list.</summary>
-        /// <param name="pathsBuilder">The <see cref="StringBuilder"/> to which to append the path.</param>
-        /// <param name="parentPathSegments">The segments of the path up to the last segment.</param>
-        /// <param name="lastPathSegment">The last segment of the path.</param>
-        private static void AppendSelectOrExpandPath(StringBuilder pathsBuilder, IEnumerable<string> parentPathSegments, string lastPathSegment)
+        /// <summary>Create combined result string using selected items list and expand items list.</summary>
+        /// <param name="selectList">A list of selected item names.</param>
+        /// <param name="expandList">A list of sub expanded item names.</param>
+        /// <returns>The generated expand string.</returns>
+        private static string CombineSelectAndExpandResult(IList<string> selectList, IList<string> expandList)
         {
-            if (pathsBuilder.Length != 0)
+            string currentExpandClause = "";
+            if (selectList.Any())
             {
-                pathsBuilder.Append(',');
+                currentExpandClause += "$select=" + String.Join(",", selectList.ToArray());
             }
 
-            foreach (string parentPathSegment in parentPathSegments)
+            if (expandList.Any())
             {
-                pathsBuilder.Append(parentPathSegment).Append('/');
+                if (!string.IsNullOrEmpty(currentExpandClause))
+                {
+                    currentExpandClause += ";";
+                }
+
+                currentExpandClause += "$expand=" + String.Join(",", expandList.ToArray());
             }
 
-            pathsBuilder.Append(lastPathSegment);
+            return currentExpandClause;
         }
     }
 }

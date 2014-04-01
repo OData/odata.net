@@ -28,8 +28,6 @@ namespace Microsoft.OData.Core.Atom
         [Conditional("DEBUG")]
         internal static void AssertNotBuffering(this BufferingXmlReader bufferedXmlReader)
         {
-            DebugUtils.CheckNoExternalCallers();
-
 #if DEBUG
             Debug.Assert(!bufferedXmlReader.IsBuffering, "!bufferedXmlReader.IsBuffering");
 #endif
@@ -42,8 +40,6 @@ namespace Microsoft.OData.Core.Atom
         [Conditional("DEBUG")]
         internal static void AssertBuffering(this BufferingXmlReader bufferedXmlReader)
         {
-            DebugUtils.CheckNoExternalCallers();
-
 #if DEBUG
             Debug.Assert(bufferedXmlReader.IsBuffering, "bufferedXmlReader.IsBuffering");
 #endif
@@ -67,8 +63,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal static string ReadElementValue(this XmlReader reader)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             string result = reader.ReadElementContentValue();
             reader.Read();
             return result;
@@ -94,7 +88,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal static string ReadElementContentValue(this XmlReader reader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
             Debug.Assert(
                 reader.NodeType == XmlNodeType.Element || reader.NodeType == XmlNodeType.Attribute,
@@ -174,7 +167,6 @@ namespace Microsoft.OData.Core.Atom
         /// whitespace only content (even though the XmlReader should report those as Whitespace).</remarks>
         internal static void SkipInsignificantNodes(this XmlReader reader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
 
             do
@@ -216,7 +208,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal static void SkipElementContent(this XmlReader reader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
             Debug.Assert(
                 reader.NodeType == XmlNodeType.Element || reader.NodeType == XmlNodeType.Attribute,
@@ -248,7 +239,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal static void ReadPayloadStart(this XmlReader reader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
             Debug.Assert(reader.NodeType == XmlNodeType.None, "Pre-Condition: XML reader must not have been used yet.");
 
@@ -271,7 +261,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal static void ReadPayloadEnd(this XmlReader reader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
 
             reader.SkipInsignificantNodes();
@@ -293,7 +282,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>true if the current node is in the specified namespace; false otherwise.</returns>
         internal static bool NamespaceEquals(this XmlReader reader, string namespaceUri)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
             Debug.Assert(
                 reader.NodeType == XmlNodeType.Element || reader.NodeType == XmlNodeType.EndElement || reader.NodeType == XmlNodeType.Attribute,
@@ -311,7 +299,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>true if the current node has the specified local name; false otherwise.</returns>
         internal static bool LocalNameEquals(this XmlReader reader, string localName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
             Debug.Assert(
                 reader.NodeType == XmlNodeType.Element || reader.NodeType == XmlNodeType.EndElement || reader.NodeType == XmlNodeType.Attribute,
@@ -335,7 +322,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal static bool TryReadEmptyElement(this XmlReader reader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
             Debug.Assert(
                 reader.NodeType == XmlNodeType.Element || reader.NodeType == XmlNodeType.Attribute,
@@ -362,7 +348,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>true if the method reached the next element; otherwise false.</returns>
         internal static bool TryReadToNextElement(this XmlReader reader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
 
             while (reader.Read())
@@ -383,7 +368,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>true if text is null, empty, or all whitespace characters.</returns>
         private static bool IsNullOrWhitespace(string text)
         {
-#if WINDOWS_PHONE || ORCAS || PORTABLELIB
             if (text == null)
             {
                 return true;
@@ -400,9 +384,6 @@ namespace Microsoft.OData.Core.Atom
 
                 return true;
             }
-#else
-            return string.IsNullOrWhiteSpace(text);
-#endif
         }
     }
 }

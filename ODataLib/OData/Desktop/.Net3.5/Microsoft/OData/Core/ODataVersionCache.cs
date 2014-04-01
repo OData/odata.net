@@ -30,7 +30,6 @@ namespace Microsoft.OData.Core
         /// <param name="factory">The method to call to create a new instance of <typeparamref name="T"/> for a given ODataVersion.</param>
         internal ODataVersionCache(Func<ODataVersion, T> factory)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(factory != null, "factory != null");
 
             this.v3 = new SimpleLazy<T>(() => factory(ODataVersion.V4), true /*isThreadSafe*/);
@@ -45,8 +44,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 switch (version)
                 {
                     case ODataVersion.V4:

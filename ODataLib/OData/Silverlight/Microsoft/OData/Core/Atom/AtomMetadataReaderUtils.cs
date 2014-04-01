@@ -26,8 +26,6 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created ATOM entry metadata.</returns>
         internal static AtomEntryMetadata CreateNewAtomEntryMetadata()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return new AtomEntryMetadata
             {
                 Authors = ReadOnlyEnumerable<AtomPersonMetadata>.Empty(),
@@ -43,8 +41,6 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created ATOM feed metadata.</returns>
         internal static AtomFeedMetadata CreateNewAtomFeedMetadata()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return new AtomFeedMetadata
             {
                 Authors = ReadOnlyEnumerable<AtomPersonMetadata>.Empty(),
@@ -61,7 +57,6 @@ namespace Microsoft.OData.Core
         /// <param name="authorMetadata">The author metadata to add.</param>
         internal static void AddAuthor(this AtomEntryMetadata entryMetadata, AtomPersonMetadata authorMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryMetadata != null, "entryMetadata != null");
             Debug.Assert(authorMetadata != null, "authorMetadata != null");
 
@@ -75,7 +70,6 @@ namespace Microsoft.OData.Core
         /// <param name="contributorMetadata">The contributor metadata to add.</param>
         internal static void AddContributor(this AtomEntryMetadata entryMetadata, AtomPersonMetadata contributorMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryMetadata != null, "entryMetadata != null");
             Debug.Assert(contributorMetadata != null, "contributorMetadata != null");
 
@@ -89,7 +83,6 @@ namespace Microsoft.OData.Core
         /// <param name="linkMetadata">The link metadata to add.</param>
         internal static void AddLink(this AtomEntryMetadata entryMetadata, AtomLinkMetadata linkMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryMetadata != null, "entryMetadata != null");
             Debug.Assert(linkMetadata != null, "linkMetadata != null");
 
@@ -103,7 +96,6 @@ namespace Microsoft.OData.Core
         /// <param name="linkMetadata">The link metadata to add.</param>
         internal static void AddLink(this AtomFeedMetadata feedMetadata, AtomLinkMetadata linkMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(feedMetadata != null, "feedMetadata != null");
             Debug.Assert(linkMetadata != null, "linkMetadata != null");
 
@@ -117,7 +109,6 @@ namespace Microsoft.OData.Core
         /// <param name="categoryMetadata">The category metadata to add.</param>
         internal static void AddCategory(this AtomEntryMetadata entryMetadata, AtomCategoryMetadata categoryMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryMetadata != null, "entryMetadata != null");
             Debug.Assert(categoryMetadata != null, "categoryMetadata != null");
 
@@ -131,7 +122,6 @@ namespace Microsoft.OData.Core
         /// <param name="categoryMetadata">The category metadata to add.</param>
         internal static void AddCategory(this AtomFeedMetadata feedMetadata, AtomCategoryMetadata categoryMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(feedMetadata != null, "feedMetadata != null");
             Debug.Assert(categoryMetadata != null, "categoryMetadata != null");
 
@@ -145,7 +135,6 @@ namespace Microsoft.OData.Core
         /// <param name="authorMetadata">The author metadata to add.</param>
         internal static void AddAuthor(this AtomFeedMetadata feedMetadata, AtomPersonMetadata authorMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(feedMetadata != null, "feedMetadata != null");
             Debug.Assert(authorMetadata != null, "authorMetadata != null");
 
@@ -159,7 +148,6 @@ namespace Microsoft.OData.Core
         /// <param name="contributorMetadata">The author metadata to add.</param>
         internal static void AddContributor(this AtomFeedMetadata feedMetadata, AtomPersonMetadata contributorMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(feedMetadata != null, "feedMetadata != null");
             Debug.Assert(contributorMetadata != null, "contributorMetadata != null");
 

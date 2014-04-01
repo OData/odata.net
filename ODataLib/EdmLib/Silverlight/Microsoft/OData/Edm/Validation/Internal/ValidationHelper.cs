@@ -10,10 +10,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using Microsoft.OData.Edm.Internal;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Values;
 
@@ -91,6 +92,7 @@ namespace Microsoft.OData.Edm.Validation.Internal
             string rawString = edmStringValue.Value;
 
             XmlReader reader = XmlReader.Create(new StringReader(rawString));
+
             try
             {
                 // Skip to root element.
@@ -132,7 +134,7 @@ namespace Microsoft.OData.Edm.Validation.Internal
                 error = null;
                 return true;
             }
-            catch (Exception)
+            catch (XmlException)
             {
                 error = new EdmError(value.Location(), EdmErrorCode.InvalidElementAnnotation, Edm.Strings.EdmModel_Validator_Semantic_InvalidElementAnnotationValueInvalidXml);
                 return false;
@@ -150,7 +152,7 @@ namespace Microsoft.OData.Edm.Validation.Internal
             {
                 if (referenced.FindDeclaredType(fullName) != null ||
                     referenced.FindDeclaredValueTerm(fullName) != null ||
-                    (checkEntityContainer && referenced.FindDeclaredEntityContainer(fullName) != null) ||
+                    (checkEntityContainer && referenced.ExistsContainer(fullName)) ||
                     (referenced.FindDeclaredOperations(fullName) ?? Enumerable.Empty<IEdmOperation>()).FirstOrDefault() != null)
                 {
                     return true;
@@ -161,20 +163,20 @@ namespace Microsoft.OData.Edm.Validation.Internal
         }
 
         // Take operation name to avoid recomputing it
-        internal static bool FunctionOrNameExistsInReferencedModel(this IEdmModel model, IEdmOperation operation, string operationFullName, bool checkEntityContainer)
+        internal static bool OperationOrNameExistsInReferencedModel(this IEdmModel model, IEdmOperation operation, string operationFullName)
         {
             foreach (IEdmModel referenced in model.ReferencedModels)
             {
                 if (referenced.FindDeclaredType(operationFullName) != null ||
-                    referenced.FindDeclaredValueTerm(operationFullName) != null ||
-                    (checkEntityContainer && referenced.FindDeclaredEntityContainer(operationFullName) != null))
+                    referenced.ExistsContainer(operationFullName) ||
+                    referenced.FindDeclaredValueTerm(operationFullName) != null)
                 {
                     return true;
                 }
                 else
                 {
                     IEnumerable<IEdmOperation> operationList = referenced.FindDeclaredOperations(operationFullName) ?? Enumerable.Empty<IEdmOperation>();
-                    if (operationList.Any(existingFunction => operation.IsFunctionSignatureEquivalentTo(existingFunction)))
+                    if (DuplicateOperationValidator.IsDuplicateOperation(operation, operationList))
                     {
                         return true;
                     }
@@ -212,6 +214,18 @@ namespace Microsoft.OData.Edm.Validation.Internal
             }
 
             return false;
+        }
+
+        internal static IEdmEntityType ComputeNavigationPropertyTarget(IEdmNavigationProperty property)
+        {
+            Debug.Assert(property != null, "Navigation property can't be null");
+            IEdmType target = property.Type.Definition;
+            if (target.TypeKind == EdmTypeKind.Collection)
+            {
+                target = ((IEdmCollectionType)target).ElementType.Definition;
+            }
+
+            return (IEdmEntityType)target;
         }
     }
 }

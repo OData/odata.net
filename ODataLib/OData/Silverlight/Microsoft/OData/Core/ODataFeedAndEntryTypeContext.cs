@@ -11,9 +11,9 @@
 namespace Microsoft.OData.Core
 {
     using System.Diagnostics;
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.Metadata;
 
     /// <summary>
     /// The context object to answer basic questions regarding the type of the entry or feed.
@@ -40,19 +40,27 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The entity set name of the feed or entry.
+        /// The navigation source name of the feed or entry.
         /// </summary>
-        public virtual string EntitySetName
+        public virtual string NavigationSourceName
         {
             get { return this.ValidateAndReturn(default(string)); }
         }
 
         /// <summary>
-        /// The element type name of the entity set of the feed or entry.
+        /// The entity type name of the navigation source of the feed or entry.
         /// </summary>
-        public virtual string EntitySetElementTypeName
+        public virtual string NavigationSourceEntityTypeName
         {
             get { return this.ValidateAndReturn(default(string)); }
+        }
+
+        /// <summary>
+        /// The kind of the navigation source of the feed or entry.
+        /// </summary>
+        public virtual EdmNavigationSourceKind NavigationSourceKind
+        {
+            get { return EdmNavigationSourceKind.None; }
         }
 
         /// <summary>
@@ -63,6 +71,14 @@ namespace Microsoft.OData.Core
         public virtual string ExpectedEntityTypeName
         {
             get { return null; }
+        }
+
+        /// <summary>
+        /// The type kind of the entity type of the feed or entry.
+        /// </summary>
+        public virtual bool IsFromCollection
+        {
+            get { return false; }
         }
 
         /// <summary>
@@ -85,26 +101,25 @@ namespace Microsoft.OData.Core
         /// Creates an instance of <see cref="ODataFeedAndEntryTypeContext"/>.
         /// </summary>
         /// <param name="serializationInfo">The serialization info from the feed or entry instance.</param>
-        /// <param name="entitySet">The entity set of the feed or entry.</param>
-        /// <param name="entitySetElementType">The element type of the entity set.</param>
+        /// <param name="navigationSource">The navigation source of the feed or entry.</param>
+        /// <param name="navigationSourceEntityType">The entity type of the navigation source.</param>
         /// <param name="expectedEntityType">The expected entity type of the feed or entry.</param>
         /// <param name="model">The Edm model instance to use.</param>
         /// <param name="throwIfMissingTypeInfo">If true, throw if any of the set or type name cannot be determined; if false, return null when any of the set or type name cannot determined.</param>
         /// <returns>A new instance of <see cref="ODataFeedAndEntryTypeContext"/>.</returns>
-        internal static ODataFeedAndEntryTypeContext Create(ODataFeedAndEntrySerializationInfo serializationInfo, IEdmEntitySet entitySet, IEdmEntityType entitySetElementType, IEdmEntityType expectedEntityType, IEdmModel model, bool throwIfMissingTypeInfo)
+        internal static ODataFeedAndEntryTypeContext Create(ODataFeedAndEntrySerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmEntityType expectedEntityType, IEdmModel model, bool throwIfMissingTypeInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(model != null, "model != null");
             if (serializationInfo != null)
             {
                 return new ODataFeedAndEntryTypeContextWithoutModel(serializationInfo);
             }
-            
-            if (entitySet != null && model.IsUserModel())
+
+            if (navigationSource != null && model.IsUserModel())
             {
-                Debug.Assert(entitySetElementType != null, "entitySetElementType != null");
+                Debug.Assert(navigationSourceEntityType != null, "navigationSourceEntityType != null");
                 Debug.Assert(expectedEntityType != null, "expectedEntityType != null");
-                return new ODataFeedAndEntryTypeContextWithModel(entitySet, entitySetElementType, expectedEntityType, model);
+                return new ODataFeedAndEntryTypeContextWithModel(navigationSource, navigationSourceEntityType, expectedEntityType, model);
             }
 
             return new ODataFeedAndEntryTypeContext(throwIfMissingTypeInfo);
@@ -143,25 +158,32 @@ namespace Microsoft.OData.Core
             internal ODataFeedAndEntryTypeContextWithoutModel(ODataFeedAndEntrySerializationInfo serializationInfo)
                 : base(/*throwIfMissingTypeInfo*/false)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(serializationInfo != null, "serializationInfo != null");
                 this.serializationInfo = serializationInfo;
             }
 
             /// <summary>
-            /// The entity set name of the feed or entry.
+            /// The navigation source name of the feed or entry.
             /// </summary>
-            public override string EntitySetName
+            public override string NavigationSourceName
             {
-                get { return this.serializationInfo.EntitySetName; }
+                get { return this.serializationInfo.NavigationSourceName; }
             }
 
             /// <summary>
-            /// The element type name of the entity set of the feed or entry.
+            /// The entity type name of the navigation source of the feed or entry.
             /// </summary>
-            public override string EntitySetElementTypeName
+            public override string NavigationSourceEntityTypeName
             {
-                get { return this.serializationInfo.EntitySetElementTypeName; }
+                get { return this.serializationInfo.NavigationSourceEntityTypeName; }
+            }
+
+            /// <summary>
+            /// The kind of the navigation source of the feed or entry.
+            /// </summary>
+            public override EdmNavigationSourceKind NavigationSourceKind
+            {
+                get { return this.serializationInfo.NavigationSourceKind; }
             }
 
             /// <summary>
@@ -195,8 +217,16 @@ namespace Microsoft.OData.Core
             {
                 get { return DefaultUrlConvention; }
             }
+
+            /// <summary>
+            /// The type kind of the entity type of the feed or entry.
+            /// </summary>
+            public override bool IsFromCollection
+            {
+                get { return this.serializationInfo.IsFromCollection; }
+            }
         }
-        
+
         /// <summary>
         /// The context object to answer basic questions regarding the type of the entry or feed based on the metadata.
         /// </summary>
@@ -208,14 +238,14 @@ namespace Microsoft.OData.Core
             private readonly IEdmModel model;
 
             /// <summary>
-            /// The entity set of the feed or entry.
+            /// The navigation source of the feed or entry.
             /// </summary>
-            private readonly IEdmEntitySet entitySet;
+            private readonly IEdmNavigationSource navigationSource;
 
             /// <summary>
-            /// The element type of the entity set of the feed or entry.
+            /// The entity type of the navigation source of the feed or entry.
             /// </summary>
-            private readonly IEdmEntityType entitySetElementType;
+            private readonly IEdmEntityType navigationSourceEntityType;
 
             /// <summary>
             /// The expected entity type of the feed or entry.
@@ -225,14 +255,14 @@ namespace Microsoft.OData.Core
             private readonly IEdmEntityType expectedEntityType;
 
             /// <summary>
-            /// The entity set name of the feed or entry.
+            /// The navigation source name of the feed or entry.
             /// </summary>
-            private readonly SimpleLazy<string> lazyEntitySetName;
+            private readonly string navigationSourceName;
 
             /// <summary>
             /// true if the entry is an media link entry or if the feed contains media link entries, false otherwise.
             /// </summary>
-            private readonly SimpleLazy<bool> lazyIsMediaLinkEntry;
+            private readonly bool isMediaLinkEntry;
 
             /// <summary>
             /// The url convention to use for the entity set.
@@ -240,45 +270,66 @@ namespace Microsoft.OData.Core
             private readonly SimpleLazy<UrlConvention> lazyUrlConvention;
 
             /// <summary>
+            /// The flag we use to identify if the current entry is from a navigation property with collection type or not.
+            /// </summary>
+            private readonly bool isFromCollection = false;
+
+            /// <summary>
             /// Constructs an instance of <see cref="ODataFeedAndEntryTypeContext"/>.
             /// </summary>
-            /// <param name="entitySet">The entity set of the feed or entry.</param>
-            /// <param name="entitySetElementType">The element type of the entity set.</param>
+            /// <param name="navigationSource">The navigation source of the feed or entry.</param>
+            /// <param name="navigationSourceEntityType">The entity type of the navigation source.</param>
             /// <param name="expectedEntityType">The expected entity type of the feed or entry.</param>
             /// <param name="model">The Edm model instance to use.</param>
-            internal ODataFeedAndEntryTypeContextWithModel(IEdmEntitySet entitySet, IEdmEntityType entitySetElementType, IEdmEntityType expectedEntityType, IEdmModel model)
+            internal ODataFeedAndEntryTypeContextWithModel(IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmEntityType expectedEntityType, IEdmModel model)
                 : base(/*throwIfMissingTypeInfo*/false)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(model != null, "model != null");
-                Debug.Assert(entitySet != null, "entitySet != null");
-                Debug.Assert(entitySetElementType != null, "entitySetElementType != null");
+                Debug.Assert(navigationSource != null, "navigationSource != null");
+                Debug.Assert(navigationSourceEntityType != null, "navigationSourceEntityType != null");
                 Debug.Assert(expectedEntityType != null, "expectedEntityType != null");
 
-                this.entitySet = entitySet;
-                this.entitySetElementType = entitySetElementType;
+                this.navigationSource = navigationSource;
+                this.navigationSourceEntityType = navigationSourceEntityType;
                 this.expectedEntityType = expectedEntityType;
                 this.model = model;
 
-                this.lazyEntitySetName = new SimpleLazy<string>(() => this.model.IsDefaultEntityContainer(this.entitySet.Container) ? this.entitySet.Name : this.entitySet.Container.FullName() + "." + this.entitySet.Name);
-                this.lazyIsMediaLinkEntry = new SimpleLazy<bool>(() => this.model.HasDefaultStream(this.expectedEntityType));
-                this.lazyUrlConvention = new SimpleLazy<UrlConvention>(() => UrlConvention.ForEntityContainer(this.model, this.entitySet.Container));
+                IEdmContainedEntitySet containedEntitySet = navigationSource as IEdmContainedEntitySet;
+                if (containedEntitySet != null)
+                {
+                    if (containedEntitySet.NavigationProperty.Type.TypeKind() == EdmTypeKind.Collection)
+                    {
+                        this.isFromCollection = true;
+                    }
+                }
+
+                this.navigationSourceName = this.navigationSource.Name;
+                this.isMediaLinkEntry = this.expectedEntityType.HasStream;
+                this.lazyUrlConvention = new SimpleLazy<UrlConvention>(() => UrlConvention.ForModel(this.model));
             }
 
             /// <summary>
-            /// The entity set name of the feed or entry.
+            /// The navigation source name of the feed or entry.
             /// </summary>
-            public override string EntitySetName
+            public override string NavigationSourceName
             {
-                get { return this.lazyEntitySetName.Value; }
+                get { return this.navigationSourceName; }
             }
 
             /// <summary>
-            /// The element type name of the entity set of the feed or entry.
+            /// The entity type name of the navigation source of the feed or entry.
             /// </summary>
-            public override string EntitySetElementTypeName
+            public override string NavigationSourceEntityTypeName
             {
-                get { return this.entitySetElementType.FullName(); }
+                get { return this.navigationSourceEntityType.FullName(); }
+            }
+
+            /// <summary>
+            /// The kind of the navigation source of the feed or entry.
+            /// </summary>
+            public override EdmNavigationSourceKind NavigationSourceKind
+            {
+                get { return this.navigationSource.NavigationSourceKind(); }
             }
 
             /// <summary>
@@ -296,7 +347,7 @@ namespace Microsoft.OData.Core
             /// </summary>
             public override bool IsMediaLinkEntry
             {
-                get { return this.lazyIsMediaLinkEntry.Value; }
+                get { return this.isMediaLinkEntry; }
             }
 
             /// <summary>
@@ -305,6 +356,14 @@ namespace Microsoft.OData.Core
             public override UrlConvention UrlConvention
             {
                 get { return this.lazyUrlConvention.Value; }
+            }
+
+            /// <summary>
+            /// The type kind of the entity type of the feed or entry.
+            /// </summary>
+            public override bool IsFromCollection
+            {
+                get { return this.isFromCollection; }
             }
         }
     }

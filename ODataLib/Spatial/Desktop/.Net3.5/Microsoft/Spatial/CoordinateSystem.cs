@@ -14,16 +14,10 @@ namespace Microsoft.Spatial
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using Microsoft.Data.Spatial;
-#if WINDOWS_PHONE
-    using Runtime.Serialization;
-#endif
 
     /// <summary>
     ///   Coordinate System Reference
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     public class CoordinateSystem
     {
         /// <summary>
@@ -92,9 +86,6 @@ namespace Microsoft.Spatial
         /// <summary>Gets the coordinate system ID according to the EPSG, or NULL if this is not an EPSG coordinate system.</summary>
         /// <returns>The coordinate system ID according to the EPSG.</returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Epsg", Justification = "This is not hungarian notation, but the widley accepted abreviation")]
-#if WINDOWS_PHONE
-        [DataMember]
-#endif
         public int? EpsgId { get; internal set; }
 
         /// <summary>Gets the coordinate system Id, no matter what scheme is used.</summary>
@@ -106,23 +97,8 @@ namespace Microsoft.Spatial
 
         /// <summary>Gets the Name of the Reference.</summary>
         /// <returns>The Name of the Reference.</returns>
-#if WINDOWS_PHONE
-        [DataMember]
-#endif
         public string Name { get; internal set; }
 
-#if WINDOWS_PHONE
-        /// <summary>
-        /// internal property used to save state when this instance is serialized.
-        /// </summary>
-        [DataMember]
-        internal Topology TopologyValue
-        {
-            get { return this.topology; }
-
-            set { this.topology = value; }
-        }
-#endif
         /// <summary>Gets or creates a Geography coordinate system with the ID, or the default if null is given.</summary>
         /// <returns>The coordinate system.</returns>
         /// <param name="epsgId">The coordinate system id, according to the EPSG. Null indicates the default should be returned.</param>

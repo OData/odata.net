@@ -59,6 +59,11 @@ namespace Microsoft.OData.Core
         private string contentIdToAddOnNextRead;
 
         /// <summary>
+        /// Internal switch for whether we support reading Content-ID header appear in HTTP head instead of ChangeSet head.
+        /// </summary>
+        private bool allowLegacyContentIdBehaviour;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input context to read the content from.</param>
@@ -67,7 +72,6 @@ namespace Microsoft.OData.Core
         /// <param name="synchronous">true if the reader is created for synchronous operation; false for asynchronous.</param>
         internal ODataBatchReader(ODataRawInputContext inputContext, string batchBoundary, Encoding batchEncoding, bool synchronous)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(inputContext != null, "inputContext != null");
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
@@ -75,6 +79,7 @@ namespace Microsoft.OData.Core
             this.synchronous = synchronous;
             this.urlResolver = new ODataBatchUrlResolver(inputContext.UrlResolver);
             this.batchStream = new ODataBatchReaderStream(inputContext, batchBoundary, batchEncoding);
+            this.allowLegacyContentIdBehaviour = true;
         }
 
         /// <summary>
@@ -386,9 +391,10 @@ namespace Microsoft.OData.Core
             else
             {
                 bool currentlyInChangeSet = this.batchStream.ChangeSetBoundary != null;
+                string contentId;
 
                 // If we did not find an end boundary, we found another part
-                bool isChangeSetPart = this.batchStream.ProcessPartHeader();
+                bool isChangeSetPart = this.batchStream.ProcessPartHeader(out contentId);
 
                 // Compute the next reader state
                 if (currentlyInChangeSet)
@@ -404,6 +410,20 @@ namespace Microsoft.OData.Core
                         ? ODataBatchReaderState.ChangesetStart
                         : ODataBatchReaderState.Operation;
                     this.IncreaseBatchSize();
+                }
+
+                if (!isChangeSetPart)
+                {
+                    // Add a potential Content-ID header to the URL resolver so that it will be available
+                    // to subsequent operations.
+                    Debug.Assert(this.contentIdToAddOnNextRead == null, "Must not have a content ID to be added to a part.");
+
+                    if (contentId != null && this.urlResolver.ContainsContentId(contentId))
+                    {
+                        throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
+                    }
+
+                    this.contentIdToAddOnNextRead = contentId;
                 }
             }
 
@@ -427,28 +447,39 @@ namespace Microsoft.OData.Core
 
             // Read all headers and create the request message
             ODataBatchOperationHeaders headers = this.batchStream.ReadHeaders();
+
+            if (this.batchStream.ChangeSetBoundary != null)
+            {
+                if (this.allowLegacyContentIdBehaviour)
+                {
+                    // Add a potential Content-ID header to the URL resolver so that it will be available
+                    // to subsequent operations.
+                    string contentId;
+                    if (this.contentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
+                    {
+                        if (contentId != null && this.urlResolver.ContainsContentId(contentId))
+                        {
+                            throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
+                        }
+
+                        this.contentIdToAddOnNextRead = contentId;
+                    }
+                }
+
+                if (this.contentIdToAddOnNextRead == null)
+                {
+                    throw new ODataException(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(ODataConstants.ContentIdHeader));
+                }
+            }
+
             ODataBatchOperationRequestMessage requestMessage = ODataBatchOperationRequestMessage.CreateReadMessage(
                 this.batchStream,
                 httpMethod,
                 requestUri,
                 headers,
                 /*operationListener*/ this,
+                this.contentIdToAddOnNextRead,
                 this.urlResolver);
-
-            // Add a potential Content-ID header to the URL resolver so that it will be available
-            // to subsequent operations.
-            string contentId;
-            if (headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
-            {
-                Debug.Assert(this.contentIdToAddOnNextRead == null, "Must not have a content ID to be added to a part.");
-
-                if (contentId != null && this.urlResolver.ContainsContentId(contentId))
-                {
-                    throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
-                }
-
-                this.contentIdToAddOnNextRead = contentId;
-            }
 
             return requestMessage;
         }
@@ -469,12 +500,32 @@ namespace Microsoft.OData.Core
             // Read all headers and create the response message
             ODataBatchOperationHeaders headers = this.batchStream.ReadHeaders();
 
+            if (this.batchStream.ChangeSetBoundary != null)
+            {
+                if (this.allowLegacyContentIdBehaviour)
+                {
+                    // Add a potential Content-ID header to the URL resolver so that it will be available
+                    // to subsequent operations.
+                    string contentId;
+                    if (this.contentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
+                    {
+                        if (contentId != null && this.urlResolver.ContainsContentId(contentId))
+                        {
+                            throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
+                        }
+
+                        this.contentIdToAddOnNextRead = contentId;
+                    }
+                }
+            }
+
             // In responses we don't need to use our batch URL resolver, since there are no cross referencing URLs
             // so use the URL resolver from the batch message instead.
             ODataBatchOperationResponseMessage responseMessage = ODataBatchOperationResponseMessage.CreateReadMessage(
-                this.batchStream, 
-                statusCode, 
+                this.batchStream,
+                statusCode,
                 headers,
+                this.contentIdToAddOnNextRead,
                 /*operationListener*/ this,
                 this.urlResolver.BatchMessageUrlResolver);
 

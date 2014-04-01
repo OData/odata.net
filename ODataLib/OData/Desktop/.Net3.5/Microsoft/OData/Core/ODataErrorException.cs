@@ -13,7 +13,7 @@ namespace Microsoft.OData.Core
     #region Namespaces
     using System;
     using System.Diagnostics;
-#if !WINDOWS_PHONE && !SILVERLIGHT && !PORTABLELIB
+#if ORCAS
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
     using System.Security.Permissions;
@@ -23,11 +23,8 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Exception type representing an in-stream error parsed when reading a payload.
     /// </summary>
-#if !WINDOWS_PHONE && !SILVERLIGHT && !PORTABLELIB
+#if ORCAS
     [Serializable]
-#endif
-#if !ORCAS && !WINDOWS_PHONE && !SILVERLIGHT  && !PORTABLELIB
-    [SuppressMessage("Microsoft.Design", "CA1032", Justification = "No need for serialization constructor, follows ISafeSerializationData info pattern.")]
 #endif
     [DebuggerDisplay("{Message}")]
     public sealed class ODataErrorException : ODataException
@@ -35,7 +32,7 @@ namespace Microsoft.OData.Core
         /// <summary>The <see cref="ODataErrorExceptionSafeSerializationState"/> value containing <see cref="ODataError"/> instance representing the error
         /// read from the payload.
         /// </summary>
-#if !ORCAS && !WINDOWS_PHONE && !SILVERLIGHT  && !PORTABLELIB
+#if ORCAS 
         // Because we don't want the exception state to be serialized normally, we take care of that in the constructor.
         [NonSerialized]
 #endif
@@ -101,16 +98,6 @@ namespace Microsoft.OData.Core
             : base(message, innerException)
         {
             this.state.ODataError = error;
-
-#if !ORCAS && !WINDOWS_PHONE && !SILVERLIGHT  && !PORTABLELIB
-            // In response to SerializeObjectState, we need to provide any state to serialize with the exception.
-            // In this case, since our state is already stored in an ISafeSerializationData implementation,
-            // we can just provide that.
-            this.SerializeObjectState += delegate(object exception, SafeSerializationEventArgs eventArgs)
-            {
-                eventArgs.AddSerializedState(this.state);
-            };
-#endif
         }
 
 #if ORCAS
@@ -181,13 +168,10 @@ namespace Microsoft.OData.Core
         /// Implement the ISafeSerializationData interface to contain custom exception data in a partially trusted assembly.
         /// Use this interface in post-ORCAS to replace the Exception.GetObjectData method, which is marked with the SecurityCriticalAttribute.
         /// </summary>
-#if !WINDOWS_PHONE && !SILVERLIGHT  && !PORTABLELIB
+#if ORCAS
         [Serializable]
 #endif
         private struct ODataErrorExceptionSafeSerializationState
-#if !ORCAS && !WINDOWS_PHONE && !SILVERLIGHT  && !PORTABLELIB
-            : ISafeSerializationData
-#endif
         {
             /// <summary>
             /// Gets or sets the <see cref="ODataError"/> object.
@@ -197,20 +181,6 @@ namespace Microsoft.OData.Core
                 get;
                 set;
             }
-
-#if !ORCAS && !WINDOWS_PHONE && !SILVERLIGHT  && !PORTABLELIB
-            /// <summary>
-            /// This method is called when deserialization of the exception is complete.
-            /// </summary>
-            /// <param name="obj">The exception object.</param>
-            void ISafeSerializationData.CompleteDeserialization(object obj)
-            {
-                // Since the exception simply contains an instance of the exception state object, we can repopulate it 
-                // here by just setting its instance field to be equal to this deserialized state instance.
-                ODataErrorException exception = obj as ODataErrorException;
-                exception.state = this;
-            }
-#endif
         }
     }
 }

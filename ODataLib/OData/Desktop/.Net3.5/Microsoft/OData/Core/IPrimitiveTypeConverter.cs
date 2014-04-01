@@ -11,6 +11,8 @@
 namespace Microsoft.OData.Core
 {
     #region Namespaces
+
+    using System.IO;
     using System.Xml;
     using Microsoft.OData.Core.Json;
     #endregion
@@ -35,20 +37,17 @@ namespace Microsoft.OData.Core
         void WriteAtom(object instance, XmlWriter writer);
 
         /// <summary>
-        /// Write the Verbose Json representation of an instance of a primitive type to a json writer.
+        /// Write the Atom representation of an instance of a primitive type to an TextWriter.
         /// </summary>
         /// <param name="instance">The instance to write.</param>
-        /// <param name="jsonWriter">Instance of JsonWriter.</param>
-        /// <param name="typeName">Type name of the instance to write. If the type name is null, the type name will not be written in the payload.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        void WriteVerboseJson(object instance, IJsonWriter jsonWriter, string typeName, ODataVersion odataVersion);
+        /// <param name="writer">The text writer to use to write the instance.</param>
+        void WriteAtom(object instance, TextWriter writer);
 
         /// <summary>
         /// Write the Json Lite representation of an instance of a primitive type to a json writer.
         /// </summary>
         /// <param name="instance">The instance to write.</param>
         /// <param name="jsonWriter">Instance of JsonWriter.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        void WriteJsonLight(object instance, IJsonWriter jsonWriter, ODataVersion odataVersion);
+        void WriteJsonLight(object instance, IJsonWriter jsonWriter);
     }
 }

@@ -27,9 +27,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private readonly EntityCollectionNode source;
 
         /// <summary>
-        /// The EntitySet containing the collection this key referrs to.
+        /// The navigation source containing the collection this key referrs to.
         /// </summary>
-        private readonly IEdmEntitySet entitySet;
+        private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
         /// The resouce type of the single value the key referrs to.
@@ -51,7 +51,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
             this.source = source;
-            this.entitySet = source.EntitySet;
+            this.navigationSource = source.NavigationSource;
             this.entityTypeReference = source.EntityItemType;
             this.keyPropertyValues = keyPropertyValues;
         }
@@ -92,11 +92,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the EntitySet that contains the collection this key referrs to.
+        /// Gets the navigation source that contains the collection this key referrs to.
         /// </summary>
-        public override IEdmEntitySet EntitySet
+        public override IEdmNavigationSource NavigationSource
         {
-            get { return this.entitySet; }
+            get { return this.navigationSource; }
         }
 
         /// <summary>
@@ -106,7 +106,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return InternalQueryNodeKind.KeyLookup;
             }
         }

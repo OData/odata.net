@@ -13,6 +13,7 @@ namespace Microsoft.OData.Core
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Xml;
     using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Core.Json;
@@ -57,17 +58,13 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Write the Verbose Json representation of an instance of a primitive type to a json writer.
+        /// Write the Atom representation of an instance of a primitive type to an TextWriter.
         /// </summary>
         /// <param name="instance">The instance to write.</param>
-        /// <param name="jsonWriter">Instance of JsonWriter.</param>
-        /// <param name="typeName">Type name of the instance to write. If the type name is null, the type name will not be written in the payload.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        public void WriteVerboseJson(object instance, IJsonWriter jsonWriter, string typeName, ODataVersion odataVersion)
+        /// <param name="writer">The text writer to use to write the instance.</param>
+        public void WriteAtom(object instance, TextWriter writer)
         {
-            IDictionary<string, object> jsonObject = GeoJsonObjectFormatter.Create().Write((ISpatial)instance);
-            Debug.Assert(!jsonObject.ContainsKey(JsonConstants.ODataMetadataName), "__metadata should not be present in jsonObject");
-            jsonWriter.WriteJsonObjectValue(jsonObject, (jw) => ODataJsonWriterUtils.WriteMetadataWithTypeName(jw, typeName), odataVersion);
+            ((Geography)instance).SendTo(WellKnownTextSqlFormatter.Create().CreateWriter(writer));
         }
 
         /// <summary>
@@ -75,11 +72,10 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="instance">The instance to write.</param>
         /// <param name="jsonWriter">Instance of JsonWriter.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        public void WriteJsonLight(object instance, IJsonWriter jsonWriter, ODataVersion odataVersion)
+        public void WriteJsonLight(object instance, IJsonWriter jsonWriter)
         {
             IDictionary<string, object> jsonObject = GeoJsonObjectFormatter.Create().Write((ISpatial)instance);
-            jsonWriter.WriteJsonObjectValue(jsonObject, /*injectPropertyAction*/ null, odataVersion);
+            jsonWriter.WriteJsonObjectValue(jsonObject, /*injectPropertyAction*/ null);
         }
     }
 }

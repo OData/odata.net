@@ -30,7 +30,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <param name="entry">The entry whose payload metadata is being queried.</param>
         internal NoOpEntityMetadataBuilder(ODataEntry entry)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entry != null, "entry != null");
 
             this.entry = entry;
@@ -44,7 +43,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override Uri GetEditLink()
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.entry.NonComputedEditLink;
         }
 
@@ -56,7 +54,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override Uri GetReadLink()
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.entry.NonComputedReadLink;
         }
 
@@ -66,10 +63,9 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>
         /// The ID for the entity.
         /// </returns>
-        internal override string GetId()
+        internal override Uri GetId()
         {
-            DebugUtils.CheckNoExternalCallers();
-            return this.entry.NonComputedId;
+            return this.entry.IsTransient ? null : this.entry.NonComputedId;
         }
 
         /// <summary>
@@ -80,7 +76,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override string GetETag()
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.entry.NonComputedETag;
         }
 
@@ -93,7 +88,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override ODataStreamReferenceValue GetMediaResource()
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.entry.NonComputedMediaResource;
         }
 
@@ -104,7 +98,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The the computed and non-computed entity properties.</returns>
         internal override IEnumerable<ODataProperty> GetProperties(IEnumerable<ODataProperty> nonComputedProperties)
         {
-            DebugUtils.CheckNoExternalCallers();
             return nonComputedProperties;
         }
 
@@ -115,7 +108,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The list of computed and non-computed actions for the entity.</returns>
         internal override IEnumerable<ODataAction> GetActions()
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.entry.NonComputedActions;
         }
 
@@ -125,7 +117,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The list of computed and non-computed functions for the entity.</returns>
         internal override IEnumerable<ODataFunction> GetFunctions()
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.entry.NonComputedFunctions;
         }
 
@@ -142,7 +133,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override Uri GetNavigationLinkUri(string navigationPropertyName, Uri navigationLinkUrl, bool hasNavigationLinkUrl)
         {
-            DebugUtils.CheckNoExternalCallers();
             return navigationLinkUrl;
         }
 
@@ -159,8 +149,35 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override Uri GetAssociationLinkUri(string navigationPropertyName, Uri associationLinkUrl, bool hasAssociationLinkUrl)
         {
-            DebugUtils.CheckNoExternalCallers();
             return associationLinkUrl;
+        }
+
+        /// <summary>
+        /// Get the id that need to be written into wire
+        /// </summary>
+        /// <param name="id">The id return to the caller</param>
+        /// <returns>
+        /// If writer should write odata.id property into wire
+        /// </returns>
+        internal override bool TryGetIdForSerialization(out Uri id)
+        {
+            if (this.entry.IsTransient)
+            {
+                id = null;
+                return true;
+            }
+            else
+            {
+                id = this.GetId();
+                if (id == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
         }
     }
 }

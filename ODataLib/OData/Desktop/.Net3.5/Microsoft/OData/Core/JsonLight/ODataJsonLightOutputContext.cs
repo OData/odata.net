@@ -14,7 +14,6 @@ namespace Microsoft.OData.Core.JsonLight
 
     using System;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
 #if ODATALIB_ASYNC
@@ -22,7 +21,7 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Json;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -54,7 +53,6 @@ namespace Microsoft.OData.Core.JsonLight
             IEdmModel model)
             : base(format, textWriter, messageWriterSettings, model)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!this.WritingResponse, "Expecting WritingResponse to always be false for this constructor, so no need to validate the MetadataDocumentUri on the writer settings.");
             Debug.Assert(textWriter != null, "textWriter != null");
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
@@ -75,13 +73,12 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="model">The model to use.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
         internal ODataJsonLightOutputContext(ODataFormat format, Stream messageStream, MediaType mediaType, Encoding encoding, ODataMessageWriterSettings messageWriterSettings, bool writingResponse, bool synchronous, IEdmModel model, IODataUrlResolver urlResolver)
-            : base(format, messageStream, encoding, messageWriterSettings, writingResponse, synchronous, model, urlResolver)
+            : base(format, messageStream, encoding, messageWriterSettings, writingResponse, synchronous, mediaType.HasIeee754CompatibleSetToTrue(), model, urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(messageStream != null, "messageStream != null");
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
             Debug.Assert(mediaType != null, "mediaType != null");
-            Uri metadataDocumentUri = messageWriterSettings.MetadataDocumentUri == null ? null : messageWriterSettings.MetadataDocumentUri.BaseUri;
+            Uri metadataDocumentUri = messageWriterSettings.MetadataDocumentUri;
             this.metadataLevel = JsonLightMetadataLevel.Create(mediaType, metadataDocumentUri, model, writingResponse);
         }
 
@@ -92,7 +89,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 if (this.typeNameOracle == null)
                 {
                     this.typeNameOracle = this.MetadataLevel.GetTypeNameOracle(this.MessageWriterSettings.AutoComputePayloadMetadataInJson);
@@ -109,19 +105,19 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.metadataLevel;
             }
         }
 
         /// <summary>
-        /// Creates a metadata uri builder for the current output context.
+        /// The Context Url level used when writing.
         /// </summary>
-        /// <returns>The metadata uri builder to use when writing.</returns>
-        internal ODataJsonLightContextUriBuilder CreateMetadataUriBuilder()
+        internal override ODataContextUrlLevel ContextUrlLevel
         {
-            DebugUtils.CheckNoExternalCallers();
-            return ODataJsonLightContextUriBuilder.CreateFromSettings(this.MetadataLevel, this.WritingResponse, this.MessageWriterSettings, this.Model);
+            get
+            {
+                return metadataLevel.ContextUrlLevel;
+            }
         }
 
         /// <summary>
@@ -141,7 +137,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal override void WriteInStreamError(ODataError error, bool includeDebugInformation)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             this.WriteInStreamErrorImplementation(error, includeDebugInformation);
@@ -169,7 +164,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal override Task WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
@@ -188,9 +182,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override ODataWriter CreateODataFeedWriter(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        internal override ODataWriter CreateODataFeedWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             return this.CreateODataFeedWriterImplementation(entitySet, entityType);
@@ -204,9 +197,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataWriter> CreateODataFeedWriterAsync(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        internal override Task<ODataWriter> CreateODataFeedWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataFeedWriterImplementation(entitySet, entityType));
@@ -216,32 +208,30 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override ODataWriter CreateODataEntryWriter(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        internal override ODataWriter CreateODataEntryWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
-            return this.CreateODataEntryWriterImplementation(entitySet, entityType);
+            return this.CreateODataEntryWriterImplementation(navigationSource, entityType);
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataWriter> CreateODataEntryWriterAsync(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        internal override Task<ODataWriter> CreateODataEntryWriterAsync(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataEntryWriterImplementation(entitySet, entityType));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataEntryWriterImplementation(navigationSource, entityType));
         }
 #endif
 
@@ -253,7 +243,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
         internal override ODataCollectionWriter CreateODataCollectionWriter(IEdmTypeReference itemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             return this.CreateODataCollectionWriterImplementation(itemTypeReference);
@@ -268,7 +257,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
         internal override Task<ODataCollectionWriter> CreateODataCollectionWriterAsync(IEdmTypeReference itemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataCollectionWriterImplementation(itemTypeReference));
@@ -283,7 +271,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
         internal override ODataParameterWriter CreateODataParameterWriter(IEdmOperationImport operationImport)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             return this.CreateODataParameterWriterImplementation(operationImport);
@@ -298,45 +285,69 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
         internal override Task<ODataParameterWriter> CreateODataParameterWriterAsync(IEdmOperationImport operationImport)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataParameterWriterImplementation(operationImport));
         }
 #endif
-
         /// <summary>
-        /// Writes a service document with the specified <paramref name="defaultWorkspace"/> 
-        /// as message payload.
+        /// Creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
         /// </summary>
-        /// <param name="defaultWorkspace">The default workspace to write in the service document.</param>
-        /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
-        internal override void WriteServiceDocument(ODataWorkspace defaultWorkspace)
+        /// <param name="operation">The operation whose parameters will be written.</param>
+        /// <returns>The created parameter writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override ODataParameterWriter CreateODataParameterWriter(IEdmOperation operation)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
-            this.WriteServiceDocumentImplementation(defaultWorkspace);
+            return this.CreateODataParameterWriterImplementation(operation);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
+        /// </summary>
+        /// <param name="operation">The operation import whose parameters will be written.</param>
+        /// <returns>A running task for the created parameter writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override Task<ODataParameterWriter> CreateODataParameterWriterAsync(IEdmOperation operation)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataParameterWriterImplementation(operation));
+        }
+#endif
+
+        /// <summary>
+        /// Writes a service document with the specified <paramref name="serviceDocument"/> 
+        /// as message payload.
+        /// </summary>
+        /// <param name="serviceDocument">The service dcument to write.</param>
+        /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
+        internal override void WriteServiceDocument(ODataServiceDocument serviceDocument)
+        {
+            this.AssertSynchronous();
+
+            this.WriteServiceDocumentImplementation(serviceDocument);
             this.Flush();
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously writes a service document with the specified <paramref name="defaultWorkspace"/> 
+        /// Asynchronously writes a service document with the specified <paramref name="serviceDocument"/> 
         /// as message payload.
         /// </summary>
-        /// <param name="defaultWorkspace">The default workspace to write in the service document.</param>
+        /// <param name="serviceDocument">The service document to write.</param>
         /// <returns>A task representing the asynchronous operation of writing the service document.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override Task WriteServiceDocumentAsync(ODataWorkspace defaultWorkspace)
+        internal override Task WriteServiceDocumentAsync(ODataServiceDocument serviceDocument)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
                 () =>
                 {
-                    this.WriteServiceDocumentImplementation(defaultWorkspace);
+                    this.WriteServiceDocumentImplementation(serviceDocument);
                     return this.FlushAsync();
                 });
         }
@@ -349,7 +360,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
         internal override void WriteProperty(ODataProperty property)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             this.WritePropertyImplementation(property);
@@ -365,7 +375,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
         internal override Task WritePropertyAsync(ODataProperty property)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
@@ -388,7 +397,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
         internal override void WriteError(ODataError error, bool includeDebugInformation)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             this.WriteErrorImplementation(error, includeDebugInformation);
@@ -408,7 +416,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
         internal override Task WriteErrorAsync(ODataError error, bool includeDebugInformation)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
@@ -421,78 +428,66 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
-        /// Writes the result of a $links query as the message payload.
+        /// Writes the result of a $ref query as the message payload.
         /// </summary>
         /// <param name="links">The entity reference links to write as message payload.</param>
-        /// <param name="entitySet">The entity set of the navigation property.</param>
-        /// <param name="navigationProperty">The navigation property for which the entity reference links are being written, or null if none is available.</param>
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
-        internal override void WriteEntityReferenceLinks(ODataEntityReferenceLinks links, IEdmEntitySet entitySet, IEdmNavigationProperty navigationProperty)
+        internal override void WriteEntityReferenceLinks(ODataEntityReferenceLinks links)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
-            this.WriteEntityReferenceLinksImplementation(links, entitySet, navigationProperty);
+            this.WriteEntityReferenceLinksImplementation(links);
             this.Flush();
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously writes the result of a $links query as the message payload.
+        /// Asynchronously writes the result of a $ref query as the message payload.
         /// </summary>
         /// <param name="links">The entity reference links to write as message payload.</param>
-        /// <param name="entitySet">The entity set of the navigation property.</param>
-        /// <param name="navigationProperty">The navigation property for which the entity reference links are being written, or null if none is available.</param>
         /// <returns>A task representing the asynchronous writing of the entity reference links.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override Task WriteEntityReferenceLinksAsync(ODataEntityReferenceLinks links, IEdmEntitySet entitySet, IEdmNavigationProperty navigationProperty)
+        internal override Task WriteEntityReferenceLinksAsync(ODataEntityReferenceLinks links)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
                 () =>
                 {
-                    this.WriteEntityReferenceLinksImplementation(links, entitySet, navigationProperty);
+                    this.WriteEntityReferenceLinksImplementation(links);
                     return this.FlushAsync();
                 });
         }
 #endif
 
         /// <summary>
-        /// Writes a singleton result of a $links query as the message payload.
+        /// Writes a singleton result of a $ref query as the message payload.
         /// </summary>
         /// <param name="link">The entity reference link to write as message payload.</param>
-        /// <param name="entitySet">The entity set of the navigation property.</param>
-        /// <param name="navigationProperty">The navigation property for which the entity reference link is being written, or null if none is available.</param>
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
-        internal override void WriteEntityReferenceLink(ODataEntityReferenceLink link, IEdmEntitySet entitySet, IEdmNavigationProperty navigationProperty)
+        internal override void WriteEntityReferenceLink(ODataEntityReferenceLink link)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
-            this.WriteEntityReferenceLinkImplementation(link, entitySet, navigationProperty);
+            this.WriteEntityReferenceLinkImplementation(link);
             this.Flush();
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously writes a singleton result of a $links query as the message payload.
+        /// Asynchronously writes a singleton result of a $ref query as the message payload.
         /// </summary>
         /// <param name="link">The link result to write as message payload.</param>
-        /// <param name="entitySet">The entity set of the navigation property.</param>
-        /// <param name="navigationProperty">The navigation property for which the entity reference link is being written, or null if none is available.</param>
         /// <returns>A running task representing the writing of the link.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink link, IEdmEntitySet entitySet, IEdmNavigationProperty navigationProperty)
+        internal override Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink link)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
                 () =>
                 {
-                    this.WriteEntityReferenceLinkImplementation(link, entitySet, navigationProperty);
+                    this.WriteEntityReferenceLinkImplementation(link);
                     return this.FlushAsync();
                 });
         }
@@ -506,7 +501,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
-        private ODataWriter CreateODataFeedWriterImplementation(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        private ODataWriter CreateODataFeedWriterImplementation(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, entitySet, entityType, /*writingFeed*/true);
             this.outputInStreamErrorListener = odataJsonWriter;
@@ -516,12 +511,12 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
-        private ODataWriter CreateODataEntryWriterImplementation(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        private ODataWriter CreateODataEntryWriterImplementation(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, entitySet, entityType, /*writingFeed*/false);
+            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, navigationSource, entityType, /*writingFeed*/false);
             this.outputInStreamErrorListener = odataJsonWriter;
             return odataJsonWriter;
         }
@@ -545,7 +540,20 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The created parameter writer.</returns>
         private ODataParameterWriter CreateODataParameterWriterImplementation(IEdmOperationImport operationImport)
         {
-            ODataJsonLightParameterWriter jsonLightParameterWriter = new ODataJsonLightParameterWriter(this, operationImport);
+            IEdmOperation operation = operationImport != null ? operationImport.Operation : null;
+            ODataJsonLightParameterWriter jsonLightParameterWriter = new ODataJsonLightParameterWriter(this, operation);
+            this.outputInStreamErrorListener = jsonLightParameterWriter;
+            return jsonLightParameterWriter;
+        }
+
+        /// <summary>
+        /// Creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
+        /// </summary>
+        /// <param name="operation">The operation whose parameters will be written.</param>
+        /// <returns>The created parameter writer.</returns>
+        private ODataParameterWriter CreateODataParameterWriterImplementation(IEdmOperation operation)
+        {
+            ODataJsonLightParameterWriter jsonLightParameterWriter = new ODataJsonLightParameterWriter(this, operation);
             this.outputInStreamErrorListener = jsonLightParameterWriter;
             return jsonLightParameterWriter;
         }
@@ -566,7 +574,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             JsonLightInstanceAnnotationWriter instanceAnnotationWriter = new JsonLightInstanceAnnotationWriter(new ODataJsonLightValueSerializer(this), this.TypeNameOracle);
-            ODataJsonWriterUtils.WriteError(this.JsonWriter, instanceAnnotationWriter.WriteInstanceAnnotations, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth, /*writingJsonLight*/ true);
+            ODataJsonWriterUtils.WriteError(this.JsonWriter, instanceAnnotationWriter.WriteInstanceAnnotationsForError, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth, /*writingJsonLight*/ true);
         }
 
         /// <summary>
@@ -580,14 +588,14 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Writes a service document with the specified <paramref name="defaultWorkspace"/> 
+        /// Writes a service document with the specified <paramref name="serviceDocument"/> 
         /// as message payload.
         /// </summary>
-        /// <param name="defaultWorkspace">The default workspace to write in the service document.</param>
-        private void WriteServiceDocumentImplementation(ODataWorkspace defaultWorkspace)
+        /// <param name="serviceDocument">The service document to write.</param>
+        private void WriteServiceDocumentImplementation(ODataServiceDocument serviceDocument)
         {
             ODataJsonLightServiceDocumentSerializer jsonLightServiceDocumentSerializer = new ODataJsonLightServiceDocumentSerializer(this);
-            jsonLightServiceDocumentSerializer.WriteServiceDocument(defaultWorkspace);
+            jsonLightServiceDocumentSerializer.WriteServiceDocument(serviceDocument);
         }
 
         /// <summary>
@@ -605,27 +613,23 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Writes the result of a $links query as the message payload.
+        /// Writes the result of a $ref query as the message payload.
         /// </summary>
         /// <param name="links">The entity reference links to write as message payload.</param>
-        /// <param name="entitySet">The entity set of the navigation property.</param>
-        /// <param name="navigationProperty">The navigation property for which the entity reference links are being written, or null if none is available.</param>
-        private void WriteEntityReferenceLinksImplementation(ODataEntityReferenceLinks links, IEdmEntitySet entitySet, IEdmNavigationProperty navigationProperty)
+        private void WriteEntityReferenceLinksImplementation(ODataEntityReferenceLinks links)
         {
             ODataJsonLightEntityReferenceLinkSerializer jsonLightEntityReferenceLinkSerializer = new ODataJsonLightEntityReferenceLinkSerializer(this);
-            jsonLightEntityReferenceLinkSerializer.WriteEntityReferenceLinks(links, entitySet, navigationProperty);
+            jsonLightEntityReferenceLinkSerializer.WriteEntityReferenceLinks(links);
         }
 
         /// <summary>
-        /// Writes a singleton result of a $links query as the message payload.
+        /// Writes a singleton result of a $ref query as the message payload.
         /// </summary>
         /// <param name="link">The entity reference link to write as message payload.</param>
-        /// <param name="entitySet">The entity set of the navigation property.</param>
-        /// <param name="navigationProperty">The navigation property for which the entity reference link is being written, or null if none is available.</param>
-        private void WriteEntityReferenceLinkImplementation(ODataEntityReferenceLink link, IEdmEntitySet entitySet, IEdmNavigationProperty navigationProperty)
+        private void WriteEntityReferenceLinkImplementation(ODataEntityReferenceLink link)
         {
             ODataJsonLightEntityReferenceLinkSerializer jsonLightEntityReferenceLinkSerializer = new ODataJsonLightEntityReferenceLinkSerializer(this);
-            jsonLightEntityReferenceLinkSerializer.WriteEntityReferenceLink(link, entitySet, navigationProperty);
+            jsonLightEntityReferenceLinkSerializer.WriteEntityReferenceLink(link);
         }
     }
 }

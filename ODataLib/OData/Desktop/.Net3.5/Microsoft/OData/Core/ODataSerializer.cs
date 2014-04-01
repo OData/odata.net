@@ -43,7 +43,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.outputContext.UseServerFormatBehavior;
             }
         }
@@ -55,7 +54,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.outputContext.UseDefaultFormatBehavior;
             }
         }
@@ -67,7 +65,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.outputContext.MessageWriterSettings;
             }
         }
@@ -79,7 +76,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.outputContext.UrlResolver;
             }
         }
@@ -91,7 +87,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.outputContext.Version;
             }
         }
@@ -103,7 +98,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.outputContext.WritingResponse;
             }
         }
@@ -115,7 +109,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.outputContext.Model;
             }
         }
@@ -126,24 +119,7 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created instance of duplicate property names checker.</returns>
         internal DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return new DuplicatePropertyNamesChecker(this.MessageWriterSettings.WriterBehavior.AllowDuplicatePropertyNames, this.WritingResponse);
-        }
-
-        /// <summary>
-        /// Validates association link before writing.
-        /// </summary>
-        /// <param name="associationLink">The association link to validate.</param>
-        /// <param name="entryEntityType">The entity type of the entry the association link belongs to.</param>
-        protected void ValidateAssociationLink(ODataAssociationLink associationLink, IEdmEntityType entryEntityType)
-        {
-            Debug.Assert(associationLink != null, "associationLink != null");
-
-            WriterValidationUtils.ValidateAssociationLink(associationLink, this.Version, this.WritingResponse);
-
-            // We don't need the returned IEdmProperty since it was already validated to be a navigation property.
-            WriterValidationUtils.ValidateNavigationPropertyDefined(associationLink.Name, entryEntityType);
         }
     }
 }

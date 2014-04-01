@@ -46,7 +46,6 @@ namespace Microsoft.OData.Core
         /// <param name="stream">The underlying async stream to wrap. Note that only asynchronous write operation will be invoked on this stream.</param>
         internal AsyncBufferedStream(Stream stream)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(stream != null, "stream != null");
 
             this.innerStream = stream;
@@ -186,8 +185,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void Clear()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.bufferQueue.Clear();
             this.bufferToAppendTo = null;
         }
@@ -197,8 +194,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void FlushSync()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             Queue<DataBuffer> buffers = this.PrepareFlushBuffers();
             if (buffers == null)
             {
@@ -220,7 +215,6 @@ namespace Microsoft.OData.Core
         /// <returns>The task representing the asynchronous flush operation.</returns>
         internal Task FlushAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.FlushAsyncInternal();   
         }
 
@@ -231,8 +225,6 @@ namespace Microsoft.OData.Core
         /// <returns>The task representing the asynchronous flush operation.</returns>
         internal Task FlushAsyncInternal()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             Queue<DataBuffer> buffers = this.PrepareFlushBuffers();
             if (buffers == null)
             {

@@ -27,8 +27,8 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         public abstract IEdmEntityTypeReference EntityItemType { get; }
 
         /// <summary>
-        /// Get the EntitySet that contains this collection.
+        /// Get the navigation source that contains this collection.
         /// </summary>
-        public abstract IEdmEntitySet EntitySet { get; }
+        public abstract IEdmNavigationSource NavigationSource { get; }
     }
 }

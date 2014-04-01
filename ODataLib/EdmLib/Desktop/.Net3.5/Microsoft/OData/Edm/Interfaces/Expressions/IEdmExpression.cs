@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm.Expressions
         /// <summary>
         /// Represents an expression with unknown or error kind.
         /// </summary>
-        None,
+        None = 0,
 
         /// <summary>
         /// Represents an expression implementing <see cref="IEdmBinaryConstantExpression"/>.
@@ -29,11 +29,6 @@ namespace Microsoft.OData.Edm.Expressions
         /// Represents an expression implementing <see cref="IEdmBooleanConstantExpression"/>.
         /// </summary>
         BooleanConstant,
-
-        /// <summary>
-        /// Represents an expression implementing <see cref="IEdmDateTimeConstantExpression"/>.
-        /// </summary>
-        DateTimeConstant,
 
         /// <summary>
         /// Represents an expression implementing <see cref="IEdmDateTimeOffsetConstantExpression"/>.
@@ -126,9 +121,9 @@ namespace Microsoft.OData.Edm.Expressions
         If,
 
         /// <summary>
-        /// Represents an expression implementing <see cref="IEdmAssertTypeExpression"/>.
+        /// Represents an expression implementing <see cref="IEdmCastExpression"/>.
         /// </summary>
-        AssertType,
+        Cast,
 
         /// <summary>
         /// Represents an expression implementing <see cref="IEdmIsTypeExpression"/>.
@@ -148,7 +143,12 @@ namespace Microsoft.OData.Edm.Expressions
         /// <summary>
         /// Represents an expression implementing <see cref=" IEdmLabeledExpression"/>
         /// </summary>
-        Labeled
+        Labeled,
+
+        /// <summary>
+        /// Represents an expression implementing <see cref="IEdmPathExpression"/>.
+        /// </summary>
+        PropertyPath
     }
 
     /// <summary>

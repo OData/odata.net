@@ -8,7 +8,7 @@
 
 //   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.Core.UriParser.Semantic
 {
     #region Namespaces
 
@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core.UriParser
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.UriParser.Semantic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -34,9 +34,9 @@ namespace Microsoft.OData.Core.UriParser
         private readonly string name;
         
         /// <summary>
-        /// the list of operation imports represented by this node.
+        /// the list of functions represented by this node.
         /// </summary>
-        private readonly ReadOnlyCollection<IEdmOperationImport> operationImports; 
+        private readonly ReadOnlyCollection<IEdmFunction> functions; 
         
         /// <summary>
         /// List of arguments provided to the function.
@@ -49,9 +49,9 @@ namespace Microsoft.OData.Core.UriParser
         private readonly IEdmEntityTypeReference returnedEntityTypeReference;
 
         /// <summary>
-        /// The EntitySet containing the single entity that this function returns.
+        /// The entity set or singleton containing the single entity that this function returns.
         /// </summary>
-        private readonly IEdmEntitySet entitySet;
+        private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
         /// The semantically bound parent of this function.
@@ -64,10 +64,10 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="name">The name of the function to call</param>
         /// <param name="parameters">List of arguments provided to the operation import. Can be null.</param>
         /// <param name="returnedEntityTypeReference">The return type of this function.</param>
-        /// <param name="entitySet">The EntitySet containing the single entity that this operation import returns.</param>
-        /// <exception cref="System.ArgumentNullException">Throws if the input name, returnedEntityTypeReference, or entitySet is null.</exception>
-        public SingleEntityFunctionCallNode(string name, IEnumerable<QueryNode> parameters, IEdmEntityTypeReference returnedEntityTypeReference, IEdmEntitySet entitySet)
-        : this(name, null, parameters, returnedEntityTypeReference, entitySet, null)
+        /// <param name="navigationSource">The entity set or singleton containing the single entity that this operation import returns.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input name, returnedEntityTypeReference, or navigationSource is null.</exception>
+        public SingleEntityFunctionCallNode(string name, IEnumerable<QueryNode> parameters, IEdmEntityTypeReference returnedEntityTypeReference, IEdmNavigationSource navigationSource)
+            : this(name, null, parameters, returnedEntityTypeReference, navigationSource, null)
         {
         }
 
@@ -75,22 +75,22 @@ namespace Microsoft.OData.Core.UriParser
         /// Create a SingleEntityFunctionCallNode
         /// </summary>
         /// <param name="name">The name of the operation import to call</param>
-        /// <param name="operationImports">the list of operation imports this node represents.</param>
+        /// <param name="functions">the list of functions this node represents.</param>
         /// <param name="parameters">List of arguments provided to the function. Can be null.</param>
         /// <param name="returnedEntityTypeReference">The return type of this operation import.</param>
-        /// <param name="entitySet">The EntitySet containing the single entity that this operation import returns.</param>
+        /// <param name="navigationSource">The entity set or singleton containing the single entity that this operation import returns.</param>
         /// <param name="source">The semantically bound parent of this operation import.</param>
-        /// <exception cref="System.ArgumentNullException">Throws if the input name, returnedEntityTypeReference, or entitySet is null.</exception>
-        public SingleEntityFunctionCallNode(string name, IEnumerable<IEdmOperationImport> operationImports, IEnumerable<QueryNode> parameters, IEdmEntityTypeReference returnedEntityTypeReference, IEdmEntitySet entitySet, QueryNode source)
+        /// <exception cref="System.ArgumentNullException">Throws if the input name, returnedEntityTypeReference, or navigationSource is null.</exception>
+        public SingleEntityFunctionCallNode(string name, IEnumerable<IEdmFunction> functions, IEnumerable<QueryNode> parameters, IEdmEntityTypeReference returnedEntityTypeReference, IEdmNavigationSource navigationSource, QueryNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(returnedEntityTypeReference, "returnedEntityTypeReference");
 
             this.name = name;
-            this.operationImports = new ReadOnlyCollection<IEdmOperationImport>(operationImports != null ? operationImports.ToList() : new List<IEdmOperationImport>());
+            this.functions = new ReadOnlyCollection<IEdmFunction>(functions != null ? functions.ToList() : new List<IEdmFunction>());
             this.parameters = parameters;
             this.returnedEntityTypeReference = returnedEntityTypeReference;
-            this.entitySet = entitySet;
+            this.navigationSource = navigationSource;
             this.source = source;
         }
 
@@ -103,11 +103,11 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Gets the list of operation imports that this node represents
+        /// Gets the list of functions that this node represents
         /// </summary>
-        public IEnumerable<IEdmOperationImport> FunctionImports
+        public IEnumerable<IEdmFunction> Functions
         {
-            get { return this.operationImports; }
+            get { return this.functions; }
         }
 
         /// <summary>
@@ -127,11 +127,11 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Gets the EntitySet containing the single entity that this function returns.
+        /// Gets the navigation source containing the single entity that this function returns.
         /// </summary>
-        public override IEdmEntitySet EntitySet
+        public override IEdmNavigationSource NavigationSource
         {
-            get { return this.entitySet; }
+            get { return this.navigationSource; }
         }
 
         /// <summary>
@@ -157,7 +157,6 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return InternalQueryNodeKind.SingleEntityFunctionCall;
             }
         }
@@ -171,7 +170,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <exception cref="System.ArgumentNullException">Throws if the input visitor is null.</exception>
         public override T Accept<T>(QueryNodeVisitor<T> visitor)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(visitor, "visitor");
             return visitor.Visit(this);
         }

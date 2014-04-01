@@ -11,17 +11,11 @@
 namespace Microsoft.Data.Spatial
 {
     using System.Collections.ObjectModel;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
     using Microsoft.Spatial;
 
     /// <summary>
     /// A Geography linestring consist of an array of GeoPoints
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     internal class GeographyLineStringImplementation : GeographyLineString
     {
         /// <summary>
@@ -62,19 +56,6 @@ namespace Microsoft.Data.Spatial
                 return new ReadOnlyCollection<GeographyPoint>(this.points);
             }
         }
-
-#if WINDOWS_PHONE
-        /// <summary>
-        /// internal GeographyPoint array property to support serializing and de-serializing this instance.
-        /// </summary>
-        [DataMember]
-        internal GeographyPoint[] PointsArray
-        {
-            get { return this.points; }
-
-            set { this.points = value; }
-        }
-#endif
 
         /// <summary>
         /// Sends the current spatial object to the given sink

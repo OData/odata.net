@@ -15,7 +15,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Diagnostics;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
     using Microsoft.OData.Core.Metadata;
 
     /// <summary>Provides a class used to represent a key for a resource.</summary>
@@ -29,14 +28,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>Empty key singleton.</summary>
         private static readonly SegmentArgumentParser Empty = new SegmentArgumentParser();
 
-        /// <summary>Named values.</summary>
-        private readonly Dictionary<string, string> namedValues;
-
-        /// <summary>Positional values.</summary>
-        private readonly List<string> positionalValues;
-
         /// <summary>Whether or not the key was formatted as a segment.</summary>
         private readonly bool keysAsSegments;
+
+        /// <summary>Named values.</summary>
+        private Dictionary<string, string> namedValues;
+
+        /// <summary>Positional values.</summary>
+        private List<string> positionalValues;
 
         /// <summary>Initializes a new empty <see cref="SegmentArgumentParser"/> instance.</summary>
         private SegmentArgumentParser()
@@ -65,7 +64,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.namedValues != null;
             }
         }
@@ -75,7 +73,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this == Empty;
             }
         }
@@ -85,7 +82,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.namedValues;
             }
         }
@@ -95,7 +91,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.positionalValues;
             }
         }
@@ -105,7 +100,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 if (this == Empty)
                 {
                     return 0;
@@ -121,6 +115,20 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
         }
 
+        /// <summary>
+        /// Add a new value to the named values list.
+        /// </summary>
+        /// <param name="key">the new key</param>
+        /// <param name="value">the new value</param>
+        internal void AddNamedValue(string key, string value)
+        {
+            CreateIfNull(ref this.namedValues);
+            if (!namedValues.ContainsKey(key))
+            {
+                this.namedValues[key] = value; 
+            }                  
+        }
+
         /// <summary>Attempts to parse key values from the specified text.</summary>
         /// <param name='text'>Text to parse (not null).</param>
         /// <param name='instance'>After invocation, the parsed key instance.</param>
@@ -134,7 +142,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </remarks>
         internal static bool TryParseKeysFromUri(string text, out SegmentArgumentParser instance)
         {
-            DebugUtils.CheckNoExternalCallers();
             return TryParseFromUri(text, true /*allowNamedValues*/, false /*allowNull*/, out instance);
         }
 
@@ -145,7 +152,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A key instance with the given segment text as its only value.</returns>
         internal static SegmentArgumentParser FromSegment(string segmentText)
         {
-            DebugUtils.CheckNoExternalCallers();
             return new SegmentArgumentParser(null, new List<string> { segmentText }, true);
         }
 
@@ -162,7 +168,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </remarks>
         internal static bool TryParseNullableTokens(string text, out SegmentArgumentParser instance)
         {
-            DebugUtils.CheckNoExternalCallers();
             return TryParseFromUri(text, false /*allowNamedValues*/, true /*allowNull*/, out instance);
         }
 
@@ -172,7 +177,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if all values were converted; false otherwise.</returns>
         internal bool TryConvertValues(IList<IEdmStructuralProperty> keyProperties, out IEnumerable<KeyValuePair<string, object>> keyPairs)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!this.IsEmpty, "!this.IsEmpty -- caller should check");
             Debug.Assert(keyProperties.Count == this.ValueCount, "type.KeyProperties.Count == this.ValueCount -- will change with containment");
 

@@ -8,7 +8,7 @@
 
 //   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
-using Microsoft.OData.Edm.Internal;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Edm.Library
 {

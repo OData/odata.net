@@ -69,7 +69,7 @@ namespace Microsoft.OData.Edm.Library.Expressions
         /// <summary>
         /// Gets the kind of this expression.
         /// </summary>
-        public EdmExpressionKind ExpressionKind
+        public virtual EdmExpressionKind ExpressionKind
         {
             get { return EdmExpressionKind.Path; }
         }

@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core
     /// Class representing implementation specific debugging information to help determine the cause of the error.
     /// </summary>
     [DebuggerDisplay("{Message}")]
-#if !WINDOWS_PHONE && !SILVERLIGHT && !PORTABLELIB
+#if ORCAS
     [Serializable]
 #endif
     public sealed class ODataInnerError

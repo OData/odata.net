@@ -119,18 +119,10 @@ namespace Microsoft.OData.Core.Json
         void WriteValue(decimal value);
 
         /// <summary>
-        /// Write a DateTime value
-        /// </summary>
-        /// <param name="value">DateTime value to be written.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        void WriteValue(DateTime value, ODataVersion odataVersion);
-
-        /// <summary>
         /// Writes a DateTimeOffset value
         /// </summary>
         /// <param name="value">DateTimeOffset value to be written.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        void WriteValue(DateTimeOffset value, ODataVersion odataVersion);
+        void WriteValue(DateTimeOffset value);
 
         /// <summary>
         /// Writes a TimeSpan value
@@ -155,6 +147,12 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         /// <param name="value">String value to be written.</param>
         void WriteValue(string value);
+
+        /// <summary>
+        /// Write a byte array.
+        /// </summary>
+        /// <param name="value">Byte array to be written.</param>
+        void WriteValue(byte[] value);
 
         /// <summary>
         /// Clears all buffers for the current writer.

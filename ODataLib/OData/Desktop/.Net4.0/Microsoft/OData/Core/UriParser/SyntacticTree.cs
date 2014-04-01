@@ -32,6 +32,11 @@ namespace Microsoft.OData.Core.UriParser
         private const int DefaultMaxDepth = 800;
 
         /// <summary>
+        /// The parameter alias strings for other syntctic parts, can be null.
+        /// </summary>
+        private readonly IDictionary<string, string> parameterAliases;
+
+        /// <summary>
         /// The path for the query.
         /// </summary>
         private readonly ICollection<string> path;
@@ -86,6 +91,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>
         /// Create a new SyntacticTree given its parts as arguments.
         /// </summary>
+        /// <param name="parameterAliases">The parameter alias strings for other syntctic parts, can be null.</param>
         /// <param name="path">The path for the query. Must not be null.</param>
         /// <param name="filter">The filter for the query. If the property is null, there's no filter for this query.</param>
         /// <param name="orderByTokens">Enumeration of order by tokens.</param>
@@ -97,6 +103,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="format">The format for the query.</param>
         /// <param name="queryOptions">The query options for the query.</param>
         public SyntacticTree(
+            IDictionary<string, string> parameterAliases,
             ICollection<string> path,
             QueryToken filter,
             IEnumerable<OrderByToken> orderByTokens,
@@ -109,7 +116,7 @@ namespace Microsoft.OData.Core.UriParser
             IEnumerable<CustomQueryOptionToken> queryOptions)
         {
             ExceptionUtils.CheckArgumentNotNull(path, "path");
-
+            this.parameterAliases = parameterAliases;
             this.path = path;
             this.filter = filter;
             this.orderByTokens = new ReadOnlyEnumerableForUriParser<OrderByToken>(orderByTokens ?? new OrderByToken[0]);
@@ -120,6 +127,14 @@ namespace Microsoft.OData.Core.UriParser
             this.queryCount = queryCount;
             this.format = format;
             this.queryOptions = new ReadOnlyEnumerableForUriParser<CustomQueryOptionToken>(queryOptions ?? new CustomQueryOptionToken[0]);
+        }
+
+        /// <summary>
+        /// The parameter alias strings for other syntctic parts, can be null.
+        /// </summary>
+        public IDictionary<string, string> ParameterAliases
+        {
+            get { return this.parameterAliases; }
         }
 
         /// <summary>
@@ -243,10 +258,12 @@ namespace Microsoft.OData.Core.UriParser
                 throw new ArgumentException(Strings.SyntacticTree_MaxDepthInvalid, "maxDepth");
             }
 
+
             UriPathParser pathParser = new UriPathParser(maxDepth);
             var path = pathParser.ParsePathIntoSegments(queryUri, serviceBaseUri);
 
             List<CustomQueryOptionToken> queryOptions = UriUtils.ParseQueryOptions(queryUri);
+            IDictionary<string, string> parameterAliases = queryOptions.GetParameterAliases();
 
             QueryToken filter = null;
             string filterQuery = queryOptions.GetQueryOptionValueAndRemove(UriQueryConstants.FilterQueryOption);
@@ -268,7 +285,7 @@ namespace Microsoft.OData.Core.UriParser
             string selectQuery = queryOptions.GetQueryOptionValueAndRemove(UriQueryConstants.SelectQueryOption);
             if (selectQuery != null)
             {
-                ISelectExpandParser selectParser = new NonOptionSelectExpandParser(selectQuery, ODataUriParserSettings.DefaultSelectExpandLimit);
+                SelectExpandParser selectParser = new SelectExpandParser(selectQuery, ODataUriParserSettings.DefaultSelectExpandLimit);
                 select = selectParser.ParseSelect();
             }
 
@@ -276,7 +293,7 @@ namespace Microsoft.OData.Core.UriParser
             string expandQuery = queryOptions.GetQueryOptionValueAndRemove(UriQueryConstants.ExpandQueryOption);
             if (expandQuery != null)
             {
-                ISelectExpandParser expandParser = new NonOptionSelectExpandParser(expandQuery, ODataUriParserSettings.DefaultSelectExpandLimit);
+                SelectExpandParser expandParser = new SelectExpandParser(expandQuery, ODataUriParserSettings.DefaultSelectExpandLimit);
                 expand = expandParser.ParseExpand();
             }
 
@@ -312,9 +329,10 @@ namespace Microsoft.OData.Core.UriParser
             string format = queryOptions.GetQueryOptionValueAndRemove(UriQueryConstants.FormatQueryOption);
 
             return new SyntacticTree(
+                parameterAliases,
                 path,
                 filter,
-                orderByTokens, 
+                orderByTokens,
                 select,
                 expand,
                 skip,

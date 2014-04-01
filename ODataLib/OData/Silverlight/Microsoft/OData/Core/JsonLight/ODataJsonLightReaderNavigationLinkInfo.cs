@@ -74,7 +74,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.navigationLink;
             }
         }
@@ -86,7 +85,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.navigationProperty;
             }
         }
@@ -98,7 +96,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.isExpanded;
             }
         }
@@ -110,7 +107,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.expandedFeed;
             }
         }
@@ -122,7 +118,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.entityReferenceLinks != null && this.entityReferenceLinks.First != null;
             }
         }
@@ -137,7 +132,6 @@ namespace Microsoft.OData.Core.JsonLight
             ODataNavigationLink navigationLink,
             IEdmNavigationProperty navigationProperty)
         {
-            DebugUtils.CheckNoExternalCallers();
             return new ODataJsonLightReaderNavigationLinkInfo(navigationLink, navigationProperty, /*isExpanded*/ false);
         }
 
@@ -151,7 +145,6 @@ namespace Microsoft.OData.Core.JsonLight
             ODataNavigationLink navigationLink,
             IEdmNavigationProperty navigationProperty)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(navigationLink.IsCollection == false, "Expanded entry can only be reported for a singleton navigation link.");
 
@@ -171,7 +164,6 @@ namespace Microsoft.OData.Core.JsonLight
             IEdmNavigationProperty navigationProperty,
             ODataFeed expandedFeed)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(navigationLink.IsCollection == true, "Expanded feeds can only be reported for collection navigation links.");
             Debug.Assert(expandedFeed != null, "expandedFeed != null");
@@ -195,7 +187,6 @@ namespace Microsoft.OData.Core.JsonLight
             ODataEntityReferenceLink entityReferenceLink,
             bool isExpanded)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(navigationLink.IsCollection == false, "Singleton entity reference can only be reported for a singleton navigation links.");
             Debug.Assert(navigationProperty != null, "navigationProperty != null");
@@ -224,7 +215,6 @@ namespace Microsoft.OData.Core.JsonLight
             LinkedList<ODataEntityReferenceLink> entityReferenceLinks,
             bool isExpanded)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(navigationLink.IsCollection == true, "Collection entity reference can only be reported for a collection navigation links.");
             Debug.Assert(navigationProperty != null, "navigationProperty != null");
@@ -242,7 +232,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The navigation link info created.</returns>
         internal static ODataJsonLightReaderNavigationLinkInfo CreateProjectedNavigationLinkInfo(IEdmNavigationProperty navigationProperty)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationProperty != null, "navigationProperty != null");
 
             ODataNavigationLink navigationLink = new ODataNavigationLink { Name = navigationProperty.Name, IsCollection = navigationProperty.Type.IsCollection() };
@@ -256,8 +245,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The entity reference link to report or null.</returns>
         internal ODataEntityReferenceLink ReportEntityReferenceLink()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (this.entityReferenceLinks != null && this.entityReferenceLinks.First != null)
             {
                 ODataEntityReferenceLink entityRefernceLink = this.entityReferenceLinks.First.Value;

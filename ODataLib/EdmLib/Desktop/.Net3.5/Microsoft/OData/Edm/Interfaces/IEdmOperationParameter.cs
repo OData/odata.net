@@ -21,8 +21,8 @@ namespace Microsoft.OData.Edm
         IEdmTypeReference Type { get; }
 
         /// <summary>
-        /// Gets the function or operation import that declared this parameter.
+        /// Gets the operation that declared this parameter.
         /// </summary>
-        IEdmFunctionBase DeclaringFunction { get; }
+        IEdmOperation DeclaringOperation { get; }
     }
 }

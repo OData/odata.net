@@ -96,7 +96,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.messageReaderSettings;
             }
         }
@@ -108,7 +107,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.version;
             }
         }
@@ -120,7 +118,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.readingResponse;
             }
         }
@@ -132,7 +129,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.synchronous;
             }
         }
@@ -144,7 +140,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.model;
             }
         }
@@ -156,7 +151,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.edmTypeResolver;
             }
         }
@@ -168,7 +162,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.urlResolver;
             }
         }
@@ -180,7 +173,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return this.messageReaderSettings.ReaderBehavior.FormatBehaviorKind == ODataBehaviorKind.WcfDataServicesServer;
+                return this.messageReaderSettings.ReaderBehavior.FormatBehaviorKind == ODataBehaviorKind.ODataServer;
             }
         }
 
@@ -213,7 +206,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return this.messageReaderSettings.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.WcfDataServicesServer;
+                return this.messageReaderSettings.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.ODataServer;
             }
         }
 
@@ -243,9 +236,8 @@ namespace Microsoft.OData.Core
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the feed.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        internal virtual ODataReader CreateFeedReader(IEdmEntitySet entitySet, IEdmEntityType expectedBaseEntityType)
+        internal virtual ODataReader CreateFeedReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Feed);
         }
 
@@ -256,9 +248,8 @@ namespace Microsoft.OData.Core
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the feed.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        internal virtual Task<ODataReader> CreateFeedReaderAsync(IEdmEntitySet entitySet, IEdmEntityType expectedBaseEntityType)
+        internal virtual Task<ODataReader> CreateFeedReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Feed);
         }
 #endif
@@ -266,12 +257,11 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        internal virtual ODataReader CreateEntryReader(IEdmEntitySet entitySet, IEdmEntityType expectedEntityType)
+        internal virtual ODataReader CreateEntryReader(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Entry);
         }
 
@@ -279,12 +269,11 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        internal virtual Task<ODataReader> CreateEntryReaderAsync(IEdmEntitySet entitySet, IEdmEntityType expectedEntityType)
+        internal virtual Task<ODataReader> CreateEntryReaderAsync(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Entry);
         }
 #endif
@@ -296,7 +285,6 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created <see cref="ODataCollectionReader"/>.</returns>
         internal virtual ODataCollectionReader CreateCollectionReader(IEdmTypeReference expectedItemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Collection);
         }
 
@@ -308,7 +296,6 @@ namespace Microsoft.OData.Core
         /// <returns>Task which when completed returns the newly created <see cref="ODataCollectionReader"/>.</returns>
         internal virtual Task<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Collection);
         }
 #endif
@@ -323,7 +310,6 @@ namespace Microsoft.OData.Core
         /// </remarks>
         internal virtual ODataBatchReader CreateBatchReader(string batchBoundary)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
 
@@ -338,7 +324,6 @@ namespace Microsoft.OData.Core
         /// </remarks>
         internal virtual Task<ODataBatchReader> CreateBatchReaderAsync(string batchBoundary)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
 #endif
@@ -346,11 +331,10 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Create a <see cref="ODataParameterReader"/>.
         /// </summary>
-        /// <param name="operationImport">The operation import whose parameters are being read.</param>
+        /// <param name="operation">The operation whose parameters are being read.</param>
         /// <returns>The newly created <see cref="ODataParameterReader"/>.</returns>
-        internal virtual ODataParameterReader CreateParameterReader(IEdmOperationImport operationImport)
+        internal virtual ODataParameterReader CreateParameterReader(IEdmOperation operation)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Parameter);
         }
 
@@ -358,11 +342,10 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Asynchronously create a <see cref="ODataParameterReader"/>.
         /// </summary>
-        /// <param name="operationImport">The operation import whose parameters are being read.</param>
+        /// <param name="operation">The operation whose parameters are being read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataParameterReader"/>.</returns>
-        internal virtual Task<ODataParameterReader> CreateParameterReaderAsync(IEdmOperationImport operationImport)
+        internal virtual Task<ODataParameterReader> CreateParameterReaderAsync(IEdmOperation operation)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Parameter);
         }
 #endif
@@ -370,12 +353,11 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Read a service document. 
         /// This method reads the service document from the input and returns 
-        /// an <see cref="ODataWorkspace"/> that represents the read service document.
+        /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
-        /// <returns>An <see cref="ODataWorkspace"/> representing the read service document.</returns>
-        internal virtual ODataWorkspace ReadServiceDocument()
+        /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
+        internal virtual ODataServiceDocument ReadServiceDocument()
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ServiceDocument);
         }
 
@@ -383,12 +365,11 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Asynchronously read a service document. 
         /// This method reads the service document from the input and returns 
-        /// an <see cref="ODataWorkspace"/> that represents the read service document.
+        /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
-        /// <returns>Task which when completed returns an <see cref="ODataWorkspace"/> representing the read service document.</returns>
-        internal virtual Task<ODataWorkspace> ReadServiceDocumentAsync()
+        /// <returns>Task which when completed returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>
+        internal virtual Task<ODataServiceDocument> ReadServiceDocumentAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ServiceDocument);
         }
 #endif
@@ -401,7 +382,6 @@ namespace Microsoft.OData.Core
         /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
         internal virtual IEdmModel ReadMetadataDocument()
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.MetadataDocument);
         }
 
@@ -414,7 +394,6 @@ namespace Microsoft.OData.Core
         /// <returns>An <see cref="ODataProperty"/> representing the read property.</returns>
         internal virtual ODataProperty ReadProperty(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
 
@@ -428,7 +407,6 @@ namespace Microsoft.OData.Core
         /// <returns>Task which when completed returns an <see cref="ODataProperty"/> representing the read property.</returns>
         internal virtual Task<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
 #endif
@@ -439,7 +417,6 @@ namespace Microsoft.OData.Core
         /// <returns>An <see cref="ODataError"/> representing the read error.</returns>
         internal virtual ODataError ReadError()
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
 
@@ -450,7 +427,6 @@ namespace Microsoft.OData.Core
         /// <returns>Task which when completed returns an <see cref="ODataError"/> representing the read error.</returns>
         internal virtual Task<ODataError> ReadErrorAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
 #endif
@@ -458,11 +434,9 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Read a set of top-level entity reference links.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference links.</param>
         /// <returns>An <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
-        internal virtual ODataEntityReferenceLinks ReadEntityReferenceLinks(IEdmNavigationProperty navigationProperty)
+        internal virtual ODataEntityReferenceLinks ReadEntityReferenceLinks()
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLinks);
         }
 
@@ -470,11 +444,9 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Asynchronously read a set of top-level entity reference links.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference links.</param>
         /// <returns>Task which when completed returns an <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
-        internal virtual Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync(IEdmNavigationProperty navigationProperty)
+        internal virtual Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLinks);
         }
 #endif
@@ -482,11 +454,9 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Read a top-level entity reference link.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference link.</param>
         /// <returns>An <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
-        internal virtual ODataEntityReferenceLink ReadEntityReferenceLink(IEdmNavigationProperty navigationProperty)
+        internal virtual ODataEntityReferenceLink ReadEntityReferenceLink()
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLink);
         }
 
@@ -494,11 +464,9 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Asynchronously read a top-level entity reference link.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference link.</param>
         /// <returns>Task which when completed returns an <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
-        internal virtual Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync(IEdmNavigationProperty navigationProperty)
+        internal virtual Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLink);
         }
 #endif
@@ -510,7 +478,6 @@ namespace Microsoft.OData.Core
         /// <returns>An <see cref="object"/> representing the read value.</returns>
         internal virtual object ReadValue(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Value);
         }
 
@@ -522,7 +489,6 @@ namespace Microsoft.OData.Core
         /// <returns>Task which when completed returns an <see cref="object"/> representing the read value.</returns>
         internal virtual Task<object> ReadValueAsync(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Value);
         }
 #endif
@@ -533,8 +499,6 @@ namespace Microsoft.OData.Core
         /// <exception cref="ObjectDisposedException">If the object has already been disposed.</exception>
         internal void VerifyNotDisposed()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (this.disposed)
             {
                 throw new ObjectDisposedException(this.GetType().FullName);
@@ -548,8 +512,6 @@ namespace Microsoft.OData.Core
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Needs to access this in debug only.")]
         internal void AssertSynchronous()
         {
-            DebugUtils.CheckNoExternalCallers();
-
 #if DEBUG
             Debug.Assert(this.synchronous, "The method should only be called on a synchronous input context.");
 #endif
@@ -562,8 +524,6 @@ namespace Microsoft.OData.Core
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Needs to access this in debug only.")]
         internal void AssertAsynchronous()
         {
-            DebugUtils.CheckNoExternalCallers();
-
 #if DEBUG
             Debug.Assert(!this.synchronous, "The method should only be called on an asynchronous input context.");
 #endif
@@ -575,8 +535,6 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created instance of duplicate property names checker.</returns>
         internal DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return new DuplicatePropertyNamesChecker(this.MessageReaderSettings.ReaderBehavior.AllowDuplicatePropertyNames, this.ReadingResponse);
         }
 
@@ -593,7 +551,6 @@ namespace Microsoft.OData.Core
         /// </returns>
         internal Uri ResolveUri(Uri baseUri, Uri payloadUri)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(payloadUri != null, "uri != null");
 
             if (this.UrlResolver != null)

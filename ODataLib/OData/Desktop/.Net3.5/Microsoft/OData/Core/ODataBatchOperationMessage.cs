@@ -55,7 +55,6 @@ namespace Microsoft.OData.Core
             bool writing)
             : base(writing, /*disableMessageStreamDisposal*/ false, /*maxMessageSize*/ -1)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(contentStreamCreatorFunc != null, "contentStreamCreatorFunc != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
@@ -166,7 +165,6 @@ namespace Microsoft.OData.Core
         /// <returns>The instance of the interface asked for or null if it was not implemented by the message.</returns>
         internal override TInterface QueryInterface<TInterface>()
         {
-            DebugUtils.CheckNoExternalCallers();
             return null;
         }
 
@@ -183,7 +181,6 @@ namespace Microsoft.OData.Core
         /// </returns>
         internal Uri ResolveUrl(Uri baseUri, Uri payloadUri)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(payloadUri, "payloadUri");
 
             if (this.urlResolver != null)
@@ -202,7 +199,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void PartHeaderProcessingCompleted()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.contentStreamCreatorFunc = null;
         }
 
@@ -212,7 +208,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void VerifyNotCompleted()
         {
-            DebugUtils.CheckNoExternalCallers();
             if (this.contentStreamCreatorFunc == null)
             {
                 throw new ODataException(Strings.ODataBatchOperationMessage_VerifyNotCompleted);

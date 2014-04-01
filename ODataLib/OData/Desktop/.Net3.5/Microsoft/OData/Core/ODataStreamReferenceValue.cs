@@ -34,17 +34,11 @@ namespace Microsoft.OData.Core
         /// <summary>Edit link for media resource.</summary>
         private Uri computedEditLink;
 
-        /// <summary>true if an edit link was provided by the user or seen on the wire, false otherwise.</summary>
-        private bool hasNonComputedEditLink;
-
         /// <summary>Read link for media resource.</summary>
         private Uri readLink;
 
         /// <summary>Read link for media resource.</summary>
         private Uri computedReadLink;
-
-        /// <summary>true if a read link was provided by the user or seen on the wire, false otherwise.</summary>
-        private bool hasNonComputedReadLink;
 
         /// <summary>Gets or sets the edit link for media resource.</summary>
         /// <returns>The edit link for media resource.</returns>
@@ -52,7 +46,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return this.hasNonComputedEditLink
+                return this.HasNonComputedEditLink
                     ? this.editLink
                     : (this.computedEditLink ?? (this.metadataBuilder == null ? null : this.computedEditLink = this.metadataBuilder.GetStreamEditLink(this.edmPropertyName)));
             }
@@ -60,7 +54,7 @@ namespace Microsoft.OData.Core
             set
             {
                 this.editLink = value;
-                this.hasNonComputedEditLink = true;
+                this.HasNonComputedEditLink = true;
             }
         }
 
@@ -70,7 +64,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return this.hasNonComputedReadLink
+                return this.HasNonComputedReadLink
                     ? this.readLink
                     : (this.computedReadLink ?? (this.metadataBuilder == null ? null : this.computedReadLink = this.metadataBuilder.GetStreamReadLink(this.edmPropertyName)));
             }
@@ -78,7 +72,7 @@ namespace Microsoft.OData.Core
             set
             {
                 this.readLink = value;
-                this.hasNonComputedReadLink = true;
+                this.HasNonComputedReadLink = true;
             }
         }
 
@@ -99,14 +93,30 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// true if an edit link was provided by the user or seen on the wire, false otherwise. 
+        /// </summary>
+        internal bool HasNonComputedEditLink
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// true if a read link was provided by the user or seen on the wire, false otherwise. 
+        /// </summary>
+        internal bool HasNonComputedReadLink
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Sets the metadata builder for this stream reference value.
         /// </summary>
         /// <param name="builder">The metadata builder used to compute values from model annotations.</param>
         /// <param name="propertyName">The property name for the named stream; null for the default media resource.</param>
         internal void SetMetadataBuilder(ODataEntityMetadataBuilder builder, string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.metadataBuilder = builder;
             this.edmPropertyName = propertyName;
             this.computedEditLink = null;
@@ -119,7 +129,6 @@ namespace Microsoft.OData.Core
         /// <returns>The metadata builder used to compute links.</returns>
         internal ODataEntityMetadataBuilder GetMetadataBuilder()
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.metadataBuilder;
         }
     }

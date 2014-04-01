@@ -78,7 +78,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.isExclude;
             }
         }
@@ -114,7 +113,6 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created <see cref="AnnotationFilterPattern"/> instance.</returns>
         internal static AnnotationFilterPattern Create(string pattern)
         {
-            DebugUtils.CheckNoExternalCallers();
             ValidatePattern(pattern);
 
             bool isExclude = RemoveExcludeOperator(ref pattern);
@@ -138,7 +136,6 @@ namespace Microsoft.OData.Core
         /// <param name="pattersToSort">The source array to sort. When the method returns the items in this array instance will be rearragned.</param>
         internal static void Sort(AnnotationFilterPattern[] pattersToSort)
         {
-            DebugUtils.CheckNoExternalCallers();
             Array.Sort(pattersToSort);
         }
 
@@ -286,7 +283,6 @@ namespace Microsoft.OData.Core
             /// <param name="isExclude">true if the annotation should be excluded from reading when its name matches this pattern; false otherwise.</param>
             internal WildCardPattern(bool isExclude) : base(WildCard, isExclude)
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>
@@ -296,7 +292,6 @@ namespace Microsoft.OData.Core
             /// <returns>Returns true if the given annotation name matches the pattern, false otherwise.</returns>
             internal override bool Matches(string annotationName)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
                 return true;
             }
@@ -314,7 +309,6 @@ namespace Microsoft.OData.Core
             /// <param name="isExclude">true if the annotation should be excluded from reading when its name matches this pattern; false otherwise.</param>
             internal StartsWithPattern(string pattern, bool isExclude) : base(pattern, isExclude)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(!string.IsNullOrEmpty(pattern), "!string.IsNullOrEmpty(pattern)");
                 Debug.Assert(pattern.EndsWith(".", StringComparison.Ordinal), "pattern.EndsWith(\".\", StringComparison.Ordinal)");
             }
@@ -326,7 +320,6 @@ namespace Microsoft.OData.Core
             /// <returns>Returns true if the given annotation name matches the pattern, false otherwise.</returns>
             internal override bool Matches(string annotationName)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
                 return annotationName.StartsWith(this.Pattern, StringComparison.Ordinal);
             }
@@ -344,7 +337,6 @@ namespace Microsoft.OData.Core
             /// <param name="isExclude">true if the annotation should be excluded from reading when its name matches this pattern; false otherwise.</param>
             internal ExactMatchPattern(string pattern, bool isExclude) : base(pattern, isExclude)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(!string.IsNullOrEmpty(pattern), "!string.IsNullOrEmpty(pattern)");
             }
 
@@ -355,7 +347,6 @@ namespace Microsoft.OData.Core
             /// <returns>Returns true if the given annotation name matches the pattern, false otherwise.</returns>
             internal override bool Matches(string annotationName)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
                 return annotationName.Equals(this.Pattern, StringComparison.Ordinal);
             }

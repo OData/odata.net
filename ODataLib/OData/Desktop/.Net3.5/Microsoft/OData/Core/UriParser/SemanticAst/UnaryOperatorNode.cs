@@ -94,7 +94,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return InternalQueryNodeKind.UnaryOperator;
             }
         }
@@ -108,7 +107,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <exception cref="System.ArgumentNullException">Throws if the input visitor is null.</exception>
         public override T Accept<T>(QueryNodeVisitor<T> visitor)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(visitor, "visitor");
             return visitor.Visit(this);
         }

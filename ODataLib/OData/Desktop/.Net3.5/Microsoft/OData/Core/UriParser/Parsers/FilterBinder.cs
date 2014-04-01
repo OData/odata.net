@@ -40,7 +40,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="state">State to use for binding.</param>
         internal FilterBinder(MetadataBinder.QueryTokenVisitor bindMethod, BindingState state)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             this.bindMethod = bindMethod;
             this.state = state;
         }
@@ -52,7 +51,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A FilterNode with the given path linked to it (if provided).</returns>
         internal FilterClause BindFilter(QueryToken filter)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             ExceptionUtils.CheckArgumentNotNull(filter, "filter");
 
             QueryNode expressionNode = this.bindMethod(filter);

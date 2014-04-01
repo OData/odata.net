@@ -86,9 +86,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static Assembly GetAssembly(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.Assembly;
         }
 
@@ -100,9 +97,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsValueType(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.IsValueType;
         }
 
@@ -114,9 +108,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsGenericParameter(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.IsGenericParameter;
         }
 
@@ -128,9 +119,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsAbstract(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.IsAbstract;
         }
 
@@ -142,9 +130,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsGenericType(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.IsGenericType;
         }
 
@@ -156,9 +141,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsGenericTypeDefinition(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.IsGenericTypeDefinition;
         }
 
@@ -170,9 +152,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsVisible(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.IsVisible;
         }
 
@@ -184,9 +163,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsInterface(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.IsInterface;
         }
 
@@ -198,9 +174,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsClass(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.IsClass;
         }
 
@@ -212,9 +185,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsEnum(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.IsEnum;
         }
 
@@ -226,9 +196,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static Type GetBaseType(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.BaseType;
         }
 
@@ -240,9 +207,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool ContainsGenericParameters(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.ContainsGenericParameters;
         }
 
@@ -259,72 +223,10 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static ReadOnlyCollection<T> AsReadOnly<T>(this T[] array)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
 #if PORTABLELIB
             return new ReadOnlyCollection<T>(array);
 #else
             return Array.AsReadOnly(array);
-#endif
-        }
-
-        /// <summary>
-        /// Converts a string to a DateTime.
-        /// </summary>
-        /// <param name="text">String to be converted.</param>
-        /// <returns>See documentation for method being accessed in the body of the method.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static DateTime ConvertStringToDateTime(string text)
-        {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
-
-            // Workaround for XmlConvert.ToDateTime issue which is not able to convert string without seconds to DateTime, So the seconds part is added as zeros.
-            text = AddSecondsPaddingIfMissing(text);
-#if PORTABLELIB
-            // DateTimeOffset always applies an offset (using the local one if one is not present in the input), but the old XmlConvert methods
-            // would produce a DateTime value with InternalKind=DateTimeKind.Unspecified and no offset applied if none was specified in the input string.
-            // Before we convert to DateTimeOffset, we need to determine what kind of input we have so we can still produce the same kind of DateTime
-            // instances that we would have gotten on other platforms with XmlConvert.ToDateTime.
-            // 
-            // The XML DateTime pattern is described here: http://www.w3.org/TR/xmlschema-2/#dateTime
-            // For example:
-            //      No timezone specified: "2012-12-21T15:01:23.1234567"
-            //      UTC timezone: "2012-12-21T15:01:23.1234567Z"
-            //      Timezone offset from UTC: "2012-12-21T15:01:23.1234567-08:00" or "2012-12-21T15:01:23.1234567+08:00"
-            // If timezone is specified, the indicator will always be at the same place from the end of the string as in the examples above, so we can look there for the Z or +/-.
-            DateTimeKind inputKind;
-            const int TimeZoneSignOffset = 6;
-            if (text[text.Length - 1] == 'Z')
-            {
-                inputKind = DateTimeKind.Utc;
-            }
-            else if (text[text.Length - TimeZoneSignOffset] == '-' || text[text.Length - TimeZoneSignOffset] == '+')
-            {
-                inputKind = DateTimeKind.Local;
-            }
-            else
-            {
-                // To prevent ToDateTimeOffset from applying the local offset in this case, we will append the Z to indicate UTC time
-                inputKind = DateTimeKind.Unspecified;
-                text = text + "Z";
-            }
-
-            var dateTimeOffset = XmlConvert.ToDateTimeOffset(text);
-            switch (inputKind)
-            {
-                case DateTimeKind.Local:
-                    return dateTimeOffset.LocalDateTime;
-                case DateTimeKind.Utc:
-                    return dateTimeOffset.UtcDateTime;
-                default:
-                    Debug.Assert(inputKind == DateTimeKind.Unspecified, "All dates must be Utc, Local, or Unspecified.");
-                    return dateTimeOffset.DateTime;
-            }
-#else
-            return XmlConvert.ToDateTime(text, XmlDateTimeSerializationMode.RoundtripKind);
 #endif
         }
 
@@ -335,11 +237,41 @@ namespace Microsoft.OData.Edm
         /// <returns>See documentation for method being accessed in the body of the method.</returns>
         internal static DateTimeOffset ConvertStringToDateTimeOffset(string text)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             text = AddSecondsPaddingIfMissing(text);
-            return XmlConvert.ToDateTimeOffset(text);
+            DateTimeOffset dateTimeOffset = XmlConvert.ToDateTimeOffset(text);
+
+            // Validate the time zone after we know that the text is a valid date time offset string.
+            ValidateTimeZoneInformationInDateTimeOffsetString(text);
+
+            return dateTimeOffset;
+        }
+
+        /// <summary>
+        /// Validates that the DateTimeOffset string contains the time zone information.
+        /// </summary>
+        /// <param name="text">String to be validated.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
+        internal static void ValidateTimeZoneInformationInDateTimeOffsetString(string text)
+        {
+
+            // The XML DateTime pattern is described here: http://www.w3.org/TR/xmlschema-2/#dateTime
+            // If timezone is specified, the indicator will always be at the same place from the end of the string, so we can look there for the Z or +/-.
+            //
+            // UTC timezone, for example: "2012-12-21T15:01:23.1234567Z"
+            if (text.Length > 1 && (text[text.Length - 1] == 'Z' || text[text.Length - 1] == 'z'))
+            {
+                return;
+            }
+
+            // Timezone offset from UTC, for example: "2012-12-21T15:01:23.1234567-08:00" or "2012-12-21T15:01:23.1234567+08:00"
+            const int timeZoneSignOffset = 6;
+            if (text.Length > timeZoneSignOffset && (text[text.Length - timeZoneSignOffset] == '-' || text[text.Length - timeZoneSignOffset] == '+'))
+            {
+                return;
+            }
+
+            // No timezone specified, for example: "2012-12-21T15:01:23.1234567"
+            throw new InvalidOperationException(Strings.PlatformHelper_DateTimeOffsetMustContainTimeZone(text));
         }
 
         /// <summary>
@@ -349,66 +281,18 @@ namespace Microsoft.OData.Edm
         /// <returns>DateTime string after adding seconds padding</returns>
         internal static string AddSecondsPaddingIfMissing(string text)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             int indexOfT = text.IndexOf("T", System.StringComparison.Ordinal);
             const int ColonBeforeSecondsOffset = 6;
             int indexOfColonBeforeSeconds = indexOfT + ColonBeforeSecondsOffset;
 
             // check if the string is in the format of yyyy-mm-ddThh:mm or in the format of yyyy-mm-ddThh:mm[- or +]hh:mm 
-            if (indexOfT > 0 && (text.Length <= indexOfColonBeforeSeconds || text[indexOfColonBeforeSeconds] != ':'))
+            if (indexOfT > 0 && 
+                (text.Length == indexOfColonBeforeSeconds || text.Length > indexOfColonBeforeSeconds && text[indexOfColonBeforeSeconds] != ':'))
             {
                 text = text.Insert(indexOfColonBeforeSeconds, ":00");
             }
             
             return text;
-        }
-
-        /// <summary>
-        /// Converts the DateTime to a string, internal method.
-        /// </summary>
-        /// <param name="dateTime">DateTime to convert to String.</param>
-        /// <returns>Converted String.</returns>
-        internal static string ConvertDateTimeToStringInternal(DateTime dateTime)
-        {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
-            if (dateTime.Kind == DateTimeKind.Unspecified)
-            {
-                // If we just cast to DateTimeOffset here, the local offset will be applied, which can alter the meaning of the value.
-                // Instead we need to create a new DateTimeOffset with the timezone explicitly set to UTC, which will prevent
-                // any offset from being used. The resulting string does have the Z on it in that case, but we want to leave the timezone
-                // unspecified here, so we will just remove that.
-                DateTimeOffset dateTimeOffset = new DateTimeOffset(dateTime, TimeSpan.Zero);
-                string outputWithZ = XmlConvert.ToString(dateTimeOffset);
-                Debug.Assert(outputWithZ[outputWithZ.Length - 1] == 'Z', "Expected DateTimeOffset to be a UTC value.");
-                return outputWithZ.TrimEnd('Z');
-            }
-            else
-            {
-                // For Utc and Local kinds, ToString produces the same string that the old XmlConvert methods would produce.
-                return XmlConvert.ToString((DateTimeOffset)dateTime);
-            }    
-        }
-
-        /// <summary>
-        /// Converts a DateTime to a string.
-        /// </summary>
-        /// <param name="dateTime">DateTime to be converted.</param>
-        /// <returns>See documentation for property being accessed in the body of the method.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static string ConvertDateTimeToString(DateTime dateTime)
-        {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
-#if PORTABLELIB
-            return ConvertDateTimeToStringInternal(dateTime);
-#else
-            return XmlConvert.ToString(dateTime, XmlDateTimeSerializationMode.RoundtripKind);
-#endif
         }
 
         /// <summary>
@@ -420,9 +304,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static Type GetTypeOrThrow(string typeName)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return Type.GetType(typeName, true);
         }
 
@@ -434,9 +315,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static TypeCode GetTypeCode(Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return Type.GetTypeCode(type);
         }
 
@@ -451,9 +329,6 @@ namespace Microsoft.OData.Edm
         /// <returns>Category of the character.</returns>
         internal static UnicodeCategory GetUnicodeCategory(Char c)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             // Portable Library platform doesn't have Char.GetUnicodeCategory, its on CharUnicodeInfo instead.
 #if PORTABLELIB
             return CharUnicodeInfo.GetUnicodeCategory(c);
@@ -470,9 +345,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsProperty(MemberInfo member)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
 #if PORTABLELIB
             return member is PropertyInfo;
 #else
@@ -488,9 +360,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsPrimitive(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.IsPrimitive;
         }
 
@@ -502,9 +371,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsSealed(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.IsSealed;
         }
 
@@ -516,9 +382,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsMethod(MemberInfo member)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
 #if PORTABLELIB
             return member is MethodInfo;
 #else
@@ -536,9 +399,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool AreMembersEqual(MemberInfo member1, MemberInfo member2)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
 #if PORTABLELIB
             return member1 == member2;
 #else 
@@ -555,9 +415,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static IEnumerable<PropertyInfo> GetPublicProperties(this Type type, bool instanceOnly)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return GetPublicProperties(type, instanceOnly, false /*declaredOnly*/);
         }
 
@@ -571,9 +428,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static IEnumerable<PropertyInfo> GetPublicProperties(this Type type, bool instanceOnly, bool declaredOnly)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
             if (!instanceOnly)
             {
@@ -597,9 +451,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static IEnumerable<ConstructorInfo> GetInstanceConstructors(this Type type, bool isPublic)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             BindingFlags bindingFlags = BindingFlags.Instance;
             bindingFlags |= isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
             return type.GetConstructors(bindingFlags);
@@ -615,9 +466,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static ConstructorInfo GetInstanceConstructor(this Type type, bool isPublic, Type[] argTypes)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
 #if PORTABLELIB
             return GetInstanceConstructors(type, isPublic).SingleOrDefault(c => CheckTypeArgs(c, argTypes));
 #endif
@@ -637,9 +485,6 @@ namespace Microsoft.OData.Edm
         /// <returns>Returns True if found.</returns>
         internal static bool TryGetMethod(this Type type, string name, Type[] parameterTypes, out MethodInfo foundMethod)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             foundMethod = null;
             try
             {
@@ -663,9 +508,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static MethodInfo GetMethod(this Type type, string name, bool isPublic, bool isStatic)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             // PortableLib: The BindingFlags enum and all related reflection method overloads have been removed from . Instead of trying to provide
             // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
             // still allow for the same functionality as needed by the calling code.
@@ -695,9 +537,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static MethodInfo GetMethod(this Type type, string name, Type[] types, bool isPublic, bool isStatic)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
 #if PORTABLELIB
             MethodInfo methodInfo = type.GetMethod(name, types);
             if (isPublic == methodInfo.IsPublic && isStatic == methodInfo.IsStatic)
@@ -723,9 +562,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static IEnumerable<MethodInfo> GetPublicStaticMethods(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.GetMethods(BindingFlags.Static | BindingFlags.Public);
         }
 
@@ -737,9 +573,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static IEnumerable<Type> GetNonPublicNestedTypes(this Type type)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return type.GetNestedTypes(BindingFlags.NonPublic);
         }
         #endregion
@@ -782,7 +615,7 @@ namespace Microsoft.OData.Edm
         /// <remarks>Is marked as compiled option only in platforms otherwise RegexOption.None is used</remarks>
         public static Regex CreateCompiled(string pattern, RegexOptions options)
         {
-#if SILVERLIGHT || ORCAS || PORTABLELIB
+#if ORCAS || PORTABLELIB
             options = options | RegexOptions.None;
 #else
             options = options | RegexOptions.Compiled;
@@ -792,7 +625,7 @@ namespace Microsoft.OData.Edm
 
         public static string[] GetSegments(this Uri uri)
         {
-#if SILVERLIGHT || PORTABLELIB
+#if PORTABLELIB
             return uri.AbsolutePath.Split('/');
 #else
             return uri.Segments;

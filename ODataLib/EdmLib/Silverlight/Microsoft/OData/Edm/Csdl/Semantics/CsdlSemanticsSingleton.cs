@@ -1,0 +1,43 @@
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+
+namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
+{
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Csdl.Parsing.Ast;
+
+    /// <summary>
+    /// Provides semantics for CsdlSingleton.
+    /// </summary>
+    internal class CsdlSemanticsSingleton : CsdlSemanticsNavigationSource, IEdmSingleton
+    {
+        public CsdlSemanticsSingleton(CsdlSemanticsEntityContainer container, CsdlSingleton singleton)
+            : base(container, singleton)
+        {
+        }
+
+        public override IEdmType Type
+        {
+            get { return this.typeCache.GetValue(this, ComputeElementTypeFunc, null); }
+        }
+
+        public override EdmContainerElementKind ContainerElementKind
+        {
+            get { return EdmContainerElementKind.Singleton; }
+        }
+
+        protected override IEdmEntityType ComputeElementType()
+        {
+            string type = ((CsdlSingleton)this.navigationSource).Type;
+            return this.container.Context.FindType(type) as IEdmEntityType ?? new UnresolvedEntityType(type, this.Location);
+        }
+    }
+}
+

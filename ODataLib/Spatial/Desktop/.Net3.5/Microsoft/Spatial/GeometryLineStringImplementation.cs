@@ -10,19 +10,12 @@
 
 namespace Microsoft.Data.Spatial
 {
-    using System;
     using System.Collections.ObjectModel;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
     using Microsoft.Spatial;
 
     /// <summary>
     /// Geometry Line String
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     internal class GeometryLineStringImplementation : GeometryLineString
     {
         /// <summary>
@@ -74,18 +67,6 @@ namespace Microsoft.Data.Spatial
             }
         }
 
-#if WINDOWS_PHONE
-        /// <summary>
-        /// internal geometry point array property to support serializing and de-serializing this instance.
-        /// </summary>
-        [DataMember]
-        internal GeometryPoint[] PointsArray
-        {
-            get { return this.points; }
-
-            set { this.points = value; }
-        }
-#endif
         /// <summary>
         /// Sends the current spatial object to the given pipeline
         /// </summary>

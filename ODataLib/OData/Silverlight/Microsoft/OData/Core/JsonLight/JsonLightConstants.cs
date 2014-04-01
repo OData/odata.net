@@ -30,17 +30,20 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>The 'value' property name for the Json Light value property.</summary>
         internal const string ODataValuePropertyName = "value";
 
-        /// <summary>The name of the property returned for a singleton $links query.</summary>
-        internal const string ODataEntityReferenceLinkUrlName = "url";
+        /// <summary>The 'error' property name for the Json Light value property.</summary>
+        internal const string ODataErrorPropertyName = "error";
 
-        /// <summary>The name of the property returned for a URL of a workspace collection.</summary>
-        internal const string ODataWorkspaceCollectionUrlName = "url";
+        /// <summary>The name of the property returned for a URL of a service document element.</summary>
+        internal const string ODataServiceDocumentElementUrlName = "url";
 
-        /// <summary>The name of the property returned for a name of a workspace collection.</summary>
-        internal const string ODataWorkspaceCollectionNameName = "name";
+        /// <summary>The string used for the title attribute for the service document element.</summary>
+        internal const string ODataServiceDocumentElementTitle = "title";
 
-        /// <summary>The 'name' property name of an annotation group declaration.</summary>
-        internal const string ODataAnnotationGroupNamePropertyName = "name";
+        /// <summary>The string used for the kind attribute for the service document element.</summary>
+        internal const string ODataServiceDocumentElementKind = "kind";
+
+        /// <summary>The name of the property returned for a name of a service document element.</summary>
+        internal const string ODataServiceDocumentElementName = "name";
 
         /// <summary>The name of the $select query option.</summary>
         internal const string ContextUriSelectQueryOptionName = "$select";
@@ -51,27 +54,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>The '&amp;' separator character between query options.</summary>
         internal const char ContextUriQueryOptionSeparator = '&';
 
-        /// <summary>The hash sign acting as fragment indicator in a context URI.</summary>
-        internal const char ContextUriFragmentIndicator = '#';
-
-        /// <summary>The slash sign used as separator in the fragment of a context URI.</summary>
-        internal const char ContextUriFragmentPartSeparator = '/';
-
-        /// <summary>The @Element token that indicates that the payload is a single item from a set.</summary>
-        internal const string ContextUriFragmentItemSelector = "@Element";
-
-        /// <summary>
-        /// Constant "#Collection($ref)" used to represent collection of entity references in Context URL
-        /// Note that if a response is a collection of entity references, the context URL does not contain the type of the referenced entities
-        /// </summary>
-        internal const string CollectionOfEntityReferencesContextUrlSegment = "#Collection($ref)";
-
-        /// <summary>
-        /// Constant "#$ref"used to represent single entity reference in Context URL
-        /// Note that if a response is a collection of entity references, the context URL does not contain the type of the referenced entities
-        /// </summary>
-        internal const string SingleEntityReferencesContextUrlSegment = "#$ref";
-
         /// <summary>The '(' used to mark the start of function parameters in the fragment of a context URI.</summary>
         internal const char FunctionParameterStart = '(';
 
@@ -81,7 +63,13 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>The "," to use as the separator for the function parameters in the fragment of a context URI.</summary>
         internal const string FunctionParameterSeparator = ",";
 
-        /// <summary>The token that indicates the payload is a property with null value.</summary>
-        internal const string MetadataUriFragmentNull = "Edm.Null";
+        /// <summary> The kind name of the service document singleton element. </summary>
+        internal const string ServiceDocumentSingletonKindName = "Singleton";
+
+        /// <summary> The kind name of the service document function import element. </summary>
+        internal const string ServiceDocumentFunctionImportKindName = "FunctionImport";
+
+        /// <summary> The kind name of the service document entity set element. </summary>
+        internal const string ServiceDocumentEntitySetKindName = "EntitySet";
     }
 }

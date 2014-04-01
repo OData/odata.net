@@ -11,17 +11,11 @@
 namespace Microsoft.Data.Spatial
 {
     using System.Diagnostics.CodeAnalysis;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
     using Microsoft.Spatial;
 
     /// <summary>
     /// Implementation of FullGlobe
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     internal class GeographyFullGlobeImplementation : GeographyFullGlobe
     {
         /// <summary>

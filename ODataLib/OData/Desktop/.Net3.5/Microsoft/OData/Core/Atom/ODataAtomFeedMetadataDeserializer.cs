@@ -35,8 +35,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomFeedMetadataDeserializer(ODataAtomInputContext atomInputContext, bool inSourceElement)
             : base(atomInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             XmlNameTable nameTable = this.XmlReader.NameTable;
             this.EmptyNamespace = nameTable.Add(string.Empty);
 
@@ -61,7 +59,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void ReadAtomElementAsFeedMetadata(AtomFeedMetadata atomFeedMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(this.XmlReader.NamespaceURI == AtomConstants.AtomNamespace, "Only atom:* elements can be read by this method.");
 
@@ -131,7 +128,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal AtomLinkMetadata ReadAtomLinkElementInFeed(string relation, string hrefStringValue)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(
                 this.XmlReader.NamespaceURI == AtomConstants.AtomNamespace && this.XmlReader.LocalName == AtomConstants.AtomLinkElementName,
@@ -233,7 +229,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         private void ReadCategoryElement(AtomFeedMetadata atomFeedMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(
                 this.XmlReader.NamespaceURI == AtomConstants.AtomNamespace && this.XmlReader.LocalName == AtomConstants.AtomCategoryElementName,
@@ -376,7 +371,9 @@ namespace Microsoft.OData.Core.Atom
                 "Only atom:id elements can be read by this method.");
 
             this.VerifyNotPreviouslyDefined(atomFeedMetadata.SourceId);
-            atomFeedMetadata.SourceId = this.XmlReader.ReadElementValue();
+            string elementValue = this.XmlReader.ReadElementValue();
+
+            atomFeedMetadata.SourceId = UriUtils.CreateUriAsEntryOrFeedId(elementValue, UriKind.Absolute);
         }
 
         /// <summary>

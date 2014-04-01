@@ -38,7 +38,6 @@ namespace Microsoft.OData.Core.Evaluation
         internal virtual Uri BuildBaseUri()
         {
 #if !ASTORIA_CLIENT
-            DebugUtils.CheckNoExternalCallers();
 #endif
             return null;
         }
@@ -54,7 +53,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNullAndEmpty(entitySetName, "entitySetName");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(entitySetName, "entitySetName");
 #endif
             return null;
@@ -84,7 +82,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNull(entityInstance, "entityInstance");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(keyProperties, "keyProperties");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(entityTypeName, "entityTypeName");
 #endif
@@ -105,7 +102,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNotEmpty(streamPropertyName, "streamPropertyName");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
 #endif
             return null;
@@ -125,7 +121,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNotEmpty(streamPropertyName, "streamPropertyName");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
 #endif
             return null;
@@ -142,7 +137,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNullAndEmpty(navigationPropertyName, "navigationPropertyName");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
 #endif
             return null;
@@ -159,7 +153,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNullAndEmpty(navigationPropertyName, "navigationPropertyName");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
 #endif
             return null;
@@ -177,7 +170,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNullAndEmpty(operationName, "operationName");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(operationName, "operationName");
 #endif
             return null;
@@ -194,7 +186,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNullAndEmpty(typeName, "typeName");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(typeName, "typeName");
 #endif
             return null;

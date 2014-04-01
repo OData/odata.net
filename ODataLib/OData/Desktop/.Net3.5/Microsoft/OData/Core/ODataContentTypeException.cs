@@ -14,13 +14,13 @@ namespace Microsoft.OData.Core
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if !WINDOWS_PHONE && !SILVERLIGHT  && !PORTABLELIB
+#if ORCAS
     using System.Runtime.Serialization;
 #endif
     #endregion Namespaces
 
     /// <summary>Exception type representing exception when Content-Type of a message is not supported.</summary>
-#if !WINDOWS_PHONE && !SILVERLIGHT && !PORTABLELIB
+#if !PORTABLELIB
     [Serializable]
 #endif
     [DebuggerDisplay("{Message}")]
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core
         {
         }
 
-#if !WINDOWS_PHONE && !SILVERLIGHT && !PORTABLELIB
+#if ORCAS
         /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Core.ODataContentTypeException" /> class from the  specified SerializationInfo and StreamingContext instances.</summary>
         /// <param name="info"> A SerializationInfo containing the information required to serialize  the new ODataException. </param>
         /// <param name="context"> A StreamingContext containing the source of the serialized stream  associated with the new ODataException. </param>

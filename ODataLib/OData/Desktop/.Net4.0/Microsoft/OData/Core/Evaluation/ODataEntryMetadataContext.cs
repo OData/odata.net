@@ -57,9 +57,9 @@ namespace Microsoft.OData.Core.Evaluation
         private IDictionary<string, IEdmStructuralProperty> selectedStreamProperties;
 
         /// <summary>
-        /// The selected always bindable operations.
+        /// The selected bindable operations.
         /// </summary>
-        private IEnumerable<IEdmOperationImport> selectedAlwaysBindableOperations;
+        private IEnumerable<IEdmOperation> selectedBindableOperations;
 
         /// <summary>
         /// Constructs an instance of <see cref="ODataEntryMetadataContext"/>.
@@ -68,7 +68,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry.</param>
         protected ODataEntryMetadataContext(ODataEntry entry, IODataFeedAndEntryTypeContext typeContext)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(typeContext != null, "typeContext != null");
 
@@ -91,7 +90,7 @@ namespace Microsoft.OData.Core.Evaluation
         {
             get { return this.typeContext; }
         }
-        
+
         /// <summary>
         /// The actual entity type of the entry, i.e. ODataEntry.TypeName.
         /// </summary>
@@ -118,9 +117,9 @@ namespace Microsoft.OData.Core.Evaluation
         public abstract IDictionary<string, IEdmStructuralProperty> SelectedStreamProperties { get; }
 
         /// <summary>
-        /// The selected always bindable operations.
+        /// The selected bindable operations.
         /// </summary>
-        public abstract IEnumerable<IEdmOperationImport> SelectedAlwaysBindableOperations { get; }
+        public abstract IEnumerable<IEdmOperation> SelectedBindableOperations { get; }
 
         /// <summary>
         /// Creates an instance of <see cref="ODataEntryMetadataContext"/>.
@@ -140,13 +139,52 @@ namespace Microsoft.OData.Core.Evaluation
             IODataMetadataContext metadataContext,
             SelectedPropertiesNode selectedProperties)
         {
-            DebugUtils.CheckNoExternalCallers();
             if (serializationInfo != null)
             {
                 return new ODataEntryMetadataContextWithoutModel(entry, typeContext, serializationInfo);
             }
 
             return new ODataEntryMetadataContextWithModel(entry, typeContext, actualEntityType, metadataContext, selectedProperties);
+        }
+
+        /// <summary>
+        /// Get key value pair array for specifc odata entry using specifc entity type
+        /// </summary>
+        /// <param name="entry">The entry instance.</param>
+        /// <param name="serializationInfo">The serialization info of the entry for writing without model.</param>
+        /// <param name="actualEntityType">The edm entity type of the entry</param>
+        /// <returns>Key value pair array</returns>
+        internal static KeyValuePair<string, object>[] GetKeyProperties(
+            ODataEntry entry,
+            ODataFeedAndEntrySerializationInfo serializationInfo,
+            IEdmEntityType actualEntityType)
+        {
+            KeyValuePair<string, object>[] keyProperties = null;
+            string actualEntityTypeName = null;
+
+            if (serializationInfo != null)
+            {
+                if (String.IsNullOrEmpty(entry.TypeName))
+                {
+                    throw new ODataException(OData.Core.Strings.ODataFeedAndEntryTypeContext_ODataEntryTypeNameMissing);
+                }
+
+                actualEntityTypeName = entry.TypeName;
+                keyProperties = ODataEntryMetadataContextWithoutModel.GetPropertiesBySerializationInfoPropertyKind(entry, ODataPropertyKind.Key, actualEntityTypeName);
+            }
+            else
+            {
+                actualEntityTypeName = actualEntityType.FullName();
+
+                IEnumerable<IEdmStructuralProperty> edmKeyProperties = actualEntityType.Key();
+                if (edmKeyProperties != null)
+                {
+                    keyProperties = edmKeyProperties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(entry, p.Name, actualEntityTypeName, /*isKeyProperty*/false))).ToArray();
+                }
+            }
+
+            ValidateEntityTypeHasKeyProperties(keyProperties, actualEntityTypeName);
+            return keyProperties;
         }
 
         /// <summary>
@@ -159,13 +197,12 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The clr value of the property.</returns>
         private static object GetPrimitivePropertyClrValue(ODataEntry entry, string propertyName, string entityTypeName, bool isKeyProperty)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entry != null, "entry != null");
 
             ODataProperty property = entry.NonComputedProperties == null ? null : entry.NonComputedProperties.SingleOrDefault(p => p.Name == propertyName);
             if (property == null)
             {
-                throw new ODataException(OData.Core.Strings.EdmValueUtils_PropertyDoesntExist(entry.TypeName, propertyName));
+                throw new ODataException(OData.Core.Strings.EdmValueUtils_PropertyDoesntExist(entityTypeName, propertyName));
             }
 
             return GetPrimitivePropertyClrValue(entityTypeName, property, isKeyProperty);
@@ -209,6 +246,27 @@ namespace Microsoft.OData.Core.Evaluation
         }
 
         /// <summary>
+        /// Gets the property name value pairs filtered by serialization property kind.
+        /// </summary>
+        /// <param name="entry">The entry to get the properties from.</param>
+        /// <param name="propertyKind">The serialization info property kind.</param>
+        /// <param name="actualEntityTypeName">The entity type name of the entry.</param>
+        /// <returns>The property name value pairs filtered by serialization property kind.</returns>
+        private static KeyValuePair<string, object>[] GetPropertiesBySerializationInfoPropertyKind(ODataEntry entry, ODataPropertyKind propertyKind, string actualEntityTypeName)
+        {
+            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag, "propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag");
+
+            KeyValuePair<string, object>[] properties = EmptyProperties;
+            if (entry.NonComputedProperties != null)
+            {
+                properties = entry.NonComputedProperties.Where(p => p.SerializationInfo != null && p.SerializationInfo.PropertyKind == propertyKind).Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(actualEntityTypeName, p, propertyKind == ODataPropertyKind.Key))).ToArray();
+            }
+
+            return properties;
+        }
+
+        /// <summary>
         /// Implementation of <see cref="IODataEntryMetadataContext"/> based on serialization info.
         /// </summary>
         private sealed class ODataEntryMetadataContextWithoutModel : ODataEntryMetadataContext
@@ -226,7 +284,7 @@ namespace Microsoft.OData.Core.Evaluation
             /// <summary>
             /// Empty array of operations.
             /// </summary>
-            private static readonly IEdmOperationImport[] EmptyOperations = new IEdmOperationImport[0];
+            private static readonly IEdmOperation[] EmptyOperations = new IEdmOperation[0];
 
             /// <summary>
             /// The serialization info of the entry for writing without model.
@@ -242,7 +300,6 @@ namespace Microsoft.OData.Core.Evaluation
             internal ODataEntryMetadataContextWithoutModel(ODataEntry entry, IODataFeedAndEntryTypeContext typeContext, ODataFeedAndEntrySerializationInfo serializationInfo)
                 : base(entry, typeContext)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(serializationInfo != null, "serializationInfo != null");
                 this.serializationInfo = serializationInfo;
             }
@@ -305,32 +362,11 @@ namespace Microsoft.OData.Core.Evaluation
             }
 
             /// <summary>
-            /// The selected always bindable operations.
+            /// The selected bindable operations.
             /// </summary>
-            public override IEnumerable<IEdmOperationImport> SelectedAlwaysBindableOperations
+            public override IEnumerable<IEdmOperation> SelectedBindableOperations
             {
                 get { return EmptyOperations; }
-            }
-
-            /// <summary>
-            /// Gets the property name value pairs filtered by serialization property kind.
-            /// </summary>
-            /// <param name="entry">The entry to get the properties from.</param>
-            /// <param name="propertyKind">The serialization info property kind.</param>
-            /// <param name="actualEntityTypeName">The entity type name of the entry.</param>
-            /// <returns>The property name value pairs filtered by serialization property kind.</returns>
-            private static KeyValuePair<string, object>[] GetPropertiesBySerializationInfoPropertyKind(ODataEntry entry, ODataPropertyKind propertyKind, string actualEntityTypeName)
-            {
-                Debug.Assert(entry != null, "entry != null");
-                Debug.Assert(propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag, "propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag");
-
-                KeyValuePair<string, object>[] properties = EmptyProperties;
-                if (entry.NonComputedProperties != null)
-                {
-                    properties = entry.NonComputedProperties.Where(p => p.SerializationInfo != null && p.SerializationInfo.PropertyKind == propertyKind).Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(actualEntityTypeName, p, propertyKind == ODataPropertyKind.Key))).ToArray();
-                }
-
-                return properties;
             }
         }
 
@@ -365,7 +401,6 @@ namespace Microsoft.OData.Core.Evaluation
             internal ODataEntryMetadataContextWithModel(ODataEntry entry, IODataFeedAndEntryTypeContext typeContext, IEdmEntityType actualEntityType, IODataMetadataContext metadataContext, SelectedPropertiesNode selectedProperties)
                 : base(entry, typeContext)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(actualEntityType != null, "actualEntityType != null");
                 Debug.Assert(metadataContext != null, "metadataContext != null");
                 Debug.Assert(selectedProperties != null, "selectedProperties != null");
@@ -444,21 +479,21 @@ namespace Microsoft.OData.Core.Evaluation
             }
 
             /// <summary>
-            /// The selected always bindable operations.
+            /// The selected bindable operations.
             /// </summary>
-            public override IEnumerable<IEdmOperationImport> SelectedAlwaysBindableOperations
+            public override IEnumerable<IEdmOperation> SelectedBindableOperations
             {
                 get
                 {
-                    if (this.selectedAlwaysBindableOperations == null)
+                    if (this.selectedBindableOperations == null)
                     {
                         bool mustBeContainerQualified = this.metadataContext.OperationsBoundToEntityTypeMustBeContainerQualified(this.actualEntityType);
-                        this.selectedAlwaysBindableOperations = this.metadataContext.GetAlwaysBindableOperationsForType(this.actualEntityType)
+                        this.selectedBindableOperations = this.metadataContext.GetBindableOperationsForType(this.actualEntityType)
                             .Where(operation => this.selectedProperties.IsOperationSelected(this.actualEntityType, operation, mustBeContainerQualified))
                             .ToArray();
                     }
 
-                    return this.selectedAlwaysBindableOperations;
+                    return this.selectedBindableOperations;
                 }
             }
         }

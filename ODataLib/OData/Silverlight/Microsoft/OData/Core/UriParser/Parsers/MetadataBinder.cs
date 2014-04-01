@@ -11,6 +11,7 @@
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
     #region Namespaces
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
@@ -29,7 +30,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Keeping the visitor in one place makes sense.")]
     internal class MetadataBinder
-    {   
+    {
         /// <summary>
         /// Encapsulates the state of the metadate binding.
         /// </summary>
@@ -43,7 +44,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="initialState">The initialState to use for binding.</param>
         internal MetadataBinder(BindingState initialState)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             ExceptionUtils.CheckArgumentNotNull(initialState, "initialState");
             ExceptionUtils.CheckArgumentNotNull(initialState.Model, "initialState.Model");
 
@@ -65,13 +65,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.bindingState;
             }
 
             private set
             {
-                DebugUtils.CheckNoExternalCallers();
                 this.bindingState = value;
             }
         }
@@ -147,6 +145,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         protected internal QueryNode Bind(QueryToken token)
         {
             ExceptionUtils.CheckArgumentNotNull(token, "token");
+            this.BindingState.RecurseEnter();
             QueryNode result;
             switch (token.Kind)
             {
@@ -161,6 +160,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     break;
                 case QueryTokenKind.Literal:
                     result = this.BindLiteral((LiteralToken)token);
+                    break;
+                case QueryTokenKind.StringLiteral:
+                    result = this.BindStringLiteral((StringLiteralToken)token);
                     break;
                 case QueryTokenKind.BinaryOperator:
                     result = this.BindBinaryOperator((BinaryOperatorToken)token);
@@ -180,6 +182,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 case QueryTokenKind.RangeVariable:
                     result = this.BindRangeVariable((RangeVariableToken)token);
                     break;
+                case QueryTokenKind.FunctionParameterAlias:
+                    result = this.BindParameterAlias((FunctionParameterAliasToken)token);
+                    break;
                 case QueryTokenKind.FunctionParameter:
                     result = this.BindFunctionParameter((FunctionParameterToken)token);
                     break;
@@ -192,7 +197,19 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 throw new ODataException(ODataErrorStrings.MetadataBinder_BoundNodeCannotBeNull(token.Kind));
             }
 
+            this.BindingState.RecurseLeave();
             return result;
+        }
+
+        /// <summary>
+        /// Bind parameter alias (figuring out its type by first parsing and binding its value expression).
+        /// </summary>
+        /// <param name="functionParameterAliasToken">The alias syntatics token.</param>
+        /// <returns>The semantics node for parameter alias.</returns>
+        protected virtual SingleValueNode BindParameterAlias(FunctionParameterAliasToken functionParameterAliasToken)
+        {
+            ParameterAliasBinder binder = new ParameterAliasBinder(this.Bind);
+            return binder.BindParameterAlias(this.BindingState, functionParameterAliasToken);
         }
 
         /// <summary>
@@ -309,6 +326,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             FunctionCallBinder functionCallBinder = new FunctionCallBinder(this.Bind);
             return functionCallBinder.BindFunctionCall(functionCallToken, this.BindingState);
+        }
+
+        /// <summary>
+        /// Binds a StringLiteral token.
+        /// </summary>
+        /// <param name="stringLiteralToken">The StringLiteral token to bind.</param>
+        /// <returns>The bound StringLiteral token.</returns>
+        protected virtual QueryNode BindStringLiteral(StringLiteralToken stringLiteralToken)
+        {
+            return new SearchTermNode(stringLiteralToken.Text);
         }
     }
 }

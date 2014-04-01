@@ -28,7 +28,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomErrorDeserializer(ODataAtomInputContext atomInputContext)
             : base(atomInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -86,7 +85,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal static ODataError ReadErrorElement(BufferingXmlReader xmlReader, int maxInnerErrorDepth)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(xmlReader != null, "this.XmlReader != null");
             Debug.Assert(xmlReader.NodeType == XmlNodeType.Element, "xmlReader.NodeType == XmlNodeType.Element");
             Debug.Assert(xmlReader.LocalName == AtomConstants.ODataErrorElementName, "Expected reader to be positioned on <m:error> element.");
@@ -122,13 +120,12 @@ namespace Microsoft.OData.Core.Atom
                                         error.ErrorCode = xmlReader.ReadElementValue();
                                         continue;
 
-                                    // <m:message lang="...">
+                                    // <m:message >
                                     case AtomConstants.ODataErrorMessageElementName:
                                         VerifyErrorElementNotFound(
                                             ref elementsReadBitmask,
                                             DuplicateErrorElementPropertyBitMask.Message,
                                             AtomConstants.ODataErrorMessageElementName);
-                                        error.MessageLanguage = xmlReader.GetAttribute(xmlReader.XmlLangAttributeName, xmlReader.XmlNamespace);
                                         error.Message = xmlReader.ReadElementValue();
                                         continue;
 
@@ -169,7 +166,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal ODataError ReadTopLevelError()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.ReadingResponse, "Top-level errors are only supported in responses.");
             Debug.Assert(this.XmlReader != null, "this.XmlReader != null");
             Debug.Assert(!this.XmlReader.DisableInStreamErrorDetection, "!this.XmlReader.DetectInStreamErrors");

@@ -42,7 +42,7 @@ namespace Microsoft.OData.Core
         /// As a result the default media type for a given payloadKind is the first entry in the MediaTypeWithFormat array.
         /// </remarks>
         private static readonly MediaTypeWithFormat[][] defaultMediaTypes =
-            new MediaTypeWithFormat[13][]
+            new MediaTypeWithFormat[][]
             {
                 // feed
                 new MediaTypeWithFormat[]
@@ -74,9 +74,10 @@ namespace Microsoft.OData.Core
 
                 // entity reference links
                 new MediaTypeWithFormat[]
-                { 
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = ApplicationXmlMediaType },
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = TextXmlMediaType },
+                {
+                    // In V4, collection of entity references are provided as a feed
+                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = new MediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeAtomXmlSubType, new KeyValuePair<string, string>(MimeConstants.MimeTypeParameterName, MimeConstants.MimeTypeParameterValueFeed)) },
+                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = ApplicationAtomXmlMediaType },
                 },
 
                 // value
@@ -130,6 +131,13 @@ namespace Microsoft.OData.Core
                 {
                     // We will only support parameters in Json format for now.
                 },
+
+                 // individual property
+                new MediaTypeWithFormat[]
+                { 
+                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = ApplicationXmlMediaType },
+                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = TextXmlMediaType },
+                }
             };
         #endregion Default media types per payload kind
 
@@ -160,7 +168,8 @@ namespace Microsoft.OData.Core
             ODataPayloadKind.Collection,
             ODataPayloadKind.ServiceDocument,
             ODataPayloadKind.Error,
-            ODataPayloadKind.Parameter
+            ODataPayloadKind.Parameter,
+            ODataPayloadKind.IndividualProperty
         };
 
         /// <summary>
@@ -194,7 +203,6 @@ namespace Microsoft.OData.Core
         /// <returns>A new media type resolver for readers with the mappings for the specified version and behavior kind.</returns>
         internal static MediaTypeResolver GetWriterMediaTypeResolver(ODataVersion version)
         {
-            DebugUtils.CheckNoExternalCallers();
             return MediaTypeResolverCache[version];
         }
 
@@ -205,7 +213,6 @@ namespace Microsoft.OData.Core
         /// <returns>A new media type resolver for readers with the mappings for the specified version and behavior kind.</returns>
         internal static MediaTypeResolver CreateReaderMediaTypeResolver(ODataVersion version)
         {
-            DebugUtils.CheckNoExternalCallers();
             return new MediaTypeResolver(version);
         }
 
@@ -216,7 +223,6 @@ namespace Microsoft.OData.Core
         /// <returns>An array of media type / format pairs, sorted by priority.</returns>
         internal IList<MediaTypeWithFormat> GetMediaTypesForPayloadKind(ODataPayloadKind payloadKind)
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.mediaTypesForPayloadKind[(int)payloadKind];
         }
 
@@ -265,7 +271,7 @@ namespace Microsoft.OData.Core
         /// Configure the media type tables so that Json Light is the first JSON format in the table.
         /// </summary>
         /// <remarks>
-        /// This is only used in V3 and beyond.
+        /// This is only used in V4 and beyond.
         /// </remarks>
         private void AddJsonLightMediaTypes()
         {
@@ -273,13 +279,18 @@ namespace Microsoft.OData.Core
             {
                 new
                 {
-                    ParameterName = MimeConstants.MimeODataParameterName,
-                    Values = new[] { MimeConstants.MimeODataParameterValueMinimalMetadata, MimeConstants.MimeODataParameterValueFullMetadata, MimeConstants.MimeODataParameterValueNoMetadata }
+                    ParameterName = MimeConstants.MimeMetadataParameterName,
+                    Values = new[] { MimeConstants.MimeMetadataParameterValueMinimal, MimeConstants.MimeMetadataParameterValueFull, MimeConstants.MimeMetadataParameterValueNone }
                 },
                 new
                 {
                     ParameterName = MimeConstants.MimeStreamingParameterName,
-                    Values = new[] { MimeConstants.MimeStreamingParameterValueTrue, MimeConstants.MimeStreamingParameterValueFalse }
+                    Values = new[] { MimeConstants.MimeParameterValueTrue, MimeConstants.MimeParameterValueFalse }
+                },
+                new
+                {
+                    ParameterName = MimeConstants.MimeIeee754CompatibleParameterName,
+                    Values = new[] { MimeConstants.MimeParameterValueFalse, MimeConstants.MimeParameterValueTrue }
                 },
             };
 
@@ -308,6 +319,7 @@ namespace Microsoft.OData.Core
                 }
             }
 
+            List<MediaTypeWithFormat> JsonMediaTypeWithFormatList = new List<MediaTypeWithFormat>();
             MediaTypeWithFormat applicationJson = null;
             foreach (MediaType mediaType in mediaTypesToAdd)
             {
@@ -318,25 +330,30 @@ namespace Microsoft.OData.Core
                 }
                 else
                 {
-                    this.AddForJsonPayloadKinds(mediaTypeWithFormat);
+                    JsonMediaTypeWithFormatList.Insert(0, mediaTypeWithFormat);
                 }
             }
 
             if (applicationJson != null)
             {
-                this.AddForJsonPayloadKinds(applicationJson);
+                JsonMediaTypeWithFormatList.Insert(0, applicationJson);
             }
+
+            this.AddForJsonPayloadKinds(JsonMediaTypeWithFormatList);
         }
 
         /// <summary>
         /// Adds the given media type/format for all the payload kinds which support JSON.
         /// </summary>
         /// <param name="mediaTypeWithFormat">The media type/format pair to add.</param>
-        private void AddForJsonPayloadKinds(MediaTypeWithFormat mediaTypeWithFormat)
+        private void AddForJsonPayloadKinds(IEnumerable<MediaTypeWithFormat> mediaTypeWithFormat)
         {
-            foreach (ODataPayloadKind kind in JsonPayloadKinds)
+            foreach (MediaTypeWithFormat mediaTypeFormat in mediaTypeWithFormat)
             {
-                this.mediaTypesForPayloadKind[(int)kind].Add(mediaTypeWithFormat);
+                foreach (ODataPayloadKind kind in JsonPayloadKinds)
+                {
+                    this.mediaTypesForPayloadKind[(int)kind].Insert(0, mediaTypeFormat);
+                }
             }
         }
     }

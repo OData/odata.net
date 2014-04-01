@@ -14,9 +14,10 @@ namespace Microsoft.OData.Core.UriParser
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -37,7 +38,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The property info annotation.</returns>
         internal static PropertyInfoTypeAnnotation GetPropertyInfoTypeAnnotation(IEdmStructuredType structuredType, IEdmModel model)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(structuredType != null, "structuredType != null");
             Debug.Assert(model != null, "model != null");
 
@@ -60,7 +60,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>Returns the PropertyInfo object for the specified EDM property.</returns>
         internal PropertyInfo GetPropertyInfo(IEdmStructuredType structuredType, IEdmProperty property, IEdmModel model)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(structuredType != null, "structuredType != null");
             Debug.Assert(property != null, "property != null");
             Debug.Assert(model != null, "model != null");

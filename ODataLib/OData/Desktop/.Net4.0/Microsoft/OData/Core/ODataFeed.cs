@@ -48,7 +48,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>Gets or sets the URI that identifies the entity set represented by the feed.</summary>
         /// <returns>The URI that identifies the entity set represented by the feed.</returns>
-        public string Id
+        public Uri Id
         {
             get;
             set;
@@ -112,13 +112,11 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.serializationInfo;
             }
 
             set
             {
-                DebugUtils.CheckNoExternalCallers();
                 this.serializationInfo = ODataFeedAndEntrySerializationInfo.Validate(value);
             }
         }

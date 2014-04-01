@@ -13,8 +13,9 @@ namespace Microsoft.OData.Core.UriParser
     #region Namespaces
     using System.Diagnostics;
     using System.Reflection;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Edm;
+
     #endregion Namespaces
 
     /// <summary>
@@ -32,7 +33,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <remarks>The method searches this type as well as all its base types for the property.</remarks>
         internal static PropertyInfo GetPropertyInfo(this IEdmStructuredTypeReference typeReference, IEdmProperty property, IEdmModel model)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(typeReference != null, "typeReference != null");
             Debug.Assert(property != null, "property != null");
             Debug.Assert(model != null, "model != null");

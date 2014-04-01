@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents a primitive type of unknown kind.
         /// </summary>
-        None,
+        None = 0,
 
         /// <summary>
         /// Represents a Binary type.
@@ -34,11 +34,6 @@ namespace Microsoft.OData.Edm
         /// Represents a Byte type.
         /// </summary>
         Byte,
-
-        /// <summary>
-        /// Represents a DateTime type.
-        /// </summary>
-        DateTime,
 
         /// <summary>
         /// Represents a DateTimeOffset type.

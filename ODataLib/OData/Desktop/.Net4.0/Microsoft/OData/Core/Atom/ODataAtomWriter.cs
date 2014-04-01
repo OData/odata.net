@@ -25,7 +25,6 @@ namespace Microsoft.OData.Core.Atom
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.Metadata;
-
     #endregion Namespaces
 
     /// <summary>
@@ -50,17 +49,16 @@ namespace Microsoft.OData.Core.Atom
         /// Constructor creating an OData writer using the ATOM format.
         /// </summary>
         /// <param name="atomOutputContext">The output context to write to.</param>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <param name="writingFeed">True if the writer is created for writing a feed; false when it is created for writing an entry.</param>
         internal ODataAtomWriter(
             ODataAtomOutputContext atomOutputContext,
-            IEdmEntitySet entitySet,
+            IEdmNavigationSource navigationSource,
             IEdmEntityType entityType,
             bool writingFeed)
-            : base(atomOutputContext, entitySet, entityType, writingFeed)
+            : base(atomOutputContext, navigationSource, entityType, writingFeed)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(atomOutputContext != null, "atomOutputContext != null");
 
             this.atomOutputContext = atomOutputContext;
@@ -177,6 +175,9 @@ namespace Microsoft.OData.Core.Atom
             if (this.IsTopLevel)
             {
                 this.atomEntryAndFeedSerializer.WriteBaseUriAndDefaultNamespaceAttributes();
+                
+                // Write metadata:context
+                this.atomEntryAndFeedSerializer.TryWriteEntryContextUri(this.CurrentEntryScope.GetOrCreateTypeContext(this.atomOutputContext.Model, this.atomOutputContext.WritingResponse));  
             }
 
             string etag = entry.ETag;
@@ -191,10 +192,11 @@ namespace Microsoft.OData.Core.Atom
 
             // Write the id if it's available here.
             // If it's not available here we will try to write it at the end of the entry again.
-            string entryId = entry.Id;
+            Uri entryId = entry.Id;
+            bool isTransient = entry.IsTransient;
             if (entryId != null)
             {
-                this.atomEntryAndFeedSerializer.WriteEntryId(entryId);
+                this.atomEntryAndFeedSerializer.WriteEntryId(entryId, isTransient);
                 currentEntryScope.SetWrittenElement(AtomElement.Id);
             }
 
@@ -215,10 +217,15 @@ namespace Microsoft.OData.Core.Atom
 
             // Write the self link if it's available here.
             // If it's not available here we will try to write it at the end of the entry again.
+            // If readlink is identical to editlink, don't write readlink.
             Uri readLink = entry.ReadLink;
             if (readLink != null)
             {
-                this.atomEntryAndFeedSerializer.WriteEntryReadLink(readLink, entryMetadata);
+                if (readLink != editLink)
+                {
+                    this.atomEntryAndFeedSerializer.WriteEntryReadLink(readLink, entryMetadata);
+                }
+                
                 currentEntryScope.SetWrittenElement(AtomElement.ReadLink);
             }
 
@@ -258,7 +265,8 @@ namespace Microsoft.OData.Core.Atom
             if (!currentEntryScope.IsElementWritten(AtomElement.Id))
             {
                 // NOTE: We write even null id, in that case we generate an empty atom:id element.
-                this.atomEntryAndFeedSerializer.WriteEntryId(entry.Id);
+                bool isTransient = entry.IsTransient;
+                this.atomEntryAndFeedSerializer.WriteEntryId(entry.Id, isTransient);
             }
 
             Uri editLink = entry.EditLink;
@@ -268,7 +276,7 @@ namespace Microsoft.OData.Core.Atom
             }
 
             Uri readLink = entry.ReadLink;
-            if (readLink != null && !currentEntryScope.IsElementWritten(AtomElement.ReadLink))
+            if (readLink != null && readLink != editLink && !currentEntryScope.IsElementWritten(AtomElement.ReadLink))
             {
                 this.atomEntryAndFeedSerializer.WriteEntryReadLink(readLink, entryMetadata);
             }
@@ -286,20 +294,6 @@ namespace Microsoft.OData.Core.Atom
                         streamProperty, 
                         entryType, 
                         this.DuplicatePropertyNamesChecker, 
-                        projectedProperties);
-                }
-            }
-
-            // association links
-            IEnumerable<ODataAssociationLink> associationLinks = entry.AssociationLinks;
-            if (associationLinks != null)
-            {
-                foreach (ODataAssociationLink associationLink in associationLinks)
-                {
-                    this.atomEntryAndFeedSerializer.WriteAssociationLink(
-                        associationLink,
-                        entryType,
-                        this.DuplicatePropertyNamesChecker,
                         projectedProperties);
                 }
             }
@@ -353,7 +347,7 @@ namespace Microsoft.OData.Core.Atom
                 "We should have already verified that the IsCollection matches the actual content of the link (feed/entry).");
 
             // Verify non-empty ID
-            if (string.IsNullOrEmpty(feed.Id))
+            if (feed.Id == null)
             {
                 throw new ODataException(OData.Core.Strings.ODataAtomWriter_FeedsMustHaveNonEmptyId);
             }
@@ -367,9 +361,12 @@ namespace Microsoft.OData.Core.Atom
             {
                 this.atomEntryAndFeedSerializer.WriteBaseUriAndDefaultNamespaceAttributes();
 
+                // metadata:context
+                this.atomEntryAndFeedSerializer.TryWriteFeedContextUri(this.CurrentFeedScope.GetOrCreateTypeContext(this.atomOutputContext.Model, this.atomOutputContext.WritingResponse));
+
                 if (feed.Count.HasValue)
                 {
-                    this.atomEntryAndFeedSerializer.WriteCount(feed.Count.Value, false);
+                    this.atomEntryAndFeedSerializer.WriteCount(feed.Count.Value);
                 }
             }
             
@@ -481,28 +478,30 @@ namespace Microsoft.OData.Core.Atom
         /// Create a new feed scope.
         /// </summary>
         /// <param name="feed">The feed for the new scope.</param>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
+        /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly create scope.</returns>
-        protected override FeedScope CreateFeedScope(ODataFeed feed, IEdmEntitySet entitySet, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties)
+        protected override FeedScope CreateFeedScope(ODataFeed feed, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
-            return new AtomFeedScope(feed, entitySet, entityType, skipWriting, selectedProperties);
+            return new AtomFeedScope(feed, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
         }
 
         /// <summary>
         /// Create a new entry scope.
         /// </summary>
         /// <param name="entry">The entry for the new scope.</param>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
+        /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly create scope.</returns>
-        protected override EntryScope CreateEntryScope(ODataEntry entry, IEdmEntitySet entitySet, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties)
+        protected override EntryScope CreateEntryScope(ODataEntry entry, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
-            return new AtomEntryScope(entry, this.GetEntrySerializationInfo(entry), entitySet, entityType, skipWriting, this.atomOutputContext.WritingResponse, this.atomOutputContext.MessageWriterSettings.WriterBehavior, selectedProperties);
+            return new AtomEntryScope(entry, this.GetEntrySerializationInfo(entry), navigationSource, entityType, skipWriting, this.atomOutputContext.WritingResponse, this.atomOutputContext.MessageWriterSettings.WriterBehavior, selectedProperties, odataUri);
         }
 
         /// <summary>
@@ -700,14 +699,14 @@ namespace Microsoft.OData.Core.Atom
             /// Constructor to create a new feed scope.
             /// </summary>
             /// <param name="feed">The feed for the new scope.</param>
-            /// <param name="entitySet">The entity set we are going to write entities for.</param>
+            /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
             /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
-            internal AtomFeedScope(ODataFeed feed, IEdmEntitySet entitySet, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties)
-                : base(feed, entitySet, entityType, skipWriting, selectedProperties)
+            /// <param name="odataUri">The ODataUri info of this scope.</param>
+            internal AtomFeedScope(ODataFeed feed, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(feed, navigationSource, entityType, skipWriting, selectedProperties, odataUri)
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>
@@ -717,13 +716,11 @@ namespace Microsoft.OData.Core.Atom
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return this.authorWritten;
                 }
 
                 set
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     this.authorWritten = value;
                 }
             }
@@ -742,16 +739,16 @@ namespace Microsoft.OData.Core.Atom
             /// </summary>
             /// <param name="entry">The entry for the new scope.</param>
             /// <param name="serializationInfo">The serialization info for the current entry.</param>
-            /// <param name="entitySet">The entity set we are going to write entities for.</param>
+            /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
             /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="writingResponse">true if we are writing a response, false if it's a request.</param>
             /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
-            internal AtomEntryScope(ODataEntry entry, ODataFeedAndEntrySerializationInfo serializationInfo, IEdmEntitySet entitySet, IEdmEntityType entityType, bool skipWriting, bool writingResponse, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties)
-                : base(entry, serializationInfo, entitySet, entityType, skipWriting, writingResponse, writerBehavior, selectedProperties)
+            /// <param name="odataUri">The ODataUri info of this scope.</param>
+            internal AtomEntryScope(ODataEntry entry, ODataFeedAndEntrySerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, bool writingResponse, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(entry, serializationInfo, navigationSource, entityType, skipWriting, writingResponse, writerBehavior, selectedProperties, odataUri)
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>
@@ -760,7 +757,6 @@ namespace Microsoft.OData.Core.Atom
             /// <param name="atomElement">The ATOM element which was written.</param>
             internal void SetWrittenElement(AtomElement atomElement)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(!this.IsElementWritten(atomElement), "Can't write the same element twice.");
                 this.alreadyWrittenElements |= (int)atomElement;
             }
@@ -772,7 +768,6 @@ namespace Microsoft.OData.Core.Atom
             /// <returns>true if the <paramref name="atomElement"/> was already written for this entry scope; false otherwise.</returns>
             internal bool IsElementWritten(AtomElement atomElement)
             {
-                DebugUtils.CheckNoExternalCallers();
                 return (this.alreadyWrittenElements & (int)atomElement) == (int)atomElement;
             }
         }

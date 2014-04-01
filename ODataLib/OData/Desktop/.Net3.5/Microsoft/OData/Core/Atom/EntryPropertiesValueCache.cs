@@ -32,7 +32,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entry">The entry for which to create the properties cache.</param>
         internal EntryPropertiesValueCache(ODataEntry entry)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entry != null, "entry != null");
 
             // Cache the entry properties right here as there's no point in delaying since we will enumerate those anyway.
@@ -49,7 +48,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.entryPropertiesCache != null ? this.entryPropertiesCache.Where(p => p == null || !(p.Value is ODataStreamReferenceValue)) : null;
             }
         }
@@ -61,7 +59,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.entryPropertiesCache != null ? this.entryPropertiesCache.Where(p => p != null && p.Value is ODataStreamReferenceValue) : null;
             }
         }

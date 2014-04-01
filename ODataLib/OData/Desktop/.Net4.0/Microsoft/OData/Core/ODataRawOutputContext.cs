@@ -68,7 +68,6 @@ namespace Microsoft.OData.Core
             IODataUrlResolver urlResolver)
             : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(messageStream != null, "messageStream != null");
 
             try
@@ -100,7 +99,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.outputStream;
             }
         }
@@ -118,7 +116,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.rawValueWriter.TextWriter;
             }
         }
@@ -128,7 +125,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void Flush()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             if (this.rawValueWriter != null)
@@ -145,7 +141,6 @@ namespace Microsoft.OData.Core
         /// <remarks>The method should not throw directly if the flush operation itself fails, it should instead return a faulted task.</remarks>
         internal Task FlushAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
@@ -180,7 +175,6 @@ namespace Microsoft.OData.Core
         /// </remarks>
         internal override void WriteInStreamError(ODataError error, bool includeDebugInformation)
         {
-            DebugUtils.CheckNoExternalCallers();
             if (this.outputInStreamErrorListener != null)
             {
                 this.outputInStreamErrorListener.OnInStreamError();
@@ -210,7 +204,6 @@ namespace Microsoft.OData.Core
         /// </remarks>
         internal override Task WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
         {
-            DebugUtils.CheckNoExternalCallers();
             if (this.outputInStreamErrorListener != null)
             {
                 this.outputInStreamErrorListener.OnInStreamError();
@@ -229,7 +222,6 @@ namespace Microsoft.OData.Core
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
         internal override ODataBatchWriter CreateODataBatchWriter(string batchBoundary)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             return this.CreateODataBatchWriterImplementation(batchBoundary);
@@ -245,7 +237,6 @@ namespace Microsoft.OData.Core
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
         internal override Task<ODataBatchWriter> CreateODataBatchWriterAsync(string batchBoundary)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataBatchWriterImplementation(batchBoundary));
@@ -259,7 +250,6 @@ namespace Microsoft.OData.Core
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
         internal override void WriteValue(object value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             this.WriteValueImplementation(value);
@@ -275,7 +265,6 @@ namespace Microsoft.OData.Core
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
         internal override Task WriteValueAsync(object value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
@@ -295,7 +284,6 @@ namespace Microsoft.OData.Core
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "We create a NonDisposingStream which doesn't need to be disposed, even though it's IDisposable.")]
         internal void InitializeRawValueWriter()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.rawValueWriter == null, "The rawValueWriter has already been initialized.");
 
             this.rawValueWriter = new RawValueWriter(this.MessageWriterSettings, this.outputStream, this.encoding);
@@ -306,7 +294,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void CloseWriter()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.rawValueWriter != null, "The text writer has not been initialized yet.");
 
             this.rawValueWriter.Dispose();
@@ -318,8 +305,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void VerifyNotDisposed()
         {
-            DebugUtils.CheckNoExternalCallers();
-            
             if (this.messageOutputStream == null)
             {
                 throw new ObjectDisposedException(this.GetType().FullName);
@@ -331,8 +316,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void FlushBuffers()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (this.asynchronousOutputStream != null)
             {
                 this.asynchronousOutputStream.FlushSync();
@@ -346,8 +329,6 @@ namespace Microsoft.OData.Core
         /// <returns>Task which represents the pending operation.</returns>
         internal Task FlushBuffersAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (this.asynchronousOutputStream != null)
             {
                 return this.asynchronousOutputStream.FlushAsync();

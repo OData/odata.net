@@ -21,9 +21,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>Unreachable codepath in TypePromotionUtils.GetFunctionSignatures(UnaryOperatorKind), unrecognized kind of unary operator.</summary>
         TypePromotionUtils_GetFunctionSignatures_Unary_UnreachableCodepath,
 
-        /// <summary>Unreachable codepath in MetadataBinder.BindServiceOperation, unrecognized kind of service opertion.</summary>
-        MetadataBinder_BindServiceOperation,
-
         /// <summary>Unreachable codepath in QueryExpressionTranslator.TranslateBinaryOperator, unrecognized kind of binary operator.</summary>
         QueryExpressionTranslator_TranslateBinaryOperator_UnreachableCodepath,
 

@@ -16,7 +16,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Microsoft.OData.Core;
     using Edm = Microsoft.OData.Edm;
     #endregion
 
@@ -309,10 +308,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Returns the length of the given string value. If the value is not of string type, then it throws.
+        /// (1) Gets the number of characters in the supplied string object. or (2) the open type signatures of geo.length(GeometryLineString) or geo.length(GeographyLineString) method.
         /// </summary>
-        /// <param name="value">value whose length needs to be calculated.</param>
-        /// <returns>length of the string value.</returns>
+        /// <param name="value">(1) The string to be checked (2) GeometryLineString / GeographyLineString.</param>
+        /// <returns>(1) The length of the string value. (2) geometry or geography line's length (primitive double)</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", Justification = "Parameters will be used in the actual impl")]
         public static object Length(object value)
         {
@@ -533,10 +532,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The added value.</returns>
         internal static Expression AddExpression(Expression left, Expression right)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.Add(
                     ExpressionAsObject(left),
-                    ExpressionAsObject(right), 
+                    ExpressionAsObject(right),
                     AddMethodInfo);
         }
 
@@ -545,11 +543,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The conditional expression; null if the expressions aren't of the right type.</returns>
         internal static Expression AndAlsoExpression(Expression left, Expression right)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.Call(
-                    OpenTypeMethods.AndAlsoMethodInfo, 
-                    ExpressionAsObject(left), 
-                    ExpressionAsObject(right)); 
+                    OpenTypeMethods.AndAlsoMethodInfo,
+                    ExpressionAsObject(left),
+                    ExpressionAsObject(right));
         }
 
         /// <summary>Creates an expression that divides two values.</summary>
@@ -557,10 +554,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The divided value.</returns>
         internal static Expression DivideExpression(Expression left, Expression right)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.Divide(
-                    ExpressionAsObject(left), 
-                    ExpressionAsObject(right), 
+                    ExpressionAsObject(left),
+                    ExpressionAsObject(right),
                     DivideMethodInfo);
         }
 
@@ -569,11 +565,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if left equals right; false otherwise.</returns>
         internal static Expression EqualExpression(Expression left, Expression right)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.Equal(
-                    ExpressionAsObject(left), 
-                    ExpressionAsObject(right), 
-                    false, 
+                    ExpressionAsObject(left),
+                    ExpressionAsObject(right),
+                    false,
                     EqualMethodInfo);
         }
 
@@ -582,11 +577,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if left is greater than right; false otherwise.</returns>
         internal static Expression GreaterThanExpression(Expression left, Expression right)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.GreaterThan(
-                    ExpressionAsObject(left), 
-                    ExpressionAsObject(right), 
-                    false, 
+                    ExpressionAsObject(left),
+                    ExpressionAsObject(right),
+                    false,
                     GreaterThanMethodInfo);
         }
 
@@ -595,11 +589,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if left is greater than or equal to right; false otherwise.</returns>
         internal static Expression GreaterThanOrEqualExpression(Expression left, Expression right)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.GreaterThanOrEqual(
                     ExpressionAsObject(left),
-                    ExpressionAsObject(right), 
-                    false, 
+                    ExpressionAsObject(right),
+                    false,
                     GreaterThanOrEqualMethodInfo);
         }
 
@@ -608,11 +601,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if left is less than right; false otherwise.</returns>
         internal static Expression LessThanExpression(Expression left, Expression right)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.LessThan(
-                    ExpressionAsObject(left), 
-                    ExpressionAsObject(right), 
-                    false, 
+                    ExpressionAsObject(left),
+                    ExpressionAsObject(right),
+                    false,
                     LessThanMethodInfo);
         }
 
@@ -621,11 +613,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if left is less than or equal to right; false otherwise.</returns>
         internal static Expression LessThanOrEqualExpression(Expression left, Expression right)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.LessThanOrEqual(
-                    ExpressionAsObject(left), 
-                    ExpressionAsObject(right), 
-                    false, 
+                    ExpressionAsObject(left),
+                    ExpressionAsObject(right),
+                    false,
                     LessThanOrEqualMethodInfo);
         }
 
@@ -634,10 +625,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The remainder value.</returns>
         internal static Expression ModuloExpression(Expression left, Expression right)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.Modulo(
-                    ExpressionAsObject(left), 
-                    ExpressionAsObject(right), 
+                    ExpressionAsObject(left),
+                    ExpressionAsObject(right),
                     ModuloMethodInfo);
         }
 
@@ -646,10 +636,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The multiplication value.</returns>
         internal static Expression MultiplyExpression(Expression left, Expression right)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.Multiply(
-                    ExpressionAsObject(left), 
-                    ExpressionAsObject(right), 
+                    ExpressionAsObject(left),
+                    ExpressionAsObject(right),
                     MultiplyMethodInfo);
         }
 
@@ -658,11 +647,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The conditional expression; null if the expressions aren't of the right type.</returns>
         internal static Expression OrElseExpression(Expression left, Expression right)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.Call(
-                    OpenTypeMethods.OrElseMethodInfo, 
-                    ExpressionAsObject(left), 
-                    ExpressionAsObject(right)); 
+                    OpenTypeMethods.OrElseMethodInfo,
+                    ExpressionAsObject(left),
+                    ExpressionAsObject(right));
         }
 
         /// <summary>Creates an expression that checks whether two values are not equal.</summary>
@@ -670,11 +658,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if left is does not equal right; false otherwise.</returns>
         internal static Expression NotEqualExpression(Expression left, Expression right)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.NotEqual(
-                    ExpressionAsObject(left), 
-                    ExpressionAsObject(right), 
-                    false, 
+                    ExpressionAsObject(left),
+                    ExpressionAsObject(right),
+                    false,
                     NotEqualMethodInfo);
         }
 
@@ -683,10 +670,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The subtraction value.</returns>
         internal static Expression SubtractExpression(Expression left, Expression right)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.Subtract(
-                    ExpressionAsObject(left), 
-                    ExpressionAsObject(right), 
+                    ExpressionAsObject(left),
+                    ExpressionAsObject(right),
                     SubtractMethodInfo);
         }
 
@@ -695,9 +681,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The negated value.</returns>
         internal static Expression NegateExpression(Expression expression)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.Negate(
-                    ExpressionAsObject(expression), 
+                    ExpressionAsObject(expression),
                     NegateMethodInfo);
         }
 
@@ -706,9 +691,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The negated value.</returns>
         internal static Expression NotExpression(Expression expression)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Expression.Not(
-                    ExpressionAsObject(expression), 
+                    ExpressionAsObject(expression),
                     NotMethodInfo);
         }
 

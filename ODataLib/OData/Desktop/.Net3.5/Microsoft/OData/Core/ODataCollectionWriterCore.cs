@@ -62,7 +62,6 @@ namespace Microsoft.OData.Core
         /// <param name="listener">If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</param>
         protected ODataCollectionWriterCore(ODataOutputContext outputContext, IEdmTypeReference expectedItemType, IODataReaderWriterListener listener)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(outputContext != null, "outputContext != null");
 
             this.outputContext = outputContext;
@@ -397,7 +396,7 @@ namespace Microsoft.OData.Core
 
             this.InterceptException(() =>
             {
-                ValidationUtils.ValidateCollectionItem(item, true /* isStreamable */);
+                ValidationUtils.ValidateCollectionItem(item, true /* isNullable */);
                 this.WriteCollectionItem(item, this.expectedItemType);
             });
         }

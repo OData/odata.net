@@ -12,17 +12,11 @@ namespace Microsoft.Data.Spatial
 {
     using System;
     using System.Collections.ObjectModel;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
     using Microsoft.Spatial;
 
     /// <summary>
     /// Geometry Multi-LineString
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     internal class GeometryMultiLineStringImplementation : GeometryMultiLineString
     {
         /// <summary>
@@ -79,18 +73,6 @@ namespace Microsoft.Data.Spatial
             get { return new ReadOnlyCollection<GeometryLineString>(this.lineStrings); }
         }
 
-#if WINDOWS_PHONE
-        /// <summary>
-        /// internal GeometryLineString array property to support serializing and de-serializing this instance.
-        /// </summary>
-        [DataMember]
-        internal GeometryLineString[] LineStringsArray
-        {
-            get { return this.lineStrings; }
-
-            set { this.lineStrings = value; }
-        }
-#endif
         /// <summary>
         /// Sends the current spatial object to the given pipeline
         /// </summary>

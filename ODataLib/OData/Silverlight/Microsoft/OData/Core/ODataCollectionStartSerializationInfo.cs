@@ -45,7 +45,6 @@ namespace Microsoft.OData.Core
         /// <returns>The <paramref name="serializationInfo"/> instance.</returns>
         internal static ODataCollectionStartSerializationInfo Validate(ODataCollectionStartSerializationInfo serializationInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
             if (serializationInfo != null)
             {
                 ExceptionUtils.CheckArgumentNotNull(serializationInfo.CollectionTypeName, "serializationInfo.CollectionTypeName");

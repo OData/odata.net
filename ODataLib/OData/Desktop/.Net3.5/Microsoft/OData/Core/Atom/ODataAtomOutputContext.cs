@@ -72,7 +72,6 @@ namespace Microsoft.OData.Core.Atom
             IODataUrlResolver urlResolver)
             : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(messageStream != null, "stream != null");
 
             try
@@ -111,7 +110,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(this.xmlWriter != null, "Trying to get XmlWriter while none is available.");
                 return this.xmlWriter;
             }
@@ -124,7 +122,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.typeNameOracle;
             }
         }
@@ -135,7 +132,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void VerifyNotDisposed()
         {
-            DebugUtils.CheckNoExternalCallers();
             if (this.messageOutputStream == null)
             {
                 throw new ObjectDisposedException(this.GetType().FullName);
@@ -147,7 +143,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void Flush()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             // XmlWriter.Flush will call the underlying Stream.Flush.
@@ -163,7 +158,6 @@ namespace Microsoft.OData.Core.Atom
         /// <remarks>The method should not throw directly if the flush operation itself fails, it should instead return a faulted task.</remarks>
         internal Task FlushAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
@@ -197,7 +191,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal override void WriteInStreamError(ODataError error, bool includeDebugInformation)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             this.WriteInStreamErrorImplementation(error, includeDebugInformation);
@@ -225,7 +218,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal override Task WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
@@ -244,9 +236,8 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override ODataWriter CreateODataFeedWriter(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        internal override ODataWriter CreateODataFeedWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             return this.CreateODataFeedWriterImplementation(entitySet, entityType);
@@ -260,9 +251,8 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataWriter> CreateODataFeedWriterAsync(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        internal override Task<ODataWriter> CreateODataFeedWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataFeedWriterImplementation(entitySet, entityType));
@@ -272,32 +262,30 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override ODataWriter CreateODataEntryWriter(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        internal override ODataWriter CreateODataEntryWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
-            return this.CreateODataEntryWriterImplementation(entitySet, entityType);
+            return this.CreateODataEntryWriterImplementation(navigationSource, entityType);
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataWriter> CreateODataEntryWriterAsync(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        internal override Task<ODataWriter> CreateODataEntryWriterAsync(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataEntryWriterImplementation(entitySet, entityType));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataEntryWriterImplementation(navigationSource, entityType));
         }
 #endif
 
@@ -309,7 +297,6 @@ namespace Microsoft.OData.Core.Atom
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
         internal override ODataCollectionWriter CreateODataCollectionWriter(IEdmTypeReference itemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             return this.CreateODataCollectionWriterImplementation(itemTypeReference);
@@ -324,7 +311,6 @@ namespace Microsoft.OData.Core.Atom
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
         internal override Task<ODataCollectionWriter> CreateODataCollectionWriterAsync(IEdmTypeReference itemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataCollectionWriterImplementation(itemTypeReference));
@@ -334,37 +320,35 @@ namespace Microsoft.OData.Core.Atom
         //// ATOM format doesn't support parameter payloads
 
         /// <summary>
-        /// Writes a service document with the specified <paramref name="defaultWorkspace"/> 
+        /// Writes a service document with the specified <paramref name="serviceDocument"/> 
         /// as message payload.
         /// </summary>
-        /// <param name="defaultWorkspace">The default workspace to write in the service document.</param>
+        /// <param name="serviceDocument">The service document to write.</param>
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
-        internal override void WriteServiceDocument(ODataWorkspace defaultWorkspace)
+        internal override void WriteServiceDocument(ODataServiceDocument serviceDocument)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
-            this.WriteServiceDocumentImplementation(defaultWorkspace);
+            this.WriteServiceDocumentImplementation(serviceDocument);
             this.Flush();
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously writes a service document with the specified <paramref name="defaultWorkspace"/> 
+        /// Asynchronously writes a service document with the specified <paramref name="serviceDocument"/> 
         /// as message payload.
         /// </summary>
-        /// <param name="defaultWorkspace">The default workspace to write in the service document.</param>
+        /// <param name="serviceDocument">The service document to write.</param>
         /// <returns>A task representing the asynchronous operation of writing the service document.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override Task WriteServiceDocumentAsync(ODataWorkspace defaultWorkspace)
+        internal override Task WriteServiceDocumentAsync(ODataServiceDocument serviceDocument)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
                 () =>
                 {
-                    this.WriteServiceDocumentImplementation(defaultWorkspace);
+                    this.WriteServiceDocumentImplementation(serviceDocument);
                     return this.FlushAsync();
                 });
         }
@@ -377,7 +361,6 @@ namespace Microsoft.OData.Core.Atom
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
         internal override void WriteProperty(ODataProperty property)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             this.WritePropertyImplementation(property);
@@ -393,7 +376,6 @@ namespace Microsoft.OData.Core.Atom
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
         internal override Task WritePropertyAsync(ODataProperty property)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
@@ -416,7 +398,6 @@ namespace Microsoft.OData.Core.Atom
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
         internal override void WriteError(ODataError error, bool includeDebugInformation)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             this.WriteErrorImplementation(error, includeDebugInformation);
@@ -436,7 +417,6 @@ namespace Microsoft.OData.Core.Atom
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
         internal override Task WriteErrorAsync(ODataError error, bool includeDebugInformation)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
@@ -452,12 +432,9 @@ namespace Microsoft.OData.Core.Atom
         /// Writes the result of a $ref query as the message payload.
         /// </summary>
         /// <param name="links">The entity reference links to write as message payload.</param>
-        /// <param name="entitySet">The entity set of the navigation property</param>
-        /// <param name="navigationProperty">The navigation property for which the entity reference links are being written, or null if none is available.</param>
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
-        internal override void WriteEntityReferenceLinks(ODataEntityReferenceLinks links, IEdmEntitySet entitySet, IEdmNavigationProperty navigationProperty)
+        internal override void WriteEntityReferenceLinks(ODataEntityReferenceLinks links)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             this.WriteEntityReferenceLinksImplementation(links);
@@ -469,13 +446,10 @@ namespace Microsoft.OData.Core.Atom
         /// Asynchronously writes the result of a $ref query as the message payload.
         /// </summary>
         /// <param name="links">The entity reference links to write as message payload.</param>
-        /// <param name="entitySet">The entity set of the navigation property</param>
-        /// <param name="navigationProperty">The navigation property for which the entity reference links are being written, or null if none is available.</param>
         /// <returns>A task representing the asynchronous writing of the entity reference links.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override Task WriteEntityReferenceLinksAsync(ODataEntityReferenceLinks links, IEdmEntitySet entitySet, IEdmNavigationProperty navigationProperty)
+        internal override Task WriteEntityReferenceLinksAsync(ODataEntityReferenceLinks links)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
@@ -491,12 +465,9 @@ namespace Microsoft.OData.Core.Atom
         /// Writes a singleton result of a $ref query as the message payload.
         /// </summary>
         /// <param name="link">The entity reference link to write as message payload.</param>
-        /// <param name="entitySet">The entity set of the navigation property</param>
-        /// <param name="navigationProperty">The navigation property for which the entity reference link is being written, or null if none is available.</param>
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
-        internal override void WriteEntityReferenceLink(ODataEntityReferenceLink link, IEdmEntitySet entitySet, IEdmNavigationProperty navigationProperty)
+        internal override void WriteEntityReferenceLink(ODataEntityReferenceLink link)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             this.WriteEntityReferenceLinkImplementation(link);
@@ -508,13 +479,10 @@ namespace Microsoft.OData.Core.Atom
         /// Asynchronously writes a singleton result of a $ref query as the message payload.
         /// </summary>
         /// <param name="link">The link result to write as message payload.</param>
-        /// <param name="entitySet">The entity set of the navigation property</param>
-        /// <param name="navigationProperty">The navigation property for which the entity reference link is being written, or null if none is available.</param>
         /// <returns>A running task representing the writing of the link.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink link, IEdmEntitySet entitySet, IEdmNavigationProperty navigationProperty)
+        internal override Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink link)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
@@ -591,7 +559,7 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
-        private ODataWriter CreateODataFeedWriterImplementation(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        private ODataWriter CreateODataFeedWriterImplementation(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             ODataAtomWriter atomWriter = new ODataAtomWriter(this, entitySet, entityType, /*writingFeed*/true);
             this.outputInStreamErrorListener = atomWriter;
@@ -601,12 +569,12 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
-        private ODataWriter CreateODataEntryWriterImplementation(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        private ODataWriter CreateODataEntryWriterImplementation(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            ODataAtomWriter atomWriter = new ODataAtomWriter(this, entitySet, entityType, /*writingFeed*/false);
+            ODataAtomWriter atomWriter = new ODataAtomWriter(this, navigationSource, entityType, /*writingFeed*/false);
             this.outputInStreamErrorListener = atomWriter;
             return atomWriter;
         }
@@ -634,14 +602,14 @@ namespace Microsoft.OData.Core.Atom
         }
 
         /// <summary>
-        /// Writes a service document with the specified <paramref name="defaultWorkspace"/> 
+        /// Writes a service document with the specified <paramref name="serviceDocument"/> 
         /// as message payload.
         /// </summary>
-        /// <param name="defaultWorkspace">The default workspace to write in the service document.</param>
-        private void WriteServiceDocumentImplementation(ODataWorkspace defaultWorkspace)
+        /// <param name="serviceDocument">The service document to write.</param>
+        private void WriteServiceDocumentImplementation(ODataServiceDocument serviceDocument)
         {
             ODataAtomServiceDocumentSerializer atomServiceDocumentSerializer = new ODataAtomServiceDocumentSerializer(this);
-            atomServiceDocumentSerializer.WriteServiceDocument(defaultWorkspace);
+            atomServiceDocumentSerializer.WriteServiceDocument(serviceDocument);
         }
 
         /// <summary>

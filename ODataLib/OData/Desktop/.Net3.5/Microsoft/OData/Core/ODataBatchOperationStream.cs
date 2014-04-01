@@ -31,7 +31,6 @@ namespace Microsoft.OData.Core
         /// <param name="listener">Listener interface to be notified of operation changes.</param>
         internal ODataBatchOperationStream(IODataBatchOperationListener listener)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(listener != null, "listener != null");
 
             this.listener = listener;

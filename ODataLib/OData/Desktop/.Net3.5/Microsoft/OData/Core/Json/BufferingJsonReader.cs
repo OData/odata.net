@@ -67,10 +67,10 @@ namespace Microsoft.OData.Core.Json
         /// <param name="inStreamErrorPropertyName">The name of the property that denotes an in-stream error.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of recursive internalexception objects to allow when reading in-stream errors.</param>
         /// <param name="jsonFormat">The specific JSON-based format expected by the reader.</param>
-        internal BufferingJsonReader(TextReader reader, string inStreamErrorPropertyName, int maxInnerErrorDepth, ODataFormat jsonFormat)
-            : base(reader, jsonFormat)
+        /// <param name="isIeee754Compatible">If it is IEEE754 Compatible</param>
+        internal BufferingJsonReader(TextReader reader, string inStreamErrorPropertyName, int maxInnerErrorDepth, ODataFormat jsonFormat, bool isIeee754Compatible)
+            : base(reader, jsonFormat, isIeee754Compatible)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
 
             this.inStreamErrorPropertyName = inStreamErrorPropertyName;
@@ -90,8 +90,6 @@ namespace Microsoft.OData.Core.Json
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 if (this.bufferedNodesHead != null)
                 {
                     if (this.isBuffering)
@@ -119,8 +117,6 @@ namespace Microsoft.OData.Core.Json
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 if (this.bufferedNodesHead != null)
                 {
                     if (this.isBuffering)
@@ -145,15 +141,11 @@ namespace Microsoft.OData.Core.Json
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 return this.disableInStreamErrorDetection;
             }
 
             set
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 this.disableInStreamErrorDetection = value;
             }
         }
@@ -166,8 +158,6 @@ namespace Microsoft.OData.Core.Json
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 return this.isBuffering;
             }
         }
@@ -178,7 +168,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>true if a new node was found, or false if end of input was reached.</returns>
         public override bool Read()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!this.parsingInStreamError, "!this.parsingInStreamError");
 
             // read the next node and check whether it is an in-stream error
@@ -190,7 +179,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         internal void StartBuffering()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!this.isBuffering, "Buffering is already turned on. Must not call StartBuffering again.");
 
             if (this.bufferedNodesHead == null)
@@ -223,7 +211,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>The bookmark object, it should be treated as a black box by the caller.</returns>
         internal object BookmarkCurrentPosition()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.isBuffering, "Bookmarks can only be create when in buffering mode.");
 
             return this.currentBufferedNode;
@@ -235,7 +222,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="bookmark">The bookmark object to move to.</param>
         internal void MoveToBookmark(object bookmark)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.isBuffering, "Bookmarks can only be used when in buffering mode.");
             Debug.Assert(bookmark != null, "bookmark != null");
 
@@ -254,7 +240,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         internal void StopBuffering()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.isBuffering, "Buffering is not turned on. Must not call StopBuffering in this state.");
 
             // NOTE: by turning off buffering the reader is set to the first node in the buffer (if any) and will continue
@@ -277,7 +262,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>true if the current value is an in-stream error value; otherwise false.</returns>
         internal bool StartBufferingAndTryToReadInStreamErrorPropertyValue(out ODataError error)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertNotBuffering();
 
             error = null;
@@ -538,7 +522,12 @@ namespace Microsoft.OData.Core.Json
                             return false;
                         }
 
-                        if (!this.TryReadMessagePropertyValue(error))
+                        string errorMessage;
+                        if (this.TryReadErrorStringPropertyValue(out errorMessage))
+                        {
+                            error.Message = errorMessage;
+                        }
+                        else
                         {
                             return false;
                         }
@@ -574,88 +563,6 @@ namespace Microsoft.OData.Core.Json
 
             // if we don't find any properties it is not a valid error object
             return propertiesFoundBitmask != ODataJsonLightReaderUtils.ErrorPropertyBitMask.None;
-        }
-
-        /// <summary>
-        /// Try to read the message property value of an error value.
-        /// </summary>
-        /// <param name="error">An <see cref="ODataError"/> instance to set the read message property values on.</param>
-        /// <returns>true if the message property values could be read; otherwise false.</returns>
-        private bool TryReadMessagePropertyValue(ODataError error)
-        {
-            Debug.Assert(error != null, "error != null");
-            Debug.Assert(this.currentBufferedNode.NodeType == JsonNodeType.Property, "this.currentBufferedNode.NodeType == JsonNodeType.Property");
-            Debug.Assert(this.parsingInStreamError, "this.parsingInStreamError");
-            this.AssertBuffering();
-
-            // move the reader onto the property value
-            this.ReadInternal();
-
-            // we expect a start-object node here
-            if (this.currentBufferedNode.NodeType != JsonNodeType.StartObject)
-            {
-                return false;
-            }
-
-            // read the start-object node
-            this.ReadInternal();
-
-            // we expect one of the supported properties for the value (or end-object)
-            ODataJsonLightReaderUtils.ErrorPropertyBitMask propertiesFoundBitmask = ODataJsonLightReaderUtils.ErrorPropertyBitMask.None;
-            while (this.currentBufferedNode.NodeType == JsonNodeType.Property)
-            {
-                // NOTE the Json reader already ensures that the value of a property node is a string
-                string propertyName = (string)this.currentBufferedNode.Value;
-
-                switch (propertyName)
-                {
-                    case JsonConstants.ODataErrorMessageLanguageName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonLightReaderUtils.ErrorPropertyBitMask.MessageLanguage))
-                        {
-                            return false;
-                        }
-
-                        string lang;
-                        if (this.TryReadErrorStringPropertyValue(out lang))
-                        {
-                            error.MessageLanguage = lang;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-
-                        break;
-
-                    case JsonConstants.ODataErrorMessageValueName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonLightReaderUtils.ErrorPropertyBitMask.MessageValue))
-                        {
-                            return false;
-                        }
-
-                        string message;
-                        if (this.TryReadErrorStringPropertyValue(out message))
-                        {
-                            error.Message = message;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-
-                        break;
-
-                    default:
-                        // if we find a non-supported property we don't treat this as an error
-                        return false;
-                }
-
-                this.ReadInternal();
-            }
-
-            Debug.Assert(this.currentBufferedNode.NodeType == JsonNodeType.EndObject, "this.currentBufferedNode.NodeType == JsonNodeType.EndObject");
-
-            return true;
         }
 
         /// <summary>

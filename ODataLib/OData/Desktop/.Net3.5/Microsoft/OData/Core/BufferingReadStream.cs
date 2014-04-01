@@ -27,7 +27,7 @@ namespace Microsoft.OData.Core
         private readonly LinkedList<byte[]> buffers;
 
         /// <summary>
-        /// The stream being wrapped.
+        /// The stream being wrapped.sdfasdf
         /// </summary>
         private Stream innerStream;
 
@@ -50,7 +50,6 @@ namespace Microsoft.OData.Core
         /// <param name="stream">The underlying stream to wrap. Note that only read operations will be invoked on this stream.</param>
         internal BufferingReadStream(Stream stream)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(stream != null, "stream != null");
 
             this.innerStream = stream;
@@ -118,7 +117,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return !this.bufferingModeDisabled;
             }
         }
@@ -240,7 +238,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void ResetStream()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!this.bufferingModeDisabled, "Cannot reset the stream again once buffering has been turned off!");
 
             this.currentReadNode = this.buffers.First;
@@ -252,7 +249,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void StopBuffering()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!this.bufferingModeDisabled, "Cannot stop buffering if the stream is not buffering!");
 
             this.ResetStream();

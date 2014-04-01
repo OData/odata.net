@@ -44,7 +44,6 @@ namespace Microsoft.OData.Core
         internal ODataRequestMessage(IODataRequestMessage requestMessage, bool writing, bool disableMessageStreamDisposal, long maxMessageSize)
             : base(writing, disableMessageStreamDisposal, maxMessageSize)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(requestMessage != null, "requestMessage != null");
 
             this.requestMessage = requestMessage;
@@ -147,7 +146,6 @@ namespace Microsoft.OData.Core
         /// <returns>The instance of the interface asked for or null if it was not implemented by the message.</returns>
         internal override TInterface QueryInterface<TInterface>()
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.requestMessage as TInterface;
         }
     }

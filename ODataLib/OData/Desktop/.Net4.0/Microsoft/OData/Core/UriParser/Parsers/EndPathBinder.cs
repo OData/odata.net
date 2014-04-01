@@ -25,6 +25,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -49,7 +50,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="bindMethod">Method to bind the EndPathToken's parent, if there is one.</param>
         internal EndPathBinder(MetadataBinder.QueryTokenVisitor bindMethod)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             this.bind = bindMethod;
             this.functionCallBinder = new FunctionCallBinder(bindMethod);
         }
@@ -62,7 +62,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>Will return a <see cref="SingleValueOpenPropertyAccessNode"/> when open types are supported</returns>
         internal static SingleValueOpenPropertyAccessNode GeneratePropertyAccessQueryForOpenType(EndPathToken endPathToken, SingleValueNode parentNode)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             if (parentNode.TypeReference != null && !parentNode.TypeReference.Definition.IsOpenType())
             {
                 throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
@@ -81,7 +80,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>QueryNode bound to this property.</returns>
         internal static QueryNode GeneratePropertyAccessQueryNode(SingleValueNode parentNode, IEdmProperty property)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(parentNode, "parent");
             ExceptionUtils.CheckArgumentNotNull(property, "property");
 
@@ -119,7 +117,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The parent node.</returns>
         internal static SingleValueNode CreateParentFromImplicitRangeVariable(BindingState state)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(state, "state");
 
             // If the Parent is null, then it must be referring to the implicit $it parameter
@@ -139,7 +136,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A Query node representing this endpath token, bound to metadata.</returns>
         internal QueryNode BindEndPath(EndPathToken endPathToken, BindingState state)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             ExceptionUtils.CheckArgumentNotNull(endPathToken, "EndPathToken");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(endPathToken.Identifier, "EndPathToken.Identifier");
 
@@ -189,7 +185,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A SingleValueQueryNode that is the parent node of the <paramref name="segmentToken"/>.</returns>
         private QueryNode DetermineParentNode(EndPathToken segmentToken, BindingState state)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(segmentToken, "segmentToken");
             ExceptionUtils.CheckArgumentNotNull(state, "state");
 

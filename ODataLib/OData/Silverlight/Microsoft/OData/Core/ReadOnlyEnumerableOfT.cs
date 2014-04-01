@@ -41,7 +41,6 @@ namespace Microsoft.OData.Core
         internal ReadOnlyEnumerable()
             : this(new List<T>())
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -51,7 +50,6 @@ namespace Microsoft.OData.Core
         internal ReadOnlyEnumerable(IList<T> sourceList)
             : base(sourceList)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(sourceList != null, "sourceList != null");
 
             this.sourceList = sourceList;
@@ -72,7 +70,6 @@ namespace Microsoft.OData.Core
         /// <returns>Returns the empty instance of ReadOnlyEnumerableOfT.</returns>
         internal static ReadOnlyEnumerable<T> Empty()
         {
-            DebugUtils.CheckNoExternalCallers();
             return EmptyInstance.Value;
         }
         
@@ -82,7 +79,6 @@ namespace Microsoft.OData.Core
         /// <param name="itemToAdd">Item to add to the source list.</param>
         internal void AddToSourceList(T itemToAdd)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.sourceList != null, "this.sourceList != null");
 
             this.sourceList.Add(itemToAdd);

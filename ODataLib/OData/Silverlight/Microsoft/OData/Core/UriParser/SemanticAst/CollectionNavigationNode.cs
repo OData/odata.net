@@ -17,6 +17,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -45,9 +46,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private readonly SingleValueNode source;
 
         /// <summary>
-        /// The EntitySet from which the collection of entities comes from.
+        /// The navigation source from which the collection of entities comes from.
         /// </summary>
-        private readonly IEdmEntitySet entitySet;
+        private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
         /// Creates a CollectionNavigationNode.
@@ -62,21 +63,22 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
             this.source = source;
-            this.entitySet = source.EntitySet != null ? source.EntitySet.FindNavigationTarget(navigationProperty) : null;
+
+            this.navigationSource = source.NavigationSource != null ? source.NavigationSource.FindNavigationTarget(navigationProperty) : null;
         }
 
         /// <summary>
         /// Creates a CollectionNavigationNode.
         /// </summary>
         /// <param name="navigationProperty">The navigation property that defines the collection node.</param>
-        /// <param name="sourceSet">The source entity set.</param>
+        /// <param name="source">The navigation source.</param>
         /// <returns>The collection node.</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input navigation property is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigation doesn't target a collection.</exception>
-        public CollectionNavigationNode(IEdmNavigationProperty navigationProperty, IEdmEntitySet sourceSet)
+        public CollectionNavigationNode(IEdmNavigationProperty navigationProperty, IEdmNavigationSource source)
             : this(navigationProperty)
         {
-            this.entitySet = sourceSet != null ? sourceSet.FindNavigationTarget(navigationProperty) : null;
+            this.navigationSource = source != null ? source.FindNavigationTarget(navigationProperty) : null;
         }
 
         /// <summary>
@@ -150,11 +152,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the entity set containing this collection.
+        /// Gets the navigation source containing this collection.
         /// </summary>
-        public override IEdmEntitySet EntitySet
+        public override IEdmNavigationSource NavigationSource
         {
-            get { return this.entitySet; }
+            get { return this.navigationSource; }
         }
 
         /// <summary>
@@ -164,7 +166,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return InternalQueryNodeKind.CollectionNavigationNode;
             }
         }
@@ -178,7 +179,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <exception cref="System.ArgumentNullException">Throws if the input visitor is null.</exception>
         public override T Accept<T>(QueryNodeVisitor<T> visitor)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(visitor, "visitor");
             return visitor.Visit(this);
         }

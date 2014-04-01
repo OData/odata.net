@@ -15,7 +15,6 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
 #endif
 {
     #region Namespaces
-
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Microsoft.OData.Core.UriParser.Semantic;
@@ -40,9 +39,9 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         private readonly QueryToken filterOption;
 
         /// <summary>
-        /// the order by option for this expand term
+        /// the order by options for this expand term
         /// </summary>
-        private readonly OrderByToken orderByOption;
+        private readonly IEnumerable<OrderByToken> orderByOptions;
 
         /// <summary>
         /// the top option for this expand term
@@ -58,6 +57,11 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// the query count option for this expand term.
         /// </summary>
         private readonly bool? countQueryOption;
+
+        /// <summary>
+        /// the levels option for this expand term
+        /// </summary>
+        private readonly long? levelsOption;
 
         /// <summary>
         /// the select option for this expand term.
@@ -78,10 +82,11 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
             ExceptionUtils.CheckArgumentNotNull(pathToNavProp, "pathToNavigationProperty");
             this.pathToNavProp = pathToNavProp;
             this.filterOption = null;
-            this.orderByOption = null;
+            this.orderByOptions = null;
             this.topOption = null;
             this.skipOption = null;
             this.countQueryOption = null;
+            this.levelsOption = null;
             this.selectOption = null;
             this.expandOption = null;
         }
@@ -97,9 +102,11 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
             ExceptionUtils.CheckArgumentNotNull(pathToNavProp, "pathToNavigationProperty");
             this.pathToNavProp = pathToNavProp;
             this.filterOption = null;
-            this.orderByOption = null;
+            this.orderByOptions = null;
             this.topOption = null;
             this.skipOption = null;
+            this.countQueryOption = null;
+            this.levelsOption = null;
             this.selectOption = selectOption;
             this.expandOption = expandOption;
         }
@@ -109,22 +116,24 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// </summary>
         /// <param name="pathToNavProp">the nav prop for this expand term</param>
         /// <param name="filterOption">the filter option for this expand term</param>
-        /// <param name="orderByOption">the orderby option for this expand term</param>
+        /// <param name="orderByOptions">the orderby options for this expand term</param>
         /// <param name="topOption">the top option for this expand term</param>
         /// <param name="skipOption">the skip option for this expand term</param>
         /// <param name="countQueryOption">the query count option for this expand term</param>
+        /// <param name="levelsOption">the levels count option for this expand term</param>
         /// <param name="selectOption">the select option for this expand term</param>
         /// <param name="expandOption">the expand option for this expand term</param>
-        public ExpandTermToken(PathSegmentToken pathToNavProp, QueryToken filterOption, OrderByToken orderByOption, long? topOption, long? skipOption, bool? countQueryOption, SelectToken selectOption, ExpandToken expandOption)
+        public ExpandTermToken(PathSegmentToken pathToNavProp, QueryToken filterOption, IEnumerable<OrderByToken> orderByOptions, long? topOption, long? skipOption, bool? countQueryOption, long? levelsOption, SelectToken selectOption, ExpandToken expandOption)
         {
             ExceptionUtils.CheckArgumentNotNull(pathToNavProp, "property");
 
             this.pathToNavProp = pathToNavProp;
             this.filterOption = filterOption;
-            this.orderByOption = orderByOption;
+            this.orderByOptions = orderByOptions;
             this.topOption = topOption;
             this.skipOption = skipOption;
             this.countQueryOption = countQueryOption;
+            this.levelsOption = levelsOption;
             this.selectOption = selectOption;
             this.expandOption = expandOption;
         }
@@ -146,11 +155,11 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         }
 
         /// <summary>
-        /// the orderby option for this expand term.
+        /// the orderby options for this expand term.
         /// </summary>
-        public OrderByToken OrderByOption
+        public IEnumerable<OrderByToken> OrderByOptions
         {
-            get { return this.orderByOption; }
+            get { return this.orderByOptions; }
         }
 
         /// <summary>
@@ -176,6 +185,15 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         {
             get { return this.countQueryOption; }
         }
+
+        /// <summary>
+        /// the levels option for this expand term.
+        /// </summary>
+        public long? LevelsOption
+        {
+            get { return this.levelsOption; }
+        }
+
 
         /// <summary>
         /// the select option for this expand term.

@@ -21,5 +21,10 @@ namespace Microsoft.OData.Edm
         /// Gets the structural properties of the entity type that make up the entity key.
         /// </summary>
         IEnumerable<IEdmStructuralProperty> DeclaredKey { get; }
+
+        /// <summary>
+        /// Gets the value indicating whether or not this type is a media entity.
+        /// </summary>
+        bool HasStream { get; }
     }
 }

@@ -50,7 +50,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">The boolean value to write.</param>
         internal static void WriteValue(TextWriter writer, bool value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             writer.Write(value ? JsonConstants.JsonTrueLiteral : JsonConstants.JsonFalseLiteral);
@@ -63,7 +62,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Integer value to be written.</param>
         internal static void WriteValue(TextWriter writer, int value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             writer.Write(value.ToString(CultureInfo.InvariantCulture));
@@ -76,7 +74,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Float value to be written.</param>
         internal static void WriteValue(TextWriter writer, float value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             if (float.IsInfinity(value) || float.IsNaN(value))
@@ -99,7 +96,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Short value to be written.</param>
         internal static void WriteValue(TextWriter writer, short value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             writer.Write(value.ToString(CultureInfo.InvariantCulture));
@@ -112,11 +108,9 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Long value to be written.</param>
         internal static void WriteValue(TextWriter writer, long value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
-            // Since Json only supports number, we need to convert long into string to prevent data loss
-            WriteQuoted(writer, value.ToString(CultureInfo.InvariantCulture));
+            writer.Write(value.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -126,7 +120,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Double value to be written.</param>
         internal static void WriteValue(TextWriter writer, double value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             if (JsonSharedUtils.IsDoubleValueSerializedAsString(value))
@@ -155,7 +148,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Guid value to be written.</param>
         internal static void WriteValue(TextWriter writer, Guid value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             WriteQuoted(writer, value.ToString());
@@ -168,64 +160,9 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Decimal value to be written.</param>
         internal static void WriteValue(TextWriter writer, decimal value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
-            // Since Json doesn't have decimal support (it only has one data type - number),
-            // we need to convert decimal to string to prevent data loss
-            WriteQuoted(writer, value.ToString(CultureInfo.InvariantCulture));
-        }
-
-        /// <summary>
-        /// Write a DateTime value
-        /// </summary>
-        /// <param name="writer">The text writer to write the output to.</param>
-        /// <param name="value">DateTime value to be written.</param>
-        /// <param name="dateTimeFormat">The format to write out the DateTime value in.</param>
-#if SPATIAL
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.Data.Spatial.JsonValueUtils.WriteQuoted(System.IO.TextWriter,System.String)", Justification = "Constant defined by the JSON spec.")]
-#else
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.OData.Core.Json.JsonValueUtils.WriteQuoted(System.IO.TextWriter,System.String)", Justification = "Constant defined by the JSON spec.")]
-#endif
-        internal static void WriteValue(TextWriter writer, DateTime value, ODataJsonDateTimeFormat dateTimeFormat)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(writer != null, "writer != null");
-
-            switch (dateTimeFormat)
-            {
-                case ODataJsonDateTimeFormat.ISO8601DateTime:
-                    {
-                        // jsonDateTime= quotation-mark   
-                        //  YYYY-MM-DDThh:mm:ss.sTZD 
-                        //  [("+" / "-") offset] 
-                        //  quotation-mark  
-                        string textValue = PlatformHelper.ConvertDateTimeToString(value);
-                        WriteQuoted(writer, textValue);
-                    }
-
-                    break;
-
-                case ODataJsonDateTimeFormat.ODataDateTime:
-                    {
-                        // taken from the Atlas serializer
-                        // DevDiv 41127: Never confuse atlas serialized strings with dates
-                        // Serialized date: "\/Date(123)\/"
-                        // sb.Append(@"""\/Date(");
-                        // sb.Append((datetime.ToUniversalTime().Ticks - DatetimeMinTimeTicks) / 10000);
-                        // sb.Append(@")\/""");
-                        value = GetUniversalDate(value);
-                        Debug.Assert(value.Kind == DateTimeKind.Utc, "dateTime.Kind == DateTimeKind.Utc");
-
-                        string textValue = String.Format(
-                            CultureInfo.InvariantCulture,
-                            JsonConstants.ODataDateTimeFormat,
-                            DateTimeTicksToJsonTicks(value.Ticks));
-                        WriteQuoted(writer, textValue);
-                    }
-
-                    break;
-            }
+            writer.Write(value.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -241,7 +178,6 @@ namespace Microsoft.OData.Core.Json
 #endif
         internal static void WriteValue(TextWriter writer, DateTimeOffset value, ODataJsonDateTimeFormat dateTimeFormat)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             Int32 offsetMinutes = (Int32)value.Offset.TotalMinutes;
@@ -295,7 +231,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">TimeSpan value to be written.</param>
         internal static void WriteValue(TextWriter writer, TimeSpan value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             WriteQuoted(writer, EdmValueWriter.DurationAsXml(value));
@@ -308,7 +243,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Byte value to be written.</param>
         internal static void WriteValue(TextWriter writer, byte value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             writer.Write(value.ToString(CultureInfo.InvariantCulture));
@@ -321,7 +255,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">SByte value to be written.</param>
         internal static void WriteValue(TextWriter writer, sbyte value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             writer.Write(value.ToString(CultureInfo.InvariantCulture));
@@ -334,7 +267,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">String value to be written.</param>
         internal static void WriteValue(TextWriter writer, string value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             if (value == null)
@@ -348,13 +280,33 @@ namespace Microsoft.OData.Core.Json
         }
 
         /// <summary>
+        /// Write a byte array.
+        /// </summary>
+        /// <param name="writer">The text writer to write the output to.</param>
+        /// <param name="value">Byte array to be written.</param>
+        internal static void WriteValue(TextWriter writer, byte[] value)
+        {
+            Debug.Assert(writer != null, "writer != null");
+
+            if (value == null)
+            {
+                writer.Write(JsonConstants.JsonNullLiteral);
+            }
+            else
+            {
+                writer.Write(JsonConstants.QuoteCharacter);
+                writer.Write(Convert.ToBase64String(value));
+                writer.Write(JsonConstants.QuoteCharacter);
+            }
+        }
+
+        /// <summary>
         /// Returns the string value with special characters escaped.
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="inputString">Input string value.</param>
         internal static void WriteEscapedJsonString(TextWriter writer, string inputString)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(inputString != null, "The string value must not be null.");
 
@@ -369,41 +321,9 @@ namespace Microsoft.OData.Core.Json
 
                 // Append the unhandled characters (that do not require special treament)
                 // to the string builder when special characters are detected.
-                string value;
-                switch (c)
+                if (SpecialCharToEscapedStringMap[c] == null)
                 {
-                    case '\r':
-                        value = "\\r";
-                        break;
-                    case '\t':
-                        value = "\\t";
-                        break;
-                    case '\"':
-                        value = "\\\"";
-                        break;
-                    case '\\':
-                        value = "\\\\";
-                        break;
-                    case '\n':
-                        value = "\\n";
-                        break;
-                    case '\b':
-                        value = "\\b";
-                        break;
-                    case '\f':
-                        value = "\\f";
-                        break;
-                    default:
-                        if ((c < ' ') || (c > 0x7F))
-                        {
-                            value = SpecialCharToEscapedStringMap[c];
-                        }
-                        else
-                        {
-                            continue;
-                        }
-
-                        break;
+                    continue;
                 }
 
                 // Flush out the unescaped characters we've built so far.
@@ -413,7 +333,7 @@ namespace Microsoft.OData.Core.Json
                     writer.Write(inputString.Substring(startIndex, subStrLength));
                 }
 
-                writer.Write(value);
+                writer.Write(SpecialCharToEscapedStringMap[c]);
                 startIndex = currentIndex + 1;
             }
 
@@ -433,8 +353,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>The ticks to use in the .NET DateTime of DateTimeOffset structure.</returns>
         internal static long JsonTicksToDateTimeTicks(long ticks)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // Ticks in .NET are in 100-nanoseconds and start at 1.1.0001.
             // Ticks in the JSON date time format are in milliseconds and start at 1.1.1970.
             return (ticks * 10000) + JsonDateTimeMinTimeTicks;
@@ -492,12 +410,27 @@ namespace Microsoft.OData.Core.Json
         /// <returns>The map of special characters to the corresponding escaped strings.</returns>
         private static string[] CreateSpecialCharToEscapedStringMap()
         {
-            string[] specialCharToEscapedStringMap = new string[char.MaxValue];
-            for (int c = char.MinValue; c < char.MaxValue; c++)
+            string[] specialCharToEscapedStringMap = new string[char.MaxValue + 1];
+            for (int c = char.MinValue; c <= char.MaxValue; ++c)
             {
-                // We only need to populate for characters < ' ' and > 0x7F. For simplicity sake, we populate for all char values here.
-                specialCharToEscapedStringMap[c] = string.Format(CultureInfo.InvariantCulture, "\\u{0:x4}", c);
+                if ((c < ' ') || (c > 0x7F))
+                {
+                    // We only need to populate for characters < ' ' and > 0x7F.
+                    specialCharToEscapedStringMap[c] = string.Format(CultureInfo.InvariantCulture, "\\u{0:x4}", c);
+                }
+                else
+                {
+                    specialCharToEscapedStringMap[c] = null;
+                }
             }
+
+            specialCharToEscapedStringMap['\r'] = "\\r";
+            specialCharToEscapedStringMap['\t'] = "\\t";
+            specialCharToEscapedStringMap['\"'] = "\\\"";
+            specialCharToEscapedStringMap['\\'] = "\\\\";
+            specialCharToEscapedStringMap['\n'] = "\\n";
+            specialCharToEscapedStringMap['\b'] = "\\b";
+            specialCharToEscapedStringMap['\f'] = "\\f";
 
             return specialCharToEscapedStringMap;
         }

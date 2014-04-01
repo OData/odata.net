@@ -21,7 +21,7 @@ namespace Microsoft.OData.Core.Atom
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -43,7 +43,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomCollectionWriter(ODataAtomOutputContext atomOutputContext, IEdmTypeReference itemTypeReference)
             : base(atomOutputContext, itemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(atomOutputContext != null, "atomOutputContext != null");
 
             this.atomOutputContext = atomOutputContext;

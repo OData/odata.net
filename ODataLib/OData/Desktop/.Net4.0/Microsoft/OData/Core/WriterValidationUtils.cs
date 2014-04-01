@@ -30,12 +30,11 @@ namespace Microsoft.OData.Core
         /// <param name="writingResponse">True if we are writing a response.</param>
         internal static void ValidateMessageWriterSettings(ODataMessageWriterSettings messageWriterSettings, bool writingResponse)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
-            if (messageWriterSettings.BaseUri != null && !messageWriterSettings.BaseUri.IsAbsoluteUri)
+            if (messageWriterSettings.PayloadBaseUri != null && !messageWriterSettings.PayloadBaseUri.IsAbsoluteUri)
             {
-                throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute(UriUtilsCommon.UriToString(messageWriterSettings.BaseUri)));
+                throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute(UriUtils.UriToString(messageWriterSettings.PayloadBaseUri)));
             }
 
             if (messageWriterSettings.HasJsonPaddingFunction() && !writingResponse)
@@ -50,8 +49,6 @@ namespace Microsoft.OData.Core
         /// <param name="property">The property to validate for not being null.</param>
         internal static void ValidatePropertyNotNull(ODataProperty property)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (property == null)
             {
                 throw new ODataException(Strings.WriterValidationUtils_PropertyMustNotBeNull);
@@ -64,8 +61,6 @@ namespace Microsoft.OData.Core
         /// <param name="propertyName">The property name to validate..</param>
         internal static void ValidatePropertyName(string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // Properties must have a non-empty name
             if (string.IsNullOrEmpty(propertyName))
             {
@@ -86,7 +81,6 @@ namespace Microsoft.OData.Core
         /// or null if no metadata is available.</returns>
         internal static IEdmProperty ValidatePropertyDefined(string propertyName, IEdmStructuredType owningStructuredType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             if (owningStructuredType == null)
@@ -115,7 +109,6 @@ namespace Microsoft.OData.Core
         /// or null if no metadata is available.</returns>
         internal static IEdmNavigationProperty ValidateNavigationPropertyDefined(string propertyName, IEdmEntityType owningEntityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             if (owningEntityType == null)
@@ -147,8 +140,6 @@ namespace Microsoft.OData.Core
         /// <param name="parentNavigationPropertyType">The type of the parent navigation property.</param>
         internal static void ValidateEntryInExpandedLink(IEdmEntityType entryEntityType, IEdmEntityType parentNavigationPropertyType)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (parentNavigationPropertyType == null)
             {
                 return;
@@ -164,32 +155,12 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataAssociationLink"/> to ensure all required information is specified and valid.
-        /// </summary>
-        /// <param name="associationLink">The association link to validate.</param>
-        /// <param name="version">The version of the OData protocol used for checking.</param>
-        /// <param name="writingResponse">true if we are writing a response; otherwise false.</param>
-        internal static void ValidateAssociationLink(ODataAssociationLink associationLink, ODataVersion version, bool writingResponse)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(associationLink != null, "associationLink != null");
-
-            if (!writingResponse)
-            {
-                throw new ODataException(Strings.WriterValidationUtils_AssociationLinkInRequest(associationLink.Name));
-            }
-
-            ValidationUtils.ValidateAssociationLink(associationLink);
-        }
-
-        /// <summary>
         /// Validates that an <see cref="ODataOperation"/> can be written.
         /// </summary>
         /// <param name="operation">The operation (an action or a function) to validate.</param>
         /// <param name="writingResponse">true if writing a response; otherwise false.</param>
         internal static void ValidateCanWriteOperation(ODataOperation operation, bool writingResponse)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(operation != null, "operation != null");
 
             // Operations are only valid in responses; we fail on them in requests
@@ -207,7 +178,6 @@ namespace Microsoft.OData.Core
         /// <param name="version">The version of the OData protocol used for checking.</param>
         internal static void ValidateFeedAtEnd(ODataFeed feed, bool writingRequest, ODataVersion version)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(feed != null, "feed != null");
 
             // Verify next link
@@ -229,7 +199,6 @@ namespace Microsoft.OData.Core
         /// <param name="entry">The entry to validate.</param>
         internal static void ValidateEntryAtStart(ODataEntry entry)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entry != null, "entry != null");
 
             // Id can be specified at the beginning (and might be written here), so we need to validate it here.
@@ -245,7 +214,6 @@ namespace Microsoft.OData.Core
         /// <param name="entry">The entry to validate.</param>
         internal static void ValidateEntryAtEnd(ODataEntry entry)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entry != null, "entry != null");
 
             // If the Id was not specified in the beginning it might have been specified at the end, so validate it here as well.
@@ -259,7 +227,6 @@ namespace Microsoft.OData.Core
         /// <param name="isDefaultStream">true if <paramref name="streamReference"/> is the default stream for an entity; false if it is a named stream property value.</param>
         internal static void ValidateStreamReferenceValue(ODataStreamReferenceValue streamReference, bool isDefaultStream)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(streamReference != null, "streamReference != null");
 
             if (streamReference.ContentType != null && streamReference.ContentType.Length == 0)
@@ -304,7 +271,6 @@ namespace Microsoft.OData.Core
         /// <remarks>This does NOT validate the value of the stream property, just the property itself.</remarks>
         internal static void ValidateStreamReferenceProperty(ODataProperty streamProperty, IEdmProperty edmProperty, ODataVersion version, bool writingResponse)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(streamProperty != null, "streamProperty != null");
 
             ValidationUtils.ValidateStreamReferenceProperty(streamProperty, edmProperty);
@@ -322,8 +288,6 @@ namespace Microsoft.OData.Core
         /// <remarks>This should be called only for entity reference links inside the ODataEntityReferenceLinks.Links collection.</remarks>
         internal static void ValidateEntityReferenceLinkNotNull(ODataEntityReferenceLink entityReferenceLink)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (entityReferenceLink == null)
             {
                 throw new ODataException(Strings.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull);
@@ -336,7 +300,6 @@ namespace Microsoft.OData.Core
         /// <param name="entityReferenceLink">The entity reference link to validate.</param>
         internal static void ValidateEntityReferenceLink(ODataEntityReferenceLink entityReferenceLink)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entityReferenceLink != null, "entityReferenceLink != null");
 
             if (entityReferenceLink.Url == null)
@@ -354,11 +317,10 @@ namespace Microsoft.OData.Core
         /// <returns>The type of the navigation property for this navigation link; or null if no <paramref name="declaringEntityType"/> was specified.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Keeping the validation code for navigation link multiplicity in one place.")]
         internal static IEdmNavigationProperty ValidateNavigationLink(
-            ODataNavigationLink navigationLink, 
-            IEdmEntityType declaringEntityType, 
+            ODataNavigationLink navigationLink,
+            IEdmEntityType declaringEntityType,
             ODataPayloadKind? expandedPayloadKind)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(
                 !expandedPayloadKind.HasValue ||
@@ -428,7 +390,7 @@ namespace Microsoft.OData.Core
 
             if (errorTemplate != null)
             {
-                string uri = navigationLink.Url == null ? "null" : UriUtilsCommon.UriToString(navigationLink.Url);
+                string uri = navigationLink.Url == null ? "null" : UriUtils.UriToString(navigationLink.Url);
                 throw new ODataException(errorTemplate(uri));
             }
 
@@ -441,7 +403,6 @@ namespace Microsoft.OData.Core
         /// <param name="navigationLink">The navigation link to validate.</param>
         internal static void ValidateNavigationLinkUrlPresent(ODataNavigationLink navigationLink)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationLink != null, "navigationLink != null");
 
             // Navigation link must specify the Url
@@ -459,7 +420,6 @@ namespace Microsoft.OData.Core
         /// <param name="navigationLink">The navigation link to validate.</param>
         internal static void ValidateNavigationLinkHasCardinality(ODataNavigationLink navigationLink)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationLink != null, "navigationLink != null");
 
             if (!navigationLink.IsCollection.HasValue)
@@ -474,10 +434,9 @@ namespace Microsoft.OData.Core
         /// <param name="expectedPropertyTypeReference">The expected property type or null if we don't have any.</param>
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
-        /// <param name="model">The model to use to get the data service version.</param>
+        /// <param name="model">The model to use to get the OData version.</param>
         internal static void ValidateNullPropertyValue(IEdmTypeReference expectedPropertyTypeReference, string propertyName, ODataWriterBehavior writerBehavior, IEdmModel model)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writerBehavior != null, "writerBehavior != null");
             Debug.Assert(model != null, "For null validation, model is required.");
 
@@ -496,6 +455,10 @@ namespace Microsoft.OData.Core
                     {
                         throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.ODataFullName()));
                     }
+                }
+                else if (expectedPropertyTypeReference.IsODataEnumTypeKind() && !expectedPropertyTypeReference.IsNullable)
+                {
+                    throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.ODataFullName()));
                 }
                 else if (expectedPropertyTypeReference.IsStream())
                 {
@@ -519,10 +482,11 @@ namespace Microsoft.OData.Core
         /// Validates the value of the Id property on an entry.
         /// </summary>
         /// <param name="id">The id value for an entry to validate.</param>
-        private static void ValidateEntryId(string id)
+        private static void ValidateEntryId(Uri id)
         {
             // Verify non-empty ID (entries can have no (null) ID for insert scenarios; empty IDs are not allowed)
-            if (id != null && id.Length == 0)
+            // TODO: it always passes. Will add more validation or remove the validation after supporting relative Uri.
+            if (id != null && UriUtils.UriToString(id).Length == 0)
             {
                 throw new ODataException(Strings.WriterValidationUtils_EntriesMustHaveNonEmptyId);
             }

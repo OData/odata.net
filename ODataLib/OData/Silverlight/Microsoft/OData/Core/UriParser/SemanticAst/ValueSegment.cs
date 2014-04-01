@@ -50,7 +50,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 
             if (previousType is IEdmEntityType)
             {
-                // TODO Throw is the entity type does not have an m:HasStream attribute
+                // TODO Throw if the entity type does not have a HasStream attribute
                 // $value on an entity type means default stream
                 this.edmType = EdmCoreModel.Instance.GetStream(false).Definition;
             }
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="translator">An implementation of the translator interface.</param>
         /// <returns>An object whose type is determined by the type parameter of the translator.</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input translator is null.</exception>
-        public override T Translate<T>(PathSegmentTranslator<T> translator)
+        public override T TranslateWith<T>(PathSegmentTranslator<T> translator)
         {
             ExceptionUtils.CheckArgumentNotNull(translator, "translator");
             return translator.Translate(this);
@@ -87,9 +87,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         /// <param name="handler">An implementation of the translator interface.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input handler is null.</exception>
-        public override void Handle(PathSegmentHandler handler)
+        public override void HandleWith(PathSegmentHandler handler)
         {
-            ExceptionUtils.CheckArgumentNotNull(handler, "translator");
+            ExceptionUtils.CheckArgumentNotNull(handler, "handler");
             handler.Handle(this);
         }
 
@@ -100,7 +100,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <returns>true if the other segment is equal.</returns>
         internal override bool Equals(ODataPathSegment other)
         {
-            DebugUtils.CheckNoExternalCallers();
             ValueSegment otherValueSegment = other as ValueSegment;
             return otherValueSegment != null &&
                    otherValueSegment.EdmType == this.edmType;

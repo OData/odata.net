@@ -25,8 +25,6 @@ namespace Microsoft.OData.Core
         /// <returns>true if <paramref name="type"/> is nullable; false otherwise.</returns>
         internal static bool IsNullableType(Type type)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             //// This is a copy of WebUtil.IsNullableType from the product.
 
             return type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>);
@@ -40,8 +38,6 @@ namespace Microsoft.OData.Core
         /// </returns>
         internal static Type GetNonNullableType(Type type)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             //// This is a copy of RequestQueryParser.GetNonNullableType from the product.
 
             return Nullable.GetUnderlyingType(type) ?? type;
@@ -55,7 +51,6 @@ namespace Microsoft.OData.Core
         /// <returns>The <paramref name="type"/> if it allows null or the corresponding nullable type.</returns>
         internal static Type GetNullableType(Type type)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(type != null, "type != null");
 
             if (!TypeAllowsNull(type))
@@ -71,7 +66,6 @@ namespace Microsoft.OData.Core
         /// <returns>true if type is a reference type or a Nullable type; false otherwise.</returns>
         internal static bool TypeAllowsNull(Type type)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(type != null, "type != null");
 
             //// This is a copy of WebUtil.TypeAllowsNull from the product.
@@ -89,19 +83,13 @@ namespace Microsoft.OData.Core
         /// use simple reference equality on platforms which don't have that method (like Silverlight).</remarks>
         internal static bool AreTypesEquivalent(Type typeA, Type typeB)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (typeA == null || typeB == null)
             {
                 return false;
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE || ORCAS || PORTABLELIB
                 return typeA == typeB;
-#else
-                return typeA.IsEquivalentTo(typeB);
-#endif
             }
         }
     }

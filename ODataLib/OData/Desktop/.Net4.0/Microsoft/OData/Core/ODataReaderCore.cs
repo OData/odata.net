@@ -58,8 +58,8 @@ namespace Microsoft.OData.Core
         /// <param name="readingFeed">true if the reader is created for reading a feed; false when it is created for reading an entry.</param>
         /// <param name="listener">If not null, the reader will notify the implementer of the interface of relevant state changes in the reader.</param>
         protected ODataReaderCore(
-            ODataInputContext inputContext, 
-            bool readingFeed, 
+            ODataInputContext inputContext,
+            bool readingFeed,
             IODataReaderWriterListener listener)
         {
             Debug.Assert(inputContext != null, "inputContext != null");
@@ -79,8 +79,8 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// The current state of the reader.
         /// </summary>
-        public override sealed ODataReaderState State 
-        { 
+        public override sealed ODataReaderState State
+        {
             get
             {
                 this.inputContext.VerifyNotDisposed();
@@ -92,8 +92,8 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// The most recent <see cref="ODataItem"/> that has been read.
         /// </summary>
-        public override sealed ODataItem Item 
-        { 
+        public override sealed ODataItem Item
+        {
             get
             {
                 this.inputContext.VerifyNotDisposed();
@@ -123,6 +123,17 @@ namespace Microsoft.OData.Core
             {
                 Debug.Assert(this.Item is ODataFeed, "this.Item is ODataFeed");
                 return (ODataFeed)this.Item;
+            }
+        }
+
+        /// <summary>
+        /// Returns the current entry depth.
+        /// </summary>
+        protected int CurrentEntryDepth
+        {
+            get
+            {
+                return this.currentEntryDepth;
             }
         }
 
@@ -170,16 +181,16 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Returns the entity set for the current scope.
+        /// Returns the navigation source for the current scope.
         /// </summary>
-        protected IEdmEntitySet CurrentEntitySet
+        protected IEdmNavigationSource CurrentNavigationSource
         {
             get
             {
                 Debug.Assert(this.scopes != null && this.scopes.Count > 0, "A scope must always exist.");
-                IEdmEntitySet entitySet = this.scopes.Peek().EntitySet;
-                Debug.Assert(entitySet == null || this.inputContext.Model.IsUserModel(), "We can only have entity set if we also have metadata.");
-                return entitySet;
+                IEdmNavigationSource navigationSource = this.scopes.Peek().NavigationSource;
+                Debug.Assert(navigationSource == null || this.inputContext.Model.IsUserModel(), "We can only have navigation source if we also have metadata.");
+                return navigationSource;
             }
         }
 
@@ -230,11 +241,14 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                Debug.Assert(this.scopes != null && this.scopes.Count > 1, "this.scopes.Count > 1");
-                Scope parentScope = this.scopes.Skip(1).First();
-                if (parentScope.State == ODataReaderState.NavigationLinkStart)
+                Debug.Assert(this.scopes != null, "this.scopes != null");
+                if (this.scopes.Count > 1)
                 {
-                    return parentScope;
+                    Scope parentScope = this.scopes.Skip(1).First();
+                    if (parentScope.State == ODataReaderState.NavigationLinkStart)
+                    {
+                        return parentScope;
+                    }
                 }
 
                 return null;
@@ -310,7 +324,7 @@ namespace Microsoft.OData.Core
         public override sealed Task<bool> ReadAsync()
         {
             this.VerifyCanRead(false);
-            return this.ReadAsynchronously().FollowOnFaultWith(t => this.EnterScope(new Scope(ODataReaderState.Exception, null, null, null)));
+            return this.ReadAsynchronously().FollowOnFaultWith(t => this.EnterScope(new Scope(ODataReaderState.Exception, null, null, null, null)));
         }
 #endif
 
@@ -442,10 +456,10 @@ namespace Microsoft.OData.Core
 
             SerializationTypeNameAnnotation serializationTypeNameAnnotation;
             EdmTypeKind targetTypeKind;
-            IEdmEntityTypeReference targetEntityTypeReference = 
+            IEdmEntityTypeReference targetEntityTypeReference =
                 (IEdmEntityTypeReference)ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.Entity,
-                    /*defaultPrimitivePayloadType*/ null,
+                /*defaultPrimitivePayloadType*/ null,
                     this.CurrentEntityType.ToTypeReference(),
                     entityTypeNameFromPayload,
                     this.inputContext.Model,
@@ -602,7 +616,7 @@ namespace Microsoft.OData.Core
             {
                 if (ExceptionUtils.IsCatchableExceptionType(e))
                 {
-                    this.EnterScope(new Scope(ODataReaderState.Exception, null, null, null));
+                    this.EnterScope(new Scope(ODataReaderState.Exception, null, null, null, null));
                 }
 
                 throw;
@@ -661,13 +675,17 @@ namespace Microsoft.OData.Core
             /// <summary>The item attached to this scope.</summary>
             private readonly ODataItem item;
 
+            /// <summary>The odataUri parsed based on the context uri attached to this scope.</summary>
+            private readonly ODataUri odataUri;
+
             /// <summary>
             /// Constructor creating a new reader scope.
             /// </summary>
             /// <param name="state">The reader state of this scope.</param>
             /// <param name="item">The item attached to this scope.</param>
-            /// <param name="entitySet">The entity set we are going to read entities for.</param>
+            /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="expectedEntityType">The expected entity type for the scope.</param>
+            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             /// <remarks>The <paramref name="expectedEntityType"/> has the following meanings for given state:
             /// Start -               it's the expected base type of the top-level entry or entries in the top-level feed.
             /// FeedStart -           it's the expected base type of the entries in the feed.
@@ -680,7 +698,7 @@ namespace Microsoft.OData.Core
             /// EntityReferenceLink - it's null, no need for types on entity reference links.
             /// In all cases the specified type must be an entity type.</remarks>
             [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Debug.Assert check only.")]
-            internal Scope(ODataReaderState state, ODataItem item, IEdmEntitySet entitySet, IEdmEntityType expectedEntityType)
+            internal Scope(ODataReaderState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType, ODataUri odataUri)
             {
                 Debug.Assert(
                     state == ODataReaderState.Exception && item == null ||
@@ -698,7 +716,8 @@ namespace Microsoft.OData.Core
                 this.state = state;
                 this.item = item;
                 this.EntityType = expectedEntityType;
-                this.EntitySet = entitySet;
+                this.NavigationSource = navigationSource;
+                this.odataUri = odataUri;
             }
 
             /// <summary>
@@ -724,9 +743,20 @@ namespace Microsoft.OData.Core
             }
 
             /// <summary>
-            /// The entity set we are reading entries from (possibly null).
+            /// The odataUri parsed based on the context url to this scope.
             /// </summary>
-            internal IEdmEntitySet EntitySet { get; set; }
+            internal ODataUri ODataUri
+            {
+                get
+                {
+                    return this.odataUri;
+                }
+            }
+
+            /// <summary>
+            /// The navigation source we are reading entries from (possibly null).
+            /// </summary>
+            internal IEdmNavigationSource NavigationSource { get; set; }
 
             /// <summary>
             /// The entity type for this scope. Can be either the expected one if the real one

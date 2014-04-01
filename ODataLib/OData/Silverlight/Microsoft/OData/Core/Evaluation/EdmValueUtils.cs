@@ -46,7 +46,6 @@ namespace Microsoft.OData.Core.Evaluation
         internal static IEdmDelayedValue ConvertPrimitiveValue(object primitiveValue, IEdmPrimitiveTypeReference type)
         {
 #if !ASTORIA_CLIENT
-            DebugUtils.CheckNoExternalCallers();
 #endif
             Debug.Assert(primitiveValue != null, "primitiveValue != null");
 
@@ -77,10 +76,6 @@ namespace Microsoft.OData.Core.Evaluation
                     type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Int64);
                     return new EdmIntegerConstant(type, (Int64)primitiveValue);
 
-                case TypeCode.DateTime:
-                    IEdmTemporalTypeReference dateTimeType = (IEdmTemporalTypeReference)EnsurePrimitiveType(type, EdmPrimitiveTypeKind.DateTime);
-                    return new EdmDateTimeConstant(dateTimeType, (DateTime)primitiveValue);
-
                 case TypeCode.Decimal:
                     IEdmDecimalTypeReference decimalType = (IEdmDecimalTypeReference)EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Decimal);
                     return new EdmDecimalConstant(decimalType, (decimal)primitiveValue);
@@ -110,7 +105,6 @@ namespace Microsoft.OData.Core.Evaluation
         internal static object ToClrValue(this IEdmPrimitiveValue edmValue)
         {
 #if !ASTORIA_CLIENT
-            DebugUtils.CheckNoExternalCallers();
 #endif
             Debug.Assert(edmValue != null, "edmValue != null");
             EdmPrimitiveTypeKind primitiveKind = edmValue.Type.PrimitiveKind();
@@ -121,9 +115,6 @@ namespace Microsoft.OData.Core.Evaluation
 
                 case EdmValueKind.Boolean:
                     return ((IEdmBooleanValue)edmValue).Value;
-
-                case EdmValueKind.DateTime:
-                    return ((IEdmDateTimeValue)edmValue).Value;
 
                 case EdmValueKind.DateTimeOffset:
                     return ((IEdmDateTimeOffsetValue)edmValue).Value;
@@ -161,7 +152,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// false if the stream property doesn't exist.</returns>
         internal static bool TryGetStreamProperty(IEdmStructuredValue entityInstance, string streamPropertyName, out IEdmProperty streamProperty)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entityInstance != null, "entityInstance != null");
 
             streamProperty = null;
@@ -185,7 +175,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The clr value of the property.</returns>
         internal static object GetPrimitivePropertyClrValue(this IEdmStructuredValue structuredValue, string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(structuredValue != null, "entityInstance != null");
             IEdmStructuredTypeReference valueType = structuredValue.Type.AsStructured();
 

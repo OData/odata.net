@@ -44,8 +44,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="propertyAndValueDeserializer">The property and value deserializer to use to read the value of an annotation element.</param>
         internal ODataAtomAnnotationReader(ODataAtomInputContext inputContext, ODataAtomPropertyAndValueDeserializer propertyAndValueDeserializer)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.inputContext = inputContext;
             this.propertyAndValueDeserializer = propertyAndValueDeserializer;
             BufferingXmlReader xmlReader = this.inputContext.XmlReader;
@@ -77,8 +75,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal bool TryReadAnnotation(out AtomInstanceAnnotation annotation)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             BufferingXmlReader xmlReader = this.inputContext.XmlReader;
             Debug.Assert(xmlReader != null, "xmlReader != null");
             Debug.Assert(xmlReader.NodeType == XmlNodeType.Element, "xmlReader must be positioned on an Element");

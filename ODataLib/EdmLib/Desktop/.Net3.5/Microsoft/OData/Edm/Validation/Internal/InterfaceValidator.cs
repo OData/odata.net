@@ -15,26 +15,20 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Internal;
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Values;
 
 namespace Microsoft.OData.Edm.Validation.Internal
 {
+    using Microsoft.OData.Edm.Library;
+
     internal class InterfaceValidator
     {
         private static readonly Dictionary<Type, VisitorBase> InterfaceVisitors = CreateInterfaceVisitorsMap();
-#if !SILVERLIGHT
+
         /// <summary>
         /// This is a thread-safe cache of object type to interface visitors which is shared between all instances of the validator.
         /// </summary>
         private static readonly Memoizer<Type, IEnumerable<VisitorBase>> ConcreteTypeInterfaceVisitors = new Memoizer<Type, IEnumerable<VisitorBase>>(ComputeInterfaceVisitorsForObject, null);
-#else
-        /// <summary>
-        /// This is cache of object type to interface visitors which is NOT shared between instances of the validator.
-        /// </summary>
-        private readonly Dictionary<Type, IEnumerable<VisitorBase>> concreteTypeInterfaceVisitors = new Dictionary<Type, IEnumerable<VisitorBase>>();
-#endif
         private readonly HashSetInternal<object> visited = new HashSetInternal<object>();
         private readonly HashSetInternal<object> visitedBad = new HashSetInternal<object>();
         private readonly HashSetInternal<object> danglingReferences = new HashSetInternal<object>();
@@ -281,11 +275,7 @@ namespace Microsoft.OData.Edm.Validation.Internal
             List<object> followup = new List<object>();
             List<object> references = new List<object>();
             IEnumerable<VisitorBase> visitors;
-#if !SILVERLIGHT
             visitors = ConcreteTypeInterfaceVisitors.Evaluate(item.GetType());
-#else
-            visitors = this.GetInterfaceVisitorsForObject(item.GetType());
-#endif
             foreach (VisitorBase visitor in visitors)
             {
                 IEnumerable<EdmError> errors = visitor.Visit(item, followup, references);
@@ -352,20 +342,6 @@ namespace Microsoft.OData.Edm.Validation.Internal
                 this.danglingReferences.Add(reference);
             }
         }
-
-#if SILVERLIGHT
-        private IEnumerable<VisitorBase> GetInterfaceVisitorsForObject(Type objectType)
-        {
-            IEnumerable<VisitorBase> visitors;
-            if (!this.concreteTypeInterfaceVisitors.TryGetValue(objectType, out visitors))
-            {
-                visitors = ComputeInterfaceVisitorsForObject(objectType);
-                this.concreteTypeInterfaceVisitors.Add(objectType, visitors);
-            }
-
-            return visitors;
-        }
-#endif
 
         #endregion
 
@@ -434,8 +410,13 @@ namespace Microsoft.OData.Edm.Validation.Internal
                         CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmSchemaElement, EdmSchemaElementKind, IEdmSchemaType>(element, element.SchemaElementKind, "SchemaElementKind"), ref errors);
                         break;
 
-                    case EdmSchemaElementKind.Operation:
+                    case EdmSchemaElementKind.Action:
                         CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmSchemaElement, EdmSchemaElementKind, IEdmOperation>(element, element.SchemaElementKind, "SchemaElementKind"), ref errors);
+                        CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmSchemaElement, EdmSchemaElementKind, IEdmAction>(element, element.SchemaElementKind, "SchemaElementKind"), ref errors);
+                        break;
+                    case EdmSchemaElementKind.Function:
+                        CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmSchemaElement, EdmSchemaElementKind, IEdmOperation>(element, element.SchemaElementKind, "SchemaElementKind"), ref errors);
+                        CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmSchemaElement, EdmSchemaElementKind, IEdmFunction>(element, element.SchemaElementKind, "SchemaElementKind"), ref errors);
                         break;
 
                     case EdmSchemaElementKind.ValueTerm:
@@ -495,7 +476,12 @@ namespace Microsoft.OData.Edm.Validation.Internal
                         termKindError = CheckForInterfaceKindValueMismatchError<IEdmEntityContainerElement, EdmContainerElementKind, IEdmEntitySet>(element, element.ContainerElementKind, "ContainerElementKind");
                         break;
 
-                    case EdmContainerElementKind.OperationImport:
+                    case EdmContainerElementKind.Singleton:
+                        termKindError = CheckForInterfaceKindValueMismatchError<IEdmEntityContainerElement, EdmContainerElementKind, IEdmSingleton>(element, element.ContainerElementKind, "ContainerElementKind");
+                        break;
+
+                    case EdmContainerElementKind.ActionImport:
+                    case EdmContainerElementKind.FunctionImport:
                         termKindError = CheckForInterfaceKindValueMismatchError<IEdmEntityContainerElement, EdmContainerElementKind, IEdmOperationImport>(element, element.ContainerElementKind, "ContainerElementKind");
                         break;
 
@@ -511,43 +497,87 @@ namespace Microsoft.OData.Edm.Validation.Internal
             }
         }
 
-        private sealed class VisitorOfIEdmEntitySet : VisitorOfT<IEdmEntitySet>
+        private sealed class VisitorOfIEdmContainedEntitySet : VisitorOfT<IEdmContainedEntitySet>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmEntitySet set, List<object> followup, List<object> references)
+            protected override IEnumerable<EdmError> VisitT(IEdmContainedEntitySet item, List<object> followup, List<object> references)
             {
                 List<EdmError> errors = null;
 
-                if (set.ElementType != null)
+                if (item.ParentNavigationSource == null)
                 {
-                    references.Add(set.ElementType);
+                    CollectErrors(CreatePropertyMustNotBeNullError(item, "ParentNavigationSource"), ref errors);
+                }
+
+                return errors;
+            }
+        }
+
+        private sealed class VisitorOfIEdmNavigationSource : VisitorOfT<IEdmNavigationSource>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmNavigationSource set, List<object> followup, List<object> references)
+            {
+                List<EdmError> errors = null;
+
+                // Navigation targets are not EDM elements, so we expand and process them here instead of adding them as followups.
+                List<IEdmNavigationPropertyBinding> navPropBindings = new List<IEdmNavigationPropertyBinding>();
+                ProcessEnumerable(set, set.NavigationPropertyBindings, "NavigationPropertyBindings", navPropBindings, ref errors);
+                foreach (IEdmNavigationPropertyBinding navPropBinding in navPropBindings)
+                {
+                    if (navPropBinding.NavigationProperty != null)
+                    {
+                        references.Add(navPropBinding.NavigationProperty);
+                    }
+                    else
+                    {
+                        CollectErrors(CreatePropertyMustNotBeNullError(navPropBinding, "NavigationProperty"), ref errors);
+                    }
+
+                    if (navPropBinding.Target != null)
+                    {
+                        references.Add(navPropBinding.Target);
+                    }
+                    else
+                    {
+                        CollectErrors(CreatePropertyMustNotBeNullError(navPropBinding, "Target"), ref errors);
+                    }
+                }
+
+                return errors;
+            }
+        }
+
+        private sealed class VisitorOfIEdmEntitySetBase : VisitorOfT<IEdmEntitySetBase>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmEntitySetBase set, List<object> followup, List<object> references)
+            {
+                List<EdmError> errors = null;
+
+                if (set.Type != null)
+                {
+                    references.Add(set.Type);
                 }
                 else
                 {
-                    CollectErrors(CreatePropertyMustNotBeNullError(set, "ElementType"), ref errors);
+                    CollectErrors(CreatePropertyMustNotBeNullError(set, "Type"), ref errors);
                 }
 
-                // Navigation targets are not EDM elements, so we expand and process them here instead of adding them as followups.
-                List<IEdmNavigationTargetMapping> navTargetMappings = new List<IEdmNavigationTargetMapping>();
-                ProcessEnumerable(set, set.NavigationTargets, "NavigationTargets", navTargetMappings, ref errors);
-                foreach (IEdmNavigationTargetMapping navTargetMapping in navTargetMappings)
-                {
-                    if (navTargetMapping.NavigationProperty != null)
-                    {
-                        references.Add(navTargetMapping.NavigationProperty);
-                    }
-                    else
-                    {
-                        CollectErrors(CreatePropertyMustNotBeNullError(navTargetMapping, "NavigationProperty"), ref errors);
-                    }
+                return errors;
+            }
+        }
 
-                    if (navTargetMapping.TargetEntitySet != null)
-                    {
-                        references.Add(navTargetMapping.TargetEntitySet);
-                    }
-                    else
-                    {
-                        CollectErrors(CreatePropertyMustNotBeNullError(navTargetMapping, "TargetEntitySet"), ref errors);
-                    }
+        private sealed class VisitorOfIEdmSingleton : VisitorOfT<IEdmSingleton>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmSingleton singleton, List<object> followup, List<object> references)
+            {
+                List<EdmError> errors = null;
+
+                if (singleton.Type != null)
+                {
+                    references.Add(singleton.Type);
+                }
+                else
+                {
+                    CollectErrors(CreatePropertyMustNotBeNullError(singleton, "Type"), ref errors);
                 }
 
                 return errors;
@@ -560,7 +590,7 @@ namespace Microsoft.OData.Edm.Validation.Internal
             {
                 if (type.Definition != null)
                 {
-                    // Transient types, such as collections, rows and entity refs are considered to be owned by the type reference, so they go as followups.
+                    // Transient types, such as collection and entity refs are considered to be owned by the type reference, so they go as followups.
                     // Schema types are owned by their model, so they go as references.
                     if (type.Definition is IEdmSchemaType)
                     {
@@ -597,10 +627,6 @@ namespace Microsoft.OData.Edm.Validation.Internal
 
                     case EdmTypeKind.Complex:
                         typeKindError = CheckForInterfaceKindValueMismatchError<IEdmType, EdmTypeKind, IEdmComplexType>(type, type.TypeKind, "TypeKind");
-                        break;
-
-                    case EdmTypeKind.Row:
-                        typeKindError = CheckForInterfaceKindValueMismatchError<IEdmType, EdmTypeKind, IEdmRowType>(type, type.TypeKind, "TypeKind");
                         break;
 
                     case EdmTypeKind.Collection:
@@ -854,32 +880,61 @@ namespace Microsoft.OData.Edm.Validation.Internal
             {
                 List<EdmError> errors = null;
 
+                followup.Add(property.Type);
+
                 if (property.Partner != null)
                 {
-                    // If the declaring type of the partner does not contain the partner, it is a silent partner, and belongs to this property.
-                    if (!property.Partner.DeclaringType.DeclaredProperties.Contains(property.Partner))
-                    {
-                        followup.Add(property.Partner);
-                    }
-                    else
-                    {
-                        references.Add(property.Partner);
-                    }
+                    followup.Add(property.Partner);
 
-                    if (property.Partner.Partner != property || property.Partner == property)
+                    if (!(property.Partner is BadNavigationProperty))
                     {
-                        CollectErrors(new EdmError(GetLocation(property), EdmErrorCode.InterfaceCriticalNavigationPartnerInvalid, Strings.EdmModel_Validator_Syntactic_NavigationPartnerInvalid(property.Name)), ref errors);
+                        // Validates that the partner of the partner navigation property leads to the same property and also 
+                        // validates that the partner property is not referencing the property itself ( except for the case that the Type of the navigation property is the same as  
+                        // its declaring property, ex: a Person entity has Navigation property Friend which has the target as Person and Partner as Friend )
+                        if (property.Partner.Partner != property || (property.Partner == property && (ValidationHelper.ComputeNavigationPropertyTarget(property) != property.DeclaringEntityType())))
+                        {
+                            CollectErrors(new EdmError(GetLocation(property), EdmErrorCode.InterfaceCriticalNavigationPartnerInvalid, Strings.EdmModel_Validator_Syntactic_NavigationPartnerInvalid(property.Name)), ref errors);
+                        }
                     }
                 }
 
-                if (property.DependentProperties != null)
+                if (property.ReferentialConstraint != null)
                 {
-                    ProcessEnumerable(property, property.DependentProperties, "DependentProperties", references, ref errors);
+                    followup.Add(property.ReferentialConstraint);
                 }
 
                 if (property.OnDelete < EdmOnDeleteAction.None || property.OnDelete > EdmOnDeleteAction.Cascade)
                 {
                     CollectErrors(CreateEnumPropertyOutOfRangeError(property, property.OnDelete, "OnDelete"), ref errors);
+                }
+
+                return errors;
+            }
+        }
+
+        private sealed class VisitorOfIEdmReferentialConstraint : VisitorOfT<IEdmReferentialConstraint>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmReferentialConstraint member, List<object> followup, List<object> references)
+            {
+                List<EdmError> errors = null;
+
+                if (member.PropertyPairs == null)
+                {
+                    CollectErrors(CreatePropertyMustNotBeNullError(member, "PropertyPairs"), ref errors);
+                }
+                else
+                {
+                    foreach (EdmReferentialConstraintPropertyPair pair in member.PropertyPairs)
+                    {
+                        if (pair == null)
+                        {
+                            CollectErrors(new EdmError(GetLocation(member), EdmErrorCode.InterfaceCriticalEnumerableMustNotHaveNullElements, Strings.EdmModel_Validator_Syntactic_EnumerableMustNotHaveNullElements(typeof(IEdmReferentialConstraint).Name, "PropertyPairs")), ref errors);
+                            break;
+                        }
+
+                        followup.Add(pair.PrincipalProperty);
+                        followup.Add(pair.DependentProperty);
+                    }
                 }
 
                 return errors;
@@ -914,33 +969,23 @@ namespace Microsoft.OData.Edm.Validation.Internal
             }
         }
 
-        private sealed class VisitorOfIEdmFunctionBase : VisitorOfT<IEdmFunctionBase>
-        {
-            protected override IEnumerable<EdmError> VisitT(IEdmFunctionBase function, List<object> followup, List<object> references)
-            {
-                List<EdmError> errors = null;
-
-                ProcessEnumerable(function, function.Parameters, "Parameters", followup, ref errors);
-
-                // Return type is optional for function imports and is required for MDFs. Both cases are derived interfaces (IEdmFunctionImport and IEdmFunction).
-                // So, from the point of view of this interface, we consider return type as optional and it is expected that IEdmFunction visitor will have 
-                // an additional null check for the return type.
-                if (function.ReturnType != null)
-                {
-                    // Function owns its return type reference, so it goes as a followup.
-                    followup.Add(function.ReturnType);
-                }
-                
-                return errors;
-            }
-        }
-
         private sealed class VisitorOfIEdmOperation : VisitorOfT<IEdmOperation>
         {
             protected override IEnumerable<EdmError> VisitT(IEdmOperation operation, List<object> followup, List<object> references)
             {
-                // No need to return the return type as followup - it is handled as such in the IEdmFunctionBase visitor.
-                return operation.ReturnType == null ? new EdmError[] { CreatePropertyMustNotBeNullError(operation, "ReturnType") } : null;
+                List<EdmError> errors = null;
+
+                ProcessEnumerable(operation, operation.Parameters, "Parameters", followup, ref errors);
+
+                // Return type is optional for Action but not for Function
+                // So, from the point of view of this interface, derived validation will ensure return type null is valid or not.
+                if (operation.ReturnType != null)
+                {
+                    // Function owns its return type reference, so it goes as a followup.
+                    followup.Add(operation.ReturnType);
+                }
+
+                return errors;
             }
         }
 
@@ -949,8 +994,7 @@ namespace Microsoft.OData.Edm.Validation.Internal
         {
             protected override IEnumerable<EdmError> VisitT(IEdmAction operation, List<object> followup, List<object> references)
             {
-                // No need to return the return type as followup - it is handled as such in the IEdmFunctionBase visitor.
-                return operation.ReturnType == null ? new EdmError[] { CreatePropertyMustNotBeNullError(operation, "ReturnType") } : null;
+                return null;
             }
         }
 
@@ -959,8 +1003,7 @@ namespace Microsoft.OData.Edm.Validation.Internal
         {
             protected override IEnumerable<EdmError> VisitT(IEdmFunction operation, List<object> followup, List<object> references)
             {
-                // No need to return the return type as followup - it is handled as such in the IEdmFunctionBase visitor.
-                return operation.ReturnType == null ? new EdmError[] { CreatePropertyMustNotBeNullError(operation, "ReturnType") } : null;
+                return null;
             }
         }
 
@@ -974,6 +1017,8 @@ namespace Microsoft.OData.Edm.Validation.Internal
                     followup.Add(functionImport.EntitySet);
                 }
 
+                followup.Add(functionImport.Operation);
+
                 return null;
             }
         }
@@ -983,11 +1028,6 @@ namespace Microsoft.OData.Edm.Validation.Internal
         {
             protected override IEnumerable<EdmError> VisitT(IEdmActionImport actionImport, List<object> followup, List<object> references)
             {
-                if (actionImport.EntitySet != null)
-                {
-                    followup.Add(actionImport.EntitySet);
-                }
-
                 return null;
             }
         }
@@ -997,11 +1037,6 @@ namespace Microsoft.OData.Edm.Validation.Internal
         {
             protected override IEnumerable<EdmError> VisitT(IEdmFunctionImport functionImport, List<object> followup, List<object> references)
             {
-                if (functionImport.EntitySet != null)
-                {
-                    followup.Add(functionImport.EntitySet);
-                }
-
                 return null;
             }
         }
@@ -1023,9 +1058,9 @@ namespace Microsoft.OData.Edm.Validation.Internal
                     CollectErrors(CreatePropertyMustNotBeNullError(parameter, "Type"), ref errors);
                 }
 
-                if (parameter.DeclaringFunction != null)
+                if (parameter.DeclaringOperation != null)
                 {
-                    references.Add(parameter.DeclaringFunction);
+                    references.Add(parameter.DeclaringOperation);
                 }
                 else
                 {
@@ -1073,14 +1108,6 @@ namespace Microsoft.OData.Edm.Validation.Internal
             protected override IEnumerable<EdmError> VisitT(IEdmComplexTypeReference typeRef, List<object> followup, List<object> references)
             {
                 return typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Complex ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
-            }
-        }
-
-        private sealed class VisitorOfIEdmRowTypeReference : VisitorOfT<IEdmRowTypeReference>
-        {
-            protected override IEnumerable<EdmError> VisitT(IEdmRowTypeReference typeRef, List<object> followup, List<object> references)
-            {
-                return typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Row ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
             }
         }
 
@@ -1175,10 +1202,6 @@ namespace Microsoft.OData.Edm.Validation.Internal
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmBooleanConstantExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
-                        case EdmExpressionKind.DateTimeConstant:
-                            expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmDateTimeConstantExpression>(expression, expression.ExpressionKind, "ExpressionKind");
-                            break;
-
                         case EdmExpressionKind.DateTimeOffsetConstant:
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmDateTimeOffsetConstantExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
@@ -1212,6 +1235,7 @@ namespace Microsoft.OData.Edm.Validation.Internal
                             break;
 
                         case EdmExpressionKind.Path:
+                        case EdmExpressionKind.PropertyPath:
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmPathExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
@@ -1243,8 +1267,8 @@ namespace Microsoft.OData.Edm.Validation.Internal
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmIfExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
-                        case EdmExpressionKind.AssertType:
-                            expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmAssertTypeExpression>(expression, expression.ExpressionKind, "ExpressionKind");
+                        case EdmExpressionKind.Cast:
+                            expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmCastExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
                         case EdmExpressionKind.IsType:
@@ -1520,9 +1544,9 @@ namespace Microsoft.OData.Edm.Validation.Internal
             }
         }
 
-        private sealed class VistorOfIEdmAssertTypeExpression : VisitorOfT<IEdmAssertTypeExpression>
+        private sealed class VistorOfIEdmCastExpression : VisitorOfT<IEdmCastExpression>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmAssertTypeExpression expression, List<object> followup, List<object> references)
+            protected override IEnumerable<EdmError> VisitT(IEdmCastExpression expression, List<object> followup, List<object> references)
             {
                 List<EdmError> errors = null;
 
@@ -1642,10 +1666,6 @@ namespace Microsoft.OData.Edm.Validation.Internal
 
                     case EdmValueKind.Collection:
                         CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmValue, EdmValueKind, IEdmCollectionValue>(value, value.ValueKind, "ValueKind"), ref errors);
-                        break;
-
-                    case EdmValueKind.DateTime:
-                        CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmValue, EdmValueKind, IEdmDateTimeValue>(value, value.ValueKind, "ValueKind"), ref errors);
                         break;
 
                     case EdmValueKind.DateTimeOffset:
@@ -1821,16 +1841,6 @@ namespace Microsoft.OData.Edm.Validation.Internal
                 {
                     return new EdmError[] { CreatePropertyMustNotBeNullError(annotation, "Value") };
                 }
-            }
-        }
-
-        private sealed class VisitorOfIEdmTypeAnnotation : VisitorOfT<IEdmTypeAnnotation>
-        {
-            protected override IEnumerable<EdmError> VisitT(IEdmTypeAnnotation annotation, List<object> followup, List<object> references)
-            {
-                List<EdmError> errors = null;
-                ProcessEnumerable(annotation, annotation.PropertyValueBindings, "PropertyValueBindings", followup, ref errors);
-                return errors;
             }
         }
 

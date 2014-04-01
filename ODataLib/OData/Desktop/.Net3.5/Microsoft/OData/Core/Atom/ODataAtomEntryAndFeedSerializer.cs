@@ -14,7 +14,6 @@ namespace Microsoft.OData.Core.Atom
     using System;
     using System.Diagnostics;
     using System.Linq;
-    using System.Xml;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -23,6 +22,9 @@ namespace Microsoft.OData.Core.Atom
     /// </summary>
     internal sealed class ODataAtomEntryAndFeedSerializer : ODataAtomPropertyAndValueSerializer
     {
+        /// <summary>The context uri builder to use.</summary>
+        private readonly ODataContextUriBuilder contextUriBuilder;
+
         /// <summary>
         /// The serializer for writing ATOM metadata for entries.
         /// </summary>
@@ -40,10 +42,11 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomEntryAndFeedSerializer(ODataAtomOutputContext atomOutputContext)
             : base(atomOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.atomEntryMetadataSerializer = new ODataAtomEntryMetadataSerializer(atomOutputContext);
             this.atomFeedMetadataSerializer = new ODataAtomFeedMetadataSerializer(atomOutputContext);
+
+            // DEVNOTE: grab this early so that any validation errors are thrown at creation time rather than when Write___ is called.
+            this.contextUriBuilder = atomOutputContext.CreateContextUriBuilder();
         }
 
         /// <summary>
@@ -51,8 +54,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void WriteEntryPropertiesStart()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // <m:properties> if required
             this.XmlWriter.WriteStartElement(
                 AtomConstants.ODataMetadataNamespacePrefix,
@@ -65,8 +66,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void WriteEntryPropertiesEnd()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // </m:properties>
             this.XmlWriter.WriteEndElement();
         }
@@ -78,8 +77,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entryMetadata">The entry metadata if available.</param>
         internal void WriteEntryTypeName(string typeName, AtomEntryMetadata entryMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (typeName != null)
             {
                 AtomCategoryMetadata mergedCategoryMetadata = ODataAtomWriterMetadataUtils.MergeCategoryMetadata(
@@ -97,8 +94,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="updatedTime">Value for the atom:updated element.</param>
         internal void WriteEntryMetadata(AtomEntryMetadata entryMetadata, string updatedTime)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.atomEntryMetadataSerializer.WriteEntryMetadata(entryMetadata, updatedTime);
         }
 
@@ -106,10 +101,19 @@ namespace Microsoft.OData.Core.Atom
         /// Writes the entry atom:id element.
         /// </summary>
         /// <param name="entryId">The value of the ODataEntry.Id property to write.</param>
-        internal void WriteEntryId(string entryId)
+        /// <param name="isTransient">If the entry is a transient entry</param>
+        internal void WriteEntryId(Uri entryId, bool isTransient)
         {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(entryId == null || entryId.Length > 0, "We should have validated that the Id is not empty by now.");
+            string entryIdPlainText;
+
+            if (isTransient)
+            {
+                entryIdPlainText = AtomUtils.GetTransientId();
+            }
+            else
+            {
+                entryIdPlainText = entryId == null ? null : UriUtils.UriToString(entryId);
+            }
 
             // <atom:id>idValue</atom:id>
             // NOTE: do not generate a relative Uri for the ID; it is independent of xml:base
@@ -117,7 +121,7 @@ namespace Microsoft.OData.Core.Atom
                 AtomConstants.AtomNamespacePrefix,
                 AtomConstants.AtomIdElementName,
                 AtomConstants.AtomNamespace,
-                entryId);
+                entryIdPlainText);
         }
 
         /// <summary>
@@ -127,7 +131,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entryMetadata">The ATOM entry metatadata for the current entry.</param>
         internal void WriteEntryReadLink(Uri readLink, AtomEntryMetadata entryMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(readLink != null, "readLink != null");
 
             // we allow additional link metadata to specify the title, type, hreflang or length of the link
@@ -144,7 +147,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entryMetadata">The ATOM entry metatadata for the current entry.</param>
         internal void WriteEntryEditLink(Uri editLink, AtomEntryMetadata entryMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(editLink != null, "editLink != null");
 
             // we allow additional link metadata to specify the title, type, hreflang or length of the link
@@ -160,7 +162,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="mediaResource">The media resource representing the MR of the entry to write.</param>
         internal void WriteEntryMediaEditLink(ODataStreamReferenceValue mediaResource)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(mediaResource != null, "mediaResource != null");
 
             Uri mediaEditLink = mediaResource.EditLink;
@@ -184,31 +185,14 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Write the metadata for an OData association link; makes sure any duplicate of the link's values duplicated in metadata are equal.
         /// </summary>
-        /// <param name="associationLink">The association link for which to write the metadata.</param>
-        /// <param name="owningType">The <see cref="IEdmEntityType"/> instance the association link is defined on.</param>
-        /// <param name="duplicatePropertyNamesChecker">The checker instance for duplicate property names.</param>
-        /// <param name="projectedProperties">Set of projected properties, or null if all properties should be written.</param>
-        internal void WriteAssociationLink(
-            ODataAssociationLink associationLink,
-            IEdmEntityType owningType,
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
-            ProjectedPropertiesAnnotation projectedProperties)
+        /// <param name="navigationPropertyName">The name of the navigation property whose association link is being written.</param>
+        /// <param name="associationLinkUrl">The association link url to write.</param>
+        /// <param name="associationLinkMetadata">Atom metadata about this link element. This can be used to customized the link element with additional XML attributes.</param>
+        internal void WriteAssociationLink(string navigationPropertyName, Uri associationLinkUrl, AtomLinkMetadata associationLinkMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
-
-            ValidationUtils.ValidateAssociationLinkNotNull(associationLink);
-            string associationLinkName = associationLink.Name;
-            if (projectedProperties.ShouldSkipProperty(associationLinkName))
-            {
-                return;
-            }
-
-            this.ValidateAssociationLink(associationLink, owningType);
-            duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNames(associationLink);
-
-            AtomLinkMetadata linkMetadata = associationLink.GetAnnotation<AtomLinkMetadata>();
-            string linkRelation = AtomUtils.ComputeODataAssociationLinkRelation(associationLink);
-            AtomLinkMetadata mergedLinkMetadata = ODataAtomWriterMetadataUtils.MergeLinkMetadata(linkMetadata, linkRelation, associationLink.Url, associationLinkName, MimeConstants.MimeApplicationXml);
+            AtomLinkMetadata linkMetadata = associationLinkMetadata;
+            string linkRelation = AtomUtils.ComputeODataAssociationLinkRelation(navigationPropertyName);
+            AtomLinkMetadata mergedLinkMetadata = ODataAtomWriterMetadataUtils.MergeLinkMetadata(linkMetadata, linkRelation, associationLinkUrl, navigationPropertyName, MimeConstants.MimeApplicationXml);
             this.atomEntryMetadataSerializer.WriteAtomLink(mergedLinkMetadata, null /* etag*/);
         }
 
@@ -220,11 +204,16 @@ namespace Microsoft.OData.Core.Atom
         /// will be ignored. If this parameter is null, the Url from the navigation link is used.</param>
         internal void WriteNavigationLinkStart(ODataNavigationLink navigationLink, Uri navigationLinkUrlOverride)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(!string.IsNullOrEmpty(navigationLink.Name), "The navigation link name was not verified yet.");
             Debug.Assert(navigationLink.Url != null, "The navigation link Url was not verified yet.");
             Debug.Assert(navigationLink.IsCollection.HasValue, "navigationLink.IsCollection.HasValue");
+
+            if (navigationLink.AssociationLinkUrl != null)
+            {
+                // TODO Task 1665240:Association Link - Add back support for customizing association link element in Atom
+                this.WriteAssociationLink(navigationLink.Name, navigationLink.AssociationLinkUrl, null);
+            }
 
             // <atom:link>
             this.XmlWriter.WriteStartElement(AtomConstants.AtomNamespacePrefix, AtomConstants.AtomLinkElementName, AtomConstants.AtomNamespace);
@@ -247,7 +236,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="authorWritten">Set to true if the author element was written, false otherwise.</param>
         internal void WriteFeedMetadata(ODataFeed feed, string updatedTime, out bool authorWritten)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(feed != null, "feed != null");
             Debug.Assert(!string.IsNullOrEmpty(updatedTime), "!string.IsNullOrEmpty(updatedTime)");
 #if DEBUG
@@ -262,12 +250,12 @@ namespace Microsoft.OData.Core.Atom
                 // create the required metadata elements with default values.
 
                 // <atom:id>idValue</atom:id>
-                Debug.Assert(!string.IsNullOrEmpty(feed.Id), "The feed Id should have been validated by now.");
+                Debug.Assert(feed.Id != null, "The feed Id should have been validated by now.");
                 this.WriteElementWithTextContent(
                     AtomConstants.AtomNamespacePrefix,
                     AtomConstants.AtomIdElementName,
                     AtomConstants.AtomNamespace,
-                    feed.Id);
+                    UriUtils.UriToString(feed.Id));
 
                 // <atom:title></atom:title>
                 this.WriteEmptyElement(
@@ -295,8 +283,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void WriteFeedDefaultAuthor()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.atomFeedMetadataSerializer.WriteEmptyAuthor();
         }
 
@@ -306,7 +292,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="feed">The feed to write the next page link for.</param>
         internal void WriteFeedNextPageLink(ODataFeed feed)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(feed != null, "feed != null");
 
             Uri nextPageLink = feed.NextPageLink;
@@ -327,7 +312,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="feed">The feed to write the delta link for.</param>
         internal void WriteFeedDeltaLink(ODataFeed feed)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(feed != null, "feed != null");
 
             Uri deltaLink = feed.DeltaLink;
@@ -351,7 +335,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="getLinkMetadata">Function to get the AtomLinkMetadata for the feed link.</param>
         internal void WriteFeedLink(ODataFeed feed, string relation, Uri href, Func<AtomFeedMetadata, AtomLinkMetadata> getLinkMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             AtomFeedMetadata feedMetadata = feed.GetAnnotation<AtomFeedMetadata>();
             AtomLinkMetadata mergedLink = ODataAtomWriterMetadataUtils.MergeLinkMetadata(
                     getLinkMetadata(feedMetadata),
@@ -375,7 +358,6 @@ namespace Microsoft.OData.Core.Atom
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
             ProjectedPropertiesAnnotation projectedProperties)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(streamProperty != null, "Stream property must not be null.");
             Debug.Assert(streamProperty.Value != null, "The media resource of the stream property must not be null.");
 
@@ -428,8 +410,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="operation">The association link to write.</param>
         internal void WriteOperation(ODataOperation operation)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // checks for null and validates its properties
             WriterValidationUtils.ValidateCanWriteOperation(operation, this.WritingResponse);
             ValidationUtils.ValidateOperationMetadataNotNull(operation);
@@ -469,6 +449,26 @@ namespace Microsoft.OData.Core.Atom
 
             // </m:action> or </m:function>
             this.XmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// Tries to writes the context URI property for an entry into the payload if one is available.
+        /// </summary>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry.</param>
+        internal void TryWriteEntryContextUri(ODataFeedAndEntryTypeContext typeContext)
+        {
+            ODataUri odataUri = this.AtomOutputContext.MessageWriterSettings.ODataUri;
+            this.WriteContextUriProperty(this.contextUriBuilder.BuildContextUri(ODataPayloadKind.Entry, ODataContextUrlInfo.Create(typeContext, /* isSingle */ true, odataUri)));
+        }
+
+        /// <summary>
+        /// Tries to writes the context URI property for a feed into the payload if one is available.
+        /// </summary>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the feed.</param>
+        internal void TryWriteFeedContextUri(ODataFeedAndEntryTypeContext typeContext)
+        {
+            ODataUri odataUri = this.AtomOutputContext.MessageWriterSettings.ODataUri;
+            this.WriteContextUriProperty(this.contextUriBuilder.BuildContextUri(ODataPayloadKind.Feed, ODataContextUrlInfo.Create(typeContext, /* isSingle */ false, odataUri)));
         }
 
         /// <summary>

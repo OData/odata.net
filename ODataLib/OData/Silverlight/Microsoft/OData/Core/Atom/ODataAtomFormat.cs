@@ -48,7 +48,6 @@ namespace Microsoft.OData.Core.Atom
             IODataResponseMessage responseMessage,
             ODataPayloadKindDetectionInfo detectionInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(responseMessage, "responseMessage");
             ExceptionUtils.CheckArgumentNotNull(detectionInfo, "detectionInfo");
 
@@ -66,7 +65,6 @@ namespace Microsoft.OData.Core.Atom
             IODataRequestMessage requestMessage,
             ODataPayloadKindDetectionInfo detectionInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(requestMessage, "requestMessage");
             ExceptionUtils.CheckArgumentNotNull(detectionInfo, "detectionInfo");
 
@@ -101,7 +99,6 @@ namespace Microsoft.OData.Core.Atom
             IODataUrlResolver urlResolver,
             object payloadKindDetectionFormatState)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(message, "message");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
@@ -138,7 +135,6 @@ namespace Microsoft.OData.Core.Atom
             IEdmModel model, 
             IODataUrlResolver urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(message, "message");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
@@ -166,7 +162,6 @@ namespace Microsoft.OData.Core.Atom
             IODataResponseMessageAsync responseMessage,
             ODataPayloadKindDetectionInfo detectionInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(responseMessage, "responseMessage");
             ExceptionUtils.CheckArgumentNotNull(detectionInfo, "detectionInfo");
 
@@ -187,7 +182,6 @@ namespace Microsoft.OData.Core.Atom
             IODataRequestMessageAsync requestMessage,
             ODataPayloadKindDetectionInfo detectionInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(requestMessage, "requestMessage");
             ExceptionUtils.CheckArgumentNotNull(detectionInfo, "detectionInfo");
 
@@ -224,7 +218,6 @@ namespace Microsoft.OData.Core.Atom
             IODataUrlResolver urlResolver,
             object payloadKindDetectionFormatState)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(message, "message");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
@@ -262,7 +255,6 @@ namespace Microsoft.OData.Core.Atom
             IEdmModel model, 
             IODataUrlResolver urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(message, "message");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 

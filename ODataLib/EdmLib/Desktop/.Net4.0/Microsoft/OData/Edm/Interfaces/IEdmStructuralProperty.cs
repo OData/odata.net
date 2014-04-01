@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Denotes a property that should be used for optimistic concurrency checks.
         /// </summary>
-        None,
+        None = 0,
 
         /// <summary>
         /// Denotes a property that should not be used for optimistic concurrency checks.

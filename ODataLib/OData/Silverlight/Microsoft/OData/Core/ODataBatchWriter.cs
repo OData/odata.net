@@ -87,11 +87,10 @@ namespace Microsoft.OData.Core
         /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
         internal ODataBatchWriter(ODataRawOutputContext rawOutputContext, string batchBoundary)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(rawOutputContext != null, "rawOutputContext != null");
             Debug.Assert(
-                rawOutputContext.MessageWriterSettings.BaseUri == null || rawOutputContext.MessageWriterSettings.BaseUri.IsAbsoluteUri,
-                "We should have validated that BaseUri is absolute.");
+                rawOutputContext.MessageWriterSettings.PayloadBaseUri == null || rawOutputContext.MessageWriterSettings.PayloadBaseUri.IsAbsoluteUri,
+                "We should have validated that PayloadBaseUri is absolute.");
 
             ExceptionUtils.CheckArgumentNotNull(batchBoundary, "batchBoundary");
 
@@ -275,10 +274,11 @@ namespace Microsoft.OData.Core
         /// <returns>The message that can be used to write the request operation.</returns>
         /// <param name="method">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
-        public ODataBatchOperationRequestMessage CreateOperationRequestMessage(string method, Uri uri)
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head, would be ignored if <paramref name="method"/> is "GET".</param>
+        public ODataBatchOperationRequestMessage CreateOperationRequestMessage(string method, Uri uri, string contentId)
         {
-            this.VerifyCanCreateOperationRequestMessage(true, method, uri);
-            return this.CreateOperationRequestMessageImplementation(method, uri);
+            this.VerifyCanCreateOperationRequestMessage(true, method, uri, contentId);
+            return this.CreateOperationRequestMessageImplementation(method, uri, contentId);
         }
 
 #if ODATALIB_ASYNC
@@ -286,30 +286,33 @@ namespace Microsoft.OData.Core
         /// <returns>The message that can be used to asynchronously write the request operation.</returns>
         /// <param name="method">The HTTP method to be used for this request operation.</param>
         /// <param name="uri">The URI to be used for this request operation.</param>
-        public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri)
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head, would be ignored if <paramref name="method"/> is "GET".</param>
+        public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId)
         {
-            this.VerifyCanCreateOperationRequestMessage(false, method, uri);
+            this.VerifyCanCreateOperationRequestMessage(false, method, uri, contentId);
             return TaskUtils.GetTaskForSynchronousOperation<ODataBatchOperationRequestMessage>(
-                () => this.CreateOperationRequestMessageImplementation(method, uri));
+                () => this.CreateOperationRequestMessageImplementation(method, uri, contentId));
         }
 #endif
 
         /// <summary>Creates a message for writing an operation of a batch response.</summary>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>The message that can be used to write the response operation.</returns>
-        public ODataBatchOperationResponseMessage CreateOperationResponseMessage()
+        public ODataBatchOperationResponseMessage CreateOperationResponseMessage(string contentId)
         {
             this.VerifyCanCreateOperationResponseMessage(true);
-            return this.CreateOperationResponseMessageImplementation();
+            return this.CreateOperationResponseMessageImplementation(contentId);
         }
 
 #if ODATALIB_ASYNC
         /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataBatchOperationResponseMessage" /> for writing an operation of a batch response.</summary>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>A task that when completed returns the newly created operation response message.</returns>
-        public Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync()
+        public Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync(string contentId)
         {
             this.VerifyCanCreateOperationResponseMessage(false);
             return TaskUtils.GetTaskForSynchronousOperation<ODataBatchOperationResponseMessage>(
-                this.CreateOperationResponseMessageImplementation);
+                () => this.CreateOperationResponseMessageImplementation(contentId));
         }
 #endif
 
@@ -336,7 +339,7 @@ namespace Microsoft.OData.Core
         public Task FlushAsync()
         {
             this.VerifyCanFlush(false);
-            
+
             // make sure we switch to state FatalExceptionThrown if an exception is thrown during flushing.
             return this.rawOutputContext.FlushAsync().FollowOnFaultWith(t => this.SetState(BatchWriterState.Error));
         }
@@ -453,7 +456,7 @@ namespace Microsoft.OData.Core
         private void WriteEndBatchImplementation()
         {
             Debug.Assert(
-                this.batchStartBoundaryWritten || this.CurrentOperationMessage == null, 
+                this.batchStartBoundaryWritten || this.CurrentOperationMessage == null,
                 "If not batch boundary was written we must not have an active message.");
 
             // write pending message data (headers, response line) for a previously unclosed message/request
@@ -544,7 +547,8 @@ namespace Microsoft.OData.Core
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
         /// <param name="method">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
-        private void VerifyCanCreateOperationRequestMessage(bool synchronousCall, string method, Uri uri)
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        private void VerifyCanCreateOperationRequestMessage(bool synchronousCall, string method, Uri uri, string contentId)
         {
             this.ValidateWriterReady();
             this.VerifyCallAllowed(synchronousCall);
@@ -568,6 +572,11 @@ namespace Microsoft.OData.Core
                 {
                     this.ThrowODataException(Strings.ODataBatch_InvalidHttpMethodForChangeSetRequest(method));
                 }
+
+                if (string.IsNullOrEmpty(contentId))
+                {
+                    this.ThrowODataException(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(ODataConstants.ContentIdHeader));
+                }
             }
 
             ExceptionUtils.CheckArgumentNotNull(uri, "uri");
@@ -578,8 +587,9 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="method">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
-        private ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method, Uri uri)
+        private ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method, Uri uri, string contentId)
         {
             if (this.changeSetBoundary == null)
             {
@@ -603,22 +613,28 @@ namespace Microsoft.OData.Core
                 this.urlResolver.AddContentId(this.currentOperationContentId);
             }
 
-            this.InterceptException(() => uri = ODataBatchUtils.CreateOperationRequestUri(uri, this.rawOutputContext.MessageWriterSettings.BaseUri, this.urlResolver));
+            this.InterceptException(() => uri = ODataBatchUtils.CreateOperationRequestUri(uri, this.rawOutputContext.MessageWriterSettings.PayloadBaseUri, this.urlResolver));
 
             // create the new request operation
             this.CurrentOperationRequestMessage = ODataBatchOperationRequestMessage.CreateWriteMessage(
-                this.rawOutputContext.OutputStream, 
-                method, 
+                this.rawOutputContext.OutputStream,
+                method,
                 uri,
                 /*operationListener*/ this,
                 this.urlResolver);
+
+            if (this.changeSetBoundary != null)
+            {
+                this.RememberContentIdHeader(contentId);
+            }
+
             this.SetState(BatchWriterState.OperationCreated);
 
             // write the operation's start boundary string
             this.WriteStartBoundaryForOperation();
 
             // write the headers and request line
-            ODataBatchWriterUtils.WriteRequestPreamble(this.rawOutputContext.TextWriter, method, uri);
+            ODataBatchWriterUtils.WriteRequestPreamble(this.rawOutputContext.TextWriter, method, uri, changeSetBoundary != null, contentId);
 
             return this.CurrentOperationRequestMessage;
         }
@@ -631,7 +647,7 @@ namespace Microsoft.OData.Core
         {
             this.ValidateWriterReady();
             this.VerifyCallAllowed(synchronousCall);
-            
+
             if (!this.rawOutputContext.WritingResponse)
             {
                 this.ThrowODataException(Strings.ODataBatchWriter_CannotCreateResponseOperationWhenWritingRequest);
@@ -641,16 +657,17 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Creates an <see cref="ODataBatchOperationResponseMessage"/> for writing an operation of a batch response - implementation of the actual functionality.
         /// </summary>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>The message that can be used to write the response operation.</returns>
-        private ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation()
+        private ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation(string contentId)
         {
             this.WritePendingMessageData(true);
 
             // In responses we don't need to use our batch URL resolver, since there are no cross referencing URLs
             // so use the URL resolver from the batch message instead.
             this.CurrentOperationResponseMessage = ODataBatchOperationResponseMessage.CreateWriteMessage(
-                this.rawOutputContext.OutputStream, 
-                /*operationListener*/ this, 
+                this.rawOutputContext.OutputStream,
+                /*operationListener*/ this,
                 this.urlResolver.BatchMessageUrlResolver);
             this.SetState(BatchWriterState.OperationCreated);
 
@@ -660,7 +677,7 @@ namespace Microsoft.OData.Core
             this.WriteStartBoundaryForOperation();
 
             // write the headers and request separator line
-            ODataBatchWriterUtils.WriteResponsePreamble(this.rawOutputContext.TextWriter);
+            ODataBatchWriterUtils.WriteResponsePreamble(this.rawOutputContext.TextWriter, changeSetBoundary != null, contentId);
 
             return this.CurrentOperationResponseMessage;
         }
@@ -873,10 +890,10 @@ namespace Microsoft.OData.Core
 
                     break;
                 case BatchWriterState.OperationCreated:
-                    if (newState != BatchWriterState.OperationCreated && 
-                        newState != BatchWriterState.OperationStreamRequested && 
+                    if (newState != BatchWriterState.OperationCreated &&
+                        newState != BatchWriterState.OperationStreamRequested &&
                         newState != BatchWriterState.ChangeSetStarted &&
-                        newState != BatchWriterState.ChangeSetCompleted && 
+                        newState != BatchWriterState.ChangeSetCompleted &&
                         newState != BatchWriterState.BatchCompleted)
                     {
                         throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromOperationCreated);
@@ -893,9 +910,9 @@ namespace Microsoft.OData.Core
 
                     break;
                 case BatchWriterState.OperationStreamDisposed:
-                    if (newState != BatchWriterState.OperationCreated && 
+                    if (newState != BatchWriterState.OperationCreated &&
                         newState != BatchWriterState.ChangeSetStarted &&
-                        newState != BatchWriterState.ChangeSetCompleted && 
+                        newState != BatchWriterState.ChangeSetCompleted &&
                         newState != BatchWriterState.BatchCompleted)
                     {
                         throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamDisposed);
@@ -903,8 +920,8 @@ namespace Microsoft.OData.Core
 
                     break;
                 case BatchWriterState.ChangeSetCompleted:
-                    if (newState != BatchWriterState.BatchCompleted && 
-                        newState != BatchWriterState.ChangeSetStarted && 
+                    if (newState != BatchWriterState.BatchCompleted &&
+                        newState != BatchWriterState.ChangeSetStarted &&
                         newState != BatchWriterState.OperationCreated)
                     {
                         throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromChangeSetCompleted);
@@ -961,9 +978,6 @@ namespace Microsoft.OData.Core
                     this.rawOutputContext.TextWriter.WriteLine("{0} {1} {2}", ODataConstants.HttpVersionInBatching, statusCode, statusMessage);
                 }
 
-                // NOTE: Content-ID headers are only valid in operations in a request changeset
-                bool rememberContentId = this.CurrentOperationRequestMessage != null && this.changeSetBoundary != null;
-                string contentId = null;
                 IEnumerable<KeyValuePair<string, string>> headers = this.CurrentOperationMessage.Headers;
                 if (headers != null)
                 {
@@ -972,18 +986,7 @@ namespace Microsoft.OData.Core
                         string headerName = headerPair.Key;
                         string headerValue = headerPair.Value;
                         this.rawOutputContext.TextWriter.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}: {1}", headerName, headerValue));
-
-                        // Remember the Content-ID header (for operations in a request changeset)
-                        if (rememberContentId && string.CompareOrdinal(ODataConstants.ContentIdHeader, headerName) == 0)
-                        {
-                            contentId = headerValue;
-                        }
                     }
-                }
-
-                if (rememberContentId)
-                {
-                    this.RememberContentIdHeader(contentId);
                 }
 
                 // write CRLF after the headers (or request/response line if there are no headers)

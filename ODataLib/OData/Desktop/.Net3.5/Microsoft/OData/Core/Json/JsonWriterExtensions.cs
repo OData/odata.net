@@ -31,10 +31,8 @@ namespace Microsoft.OData.Core.Json
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="jsonObjectValue">Writes the given json object value to the underlying json writer.</param>
         /// <param name="injectPropertyAction">Called when the top-level object is started to possibly inject first property into the object.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        internal static void WriteJsonObjectValue(this IJsonWriter jsonWriter, IDictionary<string, object> jsonObjectValue, Action<IJsonWriter> injectPropertyAction, ODataVersion odataVersion)
+        internal static void WriteJsonObjectValue(this IJsonWriter jsonWriter, IDictionary<string, object> jsonObjectValue, Action<IJsonWriter> injectPropertyAction)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(jsonObjectValue != null, "jsonObjectValue != null");
 
@@ -48,7 +46,7 @@ namespace Microsoft.OData.Core.Json
             foreach (KeyValuePair<string, object> property in jsonObjectValue)
             {
                 jsonWriter.WriteName(property.Key);
-                jsonWriter.WriteJsonValue(property.Value, odataVersion);
+                jsonWriter.WriteJsonValue(property.Value);
             }
 
             jsonWriter.EndObjectScope();
@@ -59,11 +57,8 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="value">The value to write.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        internal static void WritePrimitiveValue(this IJsonWriter jsonWriter, object value, ODataVersion odataVersion)
+        internal static void WritePrimitiveValue(this IJsonWriter jsonWriter, object value)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             TypeCode typeCode = ODataPlatformHelper.GetTypeCode(value.GetType());
             switch (typeCode)
             {
@@ -73,10 +68,6 @@ namespace Microsoft.OData.Core.Json
 
                 case TypeCode.Byte:
                     jsonWriter.WriteValue((byte)value);
-                    break;
-
-                case TypeCode.DateTime:
-                    jsonWriter.WriteValue((DateTime)value, odataVersion);
                     break;
 
                 case TypeCode.Decimal:
@@ -116,13 +107,13 @@ namespace Microsoft.OData.Core.Json
                         byte[] valueAsByteArray = value as byte[];
                         if (valueAsByteArray != null)
                         {
-                            jsonWriter.WriteValue(Convert.ToBase64String(valueAsByteArray));
+                            jsonWriter.WriteValue(valueAsByteArray);
                             break;
                         }
 
                         if (value is DateTimeOffset)
                         {
-                            jsonWriter.WriteValue((DateTimeOffset)value, odataVersion);
+                            jsonWriter.WriteValue((DateTimeOffset)value);
                             break;
                         }
 
@@ -148,17 +139,15 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="arrayValue">Writes the json array value to the underlying json writer.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        private static void WriteJsonArrayValue(this IJsonWriter jsonWriter, IEnumerable arrayValue, ODataVersion odataVersion)
+        private static void WriteJsonArrayValue(this IJsonWriter jsonWriter, IEnumerable arrayValue)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(arrayValue != null, "arrayValue != null");
 
             jsonWriter.StartArrayScope();
 
             foreach (object element in arrayValue)
             {
-                jsonWriter.WriteJsonValue(element, odataVersion);
+                jsonWriter.WriteJsonValue(element);
             }
 
             jsonWriter.EndArrayScope();
@@ -169,8 +158,7 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="propertyValue">value to write.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        private static void WriteJsonValue(this IJsonWriter jsonWriter, object propertyValue, ODataVersion odataVersion)
+        private static void WriteJsonValue(this IJsonWriter jsonWriter, object propertyValue)
         {
             if (propertyValue == null)
             {
@@ -178,20 +166,20 @@ namespace Microsoft.OData.Core.Json
             }
             else if (EdmLibraryExtensions.IsPrimitiveType(propertyValue.GetType()))
             {
-                jsonWriter.WritePrimitiveValue(propertyValue, odataVersion);
+                jsonWriter.WritePrimitiveValue(propertyValue);
             }
             else
             {
                 IDictionary<string, object> objectValue = propertyValue as IDictionary<string, object>;
                 if (objectValue != null)
                 {
-                    jsonWriter.WriteJsonObjectValue(objectValue, null /*typeName */, odataVersion);
+                    jsonWriter.WriteJsonObjectValue(objectValue, null /*typeName */);
                 }
                 else
                 {
                     IEnumerable arrayValue = propertyValue as IEnumerable;
                     Debug.Assert(arrayValue != null, "arrayValue != null");
-                    jsonWriter.WriteJsonArrayValue(arrayValue, odataVersion);
+                    jsonWriter.WriteJsonArrayValue(arrayValue);
                 }
             }
         }

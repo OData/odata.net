@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm.Library.Annotations
     public abstract class EdmVocabularyAnnotation : EdmElement, IEdmVocabularyAnnotation
     {
         private readonly IEdmVocabularyAnnotatable target;
-        private readonly IEdmTerm term;
+        private readonly IEdmValueTerm term;
         private readonly string qualifier;
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Microsoft.OData.Edm.Library.Annotations
         /// <param name="target">Element the annotation applies to.</param>
         /// <param name="term">Term bound by the annotation.</param>
         /// <param name="qualifier">Qualifier used to discriminate between multiple bindings of the same property or type.</param>
-        protected EdmVocabularyAnnotation(IEdmVocabularyAnnotatable target, IEdmTerm term, string qualifier)
+        protected EdmVocabularyAnnotation(IEdmVocabularyAnnotatable target, IEdmValueTerm term, string qualifier)
         {
             EdmUtil.CheckArgumentNull(target, "target");
             EdmUtil.CheckArgumentNull(term, "term");

@@ -20,13 +20,13 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Base class for all annotatable types in OData library.
     /// </summary>
-#if !WINDOWS_PHONE && !SILVERLIGHT  && !PORTABLELIB
+#if ORCAS
     [Serializable]
 #endif
     public abstract class ODataAnnotatable
     {
         /// <summary>The map of annotationsAsArray keyed by type.</summary>
-#if !WINDOWS_PHONE && !SILVERLIGHT  && !PORTABLELIB
+#if ORCAS
         [NonSerialized]
 #endif
         private object annotations;
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Collection of custom instance annotations.
         /// </summary>
-#if !WINDOWS_PHONE && !SILVERLIGHT && !PORTABLELIB
+#if ORCAS
         [NonSerialized]
 #endif
         private ICollection<ODataInstanceAnnotation> instanceAnnotations = new Collection<ODataInstanceAnnotation>();
@@ -76,8 +76,6 @@ namespace Microsoft.OData.Core
         /// <typeparam name="T">The type of the annotation.</typeparam>
         public void SetAnnotation<T>(T annotation) where T : class
         {
-            this.VerifySetAnnotation(annotation);
-
             if (annotation == null)
             {
                 RemoveAnnotation<T>();
@@ -89,21 +87,6 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Verifies that <paramref name="annotation"/> can be added as an annotation of this.
-        /// </summary>
-        /// <param name="annotation">Annotation instance.</param>
-        internal virtual void VerifySetAnnotation(object annotation)
-        {
-            DebugUtils.CheckNoExternalCallers();
-#pragma warning disable 618 // Disable "obsolete" warning for the InstanceAnnotationCollection. Used for backwards compatibilty.
-            if (annotation is InstanceAnnotationCollection)
-#pragma warning restore 618
-            {
-                throw new NotSupportedException(Strings.ODataAnnotatable_InstanceAnnotationsOnlyOnODataError);
-            }
-        }
-
-        /// <summary>
         /// Get the annotation of type <typeparamref name="T"/>. If the annotation is not found, create a new
         /// instance of the annotation and call SetAnnotation on it then return the newly created instance.
         /// </summary>
@@ -111,8 +94,6 @@ namespace Microsoft.OData.Core
         /// <returns>The annotation of type <typeparamref name="T"/>.</returns>
         internal T GetOrCreateAnnotation<T>() where T : class, new()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             T annotation = this.GetAnnotation<T>();
             if (annotation == null)
             {
@@ -129,7 +110,6 @@ namespace Microsoft.OData.Core
         /// <returns>The custom instance annotations.</returns>
         internal ICollection<ODataInstanceAnnotation> GetInstanceAnnotations()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.instanceAnnotations != null, "this.instanceAnnotations != null");
             return this.instanceAnnotations;
         }
@@ -140,7 +120,6 @@ namespace Microsoft.OData.Core
         /// <param name="value">The new value to set.</param>
         internal void SetInstanceAnnotations(ICollection<ODataInstanceAnnotation> value)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(value, "value");
             this.instanceAnnotations = value;
         }

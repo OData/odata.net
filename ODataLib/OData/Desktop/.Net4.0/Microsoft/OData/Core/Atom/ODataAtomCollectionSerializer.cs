@@ -25,7 +25,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomCollectionSerializer(ODataAtomOutputContext atomOutputContext)
             : base(atomOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -33,8 +32,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void WriteCollectionStart()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // <m:value>
             this.XmlWriter.WriteStartElement(AtomConstants.ODataMetadataNamespacePrefix, AtomConstants.ODataValueElementName, AtomConstants.ODataMetadataNamespace);
 

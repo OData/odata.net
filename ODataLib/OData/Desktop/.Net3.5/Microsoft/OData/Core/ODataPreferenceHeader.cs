@@ -85,7 +85,6 @@ namespace Microsoft.OData.Core
         /// <param name="requestMessage">The request message to get and set the "Prefer" header.</param>
         internal ODataPreferenceHeader(IODataRequestMessage requestMessage)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(requestMessage != null, "requestMessage != null");
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ true, /*disableMessageStreamDisposal*/ false, /*maxMessageSize*/ -1);
             this.preferenceHeaderName = PreferHeaderName;
@@ -97,7 +96,6 @@ namespace Microsoft.OData.Core
         /// <param name="responseMessage">The response message to get and set the "Preference-Applied" header.</param>
         internal ODataPreferenceHeader(IODataResponseMessage responseMessage)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(responseMessage != null, "responseMessage != null");
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ true, /*disableMessageStreamDisposal*/ false, /*maxMessageSize*/ -1);
             this.preferenceHeaderName = PreferenceAppliedHeaderName;

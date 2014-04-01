@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -46,9 +46,8 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightCollectionWriter(ODataJsonLightOutputContext jsonLightOutputContext, IEdmTypeReference itemTypeReference)
             : base(jsonLightOutputContext, itemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonLightOutputContext != null, "jsonLightOutputContext != null");
-            
+
             this.jsonLightOutputContext = jsonLightOutputContext;
             this.jsonLightCollectionSerializer = new ODataJsonLightCollectionSerializer(this.jsonLightOutputContext, /*writingTopLevelCollection*/true);
         }
@@ -62,7 +61,6 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightCollectionWriter(ODataJsonLightOutputContext jsonLightOutputContext, IEdmTypeReference expectedItemType, IODataReaderWriterListener listener)
             : base(jsonLightOutputContext, expectedItemType, listener)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonLightOutputContext != null, "jsonLightOutputContext != null");
             Debug.Assert(!jsonLightOutputContext.WritingResponse, "The collection writer constructor for parameter payloads must only be used for writing requests.");
 
@@ -141,22 +139,27 @@ namespace Microsoft.OData.Core.JsonLight
             if (item == null)
             {
                 ValidationUtils.ValidateNullCollectionItem(expectedItemType, this.jsonLightOutputContext.MessageWriterSettings.WriterBehavior);
-                this.jsonLightOutputContext.JsonWriter.WriteValue(null);
+                this.jsonLightOutputContext.JsonWriter.WriteValue((string)null);
             }
             else
             {
                 ODataComplexValue complexValue = item as ODataComplexValue;
+                ODataEnumValue enumVal = null;
                 if (complexValue != null)
                 {
                     this.jsonLightCollectionSerializer.AssertRecursionDepthIsZero();
                     this.jsonLightCollectionSerializer.WriteComplexValue(
                         complexValue,
                         expectedItemType,
-                        false /*isTopLevel*/, 
+                        false /*isTopLevel*/,
                         false /*isOpenPropertyType*/,
                         this.DuplicatePropertyNamesChecker);
                     this.jsonLightCollectionSerializer.AssertRecursionDepthIsZero();
                     this.DuplicatePropertyNamesChecker.Clear();
+                }
+                else if ((enumVal = item as ODataEnumValue) != null)
+                {
+                    this.jsonLightCollectionSerializer.WritePrimitiveValue(enumVal.Value, expectedItemType);
                 }
                 else
                 {

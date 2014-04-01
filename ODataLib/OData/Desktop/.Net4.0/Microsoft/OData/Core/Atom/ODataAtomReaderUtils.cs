@@ -18,7 +18,7 @@ namespace Microsoft.OData.Core.Atom
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -35,7 +35,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>An <see cref="XmlReader"/> instance configured with the provided settings.</returns>
         internal static XmlReader CreateXmlReader(Stream stream, Encoding encoding, ODataMessageReaderSettings messageReaderSettings)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(stream != null, "stream != null");
             Debug.Assert(messageReaderSettings != null, "messageReaderSettings != null");
 
@@ -62,7 +61,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>true if the value denotes that the element should be null; false otherwise.</returns>
         internal static bool ReadMetadataNullAttributeValue(string attributeValue)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(attributeValue != null, "attributeValue != null");
 
             return XmlConvert.ToBoolean(attributeValue);

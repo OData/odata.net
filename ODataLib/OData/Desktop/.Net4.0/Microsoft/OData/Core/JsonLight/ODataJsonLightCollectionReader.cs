@@ -47,7 +47,6 @@ namespace Microsoft.OData.Core.JsonLight
             IODataReaderWriterListener listener)
             : base(jsonLightInputContext, expectedItemTypeReference, listener)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonLightInputContext != null, "jsonLightInputContext != null");
 
             this.jsonLightInputContext = jsonLightInputContext;
@@ -227,7 +226,7 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
 
             IEdmTypeReference actualItemTypeReference;
-            this.ExpectedItemTypeReference = ReaderValidationUtils.ValidateCollectionMetadataUriAndGetPayloadItemTypeReference(
+            this.ExpectedItemTypeReference = ReaderValidationUtils.ValidateCollectionContextUriAndGetPayloadItemTypeReference(
                 this.jsonLightCollectionDeserializer.ContextUriParseResult,
                 this.ExpectedItemTypeReference);
 

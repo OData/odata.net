@@ -28,7 +28,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomMetadataSerializer(ODataAtomOutputContext atomOutputContext)
             : base(atomOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -40,7 +39,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="textConstruct">The <see cref="AtomTextConstruct"/> value to be used as element content.</param>
         internal void WriteTextConstruct(string prefix, string localName, string ns, AtomTextConstruct textConstruct)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(prefix != null, "prefix != null");
             Debug.Assert(!string.IsNullOrEmpty(localName), "!string.IsNullOrEmpty(localName)");
             Debug.Assert(!string.IsNullOrEmpty(ns), "!string.IsNullOrEmpty(ns)");
@@ -78,7 +76,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="category">The category information to write.</param>
         internal void WriteCategory(AtomCategoryMetadata category)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(category != null, "Category must not be null.");
 
             this.WriteCategory(AtomConstants.AtomNamespacePrefix, category.Term, category.Scheme, category.Label);
@@ -93,8 +90,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="label">The value for the 'label' attribute (optional).</param>
         internal void WriteCategory(string atomPrefix, string term, string scheme, string label)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.XmlWriter.WriteStartElement(
                 atomPrefix,
                 AtomConstants.AtomCategoryElementName,
@@ -107,7 +102,7 @@ namespace Microsoft.OData.Core.Atom
 
             this.XmlWriter.WriteAttributeString(
                 AtomConstants.AtomCategoryTermAttributeName,
-                term);
+                ODataAtomWriterUtils.PrefixTypeName(term));
 
             if (scheme != null)
             {
@@ -127,8 +122,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void WriteEmptyAuthor()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // <atom:author>
             this.XmlWriter.WriteStartElement(AtomConstants.AtomNamespacePrefix, AtomConstants.AtomAuthorElementName, AtomConstants.AtomNamespace);
 
@@ -148,7 +141,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="personMetadata">The person metadata to write.</param>
         internal void WritePersonMetadata(AtomPersonMetadata personMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(personMetadata != null, "Person metadata must not be null.");
 
             // <atom:name>name of person</atom:name>
@@ -202,7 +194,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="etag">The (optional) ETag for a link.</param>
         internal void WriteAtomLink(AtomLinkMetadata linkMetadata, string etag)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(linkMetadata != null, "Link metadata must not be null.");
 
             // <atom:link ...
@@ -225,7 +216,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="etag">The (optional) ETag for a link.</param>
         internal void WriteAtomLinkAttributes(AtomLinkMetadata linkMetadata, string etag)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(linkMetadata != null, "Link metadata must not be null.");
 
             string linkHref = linkMetadata.Href == null ? null : this.UriToUrlAttributeValue(linkMetadata.Href);

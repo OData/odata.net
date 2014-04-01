@@ -15,7 +15,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -27,7 +27,7 @@ namespace Microsoft.OData.Core.JsonLight
         private readonly bool writingTopLevelCollection;
 
         /// <summary>The context uri builder to use.</summary>
-        private readonly ODataJsonLightContextUriBuilder contextUriBuilder;
+        private readonly ODataContextUriBuilder contextUriBuilder;
 
         /// <summary>
         /// Constructor.
@@ -37,11 +37,10 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightCollectionSerializer(ODataJsonLightOutputContext jsonLightOutputContext, bool writingTopLevelCollection)
             : base(jsonLightOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.writingTopLevelCollection = writingTopLevelCollection;
 
             // DEVNOTE: grab this early so that any validation errors are thrown at creation time rather than when Write___ is called.
-            this.contextUriBuilder = jsonLightOutputContext.CreateMetadataUriBuilder();
+            this.contextUriBuilder = jsonLightOutputContext.CreateContextUriBuilder();
         }
 
         /// <summary>
@@ -51,7 +50,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="itemTypeReference">The item type of the collection or null if no metadata is available.</param>
         internal void WriteCollectionStart(ODataCollectionStart collectionStart, IEdmTypeReference itemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(collectionStart != null, "collectionStart != null");
 
             if (this.writingTopLevelCollection)
@@ -59,12 +57,8 @@ namespace Microsoft.OData.Core.JsonLight
                 // "{"
                 this.JsonWriter.StartObjectScope();
 
-                // "odata.context":...
-                Uri contextUri;
-                if (this.contextUriBuilder.TryBuildCollectionContextUri(collectionStart.SerializationInfo, itemTypeReference, out contextUri))
-                {
-                    this.WriteMetadataUriProperty(contextUri);
-                }
+                // "@odata.context":...
+                this.WriteContextUriProperty(() => this.contextUriBuilder.BuildContextUri(ODataPayloadKind.Collection, ODataContextUrlInfo.Create(collectionStart.SerializationInfo, itemTypeReference)));
 
                 // "value":
                 this.JsonWriter.WriteValuePropertyName();
@@ -80,8 +74,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         internal void WriteCollectionEnd()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // Write the end of the array for the collection items
             // "]"
             this.JsonWriter.EndArrayScope();

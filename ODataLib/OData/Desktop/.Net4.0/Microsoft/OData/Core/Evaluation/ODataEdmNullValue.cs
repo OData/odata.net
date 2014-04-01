@@ -31,7 +31,6 @@ namespace Microsoft.OData.Core.Evaluation
         internal ODataEdmNullValue(IEdmTypeReference type)
             : base(type)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>

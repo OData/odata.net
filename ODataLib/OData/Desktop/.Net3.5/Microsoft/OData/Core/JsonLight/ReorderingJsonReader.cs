@@ -28,10 +28,10 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="reader">The text reader to read input characters from.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of recursive internalexception objects to allow when reading in-stream errors.</param>
-        internal ReorderingJsonReader(TextReader reader, int maxInnerErrorDepth)
-            : base(reader, ODataAnnotationNames.ODataError, maxInnerErrorDepth, ODataFormat.Json)
+        /// <param name="isIeee754Comaptible">isIeee754Comaptible</param>
+        internal ReorderingJsonReader(TextReader reader, int maxInnerErrorDepth, bool isIeee754Comaptible)
+            : base(reader, JsonLightConstants.ODataErrorPropertyName, maxInnerErrorDepth, ODataFormat.Json, isIeee754Comaptible)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
         }
 
@@ -144,28 +144,45 @@ namespace Microsoft.OData.Core.JsonLight
 
             this.ReadInternal();
 
-            int separatorIndex = jsonPropertyName.IndexOf('@');
-            if (separatorIndex >= 0)
+            if (jsonPropertyName.StartsWith("@", StringComparison.Ordinal))
             {
-                // This is a property annotation; compute the property and annotation names
-                propertyName = jsonPropertyName.Substring(0, separatorIndex);
-                annotationName = jsonPropertyName.Substring(separatorIndex + 1);
+                // Instance-level annotation for the instance itself; not property name.
+                propertyName = null;
+                annotationName = jsonPropertyName.Substring(1);
             }
             else
             {
-                // This is either a regular data property or an instance-level annotation
-                int dotIndex = jsonPropertyName.IndexOf('.');
-                if (dotIndex < 0)
+                int separatorIndex = jsonPropertyName.IndexOf(JsonLightConstants.ODataPropertyAnnotationSeparatorChar);
+                if (separatorIndex > 0)
                 {
-                    // Regular property
-                    propertyName = jsonPropertyName;
-                    annotationName = null;
+                    // This is a property annotation; compute the property and annotation names
+                    propertyName = jsonPropertyName.Substring(0, separatorIndex);
+                    annotationName = jsonPropertyName.Substring(separatorIndex + 1);
                 }
                 else
                 {
-                    // Instance-level annotation for the instance itself; no property name.
-                    propertyName = null;
-                    annotationName = jsonPropertyName;
+                    // This is either a regular data property or an instance-level annotation
+                    int dotIndex = jsonPropertyName.IndexOf('.');
+                    if (dotIndex < 0)
+                    {
+                        // Regular property
+                        propertyName = jsonPropertyName;
+                        annotationName = null;
+                    }
+                    else
+                    {
+                        if (ODataJsonLightUtils.IsMetadataReferenceProperty(jsonPropertyName))
+                        {
+                            // Metadata reference property
+                            propertyName = null;
+                            annotationName = jsonPropertyName;
+                        }
+                        else
+                        {
+                            // unexpected instance annotation name
+                            throw new ODataException(Microsoft.OData.Core.Strings.JsonReaderExtensions_UnexpectedInstanceAnnotationName(jsonPropertyName));
+                        }
+                    }
                 }
             }
         }
@@ -300,7 +317,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// Reorders the buffered properties to conform to the required payload order.
             /// </summary>
-            /// <remarks>The required order is: odata.metadata comes first, odata.type comes next, then all odata.* property annotations
+            /// <remarks>The required order is: odata.context comes first, odata.type comes next, then all odata.* property annotations
             /// and finally, we preserve the relative order of custom annotations and data properties.</remarks>
             internal void Reorder()
             {
@@ -388,36 +405,14 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             /// <summary>
-            /// Checks whether an annotation name is a odata.metadata annotation.
+            /// Checks whether an annotation name is a odata.context annotation.
             /// </summary>
             /// <param name="annotationName">The annotation name to check.</param>
-            /// <returns>true if the annotation name represents an odata.metadata annotation; otherwise false.</returns>
-            private static bool IsODataMetadataAnnotation(string annotationName)
+            /// <returns>true if the annotation name represents an odata.context annotation; otherwise false.</returns>
+            private static bool IsODataContextAnnotation(string annotationName)
             {
                 Debug.Assert(annotationName != null, "annotationName != null");
                 return string.CompareOrdinal(ODataAnnotationNames.ODataContext, annotationName) == 0;
-            }
-
-            /// <summary>
-            /// Checks whether an annotation name is a odata.annotationGroup annotation.
-            /// </summary>
-            /// <param name="annotationName">The annotation name to check.</param>
-            /// <returns>true if the annotation name represents an odata.annotationGroup annotation; otherwise false.</returns>
-            private static bool IsODataAnnotationGroupReferenceAnnotation(string annotationName)
-            {
-                Debug.Assert(annotationName != null, "annotationName != null");
-                return string.CompareOrdinal(ODataAnnotationNames.ODataAnnotationGroupReference, annotationName) == 0;
-            }
-
-            /// <summary>
-            /// Checks whether an annotation name is a odata.annotationGroupReference annotation.
-            /// </summary>
-            /// <param name="annotationName">The annotation name to check.</param>
-            /// <returns>true if the annotation name represents an odata.annotationGroupReference annotation; otherwise false.</returns>
-            private static bool IsODataAnnotationGroupAnnotation(string annotationName)
-            {
-                Debug.Assert(annotationName != null, "annotationName != null");
-                return string.CompareOrdinal(ODataAnnotationNames.ODataAnnotationGroup, annotationName) == 0;
             }
 
             /// <summary>
@@ -457,18 +452,16 @@ namespace Microsoft.OData.Core.JsonLight
             /// Sorts the property names for an object.
             /// </summary>
             /// <returns>The sorted enumerable of property names.</returns>
-            /// <remarks>The sort order is to put odata.metadata first, then odata.type, odata.id, and odata.etag, followed by all other odata.* instance annotations.
+            /// <remarks>The sort order is to put odata.context first, then odata.type, odata.id, and odata.etag, followed by all other odata.* instance annotations.
             /// For the rest, we preserve the relative order of custom annotations with regard to the data property.
             /// Note that we choose the position of the first property annotation in cases where no data property for a set of 
             /// property annotations exists.</remarks>
             private IEnumerable<string> SortPropertyNames()
             {
-                string metadataAnnotationName = null;
+                string contextAnnotationName = null;
                 string typeAnnotationName = null;
                 string idAnnotationName = null;
                 string etagAnnotationName = null;
-                string annotationGroupDeclarationName = null;
-                string annotationGroupReferenceName = null;
                 List<String> odataAnnotationNames = null;
                 List<String> otherNames = null;
                 foreach (KeyValuePair<string, string> propertyNameWithAnnotation in this.propertyNamesWithAnnotations)
@@ -489,19 +482,11 @@ namespace Microsoft.OData.Core.JsonLight
                         this.dataProperties.Add(propertyName);
                     }
 
-                    // Then find the special properties 'odata.metadata', 'odata.annotationGroup', 'odata.annotationGroupReference', 'odata.type', 'odata.id', and 'odata.etag' before separating 
+                    // Then find the special properties 'odata.context', 'odata.type', 'odata.id', and 'odata.etag' before separating 
                     // the rest into odata.* annotations and regular properties (and custom annotations).
-                    if (IsODataMetadataAnnotation(propertyName))
+                    if (IsODataContextAnnotation(propertyName))
                     {
-                        metadataAnnotationName = propertyName;
-                    }
-                    else if (IsODataAnnotationGroupAnnotation(propertyName))
-                    {
-                        annotationGroupDeclarationName = propertyName;
-                    }
-                    else if (IsODataAnnotationGroupReferenceAnnotation(propertyName))
-                    {
-                        annotationGroupReferenceName = propertyName;
+                        contextAnnotationName = propertyName;
                     }
                     else if (IsODataTypeAnnotation(propertyName))
                     {
@@ -535,20 +520,9 @@ namespace Microsoft.OData.Core.JsonLight
                     }
                 }
 
-                if (metadataAnnotationName != null)
+                if (contextAnnotationName != null)
                 {
-                    yield return metadataAnnotationName;
-                }
-
-                if (annotationGroupDeclarationName != null)
-                {
-                    yield return annotationGroupDeclarationName;
-                }
-
-                if (annotationGroupReferenceName != null)
-                {
-                    // Note: It's invalid to have both an annotation group declaration and reference in the same object, but this will be detected upstream.
-                    yield return annotationGroupReferenceName;
+                    yield return contextAnnotationName;
                 }
 
                 if (typeAnnotationName != null)

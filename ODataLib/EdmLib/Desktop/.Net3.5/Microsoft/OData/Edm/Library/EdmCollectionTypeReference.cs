@@ -19,10 +19,25 @@ namespace Microsoft.OData.Edm.Library
         /// Initializes a new instance of the <see cref="EdmCollectionTypeReference"/> class.
         /// </summary>
         /// <param name="collectionType">The type definition this reference refers to.</param>
-        /// <param name="isNullable">Denotes whether the type can be nullable.</param>
-        public EdmCollectionTypeReference(IEdmCollectionType collectionType, bool isNullable)
-            : base(collectionType, isNullable)
+        public EdmCollectionTypeReference(IEdmCollectionType collectionType)
+            : base(collectionType, GetIsNullable(collectionType))
         {
+        }
+
+        private static bool GetIsNullable(IEdmCollectionType collectionType)
+        {
+            // check if the member type is entity, if yes, pass in default value (true),
+            //   as per spec: A navigation property whose Type attribute specifies a collection MUST NOT
+            //   specify a value for the Nullable attribute as the collection always exists, it may just be empty.
+            // else replace with the nullable in member type reference
+            IEdmTypeReference elementType = collectionType.ElementType;
+            if (elementType == null)
+            {
+                return true;
+            }
+
+            IEdmEntityTypeReference entityReference = elementType as IEdmEntityTypeReference;
+            return entityReference != null || collectionType.ElementType.IsNullable;
         }
     }
 }

@@ -29,7 +29,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A new <see cref="RangeVariable"/>.</returns>
         internal static RangeVariable CreateImplicitRangeVariable(ODataPath path)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             ExceptionUtils.CheckArgumentNotNull(path, "path");
             IEdmTypeReference elementType = path.EdmType();
 
@@ -48,7 +47,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             if (elementType.IsEntity())
             {
                 IEdmEntityTypeReference entityTypeReference = elementType as IEdmEntityTypeReference;
-                return new EntityRangeVariable(ExpressionConstants.It, entityTypeReference, path.EntitySet());
+                return new EntityRangeVariable(ExpressionConstants.It, entityTypeReference, path.NavigationSource());
             }
 
             return new NonentityRangeVariable(ExpressionConstants.It, elementType, null);
@@ -58,17 +57,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// Creates a ParameterQueryNode for an implicit parameter ($it).
         /// </summary>
         /// <param name="elementType">Element type the parameter represents.</param>
-        /// <param name="entitySet">Entity Set. May be null and must be null for non entities.</param>
+        /// <param name="navigationSource">The navigation source. May be null and must be null for non entities.</param>
         /// <returns>A new IParameterNode.</returns>
-        internal static RangeVariable CreateImplicitRangeVariable(IEdmTypeReference elementType, IEdmEntitySet entitySet)
+        internal static RangeVariable CreateImplicitRangeVariable(IEdmTypeReference elementType, IEdmNavigationSource navigationSource)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             if (elementType.IsEntity())
             {
-                return new EntityRangeVariable(ExpressionConstants.It, elementType as IEdmEntityTypeReference, entitySet);
+                return new EntityRangeVariable(ExpressionConstants.It, elementType as IEdmEntityTypeReference, navigationSource);
             }
 
-            Debug.Assert(entitySet == null, "if the type wasn't an entity then there should be no entity set");
+            Debug.Assert(navigationSource == null, "if the type wasn't an entity then there should be no navigation source");
             return new NonentityRangeVariable(ExpressionConstants.It, elementType, null);
         }
 
@@ -79,7 +77,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A new SingleValueNode (either an Entity or NonEntity RangeVariableReferenceNode.</returns>
         internal static SingleValueNode CreateRangeVariableReferenceNode(RangeVariable rangeVariable)
         {
-            DebugUtils.CheckNoExternalCallers();
             if (rangeVariable.Kind == RangeVariableKind.Nonentity)
             {
                 return new NonentityRangeVariableReferenceNode(rangeVariable.Name, (NonentityRangeVariable)rangeVariable);
@@ -99,7 +96,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A new RangeVariable.</returns>
         internal static RangeVariable CreateParameterNode(string parameter, CollectionNode nodeToIterateOver)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             IEdmTypeReference elementType = nodeToIterateOver.ItemType;
 
             if (elementType.IsEntity())
@@ -128,7 +124,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             RangeVariable newRangeVariable,
             QueryTokenKind queryTokenKind)
         {
-            DebugUtils.CheckNoExternalCallers();
             LambdaNode lambdaNode;
             if (queryTokenKind == QueryTokenKind.Any)
             {

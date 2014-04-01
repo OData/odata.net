@@ -39,7 +39,6 @@ namespace Microsoft.OData.Core
         /// </remarks>
         internal static Uri CreateOperationRequestUri(Uri uri, Uri baseUri, IODataUrlResolver urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(uri != null, "uri != null");
 
             Uri resultUri;
@@ -61,9 +60,9 @@ namespace Microsoft.OData.Core
             {
                 if (baseUri == null)
                 {
-                    string errorMessage = UriUtilsCommon.UriToString(uri).StartsWith("$", StringComparison.Ordinal)
-                        ? Strings.ODataBatchUtils_RelativeUriStartingWithDollarUsedWithoutBaseUriSpecified(UriUtilsCommon.UriToString(uri))
-                        : Strings.ODataBatchUtils_RelativeUriUsedWithoutBaseUriSpecified(UriUtilsCommon.UriToString(uri));
+                    string errorMessage = UriUtils.UriToString(uri).StartsWith("$", StringComparison.Ordinal)
+                        ? Strings.ODataBatchUtils_RelativeUriStartingWithDollarUsedWithoutBaseUriSpecified(UriUtils.UriToString(uri))
+                        : Strings.ODataBatchUtils_RelativeUriUsedWithoutBaseUriSpecified(UriUtils.UriToString(uri));
                     throw new ODataException(errorMessage);
                 }
 
@@ -85,7 +84,6 @@ namespace Microsoft.OData.Core
             ODataBatchOperationHeaders headers,
             IODataBatchOperationListener operationListener)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
@@ -115,7 +113,6 @@ namespace Microsoft.OData.Core
             Stream outputStream,
             IODataBatchOperationListener operationListener)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(outputStream != null, "outputStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
@@ -130,7 +127,6 @@ namespace Microsoft.OData.Core
         /// <param name="requiredByteCount">The number of bytes to be added to the array.</param>
         internal static void EnsureArraySize(ref byte[] buffer, int numberOfBytesInBuffer, int requiredByteCount)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(buffer != null, "bytes != null");
             Debug.Assert(numberOfBytesInBuffer >= 0, "numberOfBytesInBuffer >= 0");
             Debug.Assert(requiredByteCount >= 0, "byteCount >= 0");

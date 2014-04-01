@@ -14,10 +14,12 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Values;
-    using Microsoft.OData.Core.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -38,7 +40,6 @@ namespace Microsoft.OData.Core.Evaluation
         internal ODataEdmStructuredValue(ODataEntry entry)
             : base(entry.GetEdmType())
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entry != null, "entry != null");
 
             this.properties = entry.NonComputedProperties;
@@ -52,7 +53,6 @@ namespace Microsoft.OData.Core.Evaluation
         internal ODataEdmStructuredValue(ODataComplexValue complexValue)
             : base(complexValue.GetEdmType())
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(complexValue != null, "complexValue != null");
 
             this.properties = complexValue.Properties;

@@ -42,8 +42,11 @@ namespace Microsoft.OData.Edm
         {
             switch (element.SchemaElementKind)
             {
-                case EdmSchemaElementKind.Operation:
-                    this.ProcessOperation((IEdmOperation)element);
+                case EdmSchemaElementKind.Action:
+                    this.ProcessAction((IEdmAction)element);
+                    break;
+                case EdmSchemaElementKind.Function:
+                    this.ProcessFunction((IEdmFunction)element);
                     break;
                 case EdmSchemaElementKind.TypeDefinition:
                     this.VisitSchemaType((IEdmType)element);
@@ -88,10 +91,8 @@ namespace Microsoft.OData.Edm
                 switch (annotation.Term.TermKind)
                 {
                     case EdmTermKind.Type:
-                        this.ProcessTypeAnnotation((IEdmTypeAnnotation)annotation);
-                        break;
                     case EdmTermKind.Value:
-                        this.ProcessValueAnnotation((IEdmValueAnnotation)annotation);
+                        this.ProcessAnnotation((IEdmValueAnnotation)annotation);
                         break;
                     case EdmTermKind.None:
                         this.ProcessVocabularyAnnotation(annotation);
@@ -124,8 +125,8 @@ namespace Microsoft.OData.Edm
         {
             switch (expression.ExpressionKind)
             {
-                case EdmExpressionKind.AssertType:
-                    this.ProcessAssertTypeExpression((IEdmAssertTypeExpression)expression);
+                case EdmExpressionKind.Cast:
+                    this.ProcessCastExpression((IEdmCastExpression)expression);
                     break;
                 case EdmExpressionKind.BinaryConstant:
                     this.ProcessBinaryConstantExpression((IEdmBinaryConstantExpression)expression);
@@ -135,9 +136,6 @@ namespace Microsoft.OData.Edm
                     break;
                 case EdmExpressionKind.Collection:
                     this.ProcessCollectionExpression((IEdmCollectionExpression)expression);
-                    break;
-                case EdmExpressionKind.DateTimeConstant:
-                    this.ProcessDateTimeConstantExpression((IEdmDateTimeConstantExpression)expression);
                     break;
                 case EdmExpressionKind.DateTimeOffsetConstant:
                     this.ProcessDateTimeOffsetConstantExpression((IEdmDateTimeOffsetConstantExpression)expression);
@@ -187,6 +185,9 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.Path:
                     this.ProcessPathExpression((IEdmPathExpression)expression);
                     break;
+                case EdmExpressionKind.PropertyPath:
+                    this.ProcessPropertyPathExpression((IEdmPathExpression)expression);
+                    break;
                 case EdmExpressionKind.PropertyReference:
                     this.ProcessPropertyReferenceExpression((IEdmPropertyReferenceExpression)expression);
                     break;
@@ -219,7 +220,7 @@ namespace Microsoft.OData.Edm
 
         #region Data Model
 
-        public void VisitEntityContainerElements(IEnumerable<IEdmEntityContainerElement> elements)
+        public virtual void VisitEntityContainerElements(IEnumerable<IEdmEntityContainerElement> elements)
         {
             foreach (IEdmEntityContainerElement element in elements)
             {
@@ -228,8 +229,14 @@ namespace Microsoft.OData.Edm
                     case EdmContainerElementKind.EntitySet:
                         this.ProcessEntitySet((IEdmEntitySet)element);
                         break;
-                    case EdmContainerElementKind.OperationImport:
-                        this.ProcessOperationImport((IEdmOperationImport)element);
+                    case EdmContainerElementKind.Singleton:
+                        this.ProcessSingleton((IEdmSingleton)element);
+                        break;
+                    case EdmContainerElementKind.ActionImport:
+                        this.ProcessActionImport((IEdmActionImport)element);
+                        break;
+                    case EdmContainerElementKind.FunctionImport:
+                        this.ProcessFunctionImport((IEdmFunctionImport)element);
                         break;
                     case EdmContainerElementKind.None:
                         this.ProcessEntityContainerElement(element);
@@ -266,9 +273,6 @@ namespace Microsoft.OData.Edm
                 case EdmTypeKind.Primitive:
                     this.VisitPrimitiveTypeReference(reference.AsPrimitive());
                     break;
-                case EdmTypeKind.Row:
-                    this.ProcessRowTypeReference(reference.AsRow());
-                    break;
                 case EdmTypeKind.None:
                     this.ProcessTypeReference(reference);
                     break;
@@ -290,7 +294,6 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.String:
                     this.ProcessStringTypeReference(reference.AsString());
                     break;
-                case EdmPrimitiveTypeKind.DateTime:
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Duration:
                     this.ProcessTemporalTypeReference(reference.AsTemporal());
@@ -460,12 +463,6 @@ namespace Microsoft.OData.Edm
             this.ProcessEntityReferenceType(reference.EntityReferenceDefinition());
         }
 
-        protected virtual void ProcessRowTypeReference(IEdmRowTypeReference reference)
-        {
-            this.ProcessStructuredTypeReference(reference);
-            this.ProcessRowType(reference.RowDefinition());
-        }
-
         protected virtual void ProcessCollectionTypeReference(IEdmCollectionTypeReference reference)
         {
             this.ProcessTypeReference(reference);
@@ -552,12 +549,6 @@ namespace Microsoft.OData.Edm
             this.ProcessSchemaType(definition);
         }
 
-        protected virtual void ProcessRowType(IEdmRowType definition)
-        {
-            this.ProcessElement(definition);
-            this.ProcessStructuredType(definition);
-        }
-
         protected virtual void ProcessCollectionType(IEdmCollectionType definition)
         {
             this.ProcessElement(definition);
@@ -634,16 +625,10 @@ namespace Microsoft.OData.Edm
             this.ProcessNamedElement(annotation);
         }
 
-        protected virtual void ProcessValueAnnotation(IEdmValueAnnotation annotation)
+        protected virtual void ProcessAnnotation(IEdmValueAnnotation annotation)
         {
             this.ProcessVocabularyAnnotation(annotation);
             this.VisitExpression(annotation.Value);
-        }
-
-        protected virtual void ProcessTypeAnnotation(IEdmTypeAnnotation annotation)
-        {
-            this.ProcessVocabularyAnnotation(annotation);
-            this.VisitPropertyValueBindings(annotation.PropertyValueBindings);
         }
 
         protected virtual void ProcessPropertyValueBinding(IEdmPropertyValueBinding binding)
@@ -690,6 +675,11 @@ namespace Microsoft.OData.Edm
         }
 
         protected virtual void ProcessPathExpression(IEdmPathExpression expression)
+        {
+            this.ProcessExpression(expression);
+        }
+
+        protected virtual void ProcessPropertyPathExpression(IEdmPathExpression expression)
         {
             this.ProcessExpression(expression);
         }
@@ -767,11 +757,6 @@ namespace Microsoft.OData.Edm
             this.ProcessExpression(expression);
         }
 
-        protected virtual void ProcessDateTimeConstantExpression(IEdmDateTimeConstantExpression expression)
-        {
-            this.ProcessExpression(expression);
-        }
-
         protected virtual void ProcessDateTimeOffsetConstantExpression(IEdmDateTimeOffsetConstantExpression expression)
         {
             this.ProcessExpression(expression);
@@ -787,7 +772,7 @@ namespace Microsoft.OData.Edm
             this.ProcessExpression(expression);
         }
 
-        protected virtual void ProcessAssertTypeExpression(IEdmAssertTypeExpression expression)
+        protected virtual void ProcessCastExpression(IEdmCastExpression expression)
         {
             this.ProcessExpression(expression);
             this.VisitTypeReference(expression.Type);
@@ -830,30 +815,46 @@ namespace Microsoft.OData.Edm
             this.ProcessEntityContainerElement(set);
         }
 
+        protected virtual void ProcessSingleton(IEdmSingleton singleton)
+        {
+            this.ProcessEntityContainerElement(singleton);
+        }
+
         #endregion
 
         #region Operation Related
+
+        protected virtual void ProcessAction(IEdmAction action)
+        {
+            this.ProcessSchemaElement(action);
+            this.ProcessOperation(action);
+        }
+
+        protected virtual void ProcessFunction(IEdmFunction function)
+        {
+            this.ProcessSchemaElement(function);
+            this.ProcessOperation(function);
+        }
+
+        protected virtual void ProcessActionImport(IEdmActionImport actionImport)
+        {
+            this.ProcessEntityContainerElement(actionImport);
+        }
+
+        protected virtual void ProcessFunctionImport(IEdmFunctionImport functionImport)
+        {
+            this.ProcessEntityContainerElement(functionImport);
+        }
+
         protected virtual void ProcessOperation(IEdmOperation operation)
         {
-            this.ProcessSchemaElement(operation);
-            this.ProcessFunctionBase(operation);
-        }
-
-        protected virtual void ProcessOperationImport(IEdmOperationImport operationImport)
-        {
-            this.ProcessEntityContainerElement(operationImport);
-            this.ProcessFunctionBase(operationImport);
-        }
-
-        protected virtual void ProcessFunctionBase(IEdmFunctionBase functionBase)
-        {
-            if (functionBase.ReturnType != null)
+            if (operation.ReturnType != null)
             {
-                this.VisitTypeReference(functionBase.ReturnType);
+                this.VisitTypeReference(operation.ReturnType);
             }
             
             // Do not visit vocabularyAnnotatable because functions and operation imports are always going to be either a schema element or a container element and will be visited through those paths.
-            this.VisitOperationParameters(functionBase.Parameters);
+            this.VisitOperationParameters(operation.Parameters);
         }
 
         protected virtual void ProcessOperationParameter(IEdmOperationParameter parameter)

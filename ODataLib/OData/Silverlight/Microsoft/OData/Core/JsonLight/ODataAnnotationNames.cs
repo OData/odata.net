@@ -45,9 +45,6 @@ namespace Microsoft.OData.Core.JsonLight
                     ODataBind, 
                     ODataAssociationLinkUrl, 
                     ODataNavigationLinkUrl,
-                    ODataAnnotationGroup, 
-                    ODataAnnotationGroupReference, 
-                    ODataError,
                     ODataDeltaLink
                 },
                 StringComparer.Ordinal);
@@ -83,7 +80,7 @@ namespace Microsoft.OData.Core.JsonLight
         internal const string ODataMediaContentType = "odata.mediaContentType";
 
         /// <summary>The OData media etag annotation name.</summary>
-        internal const string ODataMediaETag = "odata.mediaETag";
+        internal const string ODataMediaETag = "odata.mediaEtag";
 
         /// <summary>The 'odata.count' annotation name.</summary>
         internal const string ODataCount = "odata.count";
@@ -100,15 +97,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>The 'odata.associationLink' annotation name.</summary>
         internal const string ODataAssociationLinkUrl = "odata.associationLink";
 
-        /// <summary>The 'odata.annotationGroup' annotation name.</summary>
-        internal const string ODataAnnotationGroup = "odata.annotationGroup";
-
-        /// <summary>The 'odata.annotationGroupReference' annotation name.</summary>
-        internal const string ODataAnnotationGroupReference = "odata.annotationGroupReference";
-
-        /// <summary>The 'odata.error' annotation name.</summary>
-        internal const string ODataError = "odata.error";
-
         /// <summary>The 'odata.deltaLink' annotation name.</summary>
         internal const string ODataDeltaLink = "odata.deltaLink";
 
@@ -119,7 +107,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>Returns true if the <paramref name="annotationName"/> starts with "odata.", false otherwise.</returns>
         internal static bool IsODataAnnotationName(string annotationName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
 
             if (annotationName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix, StringComparison.Ordinal))
@@ -137,7 +124,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>Returns true if the <paramref name="annotationName"/> starts with "odata." and is not one of the reserved odata annotation names; returns false otherwise.</returns>
         internal static bool IsUnknownODataAnnotationName(string annotationName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
 
             if (IsODataAnnotationName(annotationName) && !KnownODataAnnotationNames.Contains(annotationName))
@@ -154,7 +140,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="annotationName">The instance annotation name to check.</param>
         internal static void ValidateIsCustomAnnotationName(string annotationName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
 
             // All other reserved OData instance annotations should fail.
@@ -164,6 +149,21 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             Debug.Assert(!IsODataAnnotationName(annotationName), "Unknown names under the odata. namespace should be skipped by ODataJsonLightDeserializer.ParseProperty().");
+        }
+
+        /// <summary>
+        /// Get the string without the instance annotation prefix @
+        /// </summary>
+        /// <param name="annotationName">the origin annotation name from reader</param>
+        /// <returns>the annotation name without prefix @ </returns>
+        internal static string RemoveAnnotationPrefix(string annotationName)
+        {
+            if (!String.IsNullOrEmpty(annotationName) && annotationName[0] == JsonLightConstants.ODataPropertyAnnotationSeparatorChar)
+            {
+                return annotationName.Substring(1);
+            }
+
+            return annotationName;
         }
     }
 }

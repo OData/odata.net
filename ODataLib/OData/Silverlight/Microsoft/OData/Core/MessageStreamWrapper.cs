@@ -28,7 +28,6 @@ namespace Microsoft.OData.Core
         /// <returns>A stream wrapping the <paramref name="innerStream"/> that ignores calls to Dispose.</returns>
         internal static Stream CreateNonDisposingStream(Stream innerStream)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(innerStream != null, "innerStream != null");
 
             return new MessageStreamWrappingStream(innerStream, /*ignoreDispose*/ true, /*maxBytesToBeRead*/ -1);
@@ -43,7 +42,6 @@ namespace Microsoft.OData.Core
         /// enforces the maximum number of bytes to be read from the stream.</returns>
         internal static Stream CreateStreamWithMaxSize(Stream innerStream, long maxBytesToBeRead)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(innerStream != null, "innerStream != null");
 
             return new MessageStreamWrappingStream(innerStream, /*ignoreDispose*/ false, maxBytesToBeRead);
@@ -58,7 +56,6 @@ namespace Microsoft.OData.Core
         /// enforces the maximum number of bytes to be read from the stream.</returns>
         internal static Stream CreateNonDisposingStreamWithMaxSize(Stream innerStream, long maxBytesToBeRead)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(innerStream != null, "innerStream != null");
 
             return new MessageStreamWrappingStream(innerStream, /*ignoreDispose*/ true, maxBytesToBeRead);
@@ -71,7 +68,6 @@ namespace Microsoft.OData.Core
         /// <returns>true if the <paramref name="stream"/> ignores calls to Dispose; otherwise false.</returns>
         internal static bool IsNonDisposingStream(Stream stream)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(stream != null, "stream != null");
 
             MessageStreamWrappingStream wrappingStream = stream as MessageStreamWrappingStream;
@@ -105,7 +101,6 @@ namespace Microsoft.OData.Core
             /// <param name="maxBytesToBeRead">The maximum number of bytes to be read from the stream before reporting an error.</param>
             internal MessageStreamWrappingStream(Stream innerStream, bool ignoreDispose, long maxBytesToBeRead)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(innerStream != null, "innerStream != null");
 
                 this.innerStream = innerStream;
@@ -159,7 +154,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return this.ignoreDispose;
                 }
             }

@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+
     #endregion Namespaces
 
     /// <summary>
@@ -29,8 +29,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="argumentTypes">The argument types for this function signature.</param>
         internal FunctionSignature(params IEdmTypeReference[] argumentTypes)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.argumentTypes = argumentTypes;
         }
 
@@ -41,7 +39,6 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.argumentTypes;
             }
         }
@@ -65,8 +62,6 @@ namespace Microsoft.OData.Core.UriParser
         internal FunctionSignatureWithReturnType(IEdmTypeReference returnType, params IEdmTypeReference[] argumentTypes)
             : base(argumentTypes)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.returnType = returnType;
         }
 
@@ -77,7 +72,6 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.returnType;
             }
         }

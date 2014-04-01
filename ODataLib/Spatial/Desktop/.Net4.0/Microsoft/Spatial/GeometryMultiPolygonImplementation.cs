@@ -12,17 +12,11 @@ namespace Microsoft.Data.Spatial
 {
     using System;
     using System.Collections.ObjectModel;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
     using Microsoft.Spatial;
 
     /// <summary>
     /// Geometry Multi-Polygon
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     internal class GeometryMultiPolygonImplementation : GeometryMultiPolygon
     {
         /// <summary>
@@ -79,18 +73,6 @@ namespace Microsoft.Data.Spatial
             get { return new ReadOnlyCollection<GeometryPolygon>(this.polygons); }
         }
 
-#if WINDOWS_PHONE
-        /// <summary>
-        /// internal GeometryPolygon array property to support serializing and de-serializing this instance.
-        /// </summary>
-        [DataMember]
-        internal GeometryPolygon[] PolygonsArray
-        {
-            get { return this.polygons; }
-
-            set { this.polygons = value; }
-        }
-#endif
         /// <summary>
         /// Sends the current spatial object to the given pipeline
         /// </summary>

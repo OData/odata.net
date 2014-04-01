@@ -38,16 +38,19 @@ namespace Microsoft.OData.Edm
         IEnumerable<IEdmModel> ReferencedModels { get; }
 
         /// <summary>
+        /// Gets the collection of namespaces that schema elements use contained in this model.
+        /// </summary>
+        IEnumerable<string> DeclaredNamespaces { get; }
+        
+        /// <summary>
         /// Gets the model's annotations manager.
         /// </summary>
         Annotations.IEdmDirectValueAnnotationsManager DirectValueAnnotationsManager { get; }
 
         /// <summary>
-        /// Searches for an entity container with the given name in this model and returns null if no such entity container exists.
+        /// Gets the only one entity container of the model.
         /// </summary>
-        /// <param name="name">The name of the entity container being found.</param>
-        /// <returns>The requested entity container, or null if no such entity container exists.</returns>
-        IEdmEntityContainer FindDeclaredEntityContainer(string name);
+        IEdmEntityContainer EntityContainer { get; }
 
         /// <summary>
         /// Searches for a type with the given name in this model and returns null if no such type exists.
@@ -55,6 +58,21 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifiedName">The qualified name of the type being found.</param>
         /// <returns>The requested type, or null if no such type exists.</returns>
         IEdmSchemaType FindDeclaredType(string qualifiedName);
+
+        /// <summary>
+        /// Searches for bound operations based on the binding type, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>A set of operations that share the binding type or empty enumerable if no such operation exists.</returns>
+        IEnumerable<IEdmOperation> FindDeclaredBoundOperations(IEdmType bindingType);
+
+        /// <summary>
+        /// Searches for bound operations based on the qualified name and binding type, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation.</param>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>A set of operations that share the qualified name and binding type or empty enumerable if no such operation exists.</returns>
+        IEnumerable<IEdmOperation> FindDeclaredBoundOperations(string qualifiedName, IEdmType bindingType);
 
         /// <summary>
         /// Searches for operations with the given name in this model and returns an empty enumerable if no such operation exists.

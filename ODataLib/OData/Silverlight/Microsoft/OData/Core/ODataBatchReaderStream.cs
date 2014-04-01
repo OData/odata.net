@@ -70,11 +70,10 @@ namespace Microsoft.OData.Core
         /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
         /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
         internal ODataBatchReaderStream(
-            ODataRawInputContext inputContext, 
-            string batchBoundary, 
+            ODataRawInputContext inputContext,
+            string batchBoundary,
             Encoding batchEncoding)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(inputContext != null, "inputContext != null");
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
@@ -96,7 +95,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.batchBoundary;
             }
         }
@@ -110,7 +108,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.changesetBoundary;
             }
         }
@@ -149,7 +146,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void ResetChangeSetBoundary()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.changesetBoundary != null, "Only valid to reset a changeset boundary if one exists.");
             this.changesetBoundary = null;
             this.changesetEncoding = null;
@@ -163,8 +159,6 @@ namespace Microsoft.OData.Core
         /// <returns>true if a boundary was found; otherwise false.</returns>
         internal bool SkipToBoundary(out bool isEndBoundary, out bool isParentBoundary)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // Ensure we have a batch encoding; if not detect it on the first read/skip.
             this.EnsureBatchEncoding();
 
@@ -174,8 +168,8 @@ namespace Microsoft.OData.Core
                 int boundaryStartPosition, boundaryEndPosition;
                 scanResult = this.batchBuffer.ScanForBoundary(
                     this.CurrentBoundaries,
-                    /*stopAfterIfNotFound*/int.MaxValue, 
-                    out boundaryStartPosition, 
+                    /*stopAfterIfNotFound*/int.MaxValue,
+                    out boundaryStartPosition,
                     out boundaryEndPosition,
                     out isEndBoundary,
                     out isParentBoundary);
@@ -228,7 +222,6 @@ namespace Microsoft.OData.Core
         /// <returns>The number of bytes actually read.</returns>
         internal int ReadWithDelimiter(byte[] userBuffer, int userBufferOffset, int count)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(userBuffer != null, "userBuffer != null");
             Debug.Assert(userBufferOffset >= 0 && userBufferOffset < userBuffer.Length, "Offset must be within the range of the user buffer.");
             Debug.Assert(count >= 0, "count >= 0");
@@ -249,8 +242,8 @@ namespace Microsoft.OData.Core
                 bool isEndBoundary, isParentBoundary;
                 scanResult = this.batchBuffer.ScanForBoundary(
                     this.CurrentBoundaries,
-                    remainingNumberOfBytesToRead, 
-                    out boundaryStartPosition, 
+                    remainingNumberOfBytesToRead,
+                    out boundaryStartPosition,
                     out boundaryEndPosition,
                     out isEndBoundary,
                     out isParentBoundary);
@@ -334,7 +327,7 @@ namespace Microsoft.OData.Core
 
                         // return the number of bytes that were read
                         return count - remainingNumberOfBytesToRead;
-                        
+
                     default:
                         break;
                 }
@@ -353,7 +346,6 @@ namespace Microsoft.OData.Core
         /// <returns>The number of bytes actually read.</returns>
         internal int ReadWithLength(byte[] userBuffer, int userBufferOffset, int count)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(userBuffer != null, "userBuffer != null");
             Debug.Assert(userBufferOffset >= 0, "userBufferOffset >= 0");
             Debug.Assert(count >= 0, "count >= 0");
@@ -403,14 +395,16 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Reads the headers of a part.
         /// </summary>
+        /// <param name="contentId">Content-ID read from changeset header, null if changeset part detected</param>
         /// <returns>true if the start of a changeset part was detected; otherwise false.</returns>
-        internal bool ProcessPartHeader()
+        internal bool ProcessPartHeader(out string contentId)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.batchEncoding != null, "Batch encoding should have been established on first call to SkipToBoundary.");
 
             bool isChangeSetPart;
             ODataBatchOperationHeaders headers = this.ReadPartHeaders(out isChangeSetPart);
+
+            contentId = null;
 
             if (isChangeSetPart)
             {
@@ -430,6 +424,10 @@ namespace Microsoft.OData.Core
                 // Verify that we only allow single byte encodings and UTF-8 for now.
                 ReaderValidationUtils.ValidateEncodingSupportedInBatch(this.changesetEncoding);
             }
+            else if (this.ChangeSetBoundary != null)
+            {
+                headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId);
+            }
 
             return isChangeSetPart;
         }
@@ -440,7 +438,6 @@ namespace Microsoft.OData.Core
         /// <returns>A dictionary of header names to header values; never null.</returns>
         internal ODataBatchOperationHeaders ReadHeaders()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.batchEncoding != null, "Batch encoding should have been established on first call to SkipToBoundary.");
 
             ODataBatchOperationHeaders headers = new ODataBatchOperationHeaders();
@@ -471,8 +468,6 @@ namespace Microsoft.OData.Core
         /// <returns>The text of the first non-empty line (not including any terminating newline characters).</returns>
         internal string ReadFirstNonEmptyLine()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             string line;
             do
             {
@@ -654,7 +649,7 @@ namespace Microsoft.OData.Core
                 Debug.Assert(this.underlyingStreamExhausted, "Underlying stream must be exhausted if we have less than 2 bytes in the buffer after refilling.");
 
                 // If we cannot read any of the known preambles we fall back to the default encoding, which is US-ASCII.
-#if SILVERLIGHT || WINDOWS_PHONE || PORTABLELIB
+#if !ORCAS
                 // ASCII not available; use UTF8 without preamble
                 return MediaType.FallbackEncoding;
 #else
@@ -662,18 +657,18 @@ namespace Microsoft.OData.Core
 #endif
             }
             else if (this.batchBuffer[this.batchBuffer.CurrentReadPosition] == 0xFE && this.batchBuffer[this.batchBuffer.CurrentReadPosition + 1] == 0xFF)
-            {   
+            {
                 // Big Endian Unicode
                 return new UnicodeEncoding(/*bigEndian*/ true, /*byteOrderMark*/ true);
             }
             else if (this.batchBuffer[this.batchBuffer.CurrentReadPosition] == 0xFF && this.batchBuffer[this.batchBuffer.CurrentReadPosition + 1] == 0xFE)
-            {   
+            {
                 // Little Endian Unicode, or possibly little endian UTF32
                 if (numberOfBytesInBuffer >= 4 &&
                     this.batchBuffer[this.batchBuffer.CurrentReadPosition + 2] == 0 &&
                     this.batchBuffer[this.batchBuffer.CurrentReadPosition + 3] == 0)
                 {
-#if SILVERLIGHT || WINDOWS_PHONE || PORTABLELIB
+#if !ORCAS
                     // Little Endian UTF32 not available
                     throw Error.NotSupported();
 #else
@@ -689,7 +684,7 @@ namespace Microsoft.OData.Core
                      this.batchBuffer[this.batchBuffer.CurrentReadPosition] == 0xEF &&
                      this.batchBuffer[this.batchBuffer.CurrentReadPosition + 1] == 0xBB &&
                      this.batchBuffer[this.batchBuffer.CurrentReadPosition + 2] == 0xBF)
-            {   
+            {
                 // UTF-8
                 return Encoding.UTF8;
             }
@@ -698,9 +693,9 @@ namespace Microsoft.OData.Core
                      this.batchBuffer[this.batchBuffer.CurrentReadPosition + 1] == 0 &&
                      this.batchBuffer[this.batchBuffer.CurrentReadPosition + 2] == 0xFE &&
                      this.batchBuffer[this.batchBuffer.CurrentReadPosition + 3] == 0xFF)
-            {   
+            {
                 // Big Endian UTF32
-#if SILVERLIGHT || WINDOWS_PHONE || PORTABLELIB
+#if !ORCAS
                 // Big Endian UTF32 not available
                 throw Error.NotSupported();
 #else
@@ -709,7 +704,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE || PORTABLELIB
+#if !ORCAS
                 // ASCII not available; use UTF8 without preamble
                 return MediaType.FallbackEncoding;
 #else
@@ -797,12 +792,12 @@ namespace Microsoft.OData.Core
             MediaType mediaType;
             ODataPayloadKind readerPayloadKind;
             MediaTypeUtils.GetFormatFromContentType(
-                contentType, 
-                new ODataPayloadKind[] { ODataPayloadKind.Batch }, 
+                contentType,
+                new ODataPayloadKind[] { ODataPayloadKind.Batch },
                 MediaTypeResolver.DefaultMediaTypeResolver,
-                out mediaType, 
-                out this.changesetEncoding, 
-                out readerPayloadKind, 
+                out mediaType,
+                out this.changesetEncoding,
+                out readerPayloadKind,
                 out this.changesetBoundary);
             Debug.Assert(readerPayloadKind == ODataPayloadKind.Batch, "Must find batch payload kind.");
             Debug.Assert(this.changesetBoundary != null && this.changesetBoundary.Length > 0, "Boundary string should have been validated by now.");

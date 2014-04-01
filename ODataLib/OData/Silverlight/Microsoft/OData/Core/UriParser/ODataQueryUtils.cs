@@ -63,9 +63,9 @@ namespace Microsoft.OData.Core.UriParser
                 if (canReflect)
                 {
                     annotation = new ODataQueryEdmPropertyAnnotation
-                        {
-                            CanReflectOnProperty = true
-                        };
+                    {
+                        CanReflectOnProperty = true
+                    };
                     model.SetAnnotationValue(property, annotation);
                 }
             }
@@ -73,102 +73,6 @@ namespace Microsoft.OData.Core.UriParser
             {
                 annotation.CanReflectOnProperty = canReflect;
             }
-        }
-
-        /// <summary>
-        /// Gets the result kind of the <paramref name="serviceOperation"/>.
-        /// </summary>
-        /// <param name="serviceOperation">The <see cref="IEdmOperationImport"/> to check.</param>
-        /// <param name="model">The <see cref="IEdmModel"/> containing the annotation.</param>
-        /// <returns>The result kind of the <paramref name="serviceOperation"/> or null if no result kind annotation exists.</returns>
-        public static ODataServiceOperationResultKind? GetServiceOperationResultKind(
-            this IEdmOperationImport serviceOperation, IEdmModel model)
-        {
-            ExceptionUtils.CheckArgumentNotNull(serviceOperation, "operationImport");
-            ExceptionUtils.CheckArgumentNotNull(model, "model");
-
-            ODataQueryEdmServiceOperationAnnotation annotation =
-                model.GetAnnotationValue<ODataQueryEdmServiceOperationAnnotation>(serviceOperation);
-            return annotation == null ? null : (ODataServiceOperationResultKind?)annotation.ResultKind;
-        }
-
-        /// <summary>
-        /// Sets the result kind of the <paramref name="serviceOperation"/>.
-        /// </summary>
-        /// <param name="serviceOperation">The <see cref="IEdmOperationImport"/> to check.</param>
-        /// <param name="model">The <see cref="IEdmModel"/> containing the annotation.</param>
-        /// <param name="resultKind">The result kind to set.</param>
-        public static void SetServiceOperationResultKind(this IEdmOperationImport serviceOperation, IEdmModel model, ODataServiceOperationResultKind resultKind)
-        {
-            ExceptionUtils.CheckArgumentNotNull(serviceOperation, "serviceOperation");
-            ExceptionUtils.CheckArgumentNotNull(model, "model");
-
-            ODataQueryEdmServiceOperationAnnotation existingAnnotation =
-                model.GetAnnotationValue<ODataQueryEdmServiceOperationAnnotation>(serviceOperation);
-            if (existingAnnotation == null)
-            {
-                ODataQueryEdmServiceOperationAnnotation newAnnotation =
-                    new ODataQueryEdmServiceOperationAnnotation
-                        {
-                            ResultKind = resultKind
-                        };
-                model.SetAnnotationValue(serviceOperation, newAnnotation);
-            }
-            else
-            {
-                existingAnnotation.ResultKind = resultKind;
-            }
-        }
-
-        /// <summary>
-        /// Resolves a name to an <see cref="IEdmOperationImport"/> instance.
-        /// </summary>
-        /// <param name="model">The model to resolve the name against.</param>
-        /// <param name="operationName">The name of the service operation to look up.</param>
-        /// <returns>An <see cref="IEdmOperationImport"/> instance with the specified <paramref name="operationName"/>; if no such service operation exists the method throws.</returns>
-        public static IEdmOperationImport ResolveServiceOperation(this IEdmModel model, string operationName)
-        {
-            ExceptionUtils.CheckArgumentNotNull(model, "model");
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(operationName, "operationName");
-
-            IEdmOperationImport operationImport = model.TryResolveServiceOperation(operationName);
-            if (operationImport == null)
-            {
-                throw new ODataException(ODataErrorStrings.ODataQueryUtils_DidNotFindServiceOperation(operationName));
-            }
-
-            return operationImport;
-        }
-
-        /// <summary>
-        /// Resolves a name to an <see cref="IEdmOperationImport"/> instance.
-        /// </summary>
-        /// <param name="model">The model to resolve the name against.</param>
-        /// <param name="operationName">The name of the service operation to look up.</param>
-        /// <returns>An <see cref="IEdmOperationImport"/> instance with the specified <paramref name="operationName"/> or null if no such service operation exists.</returns>
-        public static IEdmOperationImport TryResolveServiceOperation(this IEdmModel model, string operationName)
-        {
-            ExceptionUtils.CheckArgumentNotNull(model, "model");
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(operationName, "operationName");
-
-            IEdmOperationImport operationImport = null;
-            foreach (IEdmOperationImport import in model.ResolveFunctionImports(operationName))
-            {
-                if (model.IsServiceOperation(import))
-                {
-                    if (operationImport == null)
-                    {
-                        operationImport = import;
-                    }
-                    else
-                    {
-                        throw new ODataException(
-                            ODataErrorStrings.ODataQueryUtils_FoundMultipleServiceOperations(operationName));
-                    }
-                }
-            }
-
-            return operationImport;
         }
 
         /// <summary>
@@ -237,9 +141,9 @@ namespace Microsoft.OData.Core.UriParser
                 if (instanceType != null)
                 {
                     ODataQueryEdmTypeAnnotation newAnnotation = new ODataQueryEdmTypeAnnotation
-                        {
-                            InstanceType = instanceType,
-                        };
+                    {
+                        InstanceType = instanceType,
+                    };
 
                     model.SetAnnotationValue(type, newAnnotation);
                 }
@@ -350,60 +254,13 @@ namespace Microsoft.OData.Core.UriParser
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(entitySetName, "entitySetName");
 
-            IEnumerable<IEdmEntityContainer> entityContainers = model.EntityContainers();
-            if (entityContainers == null)
+            IEdmEntityContainer entityContainer = model.EntityContainer;
+            if (entityContainer != null)
             {
-                return null;
+                return entityContainer.FindEntitySet(entitySetName);               
             }
 
-            IEdmEntitySet entitySet = null;
-            foreach (IEdmEntityContainer container in entityContainers)
-            {
-                entitySet = container.FindEntitySet(entitySetName);
-                if (entitySet != null)
-                {
-                    break;
-                }
-            }
-
-            return entitySet;
-        }
-
-        /// <summary>
-        /// Method that checks whether a operation import is a service operation.
-        /// </summary>
-        /// <param name="model">The <see cref="IEdmModel"/> containing annotations.</param>
-        /// <param name="operationImport">The <see cref="IEdmOperationImport"/> to check.</param>
-        /// <returns>true if the <paramref name="operationImport"/> represents a service operation; otherwise false.</returns>
-        /// <remarks>
-        /// A <see cref="IEdmOperationImport"/> is considered a service operation if it is annotated with an m:HttpMethod attribute.
-        /// </remarks>
-        internal static bool IsServiceOperation(this IEdmModel model, IEdmOperationImport operationImport)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(operationImport != null, "operationImport != null");
-            Debug.Assert(model != null, "model != null");
-
-            // Check whether an annotation on the operation import that makes it a service operation exists
-            return model.GetHttpMethod(operationImport) != null;
-        }
-
-        /// <summary>
-        /// Method that checks whether a operation import is an action.
-        /// </summary>
-        /// <param name="model">The <see cref="IEdmModel"/> containing annotations.</param>
-        /// <param name="operationImport">The <see cref="IEdmOperationImport"/> to check.</param>
-        /// <returns>true if the <paramref name="operationImport"/> represents an action; otherwise false.</returns>
-        /// <remarks>
-        /// A <see cref="IEdmOperationImport"/> is considered an action if it is side-effecting but not annotated with an m:HttpMethod attribute.
-        /// </remarks>
-        internal static bool IsAction(this IEdmModel model, IEdmOperationImport operationImport)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(operationImport != null, "operationImport != null");
-            Debug.Assert(model != null, "model != null");
-
-            return !operationImport.IsComposable && operationImport.IsSideEffecting && !model.IsServiceOperation(operationImport);
+            return null;
         }
     }
 }

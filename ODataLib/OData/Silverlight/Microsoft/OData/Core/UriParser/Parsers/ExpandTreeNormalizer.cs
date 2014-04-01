@@ -10,6 +10,7 @@
 
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -20,8 +21,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     /// <summary>
     /// Translator from the old expand syntax tree to the new Expand Option syntax tree
     /// </summary>
-    //// TODO 1466134 We can delete this once V4 is the only thing used.
-    internal sealed class ExpandTreeNormalizer : IExpandTreeNormalizer
+    internal sealed class ExpandTreeNormalizer
     {
         /// <summary>
         /// Normalize an expand syntax tree into the new ExpandOption syntax.
@@ -33,7 +33,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // To normalize the expand tree we need to
             // 1) invert the path tree on each of its expand term tokens
             // 2) combine terms that start with the path tree
-            ExpandToken invertedPathTree = InvertPaths(treeToNormalize);
+            ExpandToken invertedPathTree = this.NormalizePaths(treeToNormalize);
 
             return CombineTerms(invertedPathTree);
         }
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="treeToInvert">the tree to invert paths on</param>
         /// <returns>a new tree with all of its paths inverted</returns>
-        public ExpandToken InvertPaths(ExpandToken treeToInvert)
+        public ExpandToken NormalizePaths(ExpandToken treeToInvert)
         {
             // iterate through each expand term token, and reverse the tree in its path property
             List<ExpandTermToken> updatedTerms = new List<ExpandTermToken>();
@@ -52,7 +52,26 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 PathReverser pathReverser = new PathReverser();
                 PathSegmentToken reversedPath = term.PathToNavProp.Accept(pathReverser);
-                ExpandTermToken newTerm = new ExpandTermToken(reversedPath, term.FilterOption, term.OrderByOption, term.TopOption, term.SkipOption, term.CountQueryOption, term.SelectOption, term.ExpandOption);
+
+                // we also need to call the select token normalizer for this level to reverse the select paths
+                SelectToken newSelectToken = term.SelectOption;
+                if (term.SelectOption != null)
+                {
+                    SelectTreeNormalizer selectTreeNormalizer = new SelectTreeNormalizer();
+                    newSelectToken = selectTreeNormalizer.NormalizeSelectTree(term.SelectOption);
+                }
+
+                ExpandToken subExpandTree;
+                if (term.ExpandOption != null)
+                {
+                    subExpandTree = this.NormalizePaths(term.ExpandOption);
+                }
+                else
+                {
+                    subExpandTree = null;
+                }
+
+                ExpandTermToken newTerm = new ExpandTermToken(reversedPath, term.FilterOption, term.OrderByOptions, term.TopOption, term.SkipOption, term.CountQueryOption, term.LevelsOption, newSelectToken, subExpandTree);
                 updatedTerms.Add(newTerm);
             }
 
@@ -69,79 +88,26 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             var combinedTerms = new Dictionary<PathSegmentToken, ExpandTermToken>(new PathSegmentTokenEqualityComparer());
             foreach (ExpandTermToken termToken in treeToCollapse.ExpandTerms)
             {
-                ExpandTermToken expandedTerm = BuildSubExpandTree(termToken);
-                AddOrCombine(combinedTerms, expandedTerm);
+                ExpandTermToken finalTermToken = termToken;
+                if (termToken.ExpandOption != null)
+                {
+                    ExpandToken newSubExpand = CombineTerms(termToken.ExpandOption);
+                    finalTermToken = new ExpandTermToken(
+                                                              termToken.PathToNavProp,
+                                                              termToken.FilterOption,
+                                                              termToken.OrderByOptions,
+                                                              termToken.TopOption,
+                                                              termToken.SkipOption,
+                                                              termToken.CountQueryOption,
+                                                              termToken.LevelsOption,
+                                                              this.RemoveDuplicateSelect(termToken.SelectOption),
+                                                              newSubExpand);
+                }
+
+                AddOrCombine(combinedTerms, finalTermToken);
             }
 
             return new ExpandToken(combinedTerms.Values);
-        }
-
-        /// <summary>
-        /// Expand all the PathTokens in a particular term into their own separate terms.
-        /// </summary>
-        /// <param name="termToExpand">the term to expand</param>
-        /// <returns>a new ExpandTermToken with each PathToken at its own level.</returns>
-        public ExpandTermToken BuildSubExpandTree(ExpandTermToken termToExpand)
-        {
-            // walk up the path tree on the property token, adding new expand clauses for each level
-            if (termToExpand.PathToNavProp.NextToken == null)
-            {
-                return termToExpand;
-            }
-
-            PathSegmentToken currentProperty = termToExpand.PathToNavProp;
-
-            // if we find a type token, then the current property becomes a path instead, 
-            // so that we can follow the chain of derived types from the base.
-            // the path can only consist of NavProps or TypeSegments, we can
-            // simply walk the tree of the current property until we find a non
-            // type segment, then break its next link, then return the new path chain which
-            // becomes our current property
-            PathSegmentToken currentToken = currentProperty;
-            while (currentToken.IsNamespaceOrContainerQualified())
-            {
-                currentToken = currentToken.NextToken;
-                if (currentToken == null)
-                {
-                    throw new ODataException(ODataErrorStrings.ExpandTreeNormalizer_NonPathInPropertyChain);
-                }
-            }
-
-            // get a pointer to the next property so that we can continue down the list.
-            PathSegmentToken nextProperty = currentToken.NextToken;
-
-            // chop off the next pointer to end this chain.
-            currentToken.SetNextToken(null);
-
-            ExpandToken subExpand;
-            if (nextProperty != null)
-            {
-                var subExpandTermToken = new ExpandTermToken(
-                    nextProperty, 
-                    termToExpand.FilterOption, 
-                    termToExpand.OrderByOption, 
-                    termToExpand.TopOption,
-                    termToExpand.SkipOption, 
-                    termToExpand.CountQueryOption, 
-                    termToExpand.SelectOption, 
-                    /*expandOption*/ null);
-                ExpandTermToken subExpandToken = BuildSubExpandTree(subExpandTermToken);
-                subExpand = new ExpandToken(new[] { subExpandToken });
-            }
-            else
-            {
-                subExpand = new ExpandToken(new ExpandTermToken[0]);
-            }
-
-            return new ExpandTermToken(
-                currentProperty, 
-                termToExpand.FilterOption, 
-                termToExpand.OrderByOption,
-                termToExpand.TopOption,
-                termToExpand.SkipOption,
-                termToExpand.CountQueryOption,
-                termToExpand.SelectOption,
-                subExpand);
         }
 
         /// <summary>
@@ -155,14 +121,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             Debug.Assert(new PathSegmentTokenEqualityComparer().Equals(existingToken.PathToNavProp, newToken.PathToNavProp), "Paths should be equal.");
 
             List<ExpandTermToken> childNodes = CombineChildNodes(existingToken, newToken).ToList();
+            SelectToken combinedSelects = this.CombineSelects(existingToken, newToken);
             return new ExpandTermToken(
                     existingToken.PathToNavProp,
                     existingToken.FilterOption,
-                    existingToken.OrderByOption,
+                    existingToken.OrderByOptions,
                     existingToken.TopOption,
                     existingToken.SkipOption,
                     existingToken.CountQueryOption,
-                    existingToken.SelectOption,
+                    existingToken.LevelsOption,
+                    combinedSelects,
                     new ExpandToken(childNodes));
         }
 
@@ -176,7 +144,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             if (existingToken.ExpandOption == null && newToken.ExpandOption == null)
             {
-                return new List<ExpandTermToken>(); 
+                return new List<ExpandTermToken>();
             }
 
             var childNodes = new Dictionary<PathSegmentToken, ExpandTermToken>(new PathSegmentTokenEqualityComparer());
@@ -222,6 +190,41 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 combinedTerms.Add(expandedTerm.PathToNavProp, expandedTerm);
             }
+        }
+
+        /// <summary>
+        /// Combine together the select clauses of two ExpandTermTokens
+        /// </summary>
+        /// <param name="existingToken">the already existing expand term token</param>
+        /// <param name="newToken">the new expand term token to be added</param>
+        /// <returns>A new select term containing each of the selected entries.</returns>
+        private SelectToken CombineSelects(ExpandTermToken existingToken, ExpandTermToken newToken)
+        {
+            if (existingToken.SelectOption == null)
+            {
+                return newToken.SelectOption;
+            }
+
+            if (newToken.SelectOption == null)
+            {
+                return existingToken.SelectOption;
+            }
+
+            List<PathSegmentToken> newSelects = existingToken.SelectOption.Properties.ToList();
+            newSelects.AddRange(newToken.SelectOption.Properties);
+            return new SelectToken(newSelects.Distinct(new PathSegmentTokenEqualityComparer()));
+        }
+
+        /// <summary>
+        /// Git rid of duplicate selected item in SelectToken
+        /// </summary>
+        /// <param name="selectToken">Select token to be dealt with</param>
+        /// <returns>A new select term containing each of the </returns>
+        private SelectToken RemoveDuplicateSelect(SelectToken selectToken)
+        {
+            return selectToken != null 
+                    ? new SelectToken(selectToken.Properties.Distinct(new PathSegmentTokenEqualityComparer())) 
+                    : null;
         }
     }
 }

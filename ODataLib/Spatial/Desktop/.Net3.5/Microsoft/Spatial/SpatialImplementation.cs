@@ -10,9 +10,6 @@
 
 namespace Microsoft.Spatial
 {
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
     using System;
     using Microsoft.Data.Spatial;
 
@@ -20,18 +17,12 @@ namespace Microsoft.Spatial
     /// Class responsible for knowing how to create the Geography and Geometry builders for 
     /// a particular implemenation of Spatial types
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     public abstract class SpatialImplementation
     {
         /// <summary>Default Spatial Implementation.</summary>
         private static SpatialImplementation spatialImplementation = new DataServicesSpatialImplementation();
 
         /// <summary> Returns an instance of SpatialImplementation that is currently being used. </summary>
-#if WINDOWS_PHONE
-        [DataMember]
-#endif
         public static SpatialImplementation CurrentImplementation
         {
             get
@@ -47,9 +38,6 @@ namespace Microsoft.Spatial
         }
 
         /// <summary>Gets or sets the Spatial operations implementation.</summary>
-#if WINDOWS_PHONE
-        [DataMember]
-#endif
         public abstract SpatialOperations Operations
         {
             get;

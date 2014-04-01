@@ -22,7 +22,7 @@ namespace Microsoft.OData.Core
     /// Class representing an error payload.
     /// </summary>
     [DebuggerDisplay("{ErrorCode}: {Message}")]
-#if !WINDOWS_PHONE && !SILVERLIGHT && !PORTABLELIB
+#if ORCAS
     [Serializable]
 #endif
     public sealed class ODataError : ODataAnnotatable
@@ -38,14 +38,6 @@ namespace Microsoft.OData.Core
         /// <summary>Gets or sets the error message.</summary>
         /// <returns>The error message.</returns>
         public string Message
-        {
-            get;
-            set;
-        }
-
-        /// <summary>Gets or sets the language for the exception Message.</summary>
-        /// <returns>The language for the exception Message.</returns>
-        public string MessageLanguage
         {
             get;
             set;
@@ -67,67 +59,6 @@ namespace Microsoft.OData.Core
         {
             get { return this.GetInstanceAnnotations(); }
             set { this.SetInstanceAnnotations(value); }
-        }
-
-        /// <summary>
-        /// Verifies that <paramref name="annotation"/> can be added as an annotation of this.
-        /// </summary>
-        /// <param name="annotation">Annotation instance.</param>
-        internal override void VerifySetAnnotation(object annotation)
-        {
-            DebugUtils.CheckNoExternalCallers();
-
-            // We block InstanceAnnotationCollection at the ODataAnnotatable level, but specifically allow them here
-        }
-
-        /// <summary>
-        /// Gets the collection of instance annotations from this <see cref="ODataError"/> instance.
-        /// </summary>
-        /// <returns>The collection of instance annotations </returns>
-        internal IEnumerable<ODataInstanceAnnotation> GetInstanceAnnotationsForWriting()
-        {
-            DebugUtils.CheckNoExternalCallers();
-
-            // We have deprecated the InstanceAnnotationCollection type. For backcompat:
-            // 1. On reading we will populate both the InstanceAnnotationCollection object annotation and the ODataError.InstanceAnnotations collection.
-            // 2. On writing, if ODataError.InstanceAnnotations collection is not empty, we will only serialize the ODataError.InstanceAnnotations collection.
-            //    Otherwise we will serialize what's in the InstanceAnnotationCollection object annotation if it's present.
-            if (this.InstanceAnnotations.Count > 0)
-            {
-                return this.InstanceAnnotations;
-            }
-
-#pragma warning disable 618 // Disable "obsolete" warning for the InstanceAnnotationCollection. Used for backwards compatibilty.
-            InstanceAnnotationCollection instanceAnnotationCollection = this.GetAnnotation<InstanceAnnotationCollection>();
-#pragma warning restore 618
-            if (instanceAnnotationCollection != null && instanceAnnotationCollection.Count > 0)
-            {
-                return instanceAnnotationCollection.Select(ia => new ODataInstanceAnnotation(ia.Key, ia.Value));
-            }
-
-            return Enumerable.Empty<ODataInstanceAnnotation>();
-        }
-
-        /// <summary>
-        /// Adds an instance annotation from the payload to this <see cref="ODataError"/> instance.
-        /// </summary>
-        /// <param name="instanceAnnotationName">The name of the instance annotation.</param>
-        /// <param name="instanceAnnotationValue">The value of the instance annotation.</param>
-        internal void AddInstanceAnnotationForReading(string instanceAnnotationName, object instanceAnnotationValue)
-        {
-            DebugUtils.CheckNoExternalCallers();
-
-            // We have deprecated the InstanceAnnotationCollection type. For backcompat:
-            // 1. On reading we will populate both the InstanceAnnotationCollection object annotation and the ODataError.InstanceAnnotations collection.
-            // 2. On writing, if ODataError.InstanceAnnotations collection is not empty, we will only serialize the ODataError.InstanceAnnotations collection.
-            //    Otherwise we will serialize what's in the InstanceAnnotationCollection object annotation if it's present.
-            ODataValue odataValue = instanceAnnotationValue.ToODataValue();
-
-#pragma warning disable 618 // Disable "obsolete" warning for the InstanceAnnotationCollection. Used for backwards compatibilty.
-            this.GetOrCreateAnnotation<InstanceAnnotationCollection>().Add(instanceAnnotationName, odataValue);
-#pragma warning restore 618
-
-            this.InstanceAnnotations.Add(new ODataInstanceAnnotation(instanceAnnotationName, odataValue));
         }
     }
 }

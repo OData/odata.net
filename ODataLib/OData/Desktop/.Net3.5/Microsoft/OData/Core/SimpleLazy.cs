@@ -55,7 +55,6 @@ namespace Microsoft.OData.Core
             : this(factory, false)
         {
 #if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
 #endif
         }
 
@@ -67,7 +66,6 @@ namespace Microsoft.OData.Core
         internal SimpleLazy(Func<T> factory, bool isThreadSafe)
         {
 #if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
 #endif
             Debug.Assert(factory != null, "factory != null");
             this.factory = factory;
@@ -86,7 +84,6 @@ namespace Microsoft.OData.Core
             get
             {
 #if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
 #endif
                 if (!this.valueCreated)
                 {

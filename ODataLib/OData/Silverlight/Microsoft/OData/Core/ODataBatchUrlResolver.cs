@@ -33,8 +33,6 @@ namespace Microsoft.OData.Core
         /// <param name="batchMessageUrlResolver">The URL resolver from the batch message.</param>
         internal ODataBatchUrlResolver(IODataUrlResolver batchMessageUrlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.batchMessageUrlResolver = batchMessageUrlResolver;
         }
 
@@ -45,8 +43,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 return this.batchMessageUrlResolver;
             }
         }
@@ -64,13 +60,12 @@ namespace Microsoft.OData.Core
         /// </returns>
         Uri IODataUrlResolver.ResolveUrl(Uri baseUri, Uri payloadUri)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(payloadUri, "payloadUri");
 
             if (this.contentIdCache != null && !payloadUri.IsAbsoluteUri)
             {
                 // On relative URIs none of the properties except for OriginalString, IsAbsoluteUri and UserEscaped are allowed
-                string originalString = UriUtilsCommon.UriToString(payloadUri);
+                string originalString = UriUtils.UriToString(payloadUri);
                 Debug.Assert(originalString != null, "Original strings cannot be null in System.Uri.");
 
                 if (originalString.Length > 0 && originalString[0] == '$')
@@ -112,7 +107,6 @@ namespace Microsoft.OData.Core
         /// <param name="contentId">The (non-null) content ID to add.</param>
         internal void AddContentId(string contentId)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(contentId != null, "contentId != null");
 
             if (this.contentIdCache == null)
@@ -131,7 +125,6 @@ namespace Microsoft.OData.Core
         /// <returns>true if the content ID cache already contains a content ID with value <paramref name="contentId"/>; otherwise false.</returns>
         internal bool ContainsContentId(string contentId)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(contentId != null, "contentId != null");
 
             if (this.contentIdCache == null)
@@ -148,8 +141,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void Reset()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (this.contentIdCache != null)
             {
                 this.contentIdCache.Clear();

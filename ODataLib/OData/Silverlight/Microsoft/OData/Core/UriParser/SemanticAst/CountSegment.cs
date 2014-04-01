@@ -57,7 +57,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="translator">An implementation of the translator interface.</param>
         /// <returns>An object whose type is determined by the type parameter of the translator.</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input translator is null.</exception>
-        public override T Translate<T>(PathSegmentTranslator<T> translator)
+        public override T TranslateWith<T>(PathSegmentTranslator<T> translator)
         {
             ExceptionUtils.CheckArgumentNotNull(translator, "translator");
             return translator.Translate(this);
@@ -68,9 +68,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         /// <param name="handler">An implementation of the handler interface.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input handler is null.</exception>
-        public override void Handle(PathSegmentHandler handler)
+        public override void HandleWith(PathSegmentHandler handler)
         {
-            ExceptionUtils.CheckArgumentNotNull(handler, "translator");
+            ExceptionUtils.CheckArgumentNotNull(handler, "handler");
             handler.Handle(this);
         }
 
@@ -82,7 +82,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <exception cref="System.ArgumentNullException">throws if the input other is null.</exception>
         internal override bool Equals(ODataPathSegment other)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(other, "other");
             return other is CountSegment;
         }

@@ -33,8 +33,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <param name="keptInContentPropertyNames">Enumeration of property names that are kept in content.</param>
         internal CachedPrimitiveKeepInContentAnnotation(IEnumerable<string> keptInContentPropertyNames)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.keptInContentPropertyNames = keptInContentPropertyNames == null 
                 ? null 
                 : new HashSet<string>(keptInContentPropertyNames, StringComparer.Ordinal);
@@ -47,7 +45,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the property is kept in the content; false otherwise.</returns>
         internal bool IsKeptInContent(string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             return this.keptInContentPropertyNames == null 

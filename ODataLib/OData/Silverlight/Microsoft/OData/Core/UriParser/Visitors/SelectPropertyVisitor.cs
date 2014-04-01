@@ -13,6 +13,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm;
@@ -22,7 +23,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
     /// <summary>
     /// Visit a Select property and use it to decorate a SelectExpand Tree
     /// </summary>
-    /// TODO 1466134 We don't need this class once V4 is working and always used.
+    /// TODO 1466134 Once we are using V4 completely, then rename this class to SelectPropertyVisitor
     internal sealed class SelectPropertyVisitor : PathSegmentTokenVisitor
     {
         /// <summary>
@@ -92,7 +93,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
                 SelectItem newSelectItem;
                 if (SelectPathSegmentTokenBinder.TryBindAsWildcard(tokenIn, this.model, out newSelectItem))
                 {
-                    this.expandClauseToDecorate.AddSelectItem(newSelectItem);
+                    this.expandClauseToDecorate.AddToSelectedItems(newSelectItem);
                     return;
                 }
             }
@@ -127,74 +128,35 @@ namespace Microsoft.OData.Core.UriParser.Visitors
 
             // next, create a segment for the first non-type segment in the path.
             ODataPathSegment lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(tokenIn, this.model, currentLevelType);
-            Debug.Assert(lastSegment != null, "nextSegment != null");
 
             // next, create an ODataPath and add the segments to it.
-            pathSoFar.Add(lastSegment);
+            if (lastSegment != null)
+            {
+                pathSoFar.Add(lastSegment);
+            }
+
             ODataSelectPath selectedPath = new ODataSelectPath(pathSoFar);
 
-            var navigationSelection = new PathSelectItem(selectedPath);
-                
-            // next, create a selection item for the path, based on the last segment's type.
-            // TODO: just have PathSelectItem
-            if (lastSegment is NavigationPropertySegment)
+            var selectionItem = new PathSelectItem(selectedPath);
+
+            // non-navigation cases do not allow further segments in $select.
+            if (tokenIn.NextToken != null)
             {
-                bool foundExactExpand = false;
-                bool foundDifferentTypeExpand = false;
-                foreach (var subItem in this.expandClauseToDecorate.Expansion.ExpandItems)
-                {
-                    IEdmNavigationProperty subItemNavigationProperty = subItem.PathToNavigationProperty.GetNavigationProperty();
-                    if (subItem.PathToNavigationProperty.Equals(navigationSelection.SelectedPath))
-                    {
-                        foundExactExpand = true;
+                throw new ODataException(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+            }
 
-                        if (tokenIn.NextToken == null)
-                        {
-                            subItem.SelectAndExpand.SetAllSelectionRecursively();
-                        }
-                        else
-                        {
-                            SelectPropertyVisitor nextLevelVisitor = new SelectPropertyVisitor(this.model, subItemNavigationProperty.ToEntityType(), this.maxDepth, subItem.SelectAndExpand);
-                            tokenIn.NextToken.Accept(nextLevelVisitor);
-                        }
-                    }
-                    else if (subItem.PathToNavigationProperty.LastSegment.Equals(navigationSelection.SelectedPath.LastSegment))
-                    {
-                        foundDifferentTypeExpand = true;
-                    }
-                }
-
-                if (foundDifferentTypeExpand && !foundExactExpand)
+            // if the selected item is a nav prop, then see if its already there before we add it.
+            NavigationPropertySegment trailingNavPropSegment = selectionItem.SelectedPath.LastSegment as NavigationPropertySegment;
+            if (trailingNavPropSegment != null)
+            {
+                if (this.expandClauseToDecorate.SelectedItems.Any(x => x is PathSelectItem && 
+                    ((PathSelectItem)x).SelectedPath.Equals(selectedPath)))
                 {
-                    throw new ODataException(ODataErrorStrings.SelectPropertyVisitor_DisparateTypeSegmentsInSelectExpand);
-                }
-
-                if (!foundExactExpand)
-                {
-                    // if it has sub-properties selected, then require it to have been expanded.
-                    if (tokenIn.NextToken != null)
-                    {
-                        throw new ODataException(ODataErrorStrings.SelectionItemBinder_NoExpandForSelectedProperty(tokenIn.Identifier));
-                    }
-
-                    // otherwise just add it to the partial selection.
-                    this.expandClauseToDecorate.AddSelectItem(navigationSelection);
-                }
-                else
-                {
-                    this.expandClauseToDecorate.InitializeEmptySelection();
+                    return;
                 }
             }
-            else
-            {
-                // non-navigation cases do not allow further segments in $select.
-                if (tokenIn.NextToken != null)
-                {
-                    throw new ODataException(ODataErrorStrings.SelectionItemBinder_NonNavigationPathToken);
-                }
 
-                this.expandClauseToDecorate.AddSelectItem(navigationSelection);
-            }
+            this.expandClauseToDecorate.AddToSelectedItems(selectionItem);         
         }
     }
 }

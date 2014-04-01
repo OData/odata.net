@@ -39,8 +39,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomMetadataDeserializer(ODataAtomInputContext atomInputContext)
             : base(atomInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             XmlNameTable nameTable = this.XmlReader.NameTable;
             this.EmptyNamespace = nameTable.Add(string.Empty);
             this.AtomNamespace = nameTable.Add(AtomConstants.AtomNamespace);

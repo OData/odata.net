@@ -16,11 +16,6 @@ namespace Microsoft.OData.Edm
     public interface IEdmStringTypeReference : IEdmPrimitiveTypeReference
     {
         /// <summary>
-        /// Gets a value indicating whether this string type specifies fixed length.
-        /// </summary>
-        bool? IsFixedLength { get; }
-
-        /// <summary>
         /// Gets a value indicating whether this string type specifies the maximum allowed length.
         /// </summary>
         bool IsUnbounded { get; }
@@ -34,10 +29,5 @@ namespace Microsoft.OData.Edm
         /// Gets a value indicating whether this string type supports unicode encoding.
         /// </summary>
         bool? IsUnicode { get; }
-
-        /// <summary>
-        /// Gets a string representing the collation of this string type.
-        /// </summary>
-        string Collation { get; }
     }
 }

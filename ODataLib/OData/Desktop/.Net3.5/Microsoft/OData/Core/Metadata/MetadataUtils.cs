@@ -22,7 +22,7 @@ namespace Microsoft.OData.Core.Metadata
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Values;
     using Microsoft.OData.Core.Atom;
-    using Strings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -31,63 +31,6 @@ namespace Microsoft.OData.Core.Metadata
     internal static class MetadataUtils
     {
         /// <summary>
-        /// Returns the annotation in the OData metadata namespace with the specified <paramref name="localName" />.
-        /// </summary>
-        /// <param name="model">The <see cref="IEdmModel"/> containing the annotation.</param>
-        /// <param name="annotatable">The <see cref="IEdmElement"/> to get the annotation from.</param>
-        /// <param name="localName">The local name of the annotation to find.</param>
-        /// <param name="value">The value of the annotation in the OData metadata namespace and with the specified <paramref name="localName"/>.</param>
-        /// <returns>true if an annotation with the specified local name was found; otherwise false.</returns>
-        internal static bool TryGetODataAnnotation(this IEdmModel model, IEdmElement annotatable, string localName, out string value)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(model != null, "model != null"); 
-            Debug.Assert(annotatable != null, "annotatable != null");
-            Debug.Assert(!string.IsNullOrEmpty(localName), "!string.IsNullOrEmpty(localName)");
-
-            object annotationValue = model.GetAnnotationValue(annotatable, AtomConstants.ODataMetadataNamespace, localName);
-            if (annotationValue == null)
-            {
-                value = null;
-                return false;
-            }
-
-            IEdmStringValue annotationStringValue = annotationValue as IEdmStringValue;
-            if (annotationStringValue == null)
-            {
-                // invalid annotation type found
-                throw new ODataException(Strings.ODataAtomWriterMetadataUtils_InvalidAnnotationValue(localName, annotationValue.GetType().FullName));
-            }
-
-            value = annotationStringValue.Value;
-            return true;
-        }
-
-        /// <summary>
-        /// Sets the annotation with the OData metadata namespace and the specified <paramref name="localName" /> on the <paramref name="annotatable"/>.
-        /// </summary>
-        /// <param name="model">The <see cref="IEdmModel"/> containing the annotations."/></param>
-        /// <param name="annotatable">The <see cref="IEdmElement"/> to set the annotation on.</param>
-        /// <param name="localName">The local name of the annotation to set.</param>
-        /// <param name="value">The value of the annotation to set.</param>
-        internal static void SetODataAnnotation(this IEdmModel model, IEdmElement annotatable, string localName, string value)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(model != null, "model != null"); 
-            Debug.Assert(annotatable != null, "annotatable != null");
-            Debug.Assert(!string.IsNullOrEmpty(localName), "!string.IsNullOrEmpty(localName)");
-
-            IEdmStringValue stringValue = null;
-            if (value != null)
-            {
-                IEdmStringTypeReference typeReference = EdmCoreModel.Instance.GetString(/*nullable*/true);
-                stringValue = new EdmStringConstant(typeReference, value);
-            }
-
-            model.SetAnnotationValue(annotatable, AtomConstants.ODataMetadataNamespace, localName, stringValue);
-        }
-
-        /// <summary>
         /// Gets all the serializable annotations in the OData metadata namespace on the <paramref name="annotatable"/>.
         /// </summary>
         /// <param name="model">The <see cref="IEdmModel"/> containing the annotations."/></param>
@@ -95,7 +38,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>All annotations in the OData metadata namespace; or null if no annotations are found.</returns>
         internal static IEnumerable<IEdmDirectValueAnnotation> GetODataAnnotations(this IEdmModel model, IEdmElement annotatable)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(model != null, "model != null");
             Debug.Assert(annotatable != null, "annotatable != null");
             
@@ -115,8 +57,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The EDM type of the <paramref name="annotatable"/> if available in the <see cref="ODataTypeAnnotation"/> annotation.</returns>
         internal static IEdmTypeReference GetEdmType(this ODataAnnotatable annotatable)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (annotatable == null)
             {
                 return null;
@@ -136,7 +76,6 @@ namespace Microsoft.OData.Core.Metadata
         /// or null if no such type could be found.</returns>
         internal static IEdmType ResolveTypeNameForWrite(IEdmModel model, string typeName)
         {
-            DebugUtils.CheckNoExternalCallers();
             EdmTypeKind typeKind;
 
             // Writers should use the highest recognized version for type resolution since they need to verify
@@ -166,7 +105,6 @@ namespace Microsoft.OData.Core.Metadata
             ODataVersion version,
             out EdmTypeKind typeKind)
         {
-            DebugUtils.CheckNoExternalCallers();
             Func<IEdmType, string, IEdmType> customTypeResolver = readerBehavior == null ? null : readerBehavior.TypeResolver;
             Debug.Assert(
                 customTypeResolver == null || readerBehavior.ApiBehaviorKind == ODataBehaviorKind.WcfDataServicesClient,
@@ -196,8 +134,6 @@ namespace Microsoft.OData.Core.Metadata
             ODataVersion version,
             out EdmTypeKind typeKind)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             Debug.Assert(model != null, "model != null");
             Debug.Assert(typeName != null, "typeName != null");
             IEdmType resolvedType = null;
@@ -247,43 +183,45 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
-        /// Calculates the operations that are always bindable to the given type.
+        /// Calculates the operations that are bindable to the given type.
         /// </summary>
         /// <param name="bindingType">The binding type in question.</param>
         /// <param name="model">The model to search for operations.</param>
         /// <param name="edmTypeResolver">The edm type resolver to get the parameter type.</param>
         /// <returns>An enumeration of operations that are always bindable to the given type.</returns>
-        internal static IEdmOperationImport[] CalculateAlwaysBindableOperationsForType(IEdmType bindingType, IEdmModel model, EdmTypeResolver edmTypeResolver)
+        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")] 
+        internal static IEdmOperation[] CalculateBindableOperationsForType(IEdmType bindingType, IEdmModel model, EdmTypeResolver edmTypeResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(model != null, "model != null");
             Debug.Assert(edmTypeResolver != null, "edmTypeResolver != null");
 
-            List<IEdmOperationImport> operations = new List<IEdmOperationImport>();
-            foreach (IEdmEntityContainer container in model.EntityContainers())
+            List<IEdmOperation> operations = null;
+            try
             {
-                foreach (IEdmOperationImport operationImport in container.OperationImports())
+                operations = model.FindDeclaredBoundOperations(bindingType).ToList();
+            }
+            catch (Exception exc)
+            {
+                if (!ExceptionUtils.IsCatchableExceptionType(exc))
                 {
-                    if (!operationImport.IsBindable || !model.IsAlwaysBindable(operationImport))
-                    {
-                        continue;
-                    }
+                    throw;
+                }
 
-                    IEdmOperationParameter bindingParameter = operationImport.Parameters.FirstOrDefault();
-                    if (bindingParameter == null)
-                    {
-                        continue;
-                    }
+                throw new ODataException(Strings.MetadataUtils_CalculateBindableOperationsForType(bindingType.FullTypeName()), exc);
+            }
 
-                    IEdmType resolvedBindingType = edmTypeResolver.GetParameterType(bindingParameter).Definition;
-                    if (resolvedBindingType.IsAssignableFrom(bindingType))
-                    {
-                        operations.Add(operationImport);
-                    }
+            List<IEdmOperation> operationsFound = new List<IEdmOperation>();
+            foreach (IEdmOperation operation in operations.EnsureOperationsBoundWithBindingParameter())
+            {
+                IEdmOperationParameter bindingParameter = operation.Parameters.FirstOrDefault();
+                IEdmType resolvedBindingType = edmTypeResolver.GetParameterType(bindingParameter).Definition;
+                if (resolvedBindingType.IsAssignableFrom(bindingType))
+                {
+                    operationsFound.Add(operation);
                 }
             }
 
-            return operations.ToArray();
+            return operationsFound.ToArray();
         }
 
         /// <summary>
@@ -294,7 +232,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The type of the term in the model, or null if no matching term was found.</returns>
         internal static IEdmTypeReference LookupTypeOfValueTerm(string qualifiedTermName, IEdmModel model)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(model != null, "model != null");
 
             IEdmTypeReference typeFromModel = null;
@@ -314,7 +251,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The nullable <see cref="IEdmTypeReference"/> for the <paramref name="payloadType"/>.</returns>
         internal static IEdmTypeReference GetNullablePayloadTypeReference(IEdmType payloadType)
         {
-            DebugUtils.CheckNoExternalCallers();
             return payloadType == null ? null : payloadType.ToTypeReference(true);
         }
     }

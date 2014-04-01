@@ -36,7 +36,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="bindMethod">Method to use for binding the parent token, if needed.</param>
         internal BinaryOperatorBinder(Func<QueryToken, QueryNode> bindMethod)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.bindMethod = bindMethod;
         }
 
@@ -47,7 +46,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The bound binary operator token.</returns>
         internal QueryNode BindBinaryOperator(BinaryOperatorToken binaryOperatorToken)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(binaryOperatorToken, "binaryOperatorToken");
 
             SingleValueNode left = this.GetOperandFromToken(binaryOperatorToken.OperatorKind, binaryOperatorToken.Left);
@@ -66,9 +64,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="right">the right operand</param>
         private static void PromoteOperandTypes(BinaryOperatorKind binaryOperatorKind, ref SingleValueNode left, ref SingleValueNode right)
         {
-            IEdmTypeReference leftType = left.TypeReference;
-            IEdmTypeReference rightType = right.TypeReference;
-            if (!TypePromotionUtils.PromoteOperandTypes(binaryOperatorKind, ref leftType, ref rightType))
+            IEdmTypeReference leftType;
+            IEdmTypeReference rightType;
+            if (!TypePromotionUtils.PromoteOperandTypes(binaryOperatorKind, left, right, out leftType, out rightType))
             {
                 string leftTypeName = left.TypeReference == null ? "<null>" : left.TypeReference.ODataFullName();
                 string rightTypeName = right.TypeReference == null ? "<null>" : right.TypeReference.ODataFullName();

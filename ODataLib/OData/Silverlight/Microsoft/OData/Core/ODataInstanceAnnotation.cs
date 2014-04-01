@@ -48,7 +48,6 @@ namespace Microsoft.OData.Core
         /// <param name="name">Name to validate.</param>
         internal static void ValidateName(string name)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(name, "name");
 
             if (name.IndexOf('.') < 0 || name[0] == '.' || name[name.Length - 1] == '.')
@@ -77,7 +76,6 @@ namespace Microsoft.OData.Core
         /// <param name="value">Value to validate.</param>
         internal static void ValidateValue(ODataValue value)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(value, "value");
 
             if (value is ODataStreamReferenceValue)

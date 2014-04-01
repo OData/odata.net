@@ -21,8 +21,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     /// Use a Select syntactic tree to populate the correct values for Selection in an already parsed
     /// Expand Semantic Tree.
     /// </summary>
-    /// TODO 1466134 We don't need this layer once V4 is working and always used.
-    internal sealed class SelectBinder : ISelectBinder
+    internal sealed class SelectBinder
     {
         /// <summary>
         /// Visitor object to walk the select tree
@@ -53,10 +52,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             if (tokenIn == null || !tokenIn.Properties.Any())
             {
-                this.visitor.DecoratedExpandClause.SetAllSelectionRecursively();
+                // if there are no properties selected for this level, then by default we select
+                // all properties (including nav prop links, functions, actions, and structural properties)
+                this.visitor.DecoratedExpandClause.SetAllSelected(true);
             }
             else
             {
+                // if there are properties selected for this level, then we return only
+                // those specific properties in the payload, so clear the all selected flag
+                // for this level.
+                this.visitor.DecoratedExpandClause.SetAllSelected(false);
                 foreach (PathSegmentToken property in tokenIn.Properties)
                 {
                     property.Accept(this.visitor);

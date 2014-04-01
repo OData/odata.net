@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml;
-using Microsoft.OData.Edm.Csdl.Internal.Serialization;
+using Microsoft.OData.Edm.Csdl.Serialization;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
 
@@ -141,17 +141,6 @@ namespace Microsoft.OData.Edm.Csdl
         private void WriteDataServicesElement()
         {
             this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_DataServices, this.edmxNamespace);
-            Version dataServiceVersion = this.model.GetDataServiceVersion();
-            if (dataServiceVersion != null)
-            {
-                this.writer.WriteAttributeString(CsdlConstants.Prefix_ODataMetadata, CsdlConstants.Attribute_DataServiceVersion, CsdlConstants.ODataMetadataNamespace, dataServiceVersion.ToString());
-            }
-
-            Version dataServiceMaxVersion = this.model.GetMaxDataServiceVersion();
-            if (dataServiceMaxVersion != null)
-            {
-                this.writer.WriteAttributeString(CsdlConstants.Prefix_ODataMetadata, CsdlConstants.Attribute_MaxDataServiceVersion, CsdlConstants.ODataMetadataNamespace, dataServiceMaxVersion.ToString());
-            }
         }
 
         private void WriteSchemas()

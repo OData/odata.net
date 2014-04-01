@@ -36,7 +36,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="bindMethod">Method to use to visit the token tree and bind the tokens recursively.</param>
         internal OrderByBinder(MetadataBinder.QueryTokenVisitor bindMethod)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(bindMethod, "bindMethod");
             this.bindMethod = bindMethod;
         }
@@ -49,7 +48,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>An OrderByClause representing the orderby statements expressed in the tokens.</returns>
         internal OrderByClause BindOrderBy(BindingState state, IEnumerable<OrderByToken> orderByTokens)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(state, "state");
             ExceptionUtils.CheckArgumentNotNull(orderByTokens, "orderByTokens");
 
@@ -78,20 +76,20 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             QueryNode expressionNode = this.bindMethod(orderByToken.Expression);
 
-            // TODO: shall we really restrict order-by expressions to primitive types?
+            // The order-by expressions need to be primitive / enumeration types
             SingleValueNode expressionResultNode = expressionNode as SingleValueNode;
             if (expressionResultNode == null ||
-                (expressionResultNode.TypeReference != null && !expressionResultNode.TypeReference.IsODataPrimitiveTypeKind()))
+                (expressionResultNode.TypeReference != null && !expressionResultNode.TypeReference.IsODataPrimitiveTypeKind() && !expressionResultNode.TypeReference.IsODataEnumTypeKind()))
             {
                 throw new ODataException(ODataErrorStrings.MetadataBinder_OrderByExpressionNotSingleValue);
             }
 
             OrderByClause orderByNode = new OrderByClause(
-                thenBy, 
+                thenBy,
                 expressionResultNode,
                 orderByToken.Direction,
                 state.ImplicitRangeVariable);
-            
+
             return orderByNode;
         }
     }

@@ -34,8 +34,8 @@ namespace Microsoft.OData.Core
         /// <summary>The output context to write to.</summary>
         private readonly ODataOutputContext outputContext;
 
-        /// <summary>The operation import whose parameters will be written.</summary>
-        private readonly IEdmOperationImport operationImport;
+        /// <summary>The operation whose parameters will be written.</summary>
+        private readonly IEdmOperation operation;
 
         /// <summary>Stack of writer scopes to keep track of the current context of the writer.</summary>
         private Stack<ParameterWriterState> scopes = new Stack<ParameterWriterState>();
@@ -50,14 +50,13 @@ namespace Microsoft.OData.Core
         /// Constructor.
         /// </summary>
         /// <param name="outputContext">The output context to write to.</param>
-        /// <param name="operationImport">The operation import whose parameters will be written.</param>
-        protected ODataParameterWriterCore(ODataOutputContext outputContext, IEdmOperationImport operationImport)
+        /// <param name="operation">The operation import whose parameters will be written.</param>
+        protected ODataParameterWriterCore(ODataOutputContext outputContext, IEdmOperation operation)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(outputContext != null, "outputContext != null");
 
             this.outputContext = outputContext;
-            this.operationImport = operationImport;
+            this.operation = operation;
             this.scopes.Push(ParameterWriterState.Start);
         }
 
@@ -152,7 +151,7 @@ namespace Microsoft.OData.Core
         /// Start writing a value parameter.
         /// </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <param name="parameterValue">The value of the parameter to write.</param>
+        /// <param name="parameterValue">The value of the parameter to write (null/ODataComplexValue/ODataEnumValue/primitiveClrValue).</param>
         public sealed override void WriteValue(string parameterName, object parameterValue)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
@@ -380,12 +379,12 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             IEdmTypeReference parameterTypeReference = this.VerifyCanWriteParameterAndGetTypeReference(synchronousCall, parameterName);
-            if (parameterTypeReference != null && !parameterTypeReference.IsODataPrimitiveTypeKind() && !parameterTypeReference.IsODataComplexTypeKind())
+            if (parameterTypeReference != null && !parameterTypeReference.IsODataPrimitiveTypeKind() && !parameterTypeReference.IsODataComplexTypeKind() && !parameterTypeReference.IsODataEnumTypeKind())
             {
                 throw new ODataException(Strings.ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind(parameterName, parameterTypeReference.TypeKind()));
             }
 
-            if (parameterValue != null && (!EdmLibraryExtensions.IsPrimitiveType(parameterValue.GetType()) || parameterValue is Stream) && !(parameterValue is ODataComplexValue))
+            if (parameterValue != null && (!EdmLibraryExtensions.IsPrimitiveType(parameterValue.GetType()) || parameterValue is Stream) && !(parameterValue is ODataComplexValue) && !(parameterValue is ODataEnumValue))
             {
                 throw new ODataException(Strings.ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType(parameterName, parameterValue.GetType()));
             }
@@ -418,12 +417,12 @@ namespace Microsoft.OData.Core
         /// <returns>The type reference of the parameter; null if no operation import was specified to the writer.</returns>
         private IEdmTypeReference GetParameterTypeReference(string parameterName)
         {
-            if (this.operationImport != null)
+            if (this.operation != null)
             {
-                IEdmOperationParameter parameter = this.operationImport.FindParameter(parameterName);
+                IEdmOperationParameter parameter = this.operation.FindParameter(parameterName);
                 if (parameter == null)
                 {
-                    throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInFunctionImport(parameterName, this.operationImport.Name));
+                    throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(parameterName, this.operation.Name));
                 }
 
                 return this.outputContext.EdmTypeResolver.GetParameterType(parameter);
@@ -436,7 +435,7 @@ namespace Microsoft.OData.Core
         /// Write a value parameter - implementation of the actual functionality.
         /// </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <param name="parameterValue">The value of the parameter to write.</param>
+        /// <param name="parameterValue">The value of the parameter to write (null/ODataComplexValue/ODataEnumValue/primitiveClrValue).</param>
         /// <param name="expectedTypeReference">The expected type reference of the parameter value.</param>
         private void WriteValueImplementation(string parameterName, object parameterValue, IEdmTypeReference expectedTypeReference)
         {
@@ -484,17 +483,17 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
 
-            if (this.operationImport != null && this.operationImport.Parameters != null)
+            if (this.operation != null && this.operation.Parameters != null)
             {
                 IEnumerable<IEdmOperationParameter> parameters = null;
-                if (this.operationImport.IsBindable)
+                if (this.operation.IsBound)
                 {
                     // The binding parameter may or may not be present in the payload. Hence we don't throw error if the binding parameter is missing.
-                    parameters = this.operationImport.Parameters.Skip(1);
+                    parameters = this.operation.Parameters.Skip(1);
                 }
                 else
                 {
-                    parameters = this.operationImport.Parameters;
+                    parameters = this.operation.Parameters;
                 }
 
                 IEnumerable<string> missingParameters = parameters.Where(p => !this.parameterNamesWritten.Contains(p.Name) && !this.outputContext.EdmTypeResolver.GetParameterType(p).IsNullable).Select(p => p.Name);
@@ -503,7 +502,7 @@ namespace Microsoft.OData.Core
                     missingParameters = missingParameters.Select(name => String.Format(CultureInfo.InvariantCulture, "'{0}'", name));
 
                     // We're calling the ToArray here since not all platforms support the string.Join which takes IEnumerable.
-                    throw new ODataException(Strings.ODataParameterWriterCore_MissingParameterInParameterPayload(string.Join(", ", missingParameters.ToArray()), this.operationImport.Name));
+                    throw new ODataException(Strings.ODataParameterWriterCore_MissingParameterInParameterPayload(string.Join(", ", missingParameters.ToArray()), this.operation.Name));
                 }
             }
         }

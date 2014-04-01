@@ -31,7 +31,6 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightErrorDeserializer(ODataJsonLightInputContext jsonLightInputContext)
             : base(jsonLightInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -44,7 +43,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal ODataError ReadTopLevelError()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             Debug.Assert(!this.JsonReader.DisableInStreamErrorDetection, "!JsonReader.DisableInStreamErrorDetection");
             this.JsonReader.AssertNotBuffering();
@@ -90,7 +88,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal Task<ODataError> ReadTopLevelErrorAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             Debug.Assert(!this.JsonReader.DisableInStreamErrorDetection, "!JsonReader.DisableInStreamErrorDetection");
             this.JsonReader.AssertNotBuffering();
@@ -143,15 +140,15 @@ namespace Microsoft.OData.Core.JsonLight
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 string propertyName = this.JsonReader.ReadPropertyName();
-                if (string.CompareOrdinal(ODataAnnotationNames.ODataError, propertyName) != 0)
+                if (string.CompareOrdinal(JsonLightConstants.ODataErrorPropertyName, propertyName) != 0)
                 {
-                    // we only allow a single 'odata.error' property for a top-level error object
+                    // we only allow a single 'error' property for a top-level error object
                     throw new ODataException(Strings.ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty(propertyName));
                 }
 
                 if (error != null)
                 {
-                    throw new ODataException(OData.Core.Strings.ODataJsonReaderUtils_MultipleErrorPropertiesWithSameName(ODataAnnotationNames.ODataError));
+                    throw new ODataException(OData.Core.Strings.ODataJsonReaderUtils_MultipleErrorPropertiesWithSameName(JsonLightConstants.ODataErrorPropertyName));
                 }
 
                 error = new ODataError();
@@ -240,7 +237,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         private object ReadErrorPropertyAnnotationValue(string propertyAnnotationName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyAnnotationName), "!string.IsNullOrEmpty(propertyAnnotationName)");
             Debug.Assert(
                 propertyAnnotationName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix, StringComparison.Ordinal),
@@ -249,7 +245,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (string.CompareOrdinal(propertyAnnotationName, ODataAnnotationNames.ODataType) == 0)
             {
-                string typeName = this.JsonReader.ReadStringValue();
+                string typeName = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName(this.JsonReader.ReadStringValue()));
                 if (typeName == null)
                 {
                     throw new ODataException(Strings.ODataJsonLightPropertyAndValueDeserializer_InvalidTypeName(propertyAnnotationName));
@@ -263,31 +259,17 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Reads the JSON object which is the value of the "odata.error" property.
+        /// Reads the JSON object which is the value of the "error" property.
         /// </summary>
         /// <param name="error">The <see cref="ODataError"/> object to update with data from the payload.</param>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.StartObject    - The start of the "odata.error" object.
+        /// Pre-Condition:  JsonNodeType.StartObject    - The start of the "error" object.
         ///                 any                         - Will throw if not StartObject.
-        /// Post-Condition: any                         - The node after the "odata.error" object's EndNode.
+        /// Post-Condition: any                         - The node after the "error" object's EndNode.
         /// </remarks>
         private void ReadODataErrorObject(ODataError error)
         {
             this.ReadJsonObjectInErrorPayload((propertyName, duplicationPropertyNameChecker) => this.ReadPropertyValueInODataErrorObject(error, propertyName, duplicationPropertyNameChecker));
-        }
-
-        /// <summary>
-        /// Reads the JSON object which is the value of the "message" property.
-        /// </summary>
-        /// <param name="error">The <see cref="ODataError"/> object to update with data from the payload.</param>
-        /// <remarks>
-        /// Pre-Condition:  JsonNodeType.StartObject    - The start of the "message" object.
-        ///                 any                         - Will throw if not StartObject.
-        /// Post-Condition: any                         - The node after the "message" object's EndNode.
-        /// </remarks>
-        private void ReadErrorMessageObject(ODataError error)
-        {
-            this.ReadJsonObjectInErrorPayload((propertyName, duplicatePropertyNamesChecker) => this.ReadPropertyValueInMessageObject(error, propertyName));
         }
 
         /// <summary>
@@ -355,7 +337,7 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Reads a property value which occurs in the "odata.error" object scope.
+        /// Reads a property value which occurs in the "error" object scope.
         /// </summary>
         /// <param name="error">The <see cref="ODataError"/> object to update with the data from this property value.</param>
         /// <param name="propertyName">The name of the property whose value is to be read.</param>
@@ -364,7 +346,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <remarks>
         /// Pre-Condition:  any                         - The value of the property being read.
         /// Post-Condition: JsonNodeType.Property       - The property after the one being read.
-        ///                 JsonNodeType.EndObject      - The end of the "odata.error" object.
+        ///                 JsonNodeType.EndObject      - The end of the "error" object.
         ///                 any                         - Anything else after the property value is an invalid payload (but won't fail in this method).
         /// </remarks>
         private void ReadPropertyValueInODataErrorObject(ODataError error, string propertyName, DuplicatePropertyNamesChecker duplicationPropertyNameChecker)
@@ -376,7 +358,7 @@ namespace Microsoft.OData.Core.JsonLight
                     break;
 
                 case JsonConstants.ODataErrorMessageName:
-                    this.ReadErrorMessageObject(error);
+                    error.Message = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorMessageName);
                     break;
 
                 case JsonConstants.ODataErrorInnerErrorName:
@@ -393,7 +375,7 @@ namespace Microsoft.OData.Core.JsonLight
                         var odataAnnotations = duplicationPropertyNameChecker.GetODataPropertyAnnotations(propertyName);
                         if (odataAnnotations != null)
                         {
-                            odataAnnotations.TryGetValue(ODataAnnotationNames.ODataType, out typeName);   
+                            odataAnnotations.TryGetValue(ODataAnnotationNames.ODataType, out typeName);
                         }
 
                         var value = valueDeserializer.ReadNonEntityValue(
@@ -406,51 +388,15 @@ namespace Microsoft.OData.Core.JsonLight
                             false /*insideComplexValue*/,
                             propertyName);
 
-                        error.AddInstanceAnnotationForReading(propertyName, value);
+                        error.GetInstanceAnnotations().Add(new ODataInstanceAnnotation(propertyName, value.ToODataValue()));
                     }
                     else
                     {
-                        // we only allow a 'code', 'message' and 'innererror' properties in the value of the 'odata.error' property or custom instance annotations
+                        // we only allow a 'code', 'message' and 'innererror' properties in the value of the 'error' property or custom instance annotations
                         throw new ODataException(Strings.ODataJsonLightErrorDeserializer_TopLevelErrorValueWithInvalidProperty(propertyName));
                     }
 
                     break;
-            }
-        }
-
-        /// <summary>
-        /// Reads a property value which occurs in the "message" object scope. 
-        /// </summary>
-        /// <param name="error">The <see cref="ODataError"/> object to update with the data from this property value.</param>
-        /// <param name="propertyName">The name of the propety whose value is to be read.</param>
-        /// <remarks>
-        /// Pre-Condition:  any                         - The value of the property being read.
-        /// Post-Condition: JsonNodeType.Property       - The property after the one being read.
-        ///                 JsonNodeType.EndObject      - The end of the "message" object.
-        ///                 any                         - Anything else after the property value is an invalid payload (but won't fail in this method).
-        /// </remarks>
-        private void ReadPropertyValueInMessageObject(ODataError error, string propertyName)
-        {
-            switch (propertyName)
-            {
-                case JsonConstants.ODataErrorMessageLanguageName:
-                    error.MessageLanguage = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorMessageLanguageName);
-                    break;
-
-                case JsonConstants.ODataErrorMessageValueName:
-                    error.Message = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorMessageValueName);
-                    break;
-
-                default:
-                    if (ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName))
-                    {
-                        // ignore custom instance annotations
-                        this.JsonReader.SkipValue();
-                        break;
-                    }
-                    
-                    // we only allow a 'lang' and 'value' properties in the value of the 'message' property
-                    throw new ODataException(Strings.ODataJsonErrorDeserializer_TopLevelErrorMessageValueWithInvalidProperty(propertyName));
             }
         }
     }

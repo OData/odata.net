@@ -15,40 +15,31 @@ namespace Microsoft.OData.Edm.Library
     /// </summary>
     public class EdmOperationParameter : EdmNamedElement, IEdmOperationParameter
     {
-        private readonly IEdmTypeReference type;
-        private readonly IEdmFunctionBase declaringFunction;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmOperationParameter"/> class.
         /// </summary>
-        /// <param name="declaringFunction">Declaring function of the parameter.</param>
+        /// <param name="declaringOperation">Declaring function of the parameter.</param>
         /// <param name="name">Name of the parameter.</param>
         /// <param name="type">Type of the parameter.</param>
-        public EdmOperationParameter(IEdmFunctionBase declaringFunction, string name, IEdmTypeReference type)
+        public EdmOperationParameter(IEdmOperation declaringOperation, string name, IEdmTypeReference type)
             : base(name)
         {
-            EdmUtil.CheckArgumentNull(declaringFunction, "declaringFunction");
+            EdmUtil.CheckArgumentNull(declaringOperation, "declaringFunction");
             EdmUtil.CheckArgumentNull(name, "name");
             EdmUtil.CheckArgumentNull(type, "type");
 
-            this.type = type;
-            this.declaringFunction = declaringFunction;
+            this.Type = type;
+            this.DeclaringOperation = declaringOperation;
         }
 
         /// <summary>
         /// Gets the type of this parameter.
         /// </summary>
-        public IEdmTypeReference Type
-        {
-            get { return this.type; }
-        }
+        public IEdmTypeReference Type { get; private set; }
 
         /// <summary>
-        /// Gets the function or operation import that declared this parameter.
+        /// Gets the operation that declared this parameter.
         /// </summary>
-        public IEdmFunctionBase DeclaringFunction
-        {
-            get { return this.declaringFunction; }
-        }
+        public IEdmOperation DeclaringOperation { get; private set; }
     }
 }

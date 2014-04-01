@@ -38,7 +38,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomEntryMetadataSerializer(ODataAtomOutputContext atomOutputContext)
             : base(atomOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -62,7 +61,6 @@ namespace Microsoft.OData.Core.Atom
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "No good way to refactor; logic should be kept together.")]
         internal void WriteEntryMetadata(AtomEntryMetadata entryMetadata, string updatedTime)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(updatedTime), "!string.IsNullOrEmpty(updatedTime)");
 #if DEBUG
             DateTimeOffset tempDateTimeOffset;

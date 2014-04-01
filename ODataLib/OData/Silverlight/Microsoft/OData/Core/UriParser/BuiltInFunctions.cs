@@ -41,7 +41,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>true if the function was found, or false otherwise.</returns>
         internal static bool TryGetBuiltInFunction(string name, out FunctionSignatureWithReturnType[] signatures)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(name != null, "name != null");
 
             return builtInFunctions.TryGetValue(name, out signatures);
@@ -53,7 +52,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>A string with ';'-separated list of function signatures.</returns>
         internal static string BuildFunctionSignatureListDescription(string name, IEnumerable<FunctionSignature> signatures)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(name != null, "name != null");
             Debug.Assert(signatures != null, "signatures != null");
 
@@ -95,8 +93,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="functions">Dictionary of functions to add to.</param>
         internal static void CreateSpatialFunctions(IDictionary<string, FunctionSignatureWithReturnType[]> functions)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // double geo.distance(geographyPoint, geographyPoint)
             // double geo.distance(geometryPoint, geometryPoint)
             FunctionSignatureWithReturnType[] signatures = new FunctionSignatureWithReturnType[]
@@ -295,42 +291,30 @@ namespace Microsoft.OData.Core.UriParser
             FunctionSignatureWithReturnType[] withoutTimeSpan = CreateDateTimeFunctionSignatureArray();
             FunctionSignatureWithReturnType[] withTimeSpan = withoutTimeSpan.Concat(CreateDurationFunctionSignatures()).ToArray();
 
-            // int year(DateTime)
-            // int year(DateTime?)
             // int year(DateTimeOffset)
             // int year(DateTimeOffset?)
             functions.Add("year", withoutTimeSpan);
 
-            // int month(DateTime)
-            // int month(DateTime?)
             // int month(DateTimeOffset)
             // int month(DateTimeOffset?)
             functions.Add("month", withoutTimeSpan);
 
-            // int day(DateTime)
-            // int day(DateTime?)
             // int day(DateTimeOffset)
             // int day(DateTimeOffset?)
             functions.Add("day", withoutTimeSpan);
 
-            // int hour(DateTime)
-            // int hour(DateTime?)
             // int hour(DateTimeOffset)
             // int hour(DateTimeOffset?)
             // int second(TimeSpan)
             // int second(TimeSpan?)
             functions.Add("hour", withTimeSpan);
 
-            // int minute(DateTime)
-            // int minute(DateTime?)
             // int minute(DateTimeOffset)
             // int minute(DateTimeOffset?)
             // int second(TimeSpan)
             // int second(TimeSpan?)
             functions.Add("minute", withTimeSpan);
 
-            // int second(DateTime)
-            // int second(DateTime?)
             // int second(DateTimeOffset)
             // int second(DateTimeOffset?)
             // int second(TimeSpan)
@@ -344,14 +328,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The array of signatures for a date time functions.</returns>
         private static FunctionSignatureWithReturnType[] CreateDateTimeFunctionSignatureArray()
         {
-            FunctionSignatureWithReturnType dateTimeNonNullable = new FunctionSignatureWithReturnType(
-                EdmCoreModel.Instance.GetInt32(false),
-                EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTime, false));
-
-            FunctionSignatureWithReturnType dateTimeNullable = new FunctionSignatureWithReturnType(
-                EdmCoreModel.Instance.GetInt32(false),
-                EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTime, true));
-
             FunctionSignatureWithReturnType dateTimeOffsetNonNullable = new FunctionSignatureWithReturnType(
                 EdmCoreModel.Instance.GetInt32(false),
                 EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false));
@@ -360,7 +336,7 @@ namespace Microsoft.OData.Core.UriParser
                 EdmCoreModel.Instance.GetInt32(false),
                 EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, true));
 
-            return new[] { dateTimeNonNullable, dateTimeNullable, dateTimeOffsetNonNullable, dateTimeOffsetNullable };
+            return new[] { dateTimeOffsetNonNullable, dateTimeOffsetNullable };
         }
 
         /// <summary>

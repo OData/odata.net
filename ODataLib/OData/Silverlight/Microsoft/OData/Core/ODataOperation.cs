@@ -51,11 +51,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>Gets or sets the URI to get metadata for the <see cref="T:Microsoft.OData.Core.ODataAction" />.</summary>
         /// <returns>The URI to get metadata for the <see cref="T:Microsoft.OData.Core.ODataAction" />.</returns>
-        public Uri Metadata
-        {
-            get;
-            set;
-        }
+        public Uri Metadata { get; set; }
 
         /// <summary>Gets or sets a human-readable description of the <see cref="T:Microsoft.OData.Core.ODataAction" />.</summary>
         /// <returns>A human-readable description of the <see cref="T:Microsoft.OData.Core.ODataAction" />.</returns>
@@ -100,13 +96,12 @@ namespace Microsoft.OData.Core
         /// <param name="metadataDocumentUri">The metadata document Uri.</param>
         internal void SetMetadataBuilder(ODataEntityMetadataBuilder builder, Uri metadataDocumentUri)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(metadataDocumentUri != null, "metadataDocumentUri != null");
             Debug.Assert(metadataDocumentUri.IsAbsoluteUri, "metadataDocumentUri.IsAbsoluteUri");
 
             ODataJsonLightValidationUtils.ValidateOperation(metadataDocumentUri, this);
             this.metadataBuilder = builder;
-            this.operationFullName = ODataJsonLightUtils.GetFullyQualifiedOperationImportName(metadataDocumentUri, UriUtilsCommon.UriToString(this.Metadata), out this.bindingParameterTypeName);
+            this.operationFullName = ODataJsonLightUtils.GetFullyQualifiedOperationName(metadataDocumentUri, UriUtils.UriToString(this.Metadata), out this.bindingParameterTypeName);
             this.computedTitle = null;
             this.computedTarget = null;
         }
@@ -117,7 +112,6 @@ namespace Microsoft.OData.Core
         /// <returns>The metadata builder used to compute values.</returns>
         internal ODataEntityMetadataBuilder GetMetadataBuilder()
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.metadataBuilder;
         }
     }

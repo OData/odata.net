@@ -53,8 +53,6 @@ namespace Microsoft.OData.Edm
                     return ((IEdmCollectionType)type).ToTraceString();
                 case EdmTypeKind.EntityReference:
                     return ((IEdmEntityReferenceType)type).ToTraceString();
-                case EdmTypeKind.Row:
-                    return ((IEdmRowType)type).ToTraceString();
                 default:
                     var schemaType = type as IEdmSchemaType;
                     return schemaType != null ? schemaType.ToTraceString() : EdmConstants.Value_UnknownType;
@@ -106,30 +104,6 @@ namespace Microsoft.OData.Edm
             return EdmTypeKind.Collection.ToString() + '(' + (type.ElementType != null ? type.ElementType.ToTraceString() : "") + ')';
         }
 
-        private static string ToTraceString(this IEdmRowType type)
-        {
-            StringBuilder sb = new StringBuilder(EdmTypeKind.Row.ToString());
-            sb.Append('(');
-            if (type.Properties().Any())
-            {
-                IEdmProperty lastProperty = type.Properties().Last();
-                foreach (IEdmProperty prop in type.Properties())
-                {
-                    if (prop != null)
-                    {
-                        sb.Append(prop.ToTraceString());
-                        if (!prop.Equals(lastProperty))
-                        {
-                            sb.Append(", ");
-                        }
-                    }
-                }
-            }
-
-            sb.Append(')');
-            return sb.ToString();
-        }
-
         private static void AppendFacets(this StringBuilder sb, IEdmPrimitiveTypeReference type)
         {
             switch (type.PrimitiveKind())
@@ -144,7 +118,6 @@ namespace Microsoft.OData.Edm
                     sb.AppendStringFacets(type.AsString());
                     break;
                 case EdmPrimitiveTypeKind.Duration:
-                case EdmPrimitiveTypeKind.DateTime:
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                     sb.AppendTemporalFacets(type.AsTemporal());
                     break;
@@ -171,7 +144,6 @@ namespace Microsoft.OData.Edm
 
         private static void AppendBinaryFacets(this StringBuilder sb, IEdmBinaryTypeReference type)
         {
-            sb.AppendKeyValue(EdmConstants.FacetName_FixedLength, type.IsFixedLength.ToString());
             if (type.IsUnbounded || type.MaxLength != null)
             {
                 sb.AppendKeyValue(EdmConstants.FacetName_MaxLength, (type.IsUnbounded) ? EdmConstants.Value_Max : type.MaxLength.ToString());
@@ -180,11 +152,6 @@ namespace Microsoft.OData.Edm
 
         private static void AppendStringFacets(this StringBuilder sb, IEdmStringTypeReference type)
         {
-            if (type.IsFixedLength != null)
-            {
-                sb.AppendKeyValue(EdmConstants.FacetName_FixedLength, type.IsFixedLength.ToString());
-            }
-
             if (type.IsUnbounded == true || type.MaxLength != null)
             {
                 sb.AppendKeyValue(EdmConstants.FacetName_MaxLength, (type.IsUnbounded) ? EdmConstants.Value_Max : type.MaxLength.ToString());
@@ -193,11 +160,6 @@ namespace Microsoft.OData.Edm
             if (type.IsUnicode != null)
             {
                 sb.AppendKeyValue(EdmConstants.FacetName_Unicode, type.IsUnicode.ToString());
-            }
-
-            if (type.Collation != null)
-            {
-                sb.AppendKeyValue(EdmConstants.FacetName_Collation, type.Collation.ToString());
             }
         }
 

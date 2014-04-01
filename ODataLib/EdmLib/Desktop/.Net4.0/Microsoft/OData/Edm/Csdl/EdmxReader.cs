@@ -14,9 +14,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using Microsoft.OData.Edm.Csdl.Internal.CsdlSemantics;
-using Microsoft.OData.Edm.Csdl.Internal.Parsing;
-using Microsoft.OData.Edm.Csdl.Internal.Parsing.Ast;
+using Microsoft.OData.Edm.Csdl.CsdlSemantics;
+using Microsoft.OData.Edm.Csdl.Parsing;
+using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Csdl
@@ -34,8 +34,6 @@ namespace Microsoft.OData.Edm.Csdl
         private readonly XmlReader reader;
         private readonly List<EdmError> errors;
         private readonly CsdlParser csdlParser;
-        private Version dataServiceVersion;
-        private Version maxDataServiceVersion;
 
         /// <summary>
         /// True when either Runtime or DataServices node have been processed.
@@ -220,16 +218,6 @@ namespace Microsoft.OData.Edm.Csdl
                     
                     Debug.Assert(edmxVersion != null, "edmxVersion != null");
                     model.SetEdmxVersion(edmxVersion);
-                    
-                    if (this.dataServiceVersion != null)
-                    {
-                        model.SetDataServiceVersion(this.dataServiceVersion);
-                    }
-
-                    if (this.maxDataServiceVersion != null)
-                    {
-                        model.SetMaxDataServiceVersion(this.maxDataServiceVersion);
-                    }
                 }
                 else
                 {
@@ -370,18 +358,6 @@ namespace Microsoft.OData.Edm.Csdl
 
         private void ParseDataServicesElement()
         {
-            string dataServiceVersionString = this.GetAttributeValue(CsdlConstants.ODataMetadataNamespace, CsdlConstants.Attribute_DataServiceVersion);
-            if (dataServiceVersionString != null && !TryParseVersion(dataServiceVersionString, out this.dataServiceVersion))
-            {
-                this.RaiseError(EdmErrorCode.InvalidVersionNumber, Edm.Strings.EdmxParser_EdmxDataServiceVersionInvalid);
-            }
-
-            string maxDataServiceVersionString = this.GetAttributeValue(CsdlConstants.ODataMetadataNamespace, CsdlConstants.Attribute_MaxDataServiceVersion);
-            if (maxDataServiceVersionString != null && !TryParseVersion(maxDataServiceVersionString, out this.maxDataServiceVersion))
-            {
-                this.RaiseError(EdmErrorCode.InvalidVersionNumber, Edm.Strings.EdmxParser_EdmxMaxDataServiceVersionInvalid);
-            }
-
             this.ParseTargetElement(CsdlConstants.Element_DataServices, this.dataServicesParserLookup);
         }
 
@@ -411,9 +387,18 @@ namespace Microsoft.OData.Edm.Csdl
         private void ParseCsdlSchemaElement()
         {
             Debug.Assert(this.reader.LocalName == CsdlConstants.Element_Schema, "Must call ParseCsdlSchemaElement on Schema Element");
+
+            XmlReaderSettings settings = new XmlReaderSettings();
+            IXmlLineInfo lineInfo = this.reader as IXmlLineInfo;
+            if (lineInfo != null && lineInfo.HasLineInfo())
+            {
+                settings.LineNumberOffset = lineInfo.LineNumber - 1;
+                settings.LinePositionOffset = lineInfo.LinePosition - 2;
+            }
+            
             using (StringReader sr = new StringReader(this.reader.ReadOuterXml()))
             {
-                using (XmlReader xr = XmlReader.Create(sr))
+                using (XmlReader xr = XmlReader.Create(sr, settings))
                 {
                     this.csdlParser.AddReader(xr);
                 }

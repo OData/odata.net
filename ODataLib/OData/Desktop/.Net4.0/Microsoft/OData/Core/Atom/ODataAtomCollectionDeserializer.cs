@@ -15,6 +15,7 @@ namespace Microsoft.OData.Core.Atom
     using System.Xml;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -32,8 +33,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomCollectionDeserializer(ODataAtomInputContext atomInputContext)
             : base(atomInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
         }
 
@@ -50,7 +49,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal ODataCollectionStart ReadCollectionStart(out bool isCollectionElementEmpty)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
             this.AssertXmlCondition(XmlNodeType.Element);
 
@@ -97,7 +95,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void ReadCollectionEnd()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
             this.AssertXmlCondition(true, XmlNodeType.EndElement);
 
@@ -119,7 +116,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal object ReadCollectionItem(IEdmTypeReference expectedItemType, CollectionWithoutExpectedTypeValidator collectionValidator)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
             this.AssertXmlCondition(XmlNodeType.Element);
 
@@ -148,7 +144,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void SkipToElementInODataMetadataNamespace()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
 
             do

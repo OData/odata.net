@@ -45,7 +45,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="bindMethod">Bind method to use for binding a parent node, if needed.</param>
         internal InnerPathTokenBinder(MetadataBinder.QueryTokenVisitor bindMethod)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             this.bindMethod = bindMethod;
         }
 
@@ -56,7 +55,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The given parent node as a SingleEntityNode.</returns>
         internal static SingleEntityNode EnsureParentIsEntityForNavProp(SingleValueNode parent)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(parent, "parent");
             SingleEntityNode parentEntity = parent as SingleEntityNode;
             if (parentEntity == null)
@@ -76,7 +74,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The property associated with string and parent type.</returns>
         internal static IEdmProperty BindProperty(IEdmTypeReference parentReference, string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             IEdmStructuredTypeReference structuredParentType =
                 parentReference == null ? null : parentReference.AsStructuredOrNull();
             return structuredParentType == null ? null : structuredParentType.FindProperty(propertyName);
@@ -93,7 +90,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A new CollectionNavigationNode or SingleNavigationNode to capture the navigation propety access.</returns>
         internal static QueryNode GetNavigationNode(IEdmNavigationProperty property, SingleEntityNode parent, IEnumerable<NamedValue> namedValues, BindingState state, KeyBinder keyBinder)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             ExceptionUtils.CheckArgumentNotNull(property, "property");
             ExceptionUtils.CheckArgumentNotNull(parent, "parent");
             ExceptionUtils.CheckArgumentNotNull(state, "state");
@@ -129,8 +125,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The bound node.</returns>
         internal QueryNode BindInnerPathSegment(InnerPathToken segmentToken, BindingState state)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             FunctionCallBinder functionCallBinder = new FunctionCallBinder(this.bindMethod);
 
             // First we get the parent node
@@ -201,7 +195,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A SingleValueQueryNode that is the parent node of the <paramref name="segmentToken"/>.</returns>
         private QueryNode DetermineParentNode(InnerPathToken segmentToken, BindingState state)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             ExceptionUtils.CheckArgumentNotNull(segmentToken, "segmentToken");
             ExceptionUtils.CheckArgumentNotNull(state, "state");
 

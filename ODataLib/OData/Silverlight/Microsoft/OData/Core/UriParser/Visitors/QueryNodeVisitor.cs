@@ -26,7 +26,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(AllNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -37,7 +36,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(AnyNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -48,7 +46,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(BinaryOperatorNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -59,7 +56,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(CollectionNavigationNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -70,7 +66,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(CollectionPropertyAccessNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -81,7 +76,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(ConstantNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -92,7 +86,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(ConvertNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -103,7 +96,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(EntityCollectionCastNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -114,7 +106,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(EntityRangeVariableReferenceNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -125,7 +116,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(NonentityRangeVariableReferenceNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -136,7 +126,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(SingleEntityCastNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -147,7 +136,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(SingleNavigationNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -158,7 +146,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(SingleEntityFunctionCallNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -169,7 +156,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(SingleValueFunctionCallNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -180,7 +166,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(EntityCollectionFunctionCallNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -191,7 +176,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(CollectionFunctionCallNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -202,7 +186,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(SingleValueOpenPropertyAccessNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -213,7 +196,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(SingleValuePropertyAccessNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -224,7 +206,6 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(UnaryOperatorNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             throw new NotImplementedException();
         }
 
@@ -235,7 +216,16 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(NamedFunctionParameterNode nodeIn)
         {
-            DebugUtils.CheckNoExternalCallers();
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visit a ParameterAliasNode
+        /// </summary>
+        /// <param name="nodeIn">The node to visit</param>
+        /// <returns>The translated expression</returns>
+        public virtual T Visit(ParameterAliasNode nodeIn)
+        {
             throw new NotImplementedException();
         }
     }

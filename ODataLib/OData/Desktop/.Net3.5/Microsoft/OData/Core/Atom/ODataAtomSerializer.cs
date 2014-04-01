@@ -34,7 +34,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomSerializer(ODataAtomOutputContext atomOutputContext)
             : base(atomOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(atomOutputContext != null, "atomOutputContext != null");
 
             this.atomOutputContext = atomOutputContext;
@@ -75,7 +74,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.atomOutputContext.XmlWriter;
             }
         }
@@ -102,7 +100,6 @@ namespace Microsoft.OData.Core.Atom
         /// it returns the original string of the Uri.</returns>
         internal string UriToUrlAttributeValue(Uri uri)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(uri != null, "uri != null");
             return this.UriToUrlAttributeValue(uri, /*failOnRelativeUriWithoutBaseUri*/ true);
         }
@@ -120,16 +117,15 @@ namespace Microsoft.OData.Core.Atom
         /// it returns the original string of the Uri.</returns>
         internal string UriToUrlAttributeValue(Uri uri, bool failOnRelativeUriWithoutBaseUri)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(uri != null, "uri != null");
 
             if (this.UrlResolver != null)
             {
                 // The resolver returns 'null' if no custom resolution is desired.
-                Uri resultUri = this.UrlResolver.ResolveUrl(this.MessageWriterSettings.BaseUri, uri);
+                Uri resultUri = this.UrlResolver.ResolveUrl(this.MessageWriterSettings.PayloadBaseUri, uri);
                 if (resultUri != null)
                 {
-                    return UriUtilsCommon.UriToString(resultUri);
+                    return UriUtils.UriToString(resultUri);
                 }
             }
 
@@ -137,16 +133,16 @@ namespace Microsoft.OData.Core.Atom
             {
                 // NOTE: the only URIs that are allowed to be relative (e.g., failOnRelativeUriWithoutBaseUri is false)
                 //       are metadata URIs in operations; for such metadata URIs there is no base URI.
-                if (this.MessageWriterSettings.BaseUri == null && failOnRelativeUriWithoutBaseUri)
+                if (this.MessageWriterSettings.PayloadBaseUri == null && failOnRelativeUriWithoutBaseUri)
                 {
                     throw new ODataException(
-                        ODataErrorStrings.ODataWriter_RelativeUriUsedWithoutBaseUriSpecified(UriUtilsCommon.UriToString(uri)));
+                        ODataErrorStrings.ODataWriter_RelativeUriUsedWithoutBaseUriSpecified(UriUtils.UriToString(uri)));
                 }
 
                 uri = UriUtils.EnsureEscapedRelativeUri(uri);
             }
 
-            return UriUtilsCommon.UriToString(uri);
+            return UriUtils.UriToString(uri);
         }
 
         /// <summary>
@@ -154,8 +150,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void WritePayloadStart()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.XmlWriter.WriteStartDocument();
         }
 
@@ -166,8 +160,6 @@ namespace Microsoft.OData.Core.Atom
         /// as it would fail on unclosed elements (or try to close them).</remarks>
         internal void WritePayloadEnd()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.XmlWriter.WriteEndDocument();
         }
 
@@ -179,7 +171,6 @@ namespace Microsoft.OData.Core.Atom
         internal void WriteTopLevelError(ODataError error, bool includeDebugInformation)
         {
             Debug.Assert(this.MessageWriterSettings != null, "this.MessageWriterSettings != null");
-            DebugUtils.CheckNoExternalCallers();
 
             this.WritePayloadStart();
             ODataAtomWriterUtils.WriteError(this.XmlWriter, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth);
@@ -192,7 +183,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="flags">An enumeration value to indicate what default namespace attributes to write.</param>
         internal void WriteDefaultNamespaceAttributes(DefaultNamespaceFlags flags)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.MessageWriterSettings.Version.HasValue, "Version must be set by now.");
 
             if ((flags & DefaultNamespaceFlags.Atom) == DefaultNamespaceFlags.Atom)
@@ -225,20 +215,12 @@ namespace Microsoft.OData.Core.Atom
         /// Writes the count.
         /// </summary>
         /// <param name="count">Count value.</param>
-        /// <param name="includeNamespaceDeclaration">True if the namespace declaration for the metadata namespace should be included; otherwise false.</param>
-        internal void WriteCount(long count, bool includeNamespaceDeclaration)
+        internal void WriteCount(long count)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.XmlWriter.WriteStartElement(
                 AtomConstants.ODataMetadataNamespacePrefix,
                 AtomConstants.ODataCountElementName,
-                AtomConstants.ODataMetadataNamespace);
-
-            if (includeNamespaceDeclaration)
-            {
-                this.WriteDefaultNamespaceAttributes(DefaultNamespaceFlags.ODataMetadata);
-            }
+                null);
 
             this.XmlWriter.WriteValue(count);
             this.XmlWriter.WriteEndElement();
@@ -249,9 +231,7 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void WriteBaseUriAndDefaultNamespaceAttributes()
         {
-            DebugUtils.CheckNoExternalCallers();
-
-            Uri baseUri = this.MessageWriterSettings.BaseUri;
+            Uri baseUri = this.MessageWriterSettings.PayloadBaseUri;
             if (baseUri != null)
             {
                 this.XmlWriter.WriteAttributeString(
@@ -272,7 +252,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="textContent">The value to be used as element content.</param>
         internal void WriteElementWithTextContent(string prefix, string localName, string ns, string textContent)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(prefix != null, "prefix != null");
             Debug.Assert(!string.IsNullOrEmpty(localName), "!string.IsNullOrEmpty(localName)");
             Debug.Assert(!string.IsNullOrEmpty(ns), "!string.IsNullOrEmpty(ns)");
@@ -295,13 +274,24 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="ns">The namespace of the element.</param>
         internal void WriteEmptyElement(string prefix, string localName, string ns)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(prefix != null, "prefix != null");
             Debug.Assert(!string.IsNullOrEmpty(localName), "!string.IsNullOrEmpty(localName)");
             Debug.Assert(!string.IsNullOrEmpty(ns), "!string.IsNullOrEmpty(ns)");
 
             this.XmlWriter.WriteStartElement(prefix, localName, ns);
             this.XmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// Writes the context URI property and the specified value into the payload.
+        /// </summary>
+        /// <param name="contextUri">The context URI to write.</param>
+        internal void WriteContextUriProperty(Uri contextUri)
+        {
+            if (contextUri != null)
+            {
+                this.XmlWriter.WriteAttributeString(AtomConstants.AtomContextAttributeValue, AtomConstants.ODataMetadataNamespace, contextUri.AbsoluteUri);
+            }
         }
     }
 }

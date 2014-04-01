@@ -10,6 +10,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.OData.Edm.Validation.Internal;
 
 namespace Microsoft.OData.Edm.Validation

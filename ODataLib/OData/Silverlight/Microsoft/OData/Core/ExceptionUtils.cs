@@ -51,7 +51,6 @@ namespace Microsoft.OData.Core
         /// </returns>
         internal static bool IsCatchableExceptionType(Exception e)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(e != null, "Unexpected null exception!");
 
             Type type = e.GetType();
@@ -73,7 +72,6 @@ namespace Microsoft.OData.Core
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
         internal static void CheckArgumentNotNull<T>([ValidatedNotNull] T value, string parameterName) where T : class
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
             if (value == null)
@@ -92,7 +90,6 @@ namespace Microsoft.OData.Core
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
         internal static void CheckArgumentStringNotEmpty(string value, string parameterName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
             if (value != null && value.Length == 0)
@@ -111,7 +108,6 @@ namespace Microsoft.OData.Core
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
         internal static void CheckArgumentStringNotNullOrEmpty([ValidatedNotNull] string value, string parameterName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
             if (string.IsNullOrEmpty(value))
@@ -129,7 +125,6 @@ namespace Microsoft.OData.Core
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
         internal static void CheckIntegerNotNegative(int value, string parameterName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
             if (value < 0)
@@ -147,7 +142,6 @@ namespace Microsoft.OData.Core
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
         internal static void CheckIntegerPositive(int value, string parameterName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
             if (value <= 0)
@@ -165,7 +159,6 @@ namespace Microsoft.OData.Core
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
         internal static void CheckLongPositive(long value, string parameterName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
             if (value <= 0)
@@ -185,7 +178,6 @@ namespace Microsoft.OData.Core
         /// <typeparam name="T">Type of the collection. It does not matter.</typeparam>
         internal static void CheckArgumentCollectionNotNullOrEmpty<T>(ICollection<T> value, string parameterName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
             if (value == null)

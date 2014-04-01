@@ -34,7 +34,7 @@ namespace Microsoft.OData.Core.JsonLight
         private readonly SimpleLazy<JsonLightInstanceAnnotationWriter> instanceAnnotationWriter;
 
         /// <summary>
-        /// Set to true when odata.metadata is writen; set to false otherwise.
+        /// Set to true when odata.context is writen; set to false otherwise.
         /// When value is false, all URIs writen to the payload must be absolute.
         /// </summary>
         private bool allowRelativeUri;
@@ -46,7 +46,6 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightSerializer(ODataJsonLightOutputContext jsonLightOutputContext)
             : base(jsonLightOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonLightOutputContext != null, "jsonLightOutputContext != null");
 
             this.jsonLightOutputContext = jsonLightOutputContext;
@@ -61,7 +60,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.jsonLightOutputContext;
             }
         }
@@ -73,7 +71,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.jsonLightOutputContext.JsonWriter;
             }
         }
@@ -85,7 +82,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.instanceAnnotationWriter.Value;
             }
         }
@@ -96,7 +92,6 @@ namespace Microsoft.OData.Core.JsonLight
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This method is an instance method for consistency with other formats.")]
         internal void WritePayloadStart()
         {
-            DebugUtils.CheckNoExternalCallers();
             ODataJsonWriterUtils.StartJsonPaddingIfRequired(this.JsonWriter, this.MessageWriterSettings);
         }
 
@@ -106,21 +101,51 @@ namespace Microsoft.OData.Core.JsonLight
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This method is an instance method for consistency with other formats.")]
         internal void WritePayloadEnd()
         {
-            DebugUtils.CheckNoExternalCallers();
             ODataJsonWriterUtils.EndJsonPaddingIfRequired(this.JsonWriter, this.MessageWriterSettings);
         }
 
         /// <summary>
         /// Writes the context URI property and the specified value into the payload.
         /// </summary>
-        /// <param name="contextUri">The context URI to write.</param>
-        internal void WriteMetadataUriProperty(Uri contextUri)
+        /// <param name="contextUriGen">Function to generate context Uri.</param>
+        /// <param name="condition">Condition for testing whether context uri need to be written, always write if condition is null.</param>
+        /// <param name="propertyName">Property name to write contextUri on.</param>
+        internal void WriteContextUriProperty(Func<Uri> contextUriGen, Func<bool> condition = null, string propertyName = null)
         {
-            DebugUtils.CheckNoExternalCallers();
+            switch (this.jsonLightOutputContext.ContextUrlLevel)
+            {
+                case ODataContextUrlLevel.None:
+                    return;
+                case ODataContextUrlLevel.OnDemand:
+                    if (condition != null && !condition())
+                    {
+                        return;
+                    }
 
-            this.JsonWriter.WriteName(ODataAnnotationNames.ODataContext);
-            this.JsonWriter.WritePrimitiveValue(contextUri.AbsoluteUri, this.Version);
-            this.allowRelativeUri = true;
+                    break;
+            }
+
+            Uri contextUri = null;
+
+            if (contextUriGen != null)
+            {
+                contextUri = contextUriGen();
+            }
+
+            if (contextUri != null)
+            {
+                if (string.IsNullOrEmpty(propertyName))
+                {
+                    this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataContext);
+                }
+                else
+                {
+                    this.JsonWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataContext);
+                }
+
+                this.JsonWriter.WritePrimitiveValue(contextUri.AbsoluteUri);
+                this.allowRelativeUri = true;
+            }
         }
 
         /// <summary>
@@ -129,7 +154,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="payloadWriterAction">The action that writes the actual JSON payload that is being wrapped.</param>
         internal void WriteTopLevelPayload(Action payloadWriterAction)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(payloadWriterAction != null, "payloadWriterAction != null");
 
             this.WritePayloadStart();
@@ -146,10 +170,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
         internal void WriteTopLevelError(ODataError error, bool includeDebugInformation)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(error != null, "error != null");
 
-            this.WriteTopLevelPayload(() => ODataJsonWriterUtils.WriteError(this.JsonLightOutputContext.JsonWriter, this.InstanceAnnotationWriter.WriteInstanceAnnotations, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth, /*writingJsonLight*/ true));
+            this.WriteTopLevelPayload(() => ODataJsonWriterUtils.WriteError(this.JsonLightOutputContext.JsonWriter, this.InstanceAnnotationWriter.WriteInstanceAnnotationsForError, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth, /*writingJsonLight*/ true));
         }
 
         /// <summary>
@@ -159,13 +182,11 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>Returns the string representation of the URI.</returns>
         internal string UriToString(Uri uri)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(uri != null, "uri != null");
 
-            // Get the metadataDocumentUri directly from MessageWriterSettings and not using MetadataUriBuilder because in the case of getting the service document with nometadata 
-            // MetadataUriBuilder returns null, but the metadataDocumentUri is needed to calculate Absolute Uris in the service document. In any other case jsonLightOutputContext.CreateMetadataUriBuilder() should be used.
-            ODataMetadataDocumentUri odataMetadataDocumentUri = this.jsonLightOutputContext.MessageWriterSettings.MetadataDocumentUri;
-            Uri metadataDocumentUri = odataMetadataDocumentUri == null ? null : odataMetadataDocumentUri.BaseUri;
+            // Get the metadataDocumentUri directly from MessageWriterSettings and not using ContextUriBuilder because in the case of getting the service document with nometadata 
+            // ContextUriBuilder returns null, but the metadataDocumentUri is needed to calculate Absolute Uris in the service document. In any other case jsonLightOutputContext.CreateContextUriBuilder() should be used.
+            Uri metadataDocumentUri = this.jsonLightOutputContext.MessageWriterSettings.MetadataDocumentUri;
 
             Uri resultUri;
             if (this.jsonLightOutputContext.UrlResolver != null)
@@ -174,7 +195,7 @@ namespace Microsoft.OData.Core.JsonLight
                 resultUri = this.jsonLightOutputContext.UrlResolver.ResolveUrl(metadataDocumentUri, uri);
                 if (resultUri != null)
                 {
-                    return UriUtilsCommon.UriToString(resultUri);
+                    return UriUtils.UriToString(resultUri);
                 }
             }
 
@@ -183,9 +204,10 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 if (!this.allowRelativeUri)
                 {
+                    // TODO: Check if it is dead code to be removed.
                     if (metadataDocumentUri == null)
                     {
-                        throw new ODataException(Strings.ODataJsonLightSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata(UriUtilsCommon.UriToString(resultUri)));
+                        throw new ODataException(Strings.ODataJsonLightSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata(UriUtils.UriToString(resultUri)));
                     }
 
                     resultUri = UriUtils.UriToAbsoluteUri(metadataDocumentUri, uri);
@@ -196,7 +218,7 @@ namespace Microsoft.OData.Core.JsonLight
                 }
             }
 
-            return UriUtilsCommon.UriToString(resultUri);
+            return UriUtils.UriToString(resultUri);
         }
     }
 }

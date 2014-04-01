@@ -136,7 +136,7 @@ namespace Microsoft.OData.Core
                     this.expectedItemTypeReference = value;
 
                     // If we set an expected item type reference (e.g., from the
-                    // Json Light metadata URI), we need to reset the collection validator.
+                    // Json Light context URI), we need to reset the collection validator.
                     this.collectionValidator = null;
                 }
             }
@@ -295,7 +295,7 @@ namespace Microsoft.OData.Core
         {
             if (state == ODataCollectionReaderState.Value)
             {
-                ValidationUtils.ValidateCollectionItem(item, true /* isStreamable */);
+                ValidationUtils.ValidateCollectionItem(item, true /* isNullable */);
             }
 
             this.scopes.Push(new Scope(state, item, isCollectionElementEmpty));
@@ -324,7 +324,7 @@ namespace Microsoft.OData.Core
 
             if (state == ODataCollectionReaderState.Value)
             {
-                ValidationUtils.ValidateCollectionItem(item, true /* isStreamable */);
+                ValidationUtils.ValidateCollectionItem(item, true /* isNullable */);
             }
 
             this.scopes.Pop();

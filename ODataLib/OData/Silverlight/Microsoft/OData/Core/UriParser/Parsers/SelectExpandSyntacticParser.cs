@@ -32,10 +32,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             out ExpandToken expandTree, 
             out SelectToken selectTree)
         {
-            ISelectExpandParser selectParser = SelectExpandTermParserFactory.Create(selectClause, configuration.Settings);
+            SelectExpandParser selectParser = new SelectExpandParser(selectClause, configuration.Settings.SelectExpandLimit);
             selectTree = selectParser.ParseSelect();
 
-            ISelectExpandParser expandParser = SelectExpandTermParserFactory.Create(expandClause, configuration.Settings);
+            SelectExpandParser expandParser = new SelectExpandParser(expandClause, configuration.Settings.SelectExpandLimit);
             expandTree = expandParser.ParseExpand();
         }
     }

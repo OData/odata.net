@@ -16,12 +16,12 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.Evaluation;
     using Microsoft.OData.Core.Json;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -30,9 +30,6 @@ namespace Microsoft.OData.Core.JsonLight
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Need to keep the logic together for better readability.")]
     internal sealed class ODataJsonLightEntryAndFeedDeserializer : ODataJsonLightPropertyAndValueDeserializer
     {
-        /// <summary>The annotation group deserializer for reading annotation groups.</summary>
-        private readonly JsonLightAnnotationGroupDeserializer annotationGroupDeserializer;
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -40,9 +37,6 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightEntryAndFeedDeserializer(ODataJsonLightInputContext jsonLightInputContext)
             : base(jsonLightInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-
-            this.annotationGroupDeserializer = new JsonLightAnnotationGroupDeserializer(jsonLightInputContext);
         }
 
         /// <summary>
@@ -55,7 +49,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal void ReadFeedContentStart()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.JsonReader.AssertNotBuffering();
 
             if (this.JsonReader.NodeType != JsonNodeType.StartArray)
@@ -83,8 +76,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal void ReadFeedContentEnd()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.AssertJsonCondition(JsonNodeType.EndArray);
             this.JsonReader.AssertNotBuffering();
 
@@ -107,19 +98,14 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal void ReadEntryTypeName(IODataJsonLightReaderEntryState entryState)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryState != null, "entryState != null");
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
             // If the current node is the odata.type property - read it.
-            if (this.JsonReader.NodeType == JsonNodeType.Property && 
-                string.CompareOrdinal(ODataAnnotationNames.ODataType, this.JsonReader.GetPropertyName()) == 0)
+            if (this.JsonReader.NodeType == JsonNodeType.Property &&
+                string.CompareOrdinal(JsonLightConstants.ODataPropertyAnnotationSeparatorChar + ODataAnnotationNames.ODataType, this.JsonReader.GetPropertyName()) == 0)
             {
-                // The type name might have already been set through an annotation group, so fail to signal potential ambiguity.
-                if (!string.IsNullOrEmpty(entryState.Entry.TypeName))
-                {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_EntryTypeAlreadySpecified);
-                }
+                Debug.Assert(entryState.Entry.TypeName == null, "type name should not have already been set");
 
                 // Read over the property to move to its value.
                 this.JsonReader.Read();
@@ -147,7 +133,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal ODataJsonLightReaderNavigationLinkInfo ReadEntryContent(IODataJsonLightReaderEntryState entryState)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryState != null, "entryState != null");
             Debug.Assert(entryState.EntityType != null && this.Model.IsUserModel(), "A non-null entity type and non-null model are required.");
             Debug.Assert(
@@ -231,14 +216,12 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entryState">The entry state to use.</param>
         internal void ValidateEntryMetadata(IODataJsonLightReaderEntryState entryState)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             ODataEntry entry = entryState.Entry;
             if (entry != null)
             {
                 IEdmEntityType entityType = entryState.EntityType;
 
-                if (!this.ReadingResponse && this.Model.HasDefaultStream(entityType) && entry.MediaResource == null)
+                if (!this.ReadingResponse && entityType.HasStream && entry.MediaResource == null)
                 {
                     ODataStreamReferenceValue mediaResource = entry.MediaResource;
                     ODataJsonLightReaderUtils.EnsureInstance(ref mediaResource);
@@ -248,9 +231,7 @@ namespace Microsoft.OData.Core.JsonLight
                 // By default validate media resource
                 // In WCF DS Server mode, validate media resource in JSON Light (here)
                 // In WCF DS Client mode, do not validate media resource.
-                bool validateMediaResource =
-                    this.UseDefaultFormatBehavior ||
-                    this.UseServerFormatBehavior;
+                bool validateMediaResource = this.UseDefaultFormatBehavior || this.UseServerFormatBehavior;
                 ValidationUtils.ValidateEntryMetadataResource(entry, entityType, this.Model, validateMediaResource);
             }
         }
@@ -266,7 +247,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// the reordering reader); otherwise false.</param>
         internal void ReadTopLevelFeedAnnotations(ODataFeed feed, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, bool forFeedStart, bool readAllFeedProperties)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(feed != null, "feed != null");
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
             this.JsonReader.AssertNotBuffering();
@@ -388,7 +368,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal object ReadEntryPropertyAnnotationValue(string propertyAnnotationName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyAnnotationName), "!string.IsNullOrEmpty(propertyAnnotationName)");
             Debug.Assert(
                 propertyAnnotationName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix, StringComparison.Ordinal),
@@ -408,12 +387,13 @@ namespace Microsoft.OData.Core.JsonLight
                 case ODataAnnotationNames.ODataNextLink:           // odata.nextLink
                 case ODataAnnotationNames.ODataMediaEditLink:      // odata.mediaEditLink
                 case ODataAnnotationNames.ODataMediaReadLink:      // odata.mediaReadLink
+                case ODataAnnotationNames.ODataContext:            // odata.context
                     return this.ReadAndValidateAnnotationStringValueAsUri(propertyAnnotationName);
 
                 case ODataAnnotationNames.ODataCount:              // odata.count
-                    return this.ReadAndValidateAnnotationStringValueAsLong(propertyAnnotationName);
+                    return this.ReadAndValidateAnnotationAsLongForIeee754Compatible(propertyAnnotationName);
 
-                case ODataAnnotationNames.ODataMediaETag:          // odata.mediaETag
+                case ODataAnnotationNames.ODataMediaETag:          // odata.mediaEtag
                 case ODataAnnotationNames.ODataMediaContentType:   // odata.mediaContentType
                     return this.ReadAndValidateAnnotationStringValue(propertyAnnotationName);
 
@@ -425,9 +405,9 @@ namespace Microsoft.OData.Core.JsonLight
                     if (this.JsonReader.NodeType != JsonNodeType.StartArray)
                     {
                         return new ODataEntityReferenceLink
-                               {
-                                   Url = this.ReadAndValidateAnnotationStringValueAsUri(ODataAnnotationNames.ODataBind)
-                               };
+                        {
+                            Url = this.ReadAndValidateAnnotationStringValueAsUri(ODataAnnotationNames.ODataBind)
+                        };
                     }
 
                     LinkedList<ODataEntityReferenceLink> entityReferenceLinks = new LinkedList<ODataEntityReferenceLink>();
@@ -457,21 +437,6 @@ namespace Microsoft.OData.Core.JsonLight
                     throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyAnnotationName));
             }
         }
-        
-        /// <summary>
-        /// Reads an annotation group if one exists, and updates the given entry with the annotations from the annotation group.
-        /// </summary>
-        /// <param name="entryState">The state for the entry which should get the annotations.</param>
-        internal void ApplyAnnotationGroupIfPresent(IODataJsonLightReaderEntryState entryState)
-        {
-            DebugUtils.CheckNoExternalCallers();
-
-            ODataJsonLightAnnotationGroup annotationGroup = this.annotationGroupDeserializer.ReadAnnotationGroup(
-                this.ReadEntryPropertyAnnotationValue,
-                (annotationName, duplicatePropertyNamesChecker) => this.ReadEntryInstanceAnnotation(annotationName, /*anyPropertyFound*/ false, /*typePropertyFound*/ false, duplicatePropertyNamesChecker));
-
-            this.ApplyAnnotationGroup(entryState, annotationGroup);
-        }
 
         /// <summary>
         /// Reads instance annotation in the entry object.
@@ -490,7 +455,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal object ReadEntryInstanceAnnotation(string annotationName, bool anyPropertyFound, bool typeAnnotationFound, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
 
@@ -512,7 +476,7 @@ namespace Microsoft.OData.Core.JsonLight
                         throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_EntryInstanceAnnotationPrecededByProperty(annotationName));
                     }
 
-                    return this.ReadAndValidateAnnotationStringValue(annotationName);
+                    return this.ReadAnnotationStringValueAsUri(annotationName);
 
                 case ODataAnnotationNames.ODataETag:   // 'odata.etag'
                     if (anyPropertyFound)
@@ -529,12 +493,8 @@ namespace Microsoft.OData.Core.JsonLight
                     return this.ReadAndValidateAnnotationStringValueAsUri(annotationName);
 
                 case ODataAnnotationNames.ODataMediaContentType:  // 'odata.mediaContentType'
-                case ODataAnnotationNames.ODataMediaETag:  // 'odata.mediaETag'
+                case ODataAnnotationNames.ODataMediaETag:  // 'odata.mediaEtag'
                     return this.ReadAndValidateAnnotationStringValue(annotationName);
-
-                case ODataAnnotationNames.ODataAnnotationGroup: // 'odata.annotationGroup
-                case ODataAnnotationNames.ODataAnnotationGroupReference: // 'odata.annotationGroupReference'
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_EncounteredAnnotationGroupInUnexpectedPosition);
 
                 default:
                     ODataAnnotationNames.ValidateIsCustomAnnotationName(annotationName);
@@ -561,7 +521,6 @@ namespace Microsoft.OData.Core.JsonLight
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "The casts aren't actually being done multiple times, since they occur in different cases of the switch statement.")]
         internal void ApplyEntryInstanceAnnotation(IODataJsonLightReaderEntryState entryState, string annotationName, object annotationValue)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryState != null, "entryState != null");
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
 
@@ -570,11 +529,19 @@ namespace Microsoft.OData.Core.JsonLight
             switch (annotationName)
             {
                 case ODataAnnotationNames.ODataType:   // 'odata.type'
-                    entry.TypeName = (string)annotationValue;
+                    entry.TypeName = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName((string)annotationValue));
                     break;
 
                 case ODataAnnotationNames.ODataId:   // 'odata.id'
-                    entry.Id = (string)annotationValue;
+                    if (annotationValue == null)
+                    {
+                        entry.IsTransient = true;
+                    }
+                    else
+                    {
+                        entry.Id = (Uri)annotationValue;
+                    }
+
                     break;
 
                 case ODataAnnotationNames.ODataETag:   // 'odata.etag'
@@ -604,14 +571,9 @@ namespace Microsoft.OData.Core.JsonLight
                     mediaResource.ContentType = (string)annotationValue;
                     break;
 
-                case ODataAnnotationNames.ODataMediaETag:  // 'odata.mediaETag'
+                case ODataAnnotationNames.ODataMediaETag:  // 'odata.mediaEtag'
                     ODataJsonLightReaderUtils.EnsureInstance(ref mediaResource);
                     mediaResource.ETag = (string)annotationValue;
-                    break;
-
-                case ODataAnnotationNames.ODataAnnotationGroup: // 'odata.annotationGroup
-                case ODataAnnotationNames.ODataAnnotationGroupReference: // 'odata.annotationGroupReference'
-                    Debug.Assert(false, "Annotation group annotations should have been blocked at the read step.");
                     break;
 
                 default:
@@ -637,7 +599,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>Returns the value of the instance annotation.</returns>
         internal object ReadCustomInstanceAnnotationValue(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, string name)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
             Debug.Assert(!string.IsNullOrEmpty(name), "!string.IsNullOrEmpty(name)");
 
@@ -646,14 +607,14 @@ namespace Microsoft.OData.Core.JsonLight
             string odataType = null;
             if (propertyAnnotations != null && propertyAnnotations.TryGetValue(ODataAnnotationNames.ODataType, out propertyAnnotation))
             {
-                odataType = (string)propertyAnnotation;
+                odataType = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName((string)propertyAnnotation));
             }
 
             // If this term is defined in the model, look up its type. If the term is not in the model, this will be null.
             IEdmTypeReference expectedTypeFromTerm = MetadataUtils.LookupTypeOfValueTerm(name, this.Model);
 
             object customInstanceAnnotationValue = this.ReadNonEntityValue(
-                odataType, 
+                odataType,
                 expectedTypeFromTerm,
                 null, /*duplicatePropertyNamesChecker*/
                 null, /*collectionValidator*/
@@ -677,14 +638,13 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal void ReadAndApplyFeedInstanceAnnotationValue(string annotationName, ODataFeed feed, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             Debug.Assert(feed != null, "feed != null");
 
             switch (annotationName)
             {
                 case ODataAnnotationNames.ODataCount:
-                    feed.Count = this.ReadAndValidateAnnotationStringValueAsLong(ODataAnnotationNames.ODataCount);
+                    feed.Count = this.ReadAndValidateAnnotationAsLongForIeee754Compatible(ODataAnnotationNames.ODataCount);
                     break;
 
                 case ODataAnnotationNames.ODataNextLink:
@@ -720,7 +680,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal ODataJsonLightReaderNavigationLinkInfo ReadEntryPropertyWithoutValue(IODataJsonLightReaderEntryState entryState, string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryState != null, "entryState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
@@ -790,7 +749,6 @@ namespace Microsoft.OData.Core.JsonLight
             ODataJsonLightReaderNavigationLinkInfo expandedNavigationLinkInfo,
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(feed != null, "feed != null");
 
             // Check for annotations on the feed that occur after the feed itself. (Note: the only allowed one is odata.nextLink, and we fail for anything else.)
@@ -894,6 +852,11 @@ namespace Microsoft.OData.Core.JsonLight
                             navigationLink.AssociationLinkUrl = (Uri)propertyAnnotation.Value;
                             break;
 
+                        case ODataAnnotationNames.ODataContext:
+                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.context annotation should have been parsed as a non-null Uri.");
+                            navigationLink.ContextUrl = (Uri)propertyAnnotation.Value;
+                            break;
+
                         default:
                             throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation(navigationLink.Name, propertyAnnotation.Key));
                     }
@@ -950,6 +913,10 @@ namespace Microsoft.OData.Core.JsonLight
                         case ODataAnnotationNames.ODataCount:
                             Debug.Assert(propertyAnnotation.Value is long && propertyAnnotation.Value != null, "The odata.count annotation should have been parsed as a non-null long.");
                             expandedFeed.Count = (long?)propertyAnnotation.Value;
+                            break;
+                        case ODataAnnotationNames.ODataContext:
+                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.context annotation should have been parsed as a non-null Uri.");
+                            navigationLink.ContextUrl = (Uri)propertyAnnotation.Value;
                             break;
 
                         case ODataAnnotationNames.ODataDeltaLink:   // Delta links are not supported on expanded feeds.
@@ -1144,41 +1111,12 @@ namespace Microsoft.OData.Core.JsonLight
                         }
 
                         // Read the property value.
-                        feed.Count = this.ReadAndValidateAnnotationStringValueAsLong(ODataAnnotationNames.ODataCount);
+                        feed.Count = this.ReadAndValidateAnnotationAsLongForIeee754Compatible(ODataAnnotationNames.ODataCount);
                         break;
 
                     case ODataAnnotationNames.ODataDeltaLink:   // Delta links are not supported on expanded feeds.
                     default:
                         throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedPropertyAnnotationAfterExpandedFeed(annotationName, expandedNavigationLinkInfo.NavigationLink.Name));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Applies the all the annotations from the given annotation group to an entry.
-        /// </summary>
-        /// <param name="entryState">The state for the entry which should get the annotations.</param>
-        /// <param name="annotationGroup">The annotation group to apply.</param>
-        private void ApplyAnnotationGroup(IODataJsonLightReaderEntryState entryState, ODataJsonLightAnnotationGroup annotationGroup)
-        {
-            DebugUtils.CheckNoExternalCallers();
-
-            if (annotationGroup != null)
-            {
-                foreach (KeyValuePair<string, object> annotation in annotationGroup.Annotations)
-                {
-                    string annotationFullName = annotation.Key;
-                    object annotationValue = annotation.Value;
-                    string propertyName;
-                    string annotationName;
-                    if (TryParsePropertyAnnotation(annotationFullName, out propertyName, out annotationName))
-                    {
-                        entryState.DuplicatePropertyNamesChecker.AddODataPropertyAnnotation(propertyName, annotationName, annotationValue);
-                    }
-                    else
-                    {
-                        this.ApplyEntryInstanceAnnotation(entryState, annotationFullName, annotationValue);
-                    }
                 }
             }
         }
@@ -1296,8 +1234,8 @@ namespace Microsoft.OData.Core.JsonLight
                 : this.Model.NullValueReadBehaviorKind(edmProperty);
             object propertyValue = this.ReadNonEntityValue(
                 propertyTypeName,
-                edmProperty.Type, 
-                /*duplicatePropertyNamesChecker*/ null, 
+                edmProperty.Type,
+                /*duplicatePropertyNamesChecker*/ null,
                 /*collectionValidator*/ null,
                 nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
                 /*isTopLevelPropertyValue*/ false,
@@ -1342,8 +1280,8 @@ namespace Microsoft.OData.Core.JsonLight
 
             object propertyValue = this.ReadNonEntityValue(
                 propertyTypeName,
-                /*expectedValueTypeReference*/ null, 
-                /*duplicatePropertyNamesChecker*/ null, 
+                /*expectedValueTypeReference*/ null,
+                /*duplicatePropertyNamesChecker*/ null,
                 /*collectionValidator*/ null,
                 /*validateNullValue*/ true,
                 /*isTopLevelPropertyValue*/ false,
@@ -1406,7 +1344,7 @@ namespace Microsoft.OData.Core.JsonLight
             // Link properties are stream properties and deferred links.
             Dictionary<string, object> odataPropertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName);
             if (odataPropertyAnnotations != null)
-            {   
+            {
                 object propertyAnnotationValue;
 
                 // If the property has 'odata.navigationLink' or 'odata.associationLink' annotation, read it as a navigation property
@@ -1442,8 +1380,8 @@ namespace Microsoft.OData.Core.JsonLight
 
                     return navigationLinkInfo;
                 }
-                
-                // If the property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaETag' annotation, read it as a stream property
+
+                // If the property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaEtag' annotation, read it as a stream property
                 if (odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaEditLink, out propertyAnnotationValue) ||
                     odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaReadLink, out propertyAnnotationValue) ||
                     odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaContentType, out propertyAnnotationValue) ||
@@ -1531,7 +1469,7 @@ namespace Microsoft.OData.Core.JsonLight
                             break;
 
                         case ODataAnnotationNames.ODataMediaETag:
-                            Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.mediaETag annotation should have been parsed as a non-null string.");
+                            Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.mediaEtag annotation should have been parsed as a non-null string.");
                             streamReferenceValue.ETag = (string)propertyAnnotation.Value;
                             break;
 
@@ -1583,11 +1521,25 @@ namespace Microsoft.OData.Core.JsonLight
             readerContext.JsonReader.ReadStartObject();
 
             var operation = this.CreateODataOperationAndAddToEntry(readerContext, metadataReferencePropertyName);
+
+            // Ignore the unrecognized operation.
+            if (operation == null)
+            {
+                while (readerContext.JsonReader.NodeType == JsonNodeType.Property)
+                {
+                    readerContext.JsonReader.ReadPropertyName();
+                    readerContext.JsonReader.SkipValue();
+                }
+
+                readerContext.JsonReader.ReadEndObject();
+                return;
+            }
+
             Debug.Assert(operation.Metadata != null, "operation.Metadata != null");
 
             while (readerContext.JsonReader.NodeType == JsonNodeType.Property)
             {
-                string operationPropertyName = readerContext.JsonReader.ReadPropertyName();
+                string operationPropertyName = ODataAnnotationNames.RemoveAnnotationPrefix(readerContext.JsonReader.ReadPropertyName());
                 switch (operationPropertyName)
                 {
                     case JsonConstants.ODataOperationTitleName:
@@ -1624,7 +1576,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_OperationMissingTargetProperty(metadataReferencePropertyName));
             }
-
+            
             // read the end-object node of the target / title pair
             readerContext.JsonReader.ReadEndObject();
 
@@ -1653,44 +1605,19 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>A new instance of ODataAction or ODataFunction for the <paramref name="metadataReferencePropertyName"/>.</returns>
         private ODataOperation CreateODataOperationAndAddToEntry(IODataJsonOperationsDeserializerContext readerContext, string metadataReferencePropertyName)
         {
-            string fullyQualifiedFunctionImportName = ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.ContextUriParseResult.MetadataDocumentUri, metadataReferencePropertyName);
-            IEnumerable<IEdmOperationImport> operationImports = this.JsonLightInputContext.Model.ResolveFunctionImports(fullyQualifiedFunctionImportName);
-            Debug.Assert(operationImports != null, "operationImports != null");
+            string fullyQualifiedOperationName = ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.ContextUriParseResult.MetadataDocumentUri, metadataReferencePropertyName);
+            IEdmOperation firstActionOrFunction = this.JsonLightInputContext.Model.ResolveOperations(fullyQualifiedOperationName).FirstOrDefault();
 
-            IEdmOperationImport firstActionOrFunction = null;
-            bool foundServiceOperation = false;
-            foreach (IEdmOperationImport operationImport in operationImports)
-            {
-                // Make sure operationImport is not a V1 service operation.
-                string httpMethod;
-                if (this.JsonLightInputContext.Model.TryGetODataAnnotation(operationImport, Metadata.EdmConstants.HttpMethodAttributeName, out httpMethod))
-                {
-                    foundServiceOperation = true;
-                    continue;
-                }
-
-                if (firstActionOrFunction == null)
-                {
-                    firstActionOrFunction = operationImport;
-                }
-
-                // In a valid model, all operation imports in a operation import group should be either all actions or all functions. We can simply pass the first operation import in
-                // the group to CreateODataOperation(). Create ODataOperation() uses the operation import to decide whether to create an ODataAction or an ODataFunction.
-                Debug.Assert(operationImport.IsSideEffecting == firstActionOrFunction.IsSideEffecting, "operationImport.IsSideEffecting == firstFunctionImport.IsSideEffecting");
-            }
+            bool isAction;
 
             if (firstActionOrFunction == null)
             {
-                if (foundServiceOperation)
-                {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_FunctionImportIsNotActionOrFunction(fullyQualifiedFunctionImportName));
-                }
-
-                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_InvalidFunctionImportName(metadataReferencePropertyName, fullyQualifiedFunctionImportName));
+                // Ignore the unknown function/action.
+                return null;
             }
 
-            bool isAction;
             var operation = ODataJsonLightUtils.CreateODataOperation(this.ContextUriParseResult.MetadataDocumentUri, metadataReferencePropertyName, firstActionOrFunction, out isAction);
+            
             if (isAction)
             {
                 readerContext.AddActionToEntry((ODataAction)operation);
@@ -1720,14 +1647,14 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(entryState != null, "entryState != null");
             Debug.Assert(entryState.Entry != null, "entryState.Entry != null");
             Debug.Assert(!string.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
-            Debug.Assert(metadataReferencePropertyName.IndexOf(JsonLightConstants.ContextUriFragmentIndicator) > -1, "metadataReferencePropertyName.IndexOf(JsonLightConstants.ContextUriFragmentIndicator) > -1");
+            Debug.Assert(metadataReferencePropertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator) > -1, "metadataReferencePropertyName.IndexOf(JsonLightConstants.ContextUriFragmentIndicator) > -1");
             this.JsonReader.AssertNotBuffering();
 
             this.ValidateCanReadMetadataReferenceProperty();
 
             // Validate that the property name is a valid absolute URI or a valid URI fragment.
             ODataJsonLightValidationUtils.ValidateMetadataReferencePropertyName(this.ContextUriParseResult.MetadataDocumentUri, metadataReferencePropertyName);
-            
+
             IODataJsonOperationsDeserializerContext readerContext = new OperationsDeserializerContext(entryState.Entry, this);
 
             bool insideArray = false;
@@ -1828,9 +1755,9 @@ namespace Microsoft.OData.Core.JsonLight
             /// The JSON reader to read the operations value from.
             /// </summary>
             public JsonReader JsonReader
-            { 
+            {
                 get
-                { 
+                {
                     return this.jsonLightEntryAndFeedDeserializer.JsonReader;
                 }
             }

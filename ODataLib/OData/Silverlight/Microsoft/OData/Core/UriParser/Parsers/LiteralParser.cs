@@ -48,16 +48,15 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             { typeof(SByte), DelegatingPrimitiveParser<sbyte>.WithoutMarkup(XmlConvert.ToSByte) },
             { typeof(Int16), DelegatingPrimitiveParser<short>.WithoutMarkup(XmlConvert.ToInt16) },
             { typeof(Int32), DelegatingPrimitiveParser<int>.WithoutMarkup(XmlConvert.ToInt32) },
+            { typeof(DateTimeOffset), DelegatingPrimitiveParser<DateTimeOffset>.WithoutMarkup(XmlConvert.ToDateTimeOffset) },
+            { typeof(Guid), DelegatingPrimitiveParser<Guid>.WithoutMarkup(XmlConvert.ToGuid) },
 
             // Types with prefixes and single-quotes.
-            { typeof(Guid), DelegatingPrimitiveParser<Guid>.WithPrefix(XmlConvert.ToGuid, ExpressionConstants.LiteralPrefixGuid) },
-            { typeof(DateTime), DelegatingPrimitiveParser<DateTime>.WithPrefix(s => PlatformHelper.ConvertStringToDateTime(s), XmlConstants.LiteralPrefixDateTime) },
-            { typeof(DateTimeOffset), DelegatingPrimitiveParser<DateTimeOffset>.WithPrefix(XmlConvert.ToDateTimeOffset, ExpressionConstants.LiteralPrefixDateTimeOffset) },
             { typeof(TimeSpan), DelegatingPrimitiveParser<TimeSpan>.WithPrefix(EdmValueParser.ParseDuration, ExpressionConstants.LiteralPrefixDuration) },
 
             // Types with suffixes.
-            { typeof(Int64), DelegatingPrimitiveParser<long>.WithSuffix(XmlConvert.ToInt64, ExpressionConstants.LiteralSuffixInt64) },
-            { typeof(Single), DelegatingPrimitiveParser<float>.WithSuffix(XmlConvert.ToSingle, ExpressionConstants.LiteralSuffixSingle) },
+            { typeof(Int64), DelegatingPrimitiveParser<long>.WithSuffix(XmlConvert.ToInt64, ExpressionConstants.LiteralSuffixInt64, /*required*/ false) },
+            { typeof(Single), DelegatingPrimitiveParser<float>.WithSuffix(XmlConvert.ToSingle, ExpressionConstants.LiteralSuffixSingle, /*required*/ false) },
             { typeof(Double), DelegatingPrimitiveParser<double>.WithSuffix(XmlConvert.ToDouble, ExpressionConstants.LiteralSuffixDouble, /*required*/ false) }
         };
 
@@ -68,7 +67,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return DefaultInstance;
             }
         }
@@ -80,7 +78,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The literal parser to use.</returns>
         internal static LiteralParser ForKeys(bool keyAsSegment)
         {
-            DebugUtils.CheckNoExternalCallers();
             return keyAsSegment ? KeysAsSegmentsInstance : DefaultInstance;
         }
 
@@ -99,7 +96,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if the type implements the ISpatial interface, false otherwise.</returns>
         private static bool IsSpatial(Type type)
         {
-            DebugUtils.CheckNoExternalCallers();
             return typeof(ISpatial).IsAssignableFrom(type);
         }
 #endif
@@ -116,7 +112,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// <returns>true if the value was converted; false otherwise.</returns>
             internal override bool TryParseLiteral(Type targetType, string text, out object result)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(text != null, "text != null");
                 Debug.Assert(targetType != null, "expectedType != null");
 #if DEBUG
@@ -191,7 +186,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// <returns>true if the value was converted; false otherwise.</returns>
             internal override bool TryParseLiteral(Type targetType, string text, out object result)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(text != null, "text != null");
                 Debug.Assert(targetType != null, "expectedType != null");
 
@@ -262,7 +256,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             protected PrimitiveParser(Type expectedType, string suffix, bool suffixRequired)
                 : this(expectedType)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(suffix != null, "suffix != null");
                 this.prefix = null;
                 this.suffix = suffix;
@@ -277,7 +270,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             protected PrimitiveParser(Type expectedType, string prefix)
                 : this(expectedType)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(prefix != null, "prefix != null");
                 this.prefix = prefix;
                 this.suffix = null;
@@ -290,7 +282,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// <param name="expectedType">The expected type for this parser.</param>
             protected PrimitiveParser(Type expectedType)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(expectedType != null, "expectedType != null");
                 this.expectedType = expectedType;
             }
@@ -310,7 +301,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// <returns>Whether or not the expected formatting was found and succesfully removed.</returns>
             internal virtual bool TryRemoveFormatting(ref string text)
             {
-                DebugUtils.CheckNoExternalCallers();
                 if (this.prefix != null)
                 {
                     if (!UriPrimitiveTypeParser.TryRemovePrefix(this.prefix, ref text))
@@ -338,6 +328,27 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             /// <summary>
+            /// Check and strip the input <paramref name="text"/> for literal <paramref name="suffix"/>
+            /// </summary>
+            /// <param name="suffix">The suffix value</param>
+            /// <param name="text">The string to check</param>
+            /// <returns>A string that has been striped of the suffix</returns>
+            internal static bool TryRemoveLiteralSuffix(string suffix, ref string text)
+            {
+                Debug.Assert(text != null, "text != null");
+                Debug.Assert(suffix != null, "suffix != null");
+
+                text = text.Trim(XmlWhitespaceChars);
+                if (text.Length <= suffix.Length || IsValidNumericConstant(text) || !text.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+
+                text = text.Substring(0, text.Length - suffix.Length);
+                return true;
+            }
+
+            /// <summary>
             /// Determines whether the values for the specified types should be 
             /// quoted in URI keys.
             /// </summary>
@@ -352,24 +363,15 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             /// <summary>
-            /// Check and strip the input <paramref name="text"/> for literal <paramref name="suffix"/>
+            /// Checks if text is '-INF' or 'INF' or 'NaN'.
             /// </summary>
-            /// <param name="suffix">The suffix value</param>
-            /// <param name="text">The string to check</param>
-            /// <returns>A string that has been striped of the suffix</returns>
-            private static bool TryRemoveLiteralSuffix(string suffix, ref string text)
+            /// <param name="text">numeric string</param>
+            /// <returns>true or false</returns>
+            private static bool IsValidNumericConstant(string text)
             {
-                Debug.Assert(text != null, "text != null");
-                Debug.Assert(suffix != null, "suffix != null");
-
-                text = text.Trim(XmlWhitespaceChars);
-                if (text.Length <= suffix.Length || !text.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
-
-                text = text.Substring(0, text.Length - suffix.Length);
-                return true;
+                return string.Equals(text, ExpressionConstants.InfinityLiteral, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(text, "-" + ExpressionConstants.InfinityLiteral, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(text, ExpressionConstants.NaNLiteral, StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -393,7 +395,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             protected DelegatingPrimitiveParser(Func<string, T> convertMethod, string suffix, bool suffixRequired)
                 : base(typeof(T), suffix, suffixRequired)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(convertMethod != null, "convertMethod != null");
                 this.convertMethod = convertMethod;
             }
@@ -402,10 +403,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// Prevents a default instance of the <see cref="DelegatingPrimitiveParser&lt;T&gt;"/> class from being created.
             /// </summary>
             /// <param name="convertMethod">The delegate to use for conversion.</param>
-            private DelegatingPrimitiveParser(Func<string, T> convertMethod) 
+            private DelegatingPrimitiveParser(Func<string, T> convertMethod)
                 : base(typeof(T))
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(convertMethod != null, "convertMethod != null");
                 this.convertMethod = convertMethod;
             }
@@ -429,7 +429,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// <returns>A new primitive parser.</returns>
             internal static DelegatingPrimitiveParser<T> WithoutMarkup(Func<string, T> convertMethod)
             {
-                DebugUtils.CheckNoExternalCallers();
                 return new DelegatingPrimitiveParser<T>(convertMethod);
             }
 
@@ -441,7 +440,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// <returns>A new primitive parser.</returns>
             internal static DelegatingPrimitiveParser<T> WithPrefix(Func<string, T> convertMethod, string prefix)
             {
-                DebugUtils.CheckNoExternalCallers();
                 return new DelegatingPrimitiveParser<T>(convertMethod, prefix);
             }
 
@@ -453,7 +451,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// <returns>A new primitive parser.</returns>
             internal static DelegatingPrimitiveParser<T> WithSuffix(Func<string, T> convertMethod, string suffix)
             {
-                DebugUtils.CheckNoExternalCallers();
                 return WithSuffix(convertMethod, suffix, /*required*/ true);
             }
 
@@ -466,7 +463,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// <returns>A new primitive parser.</returns>
             internal static DelegatingPrimitiveParser<T> WithSuffix(Func<string, T> convertMethod, string suffix, bool required)
             {
-                DebugUtils.CheckNoExternalCallers();
                 return new DelegatingPrimitiveParser<T>(convertMethod, suffix, required);
             }
 
@@ -480,7 +476,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// </returns>
             internal override bool TryConvert(string text, out object targetValue)
             {
-                DebugUtils.CheckNoExternalCallers();
                 try
                 {
                     targetValue = this.convertMethod(text);
@@ -508,9 +503,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// Initializes a new instance of the <see cref="DecimalPrimitiveParser"/> class.
             /// </summary>
             internal DecimalPrimitiveParser()
-                : base(ConvertDecimal, ExpressionConstants.LiteralSuffixDecimal, true)
+                : base(ConvertDecimal, ExpressionConstants.LiteralSuffixDecimal, false)
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>
@@ -549,7 +543,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             internal BinaryPrimitiveParser()
                 : base(typeof(byte[]))
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>
@@ -562,34 +555,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// </returns>
             internal override bool TryConvert(string text, out object targetValue)
             {
-                DebugUtils.CheckNoExternalCallers();
-
-                // must be of even length.
-                if ((text.Length % 2) != 0)
+                try
+                {
+                    targetValue = Convert.FromBase64String(text);
+                }
+                catch (FormatException)
                 {
                     targetValue = null;
                     return false;
                 }
 
-                byte[] result = new byte[text.Length / 2];
-                int resultIndex = 0;
-                int textIndex = 0;
-                while (resultIndex < result.Length)
-                {
-                    char ch0 = text[textIndex];
-                    char ch1 = text[textIndex + 1];
-                    if (!UriPrimitiveTypeParser.IsCharHexDigit(ch0) || !UriPrimitiveTypeParser.IsCharHexDigit(ch1))
-                    {
-                        targetValue = null;
-                        return false;
-                    }
-
-                    result[resultIndex] = (byte)((byte)(HexCharToNibble(ch0) << 4) + HexCharToNibble(ch1));
-                    textIndex += 2;
-                    resultIndex++;
-                }
-
-                targetValue = result;
                 return true;
             }
 
@@ -602,71 +577,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// </returns>
             internal override bool TryRemoveFormatting(ref string text)
             {
-                DebugUtils.CheckNoExternalCallers();
-                if (!UriPrimitiveTypeParser.TryRemovePrefix(ExpressionConstants.LiteralPrefixBinary, ref text) 
-                    && !UriPrimitiveTypeParser.TryRemovePrefix(ExpressionConstants.LiteralPrefixShortBinary, ref text))
+                if (!UriPrimitiveTypeParser.TryRemovePrefix(ExpressionConstants.LiteralPrefixBinary, ref text))
                 {
                     return false;
                 }
-                
+
                 if (!UriPrimitiveTypeParser.TryRemoveQuotes(ref text))
                 {
                     return false;
                 }
-                
-                return true;
-            }
 
-            /// <summary>Returns the 4 bits that correspond to the specified character.</summary>
-            /// <param name="c">Character in the 0-F range to be converted.</param>
-            /// <returns>The 4 bits that correspond to the specified character.</returns>
-            /// <exception cref="FormatException">Thrown when 'c' is not in the '0'-'9','a'-'f' range.</exception>
-            private static byte HexCharToNibble(char c)
-            {
-                Debug.Assert(UriPrimitiveTypeParser.IsCharHexDigit(c), String.Format(CultureInfo.InvariantCulture, "{0} is not a hex digit.", c));
-                switch (c)
-                {
-                    case '0':
-                        return 0;
-                    case '1':
-                        return 1;
-                    case '2':
-                        return 2;
-                    case '3':
-                        return 3;
-                    case '4':
-                        return 4;
-                    case '5':
-                        return 5;
-                    case '6':
-                        return 6;
-                    case '7':
-                        return 7;
-                    case '8':
-                        return 8;
-                    case '9':
-                        return 9;
-                    case 'a':
-                    case 'A':
-                        return 10;
-                    case 'b':
-                    case 'B':
-                        return 11;
-                    case 'c':
-                    case 'C':
-                        return 12;
-                    case 'd':
-                    case 'D':
-                        return 13;
-                    case 'e':
-                    case 'E':
-                        return 14;
-                    case 'f':
-                    case 'F':
-                        return 15;
-                    default:
-                        throw new InvalidOperationException();
-                }
+                return true;
             }
         }
 
@@ -678,10 +599,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// <summary>
             /// Initializes a new instance of the <see cref="StringPrimitiveParser"/> class.
             /// </summary>
-            public StringPrimitiveParser() 
+            public StringPrimitiveParser()
                 : base(typeof(string))
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>
@@ -694,7 +614,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// </returns>
             internal override bool TryConvert(string text, out object targetValue)
             {
-                DebugUtils.CheckNoExternalCallers();
                 targetValue = text;
                 return true;
             }
@@ -708,7 +627,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             /// </returns>
             internal override bool TryRemoveFormatting(ref string text)
             {
-                DebugUtils.CheckNoExternalCallers();
                 return UriPrimitiveTypeParser.TryRemoveQuotes(ref text);
             }
         }

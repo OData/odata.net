@@ -60,6 +60,13 @@ namespace Microsoft.OData.Core.JsonLight
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker);
 
         /// <summary>
+        /// Write enum value
+        /// </summary>
+        /// <param name="value">enum value</param>
+        /// <param name="expectedTypeReference">expected type reference</param>
+        void WriteEnumValue(ODataEnumValue value, IEdmTypeReference expectedTypeReference);
+
+        /// <summary>
         /// Writes out the value of a collection property.
         /// </summary>
         /// <param name="collectionValue">The collection value to write.</param>
@@ -71,7 +78,7 @@ namespace Microsoft.OData.Core.JsonLight
             ODataCollectionValue collectionValue,
             IEdmTypeReference metadataTypeReference,
             bool isTopLevelProperty,
-            bool isInUri, 
+            bool isInUri,
             bool isOpenPropertyType);
 
         /// <summary>

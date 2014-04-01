@@ -30,8 +30,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="other">The <see cref="AtomLinkMetadata"/> instance to copy the values from; can be null.</param>
         internal AtomLinkMetadata(AtomLinkMetadata other)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (other == null)
             {
                 return;

@@ -53,7 +53,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal ProjectedPropertiesAnnotation()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.projectedProperties = new HashSet<string>(StringComparer.Ordinal);
         }
 
@@ -64,7 +63,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return emptyProjectedPropertiesMarker;
             }
         }
@@ -76,7 +74,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return allProjectedPropertiesMarker;
             }
         }
@@ -88,7 +85,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.projectedProperties;
             }
         }
@@ -102,8 +98,6 @@ namespace Microsoft.OData.Core
         /// we don't have to validate before we skip them. If we would not skip them, the writing would fail later on anyway.</remarks>
         internal bool IsPropertyProjected(string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return this.projectedProperties.Contains(propertyName);
         }
 
@@ -113,7 +107,6 @@ namespace Microsoft.OData.Core
         /// <param name="propertyName">The name of the property to include in the set of projected properties.</param>
         internal void Add(string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             Debug.Assert(!object.ReferenceEquals(ProjectedPropertiesAnnotation.EmptyProjectedPropertiesInstance, this), "Must not add properties to the empty singleton instance.");
 
@@ -134,7 +127,6 @@ namespace Microsoft.OData.Core
         /// <param name="propertyName">The name of the property to remove from the set of projected properties.</param>
         internal void Remove(string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             Debug.Assert(this.projectedProperties.Contains(propertyName), "this.projectedProperties.Contains(propertyName)");
 

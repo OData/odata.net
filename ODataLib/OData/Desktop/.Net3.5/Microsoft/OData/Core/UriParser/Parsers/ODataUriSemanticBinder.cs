@@ -62,6 +62,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // Make a copy of query options since we may consume some of them as we bind the query
             bindingState.QueryOptions = new List<CustomQueryOptionToken>(syntax.QueryOptions);
 
+            ParameterAliasValueAccessor parameterAliasValueAccessor = new ParameterAliasValueAccessor(syntax.ParameterAliases);
             ODataPath path = null;
             FilterClause filter = null;
             OrderByClause orderBy = null;
@@ -69,6 +70,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             long? top = null;
             SelectExpandClause selectExpand = null;
             bool? count = null;
+
+            // set parameterAliasValueAccessor for uri path, $filter, $orderby
+            this.bindingState.Configuration.ParameterAliasValueAccessor = parameterAliasValueAccessor;
 
             // First bind the path
             path = ODataPathFactory.BindPath(syntax.Path, this.bindingState.Configuration);
@@ -104,7 +108,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             bindingState.RangeVariables.Pop();
             bindingState.ImplicitRangeVariable = null;
 
-            return new ODataUri(path, boundQueryOptions, selectExpand, filter, orderBy, skip, top, count);
+            return new ODataUri(parameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, skip, top, count);
         }
 
         /// <summary>
@@ -146,7 +150,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
                 SelectExpandSemanticBinder semanticBinder = new SelectExpandSemanticBinder();
 
-                return semanticBinder.Bind((IEdmEntityType)((IEdmCollectionTypeReference)path.EdmType()).ElementType().Definition, path.EntitySet(), syntax.Expand, syntax.Select, configuration);
+                return semanticBinder.Bind((IEdmEntityType)((IEdmCollectionTypeReference)path.EdmType()).ElementType().Definition, path.NavigationSource(), syntax.Expand, syntax.Select, configuration);
             }
 
             return null;

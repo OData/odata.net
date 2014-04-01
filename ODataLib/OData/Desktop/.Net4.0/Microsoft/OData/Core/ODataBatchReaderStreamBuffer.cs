@@ -48,7 +48,6 @@ namespace Microsoft.OData.Core
         {
             get 
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.bytes; 
             }
         }
@@ -61,7 +60,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.currentReadPosition;
             }
         }
@@ -73,7 +71,6 @@ namespace Microsoft.OData.Core
         {
             get 
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.numberOfBytesInBuffer; 
             }
         }
@@ -87,7 +84,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.bytes[index];
             }
         }
@@ -99,7 +95,6 @@ namespace Microsoft.OData.Core
         /// <param name="newPosition">The position to skip to.</param>
         internal void SkipTo(int newPosition)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(newPosition >= this.currentReadPosition, "Can only skip forward.");
             Debug.Assert(newPosition <= this.currentReadPosition + this.numberOfBytesInBuffer, "Cannot skip beyond end of buffer.");
 
@@ -119,7 +114,6 @@ namespace Microsoft.OData.Core
         /// of the buffer and then refill the rest of the buffer from the <paramref name="stream"/>.</remarks>
         internal bool RefillFrom(Stream stream, int preserveFrom)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(stream != null, "stream != null");
             Debug.Assert(preserveFrom >= this.currentReadPosition, "preserveFrom must be at least as big as the current position in the buffer.");
 
@@ -140,7 +134,6 @@ namespace Microsoft.OData.Core
         /// <returns>An enumeration value indicating whether the line termintor was found completely, partially or not at all.</returns>
         internal ODataBatchReaderStreamScanResult ScanForLineEnd(out int lineEndStartPosition, out int lineEndEndPosition)
         {
-            DebugUtils.CheckNoExternalCallers();
             bool endOfBufferReached;
             return this.ScanForLineEnd(
                 this.currentReadPosition, 
@@ -172,7 +165,6 @@ namespace Microsoft.OData.Core
             out bool isEndBoundary,
             out bool isParentBoundary)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(boundaries != null, "boundaries != null");
 
             boundaryStartPosition = -1;

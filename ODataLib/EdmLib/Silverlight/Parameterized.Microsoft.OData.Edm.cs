@@ -81,6 +81,15 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "Cannot add more than one entity container to an edm model."
+        /// </summary>
+        internal static string EdmModel_CannotAddMoreThanOneEntityContainerToOneEdmModel {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_CannotAddMoreThanOneEntityContainerToOneEdmModel);
+            }
+        }
+
+        /// <summary>
         /// A string like "An element with type 'None' cannot be used in an entity container."
         /// </summary>
         internal static string EdmEntityContainer_CannotUseElementWithTypeNone {
@@ -112,6 +121,13 @@ namespace Microsoft.OData.Edm {
             get {
                 return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.PathSegmentMustNotContainSlash);
             }
+        }
+
+        /// <summary>
+        /// A string like "The number of dependent properties must match the number of key properties on the principal entity type. '{0}' principal properties were provided, but {1} dependent properties were provided."
+        /// </summary>
+        internal static string Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType,p0,p1);
         }
 
         /// <summary>
@@ -171,10 +187,10 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The entity set '{0}' is based on type '{1}' that has no keys defined."
+        /// A string like "The entity set or singleton '{0}' is based on type '{1}' that has no keys defined."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_EntitySetTypeHasNoKeys(object p0, object p1) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EntitySetTypeHasNoKeys,p0,p1);
+        internal static string EdmModel_Validator_Semantic_NavigationSourceTypeHasNoKeys(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_NavigationSourceTypeHasNoKeys,p0,p1);
         }
 
         /// <summary>
@@ -292,17 +308,17 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The multiplicity of the principal end '{0}' is not valid. Because all dependent properties of the end '{1}' are non-nullable, the multiplicity of the principal end must be '1'."
+        /// A string like "Because all dependent properties of the navigation '{0}' are non-nullable, the multiplicity of the principal end must be '1'."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNonnullable(object p0, object p1) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNonnullable,p0,p1);
+        internal static string EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNonnullable(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNonnullable,p0);
         }
 
         /// <summary>
-        /// A string like "The multiplicity of the principal end '{0}' is not valid. Because all dependent properties of the end '{1}' are nullable, the multiplicity of the principal end must be '0..1'."
+        /// A string like "Because all dependent properties of the navigation '{0}' are nullable, the multiplicity of the principal end must be '0..1'."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNullable(object p0, object p1) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNullable,p0,p1);
+        internal static string EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNullable(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNullable,p0);
         }
 
         /// <summary>
@@ -350,13 +366,6 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The property '{0}' is of a complex type and is nullable. Nullable complex type properties are not supported in EDM versions 1.0 and 2.0."
-        /// </summary>
-        internal static string EdmModel_Validator_Semantic_NullableComplexTypeProperty(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_NullableComplexTypeProperty,p0);
-        }
-
-        /// <summary>
         /// A string like "A property cannot be of type '{0}'. The property type must be a complex, a primitive or an enum type, or a collection of complex, primitive, or enum types."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_InvalidPropertyType(object p0) {
@@ -364,84 +373,70 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The function import '{0}' cannot be composable and side-effecting at the same time."
+        /// A string like "The Bound operation '{0}' must have at least one parameter."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_ComposableFunctionImportCannotBeSideEffecting(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ComposableFunctionImportCannotBeSideEffecting,p0);
+        internal static string EdmModel_Validator_Semantic_BoundOperationMustHaveParameters(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_BoundOperationMustHaveParameters,p0);
         }
 
         /// <summary>
-        /// A string like "The bindable function import '{0}' must have at least one parameter."
+        /// A string like "The return type is not valid in operation '{0}'. The operation has an unsupported type."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_BindableFunctionImportMustHaveParameters(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_BindableFunctionImportMustHaveParameters,p0);
+        internal static string EdmModel_Validator_Semantic_OperationWithUnsupportedReturnType(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationWithUnsupportedReturnType,p0);
         }
 
         /// <summary>
-        /// A string like "The return type is not valid in function import '{0}'. In version 1.0 a function import can have no return type or return a collection of scalar values or a collection of entities."
+        /// A string like "The operation import '{0}' returns entities of type '{1}' that cannot exist in the entity set '{2}' specified for the operation import."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_FunctionImportWithUnsupportedReturnTypeV1(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_FunctionImportWithUnsupportedReturnTypeV1,p0);
+        internal static string EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet,p0,p1,p2);
         }
 
         /// <summary>
-        /// A string like "The return type is not valid in function import '{0}'. The function import can have no return type or return a scalar, a complex type, an entity type or a collection of those."
+        /// A string like "The operation import '{0}' returns entities of type '{1}' that cannot be returned by the entity set path specified for the operation import."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_FunctionImportWithUnsupportedReturnTypeAfterV1(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_FunctionImportWithUnsupportedReturnTypeAfterV1,p0);
+        internal static string EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet2(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet2,p0,p1);
         }
 
         /// <summary>
-        /// A string like "The function import '{0}' returns entities but does not specify an entity set."
+        /// A string like "The operation import '{0}' specifies an entity set of kind '{1}' which is not supported in this context. Operation import entity set expression can be either an entity set reference or a path starting with a operation import parameter and traversing navigation properties."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_FunctionImportReturnEntitiesButDoesNotSpecifyEntitySet(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_FunctionImportReturnEntitiesButDoesNotSpecifyEntitySet,p0);
+        internal static string EdmModel_Validator_Semantic_OperationImportEntitySetExpressionKindIsInvalid(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionKindIsInvalid,p0,p1);
         }
 
         /// <summary>
-        /// A string like "The function import '{0}' returns entities of type '{1}' that cannot exist in the entity set '{2}' specified for the function import."
+        /// A string like "The operation import '{0}' specifies an entity set expression which is not valid. Operation import entity set expression can be either an entity set reference or a path starting with a operation import parameter and traversing navigation properties."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_FunctionImportEntityTypeDoesNotMatchEntitySet(object p0, object p1, object p2) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_FunctionImportEntityTypeDoesNotMatchEntitySet,p0,p1,p2);
+        internal static string EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid,p0);
         }
 
         /// <summary>
-        /// A string like "The function import '{0}' returns entities of type '{1}' that cannot be returned by the entity set path specified for the function import."
+        /// A string like "The operation import '{0}' specifies an entity set but does not return entities."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_FunctionImportEntityTypeDoesNotMatchEntitySet2(object p0, object p1) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_FunctionImportEntityTypeDoesNotMatchEntitySet2,p0,p1);
+        internal static string EdmModel_Validator_Semantic_OperationImportSpecifiesEntitySetButNotEntityType(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationImportSpecifiesEntitySetButNotEntityType,p0);
         }
 
         /// <summary>
-        /// A string like "The function import '{0}' specifies an entity set expression of kind {1} which is not supported in this context. Function import entity set expression can be either an entity set reference or a path starting with a function import parameter and traversing navigation properties."
+        /// A string like "The operation import '{0}' imports operation '{1}' that is bound. Only an unbound operation can be imported using an operation import."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_FunctionImportEntitySetExpressionKindIsInvalid(object p0, object p1) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_FunctionImportEntitySetExpressionKindIsInvalid,p0,p1);
+        internal static string EdmModel_Validator_Semantic_OperationImportCannotImportBoundOperation(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationImportCannotImportBoundOperation,p0,p1);
         }
 
         /// <summary>
-        /// A string like "The function import '{0}' specifies an entity set expression which is not valid. Function import entity set expression can be either an entity set reference or a path starting with a function import parameter and traversing navigation properties."
+        /// A string like "The function '{0}' must specify a return type."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_FunctionImportEntitySetExpressionIsInvalid(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_FunctionImportEntitySetExpressionIsInvalid,p0);
+        internal static string EdmModel_Validator_Semantic_FunctionMustHaveReturnType(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_FunctionMustHaveReturnType,p0);
         }
 
         /// <summary>
-        /// A string like "The function import '{0}' specifies an entity set but does not return entities."
-        /// </summary>
-        internal static string EdmModel_Validator_Semantic_FunctionImportSpecifiesEntitySetButNotEntityType(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_FunctionImportSpecifiesEntitySetButNotEntityType,p0);
-        }
-
-        /// <summary>
-        /// A string like "The composable function import '{0}' must specify a return type."
-        /// </summary>
-        internal static string EdmModel_Validator_Semantic_ComposableFunctionImportMustHaveReturnType(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ComposableFunctionImportMustHaveReturnType,p0);
-        }
-
-        /// <summary>
-        /// A string like "Each parameter name in a function must be unique. The parameter name '{0}' is already defined."
+        /// A string like "Each parameter name in a operation must be unique. The parameter name '{0}' is already defined."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate,p0);
@@ -452,6 +447,97 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName,p0);
+        }
+
+        /// <summary>
+        /// A string like "The function '{0}' has a different return type than other function overloads with the same name. Functions with the same name must have the same return type."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_UnboundFunctionOverloadHasIncorrectReturnType(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_UnboundFunctionOverloadHasIncorrectReturnType,p0);
+        }
+
+        /// <summary>
+        /// A string like "The unbound operation '{0}' has an entity set path defined. Entity set path can only be defined on bound operations."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_OperationCannotHaveEntitySetPathWithUnBoundOperation(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationCannotHaveEntitySetPathWithUnBoundOperation,p0);
+        }
+
+        /// <summary>
+        /// A string like "The attribute '{0}' has an invalid value. The path doesn't contain the binding parameter name."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName,p0);
+        }
+
+        /// <summary>
+        /// A string like "The attribute '{0}' is invalid. The first item of the path '{2}' is '{3}' which does not match the first parameter name {3}. The first segment of the entity set path is required to be the name of the first parameter."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_InvalidEntitySetPathWithFirstPathParameterNotMatchingFirstParameterName(object p0, object p1, object p2, object p3) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidEntitySetPathWithFirstPathParameterNotMatchingFirstParameterName,p0,p1,p2,p3);
+        }
+
+        /// <summary>
+        /// A string like "The attribute '{0}' has an invalid value. The path '{1}' has a type cast segment '{2}' that is not an entity type."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_InvalidEntitySetPathTypeCastSegmentMustBeEntityType(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidEntitySetPathTypeCastSegmentMustBeEntityType,p0,p1,p2);
+        }
+
+        /// <summary>
+        /// A string like "The attribute '{0}' has an invalid value. The path '{1}' has a navigation property segment '{2}' that is unknown."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownNavigationProperty(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownNavigationProperty,p0,p1,p2);
+        }
+
+        /// <summary>
+        /// A string like "The attribute '{0}' has an invalid value. The path '{1}' has a type cast segment that doesn't derive from the entity type '{2}' for type segment '{3}'."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_InvalidEntitySetPathInvalidTypeCastSegment(object p0, object p1, object p2, object p3) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidEntitySetPathInvalidTypeCastSegment,p0,p1,p2,p3);
+        }
+
+        /// <summary>
+        /// A string like "The attribute '{0}' has an invalid value. The path '{1}' has a binding parameter that references a type '{2}' that is not an entity type."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_InvalidEntitySetPathWithNonEntityBindingParameter(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidEntitySetPathWithNonEntityBindingParameter,p0,p1,p2);
+        }
+
+        /// <summary>
+        /// A string like "The attribute '{0}' has an invalid value. The path '{1}' has a type cast segment '{2}' that cannot be found in the model."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment,p0,p1,p2);
+        }
+
+        /// <summary>
+        /// A string like "The operation '{0}' has an entity set path and with an invalid return type. The return type is required to be an entity type or a collection of entity type."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid,p0);
+        }
+
+        /// <summary>
+        /// A string like "The operation '{0}' entity set path determined entity type '{1}' is not assignable to the return type '{2}'."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_OperationWithEntitySetPathAndReturnTypeTypeNotAssignable(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationWithEntitySetPathAndReturnTypeTypeNotAssignable,p0,p1,p2);
+        }
+
+        /// <summary>
+        /// A string like "The operation '{0}' entity set path was determined to be a collection but the return type is not a collection."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType,p0);
+        }
+
+        /// <summary>
+        /// A string like "The operation '{0}' entity set path was determined to be a reference property but the return type is a collection."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType,p0);
         }
 
         /// <summary>
@@ -481,15 +567,6 @@ namespace Microsoft.OData.Edm {
         internal static string EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind {
             get {
                 return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind);
-            }
-        }
-
-        /// <summary>
-        /// A string like "Row types cannot have a base type."
-        /// </summary>
-        internal static string EdmModel_Validator_Semantic_RowTypeMustNotHaveBaseType {
-            get {
-                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_RowTypeMustNotHaveBaseType);
             }
         }
 
@@ -554,15 +631,6 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string EdmModel_Validator_Semantic_NavigationPropertyWithNonRecursiveContainmentSourceMustBeFromOne(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_NavigationPropertyWithNonRecursiveContainmentSourceMustBeFromOne,p0);
-        }
-
-        /// <summary>
-        /// A string like "The row type is invalid. A row must contain at least one property."
-        /// </summary>
-        internal static string EdmModel_Validator_Semantic_RowTypeMustHaveProperties {
-            get {
-                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_RowTypeMustHaveProperties);
-            }
         }
 
         /// <summary>
@@ -868,10 +936,10 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The mapping of the entity set '{0}' and navigation property '{1}' is invalid because the navigation property mapping must have a mapping with the navigation property's partner that points back to the originating entity set. "
+        /// A string like "The binding of the entity set or singleton '{0}' on navigation property '{1}' is invalid, the binding of bidirectional navigation property must be bidirectional if specified. "
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_EntitySetNavigationMappingMustBeBidirectional(object p0, object p1) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EntitySetNavigationMappingMustBeBidirectional,p0,p1);
+        internal static string EdmModel_Validator_Semantic_NavigationMappingMustBeBidirectional(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_NavigationMappingMustBeBidirectional,p0,p1);
         }
 
         /// <summary>
@@ -959,10 +1027,80 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The entity set '{1}' is not a valid destination for the navigation property '{0}' because it cannot hold an element of the target entity type."
+        /// A string like "The entity set or singleton '{1}' is not a valid destination for the navigation property '{0}' because it cannot hold an element of the target entity type."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_EntitySetNavigationPropertyMappingMustPointToValidTargetForProperty(object p0, object p1) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EntitySetNavigationPropertyMappingMustPointToValidTargetForProperty,p0,p1);
+        internal static string EdmModel_Validator_Semantic_NavigationPropertyMappingMustPointToValidTargetForProperty(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_NavigationPropertyMappingMustPointToValidTargetForProperty,p0,p1);
+        }
+
+        /// <summary>
+        /// A string like "The bound function '{0}' is a duplicate of other bound functions. For bound functions the combination of the namespace, name, binding parameter type and unordered set of parameter names uniquely identifies a bound function."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterNames(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterNames,p0);
+        }
+
+        /// <summary>
+        /// A string like "The bound function '{0}' is a duplicate of other bound functions. For bound functions the combination of the namespace, name, binding parameter type and ordered set of parameter types uniquely identifies a bound function."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes,p0);
+        }
+
+        /// <summary>
+        /// A string like "The unbound function '{0}' is a duplicate of other unbound functions. For unbound functions the combination of the namespace, name and unordered set of parameter names uniquely identifies an unbound function."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterNames(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterNames,p0);
+        }
+
+        /// <summary>
+        /// A string like "The unbound function '{0}' is a duplicate of other unbound functions. For unbound functions the combination of the namespace, name and ordered set of parameter types uniquely identifies an unbound function."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterTypes(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterTypes,p0);
+        }
+
+        /// <summary>
+        /// A string like "The bound action '{0}' is a duplicate of other bound actions. For bound actions the combination of the namespace, name, and binding parameter type uniquely identifies an bound action."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_ModelDuplicateBoundActions(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ModelDuplicateBoundActions,p0);
+        }
+
+        /// <summary>
+        /// A string like "The unbound action '{0}' is a duplicate of other unbound actions. For unbound actions the combination of the namespace, and name uniquely identifies an unbound action."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_ModelDuplicateUnBoundActions(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ModelDuplicateUnBoundActions,p0);
+        }
+
+        /// <summary>
+        /// A string like "The bound function overload '{0}' does not have the same return type as other function overloads. Expected type '{1}'."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType,p0,p1);
+        }
+
+        /// <summary>
+        /// A string like "The type '{0}' of the entity set '{1}' is not valid, it must be collection of entity type."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType,p0,p1);
+        }
+
+        /// <summary>
+        /// A string like "The type '{0}' of the singleton '{1}' is not valid, it must be entity type."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType,p0,p1);
+        }
+
+        /// <summary>
+        /// A string like "The navigation property mapping '{0}' is invalid because its type is collection but target to a singleton '{1}'."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_NavigationPropertyOfCollectionTypeMustNotTargetToSingleton(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_NavigationPropertyOfCollectionTypeMustNotTargetToSingleton,p0,p1);
         }
 
         /// <summary>
@@ -1095,10 +1233,10 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The function import '{0}' could not be serialized because its return type cannot be represented inline."
+        /// A string like "The operation import '{0}' could not be serialized because its return type cannot be represented inline."
         /// </summary>
-        internal static string Serializer_NonInlineFunctionImportReturnType(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Serializer_NonInlineFunctionImportReturnType,p0);
+        internal static string Serializer_NonInlineOperationImportReturnType(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Serializer_NonInlineOperationImportReturnType,p0);
         }
 
         /// <summary>
@@ -1204,19 +1342,17 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The {0} '{1}' is invalid. The entitySetPath value is not allowed when IsBound attribute is false."
+        /// </summary>
+        internal static string CsdlParser_InvalidEntitySetPathWithUnboundAction(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlParser_InvalidEntitySetPathWithUnboundAction,p0,p1);
+        }
+
+        /// <summary>
         /// A string like "The alias '{0}' is not a valid simple name."
         /// </summary>
         internal static string CsdlParser_InvalidAlias(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlParser_InvalidAlias,p0);
-        }
-
-        /// <summary>
-        /// A string like "Associations may have at most one constraint. Multiple constraints were specified for this association."
-        /// </summary>
-        internal static string CsdlParser_AssociationHasAtMostOneConstraint {
-            get {
-                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlParser_AssociationHasAtMostOneConstraint);
-            }
         }
 
         /// <summary>
@@ -1233,20 +1369,6 @@ namespace Microsoft.OData.Edm {
             get {
                 return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlParser_MissingTypeAttributeOrElement);
             }
-        }
-
-        /// <summary>
-        /// A string like "The association '{0}' is not valid. Associations must contain exactly two end elements."
-        /// </summary>
-        internal static string CsdlParser_InvalidAssociationIncorrectNumberOfEnds(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlParser_InvalidAssociationIncorrectNumberOfEnds,p0);
-        }
-
-        /// <summary>
-        /// A string like "The association set '{0}' is not valid. Association sets must contain at most two end elements."
-        /// </summary>
-        internal static string CsdlParser_InvalidAssociationSetIncorrectNumberOfEnds(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlParser_InvalidAssociationSetIncorrectNumberOfEnds,p0);
         }
 
         /// <summary>
@@ -1307,11 +1429,11 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The AssertType expression must contain 1 operand."
+        /// A string like "The Cast expression must contain 1 operand."
         /// </summary>
-        internal static string CsdlParser_InvalidAssertTypeExpressionIncorrectNumberOfOperands {
+        internal static string CsdlParser_InvalidCastExpressionIncorrectNumberOfOperands {
             get {
-                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlParser_InvalidAssertTypeExpressionIncorrectNumberOfOperands);
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlParser_InvalidCastExpressionIncorrectNumberOfOperands);
             }
         }
 
@@ -1371,6 +1493,24 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The 'Nullable' attribute cannot be specified for a navigation property with collection type."
+        /// </summary>
+        internal static string CsdlParser_CannotSpecifyNullableAttributeForNavigationPropertyWithCollectionType {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlParser_CannotSpecifyNullableAttributeForNavigationPropertyWithCollectionType);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Metadata document cannot have more than one entity container."
+        /// </summary>
+        internal static string CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer);
+            }
+        }
+
+        /// <summary>
         /// A string like " There was a mismatch in the principal and dependent ends of the referential constraint."
         /// </summary>
         internal static string CsdlSemantics_ReferentialConstraintMismatch {
@@ -1408,24 +1548,6 @@ namespace Microsoft.OData.Edm {
         internal static string EdmxParser_EdmxVersionMismatch {
             get {
                 return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmxParser_EdmxVersionMismatch);
-            }
-        }
-
-        /// <summary>
-        /// A string like "The specified value of data service version is invalid."
-        /// </summary>
-        internal static string EdmxParser_EdmxDataServiceVersionInvalid {
-            get {
-                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmxParser_EdmxDataServiceVersionInvalid);
-            }
-        }
-
-        /// <summary>
-        /// A string like "The specified value of max data service version is invalid."
-        /// </summary>
-        internal static string EdmxParser_EdmxMaxDataServiceVersionInvalid {
-            get {
-                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmxParser_EdmxMaxDataServiceVersionInvalid);
             }
         }
 
@@ -1483,6 +1605,13 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string ValueParser_InvalidSrid(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.ValueParser_InvalidSrid,p0);
+        }
+
+        /// <summary>
+        /// A string like "The value '{0}' is not a valid scale. The value must either be a 32 bit integer or 'Variable'."
+        /// </summary>
+        internal static string ValueParser_InvalidScale(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.ValueParser_InvalidScale,p0);
         }
 
         /// <summary>
@@ -1724,13 +1853,6 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The association end '{0}' could not be computed."
-        /// </summary>
-        internal static string Bad_UncomputableAssociationEnd(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Bad_UncomputableAssociationEnd,p0);
-        }
-
-        /// <summary>
         /// A string like "A navigation property could not be found for the path '{0}' starting from the type '{1}'."
         /// </summary>
         internal static string Bad_UnresolvedNavigationPropertyPath(object p0, object p1) {
@@ -1795,6 +1917,29 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string EdmToClr_TryCreateObjectInstanceReturnedWrongObject(object p0, object p1) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmToClr_TryCreateObjectInstanceReturnedWrongObject,p0,p1);
+        }
+
+        /// <summary>
+        /// A string like "The MIME type annotation must not have a null value."
+        /// </summary>
+        internal static string EdmUtil_NullValueForMimeTypeAnnotation {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmUtil_NullValueForMimeTypeAnnotation);
+            }
+        }
+
+        /// <summary>
+        /// A string like "An annotation of type string was expected for the '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' annotation, but an annotation of type '{1}' was found."
+        /// </summary>
+        internal static string EdmUtil_InvalidAnnotationValue(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmUtil_InvalidAnnotationValue,p0,p1);
+        }
+
+        /// <summary>
+        /// A string like "The time zone information is missing on the DateTimeOffset value '{0}'. A DateTimeOffset value must contain the time zone information."
+        /// </summary>
+        internal static string PlatformHelper_DateTimeOffsetMustContainTimeZone(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.PlatformHelper_DateTimeOffsetMustContainTimeZone,p0);
         }
 
     }

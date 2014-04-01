@@ -50,6 +50,16 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
 
         /// <summary>
+        /// Translate an SingletonSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public virtual T Translate(SingletonSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Translate a KeySegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
@@ -65,6 +75,16 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
         public virtual T Translate(PropertySegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Translate a OperationImportSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public virtual T Translate(OperationImportSegment segment)
         {
             throw new NotImplementedException();
         }

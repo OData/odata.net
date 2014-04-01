@@ -61,6 +61,12 @@ namespace Microsoft.OData.Core.Json
         private readonly TextReader reader;
 
         /// <summary>
+        /// If it is IEEE754Compatible, read quoted string for INT64 and decimal;
+        /// otherwise read number directly.
+        /// </summary>
+        private readonly bool isIeee754Compatible;
+
+        /// <summary>
         /// Stack of scopes.
         /// </summary>
         /// <remarks>
@@ -125,9 +131,9 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         /// <param name="reader">The text reader to read input characters from.</param>
         /// <param name="jsonFormat">The specific JSON-based format expected by the reader.</param>
-        public JsonReader(TextReader reader, ODataFormat jsonFormat)
+        /// <param name="isIeee754Compatible">If it is isIeee754Compatible</param>
+        public JsonReader(TextReader reader, ODataFormat jsonFormat, bool isIeee754Compatible)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
             Debug.Assert(jsonFormat == ODataFormat.Json, "Expected a json-based format to create a JsonReader");
 
@@ -138,6 +144,7 @@ namespace Microsoft.OData.Core.Json
             this.storedCharacterCount = 0;
             this.tokenStartIndex = 0;
             this.endOfInputReached = false;
+            this.isIeee754Compatible = isIeee754Compatible;
             this.allowAnnotations = jsonFormat == ODataFormat.Json;
             this.scopes = new Stack<Scope>();
             this.scopes.Push(new Scope(ScopeType.Root));
@@ -197,7 +204,6 @@ namespace Microsoft.OData.Core.Json
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.nodeValue;
             }
         }
@@ -209,8 +215,18 @@ namespace Microsoft.OData.Core.Json
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.nodeType;
+            }
+        }
+
+        /// <summary>
+        /// if it is IEEE754 compatible
+        /// </summary>
+        public virtual bool IsIeee754Compatible
+        {
+            get
+            {
+                return this.isIeee754Compatible;
             }
         }
 
@@ -221,8 +237,6 @@ namespace Microsoft.OData.Core.Json
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Not really feasible to extract code to methods without introducing unnecessary complexity.")]
         public virtual bool Read()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // Reset the node value.
             this.nodeValue = null;
 
@@ -698,7 +712,7 @@ namespace Microsoft.OData.Core.Json
         /// <summary>
         /// Parses the number primitive values.
         /// </summary>
-        /// <returns>Int32 or Double value if successful. Otherwise throws.</returns>
+        /// <returns>Parse value to Int32, Decimal or Double. Otherwise throws.</returns>
         /// <remarks>Assumes that the current token position points to the first character of the number, so either digit, dot or dash.</remarks>
         private object ParseNumberPrimitiveValue()
         {
@@ -731,12 +745,20 @@ namespace Microsoft.OData.Core.Json
             string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
             double doubleValue;
             int intValue;
+            decimal decimalValue;
 
             // We will first try and convert the value to Int32. If it succeeds, use that.
+            // And then, we will try Decimal, since it will lose precision while expected type is specified.
             // Otherwise, we will try and convert the value into a double.
             if (Int32.TryParse(numberString, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
             {
                 return intValue;
+            }
+
+            // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
+            if (!isIeee754Compatible && Decimal.TryParse(numberString, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimalValue))
+            {
+                return decimalValue;
             }
             
             if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))

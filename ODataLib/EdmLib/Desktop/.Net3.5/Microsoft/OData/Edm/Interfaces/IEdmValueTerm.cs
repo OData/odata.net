@@ -19,5 +19,10 @@ namespace Microsoft.OData.Edm
         /// Gets the type of this term.
         /// </summary>
         IEdmTypeReference Type { get; }
+
+        /// <summary>
+        /// Gets the AppliesTo of this term.
+        /// </summary>
+        string AppliesTo { get; }
     }
 }

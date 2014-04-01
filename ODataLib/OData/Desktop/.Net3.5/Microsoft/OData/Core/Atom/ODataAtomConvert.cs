@@ -32,8 +32,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The ATOM strings representing boolean literals.</returns>
         internal static string ToString(bool b)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return b ? AtomConstants.AtomTrueLiteral : AtomConstants.AtomFalseLiteral;
         }
 
@@ -44,8 +42,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The ATOM strings representing the byte value.</returns>
         internal static string ToString(byte b)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return XmlConvert.ToString(b);
         }
 
@@ -56,21 +52,7 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The ATOM strings representing the decimal value.</returns>
         internal static string ToString(decimal d)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return XmlConvert.ToString(d);
-        }
-
-        /// <summary>
-        /// Converts the given date/time value to the string appropriate for Atom format
-        /// </summary>
-        /// <param name="dt">The date/time value to convert.</param>
-        /// <returns>The string version of the date/time value in Atom format.</returns>
-        internal static string ToString(this DateTime dt)
-        {
-            DebugUtils.CheckNoExternalCallers();
-
-            return PlatformHelper.ConvertDateTimeToString(dt);
         }
 
         /// <summary>
@@ -80,8 +62,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>Atom format string representation of <paramref name="dateTime"/>.</returns>
         internal static string ToString(DateTimeOffset dateTime)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return XmlConvert.ToString(dateTime);
         }
 
@@ -93,8 +73,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>Atom format string representation of <paramref name="dateTime"/>.</returns>
         internal static string ToAtomString(DateTimeOffset dateTime)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (dateTime.Offset == zeroOffset)
             {
                 return dateTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture);
@@ -110,8 +88,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The string version of the timespan value in Atom format.</returns>
         internal static string ToString(this TimeSpan ts)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return EdmValueWriter.DurationAsXml(ts);
         }
 
@@ -122,8 +98,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The string version of the double value in Atom format.</returns>
         internal static string ToString(this double d)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return XmlConvert.ToString(d);
         }
 
@@ -134,8 +108,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The string version of the Int16 value in Atom format.</returns>
         internal static string ToString(this Int16 i)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return XmlConvert.ToString(i);
         }
 
@@ -146,8 +118,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The string version of the Int32 in Atom format.</returns>
         internal static string ToString(this Int32 i)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return XmlConvert.ToString(i);
         }
 
@@ -158,8 +128,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The string version of the Int64 in Atom format.</returns>
         internal static string ToString(this Int64 i)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return XmlConvert.ToString(i);
         }
 
@@ -170,8 +138,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The string version of the SByte in Atom format.</returns>
         internal static string ToString(this SByte sb)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return XmlConvert.ToString(sb);
         }
 
@@ -182,8 +148,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The string version of the byte array in Atom format.</returns>
         internal static string ToString(this byte[] bytes)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return Convert.ToBase64String(bytes);
         }
 
@@ -194,8 +158,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The string version of the Single in Atom format.</returns>
         internal static string ToString(this Single s)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return XmlConvert.ToString(s);
         }
 
@@ -206,8 +168,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The string version of the Guid in Atom format.</returns>
         internal static string ToString(this Guid guid)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return XmlConvert.ToString(guid);
         }
     }

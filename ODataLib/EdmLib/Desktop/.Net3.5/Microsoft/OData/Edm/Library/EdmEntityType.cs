@@ -20,6 +20,7 @@ namespace Microsoft.OData.Edm.Library
     {
         private readonly string namespaceName;
         private readonly string name;
+        private readonly bool hasStream;
         private List<IEdmStructuralProperty> declaredKey;
 
         /// <summary>
@@ -52,6 +53,20 @@ namespace Microsoft.OData.Edm.Library
         /// <param name="isAbstract">Denotes an entity that cannot be instantiated.</param>
         /// <param name="isOpen">Denotes if the type is open.</param>
         public EdmEntityType(string namespaceName, string name, IEdmEntityType baseType, bool isAbstract, bool isOpen)
+            : this(namespaceName, name, baseType, isAbstract, isOpen, false)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdmEntityType"/> class.
+        /// </summary>
+        /// <param name="namespaceName">Namespace the entity belongs to.</param>
+        /// <param name="name">Name of the entity.</param>
+        /// <param name="baseType">The base type of this entity type.</param>
+        /// <param name="isAbstract">Denotes an entity that cannot be instantiated.</param>
+        /// <param name="isOpen">Denotes if the type is open.</param>
+        /// <param name="hasStream">Denotes if the type is a media type.</param>
+        public EdmEntityType(string namespaceName, string name, IEdmEntityType baseType, bool isAbstract, bool isOpen, bool hasStream)
             : base(isAbstract, isOpen, baseType)
         {
             EdmUtil.CheckArgumentNull(namespaceName, "namespaceName");
@@ -59,6 +74,7 @@ namespace Microsoft.OData.Edm.Library
 
             this.namespaceName = namespaceName;
             this.name = name;
+            this.hasStream = hasStream; 
         }
 
         /// <summary>
@@ -110,6 +126,15 @@ namespace Microsoft.OData.Edm.Library
         }
 
         /// <summary>
+        /// Gets the value indicating whether or not this entity is a media type
+        /// This value inherits from the base type.
+        /// </summary>
+        public bool HasStream
+        {
+            get { return hasStream || (this.BaseType != null && this.BaseEntityType().HasStream); }
+        }
+
+        /// <summary>
         /// Adds the <paramref name="keyProperties"/> to the key of this entity type.
         /// </summary>
         /// <param name="keyProperties">The key properties.</param>
@@ -139,27 +164,14 @@ namespace Microsoft.OData.Edm.Library
 
         /// <summary>
         /// Creates and adds a unidirectional navigation property to this type.
-        /// Default partner property is created, but not added to the navigation target type.
         /// </summary>
         /// <param name="propertyInfo">Information to create the navigation property.</param>
         /// <returns>Created navigation property.</returns>
         public EdmNavigationProperty AddUnidirectionalNavigation(EdmNavigationPropertyInfo propertyInfo)
         {
-            return AddUnidirectionalNavigation(propertyInfo, this.FixUpDefaultPartnerInfo(propertyInfo, null));
-        }
-
-        /// <summary>
-        /// Creates and adds a unidirectional navigation property to this type.
-        /// Navigation property partner is created, but not added to the navigation target type.
-        /// </summary>
-        /// <param name="propertyInfo">Information to create the navigation property.</param>
-        /// <param name="partnerInfo">Information to create the partner navigation property.</param>
-        /// <returns>Created navigation property.</returns>
-        public EdmNavigationProperty AddUnidirectionalNavigation(EdmNavigationPropertyInfo propertyInfo, EdmNavigationPropertyInfo partnerInfo)
-        {
             EdmUtil.CheckArgumentNull(propertyInfo, "propertyInfo");
 
-            EdmNavigationProperty property = EdmNavigationProperty.CreateNavigationPropertyWithPartner(propertyInfo, this.FixUpDefaultPartnerInfo(propertyInfo, partnerInfo));
+            EdmNavigationProperty property = EdmNavigationProperty.CreateNavigationProperty(this, propertyInfo);
 
             this.AddProperty(property);
             return property;

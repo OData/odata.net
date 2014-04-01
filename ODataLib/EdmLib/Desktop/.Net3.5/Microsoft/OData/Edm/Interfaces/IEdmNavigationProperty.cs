@@ -8,8 +8,6 @@
 
 //   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
-using System.Collections.Generic;
-
 namespace Microsoft.OData.Edm
 {
     /// <summary>
@@ -20,7 +18,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// The Multiplicity of the association end is unknown.
         /// </summary>
-        Unknown,
+        Unknown = 0,
 
         /// <summary>
         /// The Multiplicity of the association end is zero or one.
@@ -46,7 +44,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Take no action on delete.
         /// </summary>
-        None,
+        None = 0,
 
         /// <summary>
         /// On delete also delete items on the other end of the association.
@@ -70,18 +68,13 @@ namespace Microsoft.OData.Edm
         EdmOnDeleteAction OnDelete { get; }
 
         /// <summary>
-        /// Gets whether this navigation property originates at the principal end of an association.
-        /// </summary>
-        bool IsPrincipal { get; }
-
-        /// <summary>
-        /// Gets the dependent properties of this navigation property, returning null if this is the principal end or if there is no referential constraint.
-        /// </summary>
-        IEnumerable<IEdmStructuralProperty> DependentProperties { get; }
-
-        /// <summary>
         /// Gets a value indicating whether the navigation target is contained inside the navigation source.
         /// </summary>
         bool ContainsTarget { get; }
+
+        /// <summary>
+        /// Gets the referential constraint for this navigation, returning null if this is the principal end or if there is no referential constraint.
+        /// </summary>
+        IEdmReferentialConstraint ReferentialConstraint { get; }
     }
 }

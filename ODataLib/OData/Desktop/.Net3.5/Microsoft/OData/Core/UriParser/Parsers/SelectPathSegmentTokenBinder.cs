@@ -14,7 +14,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
+    using Microsoft.OData.Core.JsonLight;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
@@ -42,12 +44,19 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return nextSegment;
             }
 
-            // for open types, operations must be container-qualified, and because the token type indicates it was not a .-seperated identifier, we should not try to look up operations.
-            if (!edmType.IsOpen || tokenIn.IsNamespaceOrContainerQualified())
+            // Operations must be container-qualified, and because the token type indicates it was not a .-seperated identifier, we should not try to look up operations.
+            if (tokenIn.IsNamespaceOrContainerQualified())
             {
                 if (TryBindAsOperation(tokenIn, model, edmType, out nextSegment))
                 {
                     return nextSegment;
+                }
+
+                // If an action or function is requested in a selectItem using a qualifiedActionName or a qualifiedFunctionName 
+                // and that operation cannot be bound to the entities requested, the service MUST ignore the selectItem.
+                if (!edmType.IsOpen)
+                {
+                    return null;
                 }
             }
 
@@ -71,11 +80,15 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             bool isTypeToken = tokenIn.IsNamespaceOrContainerQualified();
             bool wildcard = tokenIn.Identifier.EndsWith("*", StringComparison.Ordinal);
 
-            IEdmEntityContainer container;
-            if (isTypeToken && wildcard && UriEdmHelpers.TryGetEntityContainer(tokenIn.Identifier.Substring(0, tokenIn.Identifier.LastIndexOf('.')), model, out container))
+            if (isTypeToken && wildcard)
             {
-                item = new ContainerQualifiedWildcardSelectItem(container);
-                return true;
+                string namespaceName = tokenIn.Identifier.Substring(0, tokenIn.Identifier.Length - 2);
+
+                if (model.DeclaredNamespaces.Any(declaredNamespace => declaredNamespace.Equals(namespaceName, StringComparison.Ordinal)))
+                {
+                    item = new NamespaceQualifiedWildcardSelectItem(namespaceName);
+                    return true;
+                }
             }
 
             if (tokenIn.Identifier == "*")
@@ -97,23 +110,59 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="segment">Bound segment if the token was bound to an operation successfully, or null.</param>
         /// <returns>True if the token was bound successfully, or false otherwise.</returns>
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
-        private static bool TryBindAsOperation(PathSegmentToken pathToken, IEdmModel model, IEdmStructuredType entityType, out ODataPathSegment segment)
+        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
+        internal static bool TryBindAsOperation(PathSegmentToken pathToken, IEdmModel model, IEdmStructuredType entityType, out ODataPathSegment segment)
         {
             Debug.Assert(pathToken != null, "pathToken != null");
             Debug.Assert(entityType != null, "bindingType != null");
 
-            IEnumerable<IEdmOperationImport> operationImports;
-            var resolver = model as IODataUriParserModelExtensions;
-            if (resolver != null)
+            List<IEdmOperation> possibleFunctions = new List<IEdmOperation>();
+
+            // Catch all catchable exceptions as FindDeclaredBoundOperations is implemented by anyone.
+            // If an exception occurs it will be supressed and the possible functions will be empty and return false.
+            try
             {
-                operationImports = resolver.FindFunctionImportsByBindingParameterTypeHierarchy(entityType, pathToken.Identifier);
+                int wildCardPos = pathToken.Identifier.IndexOf("*", StringComparison.Ordinal);
+                if (wildCardPos > -1)
+                {
+                    string namespaceName = pathToken.Identifier.Substring(0, wildCardPos - 1);
+                    possibleFunctions = model.FindDeclaredBoundOperations(entityType).Where(o => o.Namespace == namespaceName).ToList();
+                }
+                else
+                {
+                    NonSystemToken nonSystemToken = pathToken as NonSystemToken;
+                    IList<string> parameterNames = new List<string>();
+                    if (nonSystemToken != null && nonSystemToken.NamedValues != null)
+                    {
+                        parameterNames = nonSystemToken.NamedValues.Select(s => s.Name).ToList();
+                    }
+
+                    if (parameterNames.Count > 0)
+                    {
+                        // Always force to use fully qualified name when select operation
+                        possibleFunctions = model.FindDeclaredBoundOperations(entityType).FilterByName(true, pathToken.Identifier).FilterOperationsByParameterNames(parameterNames).ToList();
+                    }
+                    else
+                    {
+                        possibleFunctions = model.FindDeclaredBoundOperations(entityType).FilterByName(true, pathToken.Identifier).ToList();
+                    }
+                }
             }
-            else
+            catch (Exception exc)
             {
-                operationImports = model.FindFunctionImportsByBindingParameterTypeHierarchy(entityType, pathToken.Identifier);
+                if (!ExceptionUtils.IsCatchableExceptionType(exc))
+                {
+                    throw;
+                }
             }
 
-            List<IEdmOperationImport> possibleFunctions = operationImports.ToList();
+            possibleFunctions = possibleFunctions.EnsureOperationsBoundWithBindingParameter().ToList();
+
+            // Only filter if there is more than one and its needed.
+            if (possibleFunctions.Count > 1)
+            {
+                possibleFunctions = possibleFunctions.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(entityType).ToList();
+            }
 
             if (possibleFunctions.Count <= 0)
             {

@@ -12,14 +12,16 @@ namespace Microsoft.OData.Core.JsonLight
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.Linq;
+    using System.Text.RegularExpressions;
+    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using UriUtils = Microsoft.OData.Core.UriUtils;
+
     #endregion Namespaces
 
     /// <summary>
@@ -27,9 +29,13 @@ namespace Microsoft.OData.Core.JsonLight
     /// </summary>
     internal sealed class ODataJsonLightContextUriParser
     {
-        /// <summary>The start of the select query option (including the '=' character).</summary>
-        private static readonly string SelectQueryOptionStart = 
-            JsonLightConstants.ContextUriSelectQueryOptionName + JsonLightConstants.ContextUriQueryOptionValueSeparator;
+        /// <summary>
+        /// Pattern for key segments, Examples:
+        /// Customer(1), Customer('foo'),
+        /// Customer(baf04077-a3c0-454b-ac6f-9fec00b8e170), Message(FromUsername='1',MessageId=-10)
+        /// Message(geography'SRID=0;Collection(LineString(142.1 64.1,3.14 2.78))'),Message(duration'P6DT23H59M59.9999S')
+        /// </summary>
+        private static readonly Regex KeyPattern = new Regex(@"^(?:-{0,1}\d+?|\w*'.+?'|[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}|.+?=.+?)$", RegexOptions.IgnoreCase);
 
         /// <summary>The model to use when resolving the target of the URI.</summary>
         private readonly IEdmModel model;
@@ -45,7 +51,7 @@ namespace Microsoft.OData.Core.JsonLight
         private ODataJsonLightContextUriParser(IEdmModel model, Uri contextUriFromPayload)
         {
             Debug.Assert(model != null, "model != null");
-            
+
             if (!model.IsUserModel())
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_NoModel);
@@ -63,16 +69,16 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="payloadKind">The payload kind we expect the context URI to conform to.</param>
         /// <param name="version">The OData version to use for determining the set of built-in functions available.</param>
         /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
+        /// <param name="needParseFragment">Whether the fragment after $metadata should be parsed, if set to false, only MetadataDocumentUri is parsed.</param>
         /// <returns>The result from parsing the context URI.</returns>
         internal static ODataJsonLightContextUriParseResult Parse(
             IEdmModel model,
             string contextUriFromPayload,
             ODataPayloadKind payloadKind,
             ODataVersion version,
-            ODataReaderBehavior readerBehavior)
+            ODataReaderBehavior readerBehavior,
+            bool needParseFragment)
         {
-            DebugUtils.CheckNoExternalCallers();
-            
             if (contextUriFromPayload == null)
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_NullMetadataDocumentUri);
@@ -83,8 +89,11 @@ namespace Microsoft.OData.Core.JsonLight
             ODataJsonLightContextUriParser parser = new ODataJsonLightContextUriParser(model, contextUri);
 
             parser.TokenizeContextUri();
+            if (needParseFragment)
+            {
+                parser.ParseContextUri(payloadKind, readerBehavior, version);
+            }
 
-            parser.ParseContextUri(payloadKind, readerBehavior, version);
             return parser.parseResult;
         }
 
@@ -95,31 +104,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The value of the $select query option or null if none exists.</returns>
         private static string ExtractSelectQueryOption(string fragment)
         {
-            Debug.Assert(fragment != null, "queryString != null");
-
-            // First find the $select query option
-            int startIx = fragment.IndexOf(SelectQueryOptionStart, StringComparison.Ordinal);
-            if (startIx < 0)
-            {
-                return null;
-            }
-
-            // Find the end of the $select query option which is either 
-            // an '&' character or the end of the string.
-            int valueStartIx = startIx + SelectQueryOptionStart.Length;
-            int endIx = fragment.IndexOf(JsonLightConstants.ContextUriQueryOptionSeparator, valueStartIx);
-
-            string selectQueryOptionValue;
-            if (endIx < 0)
-            {
-                selectQueryOptionValue = fragment.Substring(valueStartIx);
-            }
-            else
-            {
-                selectQueryOptionValue = fragment.Substring(valueStartIx, endIx - valueStartIx);
-            }
-
-            return selectQueryOptionValue.Trim();
+            return fragment;
         }
 
         /// <summary>
@@ -133,7 +118,7 @@ namespace Microsoft.OData.Core.JsonLight
             // Remove the fragment from the URI read from the payload
             UriBuilder uriBuilderWithoutFragment = new UriBuilder(contextUriFromPayload)
             {
-                Fragment = null, 
+                Fragment = null,
             };
 
             // Make sure the metadata document URI from the settings matches the context URI in the payload.
@@ -174,7 +159,7 @@ namespace Microsoft.OData.Core.JsonLight
             // an expected property kind (which is allowed), fail.
             if (!detectedPayloadKindMatchesExpectation)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(UriUtilsCommon.UriToString(this.parseResult.ContextUri), expectedPayloadKind.ToString()));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(UriUtils.UriToString(this.parseResult.ContextUri), expectedPayloadKind.ToString()));
             }
 
             // NOTE: we interpret an empty select query option to mean that nothing should be projected
@@ -199,344 +184,169 @@ namespace Microsoft.OData.Core.JsonLight
         [SuppressMessage("Microsoft.Maintainability", "CA1502", Justification = "Will be moving to non case statements later, no point in investing in reducing this now")]
         private ODataPayloadKind ParseContextUriFragment(string fragment, ODataReaderBehavior readerBehavior, ODataVersion version)
         {
-            // remove any query options like $select that may have been embedded in the fragment.
-            int indexOfQueryOptionSeparator = fragment.IndexOf(JsonLightConstants.ContextUriQueryOptionSeparator);
-            if (indexOfQueryOptionSeparator > 0)
+            // Deal with /$entity
+            string partSep = ODataConstants.UriSegmentSeparatorChar + ODataConstants.ContextUriFragmentItemSelector;
+            bool hasItemSelector = fragment.EndsWith(partSep, StringComparison.Ordinal);
+            if (hasItemSelector)
             {
-                // Extract the $select query option value from the fragment if it exists
-                string fragmentQueryOptions = fragment.Substring(indexOfQueryOptionSeparator);
-                this.parseResult.SelectQueryOption = ExtractSelectQueryOption(fragmentQueryOptions);
-
-                fragment = fragment.Substring(0, indexOfQueryOptionSeparator);
+                fragment = fragment.Substring(0, fragment.Length - partSep.Length);
             }
 
-            string[] parts = fragment.Split(JsonLightConstants.ContextUriFragmentPartSeparator);
-            int partCount = parts.Length;
+            // Deal with query option
+            if (fragment.EndsWith(")", StringComparison.Ordinal))
+            {
+                int index = fragment.Length - 2;
+                for (int rcount = 1; rcount > 0 && index > 0; --index)
+                {
+                    switch (fragment[index])
+                    {
+                        case '(':
+                            rcount--;
+                            break;
+                        case ')':
+                            rcount++;
+                            break;
+                    }
+                }
+
+                if (index == 0)
+                {
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidContextUrl(UriUtils.UriToString(this.parseResult.ContextUri)));
+                }
+
+                string previous = fragment.Substring(0, index + 1);
+
+                // Don't treat Collection(Edm.Type) as SelectExpand segment
+                if (!previous.Equals("Collection"))
+                {
+                    string selectExpandStr = fragment.Substring(index + 2);
+                    selectExpandStr = selectExpandStr.Substring(0, selectExpandStr.Length - 1);
+
+                    // Do not treat Key as SelectExpand segment
+                    if (KeyPattern.IsMatch(selectExpandStr))
+                    {
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_LastSegmentIsKeySegment(UriUtils.UriToString(this.parseResult.ContextUri)));
+                    }
+
+                    this.parseResult.SelectQueryOption = ExtractSelectQueryOption(selectExpandStr);
+                    fragment = previous;
+                }
+            }
 
             ODataPayloadKind detectedPayloadKind = ODataPayloadKind.Unsupported;
             EdmTypeResolver edmTypeResolver = new EdmTypeReaderResolver(this.model, readerBehavior, version);
 
-            switch (partCount)
+            if (!fragment.Contains(ODataConstants.UriSegmentSeparator) && !hasItemSelector)
             {
-                case 1:
-                    // Service document: no fragment
-                    if (fragment.Length == 0)
-                    {
-                        detectedPayloadKind = ODataPayloadKind.ServiceDocument;
-                        break;
-                    }
-
-                    if (parts[0].Equals(JsonLightConstants.MetadataUriFragmentNull, StringComparison.OrdinalIgnoreCase))
-                    {
-                        detectedPayloadKind = ODataPayloadKind.Property;
-                        this.parseResult.IsNullProperty = true;
-                        break;
-                    }
-
-                    if (parts[0].Equals(ODataConstants.EntityReferenceCollectionSegmentName + "(" + ODataConstants.EntityReferenceSegmentName + ")"))
-                    {
-                        detectedPayloadKind = ODataPayloadKind.EntityReferenceLinks;
-                        break;
-                    }
-
-                    if (parts[0].Equals(ODataConstants.EntityReferenceSegmentName))
-                    {
-                        detectedPayloadKind = ODataPayloadKind.EntityReferenceLink;
-                        break;
-                    }
-
-                    IEdmEntitySet entitySet = this.model.ResolveEntitySet(parts[0]);
-                    if (entitySet != null)
-                    {
-                        // Feed: {schema.entity-container.entity-set}
-                        this.parseResult.EntitySet = entitySet;
-                        this.parseResult.EdmType = edmTypeResolver.GetElementType(entitySet);
-                        detectedPayloadKind = ODataPayloadKind.Feed;
-                        break;
-                    }
-
-                    // Property: {schema.type} or Collection({schema.type}) where schema.type is primitive or complex.
-                    this.parseResult.EdmType = this.ResolveType(parts[0], readerBehavior, version);
-                        Debug.Assert(
-                            this.parseResult.EdmType.TypeKind == EdmTypeKind.Primitive || this.parseResult.EdmType.TypeKind == EdmTypeKind.Complex || this.parseResult.EdmType.IsNonEntityCollectionType(),
-                            "The first context URI segment must be a set or a non-entity type.");
-                    detectedPayloadKind = this.parseResult.EdmType is IEdmCollectionType ? ODataPayloadKind.Collection : ODataPayloadKind.Property;
-
-                    break;
-
-                    case 2:
-                        // Entry: {schema.entity-container.entity-set}/@Element
-                        // Feed with type cast: {schema.entity-container.entity-set}/{type-cast}
-                        detectedPayloadKind = this.ResolveEntitySet(
-                            parts[0], 
-                            (IEdmEntitySet resolvedEntitySet) =>
-                            {
-                                IEdmEntityType entitySetElementType = edmTypeResolver.GetElementType(resolvedEntitySet);
-
-                                if (string.CompareOrdinal(JsonLightConstants.ContextUriFragmentItemSelector, parts[1]) == 0)
-                                {
-                                    this.parseResult.EdmType = entitySetElementType;
-                                    return ODataPayloadKind.Entry;
-                                }
-                                else
-                                {
-                                    this.parseResult.EdmType = this.ResolveTypeCast(resolvedEntitySet, parts[1], readerBehavior, version, entitySetElementType);
-                                    return ODataPayloadKind.Feed;
-                                }
-                            });
-                        
-                        break;
-
-                    case 3:
-                        detectedPayloadKind = this.ResolveEntitySet(
-                            parts[0], 
-                            (IEdmEntitySet resolvedEntitySet) =>
-                            {
-                                IEdmEntityType entitySetElementType = edmTypeResolver.GetElementType(resolvedEntitySet);
-
-                                // Entry with type cast: {schema.entity-container.entity-set}/{type-cast}/@Element
-                                this.parseResult.EdmType = this.ResolveTypeCast(resolvedEntitySet, parts[1], readerBehavior, version, entitySetElementType);
-                                this.ValidateMetadataUriFragmentItemSelector(parts[2]);
-                                return ODataPayloadKind.Entry;
-                            });
-                       
-                        break;
-                    default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_FragmentWithInvalidNumberOfParts(UriUtilsCommon.UriToString(this.parseResult.ContextUri), partCount, 3));
-                }
-
-            return detectedPayloadKind;
-        }
-
-        /// <summary>
-        /// Returns the parse results of the context uri if it has a AssociationLink in the uri
-        /// </summary>
-        /// <param name="edmTypeResolver">Edm Type Resolver to determine entityset type element.</param>
-        /// <param name="partCount">Number of split parts the metadata fragment is split into.</param>
-        /// <param name="parts">The  actual metadata fragment parts.</param>
-        /// <param name="readerBehavior">The reader behavior.</param>
-        /// <param name="version">The odata version.</param>
-        /// <returns>Returns with an EntityReferenceLink or Links depending on the Uri, sets the parse results with the navigation, and set</returns>
-        private ODataPayloadKind ParseAssociationLinks(EdmTypeResolver edmTypeResolver, int partCount, string[] parts, ODataReaderBehavior readerBehavior, ODataVersion version)
-        {
-            return this.ResolveEntitySet(
-                parts[0], 
-                (IEdmEntitySet resolvedEntitySet) =>
+                // Service document: no fragment
+                if (fragment.Length == 0)
                 {
-                    ODataPayloadKind detectedPayloadKind = ODataPayloadKind.Unsupported;
-                    IEdmNavigationProperty navigationProperty;
-                    switch (partCount)
-                    {
-                        case 3:
-                            if (string.CompareOrdinal(ODataConstants.EntityReferenceSegmentName, parts[1]) == 0)
-                            {
-                                // Entity reference links: {schema.entity-container.entity-set}/$links/{nav-property}
-                                navigationProperty = this.ResolveEntityReferenceLinkMetadataFragment(edmTypeResolver, resolvedEntitySet, (string)null, parts[2], readerBehavior, version);
-                                detectedPayloadKind = this.SetEntityLinkParseResults(navigationProperty, null);
-                            }
-                            else
-                            {
-                                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidAssociationLink(UriUtilsCommon.UriToString(this.parseResult.ContextUri)));
-                            }
-
-                            break;
-
-                        case 4:
-                            if (string.CompareOrdinal(ODataConstants.EntityReferenceSegmentName, parts[1]) == 0)
-                            {
-                                // Entry with property: {schema.entity-container.entity-set}/$links/{col-nav-property}/@Element
-                                // Entry with property: {schema.entity-container.entity-set}/$links/{ref-nav-property}/@Element (invalid, will throw)
-                                navigationProperty = this.ResolveEntityReferenceLinkMetadataFragment(edmTypeResolver, resolvedEntitySet, null, parts[2], readerBehavior, version);
-                                this.ValidateLinkMetadataUriFragmentItemSelector(parts[3]);
-                                detectedPayloadKind = this.SetEntityLinkParseResults(navigationProperty, parts[3]);
-                            }
-                            else if (string.CompareOrdinal(ODataConstants.EntityReferenceSegmentName, parts[2]) == 0)
-                            {
-                                // Entry with property: {schema.entity-container.entity-set}/type/$links/{colproperty}
-                                navigationProperty = this.ResolveEntityReferenceLinkMetadataFragment(edmTypeResolver, resolvedEntitySet, parts[1], parts[3], readerBehavior, version);
-                                detectedPayloadKind = this.SetEntityLinkParseResults(navigationProperty, null);
-                            }
-                            else
-                            {
-                                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidAssociationLink(UriUtilsCommon.UriToString(this.parseResult.ContextUri)));
-                            }
-
-                            break;
-
-                        case 5:
-                            if (string.CompareOrdinal(ODataConstants.EntityReferenceSegmentName, parts[2]) == 0)
-                            {
-                                // Entry with property: {schema.entity-container.entity-set}/type/$links/{navproperty}/@Element
-                                navigationProperty = this.ResolveEntityReferenceLinkMetadataFragment(edmTypeResolver, resolvedEntitySet, parts[1], parts[3], readerBehavior, version);
-                                this.ValidateLinkMetadataUriFragmentItemSelector(parts[2]);
-                                detectedPayloadKind = this.SetEntityLinkParseResults(navigationProperty, parts[4]);
-                            }
-                            else
-                            {
-                                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidAssociationLink(UriUtilsCommon.UriToString(this.parseResult.ContextUri)));
-                            }
-                           
-                            break;
-
-                        default:
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidAssociationLink(UriUtilsCommon.UriToString(this.parseResult.ContextUri)));
-                    }
-
-                    return detectedPayloadKind;
-                });
-        }
-
-        /// <summary>
-        /// Set the EntityLinks Parse results.
-        /// </summary>
-        /// <param name="navigationProperty">Navigation property to add to the results.</param>
-        /// <param name="singleElement">Single element string, used to confirm if this is an error case or not.</param>
-        /// <returns>Returns ReferenceLink or Collection Link based on the navigation and at element</returns>
-        private ODataPayloadKind SetEntityLinkParseResults(IEdmNavigationProperty navigationProperty, string singleElement)
-        {
-            ODataPayloadKind detectedPayloadKind  = ODataPayloadKind.Unsupported;
-            this.parseResult.NavigationProperty = navigationProperty;
-            
-            detectedPayloadKind = navigationProperty.Type.IsCollection() ? ODataPayloadKind.EntityReferenceLinks : ODataPayloadKind.EntityReferenceLink;
-
-            if (singleElement != null && string.CompareOrdinal(JsonLightConstants.ContextUriFragmentItemSelector, singleElement) == 0)
-            {
-                if (navigationProperty.Type.IsCollection())
+                    detectedPayloadKind = ODataPayloadKind.ServiceDocument;
+                }
+                else if (fragment.Equals(ODataConstants.ContextUriFragmentNull, StringComparison.OrdinalIgnoreCase))
+                {
+                    detectedPayloadKind = ODataPayloadKind.Property;
+                    this.parseResult.IsNullProperty = true;
+                }
+                else if (fragment.Equals(ODataConstants.EntityReferenceCollectionSegmentName + "(" + ODataConstants.EntityReferenceSegmentName + ")"))
+                {
+                    detectedPayloadKind = ODataPayloadKind.EntityReferenceLinks;
+                }
+                else if (fragment.Equals(ODataConstants.EntityReferenceSegmentName))
                 {
                     detectedPayloadKind = ODataPayloadKind.EntityReferenceLink;
                 }
                 else
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidSingletonNavPropertyForEntityReferenceLinkUri(UriUtilsCommon.UriToString(this.parseResult.ContextUri), navigationProperty.Name, singleElement));
+                    var foundNavigationSource = this.model.FindDeclaredNavigationSource(fragment);
+
+                    if (foundNavigationSource != null)
+                    {
+                        // Feed: {schema.entity-container.entity-set} or Singleton: {schema.entity-container.singleton}
+                        this.parseResult.NavigationSource = foundNavigationSource;
+                        this.parseResult.EdmType = edmTypeResolver.GetElementType(foundNavigationSource);
+                        detectedPayloadKind = foundNavigationSource is IEdmSingleton ? ODataPayloadKind.Entry : ODataPayloadKind.Feed;
+                    }
+                    else
+                    {
+                        // Property: {schema.type} or Collection({schema.type}) where schema.type is primitive or complex.
+                        detectedPayloadKind = this.ResolveType(fragment, readerBehavior, version);
+                        Debug.Assert(
+                            this.parseResult.EdmType.TypeKind == EdmTypeKind.Primitive || this.parseResult.EdmType.TypeKind == EdmTypeKind.Enum || this.parseResult.EdmType.TypeKind == EdmTypeKind.Complex || this.parseResult.EdmType.TypeKind == EdmTypeKind.Collection || this.parseResult.EdmType.TypeKind == EdmTypeKind.Entity,
+                            "The first context URI segment must be a set or a non-entity type.");
+                    }
+                }
+            }
+            else
+            {
+                Debug.Assert(this.parseResult.MetadataDocumentUri.IsAbsoluteUri, "this.parseResult.MetadataDocumentUri.IsAbsoluteUri");
+
+                string metadataDocumentStr = UriUtils.UriToString(this.parseResult.MetadataDocumentUri);
+
+                if (!metadataDocumentStr.EndsWith(ODataConstants.UriMetadataSegment, StringComparison.Ordinal))
+                {
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidContextUrl(UriUtils.UriToString(this.parseResult.ContextUri)));
+                }
+
+                Uri serviceRoot = new Uri(metadataDocumentStr.Substring(0, metadataDocumentStr.Length - ODataConstants.UriMetadataSegment.Length));
+
+                ODataUriParser odataUriParser = new ODataUriParser(this.model, serviceRoot);
+
+                ODataPath path;
+                try
+                {
+                    path = odataUriParser.ParsePath(new Uri(serviceRoot, fragment));
+                }
+                catch (ODataException)
+                {
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidContextUrl(UriUtils.UriToString(this.parseResult.ContextUri)));
+                }
+
+                if (path.Count == 0)
+                {
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidContextUrl(UriUtils.UriToString(this.parseResult.ContextUri)));
+                }
+
+                this.parseResult.Path = path;
+
+                parseResult.NavigationSource = path.NavigationSource();
+                parseResult.EdmType = path.LastSegment.EdmType;
+
+                ODataPathSegment lastSegment = path.TrimEndingTypeSegment().LastSegment;
+                if (lastSegment is EntitySetSegment || lastSegment is NavigationPropertySegment)
+                {
+                    detectedPayloadKind = hasItemSelector ? ODataPayloadKind.Entry : ODataPayloadKind.Feed;
+
+                    if (this.parseResult.EdmType is IEdmCollectionType)
+                    {
+                        var collectionTypeReference = this.parseResult.EdmType.ToTypeReference().AsCollection();
+                        if (collectionTypeReference != null)
+                        {
+                            this.parseResult.EdmType = collectionTypeReference.ElementType().Definition;
+                        }
+                    }
+                }
+                else if (lastSegment is SingletonSegment)
+                {
+                    detectedPayloadKind = ODataPayloadKind.Entry;
+                }
+                else if (path.IsIndividualProperty())
+                {
+                    detectedPayloadKind = ODataPayloadKind.Property;
+
+                    IEdmCollectionType collectionType = parseResult.EdmType as IEdmCollectionType;
+                    if (collectionType != null)
+                    {
+                        detectedPayloadKind = ODataPayloadKind.Collection;
+                    }
+                }
+                else
+                {
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidContextUrl(UriUtils.UriToString(this.parseResult.ContextUri)));
                 }
             }
 
             return detectedPayloadKind;
-        }
-
-        /// <summary>
-        /// Parses the fragment of an entity reference link context URI.
-        /// </summary>
-        /// <param name="edmTypeResolver">Edm Type Resolver used to get the ElementType of the entity set.</param>
-        /// <param name="entitySet">Entity Set used as a starting point to find the navigation property</param>
-        /// <param name="typeName">The name of the type declaring the navigation property.</param>
-        /// <param name="propertyName">The name of the navigation property.</param>
-        /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
-        /// <param name="version">The version of the payload being read.</param>
-        /// <returns>The resolved navigation property.</returns>
-        private IEdmNavigationProperty ResolveEntityReferenceLinkMetadataFragment(EdmTypeResolver edmTypeResolver, IEdmEntitySet entitySet, string typeName, string propertyName, ODataReaderBehavior readerBehavior, ODataVersion version)
-        {
-            //// {entitySet}/$links/{nav-property}
-            //// {entitySet}/$links/{nav-property}/@Element
-            //// {entitySet}/typeName/$links/{nav-property}
-            //// {entitySet}/typeName/$links/{nav-property}/@Element
-            IEdmEntityType edmEntityType = edmTypeResolver.GetElementType(entitySet);
-
-            if (typeName != null)
-            {
-                edmEntityType = this.ResolveTypeCast(entitySet, typeName, readerBehavior, version, edmEntityType);
-            }
-
-            IEdmNavigationProperty navigationProperty = this.ResolveNavigationProperty(edmEntityType, propertyName);
-
-            return navigationProperty;
-        }
-
-        /// <summary>
-        /// Validate the Metadata Uri Fragment is @Element for a $links metadata uri, will throw a $links specific error
-        /// </summary>
-        /// <param name="elementSelector">Element selector.</param>
-        private void ValidateLinkMetadataUriFragmentItemSelector(string elementSelector)
-        {
-            if (string.CompareOrdinal(JsonLightConstants.ContextUriFragmentItemSelector, elementSelector) != 0)
-            {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidEntityReferenceLinkUriSuffix(UriUtilsCommon.UriToString(this.parseResult.ContextUri), elementSelector, JsonLightConstants.ContextUriFragmentItemSelector));
-            }
-        }
-
-        /// <summary>
-        /// Validate the Metadata Uri Fragment is @Element for a non $links metadata uri, throws if its not correct
-        /// </summary>
-        /// <param name="elementSelector">Element selector.</param>
-        private void ValidateMetadataUriFragmentItemSelector(string elementSelector)
-        {
-            if (string.CompareOrdinal(JsonLightConstants.ContextUriFragmentItemSelector, elementSelector) != 0)
-            {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidEntityWithTypeCastUriSuffix(UriUtilsCommon.UriToString(this.parseResult.ContextUri), elementSelector, JsonLightConstants.ContextUriFragmentItemSelector));
-            }
-        }
-
-        /// <summary>
-        /// Resolves a navigation property name to an IEdmNavigationProperty.
-        /// </summary>
-        /// <param name="entityType">Entity Type to look for the navigation property on.</param>
-        /// <param name="navigationPropertyName">Navigation property name to find.</param>
-        /// <returns>Returns the navigation property of throws an exception if it cannot be found.</returns>
-        private IEdmNavigationProperty ResolveNavigationProperty(IEdmEntityType entityType, string navigationPropertyName)
-        {
-            IEdmNavigationProperty navigationProperty = null;
-            IEdmProperty property = entityType.FindProperty(navigationPropertyName);
-            navigationProperty = property as IEdmNavigationProperty;
-
-            if (navigationProperty == null)
-            {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidPropertyForEntityReferenceLinkUri(UriUtilsCommon.UriToString(this.parseResult.ContextUri), navigationPropertyName));
-            }
-
-            return navigationProperty;
-        }
-
-        /// <summary>
-        /// Resolves the entity set.
-        /// </summary>
-        /// <param name="entitySetPart">The entity set part.</param>
-        /// <param name="resolvedEntitySet">The resolved entity set.</param>
-        /// <returns>Returns the OData Payload Kind</returns>
-        private ODataPayloadKind ResolveEntitySet(string entitySetPart, Func<IEdmEntitySet, ODataPayloadKind> resolvedEntitySet)
-        {
-            IEdmEntitySet entitySet = this.model.ResolveEntitySet(entitySetPart);
-            if (entitySet != null)
-            {
-                this.parseResult.EntitySet = entitySet;
-                return resolvedEntitySet(entitySet);
-            }
-
-            throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidEntitySetName(UriUtilsCommon.UriToString(this.parseResult.ContextUri), entitySetPart));
-        }
-
-        /// <summary>
-        /// Resolves an entity set with an optional type cast and updates the parse result.
-        /// </summary>
-        /// <param name="entitySet">The entity set to resolve the type cast against.</param>
-        /// <param name="typeCast">The optional type cast.</param>
-        /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
-        /// <param name="version">The version of the payload being read.</param>
-        /// <param name="entitySetElementType">The type of the given entity set.</param>
-        /// <returns>The resolved entity type.</returns>
-        private IEdmEntityType ResolveTypeCast(IEdmEntitySet entitySet, string typeCast, ODataReaderBehavior readerBehavior, ODataVersion version, IEdmEntityType entitySetElementType)
-        {
-            Debug.Assert(entitySet != null, "entitySet != null");
-
-            IEdmEntityType entityType = entitySetElementType;
-
-            // Parse the type cast if it exists
-            if (!string.IsNullOrEmpty(typeCast))
-            {
-                EdmTypeKind typeKind;
-                entityType = MetadataUtils.ResolveTypeNameForRead(this.model, /*expectedType*/ null, typeCast, readerBehavior, version, out typeKind) as IEdmEntityType;
-                if (entityType == null)
-                {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidEntityTypeInTypeCast(UriUtilsCommon.UriToString(this.parseResult.ContextUri), typeCast));
-                }
-
-                // Validate that the entity type is assignable to the base type of the set
-                if (!entitySetElementType.IsAssignableFrom(entityType))
-                {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_IncompatibleEntityTypeInTypeCast(UriUtilsCommon.UriToString(this.parseResult.ContextUri), typeCast, entitySetElementType.FullName(), entitySet.FullName()));
-                }
-            }
-
-            return entityType;
         }
 
         /// <summary>
@@ -546,19 +356,27 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
         /// <param name="version">The version of the payload being read.</param>
         /// <returns>The resolved Edm type.</returns>
-        private IEdmType ResolveType(string typeName, ODataReaderBehavior readerBehavior, ODataVersion version)
+        private ODataPayloadKind ResolveType(string typeName, ODataReaderBehavior readerBehavior, ODataVersion version)
         {
             string typeNameToResolve = EdmLibraryExtensions.GetCollectionItemTypeName(typeName) ?? typeName;
+            bool isCollection = typeNameToResolve != typeName;
 
             EdmTypeKind typeKind;
             IEdmType resolvedType = MetadataUtils.ResolveTypeNameForRead(this.model, /*expectedType*/ null, typeNameToResolve, readerBehavior, version, out typeKind);
-            if (resolvedType == null || resolvedType.TypeKind != EdmTypeKind.Primitive && resolvedType.TypeKind != EdmTypeKind.Complex)
+            if (resolvedType == null || resolvedType.TypeKind != EdmTypeKind.Primitive && resolvedType.TypeKind != EdmTypeKind.Enum && resolvedType.TypeKind != EdmTypeKind.Complex && resolvedType.TypeKind != EdmTypeKind.Entity)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName(UriUtilsCommon.UriToString(this.parseResult.ContextUri), typeName));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName(UriUtils.UriToString(this.parseResult.ContextUri), typeName));
             }
 
-            resolvedType = typeNameToResolve == typeName ? resolvedType : EdmLibraryExtensions.GetCollectionType(resolvedType.ToTypeReference(true /*nullable*/));
-            return resolvedType;
+            if (resolvedType.TypeKind == EdmTypeKind.Entity)
+            {
+                this.parseResult.EdmType = resolvedType;
+                return isCollection ? ODataPayloadKind.Feed : ODataPayloadKind.Entry;
+            }
+
+            resolvedType = isCollection ? EdmLibraryExtensions.GetCollectionType(resolvedType.ToTypeReference(true /*nullable*/)) : resolvedType;
+            this.parseResult.EdmType = resolvedType;
+            return isCollection ? ODataPayloadKind.Collection : ODataPayloadKind.Property;
         }
     }
 }

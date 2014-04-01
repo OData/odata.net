@@ -12,17 +12,11 @@ namespace Microsoft.Data.Spatial
 {
     using System;
     using System.Collections.ObjectModel;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
     using Microsoft.Spatial;
 
     /// <summary>
     /// Geometry Multi-Point
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     internal class GeometryMultiPointImplementation : GeometryMultiPoint
     {
         /// <summary>
@@ -79,18 +73,6 @@ namespace Microsoft.Data.Spatial
             get { return new ReadOnlyCollection<GeometryPoint>(this.points); }
         }
 
-#if WINDOWS_PHONE
-        /// <summary>
-        /// internal GeometryPoint array property to support serializing and de-serializing this instance.
-        /// </summary>
-        [DataMember]
-        internal GeometryPoint[] PointsArray
-        {
-            get { return this.points; }
-
-            set { this.points = value; }
-        }
-#endif
         /// <summary>
         /// Sends the current spatial object to the given pipeline
         /// </summary>

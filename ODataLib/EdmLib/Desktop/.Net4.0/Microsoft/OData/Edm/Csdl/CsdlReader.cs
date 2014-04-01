@@ -11,9 +11,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Microsoft.OData.Edm.Csdl.Internal.CsdlSemantics;
-using Microsoft.OData.Edm.Csdl.Internal.Parsing;
-using Microsoft.OData.Edm.Csdl.Internal.Parsing.Ast;
+using Microsoft.OData.Edm.Csdl.CsdlSemantics;
+using Microsoft.OData.Edm.Csdl.Parsing;
+using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Csdl

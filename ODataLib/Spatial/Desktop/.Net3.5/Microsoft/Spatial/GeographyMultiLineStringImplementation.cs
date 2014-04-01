@@ -12,17 +12,11 @@ namespace Microsoft.Data.Spatial
 {
     using System;
     using System.Collections.ObjectModel;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
     using Microsoft.Spatial;
 
     /// <summary>
     /// Geography Multi-LineString
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     internal class GeographyMultiLineStringImplementation : GeographyMultiLineString
     {
         /// <summary>
@@ -79,18 +73,6 @@ namespace Microsoft.Data.Spatial
             get { return new ReadOnlyCollection<GeographyLineString>(this.lineStrings); }
         }
 
-#if WINDOWS_PHONE
-        /// <summary>
-        /// internal GeographyLineString array property to support serializing and de-serializing this instance.
-        /// </summary>
-        [DataMember]
-        internal GeographyLineString[] LineStringsArray
-        {
-            get { return this.lineStrings; }
-
-            set { this.lineStrings = value; }
-        }
-#endif
         /// <summary>
         /// Sends the current spatial object to the given sink
         /// </summary>

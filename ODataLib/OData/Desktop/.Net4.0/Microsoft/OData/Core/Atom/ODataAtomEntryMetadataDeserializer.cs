@@ -46,8 +46,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomEntryMetadataDeserializer(ODataAtomInputContext atomInputContext)
             : base(atomInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             XmlNameTable nameTable = this.XmlReader.NameTable;
             this.EmptyNamespace = nameTable.Add(string.Empty);
             this.AtomNamespace = nameTable.Add(AtomConstants.AtomNamespace);
@@ -76,7 +74,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void ReadAtomElementInEntryContent(IODataAtomReaderEntryState entryState)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryState != null, "entryState != null");
             this.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(this.XmlReader.NamespaceURI == AtomConstants.AtomNamespace, "Only atom:* elements can be read by this method.");
@@ -166,7 +163,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal AtomLinkMetadata ReadAtomLinkElementInEntryContent(string relation, string hrefStringValue)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(
                 this.XmlReader.NamespaceURI == AtomConstants.AtomNamespace && this.XmlReader.LocalName == AtomConstants.AtomLinkElementName,
@@ -242,7 +238,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void ReadAtomCategoryElementInEntryContent(IODataAtomReaderEntryState entryState)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryState != null, "entryState != null");
             this.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(
@@ -278,7 +273,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal AtomCategoryMetadata ReadAtomCategoryElement()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(
                 this.XmlReader.NamespaceURI == AtomConstants.AtomNamespace && this.XmlReader.LocalName == AtomConstants.AtomCategoryElementName,
@@ -325,7 +319,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal AtomFeedMetadata ReadAtomSourceInEntryContent()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(
                 this.XmlReader.NamespaceURI == AtomConstants.AtomNamespace && this.XmlReader.LocalName == AtomConstants.AtomSourceElementName,

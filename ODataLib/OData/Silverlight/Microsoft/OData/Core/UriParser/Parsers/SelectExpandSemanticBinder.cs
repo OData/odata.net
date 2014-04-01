@@ -17,43 +17,38 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     /// <summary>
     /// Add semantic meaning to a Select or Expand token.
     /// </summary>
-    //// TODO 1466134 Delete this when we're only using V4
-    internal sealed class SelectExpandSemanticBinder : ISelectExpandSemanticBinder
+    //// TODO 1466134 Rename this to SelectExpandSemanticBinder when we're only using V4
+    internal sealed class SelectExpandSemanticBinder
     {
         /// <summary>
         /// Add semantic meaning to a Select or Expand Token
         /// </summary>
         /// <param name="elementType">the top level entity type.</param>
-        /// <param name="entitySet">the top level entity set</param>
+        /// <param name="navigationSource">the top level navigation source</param>
         /// <param name="expandToken">the syntactically parsed expand token</param>
         /// <param name="selectToken">the syntactically parsed select token</param>
         /// <param name="configuration">The configuration to use for parsing.</param>
         /// <returns>A select expand clause bound to metadata.</returns>
         public SelectExpandClause Bind(
             IEdmStructuredType elementType, 
-            IEdmEntitySet entitySet,
+            IEdmNavigationSource navigationSource,
             ExpandToken expandToken, 
             SelectToken selectToken, 
             ODataUriParserConfiguration configuration)
         {
-            IExpandTreeNormalizer expandTreeNormalizer = ExpandTreeNormalizerFactory.Create(configuration);
-            expandToken = expandTreeNormalizer.NormalizeExpandTree(expandToken);
+            ExpandToken unifiedSelectExpandToken = SelectExpandSyntacticUnifier.Combine(expandToken, selectToken);
 
-            ISelectTreeNormalizer selectTreeNormalizer = SelectTreeNormalizerFactory.Create(configuration);
-            selectToken = selectTreeNormalizer.NormalizeSelectTree(selectToken);
+            ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
+            ExpandToken normalizedSelectExpandToken = expandTreeNormalizer.NormalizeExpandTree(unifiedSelectExpandToken);
 
-            ExpandBinder expandBinder = ExpandBinderFactory.Create(elementType, entitySet, configuration);
-            SelectExpandClause clause = expandBinder.Bind(expandToken);
+            SelectExpandBinder selectExpandBinder = new SelectExpandBinder(configuration, elementType, navigationSource);
+            SelectExpandClause clause = selectExpandBinder.Bind(normalizedSelectExpandToken);
 
-            SelectBinder selectedPropertyBinder = new SelectBinder(configuration.Model, elementType, configuration.Settings.SelectExpandLimit, clause);
-            clause = selectedPropertyBinder.Bind(selectToken);
+            SelectExpandClauseFinisher.AddExplicitNavPropLinksWhereNecessary(clause);
 
-            var prunedTree = SelectExpandTreeFinisher.PruneSelectExpandTree(clause);
-            prunedTree.ComputeFinalSelectedItems();
+            new ExpandDepthAndCountValidator(configuration.Settings.MaximumExpansionDepth, configuration.Settings.MaximumExpansionCount).Validate(clause);
 
-            new ExpandDepthAndCountValidator(configuration.Settings.MaximumExpansionDepth, configuration.Settings.MaximumExpansionCount).Validate(prunedTree);
-
-            return prunedTree;
+            return clause;
         }
     }
 }

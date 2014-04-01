@@ -16,6 +16,7 @@ namespace Microsoft.OData.Core.Metadata
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Core.UriParser.Semantic;
     #endregion Namespaces
 
     /// <summary>
@@ -30,7 +31,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="typeReference"/> is an OData primitive type reference; otherwise false.</returns>
         internal static bool IsODataPrimitiveTypeKind(this IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
             ExceptionUtils.CheckArgumentNotNull(typeReference.Definition, "typeReference.Definition");
 
@@ -44,7 +44,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="type"/> is an OData primitive type; otherwise false.</returns>
         internal static bool IsODataPrimitiveTypeKind(this IEdmType type)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(type, "type");
 
             EdmTypeKind typeKind = type.TypeKind;
@@ -64,7 +63,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="typeReference"/> is an OData complex type reference; otherwise false.</returns>
         internal static bool IsODataComplexTypeKind(this IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
             ExceptionUtils.CheckArgumentNotNull(typeReference.Definition, "typeReference.Definition");
 
@@ -78,10 +76,35 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="type"/> is an OData complex type; otherwise false.</returns>
         internal static bool IsODataComplexTypeKind(this IEdmType type)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(type, "type");
 
             return type.TypeKind == EdmTypeKind.Complex;
+        }
+
+        /// <summary>
+        /// Checks whether a type reference refers to an OData enumeration type.
+        /// </summary>
+        /// <param name="typeReference">The (non-null) <see cref="IEdmTypeReference"/> to check.</param>
+        /// <returns>true if the <paramref name="typeReference"/> is an OData enumeration type reference; otherwise false.</returns>
+        internal static bool IsODataEnumTypeKind(this IEdmTypeReference typeReference)
+        {
+            ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
+            ExceptionUtils.CheckArgumentNotNull(typeReference.Definition, "typeReference.Definition");
+
+            return typeReference.Definition.IsODataEnumTypeKind();
+        }
+
+        /// <summary>
+        /// Checks whether a type refers to an OData Enumeration type
+        /// </summary>
+        /// <param name="type">The (non-null) <see cref="IEdmType"/> to check.</param>
+        /// <returns>true if the <paramref name="type"/> is an OData enumeration type; otherwise false.</returns>
+        internal static bool IsODataEnumTypeKind(this IEdmType type)
+        {
+            ExceptionUtils.CheckArgumentNotNull(type, "type");
+
+            EdmTypeKind typeKind = type.TypeKind;
+            return typeKind == EdmTypeKind.Enum;
         }
 
         /// <summary>
@@ -91,7 +114,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="typeReference"/> is an OData entity type reference; otherwise false.</returns>
         internal static bool IsODataEntityTypeKind(this IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
             ExceptionUtils.CheckArgumentNotNull(typeReference.Definition, "typeReference.Definition");
 
@@ -105,7 +127,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="type"/> is an OData entity type; otherwise false.</returns>
         internal static bool IsODataEntityTypeKind(this IEdmType type)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(type, "type");
 
             return type.TypeKind == EdmTypeKind.Entity;
@@ -122,8 +143,6 @@ namespace Microsoft.OData.Core.Metadata
         /// </remarks>
         internal static bool IsODataValueType(this IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             IEdmPrimitiveTypeReference primitiveTypeReference = typeReference.AsPrimitiveOrNull();
             if (primitiveTypeReference == null)
             {
@@ -134,7 +153,6 @@ namespace Microsoft.OData.Core.Metadata
             {
                 case EdmPrimitiveTypeKind.Boolean:
                 case EdmPrimitiveTypeKind.Byte:
-                case EdmPrimitiveTypeKind.DateTime:
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Decimal:
                 case EdmPrimitiveTypeKind.Double:
@@ -158,7 +176,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="typeReference"/> is a non-entity OData collection value type; otherwise false.</returns>
         internal static bool IsNonEntityCollectionType(this IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
             ExceptionUtils.CheckArgumentNotNull(typeReference.Definition, "typeReference.Definition");
 
@@ -172,7 +189,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="type"/> is a non-entity OData collection value type; otherwise false.</returns>
         internal static bool IsNonEntityCollectionType(this IEdmType type)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(type != null, "type != null");
 
             IEdmCollectionType collectionType = type as IEdmCollectionType;
@@ -194,8 +210,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>An <see cref="IEdmPrimitiveTypeReference"/> instance or null if the <paramref name="typeReference"/> cannot be converted.</returns>
         internal static IEdmPrimitiveTypeReference AsPrimitiveOrNull(this IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (typeReference == null)
             {
                 return null;
@@ -211,8 +225,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>An <see cref="IEdmComplexTypeReference"/> instance or null if the <paramref name="typeReference"/> cannot be converted.</returns>
         internal static IEdmEntityTypeReference AsEntityOrNull(this IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (typeReference == null)
             {
                 return null;
@@ -228,8 +240,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>An <see cref="IEdmStructuredTypeReference"/> instance or null if the <paramref name="typeReference"/> cannot be converted.</returns>
         internal static IEdmStructuredTypeReference AsStructuredOrNull(this IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (typeReference == null)
             {
                 return null;
@@ -242,14 +252,15 @@ namespace Microsoft.OData.Core.Metadata
         /// Determines if a <paramref name="sourcePrimitiveType"/> is convertibale according to OData rules to the
         /// <paramref name="targetPrimitiveType"/>.
         /// </summary>
+        /// <param name="sourceNodeOrNull">The node which is to be converted.</param>
         /// <param name="sourcePrimitiveType">The type which is to be converted.</param>
         /// <param name="targetPrimitiveType">The type to which we want to convert.</param>
         /// <returns>true if the source type is convertible to the target type; otherwise false.</returns>
         internal static bool CanConvertPrimitiveTypeTo(
+            SingleValueNode sourceNodeOrNull,
             IEdmPrimitiveType sourcePrimitiveType,
             IEdmPrimitiveType targetPrimitiveType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(sourcePrimitiveType != null, "sourcePrimitiveType != null");
             Debug.Assert(targetPrimitiveType != null, "targetPrimitiveType != null");
 
@@ -327,11 +338,63 @@ namespace Microsoft.OData.Core.Metadata
                         case EdmPrimitiveTypeKind.Single:
                         case EdmPrimitiveTypeKind.Double:
                             return true;
+
+                        // allow single constant->decimal in order to made L,M,D,F optional
+                        case EdmPrimitiveTypeKind.Decimal:
+                            object tmp;
+                            return TryGetConstantNodePrimitiveLDMF(sourceNodeOrNull, out tmp);
+                    }
+
+                    break;
+                case EdmPrimitiveTypeKind.Double:
+                    switch (targetPrimitiveKind)
+                    {
+                        case EdmPrimitiveTypeKind.Double:
+                            return true;
+
+                        // allow double constant->decimal in order to made L,M,D,F optional
+                        // (if the double value actually has overflowed decimal.MaxValue, exception will occur later. more details in ExpressionLexer.cs)
+                        case EdmPrimitiveTypeKind.Decimal:
+                            object tmp;
+                            return TryGetConstantNodePrimitiveLDMF(sourceNodeOrNull, out tmp);
                     }
 
                     break;
                 default:
                     return sourcePrimitiveKind == targetPrimitiveKind || targetPrimitiveType.IsAssignableFrom(sourcePrimitiveType);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Tries getting the constant node's primitive L M D F value (which can be converted to other primitive type while primitive AccessPropertyNode can't).
+        /// </summary>
+        /// <param name="sourceNodeOrNull">The Node</param>
+        /// <param name="primitiveValue">THe out parameter if succeeds</param>
+        /// <returns>true if the constant node is for long, float, double or decimal type</returns>
+        internal static bool TryGetConstantNodePrimitiveLDMF(SingleValueNode sourceNodeOrNull, out object primitiveValue)
+        {
+            primitiveValue = null;
+            if ((sourceNodeOrNull != null) && (sourceNodeOrNull is ConstantNode))
+            {
+                ConstantNode tmp = (ConstantNode)sourceNodeOrNull;
+                IEdmPrimitiveType primitiveType = tmp.TypeReference.AsPrimitiveOrNull().Definition as IEdmPrimitiveType;
+                if (primitiveType != null)
+                {
+                    switch (primitiveType.PrimitiveKind)
+                    {
+                        case EdmPrimitiveTypeKind.Int32:
+                        case EdmPrimitiveTypeKind.Int64:
+                        case EdmPrimitiveTypeKind.Single:
+                        case EdmPrimitiveTypeKind.Double:
+                        case EdmPrimitiveTypeKind.Decimal:
+                            primitiveValue = tmp.Value;
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
             }
 
             return false;

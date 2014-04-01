@@ -27,7 +27,6 @@ namespace Microsoft.OData.Core
         /// <param name="parameters">The enumeration of preference parameter key value pairs.</param>
         public HttpHeaderValueElement(string name, string value, IEnumerable<KeyValuePair<string, string>> parameters)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(name, "name");
             ExceptionUtils.CheckArgumentNotNull(parameters, "parameters");
 

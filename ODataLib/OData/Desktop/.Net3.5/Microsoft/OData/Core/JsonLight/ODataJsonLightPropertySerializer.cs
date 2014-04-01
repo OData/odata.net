@@ -39,7 +39,6 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightPropertySerializer(ODataJsonLightOutputContext jsonLightOutputContext)
             : base(jsonLightOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.jsonLightValueSerializer = new ODataJsonLightValueSerializer(this);
         }
 
@@ -50,7 +49,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.jsonLightValueSerializer;
             }
         }
@@ -62,7 +60,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="property">The property to write.</param>
         internal void WriteTopLevelProperty(ODataProperty property)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(property != null, "property != null");
             Debug.Assert(!(property.Value is ODataStreamReferenceValue), "!(property.Value is ODataStreamReferenceValue)");
 
@@ -70,13 +67,11 @@ namespace Microsoft.OData.Core.JsonLight
                 () =>
                 {
                     this.JsonWriter.StartObjectScope();
+                    ODataContextUriBuilder contextUriBuilder = this.JsonLightOutputContext.CreateContextUriBuilder();
+                    ODataPayloadKind kind = this.JsonLightOutputContext.MessageWriterSettings.IsIndividualProperty ? ODataPayloadKind.IndividualProperty : ODataPayloadKind.Property;
 
-                    Uri metadataUri;
-                    ODataJsonLightContextUriBuilder contextUriBuilder = this.JsonLightOutputContext.CreateMetadataUriBuilder();
-                    if (contextUriBuilder.TryBuildContextUriForValue(property, out metadataUri))
-                    {
-                        this.WriteMetadataUriProperty(metadataUri);                            
-                    }
+                    ODataContextUrlInfo contextInfo = ODataContextUrlInfo.Create(property.ODataValue, this.JsonLightOutputContext.MessageWriterSettings.ODataUri);
+                    this.WriteContextUriProperty(() => contextUriBuilder.BuildContextUri(kind, contextInfo));
 
                     // Note we do not allow named stream properties to be written as top level property.
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
@@ -111,8 +106,6 @@ namespace Microsoft.OData.Core.JsonLight
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
             ProjectedPropertiesAnnotation projectedProperties)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (properties == null)
             {
                 return;
@@ -167,8 +160,6 @@ namespace Microsoft.OData.Core.JsonLight
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
             ProjectedPropertiesAnnotation projectedProperties)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             WriterValidationUtils.ValidatePropertyNotNull(property);
 
             string propertyName = property.Name;
@@ -209,7 +200,7 @@ namespace Microsoft.OData.Core.JsonLight
                 if (isTopLevel)
                 {
                     // Write the special null marker for top-level null properties.
-                    this.JsonWriter.WriteName(ODataAnnotationNames.ODataNull);
+                    this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNull);
                     this.JsonWriter.WriteValue(true);
                 }
                 else
@@ -239,19 +230,17 @@ namespace Microsoft.OData.Core.JsonLight
                 return;
             }
 
+            IEdmTypeReference typeFromValue = TypeNameOracle.ResolveAndValidateTypeNameForValue(this.Model, propertyTypeReference, value, isOpenPropertyType);
             ODataEnumValue enumValue = value as ODataEnumValue;
             if (enumValue != null)
             {
-                if (!isTopLevel)
-                {
-                    this.JsonWriter.WriteName(wirePropertyName);
-                }
-
+                string typeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(enumValue, propertyTypeReference, typeFromValue, isOpenPropertyType);
+                this.WritePropertyTypeName(wirePropertyName, typeNameToWrite, isTopLevel);
+                this.JsonWriter.WriteName(wirePropertyName);
                 this.JsonLightValueSerializer.WriteEnumValue(enumValue, propertyTypeReference);
                 return;
             }
 
-            IEdmTypeReference typeFromValue = TypeNameOracle.ResolveAndValidateTypeNameForValue(this.Model, propertyTypeReference, value, isOpenPropertyType);
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
@@ -261,16 +250,17 @@ namespace Microsoft.OData.Core.JsonLight
 
                 // passing false for 'isTopLevel' because the outer wrapping object has already been written.
                 this.JsonLightValueSerializer.WriteCollectionValue(collectionValue, propertyTypeReference, isTopLevel, false /*isInUri*/, isOpenPropertyType);
-                return;
             }
+            else
+            {
+                Debug.Assert(primitiveValue != null, "primitiveValue != null");
 
-            Debug.Assert(primitiveValue != null, "primitiveValue != null");
+                string typeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(primitiveValue, propertyTypeReference, typeFromValue, isOpenPropertyType);
+                this.WritePropertyTypeName(wirePropertyName, typeNameToWrite, isTopLevel);
 
-            string typeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(primitiveValue, propertyTypeReference, typeFromValue, isOpenPropertyType);
-            this.WritePropertyTypeName(wirePropertyName, typeNameToWrite, isTopLevel);
-
-            this.JsonWriter.WriteName(wirePropertyName);
-            this.JsonLightValueSerializer.WritePrimitiveValue(primitiveValue.Value, propertyTypeReference);
+                this.JsonWriter.WriteName(wirePropertyName);
+                this.JsonLightValueSerializer.WritePrimitiveValue(primitiveValue.Value, propertyTypeReference);
+            }
         }
 
         /// <summary>
@@ -325,8 +315,7 @@ namespace Microsoft.OData.Core.JsonLight
                 // We write the type name as an instance annotation (named "odata.type") for top-level properties, but as a property annotation (e.g., "...@odata.type") if not top level.
                 if (isTopLevel)
                 {
-                    this.JsonWriter.WriteName(ODataAnnotationNames.ODataType);
-                    this.JsonWriter.WriteValue(typeNameToWrite);
+                    ODataJsonLightWriterUtils.WriteODataTypeInstanceAnnotation(this.JsonWriter, typeNameToWrite);
                 }
                 else
                 {

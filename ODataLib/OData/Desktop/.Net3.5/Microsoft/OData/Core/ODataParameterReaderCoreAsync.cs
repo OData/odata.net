@@ -28,11 +28,11 @@ namespace Microsoft.OData.Core
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input to read from.</param>
-        /// <param name="operationImport">The operation import whose parameters are being read.</param>
+        /// <param name="operation">The operation whose parameters are being read.</param>
         protected ODataParameterReaderCoreAsync(
             ODataInputContext inputContext,
-            IEdmOperationImport operationImport)
-            : base(inputContext, operationImport)
+            IEdmOperation operation)
+            : base(inputContext, operation)
         {
         }
 

@@ -19,8 +19,8 @@ namespace Microsoft.OData.Core
         /// <summary>The default behavior of the OData library.</summary>
         Default,
 
-        /// <summary>The behavior of the WCF Data Services server.</summary>
-        WcfDataServicesServer,
+        /// <summary>The behavior of the OData server.</summary>
+        ODataServer,
 
         /// <summary>The behavior of the WCF Data Services client.</summary>
         WcfDataServicesClient,

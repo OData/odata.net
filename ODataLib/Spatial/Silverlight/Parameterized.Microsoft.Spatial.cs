@@ -350,6 +350,13 @@ namespace Microsoft.Spatial {
             return Microsoft.Spatial.TextRes.GetString(Microsoft.Spatial.TextRes.JsonReaderExtensions_CannotReadValueAsJsonObject,p0);
         }
 
+        /// <summary>
+        /// A string like "The time zone information is missing on the DateTimeOffset value '{0}'. A DateTimeOffset value must contain the time zone information."
+        /// </summary>
+        internal static string PlatformHelper_DateTimeOffsetMustContainTimeZone(object p0) {
+            return Microsoft.Spatial.TextRes.GetString(Microsoft.Spatial.TextRes.PlatformHelper_DateTimeOffsetMustContainTimeZone,p0);
+        }
+
     }
 
     /// <summary>

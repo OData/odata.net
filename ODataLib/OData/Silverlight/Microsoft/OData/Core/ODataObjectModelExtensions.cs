@@ -58,27 +58,5 @@ namespace Microsoft.OData.Core
             ExceptionUtils.CheckArgumentNotNull(collectionStart, "collectionStart");
             collectionStart.SerializationInfo = serializationInfo;
         }
-
-        /// <summary>
-        /// Provide additional serialization information to the <see cref="ODataMessageWriter"/> for <paramref name="entityReferenceLink"/>.
-        /// </summary>
-        /// <param name="entityReferenceLink">The instance to set the serialization info.</param>
-        /// <param name="serializationInfo">The serialization info to set.</param>
-        public static void SetSerializationInfo(this ODataEntityReferenceLink entityReferenceLink, ODataEntityReferenceLinkSerializationInfo serializationInfo)
-        {
-            ExceptionUtils.CheckArgumentNotNull(entityReferenceLink, "entityReferenceLink");
-            entityReferenceLink.SerializationInfo = serializationInfo;
-        }
-
-        /// <summary>
-        /// Provide additional serialization information to the <see cref="ODataMessageWriter"/> for <paramref name="entityReferenceLinks"/>.
-        /// </summary>
-        /// <param name="entityReferenceLinks">The instance to set the serialization info.</param>
-        /// <param name="serializationInfo">The serialization info to set.</param>
-        public static void SetSerializationInfo(this ODataEntityReferenceLinks entityReferenceLinks, ODataEntityReferenceLinksSerializationInfo serializationInfo)
-        {
-            ExceptionUtils.CheckArgumentNotNull(entityReferenceLinks, "entityReferenceLinks");
-            entityReferenceLinks.SerializationInfo = serializationInfo;
-        }
     }
 }

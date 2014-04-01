@@ -35,13 +35,11 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.serializationInfo;
             }
 
             set
             {
-                DebugUtils.CheckNoExternalCallers();
                 this.serializationInfo = ODataCollectionStartSerializationInfo.Validate(value);
             }
         }

@@ -28,11 +28,17 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// <summary>A single complex value is requested (eg: an Address).</summary>
         ComplexObject,
 
-        /// <summary>A single value is requested (eg: a Picture property).</summary>
+        /// <summary>A single primitive property is requested (eg: a Picture property).</summary>
         Primitive,
 
-        /// <summary>A single value is requested (eg: the raw stream of a Picture).</summary>
+        /// <summary>A single primitive value is requested (eg: the raw stream of a Picture).</summary>
         PrimitiveValue,
+
+        /// <summary>A single enumeration property is requested (eg:the property value like &lt;d:ColorFlags ... &gt;SolidYellow&lt;/d:ColorFlags&gt;).</summary>
+        Enum,
+
+        /// <summary>A single enumeration value is requested (eg: the raw value like 'SolidYellow').</summary>
+        EnumValue,
 
         /// <summary>System metadata.</summary>
         Metadata,

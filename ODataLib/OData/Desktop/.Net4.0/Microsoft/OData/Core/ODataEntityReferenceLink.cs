@@ -21,11 +21,6 @@ namespace Microsoft.OData.Core
     [DebuggerDisplay("{Url.OriginalString}")]
     public sealed class ODataEntityReferenceLink : ODataItem
     {
-        /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataMessageWriter"/> for this <see cref="ODataEntityReferenceLink"/>.
-        /// </summary>
-        private ODataEntityReferenceLinkSerializationInfo serializationInfo;
-
         /// <summary>Gets or sets the URI representing the URL of the referenced entity.</summary>
         /// <returns>The URI representing the URL of the referenced entity.</returns>
         /// <remarks>This URL should be usable to retrieve or modify the referenced entity.</remarks>
@@ -33,24 +28,6 @@ namespace Microsoft.OData.Core
         {
             get;
             set;
-        }
-        
-        /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataMessageWriter"/> for this <see cref="ODataEntityReferenceLink"/>.
-        /// </summary>
-        internal ODataEntityReferenceLinkSerializationInfo SerializationInfo
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.serializationInfo;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.serializationInfo = ODataEntityReferenceLinkSerializationInfo.Validate(value);
-            }
         }
     }
 }

@@ -14,6 +14,8 @@ namespace Microsoft.OData.Core.JsonLight
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+
+    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Evaluation;
     #endregion Namespaces
@@ -24,6 +26,11 @@ namespace Microsoft.OData.Core.JsonLight
     internal abstract class JsonLightMetadataLevel
     {
         /// <summary>
+        /// Indicates which level of context Url should be used when writing payload.
+        /// </summary>
+        internal abstract ODataContextUrlLevel ContextUrlLevel { get; }
+
+        /// <summary>
         /// Creates the appropriate metadata level based on the media type being written.
         /// </summary>
         /// <param name="mediaType">The full media type being written. This media type must have a type/subtype of "application/json".</param> 
@@ -33,7 +40,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The JSON Light metadata level being written.</returns>
         internal static JsonLightMetadataLevel Create(MediaType mediaType, Uri metadataDocumentUri, IEdmModel model, bool writingResponse)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(mediaType != null, "mediaType != null");
 
             Debug.Assert(
@@ -44,29 +50,29 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 foreach (KeyValuePair<string, string> parameter in mediaType.Parameters)
                 {
-                    if (!HttpUtils.CompareMediaTypeParameterNames(parameter.Key, MimeConstants.MimeODataParameterName))
+                    if (!HttpUtils.CompareMediaTypeParameterNames(parameter.Key, MimeConstants.MimeMetadataParameterName))
                     {
                         // Only look at the "odata" parameter.
                         continue;
                     }
 
-                    if (string.Compare(parameter.Value, MimeConstants.MimeODataParameterValueMinimalMetadata, StringComparison.OrdinalIgnoreCase) == 0)
+                    if (string.Compare(parameter.Value, MimeConstants.MimeMetadataParameterValueMinimal, StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         return new JsonMinimalMetadataLevel();
                     }
 
-                    if (string.Compare(parameter.Value, MimeConstants.MimeODataParameterValueFullMetadata, StringComparison.OrdinalIgnoreCase) == 0)
+                    if (string.Compare(parameter.Value, MimeConstants.MimeMetadataParameterValueFull, StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         return new JsonFullMetadataLevel(metadataDocumentUri, model);
                     }
 
-                    if (string.Compare(parameter.Value, MimeConstants.MimeODataParameterValueNoMetadata, StringComparison.OrdinalIgnoreCase) == 0)
+                    if (string.Compare(parameter.Value, MimeConstants.MimeMetadataParameterValueNone, StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         return new JsonNoMetadataLevel();
                     }
 
                     Debug.Assert(
-                        string.Compare(parameter.Value, MimeConstants.MimeODataParameterValueVerbose, StringComparison.OrdinalIgnoreCase) != 0,
+                        string.Compare(parameter.Value, MimeConstants.MimeMetadataParameterValueVerbose, StringComparison.OrdinalIgnoreCase) != 0,
                         "media type should not indicate verbose json at this point.");
                 }
             }
@@ -88,12 +94,6 @@ namespace Microsoft.OData.Core.JsonLight
         internal abstract JsonLightTypeNameOracle GetTypeNameOracle(bool autoComputePayloadMetadataInJson);
 
         /// <summary>
-        /// Indicates whether the "odata.context" URI should be written based on the current metadata level.
-        /// </summary>
-        /// <returns>true if the context URI should be written, false otherwise.</returns>
-        internal abstract bool ShouldWriteODataContextUri();
-
-        /// <summary>
         /// Creates the metadata builder for the given entry. If such a builder is set, asking for payload
         /// metadata properties (like EditLink) of the entry may return a value computed by convention, 
         /// depending on the metadata level and whether the user manually set an edit link or not.
@@ -106,6 +106,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="isResponse">true if the entity metadata builder to create should be for a response payload; false for a request.</param>
         /// <param name="keyAsSegment">true if keys should go in seperate segments in auto-generated URIs, false if they should go in parentheses.
         /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
+        /// <param name="odataUri">The OData Uri.</param>
         /// <returns>The created metadata builder.</returns>
         internal abstract ODataEntityMetadataBuilder CreateEntityMetadataBuilder(
             ODataEntry entry, 
@@ -114,13 +115,17 @@ namespace Microsoft.OData.Core.JsonLight
             IEdmEntityType actualEntityType, 
             SelectedPropertiesNode selectedProperties, 
             bool isResponse, 
-            bool? keyAsSegment);
+            bool? keyAsSegment,
+            ODataUri odataUri);
 
         /// <summary>
         /// Injects the appropriate metadata builder based on the metadata level.
         /// </summary>
         /// <param name="entry">The entry to inject the builder.</param>
         /// <param name="builder">The metadata builder to inject.</param>
-        internal abstract void InjectMetadataBuilder(ODataEntry entry, ODataEntityMetadataBuilder builder);
+        internal virtual void InjectMetadataBuilder(ODataEntry entry, ODataEntityMetadataBuilder builder)
+        {
+            entry.MetadataBuilder = builder;
+        }
     }
 }

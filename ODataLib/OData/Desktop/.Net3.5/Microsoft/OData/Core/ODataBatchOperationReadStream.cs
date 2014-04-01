@@ -36,7 +36,6 @@ namespace Microsoft.OData.Core
         internal ODataBatchOperationReadStream(ODataBatchReaderStream batchReaderStream, IODataBatchOperationListener listener)
             : base(listener)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
             this.batchReaderStream = batchReaderStream;
         }
@@ -119,7 +118,6 @@ namespace Microsoft.OData.Core
         /// <returns>A <see cref="ODataBatchOperationReadStream"/> to read the content of a batch operation from.</returns>
         internal static ODataBatchOperationReadStream Create(ODataBatchReaderStream batchReaderStream, IODataBatchOperationListener listener, int length)
         {
-            DebugUtils.CheckNoExternalCallers();
             return new ODataBatchOperationReadStreamWithLength(batchReaderStream, listener, length);
         }
 
@@ -131,7 +129,6 @@ namespace Microsoft.OData.Core
         /// <returns>A <see cref="ODataBatchOperationReadStream"/> to read the content of a batch operation from.</returns>
         internal static ODataBatchOperationReadStream Create(ODataBatchReaderStream batchReaderStream, IODataBatchOperationListener listener)
         {
-            DebugUtils.CheckNoExternalCallers();
             return new ODataBatchOperationReadStreamWithDelimiter(batchReaderStream, listener);
         }
 

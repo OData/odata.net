@@ -12,14 +12,8 @@ namespace Microsoft.Spatial
 {
     using System.Collections.ObjectModel;
     using System.Linq;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
 
     /// <summary>Represents the multi-point of geography.</summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     public abstract class GeographyMultiPoint : GeographyCollection
     {
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeographyMultiPoint" /> class.</summary>

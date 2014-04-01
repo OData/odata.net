@@ -16,10 +16,10 @@ namespace Microsoft.OData.Core.JsonLight
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -40,14 +40,13 @@ namespace Microsoft.OData.Core.JsonLight
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightInputContext">The input to read the payload from.</param>
-        /// <param name="operationImport">The operation import whose parameters are being read.</param>
-        internal ODataJsonLightParameterReader(ODataJsonLightInputContext jsonLightInputContext, IEdmOperationImport operationImport)
-            : base(jsonLightInputContext, operationImport)
+        /// <param name="operation">The operation import whose parameters are being read.</param>
+        internal ODataJsonLightParameterReader(ODataJsonLightInputContext jsonLightInputContext, IEdmOperation operation)
+            : base(jsonLightInputContext, operation)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonLightInputContext != null, "jsonLightInputContext != null");
             Debug.Assert(jsonLightInputContext.ReadingResponse == false, "jsonLightInputContext.ReadingResponse == false");
-            Debug.Assert(operationImport != null, "operationImport != null");
+            Debug.Assert(operation != null, "operationImport != null");
 
             this.jsonLightInputContext = jsonLightInputContext;
             this.jsonLightParameterDeserializer = new ODataJsonLightParameterDeserializer(this, jsonLightInputContext);

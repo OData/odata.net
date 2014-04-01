@@ -46,15 +46,19 @@ namespace Microsoft.OData.Core.Metadata
             this.version = version;
         }
 
-        /// <summary>Returns the element type of the given entity set.</summary>
-        /// <param name="entitySet">The entity set to get the element type of.</param>
-        /// <returns>The <see cref="IEdmEntityType"/> representing the element type of the <paramref name="entitySet" />.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "entitySet.ElementType is allowed here and the reader code paths should call this method to get to the ElementType of a set.")]
-        internal override IEdmEntityType GetElementType(IEdmEntitySet entitySet)
+        /// <summary>Returns the entity type of the given navigation source.</summary>
+        /// <param name="navigationSource">The navigation source to get the element type of.</param>
+        /// <returns>The <see cref="IEdmEntityType"/> representing the entity type of the <paramref name="navigationSource" />.</returns>
+        internal override IEdmEntityType GetElementType(IEdmNavigationSource navigationSource)
         {
-            DebugUtils.CheckNoExternalCallers();
+            IEdmEntityType entityType = navigationSource.EntityType();
+            
+            if (entityType == null)
+            {
+                return null;
+            }
 
-            return entitySet == null ? null : (IEdmEntityType)this.ResolveType(entitySet.ElementType);
+            return (IEdmEntityType)this.ResolveType(entityType);
         }
 
         /// <summary>
@@ -65,11 +69,9 @@ namespace Microsoft.OData.Core.Metadata
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "operationImport.ReturnType is allowed here and the reader code paths should call this method to get to the ReturnType of a operation import.")]
         internal override IEdmTypeReference GetReturnType(IEdmOperationImport operationImport)
         {
-            DebugUtils.CheckNoExternalCallers();
-
-            if (operationImport != null && operationImport.ReturnType != null)
+            if (operationImport != null && operationImport.Operation.ReturnType != null)
             {
-                return this.ResolveTypeReference(operationImport.ReturnType);
+                return this.ResolveTypeReference(operationImport.Operation.ReturnType);
             }
 
             return null;
@@ -82,7 +84,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The <see cref="IEdmType"/> representing the return type fo the <paramref name="functionImportGroup"/>.</returns>
         internal override IEdmTypeReference GetReturnType(IEnumerable<IEdmOperationImport> functionImportGroup)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(functionImportGroup != null, "functionImportGroup != null");
 
             IEdmOperationImport firstFunctionImport = functionImportGroup.FirstOrDefault();
@@ -106,8 +107,6 @@ namespace Microsoft.OData.Core.Metadata
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "operationParameter.Type is allowed here and the reader code paths should call this method to get to the Type of a operation parameter.")]
         internal override IEdmTypeReference GetParameterType(IEdmOperationParameter operationParameter)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return operationParameter == null ? null : this.ResolveTypeReference(operationParameter.Type);
         }
 

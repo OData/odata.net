@@ -11,9 +11,10 @@
 namespace Microsoft.OData.Core.Atom
 {
     #region Namespaces
-    using System.Collections;
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Microsoft.OData.Edm;
     #endregion Namespaces
 
     /// <summary>
@@ -21,6 +22,9 @@ namespace Microsoft.OData.Core.Atom
     /// </summary>
     internal sealed class ODataAtomEntityReferenceLinkSerializer : ODataAtomSerializer
     {
+        /// <summary>The context uri builder to use.</summary>
+        private readonly ODataContextUriBuilder contextUriBuilder;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -28,7 +32,8 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomEntityReferenceLinkSerializer(ODataAtomOutputContext atomOutputContext)
             : base(atomOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
+            // DEVNOTE: grab this early so that any validation errors are thrown at creation time rather than when Write___ is called.
+            this.contextUriBuilder = atomOutputContext.CreateContextUriBuilder();
         }
 
         /// <summary>
@@ -37,7 +42,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entityReferenceLink">The entity reference link to write out.</param>
         internal void WriteEntityReferenceLink(ODataEntityReferenceLink entityReferenceLink)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entityReferenceLink != null, "entityReferenceLink != null");
 
             this.WritePayloadStart();
@@ -48,24 +52,26 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Writes a set of links (Uris) in response to a $ref query; includes optional count and next-page-link information.
         /// </summary>
-        /// <param name="entityReferenceLinks">The entity reference links to write.</param>
+        /// <param name="entityReferenceLinks">The set of entity reference links to write out.</param>
         internal void WriteEntityReferenceLinks(ODataEntityReferenceLinks entityReferenceLinks)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entityReferenceLinks != null, "entityReferenceLinks != null");
 
             this.WritePayloadStart();
 
-            // <links> ...
-            this.XmlWriter.WriteStartElement(string.Empty, AtomConstants.ODataLinksElementName, AtomConstants.ODataNamespace);
+            // <feed> ...
+            this.XmlWriter.WriteStartElement(string.Empty, AtomConstants.AtomFeedElementName, AtomConstants.AtomNamespace);
 
-            // xmlns=
-            this.XmlWriter.WriteAttributeString(AtomConstants.XmlnsNamespacePrefix, AtomConstants.ODataNamespace);
+            // xmlns:metadata=
+            this.XmlWriter.WriteAttributeString(AtomConstants.XmlnsNamespacePrefix, AtomConstants.ODataMetadataNamespacePrefix, null, AtomConstants.ODataMetadataNamespace);
+
+            // metadata:context
+            this.WriteContextUriProperty(this.contextUriBuilder.BuildContextUri(ODataPayloadKind.EntityReferenceLinks));
 
             if (entityReferenceLinks.Count.HasValue)
             {
                 // <m:count>
-                this.WriteCount(entityReferenceLinks.Count.Value, true);
+                this.WriteCount(entityReferenceLinks.Count.Value);
             }
 
             IEnumerable<ODataEntityReferenceLink> entityReferenceLinkEnumerable = entityReferenceLinks.Links;
@@ -85,7 +91,7 @@ namespace Microsoft.OData.Core.Atom
                 this.XmlWriter.WriteElementString(string.Empty, AtomConstants.ODataNextLinkElementName, AtomConstants.ODataNamespace, nextLink);
             }
 
-            // </links>
+            // </feed>
             this.XmlWriter.WriteEndElement();
 
             this.WritePayloadEnd();
@@ -105,18 +111,21 @@ namespace Microsoft.OData.Core.Atom
 
             WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
 
-            string uriElementNamespaceUri = AtomConstants.ODataNamespace;
-
-            // <uri ...
-            this.XmlWriter.WriteStartElement(string.Empty, AtomConstants.ODataUriElementName, uriElementNamespaceUri);
-
             if (isTopLevel)
             {
-                // xmlns=
-                this.XmlWriter.WriteAttributeString(AtomConstants.XmlnsNamespacePrefix, uriElementNamespaceUri);
+                // <metadata:ref ...
+                this.XmlWriter.WriteStartElement(AtomConstants.ODataMetadataNamespacePrefix, AtomConstants.ODataRefElementName, AtomConstants.ODataMetadataNamespace);
+
+                // metadata:context
+                this.WriteContextUriProperty(this.contextUriBuilder.BuildContextUri(ODataPayloadKind.EntityReferenceLink));
+            }
+            else
+            {
+                // <metadata:ref ...
+                this.XmlWriter.WriteStartElement(AtomConstants.ODataMetadataNamespacePrefix, AtomConstants.ODataRefElementName, null);
             }
 
-            this.XmlWriter.WriteString(this.UriToUrlAttributeValue(entityReferenceLink.Url));
+            this.XmlWriter.WriteAttributeString(AtomConstants.AtomIdElementName, null, this.UriToUrlAttributeValue(entityReferenceLink.Url));
 
             // </uri>
             this.XmlWriter.WriteEndElement();

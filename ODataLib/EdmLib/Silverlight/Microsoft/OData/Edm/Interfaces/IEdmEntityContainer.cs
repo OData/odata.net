@@ -30,6 +30,13 @@ namespace Microsoft.OData.Edm
         IEdmEntitySet FindEntitySet(string setName);
 
         /// <summary>
+        /// Searches for a singleton with the given name in this entity container and returns null if no such singleton exists.
+        /// </summary>
+        /// <param name="singletonName">The name of the singleton to search.</param>
+        /// <returns>The requested singleton, or null if the singleton does not exist.</returns>
+        IEdmSingleton FindSingleton(string singletonName);
+
+        /// <summary>
         /// Searches for operation imports with the given name in this entity container and returns null if no such operation import exists.
         /// </summary>
         /// <param name="operationName">The name of the operations to find.</param>

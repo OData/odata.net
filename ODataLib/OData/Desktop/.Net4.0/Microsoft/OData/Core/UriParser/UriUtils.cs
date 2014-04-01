@@ -15,6 +15,7 @@ namespace Microsoft.OData.Core.UriParser
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Xml;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
 
@@ -38,7 +39,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>true if the baseUri Uri instance is a base of uri; otherwise false.</returns>
         internal static bool UriInvariantInsensitiveIsBaseOf(Uri baseUri, Uri uri)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(baseUri != null, "baseUri != null");
             Debug.Assert(uri != null, "uri != null");
 
@@ -57,7 +57,6 @@ namespace Microsoft.OData.Core.UriParser
         /// Note that it is valid to include multiple query options with the same name.</remarks>
         internal static List<CustomQueryOptionToken> ParseQueryOptions(Uri uri)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(uri != null, "uri != null");
 
             List<CustomQueryOptionToken> queryOptions = new List<CustomQueryOptionToken>();
@@ -133,7 +132,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>true if this selection item is a structural property selection item.</returns>
         internal static bool IsStructuralOrNavigationPropertySelectionItem(SelectItem selectItem)
         {
-            DebugUtils.CheckNoExternalCallers();
             PathSelectItem pathSelectItem = selectItem as PathSelectItem;
             return pathSelectItem != null && (pathSelectItem.SelectedPath.LastSegment is NavigationPropertySegment || pathSelectItem.SelectedPath.LastSegment is PropertySegment);
         }
@@ -145,9 +143,61 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>true if this selection item is a structural property selection item.</returns>
         internal static bool IsStructuralSelectionItem(SelectItem selectItem)
         {
-            DebugUtils.CheckNoExternalCallers();
             PathSelectItem pathSelectItem = selectItem as PathSelectItem;
             return pathSelectItem != null && (pathSelectItem.SelectedPath.LastSegment is PropertySegment);
+        }
+
+        /// <summary>
+        /// Converts a string to a GUID value.
+        /// </summary>
+        /// <param name="text">String text to convert.</param>
+        /// <param name="targetValue">After invocation, converted value.</param>
+        /// <returns>true if the value was converted; false otherwise.</returns>
+        /// <remarks>Copy of WebConvert.TryKeyStringToGuid.</remarks>
+        internal static bool TryUriStringToGuid(string text, out Guid targetValue)
+        {
+            try
+            {
+                // ABNF shows guidValue defined as
+                // guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
+                // which comes to length of 36 
+                string trimmedText = text.Trim();
+                if (trimmedText.Length != 36 || trimmedText.IndexOf('-') != 8)
+                {
+                    targetValue = default(Guid);
+                    return false;
+                }
+
+                targetValue = XmlConvert.ToGuid(text);
+                return true;
+            }
+            catch (FormatException)
+            {
+                targetValue = default(Guid);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Converts a string to a DateTimeOffset value.
+        /// </summary>
+        /// <param name="text">String text to convert.</param>
+        /// <param name="targetValue">After invocation, converted value.</param>
+        /// <returns>true if the value was converted; false otherwise.</returns>
+        /// <remarks>Copy of WebConvert.TryKeyStringToDateTimeOffset.</remarks>
+        internal static bool TryUriStringToDateTimeOffset(string text, out DateTimeOffset targetValue)
+        {
+            targetValue = default(DateTimeOffset);
+
+            try
+            {
+                targetValue = PlatformHelper.ConvertStringToDateTimeOffset(text);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
         }
 
         /// <summary>Creates a URI suitable for host-agnostic comparison purposes.</summary>
@@ -157,10 +207,10 @@ namespace Microsoft.OData.Core.UriParser
         {
             Debug.Assert(uri != null, "uri != null");
 
-#if PORTABLELIB
-            uri = new Uri(UriUtilsCommon.UriToString(uri).ToUpperInvariant(), UriKind.RelativeOrAbsolute);
+#if !ORCAS
+            uri = new Uri(Core.UriUtils.UriToString(uri).ToUpperInvariant(), UriKind.RelativeOrAbsolute);
 #else
-            uri = new Uri(UriUtilsCommon.UriToString(uri).ToUpper(CultureInfo.InvariantCulture), UriKind.RelativeOrAbsolute);
+            uri = new Uri(Core.UriUtils.UriToString(uri).ToUpper(CultureInfo.InvariantCulture), UriKind.RelativeOrAbsolute);
 #endif
 
             UriBuilder builder = new UriBuilder(uri);

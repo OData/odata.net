@@ -11,6 +11,12 @@
 namespace Microsoft.OData.Core
 {
     #region Namespaces
+
+    using System;
+    using System.Diagnostics;
+    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
     #endregion Namespaces
 
     /// <summary>
@@ -26,8 +32,6 @@ namespace Microsoft.OData.Core
         /// <returns>true if the property should be skipped, false to write the property.</returns>
         internal static bool ShouldSkipProperty(this ProjectedPropertiesAnnotation projectedProperties, string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (projectedProperties == null)
             {
                 return false;
@@ -42,6 +46,37 @@ namespace Microsoft.OData.Core
             }
 
             return !projectedProperties.IsPropertyProjected(propertyName);
+        }
+
+        /// <summary>
+        /// Remove the Edm. prefix from the type name if it is primitive type.
+        /// </summary>
+        /// <param name="typeName">The type name to remove the Edm. prefix</param>
+        /// <returns>The type name without the Edm. Prefix</returns>
+        internal static string RemoveEdmPrefixFromTypeName(string typeName)
+        {
+            if (!string.IsNullOrEmpty(typeName))
+            {
+                string itemTypeName = EdmLibraryExtensions.GetCollectionItemTypeName(typeName);
+                if (itemTypeName == null)
+                {
+                    IEdmSchemaType primitiveType = EdmLibraryExtensions.ResolvePrimitiveTypeName(typeName);
+                    if (primitiveType != null)
+                    {
+                        return primitiveType.ShortQualifiedName();
+                    }
+                }
+                else
+                {
+                    IEdmSchemaType primitiveType = EdmLibraryExtensions.ResolvePrimitiveTypeName(itemTypeName);
+                    if (primitiveType != null)
+                    {
+                        return EdmLibraryExtensions.GetCollectionTypeName(primitiveType.ShortQualifiedName());
+                    }
+                }
+            }
+
+            return typeName;
         }
     }
 }

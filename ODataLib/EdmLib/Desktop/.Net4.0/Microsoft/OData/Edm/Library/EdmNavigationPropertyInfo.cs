@@ -8,10 +8,7 @@
 
 //   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
-using System;
 using System.Collections.Generic;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Internal;
 
 namespace Microsoft.OData.Edm.Library
 {
@@ -41,6 +38,11 @@ namespace Microsoft.OData.Edm.Library
         public IEnumerable<IEdmStructuralProperty> DependentProperties { get; set; }
 
         /// <summary>
+        /// Gets or sets the principal properties of the association this navigation property expresses.
+        /// </summary>
+        public IEnumerable<IEdmStructuralProperty> PrincipalProperties { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the navigation target is contained inside the navigation source.
         /// </summary>
         public bool ContainsTarget { get; set; }
@@ -62,6 +64,7 @@ namespace Microsoft.OData.Edm.Library
                 Target = this.Target,
                 TargetMultiplicity = this.TargetMultiplicity,
                 DependentProperties = this.DependentProperties,
+                PrincipalProperties = this.PrincipalProperties,
                 ContainsTarget = this.ContainsTarget,
                 OnDelete = this.OnDelete
             };

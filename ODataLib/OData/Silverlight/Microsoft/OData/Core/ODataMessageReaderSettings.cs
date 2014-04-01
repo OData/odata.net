@@ -25,8 +25,13 @@ namespace Microsoft.OData.Core
         /// </summary>
         private ODataReaderBehavior readerBehavior;
 
+        /// <summary>
+        /// The base uri used in payload.
+        /// </summary>
+        private Uri payloadBaseUri;
+
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageReaderSettings" /> class with default values.</summary>
-        public ODataMessageReaderSettings() 
+        public ODataMessageReaderSettings()
             : base()
         {
             this.DisablePrimitiveTypeConversion = false;
@@ -56,19 +61,45 @@ namespace Microsoft.OData.Core
             this.readerBehavior = other.ReaderBehavior;
         }
 
-        /// <summary>Gets or sets the document base URI (used as base for all relative URIs). If this is set, it must be an absolute URI.</summary>
-        /// <returns>The base URI.</returns>
+        /// <summary>
+        /// Gets or sets the document base URI (used as base for all relative URIs). If this is set, it must be an absolute URI.
+        /// ODataMessageReaderSettings.BaseUri may be deprecated in the furture, please use ODataMessageReaderSettings.PayloadBaseUri instead.
+        /// </summary>
+        /// <returns>The base URI used in payload.</returns>
         /// <remarks>
-        /// Note that for typical OData services this should end with a slash character. For example "http://services.odata.org/OData/OData.svc/" will work as expected,
-        /// that is a relative URI "Products(0)" will correctly combine with the base to produce "http://services.odata.org/OData/OData.svc/Products(0)".
-        /// If the URI would not end with a slash, the last segment is not considered when base and relative URIs are combined.
-        /// So for example this base URI "http://services.odata.org/OData/OData.svc" combined with relative URI "Products(0)" would produce
-        /// "http://services.odata.org/OData/Products(0)", which is typically not the desired result.
+        /// This URI will be used in ATOM format only, it would overrided by &lt;xml:base /&gt; element in ATOM payload.
+        /// If the URI does not end with a slash, a slash would be appended automatically.
         /// </remarks>
         public Uri BaseUri
         {
-            get;
-            set;
+            get
+            {
+                return payloadBaseUri;
+            }
+
+            set
+            {
+                this.payloadBaseUri = UriUtils.EnsureTaillingSlash(value);
+            }
+        }
+
+        /// <summary>Gets or sets the document base URI (used as base for all relative URIs). If this is set, it must be an absolute URI.</summary>
+        /// <returns>The base URI used in payload.</returns>
+        /// <remarks>
+        /// This URI will be used in ATOM format only, it would overrided by &lt;xml:base /&gt; element in ATOM payload.
+        /// If the URI does not end with a slash, a slash would be appended automatically.
+        /// </remarks>
+        public Uri PayloadBaseUri
+        {
+            get
+            {
+                return payloadBaseUri;
+            }
+
+            set
+            {
+                this.payloadBaseUri = UriUtils.EnsureTaillingSlash(value);
+            }
         }
 
         /// <summary>Gets or sets a value that indicates whether not to convert all primitive values to the type specified in the model or provided as an expected type. Note that values will still be converted to the type specified in the payload itself.</summary>
@@ -105,7 +136,7 @@ namespace Microsoft.OData.Core
         ///   JSON Light
         ///     - If an undeclared property is found a detection logic will run:
         ///       - The property has 'odata.navigationLink' or 'odata.associationLink' annotation on it and no value - it will be read as navigation/association link
-        ///       - The property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaETag' on it and no value
+        ///       - The property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaEtag' on it and no value
         ///             - it will be read as a stream property.
         ///       - Any other property (that is property with a value or property with no annotation mentioned above) will fail.
         ///
@@ -123,7 +154,7 @@ namespace Microsoft.OData.Core
         ///     - If an undeclared property is found a detection logic will run:
         ///       - The property has 'odata.navigationLink' or 'odata.associationLink' annotation on it (deferred or expanded navigation link)
         ///             - fail as undeclared navigation property
-        ///       - The property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaETag' on it and no value
+        ///       - The property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaEtag' on it and no value
         ///             - fail as undeclared stream property.
         ///       - The property has a value and no annotation mentioned above - the property is ignored and not read.
         ///
@@ -147,7 +178,7 @@ namespace Microsoft.OData.Core
         ///             - it will be read as navigation/association link
         ///       - The property has 'odata.navigationLink' or 'odata.associationLink' annotation on it and with value (expanded navigation link)
         ///             - it will be read, the navigation and association link will be reported and the content will be ignored.
-        ///       - The property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaETag' on it and no value
+        ///       - The property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaEtag' on it and no value
         ///             - it will be read as a stream property.
         ///       - The property has a value and no annotation mentioned above - the property is ignored and not read.
         ///
@@ -166,7 +197,7 @@ namespace Microsoft.OData.Core
         /// <returns>true if the message stream will not be disposed after finishing writing with the message; otherwise false. The default value is false.</returns>
         public bool DisableMessageStreamDisposal
         {
-            get; 
+            get;
             set;
         }
 
@@ -211,8 +242,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-                return this.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.WcfDataServicesServer || this.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.WcfDataServicesClient;
+                return this.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.ODataServer || this.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.WcfDataServicesClient;
             }
         }
 
@@ -224,7 +254,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.readerBehavior;
             }
         }
@@ -236,7 +265,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.UndeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty);
             }
         }
@@ -248,7 +276,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.UndeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty);
             }
         }
@@ -260,12 +287,11 @@ namespace Microsoft.OData.Core
             this.readerBehavior = ODataReaderBehavior.DefaultBehavior;
         }
 
-        /// <summary>Specifies whether the WCF data services server behavior is enabled.</summary>
-        /// <param name="usesV1Provider">true to use V1 provider; otherwise, false.</param>
-        public void EnableWcfDataServicesServerBehavior(bool usesV1Provider)
+        /// <summary>Specifies whether the OData server behavior is enabled.</summary>
+        public void EnableODataServerBehavior()
         {
             // We have to reset the ATOM entry XML customization since in the server behavior no atom entry customization is used.
-            this.readerBehavior = ODataReaderBehavior.CreateWcfDataServicesServerBehavior(usesV1Provider);
+            this.readerBehavior = ODataReaderBehavior.CreateWcfDataServicesServerBehavior();
         }
 
         /// <summary>
@@ -288,7 +314,6 @@ namespace Microsoft.OData.Core
         /// <returns>Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should be skipped, false otherwise.</returns>
         internal bool ShouldSkipAnnotation(string annotationName)
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.ShouldIncludeAnnotation == null || !this.ShouldIncludeAnnotation(annotationName);
         }
     }

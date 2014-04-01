@@ -11,11 +11,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Annotations;
-using Microsoft.OData.Edm.Internal;
 using Microsoft.OData.Edm.Library.Annotations;
+using ErrorStrings = Microsoft.OData.Edm.Strings;
 
 namespace Microsoft.OData.Edm.Library
 {
+    using Microsoft.OData.Edm.Vocabularis;
+
     /// <summary>
     /// Represents an EDM model.
     /// </summary>
@@ -25,7 +27,7 @@ namespace Microsoft.OData.Edm.Library
         private readonly Dictionary<string, IEdmEntityContainer> containersDictionary = new Dictionary<string, IEdmEntityContainer>();
         private readonly Dictionary<string, IEdmSchemaType> schemaTypeDictionary = new Dictionary<string, IEdmSchemaType>();
         private readonly Dictionary<string, IEdmValueTerm> valueTermDictionary = new Dictionary<string, IEdmValueTerm>();
-        private readonly Dictionary<string, object> functionDictionary = new Dictionary<string, object>();
+        private readonly Dictionary<string, IList<IEdmOperation>> functionDictionary = new Dictionary<string, IList<IEdmOperation>>();
         private readonly List<IEdmModel> referencedModels;
 
         /// <summary>
@@ -40,6 +42,11 @@ namespace Microsoft.OData.Edm.Library
 
             this.referencedModels = new List<IEdmModel>(referencedModels);
             this.referencedModels.Add(EdmCoreModel.Instance);
+            if (CoreVocabularyModel.Instance != null)
+            {
+                this.referencedModels.Add(CoreVocabularyModel.Instance);
+            }
+
             this.annotationsManager = annotationsManager;
         }
 
@@ -47,6 +54,14 @@ namespace Microsoft.OData.Edm.Library
         /// Gets the collection of schema elements that are contained in this model.
         /// </summary>
         public abstract IEnumerable<IEdmSchemaElement> SchemaElements
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the collection of namespaces that schema elements use contained in this model.
+        /// </summary>
+        public abstract IEnumerable<string> DeclaredNamespaces
         {
             get;
         }
@@ -76,16 +91,13 @@ namespace Microsoft.OData.Edm.Library
         }
 
         /// <summary>
-        /// Searches for an entity container with the given name in this model and returns null if no such entity container exists.
+        /// Gets the only one entity container of the model.
         /// </summary>
-        /// <param name="name">The name of the entity container being found.</param>
-        /// <returns>The requested entity container, or null if no such entity container exists.</returns>
-        public IEdmEntityContainer FindDeclaredEntityContainer(string name)
+        public IEdmEntityContainer EntityContainer
         {
-            IEdmEntityContainer container;
-            return this.containersDictionary.TryGetValue(name, out container) ? container : null;
+            get { return this.containersDictionary.Values.FirstOrDefault(); }
         }
-
+       
         /// <summary>
         /// Searches for a type with the given name in this model and returns null if no such type exists.
         /// </summary>
@@ -117,19 +129,42 @@ namespace Microsoft.OData.Edm.Library
         /// <returns>A group of operations sharing the specified qualified name, or an empty enumerable if no such operation exists.</returns>
         public IEnumerable<IEdmOperation> FindDeclaredOperations(string qualifiedName)
         {
-            object element;
-            if (this.functionDictionary.TryGetValue(qualifiedName, out element))
+            IList<IEdmOperation> elements;
+            if (this.functionDictionary.TryGetValue(qualifiedName, out elements))
             {
-                List<IEdmOperation> listElement = element as List<IEdmOperation>;
-                if (listElement != null)
-                {
-                    return listElement;
-                }
-
-                return new IEdmOperation[] { (IEdmOperation)element };
+                return elements;
             }
 
             return Enumerable.Empty<IEdmOperation>();
+        }
+
+        /// <summary>
+        /// Searches for bound operations based on the binding type, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns> A set of operations that share the binding type or empty enumerable if no such operation exists. </returns>
+        public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(IEdmType bindingType)
+        {
+            foreach (IEnumerable<IEdmOperation> operations in this.functionDictionary.Values.Distinct())
+            {
+                foreach (IEdmOperation operation in operations.Where(o => o.IsBound && o.Parameters.Any() && o.HasEquivalentBindingType(bindingType)))
+                {
+                    yield return operation;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Searches for bound operations based on the qualified name and binding type, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualifeid name of the operation.</param>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>
+        /// A set of operations that share the name and binding type or empty enumerable if no such operation exists.
+        /// </returns>
+        public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(string qualifiedName, IEdmType bindingType)
+        {
+            return this.FindDeclaredOperations(qualifiedName).Where(o => o.IsBound && o.Parameters.Any() && o.HasEquivalentBindingType(bindingType));
         }
 
         /// <summary>

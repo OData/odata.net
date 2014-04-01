@@ -13,7 +13,7 @@ namespace Microsoft.OData.Edm.Library
     /// <summary>
     /// Represents an EDM documentation.
     /// </summary>
-    public class EdmDocumentation : IEdmDocumentation
+    internal class EdmDocumentation : IEdmDocumentation
     {
         private readonly string summary;
         private readonly string description;

@@ -35,11 +35,19 @@ namespace Microsoft.OData.Core.Evaluation
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return NullEntityMetadataBuilder.Instance;
             }
         }
 #endif
+
+        /// <summary>
+        /// Gets instance of the metadata builder which belongs to the parent odata entry
+        /// </summary>
+        /// <returns>
+        /// The metadata builder of the parent odata entry
+        /// Or null if there is no parent odata entry
+        /// </returns>
+        internal ODataEntityMetadataBuilder ParentMetadataBuilder { get; set; }
 
         /// <summary>
         /// Gets the edit link of the entity.
@@ -69,7 +77,16 @@ namespace Microsoft.OData.Core.Evaluation
         /// Or null if it is not possible to determine the ID.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
-        internal abstract string GetId();
+        internal abstract Uri GetId();
+
+        /// <summary>
+        /// Get the id that need to be written into wire
+        /// </summary>
+        /// <param name="id">The id return to the caller</param>
+        /// <returns>
+        /// If writer should write odata.id property into wire
+        /// </returns>
+        internal abstract bool TryGetIdForSerialization(out Uri id);
 
         /// <summary>
         /// Gets the ETag of the entity.
@@ -92,7 +109,6 @@ namespace Microsoft.OData.Core.Evaluation
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
         internal virtual ODataStreamReferenceValue GetMediaResource()
         {
-            DebugUtils.CheckNoExternalCallers();
             return null;
         }
 
@@ -103,7 +119,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The the computed and non-computed entity properties.</returns>
         internal virtual IEnumerable<ODataProperty> GetProperties(IEnumerable<ODataProperty> nonComputedProperties)
         {
-            DebugUtils.CheckNoExternalCallers();
             return nonComputedProperties == null ? null : nonComputedProperties.Where(p => !(p.ODataValue is ODataStreamReferenceValue));
         }
         
@@ -114,7 +129,6 @@ namespace Microsoft.OData.Core.Evaluation
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
         internal virtual IEnumerable<ODataAction> GetActions()
         {
-            DebugUtils.CheckNoExternalCallers();
             return null;
         }
 
@@ -125,7 +139,6 @@ namespace Microsoft.OData.Core.Evaluation
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
         internal virtual IEnumerable<ODataFunction> GetFunctions()
         {
-            DebugUtils.CheckNoExternalCallers();
             return null;
         }
 
@@ -135,7 +148,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <param name="navigationPropertyName">The navigation link we've already processed.</param>
         internal virtual void MarkNavigationLinkProcessed(string navigationPropertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -145,7 +157,6 @@ namespace Microsoft.OData.Core.Evaluation
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
         internal virtual ODataJsonLightReaderNavigationLinkInfo GetNextUnprocessedNavigationLink()
         {
-            DebugUtils.CheckNoExternalCallers();
             return null;
         }
 #endif
@@ -164,7 +175,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNotEmpty(streamPropertyName, "streamPropertyName");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
 #endif
             return null;
@@ -184,7 +194,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNotEmpty(streamPropertyName, "streamPropertyName");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
 #endif
 
@@ -207,7 +216,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNullAndEmpty(navigationPropertyName, "navigationPropertyName");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
 #endif
             return null;
@@ -229,7 +237,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNullAndEmpty(navigationPropertyName, "navigationPropertyName");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
 #endif
             return null;
@@ -249,7 +256,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNullAndEmpty(operationName, "operationName");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(operationName, "operationName");
 #endif
             return null;
@@ -268,7 +274,6 @@ namespace Microsoft.OData.Core.Evaluation
 #if ASTORIA_CLIENT
             Util.CheckArgumentNullAndEmpty(operationName, "operationName");
 #else
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(operationName, "operationName");
 #endif
             return null;
@@ -301,7 +306,6 @@ namespace Microsoft.OData.Core.Evaluation
             /// </returns>
             internal override Uri GetEditLink()
             {
-                DebugUtils.CheckNoExternalCallers();
                 return null;
             }
 
@@ -314,7 +318,6 @@ namespace Microsoft.OData.Core.Evaluation
             /// </returns>
             internal override Uri GetReadLink()
             {
-                DebugUtils.CheckNoExternalCallers();
                 return null;
             }
 
@@ -325,9 +328,8 @@ namespace Microsoft.OData.Core.Evaluation
             /// The ID for the entity.
             /// Or null if it is not possible to determine the ID.
             /// </returns>
-            internal override string GetId()
+            internal override Uri GetId()
             {
-                DebugUtils.CheckNoExternalCallers();
                 return null;
             }
 
@@ -340,8 +342,20 @@ namespace Microsoft.OData.Core.Evaluation
             /// </returns>
             internal override string GetETag()
             {
-                DebugUtils.CheckNoExternalCallers();
                 return null;
+            }
+
+            /// <summary>
+            /// Get the id that need to be written into wire
+            /// </summary>
+            /// <param name="id">The id return to the caller</param>
+            /// <returns>
+            /// If writer should write odata.id property into wire
+            /// </returns>
+            internal override bool TryGetIdForSerialization(out Uri id)
+            {
+                id = null;
+                return false;
             }
         }
 #endif

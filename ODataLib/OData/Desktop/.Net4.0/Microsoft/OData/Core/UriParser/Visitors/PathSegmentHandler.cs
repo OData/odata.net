@@ -46,6 +46,15 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
 
         /// <summary>
+        /// Handle an SingletonSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public virtual void Handle(SingletonSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Handle a KeySegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>
@@ -59,6 +68,15 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// </summary>
         /// <param name="segment">the segment to Handle</param>
         public virtual void Handle(PropertySegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Handle an OperationSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public virtual void Handle(OperationImportSegment segment)
         {
             throw new NotImplementedException();
         }

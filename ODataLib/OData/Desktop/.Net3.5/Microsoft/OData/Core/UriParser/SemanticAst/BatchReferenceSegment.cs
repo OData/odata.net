@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// The entity set from the alias.
         /// </summary>
-        private readonly IEdmEntitySet entitySet;
+        private readonly IEdmEntitySetBase entitySet;
 
         /// <summary>
         /// The contentId that this alias referrs to.
@@ -51,7 +51,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <exception cref="System.ArgumentNullException">Throws if the input edmType of contentID is null.</exception>
         /// <exception cref="ODataException">Throws if the contentID is not in the right format.</exception>
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
-        public BatchReferenceSegment(string contentId, IEdmType edmType, IEdmEntitySet entitySet)
+        public BatchReferenceSegment(string contentId, IEdmType edmType, IEdmEntitySetBase entitySet)
         {
             ExceptionUtils.CheckArgumentNotNull(edmType, "resultingType");
             ExceptionUtils.CheckArgumentNotNull(contentId, "contentId");
@@ -66,13 +66,13 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 
             this.Identifier = this.ContentId;
             this.TargetEdmType = edmType;
-            this.TargetEdmEntitySet = this.EntitySet;
+            this.TargetEdmNavigationSource = this.EntitySet;
             this.SingleResult = true;
             this.TargetKind = RequestTargetKind.Resource;
 
             if (entitySet != null)
             {
-                UriParserErrorHelper.ThrowIfTypesUnrelated(edmType, entitySet.ElementType, "BatchReferenceSegments");
+                UriParserErrorHelper.ThrowIfTypesUnrelated(edmType, entitySet.EntityType(), "BatchReferenceSegments");
             }
         }
 
@@ -87,7 +87,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// Gets the resulting entity set for this batch reference segment.
         /// </summary>
-        public IEdmEntitySet EntitySet
+        public IEdmEntitySetBase EntitySet
         {
             get { return this.entitySet; }
         }
@@ -107,7 +107,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="translator">An implementation of the translator interface.</param>
         /// <returns>An object whose type is determined by the type parameter of the translator.</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input translator is null.</exception>
-        public override T Translate<T>(PathSegmentTranslator<T> translator)
+        public override T TranslateWith<T>(PathSegmentTranslator<T> translator)
         {
             ExceptionUtils.CheckArgumentNotNull(translator, "translator");
             return translator.Translate(this);
@@ -118,9 +118,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         /// <param name="handler">An implementation of the Handler interface.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input Handler is null.</exception>
-        public override void Handle(PathSegmentHandler handler)
+        public override void HandleWith(PathSegmentHandler handler)
         {
-            ExceptionUtils.CheckArgumentNotNull(handler, "translator");
+            ExceptionUtils.CheckArgumentNotNull(handler, "handler");
             handler.Handle(this);
         }
 
@@ -131,7 +131,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <returns>true if the other segment is equal.</returns>
         internal override bool Equals(ODataPathSegment other)
         {
-            DebugUtils.CheckNoExternalCallers();
             BatchReferenceSegment otherBatchReferenceSegment = other as BatchReferenceSegment;
             return otherBatchReferenceSegment != null && 
                 otherBatchReferenceSegment.EdmType == this.edmType &&

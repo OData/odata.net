@@ -61,3 +61,5 @@ GeoJsonReader_InvalidCrsName=Invalid GeoJSON. The value '{0}' is not a recognize
 JsonReaderExtensions_CannotReadPropertyValueAsString=Cannot read the value '{0}' for the property '{1}' as a quoted JSON string value.
 JsonReaderExtensions_CannotReadValueAsJsonObject=Cannot read the value '{0}' as a JSON object.
 
+; Note: The below list of error messages are common to the ODataLib, EdmLib, Spatial, Server and Client projects.
+PlatformHelper_DateTimeOffsetMustContainTimeZone=The time zone information is missing on the DateTimeOffset value '{0}'. A DateTimeOffset value must contain the time zone information.

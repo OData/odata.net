@@ -16,7 +16,8 @@ namespace Microsoft.OData.Core.Atom
     using System.IO;
     using System.Text;
     using System.Xml;
-
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
 
     #endregion Namespaces
 
@@ -34,7 +35,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>An <see cref="XmlWriter"/> instance configured with the provided settings and encoding.</returns>
         internal static XmlWriter CreateXmlWriter(Stream stream, ODataMessageWriterSettings messageWriterSettings, Encoding encoding)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(stream != null, "stream != null");
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
@@ -58,7 +58,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="maxInnerErrorDepth">The maximumum number of nested inner errors to allow.</param>
         internal static void WriteError(XmlWriter writer, ODataError error, bool includeDebugInformation, int maxInnerErrorDepth)
         {
-            DebugUtils.CheckNoExternalCallers();
             ErrorUtils.WriteXmlError(writer, error, includeDebugInformation, maxInnerErrorDepth);
         }
 
@@ -69,7 +68,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="etag">The string value of the ETag.</param>
         internal static void WriteETag(XmlWriter writer, string etag)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(etag != null, "etag != null");
 
@@ -86,7 +84,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="writer">The Xml writer to write to.</param>
         internal static void WriteNullAttribute(XmlWriter writer)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             // m:null="true"
@@ -104,7 +101,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="value">A string containing the text to write.</param>
         internal static void WriteRaw(XmlWriter writer, string value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             WritePreserveSpaceAttributeIfNeeded(writer, value);
@@ -118,11 +114,27 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="value">The string to write as element text content.</param>
         internal static void WriteString(XmlWriter writer, string value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             WritePreserveSpaceAttributeIfNeeded(writer, value);
             writer.WriteString(value);
+        }
+
+        /// <summary>
+        /// For Atom writer, only prefix the type name with # for payload writting if it is not primitive type.
+        /// </summary>
+        /// <param name="typeName">The type name to prefix</param>
+        /// <returns>The (#) prefixed type name, or the input type name if it is primitive type.</returns>
+        internal static string PrefixTypeName(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName) || IsPrimitiveType(typeName))
+            {
+                return typeName;
+            }
+
+            Debug.Assert(!typeName.StartsWith(ODataConstants.TypeNamePrefix, StringComparison.Ordinal), "The type name not start with " + ODataConstants.TypeNamePrefix + "before prefix");
+
+            return ODataConstants.TypeNamePrefix + typeName;
         }
 
         /// <summary>
@@ -133,8 +145,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The Xml writer settings to use for this writer.</returns>
         private static XmlWriterSettings CreateXmlWriterSettings(ODataMessageWriterSettings messageWriterSettings, Encoding encoding)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.CheckCharacters = messageWriterSettings.CheckCharacters;
             settings.ConformanceLevel = ConformanceLevel.Document;
@@ -157,7 +167,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="value">The value to check for insignificant whitespace.</param>
         private static void WritePreserveSpaceAttributeIfNeeded(XmlWriter writer, string value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
 
             if (value == null)
@@ -176,6 +185,16 @@ namespace Microsoft.OData.Core.Atom
                     AtomConstants.XmlNamespace,
                     AtomConstants.XmlPreserveSpaceAttributeValue);
             }
+        }
+
+        /// <summary>
+        /// Determines if the type is primitive type.
+        /// </summary>
+        /// <param name="typeName">The type name to check</param>
+        /// <returns>true if the type is primitive type, else return false</returns>
+        private static bool IsPrimitiveType(string typeName)
+        {
+            return EdmCoreModel.Instance.GetPrimitiveTypeKind(typeName) != EdmPrimitiveTypeKind.None;
         }
     }
 }

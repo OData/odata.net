@@ -54,6 +54,9 @@ namespace Microsoft.OData.Core
         /// <summary>Payload kind for parameters for a service action.</summary>
         Parameter = 12,
 
+        /// <summary>Payload kind for individual property in an entity.</summary>
+        IndividualProperty = 13,
+
         /// <summary>Unknown format</summary>
         Unsupported = int.MaxValue,
     }

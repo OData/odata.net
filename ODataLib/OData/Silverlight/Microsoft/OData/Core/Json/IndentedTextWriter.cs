@@ -109,7 +109,7 @@ namespace Microsoft.OData.Core.Json
             }
         }
 
-#if !PORTABLELIB
+#if ORCAS
         /// <summary>
         /// Closes the underlying writer.
         /// </summary>

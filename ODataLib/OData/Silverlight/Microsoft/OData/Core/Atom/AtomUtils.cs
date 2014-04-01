@@ -13,6 +13,7 @@ namespace Microsoft.OData.Core.Atom
     #region Namespaces
     using System;
     using System.Diagnostics;
+    using System.Globalization;
     #endregion Namespaces
 
     /// <summary>
@@ -45,7 +46,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The relation attribute value for the navigation property's link relation.</returns>
         internal static string ComputeODataNavigationLinkRelation(ODataNavigationLink navigationLink)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(navigationLink.Name != null, "navigationLink.Name != null");
 
@@ -59,7 +59,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The type attribute value for the navigation property.</returns>
         internal static string ComputeODataNavigationLinkType(ODataNavigationLink navigationLink)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(navigationLink.IsCollection.HasValue, "navigationLink.IsCollection.HasValue");
 
@@ -70,15 +69,13 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Creates the value for the navigation property's association link relation attribute.
         /// </summary>
-        /// <param name="associationLink">The link representing the navigation property's association for which the relation value is created.</param>
+        /// <param name="navigationPropertyName">The name of navigation property whose association link is being written.</param>
         /// <returns>The relation attribute value for the navigation property's association link relation.</returns>
-        internal static string ComputeODataAssociationLinkRelation(ODataAssociationLink associationLink)
+        internal static string ComputeODataAssociationLinkRelation(string navigationPropertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(associationLink != null, "link != null");
-            Debug.Assert(associationLink.Name != null, "link.Name != null");
+            Debug.Assert(navigationPropertyName != null, "navigationPropertyName != null");
 
-            return string.Join("", new string[] { AtomConstants.ODataNavigationPropertiesAssociationLinkRelationPrefix, associationLink.Name });
+            return string.Join("", new string[] { AtomConstants.ODataNavigationPropertiesAssociationLinkRelationPrefix, navigationPropertyName });
         }
 
         /// <summary>
@@ -89,7 +86,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The relation attribute value for the stream property's link relation.</returns>
         internal static string ComputeStreamPropertyRelation(ODataProperty streamProperty, bool forEditLink)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(streamProperty != null, "streamProperty != null");
             Debug.Assert(!string.IsNullOrEmpty(streamProperty.Name), "!string.IsNullOrEmpty(streamProperty.Name)");
 
@@ -107,8 +103,6 @@ namespace Microsoft.OData.Core.Atom
         /// </returns>
         internal static string UnescapeAtomLinkRelationAttribute(string relation)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (!string.IsNullOrEmpty(relation))
             {
                 Uri uri;
@@ -132,7 +126,6 @@ namespace Microsoft.OData.Core.Atom
         /// </returns>
         internal static string GetNameFromAtomLinkRelationAttribute(string relation, string namespacePrefix)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(
                 relation == null || relation == UnescapeAtomLinkRelationAttribute(relation),
                 "The relation attribute was not unescaped, it is necessary to first call the UnescapeAtomLinkRelationAttribute method.");
@@ -155,7 +148,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>true if the navigation link type is the expected application/atom+xml; otherwise false.</returns>
         internal static bool IsExactNavigationLinkTypeMatch(string navigationLinkType, out bool hasEntryType, out bool hasFeedType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(navigationLinkType), "!string.IsNullOrEmpty(navigationLinkType)");
 
             hasEntryType = false;
@@ -200,6 +192,15 @@ namespace Microsoft.OData.Core.Atom
                 default:
                     return false;
             }
+        }
+
+        /// <summary>
+        /// Get transient id value in Atom format
+        /// </summary>
+        /// <returns>id with format odata:transient:{some-generated-unique-identifier-to-not-break-atom-parsers}</returns>
+        internal static string GetTransientId()
+        {
+            return string.Format(CultureInfo.InvariantCulture, AtomConstants.AtomTransientIdFormat, Guid.NewGuid().ToString());
         }
     }
 }

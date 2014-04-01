@@ -13,8 +13,9 @@ namespace Microsoft.OData.Core
     #region Namespaces
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Edm;
+
     #endregion Namespaces
 
     /// <summary>
@@ -30,7 +31,6 @@ namespace Microsoft.OData.Core
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This method will eventually become an override of a method in the base class, but more refactoring work needs to happen first.")]
         internal string GetEntryTypeNameForWriting(ODataEntry entry)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entry != null, "entry != null");
 
             SerializationTypeNameAnnotation typeNameAnnotation = entry.GetAnnotation<SerializationTypeNameAnnotation>();
@@ -59,7 +59,6 @@ namespace Microsoft.OData.Core
             CollectionWithoutExpectedTypeValidator collectionValidator,
             out string collectionItemTypeName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(value != null, "value != null");
 
             collectionItemTypeName = null;

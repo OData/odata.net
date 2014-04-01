@@ -32,7 +32,6 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightPayloadKindDetectionDeserializer(ODataJsonLightInputContext jsonLightInputContext)
             : base(jsonLightInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -42,7 +41,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>An enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
         internal IEnumerable<ODataPayloadKind> DetectPayloadKind(ODataPayloadKindDetectionInfo detectionInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(detectionInfo != null, "detectionInfo != null");
             Debug.Assert(this.ReadingResponse, "Payload kind detection is only supported in responses.");
 
@@ -78,7 +76,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>A task which returns an enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
         internal Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataPayloadKindDetectionInfo detectionInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(detectionInfo != null, "detectionInfo != null");
             Debug.Assert(this.ReadingResponse, "Payload kind detection is only supported in responses.");
 
@@ -125,31 +122,37 @@ namespace Microsoft.OData.Core.JsonLight
             // If we found a context URI and parsed it, look at the detected payload kind and return it.
             if (this.ContextUriParseResult != null)
             {
-                // Store the parsed metadata URI on the input context so we can avoid parsing it again.
+                // Store the parsed context URI on the input context so we can avoid parsing it again.
                 detectionInfo.SetPayloadKindDetectionFormatState(new ODataJsonLightPayloadKindDetectionState(this.ContextUriParseResult));
 
                 return this.ContextUriParseResult.DetectedPayloadKinds;
             }
 
-            // Otherwise this is a payload without metadata URI and we have to start sniffing; only odata.error payloads
-            // don't have a metadata URI so check for a single 'odata.error' property (ignoring custom annotations).
+            // Otherwise this is a payload without context URI and we have to start sniffing; only error payloads
+            // don't have a context URI so check for a single 'error' property (ignoring custom annotations).
             ODataError error = null;
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 string propertyName = this.JsonReader.ReadPropertyName();
-                if (!ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName))
-                {
-                    // If we find a non-annotation property, this is not an error payload
-                    return Enumerable.Empty<ODataPayloadKind>();
-                }
-
                 string annotatedPropertyName, annotationName;
                 if (!ODataJsonLightDeserializer.TryParsePropertyAnnotation(propertyName, out annotatedPropertyName, out annotationName))
                 {
-                    // Instance annotation; check for odata.error
-                    if (ODataJsonLightReaderUtils.IsODataAnnotationName(propertyName))
+                    if (ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName))
                     {
-                        if (string.CompareOrdinal(ODataAnnotationNames.ODataError, propertyName) == 0)
+                        if (propertyName != null && propertyName.StartsWith(JsonLightConstants.ODataPropertyAnnotationSeparatorChar + JsonLightConstants.ODataAnnotationNamespacePrefix, System.StringComparison.Ordinal))
+                        {
+                            // Any @odata.* instance annotations are not allowed for errors.
+                            return Enumerable.Empty<ODataPayloadKind>();
+                        }
+                        else
+                        {
+                            // Skip custom instance annotations
+                            this.JsonReader.SkipValue();
+                        }
+                    }
+                    else
+                    {
+                        if (string.CompareOrdinal(JsonLightConstants.ODataErrorPropertyName, propertyName) == 0)
                         {
                             // If we find multiple errors or an invalid error value, this is not an error payload.
                             if (error != null || !this.JsonReader.StartBufferingAndTryToReadInStreamErrorPropertyValue(out error))
@@ -157,30 +160,25 @@ namespace Microsoft.OData.Core.JsonLight
                                 return Enumerable.Empty<ODataPayloadKind>();
                             }
 
-                            // At this point we successfully read the first odata.error property.
+                            // At this point we successfully read the first error property. 
                             // Skip the error value and check whether there are more properties.
                             this.JsonReader.SkipValue();
                         }
                         else
                         {
-                            // Any odata.* instance annotations other than odata.error are not allowed for errors.
+                            // if it contains non-annotation property, it is not an error payload.
                             return Enumerable.Empty<ODataPayloadKind>();
                         }
-                    }
-                    else
-                    {
-                        // Skip custom instance annotations
-                        this.JsonReader.SkipValue();
                     }
                 }
                 else
                 {
-                    // Property annotation; not allowed for errors
+                    // Property annotation
                     return Enumerable.Empty<ODataPayloadKind>();
                 }
             }
 
-            // If we got here without finding a metadata URI or an error payload, we don't know what this is.
+            // If we got here without finding a context URI or an error payload, we don't know what this is.
             if (error == null)
             {
                 return Enumerable.Empty<ODataPayloadKind>();

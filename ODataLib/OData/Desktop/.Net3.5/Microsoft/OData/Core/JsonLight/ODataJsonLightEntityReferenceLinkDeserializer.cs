@@ -34,17 +34,14 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightEntityReferenceLinkDeserializer(ODataJsonLightInputContext jsonLightInputContext)
             : base(jsonLightInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
         /// Read a set of top-level entity reference links.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference links.</param>
         /// <returns>An <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
-        internal ODataEntityReferenceLinks ReadEntityReferenceLinks(IEdmNavigationProperty navigationProperty)
+        internal ODataEntityReferenceLinks ReadEntityReferenceLinks()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             this.JsonReader.AssertNotBuffering();
 
@@ -57,7 +54,7 @@ namespace Microsoft.OData.Core.JsonLight
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false);
 
-            ODataEntityReferenceLinks entityReferenceLinks = this.ReadEntityReferenceLinksImplementation(navigationProperty, duplicatePropertyNamesChecker);
+            ODataEntityReferenceLinks entityReferenceLinks = this.ReadEntityReferenceLinksImplementation(duplicatePropertyNamesChecker);
 
             this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
 
@@ -71,11 +68,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Read a set of top-level entity reference links.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference links.</param>
         /// <returns>A task which returns an <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
-        internal Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync(IEdmNavigationProperty navigationProperty)
+        internal Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             this.JsonReader.AssertNotBuffering();
 
@@ -90,7 +85,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                 .FollowOnSuccessWith(t =>
                     {
-                        ODataEntityReferenceLinks entityReferenceLinks = this.ReadEntityReferenceLinksImplementation(navigationProperty, duplicatePropertyNamesChecker);
+                        ODataEntityReferenceLinks entityReferenceLinks = this.ReadEntityReferenceLinksImplementation(duplicatePropertyNamesChecker);
 
                         this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
 
@@ -105,11 +100,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Reads a top-level entity reference link - implementation of the actual functionality.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference links.</param>
         /// <returns>An <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
-        internal ODataEntityReferenceLink ReadEntityReferenceLink(IEdmNavigationProperty navigationProperty)
+        internal ODataEntityReferenceLink ReadEntityReferenceLink()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             this.JsonReader.AssertNotBuffering();
 
@@ -122,7 +115,7 @@ namespace Microsoft.OData.Core.JsonLight
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false);
 
-            ODataEntityReferenceLink entityReferenceLink = this.ReadEntityReferenceLinkImplementation(navigationProperty, duplicatePropertyNamesChecker);
+            ODataEntityReferenceLink entityReferenceLink = this.ReadEntityReferenceLinkImplementation(duplicatePropertyNamesChecker);
 
             this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
 
@@ -136,11 +129,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Reads a top-level entity reference link - implementation of the actual functionality.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference links.</param>
         /// <returns>A task which returns an <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
-        internal Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync(IEdmNavigationProperty navigationProperty)
+        internal Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             this.JsonReader.AssertNotBuffering();
 
@@ -155,7 +146,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                 .FollowOnSuccessWith(t =>
                     {
-                        ODataEntityReferenceLink entityReferenceLink = this.ReadEntityReferenceLinkImplementation(navigationProperty, duplicatePropertyNamesChecker);
+                        ODataEntityReferenceLink entityReferenceLink = this.ReadEntityReferenceLinkImplementation(duplicatePropertyNamesChecker);
 
                         this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
 
@@ -170,10 +161,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Read a set of top-level entity reference links.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference links.</param>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the top-level scope.</param>
         /// <returns>An <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
-        private ODataEntityReferenceLinks ReadEntityReferenceLinksImplementation(IEdmNavigationProperty navigationProperty, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        private ODataEntityReferenceLinks ReadEntityReferenceLinksImplementation(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
 
@@ -208,10 +198,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Reads a top-level entity reference link - implementation of the actual functionality.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference links.</param>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the top-level scope.</param>
         /// <returns>An <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
-        private ODataEntityReferenceLink ReadEntityReferenceLinkImplementation(IEdmNavigationProperty navigationProperty, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        private ODataEntityReferenceLink ReadEntityReferenceLinkImplementation(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
 
@@ -226,7 +215,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="forLinksStart">true when parsing the instance annotations before the 'value' property; 
         /// false when parsing the instance annotations after the 'value' property.</param>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property               The first property in the payload (or the first property after the metadata URI in responses)
+        /// Pre-Condition:  JsonNodeType.Property               The first property in the payload (or the first property after the context URI in responses)
         ///                 JsonNodeType.EndObject              The end of the entity reference links object
         /// Post-Condition: JsonNodeType.EndObject              When the end of the entity reference links object is reached
         ///                 Any                                 The first node of the value of the 'url' property (if found)
@@ -347,7 +336,7 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(links != null, "links != null");
             this.AssertJsonCondition(JsonNodeType.PrimitiveValue);
             Debug.Assert(!links.Count.HasValue, "We should have checked for duplicates already.");
-            links.Count = this.ReadAndValidateAnnotationStringValueAsLong(ODataAnnotationNames.ODataCount);
+            links.Count = this.ReadAndValidateAnnotationAsLongForIeee754Compatible(ODataAnnotationNames.ODataCount);
         }
 
         /// <summary>
@@ -399,39 +388,20 @@ namespace Microsoft.OData.Core.JsonLight
                         switch (propertyParsingResult)
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
-                                // Instance annotations are not allowed for entity reference links
-                                throw new ODataException(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink(propertyName));
-
-                            case PropertyParsingResult.CustomInstanceAnnotation:
-                                this.JsonReader.SkipValue();
-                                break;
-
-                            case PropertyParsingResult.PropertyWithoutValue:
-                                // If we find a property without a value it means that we did not find the 'url' property of the
-                                // entity reference link but an invalid property annotation
-                                throw new ODataException(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink(propertyName));
-
-                            case PropertyParsingResult.EndOfObject:
-                                break;
-
-                            case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
-
-                            case PropertyParsingResult.PropertyWithValue:
-                                if (string.CompareOrdinal(JsonLightConstants.ODataEntityReferenceLinkUrlName, propertyName) != 0)
+                                if (string.CompareOrdinal(ODataAnnotationNames.ODataId, propertyName) != 0)
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_InvalidPropertyInEntityReferenceLink(propertyName, JsonLightConstants.ODataEntityReferenceLinkUrlName));
+                                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_InvalidPropertyInEntityReferenceLink(propertyName, ODataAnnotationNames.ODataId));
                                 }
                                 else if (entityReferenceLink[0] != null)
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MultipleUriPropertiesInEntityReferenceLink(JsonLightConstants.ODataEntityReferenceLinkUrlName));
+                                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MultipleUriPropertiesInEntityReferenceLink(ODataAnnotationNames.ODataId));
                                 }
 
-                                // read the value of the 'url' property
-                                string urlString = this.JsonReader.ReadStringValue(JsonLightConstants.ODataEntityReferenceLinkUrlName);
+                                // read the value of the 'odata.id' annotation
+                                string urlString = this.JsonReader.ReadStringValue(ODataAnnotationNames.ODataId);
                                 if (urlString == null)
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull(JsonLightConstants.ODataEntityReferenceLinkUrlName));
+                                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull(ODataAnnotationNames.ODataId));
                                 }
 
                                 entityReferenceLink[0] = new ODataEntityReferenceLink
@@ -440,7 +410,23 @@ namespace Microsoft.OData.Core.JsonLight
                                 };
 
                                 ReaderValidationUtils.ValidateEntityReferenceLink(entityReferenceLink[0]);
+
                                 break;
+
+                            case PropertyParsingResult.CustomInstanceAnnotation:
+                                this.JsonReader.SkipValue();
+                                break;
+
+                            case PropertyParsingResult.PropertyWithValue:
+                            case PropertyParsingResult.PropertyWithoutValue:
+                                // entity reference link  is denoted by odata.id annotation
+                                throw new ODataException(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink(propertyName));
+
+                            case PropertyParsingResult.EndOfObject:
+                                break;
+
+                            case PropertyParsingResult.MetadataReferenceProperty:
+                                throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
 
                             default:
                                 throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonLightEntityReferenceLinkDeserializer_ReadSingleEntityReferenceLink));
@@ -450,7 +436,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (entityReferenceLink[0] == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(JsonLightConstants.ODataEntityReferenceLinkUrlName));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(ODataAnnotationNames.ODataId));
             }
 
             // end of the entity reference link object

@@ -25,7 +25,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>Bound query node.</returns>
         internal static ConstantNode BindLiteral(LiteralToken literalToken)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             ExceptionUtils.CheckArgumentNotNull(literalToken, "literalToken");
 
             if (!string.IsNullOrEmpty(literalToken.OriginalText))

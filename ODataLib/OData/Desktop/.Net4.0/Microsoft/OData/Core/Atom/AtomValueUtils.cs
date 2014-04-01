@@ -35,7 +35,6 @@ namespace Microsoft.OData.Core
         /// <param name="value">The value to be written.</param>
         internal static void WritePrimitiveValue(XmlWriter writer, object value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(value != null, "value != null");
 
             if (!PrimitiveConverter.Instance.TryWriteAtom(value, writer))
@@ -50,8 +49,6 @@ namespace Microsoft.OData.Core
         /// <returns>The specified value converted to an ATOM string.</returns>
         internal static string ConvertPrimitiveToString(object value)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             string result;
             if (!TryConvertPrimitiveToString(value, out result))
             {
@@ -59,6 +56,22 @@ namespace Microsoft.OData.Core
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Reads a string value of an XML element and gets TypeName from model's EdmEnumTypeReference.
+        /// </summary>
+        /// <param name="reader">The XML reader to read the value from.</param>
+        /// <param name="enumTypeReference">The enum rype reference.</param>
+        /// <returns>An ODataEnumValue</returns>
+        internal static ODataEnumValue ReadEnumValue(XmlReader reader, IEdmEnumTypeReference enumTypeReference)
+        {
+            Debug.Assert(reader != null, "reader != null");
+
+            // skip the validation on value or type name.
+            string stringValue = reader.ReadElementContentValue();
+            string typeName = (enumTypeReference != null) ? enumTypeReference.ODataFullName() : null;
+            return new ODataEnumValue(stringValue, typeName);
         }
 
         /// <summary>
@@ -76,7 +89,6 @@ namespace Microsoft.OData.Core
         /// </remarks>
         internal static object ReadPrimitiveValue(XmlReader reader, IEdmPrimitiveTypeReference primitiveTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
 
             object spatialValue;
@@ -96,8 +108,6 @@ namespace Microsoft.OData.Core
         /// <returns>The string version of the text construct format in Atom format.</returns>
         internal static string ToString(AtomTextConstructKind textConstructKind)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             switch (textConstructKind)
             {
                 case AtomTextConstructKind.Text:
@@ -117,7 +127,6 @@ namespace Microsoft.OData.Core
         /// <returns>boolean value indicating conversion successful conversion</returns>
         internal static bool TryConvertPrimitiveToString(object value, out string result)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(value != null, "value != null");
             result = null;
 
@@ -130,10 +139,6 @@ namespace Microsoft.OData.Core
 
                 case TypeCode.Byte:
                     result = ODataAtomConvert.ToString((byte)value);
-                    break;
-
-                case TypeCode.DateTime:
-                    result = ODataAtomConvert.ToString((DateTime)value);
                     break;
 
                 case TypeCode.Decimal:
@@ -212,7 +217,6 @@ namespace Microsoft.OData.Core
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static object ConvertStringToPrimitive(string text, IEdmPrimitiveTypeReference targetTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(text != null, "text != null");
             Debug.Assert(targetTypeReference != null, "targetTypeReference != null");
 
@@ -228,8 +232,6 @@ namespace Microsoft.OData.Core
                         return ConvertXmlBooleanValue(text);
                     case EdmPrimitiveTypeKind.Byte:
                         return XmlConvert.ToByte(text);
-                    case EdmPrimitiveTypeKind.DateTime:
-                        return PlatformHelper.ConvertStringToDateTime(text);
                     case EdmPrimitiveTypeKind.DateTimeOffset:
                         return PlatformHelper.ConvertStringToDateTimeOffset(text);
                     case EdmPrimitiveTypeKind.Decimal:

@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents a type with an unknown or error kind.
         /// </summary>
-        None,
+        None = 0,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmPrimitiveType"/>. 
@@ -34,11 +34,6 @@ namespace Microsoft.OData.Edm
         /// Represents a type implementing <see cref="IEdmComplexType"/>. 
         /// </summary>
         Complex,
-
-        /// <summary>
-        /// Represents a type implementing <see cref="IEdmRowType"/>. 
-        /// </summary>
-        Row,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmCollectionType"/>. 

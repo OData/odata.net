@@ -33,7 +33,6 @@ namespace Microsoft.OData.Core
         /// <param name="innerStream">Stream that is being wrapped.</param>
         internal NonDisposingStream(Stream innerStream)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(innerStream != null, "innerStream != null");
             this.innerStream = innerStream;
         }

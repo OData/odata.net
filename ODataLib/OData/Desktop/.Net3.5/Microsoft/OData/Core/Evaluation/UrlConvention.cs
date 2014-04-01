@@ -71,7 +71,7 @@ namespace Microsoft.OData.Service.Design
         /// <summary>
         /// The term to use for building value annotations for indicating the conventions used.
         /// </summary>
-        private static readonly IEdmValueTerm ConventionTerm = new EdmValueTerm(ConventionTermNamespace, ConventionTermName, EdmPrimitiveTypeKind.String);
+        private static readonly IEdmValueTerm ConventionTerm = new EdmTerm(ConventionTermNamespace, ConventionTermName, EdmPrimitiveTypeKind.String);
 
         /// <summary>
         /// The value to use when building value annotations for indicating that the key-as-segment convention is being used.
@@ -100,7 +100,6 @@ namespace Microsoft.OData.Service.Design
             get
             {
 #if ODATALIB
-                DebugUtils.CheckNoExternalCallers();
 #endif
                 return this.generateKeyAsSegment;
             }
@@ -114,7 +113,6 @@ namespace Microsoft.OData.Service.Design
         internal static UrlConvention CreateWithExplicitValue(bool generateKeyAsSegment)
         {
 #if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
 #endif
             return new UrlConvention(generateKeyAsSegment);
         }
@@ -176,10 +174,7 @@ namespace Microsoft.OData.Service.Design
 
             if (dataServiceBehavior.GenerateKeyAsSegment)
             {
-                foreach (IEdmEntityContainer container in model.EntityContainers())
-                {
-                    yield return new EdmValueAnnotation(container, ConventionTerm, KeyAsSegmentAnnotationValue);
-                }
+                yield return new EdmAnnotation(model.EntityContainer, ConventionTerm, KeyAsSegmentAnnotationValue);
             }
         }
 
@@ -205,16 +200,14 @@ namespace Microsoft.OData.Service.Design
 
 #if ODATALIB
         /// <summary>
-        /// Gets the url convention for the given entity container based on its vocabulary annotations.
+        /// Gets the url convention for the given model based on its vocabulary annotations in the entity container of the model.
         /// </summary>
         /// <param name="model">The model the entity container belongs to.</param>
-        /// <param name="container">The container to get the url convention for.</param>
-        /// <returns>The url convention of the container.</returns>
-        internal static UrlConvention ForEntityContainer(IEdmModel model, IEdmEntityContainer container)
+        /// <returns>The url convention of the model.</returns>
+        internal static UrlConvention ForModel(IEdmModel model)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(model != null, "model != null");
-            Debug.Assert(container != null, "container != null");
+            IEdmEntityContainer container = model.EntityContainer;
             return CreateWithExplicitValue(model.FindVocabularyAnnotations(container).OfType<IEdmValueAnnotation>().Any(IsKeyAsSegmentUrlConventionAnnotation));
         }
 
@@ -227,7 +220,6 @@ namespace Microsoft.OData.Service.Design
         /// <returns>The convention to use when generating URLs.</returns>
         internal static UrlConvention ForUserSettingAndTypeContext(bool? keyAsSegment, IODataFeedAndEntryTypeContext typeContext)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(typeContext != null, "typeContext != null");
 
             // The setting from the user is an override, so check if it was set.
@@ -295,21 +287,21 @@ namespace Microsoft.OData.Service.Design
         private static bool HasKeyAsSegmentAnnotation(XDocument edmxOrCsdlDocument, string containerName)
         {
             // <Annotations Target="AstoriaUnitTests.Tests.KeyAsSegmentContext">
-            //   <ValueAnnotation Term="Com.Microsoft.OData.Service.Conventions.V1.UrlConventions" String="KeyAsSegment" />
+            //   <Annotation Term="Com.Microsoft.OData.Service.Conventions.V1.UrlConventions" String="KeyAsSegment" />
             // </Annotations>
             const string TermValue = ConventionTermNamespace + "." + ConventionTermName;
             XNamespace annotationsNamespace = XNamespace.Get("http://docs.oasis-open.org/odata/ns/edm");
 
             // 1) Get all 'Annotations' elements...
             // 2) which target a container with the given full name or unqualified name...
-            // 3) get all 'ValueAnnotation' elements...
+            // 3) get all 'Annotation' elements...
             // 4) and see if any of them have the right term and value.
             bool containerNameHasNamespace = containerName.Contains(".");
             return edmxOrCsdlDocument
                 .Descendants(annotationsNamespace.GetName("Annotations"))                
                 .Where(annotations => HasAnnotationWithValue(annotations, "Target", value => value == containerName || (!containerNameHasNamespace && value.EndsWith("." + containerName, StringComparison.Ordinal))))
-                .SelectMany(annotations => annotations.Elements(annotationsNamespace.GetName("ValueAnnotation")))
-                .Any(valueAnnotation => HasAnnotationWithValue(valueAnnotation, "Term", TermValue) && HasAnnotationWithValue(valueAnnotation, "String", KeyAsSegmentConventionName));
+                .SelectMany(annotations => annotations.Elements(annotationsNamespace.GetName("Annotation")))
+                .Any(annotation => HasAnnotationWithValue(annotation, "Term", TermValue) && HasAnnotationWithValue(annotation, "String", KeyAsSegmentConventionName));
         }
 
         /// <summary>

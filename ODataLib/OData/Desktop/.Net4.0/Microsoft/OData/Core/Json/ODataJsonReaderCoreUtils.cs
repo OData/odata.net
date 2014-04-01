@@ -14,10 +14,12 @@ namespace Microsoft.OData.Core.Json
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Microsoft.OData.Core.JsonLight;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -46,7 +48,6 @@ namespace Microsoft.OData.Core.Json
             int recursionDepth,
             string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(inputContext != null, "inputContext != null");
             Debug.Assert(expectedValueTypeReference != null, "expectedValueTypeReference != null");
@@ -101,7 +102,6 @@ namespace Microsoft.OData.Core.Json
             bool validateNullValue, 
             string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(inputContext != null, "inputContext != null");
 
@@ -136,7 +136,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>an instance of IDictionary containing the spatial value.</returns>
         private static IDictionary<string, object> ReadObjectValue(JsonReader jsonReader, bool insideJsonObjectValue, ODataInputContext inputContext, int recursionDepth)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(insideJsonObjectValue || jsonReader.NodeType == JsonNodeType.StartObject, "insideJsonObjectValue || jsonReader.NodeType == JsonNodeType.StartObject");
             Debug.Assert(
@@ -177,7 +176,7 @@ namespace Microsoft.OData.Core.Json
                         return null;
                 }
 
-                jsonValue.Add(propertyName, propertyValue);
+                jsonValue.Add(ODataAnnotationNames.RemoveAnnotationPrefix(propertyName), propertyValue);
             }
 
             jsonReader.ReadEndObject();
@@ -194,7 +193,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>a list of json objects.</returns>
         private static IEnumerable<object> ReadArrayValue(JsonReader jsonReader, ODataInputContext inputContext, int recursionDepth)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(jsonReader.NodeType == JsonNodeType.StartArray, "jsonReader.NodeType == JsonNodeType.StartArray");
             Debug.Assert(inputContext != null, "inputContext != null");

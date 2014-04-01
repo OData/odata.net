@@ -28,7 +28,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>Type name to write to the payload, or null if no type name should be written.</returns>
         internal override string GetEntryTypeNameForWriting(string expectedTypeName, ODataEntry entry)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entry != null, "entry != null");
 
             return null;
@@ -49,8 +48,6 @@ namespace Microsoft.OData.Core.JsonLight
             IEdmTypeReference typeReferenceFromValue,
             bool isOpenProperty)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return null;
         }
     }

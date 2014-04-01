@@ -15,7 +15,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
+    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.Metadata;
@@ -49,7 +51,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="bindMethod">Method to use for binding the parent token, if needed.</param>
         internal FunctionCallBinder(MetadataBinder.QueryTokenVisitor bindMethod)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             this.bindMethod = bindMethod;
         }
 
@@ -60,8 +61,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="argumentNodes">The types to promote.</param>
         internal static void TypePromoteArguments(FunctionSignature signature, List<QueryNode> argumentNodes)
         {
-            DebugUtils.CheckNoExternalCallers(); 
-            
             // Convert all argument nodes to the best signature argument type
             Debug.Assert(signature.ArgumentTypes.Length == argumentNodes.Count, "The best signature match doesn't have the same number of arguments.");
             for (int i = 0; i < argumentNodes.Count; i++)
@@ -79,15 +78,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="functionName">The name of the function the arguments are from.</param>
         /// <param name="argumentNodes">The arguments to validate.</param>
-        /// <returns>Returns the types of the arguments provided.</returns>
-        internal static IEdmTypeReference[] EnsureArgumentsAreSingleValue(string functionName, List<QueryNode> argumentNodes)
+        /// <returns>SingleValueNode array</returns>
+        internal static SingleValueNode[] ValidateArgumentsAreSingleValue(string functionName, List<QueryNode> argumentNodes)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             ExceptionUtils.CheckArgumentNotNull(functionName, "functionCallToken");
             ExceptionUtils.CheckArgumentNotNull(argumentNodes, "argumentNodes");
 
             // Right now all functions take a single value for all arguments
-            IEdmTypeReference[] argumentTypes = new IEdmTypeReference[argumentNodes.Count];
+            SingleValueNode[] ret = new SingleValueNode[argumentNodes.Count];
             for (int i = 0; i < argumentNodes.Count; i++)
             {
                 SingleValueNode argumentNode = argumentNodes[i] as SingleValueNode;
@@ -96,23 +94,23 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     throw new ODataException(ODataErrorStrings.MetadataBinder_FunctionArgumentNotSingleValue(functionName));
                 }
 
-                argumentTypes[i] = argumentNode.TypeReference;
+                ret[i] = argumentNode;
             }
 
-            return argumentTypes;
+            return ret;
         }
 
         /// <summary>
         /// Finds the signature that best matches the arguments
         /// </summary>
         /// <param name="functionName">The name of the function</param>
-        /// <param name="argumentTypes">The types of the arguments</param>
+        /// <param name="argumentNodes">The nodes of the arguments, can be new {null,null}.</param>
         /// <param name="signatures">The signatures to match against</param>
         /// <returns>Returns the matching signature or throws</returns>
-        internal static FunctionSignatureWithReturnType MatchSignatureToBuiltInFunction(string functionName, IEdmTypeReference[] argumentTypes, FunctionSignatureWithReturnType[] signatures)
+        internal static FunctionSignatureWithReturnType MatchSignatureToBuiltInFunction(string functionName, SingleValueNode[] argumentNodes, FunctionSignatureWithReturnType[] signatures)
         {
-            DebugUtils.CheckNoExternalCallers();
             FunctionSignatureWithReturnType signature;
+            IEdmTypeReference[] argumentTypes = argumentNodes.Select(s => s.TypeReference).ToArray();
 
             // Handle the cases where we don't have type information (null literal, open properties) for ANY of the arguments
             int argumentCount = argumentTypes.Length;
@@ -135,7 +133,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
             else
             {
-                signature = TypePromotionUtils.FindBestFunctionSignature(signatures, argumentTypes);
+                signature = TypePromotionUtils.FindBestFunctionSignature(signatures, argumentNodes);
                 if (signature == null)
                 {
                     throw new ODataException(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
@@ -154,8 +152,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The signatures which match the supplied function name.</returns>
         internal static FunctionSignatureWithReturnType[] GetBuiltInFunctionSignatures(string functionName)
         {
-            DebugUtils.CheckNoExternalCallers(); 
-
             // Try to find the function in our built-in functions
             FunctionSignatureWithReturnType[] signatures;
             if (!BuiltInFunctions.TryGetBuiltInFunction(functionName, out signatures))
@@ -174,7 +170,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The resulting SingleValueFunctionCallNode</returns>
         internal QueryNode BindFunctionCall(FunctionCallToken functionCallToken, BindingState state)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(functionCallToken, "functionCallToken");
             ExceptionUtils.CheckArgumentNotNull(functionCallToken.Name, "functionCallToken.Name");
 
@@ -220,7 +215,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if we found a function for this token, false otherwise.</returns>
         internal bool TryBindEndPathAsFunctionCall(EndPathToken endPathToken, QueryNode parent, BindingState state, out QueryNode boundFunction)
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.TryBindIdentifier(endPathToken.Identifier, null, parent, state, out boundFunction);
         }
 
@@ -235,7 +229,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if we found a function for this token, false otherwise.</returns>
         internal bool TryBindInnerPathAsFunctionCall(InnerPathToken innerPathToken, QueryNode parent, BindingState state, out QueryNode boundFunction)
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.TryBindIdentifier(innerPathToken.Identifier, null, parent, state, out boundFunction);
         }
 
@@ -249,7 +242,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if we found a function for this token, false otherwise.</returns>
         internal bool TryBindDottedIdentifierAsFunctionCall(DottedIdentifierToken dottedIdentifierToken, SingleValueNode parent, BindingState state, out QueryNode boundFunction)
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.TryBindIdentifier(dottedIdentifierToken.Identifier, null, parent, state, out boundFunction);
         }
 
@@ -277,9 +269,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             // Do some validation and get potential built-in functions that could match what we saw
             FunctionSignatureWithReturnType[] signatures = GetBuiltInFunctionSignatures(functionCallToken.Name);
-            IEdmTypeReference[] argumentTypes = EnsureArgumentsAreSingleValue(functionCallToken.Name, argumentNodes);
-
-            FunctionSignatureWithReturnType signature = MatchSignatureToBuiltInFunction(functionCallToken.Name, argumentTypes, signatures);
+            SingleValueNode[] argumentNodeArray = ValidateArgumentsAreSingleValue(functionCallToken.Name, argumentNodes);
+            FunctionSignatureWithReturnType signature = MatchSignatureToBuiltInFunction(functionCallToken.Name, argumentNodeArray, signatures);
             if (signature.ReturnType != null)
             {
                 TypePromoteArguments(signature, argumentNodes);
@@ -297,7 +288,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="arguments">the semantically bound list of arguments.</param>
         /// <param name="parent">a semantically bound parent node.</param>
         /// <param name="state">the current state of the binding algorithm</param>
-        /// <param name="boundFunction">a single value function call node representing this funciton call, if we found one.</param>
+        /// <param name="boundFunction">a single value function call node representing this function call, if we found one.</param>
         /// <returns>true if we found a function for this token.</returns>
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri Parser does not need to go through the ODL behavior knob.")]
         private bool TryBindIdentifier(string identifier, IEnumerable<FunctionParameterToken> arguments, QueryNode parent, BindingState state, out QueryNode boundFunction)
@@ -326,11 +317,18 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 return false;
             }
-            
-            IEdmOperationImport operationImport;
-            List<FunctionParameterToken> syntacticArguments = arguments == null ? new List<FunctionParameterToken>() : arguments.ToList();
-            if (!FunctionOverloadResolver.ResolveFunctionsFromList(identifier, syntacticArguments.Select(ar => ar.ParameterName).ToList(), bindingType, state.Model, out operationImport))
+
+            // All functions should be fully qualified, if they aren't they they aren't functions.
+            if (identifier.IndexOf(".", StringComparison.Ordinal) == -1)
             {
+                return false;
+            }
+
+            IEdmOperation operation;
+            List<FunctionParameterToken> syntacticArguments = arguments == null ? new List<FunctionParameterToken>() : arguments.ToList();
+            if (!FunctionOverloadResolver.ResolveOperationFromList(identifier, syntacticArguments.Select(ar => ar.ParameterName).ToList(), bindingType, state.Model, out operation))
+            {
+                // TODO challenh: FunctionOverloadResolver.ResolveOperationFromList() looks up the function by parameter names, but it shouldn't ignore parameter types. (test case ParseFilter_AliasInFunction_PropertyAsValue_TypeMismatch should fail)
                 return false;
             }
 
@@ -341,47 +339,147 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 throw new ODataException(ODataErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty(identifier));
             }
 
-            if (operationImport.IsSideEffecting)
+            if (operation.IsAction())
             {
                 return false;
             }
 
-            ICollection<FunctionParameterToken> parsedParameters;
-            if (!FunctionParameterParser.TryParseFunctionParameters(syntacticArguments, state.Configuration, operationImport, out parsedParameters))
-            {
-                return false;
-            }
+            IEdmFunction function = (IEdmFunction)operation;
+
+            // TODO challenh:  $filter $orderby parameter expression which contains complex or collection should NOT be supported in this way
+            //     but should be parsed into token tree, and binded to node tree: parsedParameters.Select(p => this.bindMethod(p));
+            ICollection<FunctionParameterToken> parsedParameters = HandleComplexOrCollectionParameterValueIfExists(state.Configuration.Model, function, syntacticArguments);
 
             IEnumerable<QueryNode> boundArguments = parsedParameters.Select(p => this.bindMethod(p));
-
-            IEdmTypeReference returnType = operationImport.ReturnType;
-            IEdmEntitySet returnSet = null;
+            boundArguments = boundArguments.ToList(); // force enumerable to run : will immediately evaluate all this.bindMethod(p).
+            IEdmTypeReference returnType = function.ReturnType;
+            IEdmEntitySetBase returnSet = null;
             var singleEntityNode = parent as SingleEntityNode;
             if (singleEntityNode != null)
             {
-                returnSet = operationImport.GetTargetEntitySet(singleEntityNode.EntitySet, state.Model);
+                returnSet = function.GetTargetEntitySet(singleEntityNode.NavigationSource, state.Model);
             }
 
             if (returnType.IsEntity())
             {
-                boundFunction = new SingleEntityFunctionCallNode(identifier, new[] { operationImport }, boundArguments, (IEdmEntityTypeReference)returnType.Definition.ToTypeReference(), returnSet, parent);
+                boundFunction = new SingleEntityFunctionCallNode(identifier, new[] { function }, boundArguments, (IEdmEntityTypeReference)returnType.Definition.ToTypeReference(), returnSet, parent);
             }
             else if (returnType.IsEntityCollection())
             {
                 IEdmCollectionTypeReference collectionTypeReference = (IEdmCollectionTypeReference)returnType;
-                boundFunction = new EntityCollectionFunctionCallNode(identifier, new[] { operationImport }, boundArguments, collectionTypeReference, returnSet, parent);
+                boundFunction = new EntityCollectionFunctionCallNode(identifier, new[] { function }, boundArguments, collectionTypeReference, returnSet, parent);
             }
             else if (returnType.IsCollection())
             {
                 IEdmCollectionTypeReference collectionTypeReference = (IEdmCollectionTypeReference)returnType;
-                boundFunction = new CollectionFunctionCallNode(identifier, new[] { operationImport }, boundArguments, collectionTypeReference, parent);
+                boundFunction = new CollectionFunctionCallNode(identifier, new[] { function }, boundArguments, collectionTypeReference, parent);
             }
             else
             {
-                boundFunction = new SingleValueFunctionCallNode(identifier, new[] { operationImport }, boundArguments, returnType, parent);
+                boundFunction = new SingleValueFunctionCallNode(identifier, new[] { function }, boundArguments, returnType, parent);
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Bind path segment's operation or operationImport's parameters.
+        /// </summary>
+        /// <param name="configuration">The ODataUriParserConfiguration.</param>
+        /// <param name="functionOrOpertion">The function or operation.</param>
+        /// <param name="segmentParameterTokens">The parameter tokens to be binded.</param>
+        /// <returns>The binded semantic nodes.</returns>
+        internal static List<OperationSegmentParameter> BindSegmentParameters(ODataUriParserConfiguration configuration, IEdmOperation functionOrOpertion, ICollection<FunctionParameterToken> segmentParameterTokens)
+        {
+            // TODO challenh: HandleComplexOrCollectionParameterValueIfExists  is temp work around for single copmlex or colleciton type, it can't handle nested complex or collection value.
+            ICollection<FunctionParameterToken> parametersParsed = FunctionCallBinder.HandleComplexOrCollectionParameterValueIfExists(configuration.Model, functionOrOpertion, segmentParameterTokens);
+
+            // Bind it to metadata
+            BindingState state = new BindingState(configuration);
+            state.ImplicitRangeVariable = null;
+            state.RangeVariables.Clear();
+            MetadataBinder binder = new MetadataBinder(state);
+            List<OperationSegmentParameter> boundParameters = new List<OperationSegmentParameter>();
+            foreach (var paraToken in parametersParsed)
+            {
+                // TODO: considering another better exception
+                if (paraToken.ValueToken is EndPathToken)
+                {
+                    throw new ODataException(Strings.MetadataBinder_ParameterNotInScope(
+                        string.Format(CultureInfo.InvariantCulture, "{0}={1}", paraToken.ParameterName, (paraToken.ValueToken as EndPathToken).Identifier)));
+                }
+
+                SingleValueNode boundNode = (SingleValueNode)binder.Bind(paraToken.ValueToken);
+
+                // ensure parameter name existis
+                var functionParameter = functionOrOpertion.FindParameter(paraToken.ParameterName);
+                if (functionParameter == null)
+                {
+                    throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(paraToken.ParameterName, functionOrOpertion.Name));
+                }
+
+                // ensure node type is compatible with parameter type.
+                var sourceTypeReference = boundNode.GetEdmTypeReference();
+                bool sourceIsNullOrOpenType = (sourceTypeReference == null);
+                if (!sourceIsNullOrOpenType)
+                {
+                    if (!TypePromotionUtils.CanConvertTo(boundNode, sourceTypeReference, functionParameter.Type))
+                    {
+                        throw new ODataException(ODataErrorStrings.MetadataBinder_CannotConvertToType(sourceTypeReference.ODataFullName(), functionParameter.Type.ODataFullName()));
+                    }
+
+                    boundNode = MetadataBindingUtils.ConvertToTypeIfNeeded(boundNode, functionParameter.Type);
+                }
+
+                OperationSegmentParameter boundParamer = new OperationSegmentParameter(paraToken.ParameterName, boundNode);
+                boundParameters.Add(boundParamer);
+            }
+
+            return boundParameters;
+        }
+
+        /// <summary>
+        /// This is temp work around for $filter $orderby parameter expression which contains complex or collection
+        ///     like "Fully.Qualified.Namespace.CanMoveToAddresses(addresses=[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}])";
+        /// TODO challenh:  $filter $orderby parameter expression which contains nested complex or collection should NOT be supported in this way
+        ///     but should be parsed into token tree, and binded to node tree: parsedParameters.Select(p => this.bindMethod(p));
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="functionOrOpertion">IEdmFunction or IEdmOperation</param>
+        /// <param name="parameterTokens">The tokens to bind.</param>
+        /// <returns>The FunctionParameterTokens with complex or collection values converted from string like "{...}", or "[..,..,..]".</returns>
+        private static ICollection<FunctionParameterToken> HandleComplexOrCollectionParameterValueIfExists(IEdmModel model, IEdmOperation functionOrOpertion, ICollection<FunctionParameterToken> parameterTokens)
+        {
+            ICollection<FunctionParameterToken> partiallyParsedParametersWithComplexOrCollection = new Collection<FunctionParameterToken>();
+            foreach (FunctionParameterToken funcParaToken in parameterTokens)
+            {
+                LiteralToken valueToken = funcParaToken.ValueToken as LiteralToken;
+                string valueStr = null;
+                if (valueToken != null && (valueStr = valueToken.Value as string) != null)
+                {
+                    var lexer = new ExpressionLexer(valueStr, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
+                    if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression)
+                    {
+                        // ExpressionTokenKind.BracketedExpression means text like [{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]
+                        // so now try convert it into complex or collection type value:
+                        var functionParameter = functionOrOpertion.FindParameter(funcParaToken.ParameterName);
+                        if (functionParameter == null)
+                        {
+                            throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(funcParaToken.ParameterName, functionOrOpertion.Name));
+                        }
+
+                        object complexOrCollectionValue = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, functionParameter.Type);
+                        LiteralToken newValueToken = new LiteralToken(complexOrCollectionValue);
+                        FunctionParameterToken newFuncParaToken = new FunctionParameterToken(funcParaToken.ParameterName, newValueToken);
+                        partiallyParsedParametersWithComplexOrCollection.Add(newFuncParaToken);
+                        continue;
+                    }
+                }
+
+                partiallyParsedParametersWithComplexOrCollection.Add(funcParaToken);
+            }
+
+            return partiallyParsedParametersWithComplexOrCollection;
         }
 
         /// <summary>
@@ -408,33 +506,33 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             switch (functionCallToken.Name)
             {
                 case ExpressionConstants.UnboundFunctionIsOf:
-                {
-                    returnType = ValidateAndBuildIsOfArgs(state, ref args);
-                    break;
-                }
-
-                case ExpressionConstants.UnboundFunctionCast:
-                {
-                    returnType = ValidateAndBuildCastArgs(state, ref args);
-                    if (returnType.IsEntity())
                     {
-                        IEdmEntityTypeReference returnEntityType = returnType.AsEntity();
-                        SingleEntityNode entityNode = args.ElementAt(0) as SingleEntityNode;
-                        if (entityNode != null)
-                        {
-                            return new SingleEntityFunctionCallNode(functionCallToken.Name, args, returnEntityType, entityNode.EntitySet);
-                        }      
+                        returnType = ValidateAndBuildIsOfArgs(state, ref args);
+                        break;
                     }
 
-                    break;
-                }
+                case ExpressionConstants.UnboundFunctionCast:
+                    {
+                        returnType = ValidateAndBuildCastArgs(state, ref args);
+                        if (returnType.IsEntity())
+                        {
+                            IEdmEntityTypeReference returnEntityType = returnType.AsEntity();
+                            SingleEntityNode entityNode = args.ElementAt(0) as SingleEntityNode;
+                            if (entityNode != null)
+                            {
+                                return new SingleEntityFunctionCallNode(functionCallToken.Name, args, returnEntityType, entityNode.NavigationSource);
+                            }
+                        }
+
+                        break;
+                    }
 
                 default:
-                {
-                    break;
-                }
+                    {
+                        break;
+                    }
             }
-            
+
             // we have everything else we need, so return the new SingleValueFunctionCallNode.
             return new SingleValueFunctionCallNode(functionCallToken.Name, args, returnType);
         }
@@ -509,6 +607,32 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             else if (!(args[0] is SingleValueNode))
             {
                 throw new ODataException(ODataErrorStrings.MetadataBinder_CastOrIsOfCollectionsNotSupported);
+            }
+
+            if (isCast && (args.Count == 2))
+            {
+                // throw if cast enum to not-string :
+                if ((args[0].GetEdmTypeReference() is IEdmEnumTypeReference)
+                    && !string.Equals(typeArgument.Value as string, Microsoft.OData.Core.Metadata.EdmConstants.EdmStringTypeName, StringComparison.Ordinal))
+                {
+                    throw new ODataException(ODataErrorStrings.CastBinder_EnumOnlyCastToOrFromString);
+                }
+
+                // throw if cast not-string to enum :
+                while (returnType is IEdmEnumTypeReference)
+                {
+                    IEdmPrimitiveTypeReference referenceTmp = args[0].GetEdmTypeReference() as IEdmPrimitiveTypeReference;
+                    if (referenceTmp != null)
+                    {
+                        IEdmPrimitiveType typeTmp = referenceTmp.Definition as IEdmPrimitiveType;
+                        if ((typeTmp != null) && (typeTmp.PrimitiveKind == EdmPrimitiveTypeKind.String))
+                        {
+                            break;
+                        }
+                    }
+
+                    throw new ODataException(ODataErrorStrings.CastBinder_EnumOnlyCastToOrFromString);
+                }
             }
 
             if (isCast)

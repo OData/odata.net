@@ -46,7 +46,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get 
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.atomInputContext.XmlReader;
             }
         }
@@ -64,7 +63,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void ReadPayloadStart()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
 
             this.XmlReader.ReadPayloadStart();
@@ -77,7 +75,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void ReadPayloadEnd()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
 
             this.XmlReader.ReadPayloadEnd();
@@ -93,7 +90,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>An absolute URI to report.</returns>
         internal Uri ProcessUriFromPayload(string uriFromPayload, Uri xmlBaseUri)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(uriFromPayload != null, "uriFromPayload != null");
             return this.ProcessUriFromPayload(uriFromPayload, xmlBaseUri, /*makeAbsolute*/ true);
         }
@@ -107,7 +103,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>An absolute or relative URI to report based on the value of the <paramref name="makeAbsolute"/> parameter.</returns>
         internal Uri ProcessUriFromPayload(string uriFromPayload, Uri xmlBaseUri, bool makeAbsolute)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(uriFromPayload != null, "uriFromPayload != null");
 
             // Figure out what base URI to use (if any)
@@ -160,8 +155,6 @@ namespace Microsoft.OData.Core.Atom
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Needs access to this in Debug only.")]
         internal void AssertXmlCondition(params XmlNodeType[] allowedNodeTypes)
         {
-            DebugUtils.CheckNoExternalCallers();
-
 #if DEBUG
             this.AssertXmlCondition(false, allowedNodeTypes);
 #endif
@@ -176,8 +169,6 @@ namespace Microsoft.OData.Core.Atom
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Needs access to this in Debug only.")]
         internal void AssertXmlCondition(bool allowEmptyElement, params XmlNodeType[] allowedNodeTypes)
         {
-            DebugUtils.CheckNoExternalCallers();
-
 #if DEBUG
             if (allowEmptyElement && this.XmlReader.NodeType == XmlNodeType.Element && this.XmlReader.IsEmptyElement)
             {

@@ -64,7 +64,6 @@ namespace Microsoft.OData.Core
             IEdmModel model, 
             IEnumerable<ODataPayloadKind> possiblePayloadKinds)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(contentType, "contentType");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "readerSettings");
             ExceptionUtils.CheckArgumentNotNull(possiblePayloadKinds, "possiblePayloadKinds");
@@ -107,7 +106,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.contentType;
             }
         }
@@ -119,7 +117,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.payloadKindDetectionFormatState;
             }
         }

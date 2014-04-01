@@ -31,8 +31,8 @@ namespace Microsoft.OData.Core
         /// <summary>The input context to read from.</summary>
         private readonly ODataInputContext inputContext;
 
-        /// <summary>The operation import whose parameters are being read.</summary>
-        private readonly IEdmOperationImport operationImport;
+        /// <summary>The operation whose parameters are being read.</summary>
+        private readonly IEdmOperation operation;
 
         /// <summary>Stack of reader scopes to keep track of the current context of the reader.</summary>
         private readonly Stack<Scope> scopes = new Stack<Scope>();
@@ -47,13 +47,13 @@ namespace Microsoft.OData.Core
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input to read from.</param>
-        /// <param name="operationImport">The operation import whose parameters are being read.</param>
+        /// <param name="operation">The operation import whose parameters are being read.</param>
         protected ODataParameterReaderCore(
             ODataInputContext inputContext,
-            IEdmOperationImport operationImport)
+            IEdmOperation operation)
         {
             this.inputContext = inputContext;
-            this.operationImport = operationImport;
+            this.operation = operation;
 
             this.EnterScope(ODataParameterReaderState.Start, null, null);
         }
@@ -117,13 +117,13 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The operation import whose parameters are being read.
+        /// The operation whose parameters are being read.
         /// </summary>
-        protected IEdmOperationImport FunctionImport
+        protected IEdmOperation Operation
         {
             get
             {
-                return this.operationImport;
+                return this.operation;
             }
         }
 
@@ -216,7 +216,7 @@ namespace Microsoft.OData.Core
                 this.State == ODataParameterReaderState.Entry ||
                 this.State == ODataParameterReaderState.Feed ||
 #endif
-                this.State == ODataParameterReaderState.Collection,
+this.State == ODataParameterReaderState.Collection,
                 "OnException called in unexpected state: " + this.State);
             Debug.Assert(this.State == ODataParameterReaderState.Exception || this.subReaderState == SubReaderState.Active, "OnException called in unexpected subReaderState: " + this.subReaderState);
             this.EnterScope(ODataParameterReaderState.Exception, null, null);
@@ -232,7 +232,7 @@ namespace Microsoft.OData.Core
                 this.State == ODataParameterReaderState.Entry ||
                 this.State == ODataParameterReaderState.Feed ||
 #endif
-                this.State == ODataParameterReaderState.Collection,
+this.State == ODataParameterReaderState.Collection,
                 "OnCompleted called in unexpected state: " + this.State);
             Debug.Assert(this.State == ODataParameterReaderState.Exception || this.subReaderState == SubReaderState.Active, "OnCompleted called in unexpected subReaderState: " + this.subReaderState);
             this.subReaderState = SubReaderState.Completed;
@@ -246,10 +246,10 @@ namespace Microsoft.OData.Core
         protected internal IEdmTypeReference GetParameterTypeReference(string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
-            IEdmOperationParameter parameter = this.FunctionImport.FindParameter(parameterName);
+            IEdmOperationParameter parameter = this.Operation.FindParameter(parameterName);
             if (parameter == null)
             {
-                throw new ODataException(Strings.ODataParameterReaderCore_ParameterNameNotInMetadata(parameterName, this.FunctionImport.Name));
+                throw new ODataException(Strings.ODataParameterReaderCore_ParameterNameNotInMetadata(parameterName, this.Operation.Name));
             }
 
             return this.inputContext.EdmTypeResolver.GetParameterType(parameter);
@@ -266,7 +266,7 @@ namespace Microsoft.OData.Core
         {
             if (state == ODataParameterReaderState.Value)
             {
-                if (value != null && !(value is ODataComplexValue) && !EdmLibraryExtensions.IsPrimitiveType(value.GetType()))
+                if (value != null && !(value is ODataComplexValue) && !EdmLibraryExtensions.IsPrimitiveType(value.GetType()) && !(value is ODataEnumValue))
                 {
                     throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterReaderCore_ValueMustBePrimitiveOrComplexOrNull));
                 }
@@ -290,7 +290,7 @@ namespace Microsoft.OData.Core
                     List<string> missingParameters = new List<string>();
 
                     // Note that the binding parameter will be specified on the Uri rather than the payload, skip the binding parameter.
-                    foreach (IEdmOperationParameter parameter in this.FunctionImport.Parameters.Skip(this.FunctionImport.IsBindable ? 1 : 0))
+                    foreach (IEdmOperationParameter parameter in this.Operation.Parameters.Skip(this.Operation.IsBound ? 1 : 0))
                     {
                         if (!this.parametersRead.Contains(parameter.Name) && !this.inputContext.EdmTypeResolver.GetParameterType(parameter).IsNullable)
                         {
@@ -301,7 +301,7 @@ namespace Microsoft.OData.Core
                     if (missingParameters.Count > 0)
                     {
                         this.scopes.Push(new Scope(ODataParameterReaderState.Exception, null, null));
-                        throw new ODataException(Strings.ODataParameterReaderCore_ParametersMissingInPayload(this.FunctionImport.Name, string.Join(",", missingParameters.ToArray())));
+                        throw new ODataException(Strings.ODataParameterReaderCore_ParametersMissingInPayload(this.Operation.Name, string.Join(",", missingParameters.ToArray())));
                     }
                 }
                 else if (name != null)
@@ -359,7 +359,7 @@ namespace Microsoft.OData.Core
                         this.State == ODataParameterReaderState.Entry ||
                         this.State == ODataParameterReaderState.Feed ||
 #endif
-                        this.State == ODataParameterReaderState.Collection ||
+ this.State == ODataParameterReaderState.Collection ||
                         this.State == ODataParameterReaderState.Completed,
                         "ReadAtStartImplementation should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Entry, ODataParameterReaderState.Feed, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
                     break;
@@ -378,7 +378,7 @@ namespace Microsoft.OData.Core
                         this.State == ODataParameterReaderState.Entry ||
                         this.State == ODataParameterReaderState.Feed ||
 #endif
-                        this.State == ODataParameterReaderState.Collection ||
+ this.State == ODataParameterReaderState.Collection ||
                         this.State == ODataParameterReaderState.Completed,
                         "ReadNextParameterImplementation should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Entry, ODataParameterReaderState.Feed, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
                     break;
@@ -613,12 +613,12 @@ namespace Microsoft.OData.Core
             {
                 Debug.Assert(
                    state == ODataParameterReaderState.Start && name == null && value == null ||
-                   state == ODataParameterReaderState.Value && !string.IsNullOrEmpty(name) && (value == null || value is ODataComplexValue || EdmLibraryExtensions.IsPrimitiveType(value.GetType())) ||
+                   state == ODataParameterReaderState.Value && !string.IsNullOrEmpty(name) && (value == null || value is ODataEnumValue || value is ODataComplexValue || EdmLibraryExtensions.IsPrimitiveType(value.GetType())) ||
 #if SUPPORT_ENTITY_PARAMETER
                    state == ODataParameterReaderState.Entry && !string.IsNullOrEmpty(name) && value == null ||
                    state == ODataParameterReaderState.Feed && !string.IsNullOrEmpty(name) && value == null ||
 #endif
-                   state == ODataParameterReaderState.Collection && !string.IsNullOrEmpty(name) && value == null ||
+ state == ODataParameterReaderState.Collection && !string.IsNullOrEmpty(name) && value == null ||
                    state == ODataParameterReaderState.Exception && name == null && value == null ||
                    state == ODataParameterReaderState.Completed && name == null && value == null,
                    "Reader state and associated item do not match.");

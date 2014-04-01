@@ -10,13 +10,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using Microsoft.OData.Edm.Annotations;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Csdl.Serialization;
 using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Internal;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Values;
+using ErrorStrings = Microsoft.OData.Edm.Strings;
 
 namespace Microsoft.OData.Edm
 {
@@ -25,12 +30,14 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public static class ExtensionMethods
     {
+        private const string CollectionTypeFormat = EdmConstants.Type_Collection + "({0})";
+
         #region IEdmModel
 
         private static readonly Func<IEdmModel, string, IEdmSchemaType> findType = (model, qualifiedName) => model.FindDeclaredType(qualifiedName);
         private static readonly Func<IEdmModel, string, IEdmValueTerm> findValueTerm = (model, qualifiedName) => model.FindDeclaredValueTerm(qualifiedName);
         private static readonly Func<IEdmModel, string, IEnumerable<IEdmOperation>> findOperations = (model, qualifiedName) => model.FindDeclaredOperations(qualifiedName);
-        private static readonly Func<IEdmModel, string, IEdmEntityContainer> findEntityContainer = (model, qualifiedName) => model.FindDeclaredEntityContainer(qualifiedName);
+        private static readonly Func<IEdmModel, string, IEdmEntityContainer> findEntityContainer = (model, qualifiedName) => { return model.ExistsContainer(qualifiedName) ? model.EntityContainer : null; };
         private static readonly Func<IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>> mergeFunctions = (f1, f2) => Enumerable.Concat(f1, f2);
 
         /// <summary>
@@ -66,7 +73,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-            return FindAcrossModels(model, qualifiedName, findType, Internal.RegistrationHelper.CreateAmbiguousTypeBinding);
+            return FindAcrossModels(model, qualifiedName, findType, RegistrationHelper.CreateAmbiguousTypeBinding);
         }
 
         /// <summary>
@@ -80,7 +87,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-            return FindAcrossModels(model, qualifiedName, findValueTerm, Internal.RegistrationHelper.CreateAmbiguousValueTermBinding);
+            return FindAcrossModels(model, qualifiedName, findValueTerm, RegistrationHelper.CreateAmbiguousValueTermBinding);
         }
 
         /// <summary>
@@ -98,6 +105,30 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// If the container name in the model is the same as the input name. The input name maybe full qualified name.
+        /// </summary>
+        /// <param name="model">The model to search.</param>
+        /// <param name="containerName">Input container name to be searched. The container name may be full qualified with namesapce prefix.</param>
+        /// <returns>True if the model has a container called input name, otherwise false.</returns>
+        public static bool ExistsContainer(this IEdmModel model, string containerName)
+        {
+            if (model.EntityContainer == null)
+            {
+                return false;
+            }
+
+            string fullQulifiedName = (model.EntityContainer.Namespace ?? String.Empty) + "." + (containerName ?? String.Empty);
+
+            if (string.Equals(model.EntityContainer.FullName(), fullQulifiedName, StringComparison.Ordinal)
+                || string.Equals(model.EntityContainer.FullName(), containerName, StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Searches for an entity container with the given name in this model and all referenced models and returns null if no such entity container exists.
         /// </summary>
         /// <param name="model">The model to search.</param>
@@ -108,18 +139,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-            return FindAcrossModels(model, qualifiedName, findEntityContainer, Internal.RegistrationHelper.CreateAmbiguousEntityContainerBinding);
-        }
-
-        /// <summary>
-        /// Gets the entity containers belonging to this model.
-        /// </summary>
-        /// <param name="model">Model to search for entity containers.</param>
-        /// <returns>Entity containers belonging to this model.</returns>
-        public static IEnumerable<IEdmEntityContainer> EntityContainers(this IEdmModel model)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            return model.SchemaElements.OfType<IEdmEntityContainer>();
+            return FindAcrossModels(model, qualifiedName, findEntityContainer, RegistrationHelper.CreateAmbiguousEntityContainerBinding);
         }
 
         /// <summary>
@@ -271,82 +291,6 @@ namespace Microsoft.OData.Edm
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets the <see cref="IEdmValue"/> of a property of a term type that has been applied to the type of a value.
-        /// </summary>
-        /// <param name="model">Model to search for type annotations.</param>
-        /// <param name="context">Value to use as context in evaluation.</param>
-        /// <param name="property">Property to evaluate.</param>
-        /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
-        /// <returns>Value of the property evaluated against the supplied value, or null if no relevant type annotation exists.</returns>
-        public static IEdmValue GetPropertyValue(this IEdmModel model, IEdmStructuredValue context, IEdmProperty property, Evaluation.EdmExpressionEvaluator expressionEvaluator)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(context, "context");
-            EdmUtil.CheckArgumentNull(property, "property");
-            EdmUtil.CheckArgumentNull(expressionEvaluator, "expressionEvaluator");
-
-            return GetPropertyValue<IEdmValue>(model, context, context.Type.AsEntity().EntityDefinition(), property, null, expressionEvaluator.Evaluate);
-        }
-
-        /// <summary>
-        /// Gets the <see cref="IEdmValue"/> of a property of a term type that has been applied to the type of a value.
-        /// </summary>
-        /// <param name="model">Model to search for type annotations.</param>
-        /// <param name="context">Value to use as context in evaluation.</param>
-        /// <param name="property">Property to evaluate.</param>
-        /// <param name="qualifier">Qualifier to apply.</param>
-        /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
-        /// <returns>Value of the property evaluated against the supplied value, or null if no relevant type annotation exists.</returns>
-        public static IEdmValue GetPropertyValue(this IEdmModel model, IEdmStructuredValue context, IEdmProperty property, string qualifier, Evaluation.EdmExpressionEvaluator expressionEvaluator)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(context, "context");
-            EdmUtil.CheckArgumentNull(property, "property");
-            EdmUtil.CheckArgumentNull(expressionEvaluator, "expressionEvaluator");
-
-            return GetPropertyValue<IEdmValue>(model, context, context.Type.AsEntity().EntityDefinition(), property, qualifier, expressionEvaluator.Evaluate);
-        }
-
-        /// <summary>
-        /// Gets the CLR value of a property of a term type that has been applied to the type of a value.
-        /// </summary>
-        /// <typeparam name="T">The CLR type of the value to be returned.</typeparam>
-        /// <param name="model">Model to search for type annotations.</param>
-        /// <param name="context">Value to use as context in evaluation.</param>
-        /// <param name="property">Property to evaluate.</param>
-        /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
-        /// <returns>Value of the property evaluated against the supplied value, or default(<typeparamref name="T"/>) if no relevant type annotation exists.</returns>
-        public static T GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmProperty property, Evaluation.EdmToClrEvaluator evaluator)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(context, "context");
-            EdmUtil.CheckArgumentNull(property, "property");
-            EdmUtil.CheckArgumentNull(evaluator, "evaluator");
-
-            return GetPropertyValue<T>(model, context, context.Type.AsEntity().EntityDefinition(), property, null, evaluator.EvaluateToClrValue<T>);
-        }
-
-        /// <summary>
-        /// Gets the CLR value of a property of a term type that has been applied to the type of a value.
-        /// </summary>
-        /// <typeparam name="T">The CLR type of the value to be returned.</typeparam>
-        /// <param name="model">Model to search for type annotations.</param>
-        /// <param name="context">Value to use as context in evaluation.</param>
-        /// <param name="property">Property to evaluate.</param>
-        /// <param name="qualifier">Qualifier to apply.</param>
-        /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
-        /// <returns>Value of the property evaluated against the supplied value, or default(<typeparamref name="T"/>) if no relevant type annotation exists.</returns>
-        public static T GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmProperty property, string qualifier, Evaluation.EdmToClrEvaluator evaluator)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(context, "context");
-            EdmUtil.CheckArgumentNull(property, "property");
-            EdmUtil.CheckArgumentNull(evaluator, "evaluator");
-
-            return GetPropertyValue<T>(model, context, context.Type.AsEntity().EntityDefinition(), property, qualifier, evaluator.EvaluateToClrValue<T>);
         }
 
         /// <summary>
@@ -654,34 +598,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets documentation for a specified element.
-        /// </summary>
-        /// <param name="model">The model containing the documentation.</param>
-        /// <param name="element">The element.</param>
-        /// <returns>Documentation that exists on the element. Otherwise, null.</returns>
-        public static IEdmDocumentation GetDocumentation(this IEdmModel model, IEdmElement element)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(element, "element");
-
-            return (IEdmDocumentation)model.GetAnnotationValue(element, EdmConstants.DocumentationUri, EdmConstants.DocumentationAnnotation);
-        }
-
-        /// <summary>
-        /// Sets documentation for a specified element.
-        /// </summary>
-        /// <param name="model">The model containing the documentation.</param>
-        /// <param name="element">The element.</param>
-        /// <param name="documentation">Documentation to set.</param>
-        public static void SetDocumentation(this IEdmModel model, IEdmElement element, IEdmDocumentation documentation)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(element, "element");
-
-            model.SetAnnotationValue(element, EdmConstants.DocumentationUri, EdmConstants.DocumentationAnnotation, documentation);
-        }
-
-        /// <summary>
         /// Gets an annotation value corresponding to the given namespace and name provided.
         /// </summary>
         /// <param name="model">The model containing the annotation.</param>
@@ -840,6 +756,180 @@ namespace Microsoft.OData.Edm
             return model.DirectValueAnnotationsManager.GetDirectValueAnnotations(element);
         }
 
+        /// <summary>
+        /// Finds the entity set.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="containerQualifiedEntitySetName">Name of the container qualified element, can be an OperationImport or an EntitySet.</param>
+        /// <param name="entitySet">The Entity Set that was found.</param>
+        /// <returns>True if an entityset was found from the qualified container name, false if none were found.</returns>
+        public static bool TryFindContainerQualifiedEntitySet(this IEdmModel model, string containerQualifiedEntitySetName, out IEdmEntitySet entitySet)
+        {
+            entitySet = null;
+            string containerName = null;
+            string simpleEntitySetName = null;
+            
+            if (containerQualifiedEntitySetName != null && 
+                containerQualifiedEntitySetName.IndexOf(".", StringComparison.Ordinal) > -1 && 
+                EdmUtil.TryParseContainerQualifiedElementName(containerQualifiedEntitySetName, out containerName, out simpleEntitySetName))
+            {
+                if (model.ExistsContainer(containerName))
+                {
+                    entitySet = model.EntityContainer.FindEntitySet(simpleEntitySetName);
+
+                    if (entitySet != null)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Finds the singleton.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="containerQualifiedSingletonName">Name of the container qualified singleton element.</param>
+        /// <param name="singleton">The singleton that was found.</param>
+        /// <returns>True if an singleton was found from the qualified container name, false if none were found.</returns>
+        public static bool TryFindContainerQualifiedSingleton(this IEdmModel model, string containerQualifiedSingletonName, out IEdmSingleton singleton)
+        {
+            singleton = null;
+            string containerName = null;
+            string simpleSingletonName = null;
+
+            if (containerQualifiedSingletonName != null &&
+                containerQualifiedSingletonName.IndexOf(".", StringComparison.Ordinal) > -1 &&
+                EdmUtil.TryParseContainerQualifiedElementName(containerQualifiedSingletonName, out containerName, out simpleSingletonName))
+            {
+                if (model.ExistsContainer(containerName))
+                {
+                    singleton = model.EntityContainer.FindSingleton(simpleSingletonName);
+
+                    if (singleton != null)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Tries the find container qualified operation imports.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="containerQualifiedOperationImportName">Name of the container qualified operation import.</param>
+        /// <param name="operationImports">The operation imports.</param>
+        /// <returns>True if OperationImports are found, false if none were found.</returns>
+        public static bool TryFindContainerQualifiedOperationImports(this IEdmModel model, string containerQualifiedOperationImportName, out IEnumerable<IEdmOperationImport> operationImports)
+        {
+            operationImports = null;
+            string containerName = null;
+            string simpleOperationName = null;
+
+            if (containerQualifiedOperationImportName.IndexOf(".", StringComparison.Ordinal) > -1 && EdmUtil.TryParseContainerQualifiedElementName(containerQualifiedOperationImportName, out containerName, out simpleOperationName))
+            {
+                if (model.ExistsContainer(containerName))
+                {
+                    operationImports = model.EntityContainer.FindOperationImports(simpleOperationName);
+
+                    if (operationImports != null && operationImports.Count() > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Searches for entity set by the given name that may be container qualified. If no container name is provided, then default container will be searched.
+        /// </summary>
+        /// <param name="model">The model to search.</param>
+        /// <param name="qualifiedName">The name which might be container qualified. If no container name is provided, then default container will be searched.</param>
+        /// <returns>The entity set found or empty if none found.</returns>
+        public static IEdmEntitySet FindDeclaredEntitySet(this IEdmModel model, string qualifiedName)
+        {
+            IEdmEntitySet foundEntitySet = null;
+            if (model.TryFindContainerQualifiedEntitySet(qualifiedName, out foundEntitySet))
+            {
+                return foundEntitySet;
+            }
+
+            if (model.EntityContainer != null)
+            {
+                return model.EntityContainer.FindEntitySet(qualifiedName);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Searches for singleton by the given name that may be container qualified. If no container name is provided, then default container will be searched.
+        /// </summary>
+        /// <param name="model">The model to search.</param>
+        /// <param name="qualifiedName">The name which might be container qualified. If no container name is provided, then default container will be searched.</param>
+        /// <returns>The singleton found or empty if none found.</returns>
+        public static IEdmSingleton FindDeclaredSingleton(this IEdmModel model, string qualifiedName)
+        {
+            IEdmSingleton foundSingleton = null;
+            if (model.TryFindContainerQualifiedSingleton(qualifiedName, out foundSingleton))
+            {
+                return foundSingleton;
+            }
+
+            if (model.EntityContainer != null)
+            {
+                return model.EntityContainer.FindSingleton(qualifiedName);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Searches for entity set or singleton by the given name that may be container qualified. If no container name is provided, then default container will be searched.
+        /// </summary>
+        /// <param name="model">The model to search.</param>
+        /// <param name="qualifiedName">The name which might be container qualified. If no container name is provided, then default container will be searched.</param>
+        /// <returns>The entity set or singleton found or empty if none found.</returns>
+        public static IEdmNavigationSource FindDeclaredNavigationSource(this IEdmModel model, string qualifiedName)
+        {
+            IEdmEntitySet entitySet = model.FindDeclaredEntitySet(qualifiedName);
+            if (entitySet != null)
+            {
+                return entitySet;
+            }
+
+            return model.FindDeclaredSingleton(qualifiedName);
+        }
+
+
+        /// <summary>
+        /// Searches for the operation imports by the specified name, returns an empty enumerable if no operation import exists.
+        /// </summary>
+        /// <param name="model">The model to search.</param>
+        /// <param name="qualifiedName">The qualified name of the operation import which may or may not include the container name.</param>
+        /// <returns>All operation imports that can be found by the specified name, returns an empty enumerable if no operation import exists.</returns>
+        public static IEnumerable<IEdmOperationImport> FindDeclaredOperationImports(this IEdmModel model, string qualifiedName)
+        {
+            IEnumerable<IEdmOperationImport> foundOperationImports = null;
+            if (!model.TryFindContainerQualifiedOperationImports(qualifiedName, out foundOperationImports))
+            {
+                IEdmEntityContainer container = model.EntityContainer;
+                if (container != null)
+                {
+                    foundOperationImports = container.FindOperationImports(qualifiedName);
+                }
+            }
+
+            return foundOperationImports;
+        }
+
         #endregion
 
         #region IEdmElement
@@ -886,6 +976,23 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(element, "element");
             return (element.Namespace ?? String.Empty) + "." + (element.Name ?? String.Empty);
         }
+
+        /// <summary>
+        /// Gets the Short Qualified name of the element.
+        /// </summary>
+        /// <param name="element">Reference to the calling object.</param>
+        /// <returns>The short qualified name of the element.</returns>
+        public static string ShortQualifiedName(this IEdmSchemaElement element)
+        {
+            EdmUtil.CheckArgumentNull(element, "element");
+            if (element.Namespace != null && element.Namespace.Equals("Edm"))
+            {
+                return (element.Name ?? String.Empty);
+            }
+
+            return FullName(element);
+        }
+
         #endregion
 
         #region IEdmEntityContainer
@@ -902,6 +1009,17 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Returns singletons belonging to an IEdmEntityContainer.
+        /// </summary>
+        /// <param name="container">Reference to the calling object.</param>
+        /// <returns>Singletons belonging to an IEdmEntityContainer.</returns>
+        public static IEnumerable<IEdmSingleton> Singletons(this IEdmEntityContainer container)
+        {
+            EdmUtil.CheckArgumentNull(container, "container");
+            return container.Elements.OfType<IEdmSingleton>();
+        }
+
+        /// <summary>
         /// Returns operation imports belonging to an IEdmEntityContainer.
         /// </summary>
         /// <param name="container">Reference to the calling object.</param>
@@ -911,6 +1029,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(container, "container");
             return container.Elements.OfType<IEdmOperationImport>();
         }
+
         #endregion
 
         #region IEdmTypeReference
@@ -934,8 +1053,43 @@ namespace Microsoft.OData.Edm
         public static string FullName(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
+            return type.Definition.FullTypeName();
+        }
+
+        /// <summary>
+        /// Gets the short qualified name of the definition referred to by the type reference.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>The short qualified name of this references definition.</returns>
+        public static string ShortQualifiedName(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
             var namedDefinition = type.Definition as IEdmSchemaElement;
-            return namedDefinition != null ? namedDefinition.FullName() : null;
+            return namedDefinition != null ? namedDefinition.ShortQualifiedName() : null;
+        }
+        #endregion
+
+        #region IEdmType
+
+        /// <summary>
+        /// Gets the full name of the definition referred to by the type reference.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>The full name of this references definition.</returns>
+        public static string FullTypeName(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            var namedDefinition = type as IEdmSchemaElement;
+            var collectionType = type as IEdmCollectionType;
+            if (collectionType == null)
+            {
+                return namedDefinition != null ? namedDefinition.FullName() : null;
+            }
+
+            // Handle collection case.
+            namedDefinition = collectionType.ElementType.Definition as IEdmSchemaElement;
+
+            return namedDefinition != null ? string.Format(CultureInfo.InvariantCulture, CollectionTypeFormat, namedDefinition.FullName()) : null;
         }
 
         #endregion
@@ -1351,26 +1505,21 @@ namespace Microsoft.OData.Edm
         #region IEdmNavigationProperty
 
         /// <summary>
-        /// Gets the multiplicity of this end of a bidirectional relationship between this navigation property and its partner.
+        /// Gets the multiplicity of the target of this navigation.
         /// </summary>
         /// <param name="property">Reference to the calling object.</param>
-        /// <returns>The multiplicity of this end of the relationship.</returns>
-        public static EdmMultiplicity Multiplicity(this IEdmNavigationProperty property)
+        /// <returns>The multiplicity of the target end of the relationship.</returns>
+        public static EdmMultiplicity TargetMultiplicity(this IEdmNavigationProperty property)
         {
             EdmUtil.CheckArgumentNull(property, "property");
-            IEdmNavigationProperty partner = property.Partner;
-            if (partner != null)
-            {
-                IEdmTypeReference partnerType = partner.Type;
-                if (partnerType.IsCollection())
-                {
-                    return EdmMultiplicity.Many;
-                }
 
-                return partnerType.IsNullable ? EdmMultiplicity.ZeroOrOne : EdmMultiplicity.One;
+            IEdmTypeReference type = property.Type;
+            if (type.IsCollection())
+            {
+                return EdmMultiplicity.Many;
             }
 
-            return EdmMultiplicity.One;
+            return type.IsNullable ? EdmMultiplicity.ZeroOrOne : EdmMultiplicity.One;
         }
 
         /// <summary>
@@ -1404,64 +1553,34 @@ namespace Microsoft.OData.Edm
             return (IEdmEntityType)property.DeclaringType;
         }
 
-        #endregion
-
-        #region IEdmRowTypeReference
         /// <summary>
-        /// Gets the definition of this row type reference.
+        /// Gets whether this navigation property originates at the principal end of an association.
         /// </summary>
-        /// <param name="type">Reference to the calling object.</param>
-        /// <returns>The definition of this row type reference.</returns>
-        public static IEdmRowType RowDefinition(this IEdmRowTypeReference type)
+        /// <param name="navigationProperty">The navigation property.</param>
+        /// <returns>Whether this navigation property originates at the principal end of an association.</returns>
+        public static bool IsPrincipal(this IEdmNavigationProperty navigationProperty)
         {
-            EdmUtil.CheckArgumentNull(type, "type");
-            return (IEdmRowType)type.Definition;
-        }
-        #endregion
-
-        #region IEdmTypeAnnotation
-        /// <summary>
-        /// Gets the binding of a property of the type term of a type annotation.
-        /// </summary>
-        /// <param name="annotation">Annotation to search.</param>
-        /// <param name="property">Property to search for.</param>
-        /// <returns>The binding of the property in the type annotation, or null if no binding exists.</returns>
-        public static IEdmPropertyValueBinding FindPropertyBinding(this IEdmTypeAnnotation annotation, IEdmProperty property)
-        {
-            EdmUtil.CheckArgumentNull(annotation, "annotation");
-            EdmUtil.CheckArgumentNull(property, "property");
-
-            foreach (IEdmPropertyValueBinding propertyBinding in annotation.PropertyValueBindings)
-            {
-                if (propertyBinding.BoundProperty == property)
-                {
-                    return propertyBinding;
-                }
-            }
-
-            return null;
+            return navigationProperty.ReferentialConstraint == null && navigationProperty.Partner != null && navigationProperty.Partner.ReferentialConstraint != null;
         }
 
         /// <summary>
-        /// Gets the binding of a property of the type term of a type annotation.
+        /// Gets the dependent properties of this navigation property, returning null if this is the principal entity or if there is no referential constraint.
         /// </summary>
-        /// <param name="annotation">Annotation to search.</param>
-        /// <param name="propertyName">Name of the property to search for.</param>
-        /// <returns>The binding of the property in the type annotation, or null if no binding exists.</returns>
-        public static IEdmPropertyValueBinding FindPropertyBinding(this IEdmTypeAnnotation annotation, string propertyName)
+        /// <param name="navigationProperty">The navigation property.</param>
+        /// <returns>The dependent properties of this navigation property, returning null if this is the principal entity or if there is no referential constraint.</returns>
+        public static IEnumerable<IEdmStructuralProperty> DependentProperties(this IEdmNavigationProperty navigationProperty)
         {
-            EdmUtil.CheckArgumentNull(annotation, "annotation");
-            EdmUtil.CheckArgumentNull(propertyName, "propertyName");
+            return navigationProperty.ReferentialConstraint == null ? null : navigationProperty.ReferentialConstraint.PropertyPairs.Select(p => p.DependentProperty);
+        }
 
-            foreach (IEdmPropertyValueBinding propertyBinding in annotation.PropertyValueBindings)
-            {
-                if (propertyBinding.BoundProperty.Name.EqualsOrdinal(propertyName))
-                {
-                    return propertyBinding;
-                }
-            }
-
-            return null;
+        /// <summary>
+        /// Gets the principal properties of this navigation property, returning null if this is the principal entity or if there is no referential constraint.
+        /// </summary>
+        /// <param name="navigationProperty">The navigation property.</param>
+        /// <returns>The principal properties of this navigation property, returning null if this is the principal entity or if there is no referential constraint.</returns>
+        public static IEnumerable<IEdmStructuralProperty> PrincipalProperties(this IEdmNavigationProperty navigationProperty)
+        {
+            return navigationProperty.ReferentialConstraint == null ? null : navigationProperty.ReferentialConstraint.PropertyPairs.Select(p => p.PrincipalProperty);
         }
 
         #endregion
@@ -1480,6 +1599,69 @@ namespace Microsoft.OData.Edm
         #endregion
 
         #region IEdmOperationImport
+        /// <summary>
+        /// Tries to get the relative entity set path.
+        /// </summary>
+        /// <param name="operation">The operation to resolve the entitySet path.</param>
+        /// <param name="model">The model.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="relativePath">The relative path.</param>
+        /// <param name="lastEntityType">Last type of the entity.</param>
+        /// <param name="errors">The errors.</param>
+        /// <returns>True if a Entity set path is found, false otherwise.</returns>
+        public static bool TryGetRelativeEntitySetPath(this IEdmOperation operation, IEdmModel model, out IEdmOperationParameter parameter, out IEnumerable<IEdmNavigationProperty> relativePath, out IEdmEntityType lastEntityType, out IEnumerable<EdmError> errors)
+        {
+            errors = Enumerable.Empty<EdmError>();
+            parameter = null;
+            relativePath = null;
+            lastEntityType = null;
+
+            Debug.Assert(operation != null, "expected non null operation");
+
+            // If a value does not exist just return as there is nothing to validate.
+            if (operation.EntitySetPath == null)
+            {
+                return false;
+            }
+
+            Collection<EdmError> foundErrors = new Collection<EdmError>();
+            errors = foundErrors;
+            if (!operation.IsBound)
+            {
+                foundErrors.Add(
+                    new EdmError(
+                        operation.Location(),
+                        EdmErrorCode.OperationCannotHaveEntitySetPathWithUnBoundOperation,
+                        Strings.EdmModel_Validator_Semantic_OperationCannotHaveEntitySetPathWithUnBoundOperation(operation.Name)));
+            }
+
+            return TryGetRelativeEntitySetPath(operation, foundErrors, operation.EntitySetPath, model, operation.Parameters, out parameter, out relativePath, out lastEntityType);
+        }
+
+
+        /// <summary>
+        /// Determines whether [is action import] [the specified operation import].
+        /// </summary>
+        /// <param name="operationImport">The operation import.</param>
+        /// <returns>
+        ///   <c>true</c> if [is action import] [the specified operation import]; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsActionImport(this IEdmOperationImport operationImport)
+        {
+            return operationImport.ContainerElementKind == EdmContainerElementKind.ActionImport;
+        }
+
+        /// <summary>
+        /// Determines whether [is function import] [the specified operation import].
+        /// </summary>
+        /// <param name="operationImport">The operation import.</param>
+        /// <returns>
+        ///   <c>true</c> if [is function import] [the specified operation import]; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsFunctionImport(this IEdmOperationImport operationImport)
+        {
+            return operationImport.ContainerElementKind == EdmContainerElementKind.FunctionImport;
+        }
 
         /// <summary>
         /// Analyzes <see cref="IEdmOperationImport"/>.EntitySet expression and returns a static <see cref="IEdmEntitySet"/> reference if available.
@@ -1501,76 +1683,119 @@ namespace Microsoft.OData.Edm
         /// <param name="operationImport">The operation import containing the entity set expression.</param>
         /// <param name="model">The model containing the operation import.</param>
         /// <param name="parameter">The operation import parameter from which the relative entity set path starts.</param>
-        /// <param name="path">The optional sequence of navigation properties.</param>
+        /// <param name="relativePath">The optional sequence of navigation properties.</param>
+        /// <param name="edmErrors">The errors that were found when attempting to get the relative path.</param>
         /// <returns>True if the entity set expression of the <paramref name="operationImport"/> contains a relative path an <see cref="IEdmEntitySet"/>, otherwise false.</returns>
-        public static bool TryGetRelativeEntitySetPath(this IEdmOperationImport operationImport, IEdmModel model, out IEdmOperationParameter parameter, out IEnumerable<IEdmNavigationProperty> path)
+        public static bool TryGetRelativeEntitySetPath(this IEdmOperationImport operationImport, IEdmModel model, out IEdmOperationParameter parameter, out IEnumerable<IEdmNavigationProperty> relativePath, out IEnumerable<EdmError> edmErrors)
         {
+            EdmUtil.CheckArgumentNull(operationImport, "operationImport");
+            EdmUtil.CheckArgumentNull(model, "model");
+
             parameter = null;
-            path = null;
+            relativePath = null;
+            edmErrors = new ReadOnlyCollection<EdmError>(new List<EdmError>());
 
-            var entitySetPath = operationImport.EntitySet as IEdmPathExpression;
-            if (entitySetPath == null)
+            IEdmPathExpression pathExpression = operationImport.EntitySet as IEdmPathExpression;
+            if (pathExpression != null)
             {
-                return false;
+                IEdmEntityType entityType = null;
+                Collection<EdmError> foundErrors = new Collection<EdmError>();
+                bool result = TryGetRelativeEntitySetPath(operationImport, foundErrors, pathExpression, model, operationImport.Operation.Parameters, out parameter, out relativePath, out entityType);
+                edmErrors = new ReadOnlyCollection<EdmError>(foundErrors);
+
+                return result;
             }
 
-            var pathToResolve = entitySetPath.Path.ToList();
-            if (pathToResolve.Count == 0)
-            {
-                return false;
-            }
+            return false;
+        }
 
-            // Resolve the first segment as a parameter.
-            parameter = operationImport.FindParameter(pathToResolve[0]);
-            if (parameter == null)
-            {
-                return false;
-            }
+        #endregion
 
-            if (pathToResolve.Count == 1)
+        #region IEdmOperation
+
+        /// <summary>
+        /// Determines whether the specified operation is action.
+        /// </summary>
+        /// <param name="operation">The operation.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified operation is action; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsAction(this IEdmOperation operation)
+        {
+            return operation.SchemaElementKind == EdmSchemaElementKind.Action;
+        }
+
+        /// <summary>
+        /// Determines whether the specified operation is function.
+        /// </summary>
+        /// <param name="operation">The operation.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified operation is function; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsFunction(this IEdmOperation operation)
+        {
+            return operation.SchemaElementKind == EdmSchemaElementKind.Function;
+        }
+
+        /// <summary>
+        /// Checks whether all operations have the same return type 
+        /// </summary>
+        /// <param name="operations">the list to check</param>
+        /// <param name="forceFullyQualifiedNameFilter">Ensures that the Where filter clause applies the Full name,</param>
+        /// <param name="operationName">The operation name to filter by.</param>
+        /// <returns>true if the list of operation imports all have the same return type</returns>
+        public static IEnumerable<IEdmOperation> FilterByName(this IEnumerable<IEdmOperation> operations, bool forceFullyQualifiedNameFilter, string operationName)
+        {
+            EdmUtil.CheckArgumentNull(operations, "operations");
+            EdmUtil.CheckArgumentNull(operationName, "operationName");
+
+            if (forceFullyQualifiedNameFilter || operationName.IndexOf(".", StringComparison.Ordinal) > -1)
             {
-                path = Enumerable.Empty<IEdmNavigationProperty>();
-                return true;
+                return operations.Where(o => o.FullName() == operationName);
             }
             else
             {
-                // Get the entity type of the parameter, treat the rest of the path as a sequence of navprops.
-                IEdmEntityType entityType = GetPathSegmentEntityType(parameter.Type);
-                List<IEdmNavigationProperty> pathList = new List<IEdmNavigationProperty>();
-                for (int i = 1; i < pathToResolve.Count; ++i)
-                {
-                    string segment = pathToResolve[i];
-                    if (EdmUtil.IsQualifiedName(segment))
-                    {
-                        if (i == pathToResolve.Count - 1)
-                        {
-                            // The last segment must not be type cast.
-                            return false;
-                        }
+                return operations.Where(o => o.Name == operationName);
+            }
+        }
 
-                        IEdmEntityType subType = model.FindDeclaredType(segment) as IEdmEntityType;
-                        if (subType == null || !subType.IsOrInheritsFrom(entityType))
-                        {
-                            return false;
-                        }
+        /// <summary>
+        /// Determines whether the bound operation's  binding type is equivalent to the specified binding type.
+        /// </summary>
+        /// <param name="operation">The operation.</param>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>
+        ///   <c>true</c> if [is operation binding type equivalent to] [the specified operation]; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool HasEquivalentBindingType(this IEdmOperation operation, IEdmType bindingType)
+        {
+            EdmUtil.CheckArgumentNull(operation, "operation");
+            EdmUtil.CheckArgumentNull(bindingType, "bindingType");
 
-                        entityType = subType;
-                    }
-                    else
-                    {
-                        IEdmNavigationProperty navProp = entityType.FindProperty(segment) as IEdmNavigationProperty;
-                        if (navProp == null)
-                        {
-                            return false;
-                        }
+            if (!operation.IsBound || !operation.Parameters.Any())
+            {
+                return false;
+            }
 
-                        pathList.Add(navProp);
-                        entityType = GetPathSegmentEntityType(navProp.Type);
-                    }
-                }
+            IEdmOperationParameter parameter = operation.Parameters.First();
+            IEdmType parameterType = parameter.Type.Definition;
 
-                path = pathList;
-                return true;
+            if (parameterType.TypeKind != bindingType.TypeKind)
+            {
+                return false;
+            }
+
+            if (parameterType.TypeKind == EdmTypeKind.Collection)
+            {
+                 // covariance applies here, so IEnumerable<A> is applicable to IEnumerable<B> where B:A
+                IEdmCollectionType parameterCollectionType = (IEdmCollectionType)parameterType;
+                IEdmCollectionType bindingCollectionType = (IEdmCollectionType)bindingType;
+
+                return bindingCollectionType.ElementType.Definition.IsOrInheritsFrom(parameterCollectionType.ElementType.Definition);
+            }
+            else
+            {
+                return bindingType.IsOrInheritsFrom(parameterType);
             }
         }
 
@@ -1599,6 +1824,196 @@ namespace Microsoft.OData.Edm
 
         #endregion
 
+        #region IEdmNavigationSource
+
+        /// <summary>
+        /// Return the navigation kind of the navigation source.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source.</param>
+        /// <returns>The kind of the navigation source.</returns>
+        public static EdmNavigationSourceKind NavigationSourceKind(this IEdmNavigationSource navigationSource)
+        {
+            if (navigationSource is IEdmEntitySet)
+            {
+                return EdmNavigationSourceKind.EntitySet;
+            }
+
+            if (navigationSource is IEdmSingleton)
+            {
+                return EdmNavigationSourceKind.Singleton;
+            }
+
+            if (navigationSource is IEdmContainedEntitySet)
+            {
+                return EdmNavigationSourceKind.ContainedEntitySet;
+            }
+
+            if (navigationSource is IEdmUnknownEntitySet)
+            {
+                return EdmNavigationSourceKind.UnknownEntitySet;
+            }
+
+            return EdmNavigationSourceKind.None;
+        }
+
+        /// <summary>
+        /// Return the entity type of the navigation source.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source.</param>
+        /// <returns>The entity type of the navigation source.</returns>
+        public static IEdmEntityType EntityType(this IEdmNavigationSource navigationSource)
+        {
+            var entitySetBase = navigationSource as IEdmEntitySetBase;
+            if (entitySetBase != null)
+            {
+                IEdmCollectionType collectionType = entitySetBase.Type as IEdmCollectionType;
+                
+                if (collectionType != null)
+                {
+                    return collectionType.ElementType.Definition as IEdmEntityType;
+                }
+
+                return null;
+            }
+
+            var singleton = navigationSource as IEdmSingleton;
+            if (singleton != null)
+            {
+                return singleton.Type as IEdmEntityType;
+            }
+
+            return null;
+        }
+
+        #endregion
+
+        internal static bool TryGetRelativeEntitySetPath(IEdmElement element, Collection<EdmError> foundErrors, IEdmPathExpression pathExpression, IEdmModel model, IEnumerable<IEdmOperationParameter> parameters, out IEdmOperationParameter parameter, out IEnumerable<IEdmNavigationProperty> relativePath, out IEdmEntityType lastEntityType)
+        {
+            parameter = null;
+            relativePath = null;
+            lastEntityType = null;
+
+            var pathItems = pathExpression.Path.ToList();
+            if (pathItems.Count < 1)
+            {
+                foundErrors.Add(new EdmError(element.Location(), EdmErrorCode.OperationWithInvalidEntitySetPathMissingCompletePath, Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName(CsdlConstants.Attribute_EntitySetPath)));
+                return false;
+            }
+
+            // If there is no parameter then this will fail in BoundOperationMustHaveParameters rule so skip validating this here.
+            if (!parameters.Any())
+            {
+                return false;
+            }
+
+            bool foundRelativePath = true;
+
+            string bindingParameterName = pathItems.First();
+            parameter = parameters.FirstOrDefault();
+            Debug.Assert(parameter != null, "Should never be null");
+            if (parameter.Name != bindingParameterName)
+            {
+                foundErrors.Add(
+                    new EdmError(
+                        element.Location(), 
+                        EdmErrorCode.InvalidPathFirstPathParameterNotMatchingFirstParameterName, 
+                        Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathWithFirstPathParameterNotMatchingFirstParameterName(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), bindingParameterName, parameter.Name)));
+                
+                foundRelativePath = false;
+            }
+
+            lastEntityType = parameter.Type.Definition as IEdmEntityType;
+            if (lastEntityType == null)
+            {
+                var collectionReference = parameter.Type as IEdmCollectionTypeReference;
+                if (collectionReference != null && collectionReference.ElementType().IsEntity())
+                {
+                    lastEntityType = collectionReference.ElementType().Definition as IEdmEntityType;
+                }
+                else
+                {
+                    foundErrors.Add(
+                        new EdmError(
+                            element.Location(),
+                            EdmErrorCode.InvalidPathWithNonEntityBindingParameter,
+                            Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathWithNonEntityBindingParameter(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), bindingParameterName)));
+
+                    return false;
+                }
+            }
+
+            List<IEdmNavigationProperty> navigationProperties = new List<IEdmNavigationProperty>();
+
+            // Now check that the next paths are valid parameters.
+            foreach (string pathSegment in pathItems.Skip(1))
+            {
+                if (EdmUtil.IsQualifiedName(pathSegment))
+                {
+                    IEdmSchemaType foundType = model.FindDeclaredType(pathSegment);
+                    if (foundType == null)
+                    {
+                        foundErrors.Add(
+                            new EdmError(
+                                element.Location(),
+                                EdmErrorCode.InvalidPathUnknownTypeCastSegment,
+                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), pathSegment)));
+
+                        foundRelativePath = false;
+                        break;
+                    }
+
+                    IEdmEntityType foundEntityTypeCast = foundType as IEdmEntityType;
+
+                    if (foundEntityTypeCast == null)
+                    {
+                        foundErrors.Add(
+                            new EdmError(
+                                element.Location(), 
+                                EdmErrorCode.InvalidPathTypeCastSegmentMustBeEntityType, 
+                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathTypeCastSegmentMustBeEntityType(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), foundType.FullName())));
+                        
+                        foundRelativePath = false;
+                        break;
+                    }
+
+                    if (!foundEntityTypeCast.IsOrInheritsFrom(lastEntityType))
+                    {
+                        foundErrors.Add(
+                            new EdmError(
+                                element.Location(), 
+                                EdmErrorCode.InvalidPathInvalidTypeCastSegment, 
+                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathInvalidTypeCastSegment(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), lastEntityType.FullName(), foundEntityTypeCast.FullName())));
+                        
+                        foundRelativePath = false;
+                        break;
+                    }
+
+                    lastEntityType = foundEntityTypeCast;
+                }
+                else
+                {
+                    IEdmNavigationProperty navigationProperty = lastEntityType.FindProperty(pathSegment) as IEdmNavigationProperty;
+                    if (navigationProperty == null)
+                    {
+                        foundErrors.Add(
+                            new EdmError(
+                                element.Location(), 
+                                EdmErrorCode.InvalidPathUnknownNavigationProperty, 
+                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownNavigationProperty(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), pathSegment)));
+                        
+                        foundRelativePath = false;
+                        break;
+                    }
+
+                    navigationProperties.Add(navigationProperty);
+                    lastEntityType = navigationProperty.ToEntityType();
+                }
+            }
+
+            relativePath = navigationProperties;
+            return foundRelativePath;
+        }
+       
         /// <summary>
         /// This method is only used for the operation import entity set path parsing.
         /// </summary>
@@ -1607,6 +2022,34 @@ namespace Microsoft.OData.Edm
         internal static IEdmEntityType GetPathSegmentEntityType(IEdmTypeReference segmentType)
         {
             return (segmentType.IsCollection() ? segmentType.AsCollection().ElementType() : segmentType).AsEntity().EntityDefinition();
+        }
+
+        /// <summary>
+        /// Gets documentation for a specified element.
+        /// </summary>
+        /// <param name="model">The model containing the documentation.</param>
+        /// <param name="element">The element.</param>
+        /// <returns>Documentation that exists on the element. Otherwise, null.</returns>
+        internal static IEdmDocumentation GetDocumentation(this IEdmModel model, IEdmElement element)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(element, "element");
+
+            return (IEdmDocumentation)model.GetAnnotationValue(element, EdmConstants.DocumentationUri, EdmConstants.DocumentationAnnotation);
+        }
+
+        /// <summary>
+        /// Sets documentation for a specified element.
+        /// </summary>
+        /// <param name="model">The model containing the documentation.</param>
+        /// <param name="element">The element.</param>
+        /// <param name="documentation">Documentation to set.</param>
+        internal static void SetDocumentation(this IEdmModel model, IEdmElement element, IEdmDocumentation documentation)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(element, "element");
+
+            model.SetAnnotationValue(element, EdmConstants.DocumentationUri, EdmConstants.DocumentationAnnotation, documentation);
         }
 
         private static T FindAcrossModels<T>(this IEdmModel model, string qualifiedName, Func<IEdmModel, string, T> finder, Func<T, T, T> ambiguousCreator)
@@ -1623,20 +2066,6 @@ namespace Microsoft.OData.Edm
             }
 
             return candidate;
-        }
-
-        private static T GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmEntityType contextType, IEdmProperty property, string qualifier, Func<IEdmExpression, IEdmStructuredValue, T> evaluator)
-        {
-            IEdmEntityType termType = (IEdmEntityType)property.DeclaringType;
-            IEnumerable<IEdmTypeAnnotation> annotations = model.FindVocabularyAnnotations<IEdmTypeAnnotation>(contextType, termType, qualifier);
-
-            if (annotations.Count() != 1)
-            {
-                throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_NoTermTypeAnnotationOnType(contextType.ToTraceString(), termType.ToTraceString()));
-            }
-
-            IEdmPropertyValueBinding propertyBinding = annotations.Single().FindPropertyBinding(property);
-            return propertyBinding != null ? evaluator(propertyBinding.Value, context) : default(T);
         }
 
         private static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmEntityType contextType, IEdmValueTerm term, string qualifier, Func<IEdmExpression, IEdmStructuredValue, IEdmTypeReference, T> evaluator)

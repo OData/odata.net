@@ -8,7 +8,7 @@
 
 //   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.Core.UriParser.Semantic
 {
     #region Namespaces
     using System.Collections.Generic;
@@ -22,6 +22,7 @@ namespace Microsoft.OData.Core.UriParser
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.UriParser.Semantic;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -35,9 +36,9 @@ namespace Microsoft.OData.Core.UriParser
         private readonly string name;
 
         /// <summary>
-        /// The list of operation imports
+        /// The list of functions
         /// </summary>
-        private readonly ReadOnlyCollection<IEdmOperationImport> operationImports;
+        private readonly ReadOnlyCollection<IEdmFunction> functions;
 
         /// <summary>
         /// List of arguments to this function call.
@@ -70,21 +71,29 @@ namespace Microsoft.OData.Core.UriParser
         /// Create a SingleValueFunctionCallNode
         /// </summary>
         /// <param name="name">The name of the function to call</param>
-        /// <param name="operationImports">the list of functions to call</param>
+        /// <param name="functions">the list of functions that this node should represent.</param>
         /// <param name="parameters">the list of arguments to this function</param>
         /// <param name="returnedTypeReference">the type of the value returned by this function.</param>
         /// <param name="source">The semantically bound parent of this function.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input operationImports is null.</exception>
-        public SingleValueFunctionCallNode(string name, IEnumerable<IEdmOperationImport> operationImports, IEnumerable<QueryNode> parameters, IEdmTypeReference returnedTypeReference, QueryNode source)
+        public SingleValueFunctionCallNode(string name, IEnumerable<IEdmFunction> functions, IEnumerable<QueryNode> parameters, IEdmTypeReference returnedTypeReference, QueryNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
+
             this.name = name;
-            this.operationImports = new ReadOnlyCollection<IEdmOperationImport>(operationImports != null ? operationImports.ToList() : new List<IEdmOperationImport>());
+            this.functions = new ReadOnlyCollection<IEdmFunction>(functions != null ? functions.ToList() : new List<IEdmFunction>());
 
             this.parameters = parameters ?? Enumerable.Empty<QueryNode>();
 
-            // TODO: SQLBU TFS Defect 1235278: SingleValueFunctionCallNode constructor should not allow the type of the node to be a collection type
-            Debug.Assert(returnedTypeReference == null || !returnedTypeReference.IsCollection(), "Type of a single value node cannot be a collection type");
+            if (returnedTypeReference != null)
+            {
+                if (returnedTypeReference.IsCollection()
+                    || !(returnedTypeReference.IsComplex() || returnedTypeReference.IsPrimitive() || returnedTypeReference.IsEnum()))
+                {
+                    throw new ArgumentException(ODataErrorStrings.Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
+                }
+            }
+
             this.returnedTypeReference = returnedTypeReference;
             this.source = source;
         }
@@ -100,11 +109,11 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>
         /// Gets the list of operation imports.
         /// </summary>
-        public IEnumerable<IEdmOperationImport> FunctionImports
+        public IEnumerable<IEdmFunction> Functions
         {
             get
             {
-                return this.operationImports;
+                return this.functions;
             }
         }
 
@@ -139,7 +148,6 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return InternalQueryNodeKind.SingleValueFunctionCall;
             }
         }

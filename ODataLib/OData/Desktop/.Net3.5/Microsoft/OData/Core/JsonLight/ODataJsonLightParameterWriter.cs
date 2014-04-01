@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -41,11 +41,10 @@ namespace Microsoft.OData.Core.JsonLight
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightOutputContext">The output context to write to.</param>
-        /// <param name="operationImport">The operation import whose parameters will be written.</param>
-        internal ODataJsonLightParameterWriter(ODataJsonLightOutputContext jsonLightOutputContext, IEdmOperationImport operationImport)
-            : base(jsonLightOutputContext, operationImport)
+        /// <param name="operation">The operation import whose parameters will be written.</param>
+        internal ODataJsonLightParameterWriter(ODataJsonLightOutputContext jsonLightOutputContext, IEdmOperation operation)
+            : base(jsonLightOutputContext, operation)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonLightOutputContext != null, "jsonLightOutputContext != null");
 
             this.jsonLightOutputContext = jsonLightOutputContext;
@@ -112,29 +111,34 @@ namespace Microsoft.OData.Core.JsonLight
             this.jsonLightOutputContext.JsonWriter.WriteName(parameterName);
             if (parameterValue == null)
             {
-                this.jsonLightOutputContext.JsonWriter.WriteValue(null);
+                this.jsonLightOutputContext.JsonWriter.WriteValue((string)null);
             }
             else
             {
                 ODataComplexValue complexValue = parameterValue as ODataComplexValue;
+                ODataEnumValue enumVal = null;
                 if (complexValue != null)
                 {
                     this.jsonLightValueSerializer.AssertRecursionDepthIsZero();
                     this.jsonLightValueSerializer.WriteComplexValue(
-                        complexValue, 
-                        expectedTypeReference, 
-                        false /*isTopLevel*/, 
+                        complexValue,
+                        expectedTypeReference,
+                        false /*isTopLevel*/,
                         false /*isOpenPropertyType*/,
                         this.DuplicatePropertyNamesChecker);
                     this.jsonLightValueSerializer.AssertRecursionDepthIsZero();
                     this.DuplicatePropertyNamesChecker.Clear();
+                }
+                else if ((enumVal = parameterValue as ODataEnumValue) != null)
+                {
+                    this.jsonLightValueSerializer.WriteEnumValue(enumVal, expectedTypeReference);
                 }
                 else
                 {
                     Debug.Assert(!(parameterValue is ODataCollectionValue), "!(parameterValue is ODataCollectionValue)");
                     Debug.Assert(!(parameterValue is ODataStreamReferenceValue), "!(parameterValue is ODataStreamReferenceValue)");
                     Debug.Assert(!(parameterValue is Stream), "!(parameterValue is Stream)");
-                    this.jsonLightValueSerializer.WritePrimitiveValue(parameterValue, expectedTypeReference);   
+                    this.jsonLightValueSerializer.WritePrimitiveValue(parameterValue, expectedTypeReference);
                 }
             }
         }

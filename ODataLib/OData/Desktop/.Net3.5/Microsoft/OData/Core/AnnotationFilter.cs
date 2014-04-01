@@ -62,8 +62,6 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created filter.</returns>
         internal static AnnotationFilter Create(string filter)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (string.IsNullOrEmpty(filter))
             {
                 return ExcludeAll;
@@ -90,13 +88,21 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// Create a filter that inlcude all.
+        /// </summary>
+        /// <returns>The include all filter.</returns>
+        internal static AnnotationFilter CreateInclueAllFilter()
+        {
+            return new IncludeAllFilter();
+        }
+
+        /// <summary>
         /// Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should be read, false otherwise.
         /// </summary>
         /// <param name="annotationName">The name of the annotation in question.</param>
         /// <returns>Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should be read, false otherwise.</returns>
         internal virtual bool Matches(string annotationName)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(annotationName, "annotationName");
 
             // Find the highest priority pattern that maches and return true only if that pattern is not exclude.
@@ -121,7 +127,6 @@ namespace Microsoft.OData.Core
             /// </summary>
             internal IncludeAllFilter() : base(new AnnotationFilterPattern[0])
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>
@@ -131,7 +136,6 @@ namespace Microsoft.OData.Core
             /// <returns>Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should be read, false otherwise.</returns>
             internal override bool Matches(string annotationName)
             {
-                DebugUtils.CheckNoExternalCallers();
                 ExceptionUtils.CheckArgumentStringNotNullOrEmpty(annotationName, "annotationName");
                 return true;
             }
@@ -147,7 +151,6 @@ namespace Microsoft.OData.Core
             /// </summary>
             internal ExcludeAllFilter() : base(new AnnotationFilterPattern[0])
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>
@@ -157,7 +160,6 @@ namespace Microsoft.OData.Core
             /// <returns>Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should be read, false otherwise.</returns>
             internal override bool Matches(string annotationName)
             {
-                DebugUtils.CheckNoExternalCallers();
                 ExceptionUtils.CheckArgumentStringNotNullOrEmpty(annotationName, "annotationName");
                 return false;
             }

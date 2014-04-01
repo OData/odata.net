@@ -291,7 +291,7 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// The target entity set must be able to hold an entity that is valid for the navigation property of a mapping.
         /// </summary>
-        EntitySetNavigationPropertyMappingMustPointToValidTargetForProperty = 109,
+        NavigationPropertyMappingMustPointToValidTargetForProperty = 109,
 
         /// <summary>
         /// Invalid role value in the relationship constraint
@@ -373,9 +373,9 @@ namespace Microsoft.OData.Edm.Validation
         EndWithManyMultiplicityCannotHaveOperationsSpecified = 132,
 
         /// <summary>
-        /// EntitySet type has no keys
+        /// Navigation source type has no keys
         /// </summary>
-        EntitySetTypeHasNoKeys = 133,
+        NavigationSourceTypeHasNoKeys = 133,
 
         //// <summary>Invalid Number Of Parameters For Aggregate Function</summary>
         // InvalidNumberOfParametersForAggregateFunction = 134,
@@ -416,11 +416,6 @@ namespace Microsoft.OData.Edm.Validation
         OperationImportUnsupportedReturnType = 146,
 
         /// <summary>
-        /// Composable operation import cannot be side-effecting.
-        /// </summary>
-        OperationImportCannotBeSideEffecting = 147,
-
-        /// <summary>
         /// Operation import specifies entity type return but no entity set.
         /// </summary>
         OperationImportReturnsEntitiesButDoesNotSpecifyEntitySet = 148,
@@ -436,9 +431,14 @@ namespace Microsoft.OData.Edm.Validation
         OperationImportSpecifiesEntitySetButDoesNotReturnEntityType = 150,
 
         /// <summary>
-        /// A composable operation import must have return type.
+        /// Operation import cannot import a bound function.
         /// </summary>
-        ComposableOperationImportMustHaveReturnType = 152,
+        OperationImportCannotImportBoundOperation = 151,
+
+        /// <summary>
+        /// A function must have return type.
+        /// </summary>
+        FunctionMustHaveReturnType = 152,
 
         /// <summary>
         /// Same Entity Set Taking part in the same role of the relationship set in two different relationship sets
@@ -557,9 +557,6 @@ namespace Microsoft.OData.Edm.Validation
         /// </summary>
         EnumMemberValueOutOfRange = 206,
 
-        // EdmAssociationSet_ElementTypeMustNotBeNull = 207,
-        // EdmAssociationSet_SourceSetMustNotBeNull = 208,
-        // EdmAssociationSet_TargetSetMustNotBeNull = 209,
         // EdmFunctionImport_ReturnTypeMustBeCollectionType = 210,
         // EdmModel_NameIsNotAllowed = 211,
         // EdmTypeReferenceNotValid = 212,
@@ -573,6 +570,11 @@ namespace Microsoft.OData.Edm.Validation
         /// The entity container name has already been assigned to a different entity container.
         /// </summary>
         DuplicateEntityContainerMemberName = 218,
+
+        /// <summary>
+        /// An unbound function overload has a different return type.
+        /// </summary>
+        UnboundFunctionOverloadHasIncorrectReturnType = 219,
 
         // EdmFunction_UnsupportedParameterType = 219,
 
@@ -672,19 +674,9 @@ namespace Microsoft.OData.Edm.Validation
         ComplexTypeMustHaveComplexBaseType = 238,
 
         /// <summary>
-        /// Could not find a function with this name.
+        /// Could not find a operation with this name.
         /// </summary>
-        BadUnresolvedFunction = 239,
-
-        /// <summary>
-        /// Rows cannot have base types.
-        /// </summary>
-        RowTypeMustNotHaveBaseType = 240,
-
-        /// <summary>
-        /// The role of an association set end must be an association end belonging to the association type that defines the associaiton set.
-        /// </summary>
-        AssociationSetEndRoleMustBelongToSetElementType = 241,
+        BadUnresolvedOperation = 239,
 
         /// <summary>
         /// Every property in an entity key must be a property of the entity.
@@ -719,11 +711,6 @@ namespace Microsoft.OData.Edm.Validation
         /// Underlying type of the enumeration type is bad because the enumeration type is bad.
         /// </summary>
         UnderlyingTypeIsBadBecauseEnumTypeIsBad = 261,
-
-        /// <summary>
-        /// The type of the entity set on this association end is inconsistent with the association end.
-        /// </summary>
-        InvalidAssociationSetEndSetWrongType = 262,
         
         /// <summary>
         /// Complex types must contain at least one property.
@@ -736,19 +723,74 @@ namespace Microsoft.OData.Edm.Validation
         OperationImportParameterIncorrectType = 265,
 
         /// <summary>
-        /// A row type must contain at least one property.
-        /// </summary>
-        RowTypeMustHaveProperties = 266,
-
-        /// <summary>
         /// A referential constraint cannot have multiple dependent properties with the same name.
         /// </summary>
         DuplicateDependentProperty = 267,
 
         /// <summary>
-        /// Bindable operation import must have at least one parameter.
+        /// Bindable operation must have at least one parameter.
         /// </summary>
-        BindableOperationImportMustHaveParameters = 268,
+        BoundOperationMustHaveParameters = 268,
+
+        /// <summary>
+        /// Operation with an EntitySetPath must be on a bound operation.
+        /// </summary>
+        OperationCannotHaveEntitySetPathWithUnBoundOperation = 269,
+
+        /// <summary>
+        /// Operation with an EntitySetPath must have the first path item be the same name as the binding parameter.
+        /// </summary>
+        InvalidPathFirstPathParameterNotMatchingFirstParameterName = 271,
+
+        /// <summary>
+        /// Operation with an EntitySetPath references a binding parameter that is not an entity type.
+        /// </summary>
+        InvalidPathWithNonEntityBindingParameter = 246,
+
+        /// <summary>
+        /// Operation with an EntitySetPath segment is invalid as it has less than two items in the path.
+        /// </summary>
+        OperationWithInvalidEntitySetPathMissingCompletePath = 248,
+
+        /// <summary>
+        /// Operation with an EntitySetPath segment has an unknown type cast segment.
+        /// </summary>
+        InvalidPathUnknownTypeCastSegment = 249,
+
+        /// <summary>
+        /// Operation with an EntitySetPath segment has an invalid type cast segment.
+        /// </summary>
+        InvalidPathInvalidTypeCastSegment = 250,
+
+        /// <summary>
+        /// Operation with an EntitySetPath segment has an invalid type cast segment, it must be an EntityType.
+        /// </summary>
+        InvalidPathTypeCastSegmentMustBeEntityType = 251,
+
+        /// <summary>
+        /// Operation with an EntitySetPath segment has an unknown navigation property.
+        /// </summary>
+        InvalidPathUnknownNavigationProperty = 252,
+
+        /// <summary>
+        /// Operation with an EntitySetPath has a return type that is not assignable to the resulting determined type from the entity set path.
+        /// </summary>
+        OperationWithEntitySetPathAndReturnTypeTypeNotAssignable = 253,
+
+        /// <summary>
+        /// Operation entity set path resolves to a collection entity type when an entity type is expected
+        /// </summary>
+        OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType = 254,
+        
+        /// <summary>
+        /// Operation entity set path resolves to an entity type when a collection of entity type is expected.
+        /// </summary>
+        OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType = 255,
+
+        /// <summary>
+        /// Operation with an EntitySetPath has an invalid return type. The return type must be an entity type or collection of entity type.
+        /// </summary>
+        OperationWithEntitySetPathReturnTypeInvalid = 256,
 
         /// <summary>
         /// Max length is out of range.
@@ -784,6 +826,11 @@ namespace Microsoft.OData.Edm.Validation
         /// Invalid association set
         /// </summary>
         InvalidAssociationSet = 279,
+
+        /// <summary>
+        /// Invalid parameter mode
+        /// </summary>
+        InvalidParameterMode = 280,
 
         /// <summary>
         /// No entity type with that name exists.
@@ -891,9 +938,9 @@ namespace Microsoft.OData.Edm.Validation
         BadUnresolvedEnumMember = 302,
 
         /// <summary>
-        /// The AssertType expression is invalid because it does not have 1 element.
+        /// The Cast expression is invalid because it does not have 1 element.
         /// </summary>
-        InvalidAssertTypeExpressionIncorrectNumberOfOperands = 303,
+        InvalidCastExpressionIncorrectNumberOfOperands = 303,
 
         /// <summary>
         /// Could not find a Parameter with that name
@@ -1093,9 +1140,9 @@ namespace Microsoft.OData.Edm.Validation
         EntitySetCanOnlyHaveSingleNavigationPropertyWithContainment = 343,
 
         /// <summary>
-        /// If a navigation property is traversed from an entity set, and then it's partner is traversed from the target of the first mapping, the destination should be the originating entity set.
+        /// If a navigation property is traversed from an entity set/singleton, and then it's partner is traversed from the target of the first mapping, the destination should be the originating entity set/singleton.
         /// </summary>
-        EntitySetNavigationMappingMustBeBidirectional = 344,
+        NavigationMappingMustBeBidirectional = 344,
 
         /// <summary>
         /// There can only be a single mapping from a given EntitySet with a particular navigation property.
@@ -1148,12 +1195,12 @@ namespace Microsoft.OData.Edm.Validation
         DuplicateDirectValueAnnotationFullName = 354,
 
         /// <summary>
-        /// AssociationSetEnd cannot infer an entity set because no set exists of the given type.
+        /// Cannot infer an entity set because no set exists of the given type.
         /// </summary>
         NoEntitySetsFoundForType = 355,
 
         /// <summary>
-        /// AssociationSetEnd cannot infer an entity set because more than one set exists of the given type.
+        /// Cannot infer an entity set because more than one set exists of the given type.
         /// </summary>
         CannotInferEntitySetWithMultipleSetsPerType = 356,
 
@@ -1191,5 +1238,45 @@ namespace Microsoft.OData.Edm.Validation
         /// Could not find a navigation property with this name.
         /// </summary>
         BadUnresolvedNavigationPropertyPath = 363,
+
+        /// <summary>
+        /// The 'Nullable' attribute cannot be specified for a navigation property with collection type.
+        /// </summary>
+        NavigationPropertyWithCollectionTypeCannotHaveNullableAttribute = 364,
+
+        /// <summary>
+        /// Metadata document cannot have more than one entity container.
+        /// </summary>
+        MetadataDocumentCannotHaveMoreThanOneEntityContainer = 365,
+
+        /// <summary>
+        /// Model has multiple functions that are the same definitions.
+        /// </summary>
+        DuplicateFunctions = 366,
+
+        /// <summary>
+        /// Model has multiple functions that are the same definitions.
+        /// </summary>
+        DuplicateActions = 367,
+
+        /// <summary>
+        /// Bound Function overloads must have the same return type.
+        /// </summary>
+        BoundFunctionOverloadsMustHaveSameReturnType = 368,
+
+        /// <summary>
+        /// The type of singleton must be entity type.
+        /// </summary>
+        SingletonTypeMustBeEntityType = 369,
+
+        /// <summary>
+        /// The type of entity set must be collection of entity type.
+        /// </summary>
+        EntitySetTypeMustBeCollectionOfEntityType = 370,
+
+        /// <summary>
+        /// The binding on navigation property of collection type must not target to singleton.
+        /// </summary>
+        NavigationPropertyOfCollectionTypeMustNotTargetToSingleton = 371,
     }
 }

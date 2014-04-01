@@ -10,7 +10,7 @@
 
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
-    using System.Linq;
+    using System.Collections.Generic;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private readonly int maxRecursionDepth;
 
         /// <summary>
-        /// Lexer to parse over the optionsText for a single $expand term. This is NOT the same lexer used by <see cref="V4SelectExpandParser"/>
+        /// Lexer to parse over the optionsText for a single $expand term. This is NOT the same lexer used by <see cref="SelectExpandParser"/>
         /// to parse over the entirety of $select or $expand. 
         /// </summary>
         private ExpressionLexer lexer;
@@ -51,16 +51,15 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>An expand term token based on the path token, and all available expand options.</returns>
         internal ExpandTermToken BuildExpandTermToken(PathSegmentToken pathToken, string optionsText)
         {
-            DebugUtils.CheckNoExternalCallers();
-            
             // Setup a new lexer for parsing the optionsText
             this.lexer = new ExpressionLexer(optionsText ?? "", true /*moveToFirstToken*/, true /*useSemicolonDelimiter*/);
 
             QueryToken filterOption = null;
-            OrderByToken orderByOption = null;
+            IEnumerable<OrderByToken> orderByOptions = null;
             long? topOption = null;
             long? skipOption = null;
             bool? countOption = null;
+            long? levelsOption = null;
             SelectToken selectOption = null;
             ExpandToken expandOption = null;
 
@@ -81,119 +80,142 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     switch (this.lexer.CurrentToken.Text)
                     {
                         case ExpressionConstants.QueryOptionFilter:
-                        {
-                            // advance to the equal sign
-                            this.lexer.NextToken();
-                            string filterText = this.ReadQueryOption();
+                            {
+                                // advance to the equal sign
+                                this.lexer.NextToken();
+                                string filterText = this.ReadQueryOption();
 
-                            // TODO using the wrong max depth here - should use filter's. We need the settings object.
-                            UriQueryExpressionParser filterParser = new UriQueryExpressionParser(this.maxRecursionDepth);
-                            filterOption = filterParser.ParseFilter(filterText);
-                            break;
-                        }
+                                // TODO using the wrong max depth here - should use filter's. We need the settings object.
+                                UriQueryExpressionParser filterParser = new UriQueryExpressionParser(this.maxRecursionDepth);
+                                filterOption = filterParser.ParseFilter(filterText);
+                                break;
+                            }
 
                         case ExpressionConstants.QueryOptionOrderby:
-                        {
-                            // advance to the equal sign
-                            this.lexer.NextToken();
-                            string orderByText = this.ReadQueryOption();
+                            {
+                                // advance to the equal sign
+                                this.lexer.NextToken();
+                                string orderByText = this.ReadQueryOption();
 
-                            // TODO using the wrong max depth here - should use orderbys's. We need the settings object.
-                            UriQueryExpressionParser orderbyParser = new UriQueryExpressionParser(this.maxRecursionDepth);
-                            orderByOption = orderbyParser.ParseOrderBy(orderByText).Single();
-                            break;
-                        }
+                                // TODO using the wrong max depth here - should use orderbys's. We need the settings object.
+                                UriQueryExpressionParser orderbyParser = new UriQueryExpressionParser(this.maxRecursionDepth);
+                                orderByOptions = orderbyParser.ParseOrderBy(orderByText);
+                                break;
+                            }
 
                         case ExpressionConstants.QueryOptionTop:
-                        {
-                            // advance to the equal sign
-                            this.lexer.NextToken();
-                            string topText = this.ReadQueryOption();
-
-                            // TryParse requires a non-nullable long.
-                            long top;
-                            if (!long.TryParse(topText, out top))
                             {
-                                throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidTopOption(topText));
-                            }
+                                // advance to the equal sign
+                                this.lexer.NextToken();
+                                string topText = this.ReadQueryOption();
 
-                            topOption = top;
-                            break;
-                        }
+                                // TryParse requires a non-nullable long.
+                                long top;
+                                if (!long.TryParse(topText, out top))
+                                {
+                                    throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidTopOption(topText));
+                                }
+
+                                topOption = top;
+                                break;
+                            }
 
                         case ExpressionConstants.QueryOptionSkip:
-                        {
-                            // advance to the equal sign
-                            this.lexer.NextToken();
-                            string skipText = this.ReadQueryOption();
-
-                            // TryParse requires a non-nullable long.
-                            long skip;
-                            if (!long.TryParse(skipText, out skip))
                             {
-                                throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidSkipOption(skipText));
-                            }
+                                // advance to the equal sign
+                                this.lexer.NextToken();
+                                string skipText = this.ReadQueryOption();
 
-                            skipOption = skip;
-                            break;
-                        }
+                                // TryParse requires a non-nullable long.
+                                long skip;
+                                if (!long.TryParse(skipText, out skip))
+                                {
+                                    throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidSkipOption(skipText));
+                                }
+
+                                skipOption = skip;
+                                break;
+                            }
 
                         case ExpressionConstants.QueryOptionCount:
-                        {
-                            // advance to the equal sign
-                            this.lexer.NextToken();
-                            string countText = this.ReadQueryOption();
-                            switch (countText)
                             {
-                                case ExpressionConstants.KeywordTrue:
+                                // advance to the equal sign
+                                this.lexer.NextToken();
+                                string countText = this.ReadQueryOption();
+                                switch (countText)
                                 {
-                                    countOption = true;
-                                    break;
+                                    case ExpressionConstants.KeywordTrue:
+                                        {
+                                            countOption = true;
+                                            break;
+                                        }
+
+                                    case ExpressionConstants.KeywordFalse:
+                                        {
+                                            countOption = false;
+                                            break;
+                                        }
+
+                                    default:
+                                        {
+                                            throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidCountOption(countText));
+                                        }
                                 }
 
-                                case ExpressionConstants.KeywordFalse:
-                                {
-                                    countOption = false;
-                                    break;
-                                }
-
-                                default:
-                                {
-                                    throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
-                                }
+                                break;
                             }
 
-                            break;
-                        }
+                        case ExpressionConstants.QueryOptionLevels:
+                            {
+                                // advance to the equal sign
+                                this.lexer.NextToken();
+                                string levelsText = this.ReadQueryOption();
+                                long level;
+
+                                if (string.CompareOrdinal(ExpressionConstants.KeywordMax, levelsText) == 0)
+                                {
+                                    levelsOption = long.MinValue;
+                                }
+                                else if (long.TryParse(levelsText, out level))
+                                {
+                                    levelsOption = level;
+                                }
+                                else
+                                {
+                                    throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidLevelsOption(levelsText));
+                                }
+
+                                break;
+                            }
 
                         case ExpressionConstants.QueryOptionSelect:
-                        {
-                            // advance to the equal sign
-                            this.lexer.NextToken();
-                            string selectText = this.ReadQueryOption();
+                            {
+                                // advance to the equal sign
+                                this.lexer.NextToken();
+                                string selectText = this.ReadQueryOption();
 
-                            // TODO test max depth.
-                            V4SelectExpandParser innerSelectParser = new V4SelectExpandParser(selectText, this.maxRecursionDepth);
-                            selectOption = innerSelectParser.ParseSelect();
-                            break;
-                        }
+                                // TODO test max depth.
+                                SelectExpandParser innerSelectParser = new SelectExpandParser(selectText, this.maxRecursionDepth);
+                                selectOption = innerSelectParser.ParseSelect();
+                                break;
+                            }
 
                         case ExpressionConstants.QueryOptionExpand:
-                        {
-                            // advance to the equal sign
-                            this.lexer.NextToken();
-                            string expandText = this.ReadQueryOption();
+                            {
+                                // advance to the equal sign
+                                this.lexer.NextToken();
+                                string expandText = this.ReadQueryOption();
 
-                            // TODO test max depth. Not sure if this works
-                            V4SelectExpandParser innerExpandParser = new V4SelectExpandParser(expandText, this.maxRecursionDepth - 1);
-                            expandOption = innerExpandParser.ParseExpand();
-                            break;
-                        }
+                                // TODO test max depth. Not sure if this works
+                                SelectExpandParser innerExpandParser = new SelectExpandParser(expandText, this.maxRecursionDepth - 1);
+                                expandOption = innerExpandParser.ParseExpand();
+                                break;
+                            }
 
                         default:
-                        {
-                            throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
-                        }
+                            {
+                                throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
+                            }
                     }
                 }
 
@@ -207,7 +229,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
             }
 
-            return new ExpandTermToken(pathToken, filterOption, orderByOption, topOption, skipOption, countOption, selectOption, expandOption);
+            return new ExpandTermToken(pathToken, filterOption, orderByOptions, topOption, skipOption, countOption, levelsOption, selectOption, expandOption);
         }
 
         /// <summary>
@@ -219,13 +241,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Equal)
             {
                 throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
-            } 
+            }
 
             // get the full text from the current location onward
             // there could be literals like 'A string literal; tricky!' in there, so we need to be careful.
             // Also there could be more nested (...) expressions that we ignore until we recurse enough times to get there.
             string expressionText = this.lexer.AdvanceThroughExpandOption();
-            
+
             if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.SemiColon)
             {
                 // Move over the ';' seperator

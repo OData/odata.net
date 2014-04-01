@@ -44,8 +44,6 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 if (this.Kind != ExpressionTokenKind.Identifier)
                 {
                     return false;
@@ -67,8 +65,6 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 return 
                     this.Kind == ExpressionTokenKind.Identifier &&
                     (this.Text == ExpressionConstants.KeywordEqual || 
@@ -81,8 +77,6 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 return
                     this.Kind == ExpressionTokenKind.BinaryLiteral ||
                     this.Kind == ExpressionTokenKind.BooleanLiteral ||
@@ -103,7 +97,6 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.IsKeyValueToken || this.Kind == ExpressionTokenKind.BracketedExpression || this.Kind == ExpressionTokenKind.NullLiteral;
             }
         }
@@ -119,8 +112,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The current identifier text.</returns>
         internal string GetIdentifier()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (this.Kind != ExpressionTokenKind.Identifier)
             {
                 string message = Strings.ExpressionToken_IdentifierExpected(this.Position);
@@ -136,8 +127,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>true if this is an identifier with the specified text.</returns>
         internal bool IdentifierIs(string id)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return this.Kind == ExpressionTokenKind.Identifier && this.Text == id;
         }
     }

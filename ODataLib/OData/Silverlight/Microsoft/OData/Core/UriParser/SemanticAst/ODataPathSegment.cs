@@ -25,28 +25,12 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     /// </summary>
     public abstract class ODataPathSegment : ODataAnnotatable
     {
-        /// <summary>Returns the identifier for this segment i.e. string part without the keys.</summary>
-        private string identifier;
-
-        /// <summary>Indicates whether this segment targets a single result or not.</summary>
-        private bool singleResult;
-
-        /// <summary>The entity set targetted by this segment. Can be null.</summary>
-        private IEdmEntitySet targetEdmEntitySet;
-
-        /// <summary>The type targetted by this segment. Can be null.</summary>
-        private IEdmType targetEdmType;
-
-        /// <summary>The kind of resource targeted by this segment.</summary>
-        private RequestTargetKind targetKind;
-
         /// <summary>
         /// Creates a new Segment and copies values from another Segment.
         /// </summary>
         /// <param name="other">Segment to copy values from.</param>
         internal ODataPathSegment(ODataPathSegment other)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.CopyValuesFrom(other);
         }
 
@@ -55,7 +39,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         protected ODataPathSegment()
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -66,84 +49,19 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 
 #region Temporary Internal Properties
         /// <summary>Returns the identifier for this segment i.e. string part without the keys.</summary>
-        internal string Identifier
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.identifier;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.identifier = value;
-            }
-        }
+        internal string Identifier { get; set; }
 
         /// <summary>Whether the segment targets a single result or not.</summary>
-        internal bool SingleResult
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.singleResult;
-            }
+        internal bool SingleResult { get; set; }
 
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.singleResult = value;
-            }
-        }
+        /// <summary>The navigation source targeted by this segment. Can be null.</summary>
+        internal IEdmNavigationSource TargetEdmNavigationSource { get; set; }
 
-        /// <summary>The entity set targetted by this segment. Can be null.</summary>
-        internal IEdmEntitySet TargetEdmEntitySet
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.targetEdmEntitySet;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.targetEdmEntitySet = value;
-            }
-        }
-
-        /// <summary>The type targetted by this segment. Can be null.</summary>
-        internal IEdmType TargetEdmType
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.targetEdmType;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.targetEdmType = value;
-            }
-        }
+        /// <summary>The type targeted by this segment. Can be null.</summary>
+        internal IEdmType TargetEdmType { get; set; }
 
         /// <summary>The kind of resource targeted by this segment.</summary>
-        internal RequestTargetKind TargetKind
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.targetKind;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.targetKind = value;
-            }
-        }
+        internal RequestTargetKind TargetKind { get; set; }
 #endregion
 
         /// <summary>
@@ -152,13 +70,13 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <typeparam name="T">Type that the translator will return after visiting this token.</typeparam>
         /// <param name="translator">An implementation of the translator interface.</param>
         /// <returns>An object whose type is determined by the type parameter of the translator.</returns>
-        public abstract T Translate<T>(PathSegmentTranslator<T> translator);
+        public abstract T TranslateWith<T>(PathSegmentTranslator<T> translator);
 
         /// <summary>
         /// Handle a <see cref="ODataPathSegment"/> using an implementation of a <see cref="PathSegmentHandler"/>.
         /// </summary>
         /// <param name="handler">An implementation of the handler interface.</param>
-        public abstract void Handle(PathSegmentHandler handler);
+        public abstract void HandleWith(PathSegmentHandler handler);
 
         /// <summary>
         /// Check if this segment is equal to another segment.
@@ -167,7 +85,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <returns>true if the segments are equal.</returns>
         internal virtual bool Equals(ODataPathSegment other)
         {
-            DebugUtils.CheckNoExternalCallers();
             return ReferenceEquals(this, other);
         }
 
@@ -175,13 +92,13 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>In DEBUG builds, ensures that invariants for the class hold.</summary>
         internal void AssertValid()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(Enum.IsDefined(typeof(RequestTargetKind), this.TargetKind), "enum value is not valid");
             Debug.Assert(
                 this.TargetKind != RequestTargetKind.Resource ||
-                this.TargetEdmEntitySet != null || 
+                this.TargetEdmNavigationSource != null || 
                 this.TargetKind == RequestTargetKind.OpenProperty ||
-                this is OperationSegment,
+                this is OperationSegment ||
+                this is OperationImportSegment,
                 "All resource targets (except for some service operations and open properties) should have a container.");
             Debug.Assert(!string.IsNullOrEmpty(this.Identifier), "identifier must not be empty or null.");
         }
@@ -193,11 +110,10 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="other">Ther segment to copy from.</param>
         internal void CopyValuesFrom(ODataPathSegment other)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(other != null, "other != null");
             this.Identifier = other.Identifier;
             this.SingleResult = other.SingleResult;
-            this.TargetEdmEntitySet = other.TargetEdmEntitySet;
+            this.TargetEdmNavigationSource = other.TargetEdmNavigationSource;
             this.TargetKind = other.TargetKind;
             this.TargetEdmType = other.TargetEdmType;
         }

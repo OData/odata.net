@@ -36,7 +36,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="bindMethod">Method to use for binding the parent token, if needed.</param>
         internal UnaryOperatorBinder(Func<QueryToken, QueryNode> bindMethod)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.bindMethod = bindMethod;
         }
 
@@ -47,7 +46,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The bound unary operator token.</returns>
         internal QueryNode BindUnaryOperator(UnaryOperatorToken unaryOperatorToken)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(unaryOperatorToken, "unaryOperatorToken");
 
             SingleValueNode operand = this.GetOperandFromToken(unaryOperatorToken);

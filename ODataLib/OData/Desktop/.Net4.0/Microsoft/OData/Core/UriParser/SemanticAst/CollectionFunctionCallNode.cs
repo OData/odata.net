@@ -32,7 +32,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// the list of operation imports
         /// </summary>
-        private readonly ReadOnlyCollection<IEdmOperationImport> operationImports;
+        private readonly ReadOnlyCollection<IEdmFunction> functions;
 
         /// <summary>
         /// the list of parameters provided to this function
@@ -58,26 +58,26 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Creates a CollectionFunctionCallNode to represent a operation call that returns a collection
         /// </summary>
         /// <param name="name">The name of this operation.</param>
-        /// <param name="operationImports">the list of operation imports that this node should represent.</param>
+        /// <param name="functions">the list of functions that this node should represent.</param>
         /// <param name="parameters">the list of already bound parameters to this operation</param>
         /// <param name="returnedCollectionType">the type of the collection returned by this operation.</param>
         /// <param name="source">The parent of this CollectionFunctionCallNode.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the provided name is null.</exception>
         /// <exception cref="System.ArgumentNullException">Throws if the provided collection type reference is null.</exception>
         /// <exception cref="System.ArgumentException">Throws if the element type of the provided collection type reference is not a primitive or complex type.</exception>
-        public CollectionFunctionCallNode(string name, IEnumerable<IEdmOperationImport> operationImports, IEnumerable<QueryNode> parameters, IEdmCollectionTypeReference returnedCollectionType, QueryNode source)
+        public CollectionFunctionCallNode(string name, IEnumerable<IEdmFunction> functions, IEnumerable<QueryNode> parameters, IEdmCollectionTypeReference returnedCollectionType, QueryNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(returnedCollectionType, "returnedCollectionType");
             this.name = name;
-            this.operationImports = new ReadOnlyCollection<IEdmOperationImport>(operationImports == null ? new List<IEdmOperationImport>() : operationImports.ToList());
+            this.functions = new ReadOnlyCollection<IEdmFunction>(functions == null ? new List<IEdmFunction>() : functions.ToList());
             this.parameters = new ReadOnlyCollection<QueryNode>(parameters == null ? new List<QueryNode>() : parameters.ToList());
             this.returnedCollectionType = returnedCollectionType;
             this.itemType = returnedCollectionType.ElementType();
 
-            if (!this.itemType.IsPrimitive() && !this.itemType.IsComplex())
+            if (!this.itemType.IsPrimitive() && !this.itemType.IsComplex() && !this.itemType.IsEnum())
             {
-                throw new ArgumentException(ODataErrorStrings.Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplex);
+                throw new ArgumentException(ODataErrorStrings.Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
             }
 
             this.source = source;
@@ -94,9 +94,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// Gets the list of operation imports represeted by this node
         /// </summary>
-        public IEnumerable<IEdmOperationImport> OperationImports
+        public IEnumerable<IEdmFunction> Functions
         {
-            get { return this.operationImports; }
+            get { return this.functions; }
         }
 
         /// <summary>
@@ -138,7 +138,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return InternalQueryNodeKind.CollectionFunctionCall;
             }
         }

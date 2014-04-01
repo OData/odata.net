@@ -32,20 +32,18 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomServiceDocumentMetadataSerializer(ODataAtomOutputContext atomOutputContext)
             : base(atomOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
-        /// Writes the ATOM metadata for a single workspace element.
+        /// Writes the ATOM metadata for a single serviceDocument element.
         /// </summary>
-        /// <param name="workspace">The workspace element to get the metadata for and write it.</param>
+        /// <param name="serviceDocument">The serviceDocument element to get the metadata for and write it.</param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.OData.Core.Atom.AtomTextConstruct.set_Text(System.String)", Justification = "The value 'Default' is a spec defined constant which is not to be localized.")]
-        internal void WriteWorkspaceMetadata(ODataWorkspace workspace)
+        internal void WriteServiceDocumentMetadata(ODataServiceDocument serviceDocument)
         {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(workspace != null, "workspace != null");
+            Debug.Assert(serviceDocument != null, "serviceDocument != null");
 
-            AtomWorkspaceMetadata metadata = workspace.GetAnnotation<AtomWorkspaceMetadata>();
+            AtomWorkspaceMetadata metadata = serviceDocument.GetAnnotation<AtomWorkspaceMetadata>();
             AtomTextConstruct title = null;
             if (metadata != null)
             {
@@ -74,16 +72,15 @@ namespace Microsoft.OData.Core.Atom
         }
 
         /// <summary>
-        /// Writes the ATOM metadata for a single (resource) collection element.
+        /// Writes the ATOM metadata for a single entity set element.
         /// </summary>
-        /// <param name="collection">The collection element to get the metadata for and write it.</param>
-        internal void WriteResourceCollectionMetadata(ODataResourceCollectionInfo collection)
+        /// <param name="entitySetInfo">The entity set element to get the metadata for and write it.</param>
+        internal void WriteEntitySetInfoMetadata(ODataEntitySetInfo entitySetInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(collection != null, "collection != null");
-            Debug.Assert(collection.Url != null, "collection.Url should have been validated at this point");
+            Debug.Assert(entitySetInfo != null, "collection != null");
+            Debug.Assert(entitySetInfo.Url != null, "collection.Url should have been validated at this point");
 
-            AtomResourceCollectionMetadata metadata = collection.GetAnnotation<AtomResourceCollectionMetadata>();
+            AtomResourceCollectionMetadata metadata = entitySetInfo.GetAnnotation<AtomResourceCollectionMetadata>();
 
             AtomTextConstruct title = null;
             if (metadata != null)
@@ -91,15 +88,15 @@ namespace Microsoft.OData.Core.Atom
                 title = metadata.Title;
             }
 
-            if (collection.Name != null)
+            if (entitySetInfo.Name != null)
             {
                 if (title == null)
                 {
-                    title = new AtomTextConstruct { Text = collection.Name };
+                    title = new AtomTextConstruct { Text = entitySetInfo.Name };
                 }
-                else if (string.CompareOrdinal(title.Text, collection.Name) != 0)
+                else if (string.CompareOrdinal(title.Text, entitySetInfo.Name) != 0)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataAtomServiceDocumentMetadataSerializer_ResourceCollectionNameAndTitleMismatch(collection.Name, title.Text));
+                    throw new ODataException(ODataErrorStrings.ODataAtomServiceDocumentMetadataSerializer_ResourceCollectionNameAndTitleMismatch(entitySetInfo.Name, title.Text));
                 }
             }
 

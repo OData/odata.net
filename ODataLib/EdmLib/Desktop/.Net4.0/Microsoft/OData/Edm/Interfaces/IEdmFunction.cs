@@ -15,5 +15,9 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public interface IEdmFunction : IEdmOperation
     {
+        /// <summary>
+        /// Gets a value indicating whether this instance is composable.
+        /// </summary>
+        bool IsComposable { get; }
     }
 }

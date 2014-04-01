@@ -10,91 +10,32 @@
 
 namespace Microsoft.OData.Core
 {
-    using System.Globalization;
-
-    using Microsoft.OData.Edm;
-
     /// <summary>
     /// OData enum value
     /// </summary>
     public sealed class ODataEnumValue : ODataValue
     {
-        /// <summary>
-        /// The str value.
-        /// </summary>
-        private readonly string strValue;
-
-        /// <summary>
-        /// The int value.
-        /// </summary>
-        private readonly long? intValue;
-
-        /// <summary>
-        /// Create an odata enum value from string
-        /// </summary>
-        /// <param name="value">input value</param>
+        /// <summary>Constructor</summary>
+        /// <param name="value">The backing type, can be "3" or "White" or "Black,Yellow,Red".</param>
         public ODataEnumValue(string value)
         {
-            this.strValue = value;
+            this.Value = value;
+            this.TypeName = null;
         }
 
-        /// <summary>
-        /// Create an odata enum value from integer
-        /// </summary>
-        /// <param name="value">input value</param>
-        public ODataEnumValue(long value)
+        /// <summary>Constructor</summary>
+        /// <param name="value">The backing type, can be "3" or "White" or "Black,Yellow,Red".</param>
+        /// <param name="typeName">The type name in edm model.</param>
+        public ODataEnumValue(string value, string typeName)
         {
-            this.intValue = value;
-        }
-        
-        /// <summary>
-        /// An enum value
-        /// If an enum value is constructed by a reader, then it shall have access to model
-        /// then we get a string value
-        /// </summary>
-        public string Value
-        {
-            get
-            {
-                return this.strValue ?? this.intValue.ToString();
-            }
+            this.Value = value;
+            this.TypeName = typeName;
         }
 
-        /// <summary>
-        /// The type name
-        /// </summary>
-        public string TypeName { get; set; }
+        /// <summary>Get backing type value, can be "3" or "White" or "Black,Yellow,Red".</summary>
+        public string Value { get; private set; }
 
-        /// <summary>
-        /// Used by writer
-        /// </summary>
-        /// <param name="expectedTypeReference">expected enum type reference</param>
-        /// <returns>string value of the enum</returns>
-        internal string GetValueForSerialization(IEdmTypeReference expectedTypeReference)
-        {
-            string enumValueString = this.Value;
-            if (expectedTypeReference == null)
-            {
-                return enumValueString;
-            }
-
-            IEdmEnumTypeReference enumTypeReference = expectedTypeReference.AsEnum();
-            if (enumTypeReference == null)
-            {
-                return enumValueString;
-            }
-
-            // validate and / or parse the enum value, and write it
-            IEdmEnumType enumType = enumTypeReference.Definition as IEdmEnumType;
-            long enumValue = 0;
-            bool success = enumType.TryParseEnum(enumValueString, true, ref enumValue);
-
-            if (success)
-            {
-                enumValueString = enumTypeReference.ToStringLiteral(enumValue);
-            }
-
-            return enumValueString;
-        }
+        /// <summary>Get the type name in edm model.</summary>
+        public string TypeName { get; private set; }
     }
 }

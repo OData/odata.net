@@ -20,6 +20,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -56,7 +57,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
         internal UriQueryExpressionParser(int maxDepth)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(maxDepth >= 0, "maxDepth >= 0");
 
             this.maxDepth = maxDepth;
@@ -75,15 +75,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The literal query token or null if something else was found.</returns>
         internal static LiteralToken TryParseLiteral(ExpressionLexer lexer)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(lexer != null, "lexer != null");
 
             switch (lexer.CurrentToken.Kind)
             {
                 case ExpressionTokenKind.BooleanLiteral:
                     return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetBoolean(false), Microsoft.OData.Core.Metadata.EdmConstants.EdmBooleanTypeName);
-                case ExpressionTokenKind.DateTimeLiteral:
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTime, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTimeTypeName);
                 case ExpressionTokenKind.DateTimeOffsetLiteral:
                     return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTimeOffsetTypeName);
                 case ExpressionTokenKind.DurationLiteral:
@@ -112,6 +109,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geometry, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmGeometryTypeName);
                 case ExpressionTokenKind.QuotedLiteral:
                     return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetString(true), Microsoft.OData.Core.Metadata.EdmConstants.EdmStringTypeName);
+                case ExpressionTokenKind.BracketedExpression:
+                    {
+                        // TODO challenh: need a BracketLiteralToken for real complex type vaule like [\"Barky\",\"Junior\"]  or {...}
+                        LiteralToken result = new LiteralToken(lexer.CurrentToken.Text, lexer.CurrentToken.Text);
+                        lexer.NextToken();
+                        return result;
+                    }
+
                 default:
                     return null;
             }
@@ -124,11 +129,20 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The lexical token representing the filter.</returns>
         internal QueryToken ParseFilter(string filter)
         {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(filter != null, "filter != null");
+            return this.ParseExpressionText(filter);
+        }
+
+        /// <summary>
+        /// Parse expression text into Token.
+        /// </summary>
+        /// <param name="expressionText">The expression string to Parse.</param>
+        /// <returns>The lexical token representing the expression text.</returns>
+        internal QueryToken ParseExpressionText(string expressionText)
+        {
+            Debug.Assert(expressionText != null, "expressionText != null");
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByExpression(filter);
+            this.lexer = CreateLexerForFilterOrOrderByExpression(expressionText);
             QueryToken result = this.ParseExpression();
             this.lexer.ValidateToken(ExpressionTokenKind.End);
 
@@ -142,7 +156,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The enumeraion of lexical tokens representing order by tokens.</returns>
         internal IEnumerable<OrderByToken> ParseOrderBy(string orderBy)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(orderBy != null, "orderBy != null");
 
             this.recursionDepth = 0;
@@ -185,7 +198,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The lexer for the expression, which will have already moved to the first token.</returns>
         private static ExpressionLexer CreateLexerForFilterOrOrderByExpression(string expression)
         {
-            return new ExpressionLexer(expression, true /*moveToFirstToken*/, false /*useSemicolonDelimeter*/, true /*allowAliases*/);
+            return new ExpressionLexer(expression, true /*moveToFirstToken*/, false /*useSemicolonDelimeter*/, true /*parsingFunctionParameters*/);
         }
 
         /// <summary>Creates an exception for a parse error.</summary>
@@ -194,6 +207,19 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private static Exception ParseError(string message)
         {
             return new ODataException(message);
+        }
+
+        /// <summary>
+        /// Parses parameter alias into token.
+        /// </summary>
+        /// <param name="lexer">The lexer to use.</param>
+        /// <returns>The parameter alias token.</returns>
+        private static FunctionParameterAliasToken ParseParameterAlias(ExpressionLexer lexer)
+        {
+            Debug.Assert(lexer != null, "lexer != null");
+            FunctionParameterAliasToken ret = new FunctionParameterAliasToken(lexer.CurrentToken.Text);
+            lexer.NextToken();
+            return ret;
         }
 
         /// <summary>
@@ -502,33 +528,38 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             switch (this.lexer.CurrentToken.Kind)
             {
-                case ExpressionTokenKind.Identifier:
-                {
-                    IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this.ParseExpression));
-                    return identifierTokenizer.ParseIdentifier(null);
-                }
-
-                case ExpressionTokenKind.OpenParen:
-                {
-                    return this.ParseParenExpression();
-                }
-                    
-                case ExpressionTokenKind.Star:
-                {
-                    IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this.ParseExpression));
-                    return identifierTokenizer.ParseStarMemberAccess(null);
-                }    
-
-                default:
-                {
-                    QueryToken primitiveLiteralToken = TryParseLiteral(this.lexer);
-                    if (primitiveLiteralToken == null)
+                case ExpressionTokenKind.ParameterAlias:
                     {
-                        throw ParseError(ODataErrorStrings.UriQueryExpressionParser_ExpressionExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                        return ParseParameterAlias(this.lexer);
                     }
 
-                    return primitiveLiteralToken;
-                }
+                case ExpressionTokenKind.Identifier:
+                    {
+                        IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this.ParseExpression));
+                        return identifierTokenizer.ParseIdentifier(null);
+                    }
+
+                case ExpressionTokenKind.OpenParen:
+                    {
+                        return this.ParseParenExpression();
+                    }
+
+                case ExpressionTokenKind.Star:
+                    {
+                        IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this.ParseExpression));
+                        return identifierTokenizer.ParseStarMemberAccess(null);
+                    }
+
+                default:
+                    {
+                        QueryToken primitiveLiteralToken = TryParseLiteral(this.lexer);
+                        if (primitiveLiteralToken == null)
+                        {
+                            throw ParseError(ODataErrorStrings.UriQueryExpressionParser_ExpressionExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                        }
+
+                        return primitiveLiteralToken;
+                    }
             }
         }
 

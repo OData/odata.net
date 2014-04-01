@@ -50,7 +50,6 @@ namespace Microsoft.OData.Core
         /// <param name="maxMessageSize">The maximum size of the message in bytes (or a negative value if no maximum applies).</param>
         protected ODataMessage(bool writing, bool disableMessageStreamDisposal, long maxMessageSize)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.writing = writing;
             this.disableMessageStreamDisposal = disableMessageStreamDisposal;
             this.maxMessageSize = maxMessageSize;
@@ -72,7 +71,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.bufferingReadStream;
             }
         }
@@ -84,13 +82,11 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.useBufferingReadStream;
             }
 
             set
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(!this.writing, "UseBufferingReadStream should only be set when reading.");
                 this.useBufferingReadStream = value;
             }

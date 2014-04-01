@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents an element where the container kind is unknown or in error.
         /// </summary>
-        None,
+        None = 0,
 
         /// <summary>
         /// Represents an element implementing <see cref="IEdmEntitySet"/>. 
@@ -26,9 +26,19 @@ namespace Microsoft.OData.Edm
         EntitySet,
 
         /// <summary>
-        /// Represents an element implementing <see cref="IEdmOperationImport"/>.
+        /// Represents an element implementing <see cref="IEdmActionImport"/>.
         /// </summary>
-        OperationImport
+        ActionImport,
+
+        /// <summary>
+        /// Represents an element implementing <see cref="IEdmFunctionImport"/>. 
+        /// </summary>
+        FunctionImport,
+
+        /// <summary>
+        /// Represents an element implementing <see cref="IEdmSingleton"/>.
+        /// </summary>
+        Singleton
     }
 
     /// <summary>

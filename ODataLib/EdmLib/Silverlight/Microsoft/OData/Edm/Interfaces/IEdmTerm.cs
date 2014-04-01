@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents a term with unknown or error kind.
         /// </summary>
-        None,
+        None = 0,
 
         /// <summary>
         /// Represents a term implementing <see cref="IEdmStructuredType"/> and <see cref="IEdmSchemaType"/>.

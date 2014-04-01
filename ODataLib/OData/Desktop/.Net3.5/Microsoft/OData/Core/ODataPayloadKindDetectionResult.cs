@@ -32,7 +32,6 @@ namespace Microsoft.OData.Core
         /// <param name="format">The format for the detected payload kind.</param>
         internal ODataPayloadKindDetectionResult(ODataPayloadKind payloadKind, ODataFormat format)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.payloadKind = payloadKind;
             this.format = format;
         }

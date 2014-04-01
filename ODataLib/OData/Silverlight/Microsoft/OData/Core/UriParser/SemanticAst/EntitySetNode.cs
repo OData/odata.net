@@ -50,7 +50,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             ExceptionUtils.CheckArgumentNotNull(entitySet, "entitySet");
             this.entitySet = entitySet;
-            this.entityType = new EdmEntityTypeReference(UriEdmHelpers.GetEntitySetElementType(this.EntitySet), false);
+            this.entityType = new EdmEntityTypeReference(this.NavigationSource.EntityType(), false);
             this.collectionTypeReference = EdmCoreModel.GetCollection(this.entityType);
         }
 
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// Gets the entity set this node represents.
         /// </summary>
-        public override IEdmEntitySet EntitySet
+        public override IEdmNavigationSource NavigationSource
         {
             get { return this.entitySet; }
         }
@@ -96,7 +96,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return InternalQueryNodeKind.EntitySet;
             }
         }

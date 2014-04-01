@@ -12,13 +12,14 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 {
     #region Namespaces
     using System;
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Semantic;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -27,9 +28,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     public sealed class SingleNavigationNode : SingleEntityNode
     {
         /// <summary>
-        /// The entity set that this NavigationProperty targets.
+        /// The navigation source that this NavigationProperty targets.
         /// </summary>
-        private readonly IEdmEntitySet entitySet;
+        private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
         /// The previous node in the path.
@@ -67,17 +68,18 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             this.source = source;
             this.navigationProperty = navigationProperty;
             this.entityTypeReference = (IEdmEntityTypeReference)this.NavigationProperty.Type;
-            this.entitySet = source.EntitySet != null ? source.EntitySet.FindNavigationTarget(navigationProperty) : null;
+
+            this.navigationSource = source.NavigationSource != null ? source.NavigationSource.FindNavigationTarget(navigationProperty) : null;
         }
 
         /// <summary>
         /// Constructs a SingleNavigationNode.
         /// </summary>
         /// <param name="navigationProperty">The navigation property this node represents.</param>
-        /// <param name="sourceSet">The entity set that this of the previous segment.</param>
+        /// <param name="sourceNavigationSource">The navigation source that this of the previous segment.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty or source is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigationProperty targets more than one entity.</exception>
-        public SingleNavigationNode(IEdmNavigationProperty navigationProperty, IEdmEntitySet sourceSet)
+        public SingleNavigationNode(IEdmNavigationProperty navigationProperty, IEdmNavigationSource sourceNavigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
 
@@ -89,7 +91,8 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 
             this.navigationProperty = navigationProperty;
             this.entityTypeReference = (IEdmEntityTypeReference)this.NavigationProperty.Type;
-            this.entitySet = sourceSet != null ? sourceSet.FindNavigationTarget(navigationProperty) : null;
+
+            this.navigationSource = sourceNavigationSource != null ? sourceNavigationSource.FindNavigationTarget(navigationProperty) : null;
         }
 
         /// <summary>
@@ -133,11 +136,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the entity set that this NavigationProperty targets.
+        /// Gets the navigation source that this NavigationProperty targets.
         /// </summary>
-        public override IEdmEntitySet EntitySet
+        public override IEdmNavigationSource NavigationSource
         {
-            get { return this.entitySet; }
+            get { return this.navigationSource; }
         }
 
         /// <summary>
@@ -147,7 +150,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return InternalQueryNodeKind.SingleNavigationNode;
             }
         }
@@ -161,7 +163,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <exception cref="System.ArgumentNullException">Throws if the input visitor is null.</exception>
         public override T Accept<T>(QueryNodeVisitor<T> visitor)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(visitor, "visitor");
             return visitor.Visit(this);
         }

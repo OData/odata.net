@@ -17,12 +17,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Globalization;
     using System.Text;
     using System.Xml;
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.Metadata;
     using Microsoft.Spatial;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
-    using ODataPlatformHelper = Microsoft.OData.Core.PlatformHelper;
     #endregion Namespaces
 
     /// <summary>
@@ -38,8 +37,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if <paramref name="c"/> is a valid hex digit; false otherwise.</returns>
         internal static bool IsCharHexDigit(char c)
         {
-            DebugUtils.CheckNoExternalCallers();
-            
             return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
         }
 
@@ -52,7 +49,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Complexity is not too high; handling all the cases in one method is preferable to refactoring.")]
         internal static bool TryUriStringToPrimitive(string text, IEdmTypeReference targetType, out object targetValue)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(text != null, "text != null");
             Debug.Assert(targetType != null, "targetType != null");
 
@@ -89,21 +85,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             else if (targetTypeKind == EdmPrimitiveTypeKind.Guid)
             {
                 Guid guidValue;
-                bool result = TryUriStringToGuid(text, out guidValue);
+                bool result = UriUtils.TryUriStringToGuid(text, out guidValue);
                 targetValue = guidValue;
-                return result;
-            }
-            else if (targetTypeKind == EdmPrimitiveTypeKind.DateTime)
-            {
-                DateTime dateTimeValue;
-                bool result = TryUriStringToDateTime(text, out dateTimeValue);
-                targetValue = dateTimeValue;
                 return result;
             }
             else if (targetTypeKind == EdmPrimitiveTypeKind.DateTimeOffset)
             {
                 DateTimeOffset dateTimeOffsetValue;
-                bool result = TryUriStringToDateTimeOffset(text, out dateTimeOffsetValue);
+                bool result = UriUtils.TryUriStringToDateTimeOffset(text, out dateTimeOffsetValue);
                 targetValue = dateTimeOffsetValue;
                 return result;
             }
@@ -164,59 +153,36 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         targetValue = XmlConvert.ToInt32(text);
                         break;
                     case EdmPrimitiveTypeKind.Int64:
-                        if (TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixInt64, ref text))
-                        {
-                            targetValue = XmlConvert.ToInt64(text);
-                        }
-                        else
-                        {
-                            targetValue = default(Int64);
-                            return false;
-                        }
-
+                        TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixInt64, ref text);
+                        targetValue = XmlConvert.ToInt64(text);
                         break;
                     case EdmPrimitiveTypeKind.Single:
-                        if (TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixSingle, ref text))
-                        {
-                            targetValue = XmlConvert.ToSingle(text);
-                        }
-                        else
-                        {
-                            targetValue = default(Single);
-                            return false;
-                        }
-
+                        TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixSingle, ref text);
+                        targetValue = XmlConvert.ToSingle(text);
                         break;
                     case EdmPrimitiveTypeKind.Double:
                         TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixDouble, ref text);
                         targetValue = XmlConvert.ToDouble(text);
                         break;
                     case EdmPrimitiveTypeKind.Decimal:
-                        if (TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixDecimal, ref text))
+                        TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixDecimal, ref text);
+                        try
                         {
-                            try
-                            {
-                                targetValue = XmlConvert.ToDecimal(text);
-                            }
-                            catch (FormatException)
-                            {
-                                // we need to support exponential format for decimals since we used to support them in V1
-                                decimal result;
-                                if (Decimal.TryParse(text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out result))
-                                {
-                                    targetValue = result;
-                                }
-                                else
-                                {
-                                    targetValue = default(Decimal);
-                                    return false;
-                                }
-                            }
+                            targetValue = XmlConvert.ToDecimal(text);
                         }
-                        else
+                        catch (FormatException)
                         {
-                            targetValue = default(Decimal);
-                            return false;
+                            // we need to support exponential format for decimals since we used to support them in V1
+                            decimal result;
+                            if (Decimal.TryParse(text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out result))
+                            {
+                                targetValue = result;
+                            }
+                            else
+                            {
+                                targetValue = default(Decimal);
+                                return false;
+                            }
                         }
 
                         break;
@@ -246,7 +212,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>True if <paramref name="text"/> could successfully be parsed into a non-negative integer; otherwise returns false.</returns>
         internal static bool TryUriStringToNonNegativeInteger(string text, out int nonNegativeInteger)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(text != null, "text != null");
 
             object valueAsObject;
@@ -275,7 +240,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <remarks>Copy of WebConvert.TryRemoveLiteralSuffix.</remarks>
         internal static bool TryRemoveSuffix(string suffix, ref string text)
         {
-            DebugUtils.CheckNoExternalCallers();
             return TryRemoveLiteralSuffix(suffix, ref text);
         }
 
@@ -288,10 +252,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <remarks>Copy of WebConvert.TryRemoveLiteralPrefix.</remarks>
         internal static bool TryRemovePrefix(string prefix, ref string text)
         {
-            DebugUtils.CheckNoExternalCallers();
             return TryRemoveLiteralPrefix(prefix, ref text);
         }
-        
+
         /// <summary>
         /// Removes quotes from the single-quotes text.
         /// </summary>
@@ -300,7 +263,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <remarks>Copy of WebConvert.TryRemoveQuotes.</remarks>
         internal static bool TryRemoveQuotes(ref string text)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(text != null, "text != null");
 
             if (text.Length < 2)
@@ -348,8 +310,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             Debug.Assert(text != null, "text != null");
 
-            if (!TryRemoveLiteralPrefix(ExpressionConstants.LiteralPrefixBinary, ref text) &&
-                !TryRemoveLiteralPrefix(ExpressionConstants.LiteralPrefixShortBinary, ref text))
+            if (!TryRemoveLiteralPrefix(ExpressionConstants.LiteralPrefixBinary, ref text))
             {
                 targetValue = null;
                 return false;
@@ -361,131 +322,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return false;
             }
 
-            if ((text.Length % 2) != 0)
+            try
+            {
+                targetValue = Convert.FromBase64String(text);
+            }
+            catch (FormatException)
             {
                 targetValue = null;
                 return false;
             }
-
-            byte[] result = new byte[text.Length / 2];
-            int resultIndex = 0;
-            int textIndex = 0;
-            while (resultIndex < result.Length)
-            {
-                char ch0 = text[textIndex];
-                char ch1 = text[textIndex + 1];
-                if (!IsCharHexDigit(ch0) || !IsCharHexDigit(ch1))
-                {
-                    targetValue = null;
-                    return false;
-                }
-
-                result[resultIndex] = (byte)((byte)(HexCharToNibble(ch0) << 4) + HexCharToNibble(ch1));
-                textIndex += 2;
-                resultIndex++;
-            }
-
-            targetValue = result;
+            
             return true;
-        }
-
-        /// <summary>
-        /// Converts a string to a GUID value.
-        /// </summary>
-        /// <param name="text">String text to convert.</param>
-        /// <param name="targetValue">After invocation, converted value.</param>
-        /// <returns>true if the value was converted; false otherwise.</returns>
-        /// <remarks>Copy of WebConvert.TryKeyStringToGuid.</remarks>
-        private static bool TryUriStringToGuid(string text, out Guid targetValue)
-        {
-            if (!TryRemoveLiteralPrefix(ExpressionConstants.LiteralPrefixGuid, ref text))
-            {
-                targetValue = default(Guid);
-                return false;
-            }
-
-            if (!TryRemoveQuotes(ref text))
-            {
-                targetValue = default(Guid);
-                return false;
-            }
-
-            try
-            {
-                targetValue = XmlConvert.ToGuid(text);
-                return true;
-            }
-            catch (FormatException)
-            {
-                targetValue = default(Guid);
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Converts a string to a DateTime value.
-        /// </summary>
-        /// <param name="text">String text to convert.</param>
-        /// <param name="targetValue">After invocation, converted value.</param>
-        /// <returns>true if the value was converted; false otherwise.</returns>
-        /// <remarks>Copy of WebConvert.TryKeyStringToDateTime.</remarks>
-        private static bool TryUriStringToDateTime(string text, out DateTime targetValue)
-        {
-            targetValue = default(DateTime);
-            if (!TryRemoveLiteralPrefix(ExpressionConstants.LiteralPrefixDateTime, ref text))
-            {
-                return false;
-            }
-
-            if (!TryRemoveQuotes(ref text))
-            {
-                return false;
-            }
-
-            try
-            {
-                targetValue = ODataPlatformHelper.ConvertStringToDateTime(text);
-                return true;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Converts a string to a DateTimeOffset value.
-        /// </summary>
-        /// <param name="text">String text to convert.</param>
-        /// <param name="targetValue">After invocation, converted value.</param>
-        /// <returns>true if the value was converted; false otherwise.</returns>
-        /// <remarks>Copy of WebConvert.TryKeyStringToDateTimeOffset.</remarks>
-        private static bool TryUriStringToDateTimeOffset(string text, out DateTimeOffset targetValue)
-        {
-            targetValue = default(DateTimeOffset);
-            if (!TryRemoveLiteralPrefix(ExpressionConstants.LiteralPrefixDateTimeOffset, ref text))
-            {
-                return false;
-            }
-
-            if (!TryRemoveQuotes(ref text))
-            {
-                return false;
-            }
-
-            try
-            {
-                targetValue = ODataPlatformHelper.ConvertStringToDateTimeOffset(text);
-                return true;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
         }
 
         /// <summary>
@@ -586,6 +433,18 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
+        /// Checks if text is '-INF' or 'INF' or 'NaN'.
+        /// </summary>
+        /// <param name="text">numeric string</param>
+        /// <returns>true or false</returns>
+        private static bool IsValidNumericConstant(string text)
+        {
+            return string.Equals(text, ExpressionConstants.InfinityLiteral, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(text, "-" + ExpressionConstants.InfinityLiteral, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(text, ExpressionConstants.NaNLiteral, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
         /// Check and strip the input <paramref name="text"/> for literal <paramref name="suffix"/>
         /// </summary>
         /// <param name="suffix">The suffix value</param>
@@ -598,7 +457,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             Debug.Assert(suffix != null, "suffix != null");
 
             text = text.Trim(WhitespaceChars);
-            if (text.Length <= suffix.Length || !text.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
+            if (text.Length <= suffix.Length || IsValidNumericConstant(text) || !text.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }

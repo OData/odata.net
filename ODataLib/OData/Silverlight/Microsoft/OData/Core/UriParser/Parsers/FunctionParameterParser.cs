@@ -15,14 +15,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm;
+    using System.Globalization;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>
     /// Component for parsing function parameters in both $filter/$orderby expressions and in paths.
+    /// TODO: 1631831 - update code that is duplicate between operation and operation import, add more tests.
     /// </summary>
     internal static class FunctionParameterParser
     {
@@ -34,22 +37,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>Whether the parameters could be split.</returns>
         internal static bool TrySplitFunctionParameters(this ExpressionLexer lexer, out ICollection<FunctionParameterToken> splitParameters)
         {
-            DebugUtils.CheckNoExternalCallers();
-            return lexer.TrySplitFunctionParameters(ExpressionTokenKind.CloseParen, out splitParameters);
-        }
-
-        /// <summary>
-        /// Tries to parse a collection of function parameters for filter/orderby.
-        /// </summary>
-        /// <param name="splitParameters">The syntactically split parameters to parse.</param>
-        /// <param name="configuration">The configuration for the URI Parser.</param>
-        /// <param name="operationImport">The operation import for the function whose parameters are being parsed.</param>
-        /// <param name="parsedParameters">The parameters if they were successfully parsed.</param>
-        /// <returns>Whether the parameters could be parsed.</returns>
-        internal static bool TryParseFunctionParameters(ICollection<FunctionParameterToken> splitParameters, ODataUriParserConfiguration configuration, IEdmOperationImport operationImport, out ICollection<FunctionParameterToken> parsedParameters)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            return TryParseFunctionParameters(splitParameters, configuration, operationImport, (paramName, convertedValue) => new FunctionParameterToken(paramName, new LiteralToken(convertedValue)), out parsedParameters);
+            return lexer.TrySplitOperationParameters(ExpressionTokenKind.CloseParen, out splitParameters);
         }
 
         /// <summary>
@@ -59,9 +47,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="parenthesisExpression">The contents of the parentheses portion of the current path segment.</param>
         /// <param name="splitParameters">The parameters if they were successfully split.</param>
         /// <returns>Whether the parameters could be split.</returns>
-        internal static bool TrySplitFunctionParameters(string functionName, string parenthesisExpression, out ICollection<FunctionParameterToken> splitParameters)
+        internal static bool TrySplitOperationParameters(string functionName, string parenthesisExpression, out ICollection<FunctionParameterToken> splitParameters)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(parenthesisExpression), "!string.IsNullOrEmpty(parenthesisExpression)");
             var lexer = new ExpressionLexer(parenthesisExpression, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
 
@@ -71,21 +58,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return false;
             }
 
-            return TrySplitFunctionParameters(lexer, ExpressionTokenKind.End, out splitParameters);
-        }
-
-        /// <summary>
-        /// Tries to parse a collection of function parameters for path.
-        /// </summary>     
-        /// <param name="splitParameters">The split parameters from the syntactic parsing step.</param>
-        /// <param name="configuration">The configuration for the URI Parser.</param>
-        /// <param name="operationImport">The operation import for the function whose parameters are being parsed.</param>
-        /// <param name="parsedParameters">The parameters if they were successfully parsed.</param>
-        /// <returns>Whether the parameters could be parsed.</returns>
-        internal static bool TryParseFunctionParameters(ICollection<FunctionParameterToken> splitParameters, ODataUriParserConfiguration configuration, IEdmOperationImport operationImport, out ICollection<OperationSegmentParameter> parsedParameters)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            return TryParseFunctionParameters(splitParameters, configuration, operationImport, (paramName, convertedValue) => new OperationSegmentParameter(paramName, convertedValue), out parsedParameters);
+            string funcFullStr = string.Format(CultureInfo.InvariantCulture, "({0})", parenthesisExpression);
+            lexer = new ExpressionLexer(funcFullStr, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
+            UriQueryExpressionParser.Parser parseMethod = () =>
+            {
+                throw new ODataException(" ParseArgumentList");
+            }; // ParseArgumentList method should never call this parseMethod
+            FunctionCallParser functionCallBinder = new FunctionCallParser(lexer, parseMethod);
+            splitParameters = functionCallBinder.ParseArgumentList();
+            lexer.ValidateToken(ExpressionTokenKind.End);
+            return true;
         }
 
         /// <summary>
@@ -95,9 +77,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="endTokenKind">The token kind that marks the end of the parameters.</param>
         /// <param name="splitParameters">The parameters if they were successfully split.</param>
         /// <returns>Whether the parameters could be split.</returns>
-        private static bool TrySplitFunctionParameters(this ExpressionLexer lexer, ExpressionTokenKind endTokenKind, out ICollection<FunctionParameterToken> splitParameters)
+        private static bool TrySplitOperationParameters(this ExpressionLexer lexer, ExpressionTokenKind endTokenKind, out ICollection<FunctionParameterToken> splitParameters)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(lexer != null, "lexer != null");
 
             var parameters = new List<FunctionParameterToken>();
@@ -123,12 +104,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 lexer.ValidateToken(ExpressionTokenKind.Equal);
                 lexer.NextToken();
 
-                QueryToken parameterValue;
-                if (!TryCreateParameterValueToken(lexer.CurrentToken, out parameterValue))
-                {
-                    throw new ODataException(ODataErrorStrings.ExpressionLexer_SyntaxError(lexer.Position, lexer.ExpressionText));
-                }
+                // TODO challenh: 1. currently maxDepth=10 supports only simple value, 2. per ABNF, should support commeon expression
+                //      functionExprParameter  = parameterName EQ ( parameterAlias / parameterValue )
+                //      parameterValue = arrayOrObject
+                //                       / commonExpr
+                UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(10);
+                QueryToken parameterValue = expressionParser.ParseExpressionText(lexer.CurrentToken.Text);
 
+                // if (!TryCreateParameterValueToken(lexer, out parameterValue))
+                // {
+                //     throw new ODataException(ODataErrorStrings.ExpressionLexer_SyntaxError(lexer.Position, lexer.ExpressionText));
+                // }
                 parameters.Add(new FunctionParameterToken(identifier, parameterValue));
 
                 // Read the next parameterToken. We should be at the end, or find
@@ -147,131 +133,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
             }
 
-            return true;
-        }
-
-        /// <summary>
-        /// Tries to parse a collection of function parameters. Allows path and filter to share the core algorithm while representing parameters differently.
-        /// </summary>
-        /// <typeparam name="TParam">The type representing a parameter.</typeparam>
-        /// <param name="splitParameters">The syntactically split parameters to parse.</param>
-        /// <param name="configuration">The configuration for the URI Parser.</param>
-        /// <param name="operationImport">The operation import for the function whose parameters are being parsed.</param>
-        /// <param name="createParameter">The callback to use for individual parameter parsing.</param>
-        /// <param name="parsedParameters">The parameters if they were successfully parsed.</param>
-        /// <returns>Whether the parameters could be parsed.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri Parser does not need to go through the ODL behavior knob.")]
-        private static bool TryParseFunctionParameters<TParam>(ICollection<FunctionParameterToken> splitParameters, ODataUriParserConfiguration configuration, IEdmOperationImport operationImport, Func<string, object, TParam> createParameter, out ICollection<TParam> parsedParameters)
-        {
-            Debug.Assert(splitParameters != null, "splitParameters != null");
-            Debug.Assert(createParameter != null, "createParameter != null");
-            Debug.Assert(configuration != null, "configuration != null");
-            Debug.Assert(operationImport != null, "operationImport != null");
-
-            parsedParameters = new List<TParam>(splitParameters.Count);
-            foreach (var splitParameter in splitParameters)
-            {
-                TParam parameter;
-
-                IEdmTypeReference expectedType = null;
-                IEdmOperationParameter edmOperationParameter = null;
-
-                try
-                {
-                    edmOperationParameter = operationImport.FindParameter(splitParameter.ParameterName);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    // this can throw an exception if there are multiple parameters with the same name..
-                    // catch that exception and throw something more sane.
-                    throw new ODataException(ODataErrorStrings.FunctionCallParser_DuplicateParameterName, ex);
-                }
-
-                Debug.Assert(edmOperationParameter != null, "At this point we should know that the parameter names match the given operation import.");
-                expectedType = edmOperationParameter.Type;
-
-                if (!TryCreateParameter(splitParameter, configuration, expectedType, o => createParameter(splitParameter.ParameterName, o), out parameter))
-                {
-                    return false;
-                }
-
-                parsedParameters.Add(parameter);
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Tries to create a parameter using any representation based on the provided delegate for creating it from a converted value.
-        /// </summary>
-        /// <param name="expressionToken">The current expression parameterToken from the lexer.</param>
-        /// <param name="parameterValue">The parameter value if one was successfully created.</param>
-        /// <returns>Whether the parameter could be created from the parameterToken.</returns>
-        private static bool TryCreateParameterValueToken(ExpressionToken expressionToken, out QueryToken parameterValue)
-        {
-            if (expressionToken.Kind == ExpressionTokenKind.ParameterAlias)
-            {
-                parameterValue = new FunctionParameterAliasToken(expressionToken.Text);
-                return true;
-            }
-
-            if (expressionToken.IsFunctionParameterToken)
-            {
-                parameterValue = new RawFunctionParameterValueToken(expressionToken.Text);
-                return true;
-            }
-
-            parameterValue = null;
-            return false;
-        }
-
-        /// <summary>
-        /// Tries to create a parameter using any representation based on the provided delegate for creating it from a converted value.
-        /// </summary>
-        /// <typeparam name="TParam">The type used to represent a parameter.</typeparam>
-        /// <param name="parameterToken">The token from the syntactic parsing step.</param>
-        /// <param name="configuration">The configuration for the URI Parser.</param>
-        /// <param name="expectedType">The type that the parameter is expected to resolve to.</param>
-        /// <param name="createParameter">Callback to create the final parameter from the parsed value.</param>
-        /// <param name="parameter">The parameter if one was successfully created.</param>
-        /// <returns>Whether the parameter could be created from the parameterToken.</returns>
-        private static bool TryCreateParameter<TParam>(FunctionParameterToken parameterToken, ODataUriParserConfiguration configuration, IEdmTypeReference expectedType, Func<object, TParam> createParameter, out TParam parameter)
-        {
-            Debug.Assert(parameterToken != null, "parameterToken != null");
-            QueryToken valueToken = parameterToken.ValueToken;
-            object convertedValue;
-            if (valueToken.Kind == QueryTokenKind.FunctionParameterAlias && configuration.FunctionParameterAliasCallback == null)
-            {
-                convertedValue = new ODataUnresolvedFunctionParameterAlias(((FunctionParameterAliasToken)valueToken).Alias, expectedType);
-            }
-            else
-            {
-                string textToParse;
-                if (valueToken.Kind == QueryTokenKind.FunctionParameterAlias)
-                {
-                    textToParse = configuration.FunctionParameterAliasCallback(((FunctionParameterAliasToken)valueToken).Alias);
-                }
-                else if (valueToken.Kind == QueryTokenKind.RawFunctionParameterValue)
-                {
-                    textToParse = ((RawFunctionParameterValueToken)valueToken).RawText;
-                }
-                else
-                {
-                    parameter = default(TParam);
-                    return false;
-                }
-
-                if (textToParse == null)
-                {
-                    convertedValue = null;
-                }
-                else
-                {
-                    convertedValue = ODataUriUtils.ConvertFromUriLiteral(textToParse, ODataVersion.V4, configuration.Model, expectedType);
-                }
-            }
-
-            parameter = createParameter(convertedValue);
             return true;
         }
     }

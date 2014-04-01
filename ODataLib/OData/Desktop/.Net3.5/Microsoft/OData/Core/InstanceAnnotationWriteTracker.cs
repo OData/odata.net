@@ -25,7 +25,7 @@ namespace Microsoft.OData.Core
         private readonly HashSet<string> writeStatus;
 
         /// <summary>
-        /// Creates a new <see cref="InstanceAnnotationWriteTracker"/> to hold write status for instance annotations contained in <see cref="InstanceAnnotationCollection"/>.
+        /// Creates a new <see cref="InstanceAnnotationWriteTracker"/> to hold write status for instance annotations.
         /// </summary>
         public InstanceAnnotationWriteTracker()
         {
@@ -39,7 +39,6 @@ namespace Microsoft.OData.Core
         /// <param name="key">The key of the element to check if its written.</param>
         public bool IsAnnotationWritten(string key)
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.writeStatus.Contains(key);
         }
 
@@ -50,7 +49,6 @@ namespace Microsoft.OData.Core
         /// <param name="key">The key of the element to mark as written.</param>
         public bool MarkAnnotationWritten(string key)
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.writeStatus.Add(key);
         }
     }

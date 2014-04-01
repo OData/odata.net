@@ -14,7 +14,7 @@ namespace Microsoft.OData.Core
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if !WINDOWS_PHONE && !SILVERLIGHT  && !PORTABLELIB
+#if ORCAS
     using System.Runtime.Serialization;
 #endif
     #endregion Namespaces
@@ -22,7 +22,7 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Exception type representing exceptions in the OData library.
     /// </summary>
-#if !WINDOWS_PHONE && !SILVERLIGHT  && !PORTABLELIB
+#if ORCAS
     [Serializable]
 #endif
     [DebuggerDisplay("{Message}")]
@@ -54,7 +54,7 @@ namespace Microsoft.OData.Core
         {
         }
 
-#if !WINDOWS_PHONE && !SILVERLIGHT && !PORTABLELIB
+#if ORCAS
         /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Core.ODataException" /> class from the specified <see cref="T:System.Runtime.Serialization.SerializationInfo" /> and <see cref="T:System.Runtime.Serialization.StreamingContext" /> instances.</summary>
         /// <param name="info"> A <see cref="T:System.Runtime.Serialization.SerializationInfo" /> containing the information required to serialize  the new <see cref="T:Microsoft.OData.Core.ODataException" />. </param>
         /// <param name="context"> A <see cref="T:System.Runtime.Serialization.StreamingContext" /> containing the source of the serialized stream  associated with the new <see cref="T:Microsoft.OData.Core.ODataException" />. </param>

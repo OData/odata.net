@@ -19,9 +19,7 @@ namespace Microsoft.OData.Edm.Library
     {
         private readonly bool isUnbounded;
         private readonly int? maxLength;
-        private readonly bool? isFixedLength;
         private readonly bool? isUnicode;
-        private readonly string collation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmStringTypeReference"/> class.
@@ -29,7 +27,7 @@ namespace Microsoft.OData.Edm.Library
         /// <param name="definition">The type this reference refers to.</param>
         /// <param name="isNullable">Denotes whether the type can be nullable.</param>
         public EdmStringTypeReference(IEdmPrimitiveType definition, bool isNullable)
-            : this(definition, isNullable, false, null, null, null, null)
+            : this(definition, isNullable, false, null, true)
         {
         }
 
@@ -40,10 +38,8 @@ namespace Microsoft.OData.Edm.Library
         /// <param name="isNullable">Denotes whether the type can be nullable.</param>
         /// <param name="isUnbounded">Denotes whether the max length is the maximum allowed value.</param>
         /// <param name="maxLength">Maximum length of a value of this type.</param>
-        /// <param name="isFixedLength">Denotes whether the length can vary. </param>
         /// <param name="isUnicode">Denotes if string is encoded using Unicode.</param>
-        /// <param name="collation">Indicates the collation string to be used by the underlying store.</param>
-        public EdmStringTypeReference(IEdmPrimitiveType definition, bool isNullable, bool isUnbounded, int? maxLength, bool? isFixedLength, bool? isUnicode, string collation)
+        public EdmStringTypeReference(IEdmPrimitiveType definition, bool isNullable, bool isUnbounded, int? maxLength, bool? isUnicode)
             : base(definition, isNullable)
         {
             if (isUnbounded && maxLength != null)
@@ -53,17 +49,7 @@ namespace Microsoft.OData.Edm.Library
 
             this.isUnbounded = isUnbounded;
             this.maxLength = maxLength;
-            this.isFixedLength = isFixedLength;
             this.isUnicode = isUnicode;
-            this.collation = collation;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this string type specifies fixed length.
-        /// </summary>
-        public bool? IsFixedLength
-        {
-            get { return this.isFixedLength; }
         }
 
         /// <summary>
@@ -88,14 +74,6 @@ namespace Microsoft.OData.Edm.Library
         public bool? IsUnicode
         {
             get { return this.isUnicode; }
-        }
-
-        /// <summary>
-        /// Gets a string representing the collation of this string type.
-        /// </summary>
-        public string Collation
-        {
-            get { return this.collation; }
         }
     }
 }

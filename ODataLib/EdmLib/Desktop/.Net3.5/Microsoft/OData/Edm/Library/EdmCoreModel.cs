@@ -57,7 +57,6 @@ namespace Microsoft.OData.Edm.Library
             var primitiveGuid = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Guid", EdmPrimitiveTypeKind.Guid);
 
             var primitiveTime = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Duration", EdmPrimitiveTypeKind.Duration);
-            var primitiveDateTime = new EdmValidCoreModelPrimitiveType(EdmNamespace, "DateTime", EdmPrimitiveTypeKind.DateTime);
             var primitiveDateTimeOffset = new EdmValidCoreModelPrimitiveType(EdmNamespace, "DateTimeOffset", EdmPrimitiveTypeKind.DateTimeOffset);
 
             var primitiveDecimal = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Decimal", EdmPrimitiveTypeKind.Decimal);
@@ -88,7 +87,6 @@ namespace Microsoft.OData.Edm.Library
                 primitiveBinary,
                 primitiveBoolean,
                 primitiveByte,
-                primitiveDateTime,
                 primitiveDateTimeOffset,
                 primitiveDecimal,
                 primitiveDouble,
@@ -125,6 +123,7 @@ namespace Microsoft.OData.Edm.Library
                 this.primitiveTypeKinds[primitive.Namespace + '.' + primitive.Name] = primitive.PrimitiveKind;
                 this.primitiveTypesByKind[primitive.PrimitiveKind] = primitive;
                 this.primitiveTypeByName[primitive.Namespace + '.' + primitive.Name] = primitive;
+                this.primitiveTypeByName[primitive.Name] = primitive;
             }
         }
 
@@ -142,6 +141,14 @@ namespace Microsoft.OData.Edm.Library
         public IEnumerable<IEdmSchemaElement> SchemaElements
         {
             get { return this.primitiveTypes; }
+        }
+
+        /// <summary>
+        /// Gets the collection of namespaces that schema elements use contained in this model.
+        /// </summary>
+        public IEnumerable<string> DeclaredNamespaces
+        {
+            get { return Enumerable.Empty<string>(); }
         }
 
         /// <summary>
@@ -169,13 +176,21 @@ namespace Microsoft.OData.Edm.Library
         }
 
         /// <summary>
+        /// Gets the only one entity container of the model.
+        /// </summary>
+        public IEdmEntityContainer EntityContainer
+        {
+            get { return null; }
+        }
+
+        /// <summary>
         /// Gets a reference to a non-atomic collection type definition.
         /// </summary>
         /// <param name="elementType">Type of elements in the collection.</param>
         /// <returns>A new non-atomic collection type reference.</returns>
         public static IEdmCollectionTypeReference GetCollection(IEdmTypeReference elementType)
         {
-            return new EdmCollectionTypeReference(new EdmCollectionType(elementType), false);
+            return new EdmCollectionTypeReference(new EdmCollectionType(elementType));
         }
 
         /// <summary>
@@ -187,6 +202,29 @@ namespace Microsoft.OData.Edm.Library
         {
             EdmValidCoreModelPrimitiveType element;
             return this.primitiveTypeByName.TryGetValue(qualifiedName, out element) ? element : null;
+        }
+
+        /// <summary>
+        /// Searches for bound operations based on the binding type, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>A set of operations that share the binding type or empty enumerable if no such operation exists.</returns>
+        public IEnumerable<IEdmOperation> FindDeclaredBoundOperations(IEdmType bindingType)
+        {
+            return Enumerable.Empty<IEdmOperation>();
+        }
+
+        /// <summary>
+        /// Searches for bound operations based on the qualified name and binding type, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation.</param>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>
+        /// A set of operations that share the qualified name and binding type or empty enumerable if no such operation exists.
+        /// </returns>
+        public IEnumerable<IEdmOperation> FindDeclaredBoundOperations(string qualifiedName, IEdmType bindingType)
+        {
+            return Enumerable.Empty<IEdmOperation>();
         }
 
         /// <summary>
@@ -210,13 +248,14 @@ namespace Microsoft.OData.Edm.Library
         }
 
         /// <summary>
-        /// Searches for an entity container with the given name in this model and returns null if no such entity container exists.
+        /// Searches for any functionImport or actionImport by name and parameter names.
         /// </summary>
-        /// <param name="name">The name of the entity container being found.</param>
-        /// <returns>The requested entity container, or null if no such entity container exists.</returns>
-        public IEdmEntityContainer FindDeclaredEntityContainer(string name)
+        /// <param name="operationImportName">The name of the operation imports to find. May be qualified with the namespace.</param>
+        /// <param name="parameterNames">The parameter names of the parameters.</param>
+        /// <returns>The operation imports that matches the search criteria or empty there was no match.</returns>
+        public IEnumerable<IEdmOperationImport> FindOperationImportsByNameNonBindingParameterType(string operationImportName, IEnumerable<string> parameterNames)
         {
-            return null;
+            return Enumerable.Empty<IEdmOperationImport>();
         }
 
         /// <summary>
@@ -330,16 +369,6 @@ namespace Microsoft.OData.Edm.Library
         }
 
         /// <summary>
-        /// Gets a reference to a datetime primitive type definition.
-        /// </summary>
-        /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
-        /// <returns>A new datetime type reference.</returns>
-        public IEdmTemporalTypeReference GetDateTime(bool isNullable)
-        {
-            return new EdmTemporalTypeReference(this.GetCoreModelPrimitiveType(EdmPrimitiveTypeKind.DateTime), isNullable);
-        }
-
-        /// <summary>
         /// Gets a reference to a datetime with offset primitive type definition.
         /// </summary>
         /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
@@ -430,7 +459,6 @@ namespace Microsoft.OData.Edm.Library
         {
             switch (kind)
             {
-                case EdmPrimitiveTypeKind.DateTime:
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Duration:
                     return new EdmTemporalTypeReference(this.GetCoreModelPrimitiveType(kind), isNullable, precision);
@@ -449,7 +477,6 @@ namespace Microsoft.OData.Edm.Library
         {
             switch (kind)
             {
-                case EdmPrimitiveTypeKind.DateTime:
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Duration:
                     return new EdmTemporalTypeReference(this.GetCoreModelPrimitiveType(kind), isNullable);
@@ -463,12 +490,11 @@ namespace Microsoft.OData.Edm.Library
         /// </summary>
         /// <param name="isUnbounded">Flag specifying if max length is unbounded.</param>
         /// <param name="maxLength">Maximum length of the type.</param>
-        /// <param name="isFixedLength">Flag specifying if the type will have a fixed length.</param>
         /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
         /// <returns>A new binary type reference.</returns>
-        public IEdmBinaryTypeReference GetBinary(bool isUnbounded, int? maxLength, bool? isFixedLength, bool isNullable)
+        public IEdmBinaryTypeReference GetBinary(bool isUnbounded, int? maxLength, bool isNullable)
         {
-            return new EdmBinaryTypeReference(this.GetCoreModelPrimitiveType(EdmPrimitiveTypeKind.Binary), isNullable, isUnbounded, maxLength, isFixedLength);
+            return new EdmBinaryTypeReference(this.GetCoreModelPrimitiveType(EdmPrimitiveTypeKind.Binary), isNullable, isUnbounded, maxLength);
         }
 
         /// <summary>
@@ -551,14 +577,12 @@ namespace Microsoft.OData.Edm.Library
         /// </summary>
         /// <param name="isUnbounded">Flag specifying if max length is the maximum allowable value.</param>
         /// <param name="maxLength">Maximum length of the type.</param>
-        /// <param name="isFixedLength">Flag specifying if the type will have a fixed length.</param>
         /// <param name="isUnicode">Flag specifying if the type should support unicode encoding.</param>
-        /// <param name="collation">String representing how data should be ordered.</param>
         /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
         /// <returns>A new string type reference.</returns>
-        public IEdmStringTypeReference GetString(bool isUnbounded, int? maxLength, bool? isFixedLength, bool? isUnicode, string collation, bool isNullable)
+        public IEdmStringTypeReference GetString(bool isUnbounded, int? maxLength, bool? isUnicode, bool isNullable)
         {
-            return new EdmStringTypeReference(this.GetCoreModelPrimitiveType(EdmPrimitiveTypeKind.String), isNullable, isUnbounded, maxLength, isFixedLength, isUnicode, collation);
+            return new EdmStringTypeReference(this.GetCoreModelPrimitiveType(EdmPrimitiveTypeKind.String), isNullable, isUnbounded, maxLength, isUnicode);
         }
 
         /// <summary>

@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Microsoft.OData.Edm.Internal;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Values;
 
 namespace Microsoft.OData.Edm.EdmToClrConversion
@@ -290,19 +290,6 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
         }
 
         /// <summary>
-        /// Converts <paramref name="edmValue"/> to a <see cref="System.DateTime"/> value.
-        /// </summary>
-        /// <param name="edmValue">The EDM value to be converted.</param>
-        /// <returns>Converted DateTime.</returns>
-        /// <exception cref="InvalidCastException">Exception is thrown if <paramref name="edmValue"/> is not <see cref="IEdmDateTimeValue"/>.</exception>
-        internal static DateTime AsClrDateTime(IEdmValue edmValue)
-        {
-            EdmUtil.CheckArgumentNull(edmValue, "edmValue");
-
-            return ((IEdmDateTimeValue)edmValue).Value;
-        }
-
-        /// <summary>
         /// Converts <paramref name="edmValue"/> to a <see cref="System.TimeSpan"/> value.
         /// </summary>
         /// <param name="edmValue">The EDM value to be converted.</param>
@@ -400,10 +387,6 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
                     clrValue = AsClrDecimal(edmValue);
                     return true;
 
-                case TypeCode.DateTime:
-                    clrValue = AsClrDateTime(edmValue);
-                    return true;
-
                 case TypeCode.String:
                     clrValue = AsClrString(edmValue);
                     return true;
@@ -491,10 +474,6 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
                     }
 
                     return this.AsClrValue(edmValue, clrType.GetGenericArguments().Single());
-                }
-                else if (clrType == typeof(DateTime))
-                {
-                    return AsClrDateTime(edmValue);
                 }
                 else if (clrType == typeof(DateTimeOffset))
                 {

@@ -10,6 +10,8 @@
 
 namespace Microsoft.OData.Edm.Library
 {
+    using Microsoft.OData.Edm.Csdl;
+
     /// <summary>
     /// Represents a reference to an EDM decimal type.
     /// </summary>
@@ -24,7 +26,7 @@ namespace Microsoft.OData.Edm.Library
         /// <param name="definition">The type this reference refers to.</param>
         /// <param name="isNullable">Denotes whether the type can be nullable.</param>
         public EdmDecimalTypeReference(IEdmPrimitiveType definition, bool isNullable)
-            : this(definition, isNullable, null, null)
+            : this(definition, isNullable, null, CsdlConstants.Default_Scale)
         {
         }
 

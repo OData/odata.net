@@ -18,26 +18,23 @@ namespace Microsoft.OData.Core.JsonLight
     /// </summary>
     internal sealed class ODataJsonLightPayloadKindDetectionState
     {
-        /// <summary>The parsed metadata URI.</summary>
+        /// <summary>The parsed context URI.</summary>
         private readonly ODataJsonLightContextUriParseResult contextUriParseResult;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="contextUriParseResult">The parsed metadata URI.</param>
+        /// <param name="contextUriParseResult">The parsed context URI.</param>
         internal ODataJsonLightPayloadKindDetectionState(ODataJsonLightContextUriParseResult contextUriParseResult)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.contextUriParseResult = contextUriParseResult;
         }
 
-        /// <summary>The parsed metadata URI.</summary>
+        /// <summary>The parsed context URI.</summary>
         internal ODataJsonLightContextUriParseResult ContextUriParseResult
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.contextUriParseResult;
             }
         }

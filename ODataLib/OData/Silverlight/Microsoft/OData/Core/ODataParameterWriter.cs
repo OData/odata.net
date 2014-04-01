@@ -36,7 +36,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>Start writing a value parameter.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <param name="parameterValue">The value of the parameter to write.</param>
+        /// <param name="parameterValue">The value of the parameter to write (null/ODataComplexValue/ODataEnumValue/primitiveClrValue).</param>
         public abstract void WriteValue(string parameterName, object parameterValue);
 
 #if ODATALIB_ASYNC

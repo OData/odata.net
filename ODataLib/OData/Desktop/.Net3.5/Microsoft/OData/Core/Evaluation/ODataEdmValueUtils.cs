@@ -19,6 +19,7 @@ namespace Microsoft.OData.Core.Evaluation
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Values;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -34,7 +35,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>An <see cref="IEdmPropertyValue"/> implementation of the <paramref name="property"/> value.</returns>
         internal static IEdmPropertyValue GetEdmPropertyValue(this ODataProperty property, IEdmStructuredTypeReference declaringType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(property != null, "property != null");
 
             IEdmTypeReference propertyType = null;
@@ -60,8 +60,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>An <see cref="IEdmDelayedValue"/> implementation of the <paramref name="value"/>.</returns>
         internal static IEdmDelayedValue ConvertValue(object value, IEdmTypeReference type)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (value == null)
             {
                 return type == null ? ODataEdmNullValue.UntypedInstance : new ODataEdmNullValue(type);

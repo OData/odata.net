@@ -19,6 +19,8 @@ namespace Microsoft.OData.Core
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
+    using Microsoft.OData.Core.Evaluation;
+    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
     #endregion Namespaces
@@ -50,16 +52,15 @@ namespace Microsoft.OData.Core
         /// Constructor.
         /// </summary>
         /// <param name="outputContext">The output context to write to.</param>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <param name="writingFeed">True if the writer is created for writing a feed; false when it is created for writing an entry.</param>
         protected ODataWriterCore(
             ODataOutputContext outputContext,
-            IEdmEntitySet entitySet,
+            IEdmNavigationSource navigationSource,
             IEdmEntityType entityType,
             bool writingFeed)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(outputContext != null, "outputContext != null");
 
             this.outputContext = outputContext;
@@ -71,12 +72,20 @@ namespace Microsoft.OData.Core
                 this.feedValidator = new FeedWithoutExpectedTypeValidator();
             }
 
-            if (entitySet != null && entityType == null)
+            if (navigationSource != null && entityType == null)
             {
-                entityType = this.outputContext.EdmTypeResolver.GetElementType(entitySet);
+                entityType = this.outputContext.EdmTypeResolver.GetElementType(navigationSource);
             }
 
-            this.scopes.Push(new Scope(WriterState.Start, /*item*/null, entitySet, entityType, /*skipWriting*/false, outputContext.MessageWriterSettings.MetadataDocumentUri.SelectedProperties()));
+            ODataUri odataUri = outputContext.MessageWriterSettings.ODataUri.Clone();
+
+            // Remove key for top level entry
+            if (!writingFeed && odataUri != null && odataUri.Path != null)
+            {
+                odataUri.Path = odataUri.Path.TrimEndingKeySegment();
+            }
+
+            this.scopes.Push(new Scope(WriterState.Start, /*item*/null, navigationSource, entityType, /*skipWriting*/false, outputContext.MessageWriterSettings.SelectedProperties, odataUri));
         }
 
         /// <summary>
@@ -191,9 +200,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Returns the entity type of the immediate parent entry for which a navigation link is being written.
+        /// Returns the navigation source of the immediate parent entry for which a navigation link is being written.
         /// </summary>
-        protected IEdmEntitySet ParentEntryEntitySet
+        protected IEdmNavigationSource ParentEntryNavigationSource
         {
             get
             {
@@ -201,7 +210,7 @@ namespace Microsoft.OData.Core
                     this.State == WriterState.NavigationLink || this.State == WriterState.NavigationLinkWithContent,
                     "ParentEntryEntityType should only be called while writing a navigation link (with or without content).");
                 Scope entryScope = this.scopes.Parent;
-                return entryScope.EntitySet;
+                return entryScope.NavigationSource;
             }
         }
 
@@ -514,6 +523,46 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// Get instance of the parent entry scope
+        /// </summary>
+        /// <returns>
+        /// The parent entry scope
+        /// Or null if there is no parent entry scope
+        /// </returns>
+        protected EntryScope GetParentEntryScope()
+        {
+            ScopeStack scopeStack = new ScopeStack();
+            Scope parentEntryScope = null;
+
+            if (this.scopes.Count > 0)
+            {
+                // pop current scope and push into scope stack
+                scopeStack.Push(this.scopes.Pop());
+            }
+
+            while (this.scopes.Count > 0)
+            {
+                Scope scope = this.scopes.Pop();
+                scopeStack.Push(scope);
+
+                if (scope is EntryScope)
+                {
+                    parentEntryScope = scope;
+                    break;
+                }
+            }
+
+            while (scopeStack.Count > 0)
+            {
+                Scope scope = scopeStack.Pop();
+                this.scopes.Push(scope);
+            }
+
+            return parentEntryScope as EntryScope;
+        }
+
+
+        /// <summary>
         /// Determines whether a given writer state is considered an error state.
         /// </summary>
         /// <param name="state">The writer state to check.</param>
@@ -618,23 +667,25 @@ namespace Microsoft.OData.Core
         /// Create a new feed scope.
         /// </summary>
         /// <param name="feed">The feed for the new scope.</param>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
+        /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly create scope.</returns>
-        protected abstract FeedScope CreateFeedScope(ODataFeed feed, IEdmEntitySet entitySet, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties);
+        protected abstract FeedScope CreateFeedScope(ODataFeed feed, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri);
 
         /// <summary>
         /// Create a new entry scope.
         /// </summary>
         /// <param name="entry">The entry for the new scope.</param>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
+        /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly create scope.</returns>
-        protected abstract EntryScope CreateEntryScope(ODataEntry entry, IEdmEntitySet entitySet, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties);
+        protected abstract EntryScope CreateEntryScope(ODataEntry entry, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri);
 
         /// <summary>
         /// Gets the serialization info for the given entry.
@@ -670,14 +721,15 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="writerState">The writer state for the new scope.</param>
         /// <param name="navLink">The navigation link for the new scope.</param>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
+        /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly created navigation link scope.</returns>
-        protected virtual NavigationLinkScope CreateNavigationLinkScope(WriterState writerState, ODataNavigationLink navLink, IEdmEntitySet entitySet, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties)
+        protected virtual NavigationLinkScope CreateNavigationLinkScope(WriterState writerState, ODataNavigationLink navLink, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
-            return new NavigationLinkScope(writerState, navLink, entitySet, entityType, skipWriting, selectedProperties);
+            return new NavigationLinkScope(writerState, navLink, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
         }
 
         /// <summary>
@@ -772,12 +824,6 @@ namespace Microsoft.OData.Core
                     // Verify query count
                     if (feed.Count.HasValue)
                     {
-                        // Check that Count is not set for expanded links
-                        if (!this.IsTopLevel)
-                        {
-                            throw new ODataException(Strings.ODataWriterCore_OnlyTopLevelFeedsSupportCount);
-                        }
-
                         // Check that Count is not set for requests
                         if (!this.outputContext.WritingResponse)
                         {
@@ -845,7 +891,6 @@ namespace Microsoft.OData.Core
 
                         this.PrepareEntryForWriteStart(entry, entryScope.GetOrCreateTypeContext(this.outputContext.Model, this.outputContext.WritingResponse), entryScope.SelectedProperties);
                         this.ValidateEntryMediaResource(entry, entityType);
-                        WriterValidationUtils.ValidateEntryAtStart(entry);
                     }
 
                     this.StartEntry(entry);
@@ -880,7 +925,7 @@ namespace Microsoft.OData.Core
             ODataEntry parentEntry = (ODataEntry)this.scopes.Parent.Item;
             if (parentEntry.MetadataBuilder != null)
             {
-                navigationLink.SetMetadataBuilder(parentEntry.MetadataBuilder);
+                navigationLink.MetadataBuilder = parentEntry.MetadataBuilder;
             }
         }
 
@@ -912,11 +957,6 @@ namespace Microsoft.OData.Core
                             Debug.Assert(
                                 entry != null || this.ParentNavigationLink != null && !this.ParentNavigationLink.IsCollection.Value,
                                 "when entry == null, it has to be an expanded single entry navigation");
-
-                            if (entry != null)
-                            {
-                                WriterValidationUtils.ValidateEntryAtEnd(entry);
-                            }
 
                             this.EndEntry(entry);
                             this.DecreaseEntryDepth();
@@ -1110,8 +1150,9 @@ namespace Microsoft.OData.Core
                     if (navigationProperty != null)
                     {
                         this.CurrentScope.EntityType = navigationProperty.ToEntityType();
-                        IEdmEntitySet parentEntitySet = this.ParentEntryEntitySet;
-                        this.CurrentScope.EntitySet = parentEntitySet == null ? null : parentEntitySet.FindNavigationTarget(navigationProperty);
+                        IEdmNavigationSource parentNavigationSource = this.ParentEntryNavigationSource;
+
+                        this.CurrentScope.NavigationSource = parentNavigationSource == null ? null : parentNavigationSource.FindNavigationTarget(navigationProperty);
                     }
                 });
 
@@ -1217,12 +1258,14 @@ namespace Microsoft.OData.Core
 
             Scope currentScope = this.CurrentScope;
 
-            IEdmEntitySet entitySet = null;
+            IEdmNavigationSource navigationSource = null;
             IEdmEntityType entityType = null;
             SelectedPropertiesNode selectedProperties = currentScope.SelectedProperties;
+            ODataUri odataUri = currentScope.ODataUri.Clone();
+
             if (newState == WriterState.Entry || newState == WriterState.Feed)
             {
-                entitySet = currentScope.EntitySet;
+                navigationSource = currentScope.NavigationSource;
                 entityType = currentScope.EntityType;
             }
 
@@ -1249,8 +1292,59 @@ namespace Microsoft.OData.Core
                         if (navigationProperty != null)
                         {
                             entityType = navigationProperty.ToEntityType();
-                            IEdmEntitySet currentEntitySet = currentScope.EntitySet;
-                            entitySet = currentEntitySet == null ? null : currentEntitySet.FindNavigationTarget(navigationProperty);
+                            IEdmNavigationSource currentNavigationSource = currentScope.NavigationSource;
+
+                            navigationSource = currentNavigationSource == null ? null : currentNavigationSource.FindNavigationTarget(navigationProperty);
+
+                            SelectExpandClause clause = odataUri.SelectAndExpand;
+                            TypeSegment typeCastFromExpand = null;
+                            if (clause != null)
+                            {
+                                SelectExpandClause subClause;
+                                clause.GetSubSelectExpandClause(navigationLink.Name, out subClause, out typeCastFromExpand);
+                                odataUri.SelectAndExpand = subClause;
+                            }
+
+                            ODataPath odataPath;
+                            switch (navigationSource.NavigationSourceKind())
+                            {
+                                case EdmNavigationSourceKind.ContainedEntitySet:
+                                    if (odataUri.Path == null)
+                                    {
+                                        throw new ODataException(Strings.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
+                                    }
+
+                                    odataPath = odataUri.Path;
+                                    if (ShouldAppendKey(currentNavigationSource))
+                                    {
+                                        ODataItem odataItem = this.CurrentScope.Item;
+                                        Debug.Assert(odataItem is ODataEntry, "If the current state is Entry the current item must be an ODataEntry as well (and not null either).");
+                                        ODataEntry entry = (ODataEntry)odataItem;
+                                        KeyValuePair<string, object>[] keys = ODataEntryMetadataContext.GetKeyProperties(entry, this.GetEntrySerializationInfo(entry), currentEntityType);
+                                        odataPath = odataPath.AppendKeySegment(keys, currentEntityType, currentNavigationSource);
+                                    }
+
+                                    if (odataPath != null && typeCastFromExpand != null)
+                                    {
+                                        odataPath.Add(typeCastFromExpand);
+                                    }
+
+                                    Debug.Assert(navigationSource is IEdmContainedEntitySet, "If the NavigationSourceKind is ContainedEntitySet, the navigationSource must be IEdmContainedEntitySet.");
+                                    IEdmContainedEntitySet containedEntitySet = (IEdmContainedEntitySet)navigationSource;
+                                    odataPath = odataPath.AppendNavigationPropertySegment(containedEntitySet.NavigationProperty, containedEntitySet);
+                                    break;
+                                case EdmNavigationSourceKind.EntitySet:
+                                    odataPath = new ODataPath(new EntitySetSegment(navigationSource as IEdmEntitySet));
+                                    break;
+                                case EdmNavigationSourceKind.Singleton:
+                                    odataPath = new ODataPath(new SingletonSegment(navigationSource as IEdmSingleton));
+                                    break;
+                                default:
+                                    odataPath = null;
+                                    break;
+                            }
+
+                            odataUri.Path = odataPath;
                         }
                     }
                 }
@@ -1261,7 +1355,7 @@ namespace Microsoft.OData.Core
                 ((FeedScope)currentScope).EntryCount++;
             }
 
-            this.PushScope(newState, item, entitySet, entityType, skipWriting, selectedProperties);
+            this.PushScope(newState, item, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
         }
 
         /// <summary>
@@ -1280,7 +1374,7 @@ namespace Microsoft.OData.Core
             {
                 Scope startScope = this.scopes.Pop();
                 Debug.Assert(startScope.State == WriterState.Start, "startScope.State == WriterState.Start");
-                this.PushScope(WriterState.Completed, /*item*/null, startScope.EntitySet, startScope.EntityType, /*skipWriting*/false, startScope.SelectedProperties);
+                this.PushScope(WriterState.Completed, /*item*/null, startScope.NavigationSource, startScope.EntityType, /*skipWriting*/false, startScope.SelectedProperties, startScope.ODataUri);
                 this.InterceptException(this.EndPayload);
             }
         }
@@ -1392,12 +1486,13 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="state">The writer state of the scope to create.</param>
         /// <param name="item">The item attached to the scope to create.</param>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
+        /// <param name="odataUri">The OdataUri info of this scope.</param>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Debug.Assert check only.")]
-        private void PushScope(WriterState state, ODataItem item, IEdmEntitySet entitySet, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties)
+        private void PushScope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
             Debug.Assert(
                 state == WriterState.Error ||
@@ -1413,19 +1508,19 @@ namespace Microsoft.OData.Core
             switch (state)
             {
                 case WriterState.Entry:
-                    scope = this.CreateEntryScope((ODataEntry)item, entitySet, entityType, skipWriting, selectedProperties);
+                    scope = this.CreateEntryScope((ODataEntry)item, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
                     break;
                 case WriterState.Feed:
-                    scope = this.CreateFeedScope((ODataFeed)item, entitySet, entityType, skipWriting, selectedProperties);
+                    scope = this.CreateFeedScope((ODataFeed)item, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
                     break;
                 case WriterState.NavigationLink:            // fall through
                 case WriterState.NavigationLinkWithContent:
-                    scope = this.CreateNavigationLinkScope(state, (ODataNavigationLink)item, entitySet, entityType, skipWriting, selectedProperties);
+                    scope = this.CreateNavigationLinkScope(state, (ODataNavigationLink)item, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
                     break;
                 case WriterState.Start:                     // fall through
                 case WriterState.Completed:                 // fall through
                 case WriterState.Error:
-                    scope = new Scope(state, item, entitySet, entityType, skipWriting, selectedProperties);
+                    scope = new Scope(state, item, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
                     break;
                 default:
                     string errorMessage = Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_Scope_Create_UnreachableCodePath);
@@ -1434,6 +1529,30 @@ namespace Microsoft.OData.Core
             }
 
             this.scopes.Push(scope);
+        }
+
+        /// <summary>
+        /// Decide whether KeySegment should be appended to ODataPath for certain navigation source.
+        /// </summary>
+        /// <param name="currentNavigationSource">The navigation source to be evaluated.</param>
+        /// <returns>Boolean value indicating whether KeySegment should be appended</returns>
+        private bool ShouldAppendKey(IEdmNavigationSource currentNavigationSource)
+        {
+            if (currentNavigationSource is IEdmEntitySet)
+            {
+                return true;
+            }
+            else if (currentNavigationSource is IEdmContainedEntitySet)
+            {
+                Debug.Assert(currentNavigationSource is IEdmContainedEntitySet, "If the NavigationSourceKind is ContainedEntitySet, the navigationSource must be IEdmContainedEntitySet.");
+                IEdmContainedEntitySet currentContainedEntitySet = (IEdmContainedEntitySet)currentNavigationSource;
+                if (currentContainedEntitySet.NavigationProperty.Type.TypeKind() == EdmTypeKind.Collection)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -1451,7 +1570,6 @@ namespace Microsoft.OData.Core
             /// </summary>
             internal ScopeStack()
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>
@@ -1461,7 +1579,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return this.scopes.Count;
                 }
             }
@@ -1473,7 +1590,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     Debug.Assert(this.scopes.Count > 1, "this.scopes.Count > 1");
                     Scope current = this.scopes.Pop();
                     Scope parent = this.scopes.Peek();
@@ -1489,7 +1605,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     Debug.Assert(this.scopes.Count > 2, "this.scopes.Count > 2");
                     Scope current = this.scopes.Pop();
                     Scope parent = this.scopes.Pop();
@@ -1507,7 +1622,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return this.Count == 0 ? null : this.Parent;
                 }
             }
@@ -1518,7 +1632,6 @@ namespace Microsoft.OData.Core
             /// <param name="scope">The scope.</param>
             internal void Push(Scope scope)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(scope != null, "scope != null");
                 this.scopes.Push(scope);
             }
@@ -1529,7 +1642,6 @@ namespace Microsoft.OData.Core
             /// <returns>The popped scope.</returns>
             internal Scope Pop()
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(this.scopes.Count > 0, "this.scopes.Count > 0");
                 return this.scopes.Pop();
             }
@@ -1540,7 +1652,6 @@ namespace Microsoft.OData.Core
             /// <returns>The current scope at the top of the stack.</returns>
             internal Scope Peek()
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(this.scopes.Count > 0, "this.scopes.Count > 0");
                 return this.scopes.Peek();
             }
@@ -1564,31 +1675,34 @@ namespace Microsoft.OData.Core
             /// <summary>The selected properties for the current scope.</summary>
             private readonly SelectedPropertiesNode selectedProperties;
 
-            /// <summary>The entity set we are going to write entities for.</summary>
-            private IEdmEntitySet entitySet;
+            /// <summary>The navigation source we are going to write entities for.</summary>
+            private IEdmNavigationSource navigationSource;
 
             /// <summary>The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</summary>
             private IEdmEntityType entityType;
+
+            /// <summary>The odata uri info for current scope.</summary>
+            private ODataUri odataUri;
 
             /// <summary>
             /// Constructor creating a new writer scope.
             /// </summary>
             /// <param name="state">The writer state of this scope.</param>
             /// <param name="item">The item attached to this scope.</param>
-            /// <param name="entitySet">The entity set we are going to write entities for.</param>
+            /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
             /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of this scope should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
-            internal Scope(WriterState state, ODataItem item, IEdmEntitySet entitySet, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties)
+            /// <param name="odataUri">The ODataUri info of this scope.</param>
+            internal Scope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 this.state = state;
                 this.item = item;
                 this.entityType = entityType;
-                this.entitySet = entitySet;
+                this.navigationSource = navigationSource;
                 this.skipWriting = skipWriting;
                 this.selectedProperties = selectedProperties;
+                this.odataUri = odataUri;
             }
 
             /// <summary>
@@ -1598,13 +1712,11 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return this.entityType;
                 }
 
                 set
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     this.entityType = value;
                 }
             }
@@ -1616,7 +1728,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return this.state;
                 }
             }
@@ -1628,24 +1739,21 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return this.item;
                 }
             }
 
-            /// <summary>The entity set we are going to write entities for.</summary>
-            internal IEdmEntitySet EntitySet
+            /// <summary>The navigation source we are going to write entities for.</summary>
+            internal IEdmNavigationSource NavigationSource
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
-                    return this.entitySet;
+                    return this.navigationSource;
                 }
 
                 set
                 {
-                    DebugUtils.CheckNoExternalCallers();
-                    this.entitySet = value;
+                    this.navigationSource = value;
                 }
             }
 
@@ -1654,9 +1762,18 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     Debug.Assert(this.selectedProperties != null, "this.selectedProperties != null");
                     return this.selectedProperties;
+                }
+            }
+
+            /// <summary>The odata Uri for the current scope.</summary>
+            internal ODataUri ODataUri
+            {
+                get
+                {
+                    Debug.Assert(this.odataUri != null, "this.odataUri != null");
+                    return this.odataUri;
                 }
             }
 
@@ -1667,7 +1784,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return this.skipWriting;
                 }
             }
@@ -1694,14 +1810,14 @@ namespace Microsoft.OData.Core
             /// Constructor to create a new feed scope.
             /// </summary>
             /// <param name="feed">The feed for the new scope.</param>
-            /// <param name="entitySet">The entity set we are going to write entities for.</param>
+            /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
             /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
-            internal FeedScope(ODataFeed feed, IEdmEntitySet entitySet, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties)
-                : base(WriterState.Feed, feed, entitySet, entityType, skipWriting, selectedProperties)
+            /// <param name="odataUri">The ODataUri info of this scope.</param>
+            internal FeedScope(ODataFeed feed, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(WriterState.Feed, feed, navigationSource, entityType, skipWriting, selectedProperties, odataUri)
             {
-                DebugUtils.CheckNoExternalCallers();
                 this.serializationInfo = feed.SerializationInfo;
             }
 
@@ -1712,13 +1828,11 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return this.entryCount;
                 }
 
                 set
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     this.entryCount = value;
                 }
             }
@@ -1730,7 +1844,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     if (this.instanceAnnotationWriteTracker == null)
                     {
                         this.instanceAnnotationWriteTracker = new InstanceAnnotationWriteTracker();
@@ -1748,13 +1861,12 @@ namespace Microsoft.OData.Core
             /// <returns>The type context to answer basic questions regarding the type info of the entry.</returns>
             internal ODataFeedAndEntryTypeContext GetOrCreateTypeContext(IEdmModel model, bool writingResponse)
             {
-                DebugUtils.CheckNoExternalCallers();
                 if (this.typeContext == null)
                 {
                     this.typeContext = ODataFeedAndEntryTypeContext.Create(
                         this.serializationInfo,
-                        this.EntitySet,
-                        EdmTypeWriterResolver.Instance.GetElementType(this.EntitySet),
+                        this.NavigationSource,
+                        EdmTypeWriterResolver.Instance.GetElementType(this.NavigationSource),
                         this.EntityType,
                         model,
                         writingResponse);
@@ -1792,16 +1904,16 @@ namespace Microsoft.OData.Core
             /// </summary>
             /// <param name="entry">The entry for the new scope.</param>
             /// <param name="serializationInfo">The serialization info for the current entry.</param>
-            /// <param name="entitySet">The entity set we are going to write entities for.</param>
+            /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
             /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="writingResponse">true if we are writing a response, false if it's a request.</param>
             /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
-            internal EntryScope(ODataEntry entry, ODataFeedAndEntrySerializationInfo serializationInfo, IEdmEntitySet entitySet, IEdmEntityType entityType, bool skipWriting, bool writingResponse, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties)
-                : base(WriterState.Entry, entry, entitySet, entityType, skipWriting, selectedProperties)
+            /// <param name="odataUri">The ODataUri info of this scope.</param>
+            internal EntryScope(ODataEntry entry, ODataFeedAndEntrySerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, bool writingResponse, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(WriterState.Entry, entry, navigationSource, entityType, skipWriting, selectedProperties, odataUri)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(writerBehavior != null, "writerBehavior != null");
 
                 if (entry != null)
@@ -1821,13 +1933,11 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return this.entityTypeFromMetadata;
                 }
 
                 internal set
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     this.entityTypeFromMetadata = value;
                 }
             }
@@ -1847,7 +1957,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return this.duplicatePropertyNamesChecker;
                 }
             }
@@ -1859,7 +1968,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     if (this.instanceAnnotationWriteTracker == null)
                     {
                         this.instanceAnnotationWriteTracker = new InstanceAnnotationWriteTracker();
@@ -1877,13 +1985,12 @@ namespace Microsoft.OData.Core
             /// <returns>The type context to answer basic questions regarding the type info of the entry.</returns>
             public ODataFeedAndEntryTypeContext GetOrCreateTypeContext(IEdmModel model, bool writingResponse)
             {
-                DebugUtils.CheckNoExternalCallers();
                 if (this.typeContext == null)
                 {
                     this.typeContext = ODataFeedAndEntryTypeContext.Create(
                         this.serializationInfo,
-                        this.EntitySet,
-                        EdmTypeWriterResolver.Instance.GetElementType(this.EntitySet),
+                        this.NavigationSource,
+                        EdmTypeWriterResolver.Instance.GetElementType(this.NavigationSource),
                         this.EntityTypeFromMetadata,
                         model,
                         writingResponse);
@@ -1903,14 +2010,14 @@ namespace Microsoft.OData.Core
             /// </summary>
             /// <param name="writerState">The writer state for the new scope.</param>
             /// <param name="navLink">The navigation link for the new scope.</param>
-            /// <param name="entitySet">The entity set we are going to write entities for.</param>
+            /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
             /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
-            internal NavigationLinkScope(WriterState writerState, ODataNavigationLink navLink, IEdmEntitySet entitySet, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties)
-                : base(writerState, navLink, entitySet, entityType, skipWriting, selectedProperties)
+            /// <param name="odataUri">The ODataUri info of this scope.</param>
+            internal NavigationLinkScope(WriterState writerState, ODataNavigationLink navLink, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(writerState, navLink, navigationSource, entityType, skipWriting, selectedProperties, odataUri)
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>
@@ -1920,8 +2027,7 @@ namespace Microsoft.OData.Core
             /// <returns>The cloned navigation link scope with the specified writer state.</returns>
             internal virtual NavigationLinkScope Clone(WriterState newWriterState)
             {
-                DebugUtils.CheckNoExternalCallers();
-                return new NavigationLinkScope(newWriterState, (ODataNavigationLink)this.Item, this.EntitySet, this.EntityType, this.SkipWriting, this.SelectedProperties);
+                return new NavigationLinkScope(newWriterState, (ODataNavigationLink)this.Item, this.NavigationSource, this.EntityType, this.SkipWriting, this.SelectedProperties, this.ODataUri);
             }
         }
     }

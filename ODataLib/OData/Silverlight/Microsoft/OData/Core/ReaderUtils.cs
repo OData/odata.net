@@ -11,10 +11,11 @@
 namespace Microsoft.OData.Core
 {
     #region Namespaces
-    using System.Collections.Generic;
+    using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -30,14 +31,9 @@ namespace Microsoft.OData.Core
         /// <remarks>The method populates the Properties property with an empty read only enumeration.</remarks>
         internal static ODataEntry CreateNewEntry()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return new ODataEntry
             {
-                Properties = new ReadOnlyEnumerable<ODataProperty>(),
-                AssociationLinks = ReadOnlyEnumerable<ODataAssociationLink>.Empty(),
-                Actions = ReadOnlyEnumerable<ODataAction>.Empty(),
-                Functions = ReadOnlyEnumerable<ODataFunction>.Empty()
+                Properties = new ReadOnlyEnumerable<ODataProperty>()
             };
         }
 
@@ -53,60 +49,38 @@ namespace Microsoft.OData.Core
             bool isExpanded,
             bool? isCollection)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
             Debug.Assert(navigationLink != null, "navigationLink != null");
             
-            ODataAssociationLink associationLink = duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(navigationLink, isExpanded, isCollection);
+            Uri associationLinkUrl = duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(navigationLink, isExpanded, isCollection);
 
             // We must not set the AssociationLinkUrl to null since that would disable templating on it, but we want templating to work if the association link was not in the payload.
-            if (associationLink != null && associationLink.Url != null && navigationLink.AssociationLinkUrl == null)
+            if (associationLinkUrl != null && navigationLink.AssociationLinkUrl == null)
             {
-                navigationLink.AssociationLinkUrl = associationLink.Url;
+                navigationLink.AssociationLinkUrl = associationLinkUrl;
             }
         }
 
         /// <summary>Checks that for duplicate association links and if there already is a navigation link with the same name
         /// sets the association link URL on that navigation link.</summary>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for the current scope.</param>
-        /// <param name="associationLink">The association link to be checked.</param>
+        /// <param name="associationLinkName">The name of association link to be checked.</param>
+        /// <param name="associationLinkUrl">The url of association link to be checked.</param>
         internal static void CheckForDuplicateAssociationLinkAndUpdateNavigationLink(
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
-            ODataAssociationLink associationLink)
+            string associationLinkName,
+            Uri associationLinkUrl)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
-            Debug.Assert(associationLink != null, "associationLink != null");
+            Debug.Assert(associationLinkName != null, "associationLinkName != null");
 
-            ODataNavigationLink navigationLink = duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNames(associationLink);
+            ODataNavigationLink navigationLink = duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNames(associationLinkName, associationLinkUrl);
 
             // We must not set the AssociationLinkUrl to null since that would disable templating on it, but we want templating to work if the association link was not in the payload.
-            if (navigationLink != null && navigationLink.AssociationLinkUrl == null && associationLink.Url != null)
+            if (navigationLink != null && navigationLink.AssociationLinkUrl == null && associationLinkUrl != null)
             {
-                navigationLink.AssociationLinkUrl = associationLink.Url;
+                navigationLink.AssociationLinkUrl = associationLinkUrl;
             }
-        }
-
-        /// <summary>
-        /// Adds an association link to an entry.
-        /// </summary>
-        /// <param name="entry">The entry to get or create the association link for.</param>
-        /// <param name="navigationProperty">The navigation property to get or create the association link for.</param>
-        /// <returns>The association link that we either retrieved or created for the <paramref name="navigationProperty"/>.</returns>
-        internal static ODataAssociationLink GetOrCreateAssociationLinkForNavigationProperty(ODataEntry entry, IEdmNavigationProperty navigationProperty)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(entry != null, "entry != null");
-            Debug.Assert(navigationProperty != null, "navigationProperty != null");
-
-            ODataAssociationLink associationLink = entry.AssociationLinks.FirstOrDefault(al => al.Name == navigationProperty.Name);
-            if (associationLink == null)
-            {
-                associationLink = new ODataAssociationLink { Name = navigationProperty.Name };
-                entry.AddAssociationLink(associationLink);
-            }
-
-            return associationLink;
         }
 
         /// <summary>
@@ -117,7 +91,6 @@ namespace Microsoft.OData.Core
         /// <returns>true if the flas is present, flase otherwise.</returns>
         internal static bool HasFlag(this ODataUndeclaredPropertyBehaviorKinds undeclaredPropertyBehaviorKinds, ODataUndeclaredPropertyBehaviorKinds flag)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(((int)flag | ((int)flag - 1)) + 1 == (int)flag * 2, "Only one flag must be set.");
 
             return (undeclaredPropertyBehaviorKinds & flag) == flag;
@@ -131,14 +104,64 @@ namespace Microsoft.OData.Core
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Ignoring violation because of Debug.Assert.")]
         internal static string GetExpectedPropertyName(IEdmStructuralProperty expectedProperty)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (expectedProperty == null)
             {
                 return null;
             }
 
             return expectedProperty.Name;
+        }
+
+        /// <summary>
+        /// Remove the prefix (#) from type name if there is.
+        /// </summary>
+        /// <param name="typeName">The type name which may be prefixed (#).</param>
+        /// <returns>The type name with prefix removed, if there is.</returns>
+        internal static string RemovePrefixOfTypeName(string typeName)
+        {
+            string prefixRemovedTypeName = typeName;
+            if (!string.IsNullOrEmpty(typeName) && typeName.StartsWith(ODataConstants.TypeNamePrefix, StringComparison.Ordinal))
+            {
+                prefixRemovedTypeName = typeName.Substring(ODataConstants.TypeNamePrefix.Length);
+
+                Debug.Assert(!prefixRemovedTypeName.StartsWith(ODataConstants.TypeNamePrefix, StringComparison.Ordinal), "The type name not start with " + ODataConstants.TypeNamePrefix + "after removing prefix");
+            }
+
+            return prefixRemovedTypeName;
+        }
+
+        /// <summary>
+        /// Add the Edm. prefix to the primitive type if there isn't.
+        /// </summary>
+        /// <param name="typeName">The type name which may be not prefixed (Edm.).</param>
+        /// <returns>The type name with Edm. prefix</returns>
+        internal static string AddEdmPrefixOfTypeName(string typeName)
+        {
+            if (!string.IsNullOrEmpty(typeName))
+            {
+                string itemTypeName = EdmLibraryExtensions.GetCollectionItemTypeName(typeName);
+                if (itemTypeName == null)
+                {
+                    // This is the primitive type
+                    IEdmSchemaType primitiveType = EdmLibraryExtensions.ResolvePrimitiveTypeName(typeName);
+                    if (primitiveType != null)
+                    {
+                        return primitiveType.FullName();
+                    }
+                }
+                else
+                {
+                    // This is the collection type
+                    IEdmSchemaType primitiveType = EdmLibraryExtensions.ResolvePrimitiveTypeName(itemTypeName);
+                    if (primitiveType != null)
+                    {
+                        return EdmLibraryExtensions.GetCollectionTypeName(primitiveType.FullName());
+                    }
+                }
+            }
+
+            // Return the origin type name
+            return typeName;
         }
     }
 }

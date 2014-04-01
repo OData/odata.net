@@ -12,13 +12,11 @@ namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Core.JsonLight;
     using Microsoft.OData.Core.Metadata;
     #endregion Namespaces
 
@@ -41,7 +39,6 @@ namespace Microsoft.OData.Core
         /// <param name="value">The value of the open property.</param>
         internal static void ValidateOpenPropertyValue(string propertyName, object value)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             if (value is ODataCollectionValue)
@@ -62,10 +59,9 @@ namespace Microsoft.OData.Core
         /// <param name="typeName">The name of the type (used for error reporting only).</param>
         internal static void ValidateValueTypeKind(EdmTypeKind typeKind, string typeName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(typeName != null, "typeName != null");
 
-            if (typeKind != EdmTypeKind.Primitive && typeKind != EdmTypeKind.Complex && typeKind != EdmTypeKind.Collection)
+            if (typeKind != EdmTypeKind.Primitive && typeKind != EdmTypeKind.Enum && typeKind != EdmTypeKind.Complex && typeKind != EdmTypeKind.Collection)
             {
                 throw new ODataException(Strings.ValidationUtils_IncorrectValueTypeKind(typeName, typeKind.ToString()));
             }
@@ -78,8 +74,6 @@ namespace Microsoft.OData.Core
         /// <returns>The item type name for the <paramref name="collectionTypeName"/>.</returns>
         internal static string ValidateCollectionTypeName(string collectionTypeName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             string itemTypeName = EdmLibraryExtensions.GetCollectionItemTypeName(collectionTypeName);
 
             if (itemTypeName == null)
@@ -98,7 +92,6 @@ namespace Microsoft.OData.Core
         /// <param name="payloadEntityTypeReference">The payload entity type reference to validate.</param>
         internal static void ValidateEntityTypeIsAssignable(IEdmEntityTypeReference expectedEntityTypeReference, IEdmEntityTypeReference payloadEntityTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(expectedEntityTypeReference != null, "expectedEntityTypeReference != null");
             Debug.Assert(payloadEntityTypeReference != null, "payloadEntityTypeReference != null");
 
@@ -116,8 +109,6 @@ namespace Microsoft.OData.Core
         /// <returns>The <see cref="IEdmCollectionTypeReference"/> instance representing the collection passed as <paramref name="typeReference"/>.</returns>
         internal static IEdmCollectionTypeReference ValidateCollectionType(IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             IEdmCollectionTypeReference collectionTypeReference = typeReference.AsCollectionOrNull();
 
             if (collectionTypeReference != null && !typeReference.IsNonEntityCollectionType())
@@ -132,16 +123,12 @@ namespace Microsoft.OData.Core
         /// Validates an item of a collection to ensure it is not of collection and stream reference types.
         /// </summary>
         /// <param name="item">The collection item.</param>
-        /// <param name="isStreamable">True if the items in the collection are streamable, false otherwise.</param>
-        internal static void ValidateCollectionItem(object item, bool isStreamable)
+        /// <param name="isNullable">True if the items in the collection are nullable, false otherwise.</param>
+        internal static void ValidateCollectionItem(object item, bool isNullable)
         {
-            DebugUtils.CheckNoExternalCallers();
-
-            // Null values are allowed for streamable collections (such as top-level collections), but not atomic collections.
-            // We don't allow null items in atomic collections because it creates ambigious situations with EPM.
-            if (!isStreamable && item == null)
+            if (!isNullable && item == null)
             {
-                throw new ODataException(Strings.ValidationUtils_NonStreamingCollectionElementsMustNotBeNull);
+                throw new ODataException(Strings.ValidationUtils_NonNullableCollectionElementsMustNotBeNull);
             }
 
             if (item is ODataCollectionValue)
@@ -162,8 +149,6 @@ namespace Microsoft.OData.Core
         /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
         internal static void ValidateNullCollectionItem(IEdmTypeReference expectedItemType, ODataWriterBehavior writerBehavior)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (expectedItemType != null)
             {
                 if (expectedItemType.IsODataPrimitiveTypeKind())
@@ -185,8 +170,6 @@ namespace Microsoft.OData.Core
         /// <param name="edmProperty">Property metadata to validate against.</param>
         internal static void ValidateStreamReferenceProperty(ODataProperty streamProperty, IEdmProperty edmProperty)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             Debug.Assert(streamProperty != null, "streamProperty != null");
             Debug.Assert(!string.IsNullOrEmpty(streamProperty.Name), "!string.IsNullOrEmpty(streamProperty.Name)");
             Debug.Assert(streamProperty.Value is ODataStreamReferenceValue, "This method should only be called for stream reference properties.");
@@ -199,62 +182,12 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataAssociationLink"/> to ensure it's not null.
-        /// </summary>
-        /// <param name="associationLink">The association link to ensure it's not null.</param>
-        internal static void ValidateAssociationLinkNotNull(ODataAssociationLink associationLink)
-        {
-            DebugUtils.CheckNoExternalCallers();
-
-            // null link can not appear in the enumeration
-            if (associationLink == null)
-            {
-                throw new ODataException(Strings.ValidationUtils_EnumerableContainsANullItem("ODataEntry.AssociationLinks"));
-            }
-        }
-
-        /// <summary>
-        /// Validates the name for an association link.
-        /// </summary>
-        /// <param name="associationLinkName">The name of the association link to validate.</param>
-        internal static void ValidateAssociationLinkName(string associationLinkName)
-        {
-            DebugUtils.CheckNoExternalCallers();
-
-            // Association link must have a non-empty name
-            if (string.IsNullOrEmpty(associationLinkName))
-            {
-                throw new ODataException(Strings.ValidationUtils_AssociationLinkMustSpecifyName);
-            }
-        }
-
-        /// <summary>
-        /// Validates an <see cref="ODataAssociationLink"/> to ensure all required information is specified and valid.
-        /// </summary>
-        /// <param name="associationLink">The association link to validate.</param>
-        internal static void ValidateAssociationLink(ODataAssociationLink associationLink)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(associationLink != null, "associationLink != null");
-
-            ValidateAssociationLinkName(associationLink.Name);
-
-            // Association link must specify the Url
-            if (associationLink.Url == null)
-            {
-                throw new ODataException(Strings.ValidationUtils_AssociationLinkMustSpecifyUrl);
-            }
-        }
-
-        /// <summary>
         /// Increases the given recursion depth, and then verifies that it doesn't exceed the recursion depth limit.
         /// </summary>
         /// <param name="recursionDepth">The current depth of the payload element hierarchy.</param>
         /// <param name="maxDepth">The maximum allowed recursion depth.</param>
         internal static void IncreaseAndValidateRecursionDepth(ref int recursionDepth, int maxDepth)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             recursionDepth++;
             if (recursionDepth > maxDepth)
             {
@@ -269,8 +202,6 @@ namespace Microsoft.OData.Core
         /// <param name="isAction">Whether <paramref name="operation"/> is an <see cref="ODataAction"/>.</param>
         internal static void ValidateOperationNotNull(ODataOperation operation, bool isAction)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // null action/function can not appear in the enumeration
             if (operation == null)
             {
@@ -285,7 +216,6 @@ namespace Microsoft.OData.Core
         /// <param name="operation">The operation to validate.</param>
         internal static void ValidateOperationMetadataNotNull(ODataOperation operation)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(operation != null, "operation != null");
 
             // ODataOperation must have a Metadata property.
@@ -301,7 +231,6 @@ namespace Microsoft.OData.Core
         /// <param name="operation">The operation to validate.</param>
         internal static void ValidateOperationTargetNotNull(ODataOperation operation)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(operation != null, "operation != null");
 
             // ODataOperation must have a Target property.
@@ -321,7 +250,6 @@ namespace Microsoft.OData.Core
         /// <remarks>If the <paramref name="entityType"/> is available only entry-level tests are performed, properties and such are not validated.</remarks>
         internal static void ValidateEntryMetadataResource(ODataEntry entry, IEdmEntityType entityType, IEdmModel model, bool validateMediaResource)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entry != null, "entry != null");
 
             if (entityType != null)
@@ -331,17 +259,16 @@ namespace Microsoft.OData.Core
 
                 if (validateMediaResource)
                 {
-                    bool hasDefaultStream = model.HasDefaultStream(entityType);
                     if (entry.MediaResource == null)
                     {
-                        if (hasDefaultStream)
+                        if (entityType.HasStream)
                         {
                             throw new ODataException(Strings.ValidationUtils_EntryWithoutMediaResourceAndMLEType(entityType.ODataFullName()));
                         }
                     }
                     else
                     {
-                        if (!hasDefaultStream)
+                        if (!entityType.HasStream)
                         {
                             throw new ODataException(Strings.ValidationUtils_EntryWithMediaResourceAndNonMLEType(entityType.ODataFullName()));
                         }
@@ -357,7 +284,6 @@ namespace Microsoft.OData.Core
         /// <param name="expectedTypeReference">The expected type for the value.</param>
         internal static void ValidateIsExpectedPrimitiveType(object value, IEdmTypeReference expectedTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(value != null, "value != null");
             Debug.Assert(expectedTypeReference != null, "expectedTypeReference != null");
 
@@ -380,7 +306,6 @@ namespace Microsoft.OData.Core
         /// </remarks>
         internal static void ValidateIsExpectedPrimitiveType(object value, IEdmPrimitiveTypeReference valuePrimitiveTypeReference, IEdmTypeReference expectedTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(value != null, "value != null");
             Debug.Assert(expectedTypeReference != null, "expectedTypeReference != null");
 
@@ -406,7 +331,6 @@ namespace Microsoft.OData.Core
         /// <param name="typeReferenceFromValue">The actual type.</param>
         internal static void ValidateMetadataPrimitiveType(IEdmTypeReference expectedTypeReference, IEdmTypeReference typeReferenceFromValue)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(expectedTypeReference != null && expectedTypeReference.IsODataPrimitiveTypeKind(), "expectedTypeReference must be a primitive type.");
             Debug.Assert(typeReferenceFromValue != null && typeReferenceFromValue.IsODataPrimitiveTypeKind(), "typeReferenceFromValue must be a primitive type.");
 
@@ -436,37 +360,40 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates a resource collection.
+        /// Validates a element in service document.
         /// </summary>
-        /// <param name="collectionInfo">The resource collection to validate.</param>
-        internal static void ValidateResourceCollectionInfo(ODataResourceCollectionInfo collectionInfo)
+        /// <param name="serviceDocumentElement">The element in service document to validate.</param>
+        /// <param name="format">Format that is being validated.</param>
+        [SuppressMessage("DataWeb.Usage", "AC0010", Justification = "Usage of ToString is safe in this context")]
+        internal static void ValidateServiceDocumentElement(ODataServiceDocumentElement serviceDocumentElement, ODataFormat format)
         {
-            DebugUtils.CheckNoExternalCallers();
-
-            if (collectionInfo == null)
+            if (serviceDocumentElement == null)
             {
-                throw new ODataException(Strings.ValidationUtils_WorkspaceCollectionsMustNotContainNullItem);
+                throw new ODataException(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
             }
 
             // The resource collection URL must not be null; 
-            if (collectionInfo.Url == null)
+            if (serviceDocumentElement.Url == null)
             {
-                throw new ODataException(Strings.ValidationUtils_ResourceCollectionMustSpecifyUrl);
+                throw new ODataException(Strings.ValidationUtils_ResourceMustSpecifyUrl);
+            }
+
+            if (format == ODataFormat.Json && string.IsNullOrEmpty(serviceDocumentElement.Name))
+            {
+                throw new ODataException(Strings.ValidationUtils_ResourceMustSpecifyName(serviceDocumentElement.Url.ToString()));
             }
         }
 
         /// <summary>
-        /// Validates a resource collection Url.
+        /// Validates a service document element's Url.
         /// </summary>
-        /// <param name="collectionInfoUrl">The resource collection url to validate.</param>
-        internal static void ValidateResourceCollectionInfoUrl(string collectionInfoUrl)
+        /// <param name="serviceDocumentUrl">The service document url to validate.</param>
+        internal static void ValidateServiceDocumentElementUrl(string serviceDocumentUrl)
         {
-            DebugUtils.CheckNoExternalCallers();
-
-            // The resource collection URL must not be null or empty; 
-            if (collectionInfoUrl == null)
+            // The service document URL must not be null or empty; 
+            if (serviceDocumentUrl == null)
             {
-                throw new ODataException(Strings.ValidationUtils_ResourceCollectionUrlMustNotBeNull);
+                throw new ODataException(Strings.ValidationUtils_ServiceDocumentElementUrlMustNotBeNull);
             }
         }
 
@@ -478,8 +405,6 @@ namespace Microsoft.OData.Core
         /// <param name="typeName">The name of the type to use in the error.</param>
         internal static void ValidateTypeKind(EdmTypeKind actualTypeKind, EdmTypeKind expectedTypeKind, string typeName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (actualTypeKind != expectedTypeKind)
             {
                 if (typeName == null)
@@ -497,8 +422,6 @@ namespace Microsoft.OData.Core
         /// <param name="boundary">The boundary delimiter to test.</param>
         internal static void ValidateBoundaryString(string boundary)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // Boundary string must have at least 1 and no more than 70 characters.
             if (boundary == null || boundary.Length == 0 || boundary.Length > MaxBoundaryLength)
             {
@@ -518,8 +441,6 @@ namespace Microsoft.OData.Core
         /// <returns>True if complex property should be validated for null values.</returns>
         internal static bool ShouldValidateComplexPropertyNullValue(IEdmModel model)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             Debug.Assert(model != null, "For null validation model is required.");
             Debug.Assert(model.IsUserModel(), "For complex properties, the model should be user model.");
 
@@ -533,7 +454,6 @@ namespace Microsoft.OData.Core
         /// <returns>true if the property name is valid, otherwise false.</returns>
         internal static bool IsValidPropertyName(string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "The ATOM or JSON reader should have verified that the property name is not null or empty.");
 
             return propertyName.IndexOfAny(ValidationUtils.InvalidCharactersInPropertyNames) < 0;
@@ -545,7 +465,6 @@ namespace Microsoft.OData.Core
         /// <param name="propertyName">The property name to check.</param>
         internal static void ValidatePropertyName(string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             if (!IsValidPropertyName(propertyName))

@@ -23,12 +23,8 @@ namespace Microsoft.OData.Core.JsonLight
     /// </summary>
     internal sealed class ODataJsonLightEntryAndFeedSerializer : ODataJsonLightPropertySerializer
     {
-        /// <summary>A map from annotation group name to annotation group for all annotation groups
-        /// encountered so far in this payload.</summary>
-        private readonly Dictionary<string, ODataJsonLightAnnotationGroup> annotationGroups;
-
-        /// <summary>The metadata uri builder to use.</summary>
-        private readonly ODataJsonLightContextUriBuilder contextUriBuilder;
+        /// <summary>The context uri builder to use.</summary>
+        private readonly ODataContextUriBuilder contextUriBuilder;
 
         /// <summary>
         /// Constructor.
@@ -37,11 +33,8 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightEntryAndFeedSerializer(ODataJsonLightOutputContext jsonLightOutputContext)
             : base(jsonLightOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-            this.annotationGroups = new Dictionary<string, ODataJsonLightAnnotationGroup>(StringComparer.Ordinal);
-            
             // DEVNOTE: grab this early so that any validation errors are thrown at creation time rather than when Write___ is called.
-            this.contextUriBuilder = jsonLightOutputContext.CreateMetadataUriBuilder();
+            this.contextUriBuilder = jsonLightOutputContext.CreateContextUriBuilder();
         }
 
         /// <summary>
@@ -52,91 +45,7 @@ namespace Microsoft.OData.Core.JsonLight
             get
             {
                 // Note: If we are in no-metadata mode or serializing a request, we don't require the MetadataDocumentUri to be set.
-                return this.contextUriBuilder.BaseUri;
-            }
-        }
-
-        /// <summary>
-        /// Writes an annotation group declaration or annotation group reference if specified for the entry.
-        /// </summary>
-        /// <param name="entry">The entry to write the annotation group declaration or reference for.</param>
-        internal void WriteAnnotationGroup(ODataEntry entry)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(entry != null, "entry != null");
-
-            ODataJsonLightAnnotationGroup annotationGroup = entry.GetAnnotation<ODataJsonLightAnnotationGroup>();
-            if (annotationGroup == null)
-            {
-                return;
-            }
-
-            if (!this.JsonLightOutputContext.WritingResponse)
-            {
-                throw new ODataException(OData.Core.Strings.ODataJsonLightEntryAndFeedSerializer_AnnotationGroupInRequest);
-            }
-
-            string annotationGroupName = annotationGroup.Name;
-            if (string.IsNullOrEmpty(annotationGroupName))
-            {
-                throw new ODataException(OData.Core.Strings.ODataJsonLightEntryAndFeedSerializer_AnnotationGroupWithoutName);
-            }
-
-            // Check whether this is the first occurrence of the annotation group.
-            ODataJsonLightAnnotationGroup existingAnnotationGroup;
-            if (this.annotationGroups.TryGetValue(annotationGroupName, out existingAnnotationGroup))
-            {
-                // Make sure the annotation groups are reference equal if they have the same name.
-                if (!object.ReferenceEquals(existingAnnotationGroup, annotationGroup))
-                {
-                    throw new ODataException(OData.Core.Strings.ODataJsonLightEntryAndFeedSerializer_DuplicateAnnotationGroup(annotationGroupName));
-                }
-
-                // Write an annotation group reference
-                this.JsonWriter.WriteName(ODataAnnotationNames.ODataAnnotationGroupReference);
-                this.JsonWriter.WritePrimitiveValue(annotationGroupName, this.JsonLightOutputContext.Version);
-            }
-            else
-            {
-                // Write an annotation group declaration
-                this.JsonWriter.WriteName(ODataAnnotationNames.ODataAnnotationGroup);
-                this.JsonWriter.StartObjectScope();
-                this.JsonWriter.WriteName(JsonLightConstants.ODataAnnotationGroupNamePropertyName);
-                this.JsonWriter.WritePrimitiveValue(annotationGroupName, this.JsonLightOutputContext.Version);
-
-                if (annotationGroup.Annotations != null)
-                {
-                    foreach (KeyValuePair<string, object> kvp in annotationGroup.Annotations)
-                    {
-                        string annotationKey = kvp.Key;
-                        Debug.Assert(annotationKey != null, "annotationKey != null");
-                        if (annotationKey.Length == 0)
-                        {
-                            throw new ODataException(OData.Core.Strings.ODataJsonLightEntryAndFeedSerializer_AnnotationGroupMemberWithoutName(annotationGroup.Name));
-                        }
-
-                        if (!ODataJsonLightReaderUtils.IsAnnotationProperty(annotationKey))
-                        {
-                            throw new ODataException(OData.Core.Strings.ODataJsonLightEntryAndFeedSerializer_AnnotationGroupMemberMustBeAnnotation(annotationKey, annotationGroup.Name));
-                        }
-
-                        this.JsonWriter.WriteName(annotationKey);
-
-                        object annotationValue = kvp.Value;
-                        string annotationValueString = annotationValue as string;
-                        if (annotationValueString == null && annotationValue != null)
-                        {
-                            throw new ODataException(OData.Core.Strings.ODataJsonLightEntryAndFeedSerializer_AnnotationGroupMemberWithInvalidValue(annotationKey, annotationGroup.Name, annotationValue.GetType().FullName));
-                        }
-
-                        this.JsonWriter.WritePrimitiveValue(annotationValueString, this.JsonLightOutputContext.Version);
-                    }
-                }
-
-                this.JsonWriter.EndObjectScope();
-
-                // Remember that we wrote the declaration of the annotation group.
-                this.annotationGroups.Add(annotationGroupName, annotationGroup);
+                return this.JsonLightOutputContext.MessageWriterSettings.MetadataDocumentUri;
             }
         }
 
@@ -146,32 +55,35 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entryState">The entry state for which to write the metadata properties.</param>
         internal void WriteEntryStartMetadataProperties(IODataJsonLightWriterEntryState entryState)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryState != null, "entryState != null");
 
             ODataEntry entry = entryState.Entry;
 
-            // Write the "odata.type": "typename"
+            // Write the "@odata.type": "typename"
             string typeName = this.JsonLightOutputContext.TypeNameOracle.GetEntryTypeNameForWriting(entryState.GetOrCreateTypeContext(this.Model, this.WritingResponse).ExpectedEntityTypeName, entry);
             if (typeName != null)
             {
-                this.JsonWriter.WriteName(ODataAnnotationNames.ODataType);
-                this.JsonWriter.WriteValue(typeName);
+                ODataJsonLightWriterUtils.WriteODataTypeInstanceAnnotation(this.JsonWriter, typeName);
             }
 
-            // Write the "odata.id": "Entity Id"
-            string id = entry.Id;
-            if (id != null)
+            // Write the "@odata.id": "Entity Id"
+            Uri id;
+            if (entry.MetadataBuilder.TryGetIdForSerialization(out id))
             {
-                this.JsonWriter.WriteName(ODataAnnotationNames.ODataId);
-                this.JsonWriter.WriteValue(id);
+                this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataId);
+                if (id != null && !entry.HasNonComputedId)
+                {
+                    id = this.MetadataDocumentBaseUri.MakeRelativeUri(id);
+                }
+
+                this.JsonWriter.WriteValue(id == null ? null : this.UriToString(id));
             }
 
-            // Write the "etag": "ETag value"
+            // Write the "@odata.etag": "ETag value"
             string etag = entry.ETag;
             if (etag != null)
             {
-                this.JsonWriter.WriteName(ODataAnnotationNames.ODataETag);
+                this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataETag);
                 this.JsonWriter.WriteValue(etag);
             }
         }
@@ -185,26 +97,32 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal void WriteEntryMetadataProperties(IODataJsonLightWriterEntryState entryState)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryState != null, "entryState != null");
 
             ODataEntry entry = entryState.Entry;
 
-            // Write the "odata.editLink": "edit-link-uri"
+            // Write the "@odata.editLink": "edit-link-uri"
             Uri editLinkUriValue = entry.EditLink;
             if (editLinkUriValue != null && !entryState.EditLinkWritten)
             {
-                this.JsonWriter.WriteName(ODataAnnotationNames.ODataEditLink);
-                this.JsonWriter.WriteValue(this.UriToString(editLinkUriValue));
+                this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataEditLink);
+                this.JsonWriter.WriteValue(this.UriToString(
+                    entry.HasNonComputedEditLink
+                    ? editLinkUriValue
+                    : this.MetadataDocumentBaseUri.MakeRelativeUri(editLinkUriValue)));
                 entryState.EditLinkWritten = true;
             }
 
-            // Write the "odata.readLink": "read-link-uri"
+            // Write the "@odata.readLink": "read-link-uri".
+            // If readlink is identical to editlink, don't write readlink.
             Uri readLinkUriValue = entry.ReadLink;
-            if (readLinkUriValue != null && !entryState.ReadLinkWritten)
+            if (readLinkUriValue != null && readLinkUriValue != editLinkUriValue && !entryState.ReadLinkWritten)
             {
-                this.JsonWriter.WriteName(ODataAnnotationNames.ODataReadLink);
-                this.JsonWriter.WriteValue(this.UriToString(readLinkUriValue));
+                this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataReadLink);
+                this.JsonWriter.WriteValue(this.UriToString(
+                    entry.HasNonComputedReadLink
+                    ? readLinkUriValue
+                    : this.MetadataDocumentBaseUri.MakeRelativeUri(readLinkUriValue)));
                 entryState.ReadLinkWritten = true;
             }
 
@@ -212,38 +130,45 @@ namespace Microsoft.OData.Core.JsonLight
             ODataStreamReferenceValue mediaResource = entry.MediaResource;
             if (mediaResource != null)
             {
-                // Write the "odata.mediaEditLink": "edit-link-uri"
+                // Write the "@odata.mediaEditLink": "edit-link-uri"
                 Uri mediaEditLinkUriValue = mediaResource.EditLink;
                 if (mediaEditLinkUriValue != null && !entryState.MediaEditLinkWritten)
                 {
-                    this.JsonWriter.WriteName(ODataAnnotationNames.ODataMediaEditLink);
-                    this.JsonWriter.WriteValue(this.UriToString(mediaEditLinkUriValue));
+                    this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaEditLink);
+                    this.JsonWriter.WriteValue(this.UriToString(
+                        mediaResource.HasNonComputedEditLink
+                        ? mediaEditLinkUriValue
+                        : this.MetadataDocumentBaseUri.MakeRelativeUri(mediaEditLinkUriValue)));
                     entryState.MediaEditLinkWritten = true;
                 }
 
-                // Write the "odata.mediaReadLink": "read-link-uri"
+                // Write the "@odata.mediaReadLink": "read-link-uri"
+                // If mediaReadLink is identical to mediaEditLink, don't write readlink.
                 Uri mediaReadLinkUriValue = mediaResource.ReadLink;
-                if (mediaReadLinkUriValue != null && !entryState.MediaReadLinkWritten)
+                if (mediaReadLinkUriValue != null && mediaReadLinkUriValue != mediaEditLinkUriValue && !entryState.MediaReadLinkWritten)
                 {
-                    this.JsonWriter.WriteName(ODataAnnotationNames.ODataMediaReadLink);
-                    this.JsonWriter.WriteValue(this.UriToString(mediaReadLinkUriValue));
+                    this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaReadLink);
+                    this.JsonWriter.WriteValue(this.UriToString(
+                        mediaResource.HasNonComputedReadLink
+                        ? mediaReadLinkUriValue
+                        : this.MetadataDocumentBaseUri.MakeRelativeUri(mediaReadLinkUriValue)));
                     entryState.MediaReadLinkWritten = true;
                 }
 
-                // Write the "odata.mediaContentType": "content/type"
+                // Write the "@odata.mediaContentType": "content/type"
                 string mediaContentType = mediaResource.ContentType;
                 if (mediaContentType != null && !entryState.MediaContentTypeWritten)
                 {
-                    this.JsonWriter.WriteName(ODataAnnotationNames.ODataMediaContentType);
+                    this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaContentType);
                     this.JsonWriter.WriteValue(mediaContentType);
                     entryState.MediaContentTypeWritten = true;
                 }
 
-                // Write the "odata.mediaETag": "ETAG"
+                // Write the "@odata.mediaEtag": "ETAG"
                 string mediaETag = mediaResource.ETag;
                 if (mediaETag != null && !entryState.MediaETagWritten)
                 {
-                    this.JsonWriter.WriteName(ODataAnnotationNames.ODataMediaETag);
+                    this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataMediaETag);
                     this.JsonWriter.WriteValue(mediaETag);
                     entryState.MediaETagWritten = true;
                 }
@@ -261,7 +186,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="duplicatePropertyNamesChecker">The duplicate names checker for properties of this entry.</param>
         internal void WriteEntryEndMetadataProperties(IODataJsonLightWriterEntryState entryState, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryState != null, "entryState != null");
 
             ODataEntry entry = entryState.Entry;
@@ -270,7 +194,7 @@ namespace Microsoft.OData.Core.JsonLight
             while (navigationLinkInfo != null)
             {
                 Debug.Assert(entry.MetadataBuilder != null, "entry.MetadataBuilder != null");
-                navigationLinkInfo.NavigationLink.SetMetadataBuilder(entry.MetadataBuilder);
+                navigationLinkInfo.NavigationLink.MetadataBuilder = entry.MetadataBuilder;
 
                 this.WriteNavigationLinkMetadata(navigationLinkInfo.NavigationLink, duplicatePropertyNamesChecker);
                 navigationLinkInfo = entry.MetadataBuilder.GetNextUnprocessedNavigationLink();
@@ -298,26 +222,35 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="duplicatePropertyNamesChecker">The checker instance for duplicate property names.</param>
         internal void WriteNavigationLinkMetadata(ODataNavigationLink navigationLink, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(!string.IsNullOrEmpty(navigationLink.Name), "The navigation link Name should have been validated by now.");
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
 
             Uri navigationLinkUrl = navigationLink.Url;
             string navigationLinkName = navigationLink.Name;
+            Uri associationLinkUrl = navigationLink.AssociationLinkUrl;
+            if (associationLinkUrl != null)
+            {
+                duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNames(navigationLinkName, null);
+                this.WriteAssociationLink(navigationLink.Name, associationLinkUrl);
+            }
+
             if (navigationLinkUrl != null)
             {
                 // The navigation link URL is a property annotation "NavigationLinkName@odata.navigationLinkUrl: 'url'"
                 this.JsonWriter.WritePropertyAnnotationName(navigationLinkName, ODataAnnotationNames.ODataNavigationLinkUrl);
                 this.JsonWriter.WriteValue(this.UriToString(navigationLinkUrl));
             }
+        }
 
-            Uri associationLinkUrl = navigationLink.AssociationLinkUrl;
-            if (associationLinkUrl != null)
-            {
-                duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNames(new ODataAssociationLink { Name = navigationLinkName });
-                this.WriteAssociationLink(navigationLink.Name, associationLinkUrl);
-            }
+        /// <summary>
+        /// Writes the navigation link metadata.
+        /// </summary>
+        /// <param name="navigationLink">The navigation link to write the metadata for.</param>
+        /// <param name="contextUrlInfo">The contextUrl information for current element.</param>
+        internal void WriteNavigationLinkContextUrl(ODataNavigationLink navigationLink, ODataContextUrlInfo contextUrlInfo)
+        {
+            this.WriteContextUriProperty(() => this.contextUriBuilder.BuildContextUri(ODataPayloadKind.Entry, contextUrlInfo), () => true, navigationLink.Name);
         }
 
         /// <summary>
@@ -327,8 +260,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="isAction">true when writing the entry's actions; false when writing the entry's functions.</param>
         internal void WriteOperations(IEnumerable<ODataOperation> operations, bool isAction)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // We cannot compare two URI's directly because the 'Equals' method on the 'Uri' class compares two 'Uri' instances without regard to the 
             // fragment part of the URI. (E.G: For 'http://someuri/index.htm#EC.action1' and http://someuri/index.htm#EC.action2', the 'Equals' method 
             // will return true.
@@ -348,31 +279,23 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Tries to writes the metadata URI property for an entry into the payload if one is available.
+        /// Tries to writes the context URI property for an entry into the payload if one is available.
         /// </summary>
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry.</param>
-        internal void TryWriteEntryMetadataUri(ODataFeedAndEntryTypeContext typeContext)
+        internal void TryWriteEntryContextUri(ODataFeedAndEntryTypeContext typeContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-            Uri metadataUri;
-            if (this.contextUriBuilder.TryBuildEntryContextUri(typeContext, out metadataUri))
-            {
-                this.WriteMetadataUriProperty(metadataUri);                
-            }
+            ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
+            this.WriteContextUriProperty(() => this.contextUriBuilder.BuildContextUri(ODataPayloadKind.Entry, ODataContextUrlInfo.Create(typeContext, /* isSingle */ true, odataUri)));
         }
 
         /// <summary>
-        /// Tries to writes the metadata URI property for a feed into the payload if one is available.
+        /// Tries to writes the context URI property for a feed into the payload if one is available.
         /// </summary>
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the feed.</param>
-        internal void TryWriteFeedMetadataUri(ODataFeedAndEntryTypeContext typeContext)
+        internal void TryWriteFeedContextUri(ODataFeedAndEntryTypeContext typeContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-            Uri metadataUri;
-            if (this.contextUriBuilder.TryBuildFeedContextUri(typeContext, out metadataUri))
-            {
-                this.WriteMetadataUriProperty(metadataUri);
-            }
+            ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
+            this.WriteContextUriProperty(() => this.contextUriBuilder.BuildContextUri(ODataPayloadKind.Feed, ODataContextUrlInfo.Create(typeContext, /* isSingle */ false, odataUri)));
         }
 
         /// <summary>
@@ -391,17 +314,17 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Gets the metadata reference fragment from the operation metadata uri.
-        /// i.e. if the operation metadata uri is {absolute metadata document uri}#{container-qualified-operation-name},
+        /// Gets the metadata reference fragment from the operation context uri.
+        /// i.e. if the operation context uri is {absolute metadata document uri}#{container-qualified-operation-name},
         /// this method will return #{container-qualified-operation-name}.
         /// </summary>
         /// <param name="operation">Operation in question.</param>
-        /// <returns>The metadata reference fragment from the operation metadata uri.</returns>
+        /// <returns>The metadata reference fragment from the operation context uri.</returns>
         private string GetOperationMetadataString(ODataOperation operation)
         {
             Debug.Assert(operation != null && operation.Metadata != null, "operation != null && operation.Metadata != null");
 
-            string operationMetadataString = UriUtilsCommon.UriToString(operation.Metadata);
+            string operationMetadataString = UriUtils.UriToString(operation.Metadata);
             Debug.Assert(ODataJsonLightUtils.IsMetadataReferenceProperty(operationMetadataString), "ODataJsonLightUtils.IsMetadataReferenceProperty(operationMetadataString)");
 
             // If we don't have a metadata document URI (which is the case with nometadata mode), just write the string form of the Uri we were given.
@@ -409,12 +332,12 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 return operation.Metadata.Fragment;
             }
-            
+
             Debug.Assert(
                 !ODataJsonLightValidationUtils.IsOpenMetadataReferencePropertyName(this.MetadataDocumentBaseUri, operationMetadataString),
                 "Open metadata reference property is not supported, we should have thrown before this point.");
 
-            return JsonLightConstants.ContextUriFragmentIndicator + ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.MetadataDocumentBaseUri, operationMetadataString);
+            return ODataConstants.ContextUriFragmentIndicator + ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.MetadataDocumentBaseUri, operationMetadataString);
         }
 
         /// <summary>
@@ -428,12 +351,11 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Validates a group of operations with the same Metadata Uri.
+        /// Validates a group of operations with the same context Uri.
         /// </summary>
         /// <param name="operations">Operations to validate.</param>
         private void ValidateOperationMetadataGroup(IGrouping<string, ODataOperation> operations)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(operations != null, "operations must not be null.");
             Debug.Assert(operations.Any(), "operations.Any()");
             Debug.Assert(operations.All(o => this.GetOperationMetadataString(o) == operations.Key), "The operations should be grouped by their metadata.");

@@ -34,32 +34,32 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private readonly IEdmType edmType;
 
         /// <summary>
-        /// The set containing the entities that we are casting.
+        /// The navigation source containing the entities that we are casting.
         /// </summary>
-        private readonly IEdmEntitySet entitySet;
+        private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
         /// Build a type segment using the given <paramref name="edmType"/>.
         /// </summary>
         /// <param name="edmType">The target type of this segment, which may be collection type.</param>
-        /// <param name="entitySet">The set containing the entities that we are casting. This can be null.</param>
+        /// <param name="navigationSource">The navigation source containing the entities that we are casting. This can be null.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input edmType is null.</exception>
         /// <exception cref="ODataException">Throws if the input edmType is not relaed to the type of elements in the input entitySet.</exception>
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
-        public TypeSegment(IEdmType edmType, IEdmEntitySet entitySet) 
+        public TypeSegment(IEdmType edmType, IEdmNavigationSource navigationSource) 
         {
             ExceptionUtils.CheckArgumentNotNull(edmType, "type");
 
             this.edmType = edmType;
-            this.entitySet = entitySet;
+            this.navigationSource = navigationSource;
 
             this.TargetEdmType = edmType;
-            this.TargetEdmEntitySet = entitySet;
+            this.TargetEdmNavigationSource = navigationSource;
 
             // Check that the type they gave us is related to the type of the set
-            if (entitySet != null)
+            if (navigationSource != null)
             {
-                UriParserErrorHelper.ThrowIfTypesUnrelated(edmType, entitySet.ElementType, "TypeSegments");
+                UriParserErrorHelper.ThrowIfTypesUnrelated(edmType, navigationSource.EntityType(), "TypeSegments");
             }
         }
 
@@ -72,11 +72,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the set containing the entities that we are casting.
+        /// Gets the navigation source containing the entities that we are casting.
         /// </summary>
-        public IEdmEntitySet EntitySet
+        public IEdmNavigationSource NavigationSource
         {
-            get { return this.entitySet; }
+            get { return this.navigationSource; }
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="translator">An implementation of the translator interface.</param>
         /// <returns>An object whose type is determined by the type parameter of the translator.</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input translator is null.</exception>
-        public override T Translate<T>(PathSegmentTranslator<T> translator)
+        public override T TranslateWith<T>(PathSegmentTranslator<T> translator)
         {
             ExceptionUtils.CheckArgumentNotNull(translator, "translator");
             return translator.Translate(this);
@@ -97,9 +97,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         /// <param name="handler">An implementation of the handler interface.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input handler is null.</exception>
-        public override void Handle(PathSegmentHandler handler)
+        public override void HandleWith(PathSegmentHandler handler)
         {
-            ExceptionUtils.CheckArgumentNotNull(handler, "translator");
+            ExceptionUtils.CheckArgumentNotNull(handler, "handler");
             handler.Handle(this);
         }
 
@@ -111,7 +111,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <exception cref="System.ArgumentNullException">Throws if the input other is null.</exception>
         internal override bool Equals(ODataPathSegment other)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(other, "other");
             TypeSegment otherType = other as TypeSegment;
             return otherType != null && otherType.EdmType == this.EdmType;

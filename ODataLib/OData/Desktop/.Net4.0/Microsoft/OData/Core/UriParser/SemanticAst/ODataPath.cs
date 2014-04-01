@@ -116,7 +116,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "We would rather ship the PathSegmentTranslator so that its more extensible later")]
         public IEnumerable<T> WalkWith<T>(PathSegmentTranslator<T> translator)
         {
-            return this.segments.Select(segment => segment.Translate(translator));
+            return this.segments.Select(segment => segment.TranslateWith(translator));
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             foreach (ODataPathSegment segment in this.segments)
             {
-                segment.Handle(handler);
+                segment.HandleWith(handler);
             }
         }
 
@@ -140,7 +140,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <exception cref="System.ArgumentNullException">Throws if the input other is null.</exception>
         internal bool Equals(ODataPath other)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(other, "other");
             if (this.segments.Count != other.segments.Count)
             {
@@ -157,7 +156,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <exception cref="System.ArgumentNullException">Throws if the input newSegment is null.</exception>
         internal void Add(ODataPathSegment newSegment)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(newSegment, "newSegment");
             this.segments.Add(newSegment);
         }

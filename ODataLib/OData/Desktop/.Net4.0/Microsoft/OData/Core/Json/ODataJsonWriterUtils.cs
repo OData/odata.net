@@ -34,17 +34,15 @@ namespace Microsoft.OData.Core.Json
         /// <param name="writingJsonLight">true if we're writing JSON lite, false if we're writing verbose JSON.</param>
         internal static void WriteError(IJsonWriter jsonWriter, Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate, ODataError error, bool includeDebugInformation, int maxInnerErrorDepth, bool writingJsonLight)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(error != null, "error != null");
 
-            string code, message, messageLanguage;
-            ErrorUtils.GetErrorDetails(error, out code, out message, out messageLanguage);
+            string code, message;
+            ErrorUtils.GetErrorDetails(error, out code, out message);
 
             ODataInnerError innerError = includeDebugInformation ? error.InnerError : null;
 
-            var instanceAnnotations = error.GetInstanceAnnotationsForWriting();
-            WriteError(jsonWriter, code, message, messageLanguage, innerError, instanceAnnotations, writeInstanceAnnotationsDelegate, maxInnerErrorDepth, writingJsonLight);
+            WriteError(jsonWriter, code, message, innerError, error.GetInstanceAnnotations(), writeInstanceAnnotationsDelegate, maxInnerErrorDepth, writingJsonLight);
         }
 
         /// <summary>
@@ -54,7 +52,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="typeName">The type name to write.</param>
         internal static void WriteMetadataWithTypeName(IJsonWriter jsonWriter, string typeName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(typeName != null, "typeName != null");
 
@@ -78,7 +75,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="settings">Writer settings.</param>
         internal static void StartJsonPaddingIfRequired(IJsonWriter jsonWriter, ODataMessageWriterSettings settings)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonWriter != null, "jsonWriter should not be null");
 
             if (settings.HasJsonPaddingFunction())
@@ -96,7 +92,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="settings">Writer settings.</param>
         internal static void EndJsonPaddingIfRequired(IJsonWriter jsonWriter, ODataMessageWriterSettings settings)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonWriter != null, "jsonWriter should not be null");
 
             if (settings.HasJsonPaddingFunction())
@@ -112,23 +107,22 @@ namespace Microsoft.OData.Core.Json
         /// <param name="uri">The uri to process.</param>
         /// <param name="makeAbsolute">true, if the URI needs to be translated into an absolute URI; false otherwise.</param>
         /// <returns>If the <paramref name="makeAbsolute"/> parameter is set to true, then a string representation of an absolute URI which is either the 
-        /// specified <paramref name="uri"/> if it was absolute, or it's a combination of the BaseUri and the relative <paramref name="uri"/>; 
+        /// specified <paramref name="uri"/> if it was absolute, or it's a combination of the PayloadBaseUri and the relative <paramref name="uri"/>; 
         /// otherwise a string representation of the specified <paramref name="uri"/>.
         /// </returns>
         /// <remarks>This method will fail if <paramref name="makeAbsolute"/> is set to true and the specified <paramref name="uri"/> is relative and there's no base URI available.</remarks>
         internal static string UriToUriString(ODataOutputContext outputContext, Uri uri, bool makeAbsolute)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(uri != null, "uri != null");
 
             Uri resultUri;
             if (outputContext.UrlResolver != null)
             {
                 // The resolver returns 'null' if no custom resolution is desired.
-                resultUri = outputContext.UrlResolver.ResolveUrl(outputContext.MessageWriterSettings.BaseUri, uri);
+                resultUri = outputContext.UrlResolver.ResolveUrl(outputContext.MessageWriterSettings.PayloadBaseUri, uri);
                 if (resultUri != null)
                 {
-                    return UriUtilsCommon.UriToString(resultUri);
+                    return UriUtils.UriToString(resultUri);
                 }
             }
 
@@ -138,12 +132,12 @@ namespace Microsoft.OData.Core.Json
             {
                 if (makeAbsolute)
                 {
-                    if (outputContext.MessageWriterSettings.BaseUri == null)
+                    if (outputContext.MessageWriterSettings.PayloadBaseUri == null)
                     {
-                        throw new ODataException(Strings.ODataWriter_RelativeUriUsedWithoutBaseUriSpecified(UriUtilsCommon.UriToString(uri)));
+                        throw new ODataException(Strings.ODataWriter_RelativeUriUsedWithoutBaseUriSpecified(UriUtils.UriToString(uri)));
                     }
 
-                    resultUri = UriUtils.UriToAbsoluteUri(outputContext.MessageWriterSettings.BaseUri, uri);
+                    resultUri = UriUtils.UriToAbsoluteUri(outputContext.MessageWriterSettings.PayloadBaseUri, uri);
                 }
                 else
                 {
@@ -153,7 +147,7 @@ namespace Microsoft.OData.Core.Json
                 }
             }
 
-            return UriUtilsCommon.UriToString(resultUri);
+            return UriUtils.UriToString(resultUri);
         }
 
         /// <summary>
@@ -162,44 +156,38 @@ namespace Microsoft.OData.Core.Json
         /// <param name="jsonWriter">JSON writer.</param>
         /// <param name="code">The code of the error.</param>
         /// <param name="message">The message of the error.</param>
-        /// <param name="messageLanguage">The language of the message.</param>
         /// <param name="innerError">Inner error details that will be included in debug mode (if present).</param>
         /// <param name="instanceAnnotations">Instance annotations for this error.</param>
         /// <param name="writeInstanceAnnotationsDelegate">Action to write the instance annotations.</param>
         /// <param name="maxInnerErrorDepth">The maximumum number of nested inner errors to allow.</param>
         /// <param name="writingJsonLight">true if we're writing JSON lite, false if we're writing verbose JSON.</param>
-        private static void WriteError(IJsonWriter jsonWriter, string code, string message, string messageLanguage, ODataInnerError innerError, IEnumerable<ODataInstanceAnnotation> instanceAnnotations, Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate, int maxInnerErrorDepth, bool writingJsonLight)
+        private static void WriteError(IJsonWriter jsonWriter, string code, string message, ODataInnerError innerError, IEnumerable<ODataInstanceAnnotation> instanceAnnotations, Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate, int maxInnerErrorDepth, bool writingJsonLight)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(code != null, "code != null");
             Debug.Assert(message != null, "message != null");
-            Debug.Assert(messageLanguage != null, "messageLanguage != null");
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations != null");
 
-            // if verbose JSON: { "error": {
-            // if JSON lite: { "odata.error": {
+            // "error": {
             jsonWriter.StartObjectScope();
-            jsonWriter.WriteName(writingJsonLight ? ODataAnnotationNames.ODataError : JsonConstants.ODataErrorName);
+            if (writingJsonLight)
+            {
+                jsonWriter.WriteName(JsonLightConstants.ODataErrorPropertyName);
+            }
+            else
+            {
+                jsonWriter.WriteName(JsonConstants.ODataErrorName);
+            }
+
             jsonWriter.StartObjectScope();
 
             // "code": "<code>"
             jsonWriter.WriteName(JsonConstants.ODataErrorCodeName);
             jsonWriter.WriteValue(code);
 
-            // "message": {
+            // "message": "<message string>"
             jsonWriter.WriteName(JsonConstants.ODataErrorMessageName);
-            jsonWriter.StartObjectScope();
-
-            // "lang": "<messageLanguage>"
-            jsonWriter.WriteName(JsonConstants.ODataErrorMessageLanguageName);
-            jsonWriter.WriteValue(messageLanguage);
-
-            // "value": "<message>"
-            jsonWriter.WriteName(JsonConstants.ODataErrorMessageValueName);
             jsonWriter.WriteValue(message);
-
-            // }
-            jsonWriter.EndObjectScope();
 
             if (innerError != null)
             {

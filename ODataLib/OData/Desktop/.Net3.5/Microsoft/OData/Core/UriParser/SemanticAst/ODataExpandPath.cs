@@ -51,7 +51,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <returns>the navigation property for this expand path.</returns>
         internal IEdmNavigationProperty GetNavigationProperty()
         {
-            DebugUtils.CheckNoExternalCallers();
             return ((NavigationPropertySegment)this.LastSegment).NavigationProperty;
         }
 

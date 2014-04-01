@@ -11,25 +11,16 @@
 namespace Microsoft.Data.Spatial
 {
     using Microsoft.Spatial;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
 
     /// <summary>
     /// Class responsible for knowing how to create the Geography and Geometry builders for 
     /// the data services implemenation of Spatial types
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     internal class DataServicesSpatialImplementation : SpatialImplementation
     {
         /// <summary>
         /// Property used to register Spatial operations implementation.
         /// </summary>
-#if WINDOWS_PHONE
-        [DataMember]
-#endif
         public override SpatialOperations Operations
         {
             get;

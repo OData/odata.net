@@ -30,7 +30,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomPayloadKindDetectionDeserializer(ODataAtomInputContext atomInputContext)
             : base(atomInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -50,8 +49,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal IEnumerable<ODataPayloadKind> DetectPayloadKind(ODataPayloadKindDetectionInfo detectionInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.XmlReader.DisableInStreamErrorDetection = true;
             try
             {
@@ -67,7 +64,15 @@ namespace Microsoft.OData.Core.Atom
 
                         if (this.ReadingResponse && string.CompareOrdinal(AtomConstants.AtomFeedElementName, this.XmlReader.LocalName) == 0)
                         {
-                            return new ODataPayloadKind[] { ODataPayloadKind.Feed };
+                            if (this.XmlReader.XmlBaseUri != null
+                                && this.XmlReader.XmlBaseUri.AbsoluteUri.Contains(ODataConstants.EntityReferenceSegmentName))
+                            {
+                                return new ODataPayloadKind[] { ODataPayloadKind.EntityReferenceLinks };
+                            }
+                            else
+                            {
+                                return new ODataPayloadKind[] { ODataPayloadKind.Feed };
+                            }
                         }
                     }
                     else if (string.CompareOrdinal(AtomConstants.ODataNamespace, this.XmlReader.NamespaceURI) == 0)
@@ -83,16 +88,6 @@ namespace Microsoft.OData.Core.Atom
                             possiblePayloadKinds.Any(k => k == ODataPayloadKind.Property || k == ODataPayloadKind.Collection)
                             ? this.DetectPropertyOrCollectionPayloadKind()
                             : Enumerable.Empty<ODataPayloadKind>();
-
-                        if (string.CompareOrdinal(AtomConstants.ODataUriElementName, this.XmlReader.LocalName) == 0)
-                        {
-                            payloadKinds = payloadKinds.Concat(new ODataPayloadKind[] { ODataPayloadKind.EntityReferenceLink });
-                        }
-
-                        if (this.ReadingResponse && string.CompareOrdinal(AtomConstants.ODataLinksElementName, this.XmlReader.LocalName) == 0)
-                        {
-                            payloadKinds = payloadKinds.Concat(new ODataPayloadKind[] { ODataPayloadKind.EntityReferenceLinks });
-                        }
 
                         return payloadKinds;
                     }
@@ -110,13 +105,13 @@ namespace Microsoft.OData.Core.Atom
                             return payloadKinds;
                         }
 
-                        // OData metadata namespace for errors and <m:uri> (back compat behavior instead of <d:uri>)
+                        // OData metadata namespace for errors and <m:ref>
                         if (this.ReadingResponse && string.CompareOrdinal(AtomConstants.ODataErrorElementName, this.XmlReader.LocalName) == 0)
                         {
                             return new ODataPayloadKind[] { ODataPayloadKind.Error };
                         }
 
-                        if (string.CompareOrdinal(AtomConstants.ODataUriElementName, this.XmlReader.LocalName) == 0)
+                        if (string.CompareOrdinal(AtomConstants.ODataRefElementName, this.XmlReader.LocalName) == 0)
                         {
                             return new ODataPayloadKind[] { ODataPayloadKind.EntityReferenceLink };
                         }

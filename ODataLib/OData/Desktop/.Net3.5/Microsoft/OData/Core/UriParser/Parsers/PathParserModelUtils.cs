@@ -15,6 +15,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Validation;
     using ErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>
@@ -30,7 +31,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>Whether the type is both structural and open.</returns>
         internal static bool IsOpenType(this IEdmType edmType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(edmType != null, "edmType != null");
             
             var structuredType = edmType as IEdmStructuredType;
@@ -61,7 +61,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>Whether or not the type is an entity or entity collection type.</returns>
         internal static bool IsEntityOrEntityCollectionType(this IEdmType edmType)
         {
-            DebugUtils.CheckNoExternalCallers();
             IEdmEntityType entityType;
             return edmType.IsEntityOrEntityCollectionType(out entityType);
         }
@@ -74,7 +73,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>Whether or not the type is an entity or entity collection type.</returns>
         internal static bool IsEntityOrEntityCollectionType(this IEdmType edmType, out IEdmEntityType entityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(edmType != null, "targetEdmType != null");
             if (edmType.TypeKind == EdmTypeKind.Entity)
             {
@@ -99,9 +97,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="sourceEntitySet">The source entity set.</param>
         /// <param name="model">The model.</param>
         /// <returns>The target entity set of the operation import or null if it could not be determined.</returns>
-        internal static IEdmEntitySet GetTargetEntitySet(this IEdmOperationImport operationImport, IEdmEntitySet sourceEntitySet, IEdmModel model)
+        internal static IEdmEntitySetBase GetTargetEntitySet(this IEdmOperationImport operationImport, IEdmEntitySetBase sourceEntitySet, IEdmModel model)
         {
-            DebugUtils.CheckNoExternalCallers();
             IEdmEntitySet targetEntitySet;
             if (operationImport.TryGetStaticEntitySet(out targetEntitySet))
             {
@@ -113,25 +110,79 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return null;
             }
 
-            if (operationImport.IsBindable && operationImport.Parameters.Any())
+            if (operationImport.Operation.IsBound && operationImport.Operation.Parameters.Any())
             {
                 IEdmOperationParameter parameter;
                 IEnumerable<IEdmNavigationProperty> path;
-                if (operationImport.TryGetRelativeEntitySetPath(model, out parameter, out path))
+                IEnumerable<EdmError> errors;
+
+                if (operationImport.TryGetRelativeEntitySetPath(model, out parameter, out path, out errors))
                 {
-                    // TODO: throw better exception
-                    ExceptionUtil.ThrowSyntaxErrorIfNotValid(parameter == operationImport.Parameters.First());
-                    targetEntitySet = sourceEntitySet;
+                    IEdmEntitySetBase currentEntitySet = sourceEntitySet;
                     foreach (var navigation in path)
                     {
-                        targetEntitySet = targetEntitySet.FindNavigationTarget(navigation);
-                        if (targetEntitySet == null)
+                        // Todo these will be removed after following step is done
+                        // Todo fareast\michdai implementation of ContainedEntitySet and UnknownEntitySet is done
+                        // Todo fareast\bixu implementation of Singleton is done
+                        currentEntitySet = currentEntitySet.FindNavigationTarget(navigation) as IEdmEntitySetBase;
+                        if (currentEntitySet == null || currentEntitySet is IEdmUnknownEntitySet)
+                        {
+                            return currentEntitySet;
+                        }
+                    }
+
+                    return currentEntitySet;
+                }
+                else
+                {
+                    bool foundSyntaxError = !errors.Any(e => e.ErrorCode == EdmErrorCode.InvalidPathFirstPathParameterNotMatchingFirstParameterName);
+                    ExceptionUtil.ThrowSyntaxErrorIfNotValid(foundSyntaxError);
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the target entity set for the given operation import.
+        /// </summary>
+        /// <param name="operation">The operation.</param>
+        /// <param name="source">The source of operation.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>The target entity set of the operation import or null if it could not be determined.</returns>
+        internal static IEdmEntitySetBase GetTargetEntitySet(this IEdmOperation operation, IEdmNavigationSource source, IEdmModel model)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            if (operation.IsBound && operation.Parameters.Any())
+            {
+                IEdmOperationParameter parameter;
+                IEnumerable<IEdmNavigationProperty> path;
+                IEdmEntityType lastEntityType;
+                IEnumerable<EdmError> errors;
+
+                if (operation.TryGetRelativeEntitySetPath(model, out parameter, out path, out lastEntityType, out errors))
+                {
+                    IEdmNavigationSource target = source;
+                    foreach (var navigation in path)
+                    {
+                        target = target.FindNavigationTarget(navigation);
+                        if (target == null)
                         {
                             return null;
                         }
                     }
 
-                    return targetEntitySet;
+                    // TODO bixu what if the target is not entity set? Should throw exception?
+                    return (IEdmEntitySetBase)target;
+                }
+                else
+                {
+                    bool foundSyntaxError = errors.Any(e => e.ErrorCode == EdmErrorCode.InvalidPathFirstPathParameterNotMatchingFirstParameterName);
+                    ExceptionUtil.ThrowSyntaxErrorIfNotValid(!foundSyntaxError);
                 }
             }
 

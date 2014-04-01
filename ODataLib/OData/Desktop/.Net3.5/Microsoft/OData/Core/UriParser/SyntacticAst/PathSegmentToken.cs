@@ -87,7 +87,6 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// <param name="nextTokenIn">the next token to set.</param>
         internal void SetNextToken(PathSegmentToken nextTokenIn)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.nextToken = nextTokenIn;
         }
     }

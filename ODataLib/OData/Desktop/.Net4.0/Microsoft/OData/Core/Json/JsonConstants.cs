@@ -113,16 +113,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         internal const string ODataDeferredName = "__deferred";
 
-        /// <summary>
-        /// "uri" header for the navigation link URL
-        /// </summary>
-        internal const string ODataNavigationLinkUriName = "uri";
-
-        /// <summary>
-        /// The name of the property returned for a singleton $links query
-        /// </summary>
-        internal const string ODataUriName = "uri";
-
         /// <summary>"actions" header for entry metadata.</summary>
         internal const string ODataActionsMetadataName = "actions";
 
@@ -152,16 +142,6 @@ namespace Microsoft.OData.Core.Json
         /// "message" header for the error message property
         /// </summary>
         internal const string ODataErrorMessageName = "message";
-
-        /// <summary>
-        /// "lang" header for the error message language property
-        /// </summary>
-        internal const string ODataErrorMessageLanguageName = "lang";
-
-        /// <summary>
-        /// "value" header for the error message value property
-        /// </summary>
-        internal const string ODataErrorMessageValueName = "value";
 
         /// <summary>
         /// "innererror" header for the inner error property

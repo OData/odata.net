@@ -67,7 +67,6 @@ namespace Microsoft.OData.Core
             ODataPayloadKind readerPayloadKind)
             : base(format, messageReaderSettings, version, readingResponse, synchronous, model, urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(messageStream != null, "stream != null");
             Debug.Assert(readerPayloadKind != ODataPayloadKind.Unsupported, "readerPayloadKind != ODataPayloadKind.Unsupported");
 
@@ -99,7 +98,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.stream;
             }
         }
@@ -111,7 +109,6 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created <see cref="ODataCollectionReader"/>.</returns>
         internal override ODataBatchReader CreateBatchReader(string batchBoundary)
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.CreateBatchReaderImplementation(batchBoundary, /*synchronous*/ true);
         }
 
@@ -123,8 +120,6 @@ namespace Microsoft.OData.Core
         /// <returns>Task which when completed returns the newly created <see cref="ODataCollectionReader"/>.</returns>
         internal override Task<ODataBatchReader> CreateBatchReaderAsync(string batchBoundary)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(batchBoundary, /*synchronous*/ false));
         }
@@ -137,7 +132,6 @@ namespace Microsoft.OData.Core
         /// <returns>An <see cref="object"/> representing the read value.</returns>
         internal override object ReadValue(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             return this.ReadValueImplementation(expectedPrimitiveTypeReference);
         }
 
@@ -149,8 +143,6 @@ namespace Microsoft.OData.Core
         /// <returns>Task which when completed returns an <see cref="object"/> representing the read value.</returns>
         internal override Task<object> ReadValueAsync(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.ReadValueImplementation(expectedPrimitiveTypeReference));
         }

@@ -12,14 +12,8 @@ namespace Microsoft.Spatial
 {
     using System.Collections.ObjectModel;
     using System.Linq;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
 
     /// <summary>Represents a geography line string consist of an array of geo points.</summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     public abstract class GeographyLineString : GeographyCurve
     {
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeographyLineString" /> class.</summary>

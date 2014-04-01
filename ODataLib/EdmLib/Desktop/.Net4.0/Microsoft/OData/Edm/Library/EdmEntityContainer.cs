@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Internal;
 
 namespace Microsoft.OData.Edm.Library
 {
@@ -25,7 +24,8 @@ namespace Microsoft.OData.Edm.Library
         private readonly string name;
         private readonly List<IEdmEntityContainerElement> containerElements = new List<IEdmEntityContainerElement>();
         private readonly Dictionary<string, IEdmEntitySet> entitySetDictionary = new Dictionary<string, IEdmEntitySet>();
-        private readonly Dictionary<string, object> functionImportDictionary = new Dictionary<string, object>();
+        private readonly Dictionary<string, IEdmSingleton> singletonDictionary = new Dictionary<string, IEdmSingleton>();
+        private readonly Dictionary<string, object> operationImportDictionary = new Dictionary<string, object>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmEntityContainer"/> class.
@@ -88,8 +88,12 @@ namespace Microsoft.OData.Edm.Library
                 case EdmContainerElementKind.EntitySet:
                     RegistrationHelper.AddElement((IEdmEntitySet)element, element.Name, this.entitySetDictionary, RegistrationHelper.CreateAmbiguousEntitySetBinding);
                     break;
-                case EdmContainerElementKind.OperationImport:
-                    RegistrationHelper.AddOperation((IEdmOperationImport)element, element.Name, this.functionImportDictionary);
+                case EdmContainerElementKind.Singleton:
+                    RegistrationHelper.AddElement((IEdmSingleton)element, element.Name, this.singletonDictionary, RegistrationHelper.CreateAmbiguousSingletonBinding);
+                    break;
+                case EdmContainerElementKind.ActionImport:
+                case EdmContainerElementKind.FunctionImport:
+                    RegistrationHelper.AddOperationImport((IEdmOperationImport)element, element.Name, this.operationImportDictionary);
                     break;
                 case EdmContainerElementKind.None:
                     throw new InvalidOperationException(Edm.Strings.EdmEntityContainer_CannotUseElementWithTypeNone);
@@ -112,74 +116,70 @@ namespace Microsoft.OData.Edm.Library
         }
 
         /// <summary>
+        /// Creates and adds an singleton to this entity container.
+        /// </summary>
+        /// <param name="name">Name of the singleton.</param>
+        /// <param name="entityType">The entity type of this singleton.</param>
+        /// <returns>Created singleton.</returns>
+        public virtual EdmSingleton AddSingleton(string name, IEdmEntityType entityType)
+        {
+            EdmSingleton singleton = new EdmSingleton(this, name, entityType);
+            this.AddElement(singleton);
+            return singleton;
+        }
+
+        /// <summary>
         /// Creates and adds a function import to this entity container.
         /// </summary>
-        /// <param name="name">Name of the function import.</param>
-        /// <param name="returnType">Return type of the function import.</param>
+        /// <param name="function">The function of the specified function import.</param>
         /// <returns>Created function import.</returns>
-        public virtual EdmFunctionImport AddFunctionImport(string name, IEdmTypeReference returnType)
+        public virtual EdmFunctionImport AddFunctionImport(IEdmFunction function)
         {
-            EdmFunctionImport functionImport = new EdmFunctionImport(this, name, returnType);
+            EdmFunctionImport functionImport = new EdmFunctionImport(this, function.Name, function);
             this.AddElement(functionImport);
             return functionImport;
         }
 
         /// <summary>
-        /// Creates and adds a action import to this entity container.
-        /// </summary>
-        /// <param name="name">Name of the action import.</param>
-        /// <param name="returnType">Return type of the action import.</param>
-        /// <returns>Created action import.</returns>
-        public virtual EdmActionImport AddActionImport(string name, IEdmTypeReference returnType)
-        {
-            EdmActionImport actionImport = new EdmActionImport(this, name, returnType);
-            this.AddElement(actionImport);
-            return actionImport;
-        }
-
-        /// <summary>
         /// Creates and adds a function import to this entity container.
         /// </summary>
         /// <param name="name">Name of the function import.</param>
-        /// <param name="returnType">Return type of the function import.</param>
-        /// <param name="entitySet">An entity set containing entities returned by this function import. 
-        /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
+        /// <param name="function">The function of the specified function import.</param>
         /// <returns>Created function import.</returns>
-        public virtual EdmFunctionImport AddFunctionImport(string name, IEdmTypeReference returnType, IEdmExpression entitySet)
+        public virtual EdmFunctionImport AddFunctionImport(string name, IEdmFunction function)
         {
-            EdmFunctionImport functionImport = new EdmFunctionImport(this, name, returnType, entitySet);
+            EdmFunctionImport functionImport = new EdmFunctionImport(this, name, function);
             this.AddElement(functionImport);
             return functionImport;
         }
 
         /// <summary>
-        /// Creates and adds an action import to this entity container.
+        /// Creates and adds a function import to this entity container.
         /// </summary>
-        /// <param name="name">Name of the action import.</param>
-        /// <param name="returnType">Return type of the action import.</param>
-        /// <param name="entitySet">An entity set containing entities returned by this action import. 
+        /// <param name="name">Name of the function import.</param>
+        /// <param name="function">The function of the specified function import.</param>
+        /// <param name="entitySet">An entity set containing entities returned by this function import. 
         /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
-        /// <returns>Created action import.</returns>
-        public virtual EdmActionImport AddActionImport(string name, IEdmTypeReference returnType, IEdmExpression entitySet)
+        /// <returns>Created function import.</returns>
+        public virtual EdmFunctionImport AddFunctionImport(string name, IEdmFunction function, IEdmExpression entitySet)
         {
-            EdmActionImport actionImport = new EdmActionImport(this, name, returnType, entitySet);
-            this.AddElement(actionImport);
-            return actionImport;
+            EdmFunctionImport functionImport = new EdmFunctionImport(this, name, function, entitySet, false /*includeInServiceDocument*/);
+            this.AddElement(functionImport);
+            return functionImport;
         }
 
         /// <summary>
         /// Creates and adds a function import to this entity container.
         /// </summary>
         /// <param name="name">Name of the function import.</param>
-        /// <param name="returnType">Return type of the function import.</param>
+        /// <param name="function">The function of the specified function import.</param>
         /// <param name="entitySet">An entity set containing entities returned by this function import. 
         /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
-        /// <param name="composable">A value indicating whether this function import can be composed inside expressions.</param>
-        /// <param name="bindable">A value indicating whether this function import can be used as an extension method for the type of the first parameter of this function import.</param>
+        /// <param name="includeInServiceDocument">A value indicating whether this function import will be in the service document.</param>
         /// <returns>Created operation import.</returns>
-        public virtual EdmOperationImport AddFunctionImport(string name, IEdmTypeReference returnType, IEdmExpression entitySet, bool composable, bool bindable)
+        public virtual EdmOperationImport AddFunctionImport(string name, IEdmFunction function, IEdmExpression entitySet, bool includeInServiceDocument)
         {
-            EdmOperationImport functionImport = new EdmFunctionImport(this, name, returnType, entitySet, bindable, composable);
+            EdmOperationImport functionImport = new EdmFunctionImport(this, name, function, entitySet, includeInServiceDocument);
             this.AddElement(functionImport);
             return functionImport;
         }
@@ -188,14 +188,38 @@ namespace Microsoft.OData.Edm.Library
         /// Creates and adds an action import to this entity container.
         /// </summary>
         /// <param name="name">Name of the action import.</param>
-        /// <param name="returnType">Return type of the action import.</param>
+        /// <param name="action">Action that the action import is importing to the container.</param>
         /// <param name="entitySet">An entity set containing entities returned by this action import. 
         /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
-        /// <param name="bindable">A value indicating whether this action import can be used as an extension method for the type of the first parameter of this action import.</param>
         /// <returns>Created action import.</returns>
-        public virtual EdmActionImport AddActionImport(string name, IEdmTypeReference returnType, IEdmExpression entitySet, bool bindable)
+        public virtual EdmActionImport AddActionImport(string name, IEdmAction action, IEdmExpression entitySet)
         {
-            EdmActionImport actionImport = new EdmActionImport(this, name, returnType, entitySet, bindable);
+            EdmActionImport actionImport = new EdmActionImport(this, name, action, entitySet);
+            this.AddElement(actionImport);
+            return actionImport;
+        }
+
+        /// <summary>
+        /// Creates and adds an action import to this entity container.
+        /// </summary>
+        /// <param name="action">Action that the action import is importing to the container.</param>
+        /// <returns>Created action import.</returns>
+        public virtual EdmActionImport AddActionImport(IEdmAction action)
+        {
+            EdmActionImport actionImport = new EdmActionImport(this, action.Name, action, null);
+            this.AddElement(actionImport);
+            return actionImport;
+        }
+
+        /// <summary>
+        /// Creates and adds an action import to this entity container.
+        /// </summary>
+        /// <param name="name">Name of the action import.</param>
+        /// <param name="action">Action that the action import is importing to the container.</param>
+        /// <returns>Created action import.</returns>
+        public virtual EdmActionImport AddActionImport(string name, IEdmAction action)
+        {
+            EdmActionImport actionImport = new EdmActionImport(this, name, action, null);
             this.AddElement(actionImport);
             return actionImport;
         }
@@ -207,8 +231,24 @@ namespace Microsoft.OData.Edm.Library
         /// <returns>The requested element, or null if the element does not exist.</returns>
         public virtual IEdmEntitySet FindEntitySet(string setName)
         {
-            IEdmEntitySet element;
-            return this.entitySetDictionary.TryGetValue(setName, out element) ? element : null;
+            if (!string.IsNullOrEmpty(setName))
+            {
+                IEdmEntitySet element;
+                return this.entitySetDictionary.TryGetValue(setName, out element) ? element : null;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Searches for a singleton with the given name in this entity container and returns null if no such singleton exists.
+        /// </summary>
+        /// <param name="singletonName">The name of the singleton to search.</param>
+        /// <returns>The requested singleton, or null if the singleton does not exist.</returns>
+        public virtual IEdmSingleton FindSingleton(string singletonName)
+        {
+            IEdmSingleton element;
+            return this.singletonDictionary.TryGetValue(singletonName, out element) ? element : null;
         }
 
         /// <summary>
@@ -219,7 +259,7 @@ namespace Microsoft.OData.Edm.Library
         public IEnumerable<IEdmOperationImport> FindOperationImports(string operationName)
         {
             object element;
-            if (this.functionImportDictionary.TryGetValue(operationName, out element))
+            if (this.operationImportDictionary.TryGetValue(operationName, out element))
             {
                 List<IEdmOperationImport> listElement = element as List<IEdmOperationImport>;
                 if (listElement != null)

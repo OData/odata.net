@@ -31,7 +31,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="bindMethod">Method used to bind a parent token.</param>
         internal LambdaBinder(MetadataBinder.QueryTokenVisitor bindMethod)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             ExceptionUtils.CheckArgumentNotNull(bindMethod, "bindMethod");
             this.bindMethod = bindMethod;
         }
@@ -44,7 +43,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A metadata bound any or all node.</returns>
         internal LambdaNode BindLambdaToken(LambdaToken lambdaToken, BindingState state)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             ExceptionUtils.CheckArgumentNotNull(lambdaToken, "LambdaToken");
             ExceptionUtils.CheckArgumentNotNull(state, "state");
 

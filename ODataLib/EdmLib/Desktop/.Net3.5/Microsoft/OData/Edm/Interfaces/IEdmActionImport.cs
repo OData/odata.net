@@ -17,5 +17,9 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public interface IEdmActionImport : IEdmOperationImport
     {
+        /// <summary>
+        /// Gets the action type of the import.
+        /// </summary>
+        IEdmAction Action { get; }
     }
 }

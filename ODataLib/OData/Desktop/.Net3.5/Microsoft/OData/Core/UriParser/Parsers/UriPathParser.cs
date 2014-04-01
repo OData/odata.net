@@ -32,8 +32,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="maxSegments">The maximum number of segments for each part of the query.</param>
         internal UriPathParser(int maxSegments)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.maxSegments = maxSegments;
         }
 
@@ -44,8 +42,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>a list of strings for each segment in the uri.</returns>
         internal string[] ParsePath(string escapedRelativePathUri)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (escapedRelativePathUri == null || String.IsNullOrEmpty(escapedRelativePathUri.Trim()))
             {
                 return new string[0];
@@ -72,8 +68,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>List of unescaped segments.</returns>
         internal ICollection<string> ParsePathIntoSegments(Uri absoluteUri, Uri serviceBaseUri)
         {
-            DebugUtils.CheckNoExternalCallers(); 
-
             if (!UriUtils.UriInvariantInsensitiveIsBaseOf(serviceBaseUri, absoluteUri))
             {
                 throw new ODataException(Strings.UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri(absoluteUri, serviceBaseUri));
@@ -85,8 +79,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 int numberOfSegmentsToSkip = 0;
 
                 // Skip over the base URI segments
-#if SILVERLIGHT || PORTABLELIB
-                numberOfSegmentsToSkip = serviceBaseUri.AbsolutePath.Split('/').Length;
+#if !ORCAS
+                // need to calculate the number of segments to skip in the full
+                // uri (so that we can skip over http://blah.com/basePath for example, 
+                // get only the odata specific parts of the path). 
+                // 
+                // because of differences in system.uri between portable lib and 
+                // the desktop library, we need to handle this differently.
+                // in this case we get the number of segments to skip as simply
+                // then number of tokens in the serviceBaseUri split on slash, with
+                // length - 1 since its a zero based array.
+                numberOfSegmentsToSkip = serviceBaseUri.AbsolutePath.Split('/').Length - 1;
                 string[] uriSegments = uri.AbsolutePath.Split('/');
 #else
                 numberOfSegmentsToSkip = serviceBaseUri.Segments.Length;
@@ -115,7 +118,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
                 return segments.ToArray();
             }
-#if PORTABLELIB
+#if !ORCAS
             catch (FormatException uriFormatException)
 #else
             catch (UriFormatException uriFormatException)

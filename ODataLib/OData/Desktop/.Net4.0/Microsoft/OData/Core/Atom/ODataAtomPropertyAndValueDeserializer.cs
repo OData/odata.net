@@ -54,8 +54,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomPropertyAndValueDeserializer(ODataAtomInputContext atomInputContext)
             : base(atomInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             XmlNameTable nameTable = this.XmlReader.NameTable;
             this.EmptyNamespace = nameTable.Add(string.Empty);
             this.ODataNullAttributeName = nameTable.Add(AtomConstants.ODataNullAttributeName);
@@ -72,7 +70,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>An <see cref="ODataProperty"/> representing the read property.</returns>
         internal ODataProperty ReadTopLevelProperty(IEdmStructuralProperty expectedProperty, IEdmTypeReference expectedPropertyTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(
                 expectedPropertyTypeReference == null || !expectedPropertyTypeReference.IsODataEntityTypeKind(),
                 "If the expected type is specified it must not be an entity type.");
@@ -123,8 +120,6 @@ namespace Microsoft.OData.Core.Atom
             CollectionWithoutExpectedTypeValidator collectionValidator,
             bool validateNullValue)
         {
-            DebugUtils.CheckNoExternalCallers();
-            
             this.AssertRecursionDepthIsZero();
             object nonEntityValue = this.ReadNonEntityValueImplementation(
                 expectedValueTypeReference,
@@ -230,7 +225,7 @@ namespace Microsoft.OData.Core.Atom
                     if (this.XmlReader.LocalNameEquals(this.AtomTypeAttributeName))
                     {
                         // m:type
-                        typeName = this.XmlReader.Value;
+                        typeName = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName(this.XmlReader.Value));
                     }
                     else if (this.XmlReader.LocalNameEquals(this.ODataNullAttributeName))
                     {
@@ -354,6 +349,11 @@ namespace Microsoft.OData.Core.Atom
 
                 switch (targetTypeKind)
                 {
+                    case EdmTypeKind.Enum:
+                        Debug.Assert(targetTypeReference != null && targetTypeReference.IsODataEnumTypeKind(), "Expected an OData Enum type.");
+                        result = this.ReadEnumValue(targetTypeReference.AsEnum());
+                        break;
+
                     case EdmTypeKind.Primitive:
                         Debug.Assert(targetTypeReference != null && targetTypeReference.IsODataPrimitiveTypeKind(), "Expected an OData primitive type.");
                         result = this.ReadPrimitiveValue(targetTypeReference.AsPrimitive());
@@ -524,9 +524,9 @@ namespace Microsoft.OData.Core.Atom
             ODataNullValueBehaviorKind nullValueReadBehaviorKind)
         {
             Debug.Assert(
-                expectedPropertyTypeReference == null || expectedPropertyTypeReference.IsODataPrimitiveTypeKind() ||
+                expectedPropertyTypeReference == null || expectedPropertyTypeReference.IsODataPrimitiveTypeKind() || expectedPropertyTypeReference.IsODataEnumTypeKind() ||
                 expectedPropertyTypeReference.IsODataComplexTypeKind() || expectedPropertyTypeReference.IsNonEntityCollectionType(),
-                "Only primitive, complex and collection types can be read by this method.");
+                "Only primitive, Enum, complex and collection types can be read by this method.");
             this.AssertXmlCondition(XmlNodeType.Element);
             this.XmlReader.AssertNotBuffering();
 
@@ -562,6 +562,23 @@ namespace Microsoft.OData.Core.Atom
 
             this.XmlReader.AssertNotBuffering();
             return property;
+        }
+
+        /// <summary>
+        /// Read an enumeration value from the reader.
+        /// </summary>
+        /// <param name="actualValueTypeReference">The thpe of the value to read.</param>
+        /// <returns>An ODataEnumValue with the value read from the payload.</returns>
+        private ODataEnumValue ReadEnumValue(IEdmEnumTypeReference actualValueTypeReference)
+        {
+            Debug.Assert(actualValueTypeReference != null, "actualValueTypeReference != null");
+            Debug.Assert(actualValueTypeReference.TypeKind() == EdmTypeKind.Enum, "Only Enum values can be read by this method.");
+            this.AssertXmlCondition(XmlNodeType.Element, XmlNodeType.Attribute);
+
+            ODataEnumValue result = AtomValueUtils.ReadEnumValue(this.XmlReader, actualValueTypeReference);
+            this.AssertXmlCondition(true, XmlNodeType.EndElement);
+            Debug.Assert(result != null, "The method should never return null since it doesn't handle null values.");
+            return result;
         }
 
         /// <summary>
@@ -734,7 +751,7 @@ namespace Microsoft.OData.Core.Atom
                                     this.XmlReader.Read();
 
                                     // Validate the item (for example that it's not null)
-                                    ValidationUtils.ValidateCollectionItem(itemValue, false /* isStreamable */);
+                                    ValidationUtils.ValidateCollectionItem(itemValue, itemTypeReference.IsNullable());
 
                                     // Note that the ReadNonEntityValue already validated that the actual type of the value matches
                                     // the expected type (the itemType).

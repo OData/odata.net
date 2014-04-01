@@ -31,7 +31,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>query count value if successful. Null if not.</returns>
         internal static bool? ParseQueryCount(string count)
         {
-            DebugUtils.CheckNoExternalCallers();
             if (count == null)
             {
                 return null;
@@ -60,7 +59,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>A KeywordKind value if successful. Null if not.</returns>
         internal static KeywordKind? ParseKeywordKind(string segment)
         {
-            DebugUtils.CheckNoExternalCallers();
             switch (segment)
             {
                 case UriQueryConstants.MetadataSegment:
@@ -89,7 +87,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>A $ keyword that represent the given keyword.</returns>
         internal static string GetNameFromKeywordKind(KeywordKind keyword)
         {
-            DebugUtils.CheckNoExternalCallers();
             switch (keyword)
             {
                 case KeywordKind.Batch:

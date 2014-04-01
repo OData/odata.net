@@ -21,38 +21,38 @@ namespace Microsoft.OData.Core
         /// Reads the OData-Version header from the <paramref name="message"/> and parses it.
         /// If no OData-Version header is found it sets the default version to be used for reading.
         /// </summary>
-        /// <param name="message">The message to get the data service version header from.</param>
+        /// <param name="message">The message to get the OData-Version header from.</param>
         /// <param name="defaultVersion">The default version to use if the header was not specified.</param>
         /// <returns>
         /// The <see cref="ODataVersion"/> retrieved from the OData-Version header of the message.
         /// The default version if none is specified in the header.
         /// </returns>
-        public static ODataVersion GetDataServiceVersion(this IODataResponseMessage message, ODataVersion defaultVersion)
+        public static ODataVersion GetODataVersion(this IODataResponseMessage message, ODataVersion defaultVersion)
         {
-            // translation from IODataResponseMessage to ODataMessage to pass into GetDataServiceVersion.
+            // translation from IODataResponseMessage to ODataMessage to pass into GetODataVersion.
             // we retain all of the data we need from the message, with a few extra data that aren't used in.
-            // GetDataServiceVersion. Not ideal, but it works.
+            // GetODataVersion. Not ideal, but it works.
             ODataMessage odataMessage = new ODataResponseMessage(message, false /*writing*/, false/*disableMessageStreamDisposal*/, Int64.MaxValue /*maxMessageSize*/);
-            return ODataUtilsInternal.GetDataServiceVersion(odataMessage, defaultVersion);
+            return ODataUtilsInternal.GetODataVersion(odataMessage, defaultVersion);
         }
 
         /// <summary>
         /// Reads the OData-Version header from the <paramref name="message"/> and parses it.
         /// If no OData-Version header is found it sets the default version to be used for reading.
         /// </summary>
-        /// <param name="message">The message to get the data service version header from.</param>
+        /// <param name="message">The message to get the OData-Version version header from.</param>
         /// <param name="defaultVersion">The default version to use if the header was not specified.</param>
         /// <returns>
         /// The <see cref="ODataVersion"/> retrieved from the OData-Version header of the message.
         /// The default version if none is specified in the header.
         /// </returns>
-        public static ODataVersion GetDataServiceVersion(this IODataRequestMessage message, ODataVersion defaultVersion)
+        public static ODataVersion GetODataVersion(this IODataRequestMessage message, ODataVersion defaultVersion)
         {
-            // translation from IODataResponseMessage to ODataMessage to pass into GetDataServiceVersion.
+            // translation from IODataResponseMessage to ODataMessage to pass into GetODataVersion.
             // we retain all of the data we need from the message, with a few extra data that aren't used in.
-            // GetDataServiceVersion. Not ideal, but it works.
+            // GetODataVersion. Not ideal, but it works.
             ODataMessage odataMessage = new ODataRequestMessage(message, false /*writing*/, false/*disableMessageStreamDisposal*/, Int64.MaxValue /*maxMessageSize*/);
-            return ODataUtilsInternal.GetDataServiceVersion(odataMessage, defaultVersion);
+            return ODataUtilsInternal.GetODataVersion(odataMessage, defaultVersion);
         }
 
         /// <summary>

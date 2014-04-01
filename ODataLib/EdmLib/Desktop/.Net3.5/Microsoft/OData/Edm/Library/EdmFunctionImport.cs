@@ -17,43 +17,61 @@ namespace Microsoft.OData.Edm.Library
     /// </summary>
     public class EdmFunctionImport : EdmOperationImport, IEdmFunctionImport
     {
+        private static readonly string FunctionArgumentNullParameterName = "function";
+
         /// <summary>
-        /// Initializes a new instance of <see cref="EdmFunctionImport"/> class.
+        /// Initializes a new instance of the <see cref="EdmFunctionImport"/> class.
         /// </summary>
-        /// <param name="container">An <see cref="IEdmEntityContainer"/> containing this function import.</param>
-        /// <param name="name">Name of the function import.</param>
-        /// <param name="returnType">Return type of the function import.</param>
-        public EdmFunctionImport(IEdmEntityContainer container, string name, IEdmTypeReference returnType)
-            : this(container, name, returnType, null, false /*isBindable*/, true /*isComposable*/)
+        /// <param name="container">The container.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="function">The function.</param>
+        public EdmFunctionImport(IEdmEntityContainer container, string name, IEdmFunction function)
+            : this(container, name, function, null, false)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="EdmFunctionImport"/> class.
+        /// Initializes a new instance of the <see cref="EdmFunctionImport"/> class.
         /// </summary>
-        /// <param name="container">An <see cref="IEdmEntityContainer"/> containing this function import.</param>
-        /// <param name="name">Name of the function import.</param>
-        /// <param name="returnType">Return type of the function import.</param>
-        /// <param name="entitySet">An entity set containing entities returned by this function import. 
-        /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
-        public EdmFunctionImport(IEdmEntityContainer container, string name, IEdmTypeReference returnType, IEdmExpression entitySet)
-            : this(container, name, returnType, entitySet, false /*isBindable*/, true /*isComposable*/)
+        /// <param name="container">The container.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="function">The function.</param>
+        /// <param name="entitySetExpression">The entity set expression.</param>
+        /// <param name="includeInServiceDocument">The value indicates if the function is to be include in the service document or not.</param>
+        public EdmFunctionImport(IEdmEntityContainer container, string name, IEdmFunction function, IEdmExpression entitySetExpression, bool includeInServiceDocument)
+            : base(container, function, name, entitySetExpression)
         {
+            EdmUtil.CheckArgumentNull(function, "function");
+
+            this.Function = function;
+            this.IncludeInServiceDocument = includeInServiceDocument;
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="EdmFunctionImport"/> class.
+        /// Gets the function that defines the function import.
         /// </summary>
-        /// <param name="container">An <see cref="IEdmEntityContainer"/> containing this function import.</param>
-        /// <param name="name">Name of the function import.</param>
-        /// <param name="returnType">Return type of the function import.</param>
-        /// <param name="entitySet">An entity set containing entities returned by this function import. 
-        /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
-        /// <param name="isBindable">A value indicating whether this function import can be used as an extension method for the type of the first parameter of this action import.</param>
-        /// <param name="isComposable">A value indicating whether this function import is composable.</param>
-        public EdmFunctionImport(IEdmEntityContainer container, string name, IEdmTypeReference returnType, IEdmExpression entitySet, bool isBindable, bool isComposable)
-            : base(container, name, returnType, entitySet, false /*isSideAffecting*/, isComposable, isBindable)
+        public IEdmFunction Function { get; private set; }
+
+        /// <summary>
+        /// Gets the kind of this operation, which is always FunctionImport.
+        /// </summary>
+        public override EdmContainerElementKind ContainerElementKind
         {
+            get { return EdmContainerElementKind.FunctionImport; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether [include in service document].
+        /// </summary>
+        public bool IncludeInServiceDocument { get; private set; }
+
+        /// <summary>
+        /// Operations the name of the argument null parameter.
+        /// </summary>
+        /// <returns>Returns the name of the operation from this import.</returns>
+        protected override string OperationArgumentNullParameterName()
+        {
+            return FunctionArgumentNullParameterName;
         }
     }
 }

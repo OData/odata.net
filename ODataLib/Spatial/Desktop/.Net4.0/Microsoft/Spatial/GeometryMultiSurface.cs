@@ -10,14 +10,7 @@
 
 namespace Microsoft.Spatial
 {
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
-
     /// <summary>Represents the geometry multi-surface.</summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     public abstract class GeometryMultiSurface : GeometryCollection
     {
         /// <summary>

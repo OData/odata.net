@@ -35,7 +35,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="bindMethod">Method to use for binding the parent token, if needed.</param>
         internal EnumBinder(MetadataBinder.QueryTokenVisitor bindMethod)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             this.bindMethod = bindMethod;
         }
 
@@ -49,27 +48,25 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if we bound an enum node, false otherwise.</returns>
         internal bool TryBindDottedIdentifierAsEnum(DottedIdentifierToken dottedIdentifierToken, SingleValueNode parent, BindingState state, out QueryNode boundEnum)
         {
-            DebugUtils.CheckNoExternalCallers();
-            return this.TryBindIdentifier(dottedIdentifierToken.Identifier, parent, state, out boundEnum);
+            return TryBindIdentifier(dottedIdentifierToken.Identifier, state.Model, out boundEnum);
         }
 
         /// <summary>
         /// Try to bind an identifier to a EnumNode
         /// </summary>
-        /// <param name="identifier">the identifier to bind</param>
-        /// <param name="parent">a semantically bound parent node.</param>
-        /// <param name="state">the current state of the binding algorithm</param>
+        /// <param name="identifier">the identifier to bind</param> 
+        /// <param name="model">the current model.</param>
         /// <param name="boundEnum">an enum node .</param>
         /// <returns>true if we bound an enum for this token.</returns>
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri Parser does not need to go through the ODL behavior knob.")]
-        private bool TryBindIdentifier(string identifier, QueryNode parent, BindingState state, out QueryNode boundEnum)
+        internal static bool TryBindIdentifier(string identifier, IEdmModel model, out QueryNode boundEnum)
         {
             boundEnum = null;
             string text = identifier;
 
             // parse the string, e.g., NS.Color'Green'
             // get type information, and also convert Green into an ODataEnumValue
-            
+
             // find the first ', before that, it is namespace.type
             int indexOfSingleQuote = text.IndexOf('\'');
             if (indexOfSingleQuote < 0)
@@ -80,7 +77,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             string namespaceAndType = text.Substring(0, indexOfSingleQuote);
 
             // find the type from edm model
-            IEdmModel model = state.Model;
             IEdmEnumType enumType = UriEdmHelpers.FindEnumTypeFromModel(model, namespaceAndType);
             if (enumType == null)
             {
@@ -93,7 +89,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             // parse string or int value to edm enum value
             string enumValueString = text;
-            IEdmEnumValue enumValue;
+            ODataEnumValue enumValue;
             enumType.TryParseEnum(enumValueString, out enumValue);
 
             if (enumValue == null)
@@ -103,7 +99,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             // create an enum node, enclosing an odata enum value
             EdmEnumTypeReference enumTypeReference = new EdmEnumTypeReference(enumType, true);
-            boundEnum = new EnumNode(enumTypeReference, enumValue);
+            boundEnum = new ConstantNode(enumValue, identifier, enumTypeReference);
 
             return true;
         }

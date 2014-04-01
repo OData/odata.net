@@ -17,6 +17,8 @@ namespace Microsoft.OData.Core.Json
     #region Namespaces
     using System;
     using System.Diagnostics;
+    using Microsoft.OData.Core.JsonLight;
+
 #if SPATIAL
     using Microsoft.Spatial;
 #endif
@@ -33,7 +35,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         internal static void ReadStartObject(this JsonReader jsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             ReadNext(jsonReader, JsonNodeType.StartObject);
@@ -45,7 +46,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         internal static void ReadEndObject(this JsonReader jsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             ReadNext(jsonReader, JsonNodeType.EndObject);
@@ -57,7 +57,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         internal static void ReadStartArray(this JsonReader jsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             ReadNext(jsonReader, JsonNodeType.StartArray);
@@ -69,7 +68,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         internal static void ReadEndArray(this JsonReader jsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             ReadNext(jsonReader, JsonNodeType.EndArray);
@@ -82,12 +80,13 @@ namespace Microsoft.OData.Core.Json
         /// <returns>The property name of the current property node.</returns>
         internal static string GetPropertyName(this JsonReader jsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(jsonReader.NodeType == JsonNodeType.Property, "jsonReader.NodeType == JsonNodeType.Property");
 
             // NOTE: the JSON reader already verifies that property names are strings and not null/empty
-            return (string)jsonReader.Value;
+            string propertyName = (string)jsonReader.Value;
+
+            return propertyName;
         }
 
         /// <summary>
@@ -97,7 +96,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>The property name of the property node read.</returns>
         internal static string ReadPropertyName(this JsonReader jsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             jsonReader.ValidateNodeType(JsonNodeType.Property);
@@ -113,7 +111,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>The primitive value read from the reader.</returns>
         internal static object ReadPrimitiveValue(this JsonReader jsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             object value = jsonReader.Value;
@@ -128,7 +125,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>The string value read from the reader; throws an exception if no string value could be read.</returns>
         internal static string ReadStringValue(this JsonReader jsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             object value = jsonReader.ReadPrimitiveValue();
@@ -149,7 +145,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>The string value read from the reader; throws an exception if no string value could be read.</returns>
         internal static string ReadStringValue(this JsonReader jsonReader, string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             object value = jsonReader.ReadPrimitiveValue();
@@ -169,7 +164,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>The double value read from the reader; throws an exception if no double value could be read.</returns>
         internal static double? ReadDoubleValue(this JsonReader jsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             object value = jsonReader.ReadPrimitiveValue();
@@ -185,6 +179,12 @@ namespace Microsoft.OData.Core.Json
                 return (double)intValue;
             }
 
+            decimal? decimalValue = value as decimal?;
+            if (decimalValue != null)
+            {
+                return (double)decimalValue;
+            }
+
             throw CreateException(Strings.JsonReaderExtensions_CannotReadValueAsDouble(value));
         }
 
@@ -198,7 +198,6 @@ namespace Microsoft.OData.Core.Json
         /// </remarks>
         internal static void SkipValue(this JsonReader jsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             int depth = 0;
@@ -236,7 +235,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>The node type of the node that reader is positioned on after reading.</returns>
         internal static JsonNodeType ReadNext(this JsonReader jsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
 #if DEBUG
@@ -255,8 +253,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>true if the reader is on PrimitiveValue, StartObject or StartArray node, false otherwise.</returns>
         internal static bool IsOnValueNode(this JsonReader jsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             JsonNodeType nodeType = jsonReader.NodeType;
             return nodeType == JsonNodeType.PrimitiveValue || nodeType == JsonNodeType.StartObject || nodeType == JsonNodeType.StartArray;
         }
@@ -269,8 +265,6 @@ namespace Microsoft.OData.Core.Json
         [Conditional("DEBUG")]
         internal static void AssertNotBuffering(this BufferingJsonReader bufferedJsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
-
 #if DEBUG
             Debug.Assert(!bufferedJsonReader.IsBuffering, "!bufferedJsonReader.IsBuffering");
 #endif
@@ -283,8 +277,6 @@ namespace Microsoft.OData.Core.Json
         [Conditional("DEBUG")]
         internal static void AssertBuffering(this BufferingJsonReader bufferedJsonReader)
         {
-            DebugUtils.CheckNoExternalCallers();
-
 #if DEBUG
             Debug.Assert(bufferedJsonReader.IsBuffering, "bufferedJsonReader.IsBuffering");
 #endif
@@ -305,7 +297,6 @@ namespace Microsoft.OData.Core.Json
 #else
         internal static ODataException CreateException(string exceptionMessage)
         {
-            DebugUtils.CheckNoExternalCallers();
             return new ODataException(exceptionMessage);
         }
 #endif
@@ -317,7 +308,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="expectedNodeType">The expected <see cref="JsonNodeType"/> of the read node.</param>
         private static void ReadNext(this JsonReader jsonReader, JsonNodeType expectedNodeType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(expectedNodeType != JsonNodeType.None, "expectedNodeType != JsonNodeType.None");
 

@@ -16,12 +16,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.UriParser.Semantic;
+    using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>
     /// Translate a select tree into the right format to be used with an expand tree.
     /// </summary>
-    //// TODO 1466134 We can delete this once V4 is the only thing used.
-    internal sealed class SelectTreeNormalizer : ISelectTreeNormalizer
+    //// TODO 1466134 Rename this to SelectTreeNormalizer when we're only using V4
+    internal sealed class SelectTreeNormalizer
     {
         /// <summary>
         /// Normalize a SelectToken into something that can be used to trim an expand tree.

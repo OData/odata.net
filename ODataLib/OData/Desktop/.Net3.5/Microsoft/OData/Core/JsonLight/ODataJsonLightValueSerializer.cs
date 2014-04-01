@@ -19,7 +19,6 @@ namespace Microsoft.OData.Core.JsonLight
     using Microsoft.OData.Core.Json;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
-
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces
@@ -46,7 +45,6 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightValueSerializer(ODataJsonLightPropertySerializer propertySerializer)
             : base(propertySerializer.JsonLightOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.propertySerializer = propertySerializer;
         }
 
@@ -57,7 +55,6 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightValueSerializer(ODataJsonLightOutputContext outputContext)
             : base(outputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -101,7 +98,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 if (this.propertySerializer == null)
                 {
                     this.propertySerializer = new ODataJsonLightPropertySerializer(this.JsonLightOutputContext);
@@ -116,8 +112,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         public void WriteNullValue()
         {
-            DebugUtils.CheckNoExternalCallers();
-            this.JsonWriter.WriteValue(null);
+            this.JsonWriter.WriteValue((string)null);
         }
 
         /// <summary>
@@ -138,13 +133,12 @@ namespace Microsoft.OData.Core.JsonLight
             bool isOpenPropertyType,
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(complexValue != null, "complexValue != null");
 
             this.IncreaseRecursionDepth();
 
             // Start the object scope which will represent the entire complex instance;
-            // for top-level complex properties we already wrote the object scope (and the metadata URI when needed).
+            // for top-level complex properties we already wrote the object scope (and the context URI when needed).
             if (!isTopLevel)
             {
                 this.JsonWriter.StartObjectScope();
@@ -209,8 +203,7 @@ namespace Microsoft.OData.Core.JsonLight
             ODataEnumValue value,
             IEdmTypeReference expectedTypeReference)
         {
-            string enumValueString = value.GetValueForSerialization(expectedTypeReference);
-            this.JsonWriter.WritePrimitiveValue(enumValueString, this.Version);
+            this.JsonWriter.WritePrimitiveValue(value.Value);
         }
 
         /// <summary>
@@ -226,7 +219,6 @@ namespace Microsoft.OData.Core.JsonLight
         [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
         public void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(collectionValue != null, "collectionValue != null");
             Debug.Assert(!isTopLevelProperty || !isInUri, "Cannot be a top level property and in a uri");
 
@@ -278,7 +270,7 @@ namespace Microsoft.OData.Core.JsonLight
                 DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = null;
                 foreach (object item in items)
                 {
-                    ValidationUtils.ValidateCollectionItem(item, false /* isStreamable */);
+                    ValidationUtils.ValidateCollectionItem(item, expectedItemTypeReference.IsNullable());
 
                     ODataComplexValue itemAsComplexValue = item as ODataComplexValue;
                     if (itemAsComplexValue != null)
@@ -302,7 +294,24 @@ namespace Microsoft.OData.Core.JsonLight
                         Debug.Assert(!(item is ODataCollectionValue), "!(item is ODataCollectionValue)");
                         Debug.Assert(!(item is ODataStreamReferenceValue), "!(item is ODataStreamReferenceValue)");
 
-                        this.WritePrimitiveValue(item, expectedItemTypeReference);
+                        // by design: collection element's type name is not written for enum or non-spatial primitive value even in case of full metadata.
+                        // because enum and non-spatial primitive types don't have inheritance, the type of each element is the same as the item type of the collection, whose type name for spatial types in full metadata mode.
+                        ODataEnumValue enumValue = item as ODataEnumValue;
+                        if (enumValue != null)
+                        {
+                            this.WriteEnumValue(enumValue, expectedItemTypeReference);
+                        }
+                        else
+                        {
+                            if (item != null)
+                            {
+                                this.WritePrimitiveValue(item, expectedItemTypeReference);
+                            }
+                            else
+                            {
+                                this.WriteNullValue();
+                            }
+                        }
                     }
                 }
             }
@@ -328,7 +337,6 @@ namespace Microsoft.OData.Core.JsonLight
             object value,
             IEdmTypeReference expectedTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(value != null, "value != null");
 
             IEdmPrimitiveTypeReference actualTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
@@ -340,11 +348,11 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (actualTypeReference != null && actualTypeReference.IsSpatial())
             {
-                PrimitiveConverter.Instance.WriteJsonLight(value, this.JsonWriter, this.Version);
+                PrimitiveConverter.Instance.WriteJsonLight(value, this.JsonWriter);
             }
             else
             {
-                this.JsonWriter.WritePrimitiveValue(value, this.Version);
+                this.JsonWriter.WritePrimitiveValue(value);
             }
         }
 
@@ -365,7 +373,6 @@ namespace Microsoft.OData.Core.JsonLight
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "The this is needed in DEBUG build.")]
         internal void AssertRecursionDepthIsZero()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.recursionDepth == 0, "The current recursion depth must be 0.");
         }
 

@@ -25,7 +25,6 @@ namespace Microsoft.OData.Core
         internal HttpHeaderValue()
             : base(StringComparer.OrdinalIgnoreCase /*Should be case-insensitive for tokens.*/)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>

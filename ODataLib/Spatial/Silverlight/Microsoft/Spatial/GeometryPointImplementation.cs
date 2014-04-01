@@ -11,17 +11,11 @@
 namespace Microsoft.Data.Spatial
 {
     using System;
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
     using Microsoft.Spatial;
 
     /// <summary>
     /// Geometry Point
     /// </summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     internal class GeometryPointImplementation : GeometryPoint
     {
         /// <summary>
@@ -148,51 +142,6 @@ namespace Microsoft.Data.Spatial
             get { return this.m; }
         }
 
-#if WINDOWS_PHONE
-        /// <summary>
-        /// internal property used to save state when this instance is serialized
-        /// </summary>
-        [DataMember]
-        internal double XValue
-        {
-            get { return this.x; }
-
-            set { this.x = value; }
-        }
-
-        /// <summary>
-        /// internal property used to save state when this instance is serialized
-        /// </summary>
-        [DataMember]
-        internal double YValue
-        {
-            get { return this.y; }
-
-            set { this.y = value; }
-        }
-
-        /// <summary>
-        /// internal property used to save state when this instance is serialized
-        /// </summary>
-        [DataMember]
-        internal double? ZValue
-        {
-            get { return this.z; }
-
-            set { this.z = value; }
-        }
-
-        /// <summary>
-        /// internal property used to save state when this instance is serialized
-        /// </summary>
-        [DataMember]
-        internal double? MValue
-        {
-            get { return this.m; }
-
-            set { this.m = value; }
-        }
-#endif
         /// <summary>
         /// Sends the current spatial object to the given pipeline
         /// </summary>

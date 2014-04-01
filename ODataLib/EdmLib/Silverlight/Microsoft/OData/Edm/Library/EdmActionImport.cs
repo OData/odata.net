@@ -8,6 +8,8 @@
 
 //   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using Microsoft.OData.Edm.Expressions;
 
 namespace Microsoft.OData.Edm.Library
@@ -17,42 +19,54 @@ namespace Microsoft.OData.Edm.Library
     /// </summary>
     public class EdmActionImport : EdmOperationImport, IEdmActionImport
     {
+        private static readonly string ActionArgumentNullParameterName = "action";
+
         /// <summary>
-        /// Initializes a new instance of <see cref="EdmActionImport"/> class.
+        /// Initializes a new instance of the <see cref="EdmActionImport"/> class.
         /// </summary>
-        /// <param name="container">An <see cref="IEdmEntityContainer"/> containing this action import.</param>
-        /// <param name="name">Name of the action import.</param>
-        /// <param name="returnType">Return type of the action import.</param>
-        public EdmActionImport(IEdmEntityContainer container, string name, IEdmTypeReference returnType)
-            : this(container, name, returnType, null, false /*isBindable*/)
+        /// <param name="container">The container.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="action">The action.</param>
+        public EdmActionImport(IEdmEntityContainer container, string name, IEdmAction action)
+            : this(container, name, action, null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="EdmActionImport"/> class.
+        /// Initializes a new instance of the <see cref="EdmActionImport"/> class.
         /// </summary>
-        /// <param name="container">An <see cref="IEdmEntityContainer"/> containing this action import.</param>
-        /// <param name="name">Name of the action import.</param>
-        /// <param name="returnType">Return type of the action import.</param>
-        /// <param name="entitySet">An entity set containing entities returned by this action import. 
-        /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
-        public EdmActionImport(IEdmEntityContainer container, string name, IEdmTypeReference returnType, IEdmExpression entitySet)
-            : this(container, name, returnType, entitySet, false /*isBindable*/)
+        /// <param name="container">The container.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="action">The action.</param>
+        /// <param name="entitySetExpression">The entity set expression.</param>
+        public EdmActionImport(IEdmEntityContainer container, string name, IEdmAction action, IEdmExpression entitySetExpression)
+            : base(container, action, name, entitySetExpression)
         {
+            EdmUtil.CheckArgumentNull(action, "action");
+
+            this.Action = action;
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="EdmActionImport"/> class.
+        /// Gets the action type of the import.
         /// </summary>
-        /// <param name="container">An <see cref="IEdmEntityContainer"/> containing this action import.</param>
-        /// <param name="name">Name of the action import.</param>
-        /// <param name="returnType">Return type of the action import.</param>
-        /// <param name="entitySet">An entity set containing entities returned by this action import. 
-        /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
-        /// <param name="isBindable">A value indicating whether this action import can be used as an extension method for the type of the first parameter of this action import.</param>
-        public EdmActionImport(IEdmEntityContainer container, string name, IEdmTypeReference returnType, IEdmExpression entitySet, bool isBindable)
-            : base(container, name, returnType, entitySet, true /*isSideAffecting*/, false /*isComposable*/, isBindable)
+        public IEdmAction Action { get; private set; }
+
+        /// <summary>
+        /// Gets the kind of this actionimport, which is always ActionImport.
+        /// </summary>
+        public override EdmContainerElementKind ContainerElementKind
         {
+            get { return EdmContainerElementKind.ActionImport; }
+        }
+
+        /// <summary>
+        /// Indicates the name of the constructor argument that is passed to EdmOperationImport.
+        /// </summary>
+        /// <returns>Returns the name of the operation from this import.</returns>
+        protected override string OperationArgumentNullParameterName()
+        {
+            return ActionArgumentNullParameterName;
         }
     }
 }

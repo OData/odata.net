@@ -84,13 +84,11 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.uriFromEpm;
             }
 
             set
             {
-                DebugUtils.CheckNoExternalCallers();
                 this.uriFromEpm = value;
             }
         }

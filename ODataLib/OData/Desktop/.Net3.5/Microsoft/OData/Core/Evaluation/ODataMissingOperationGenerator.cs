@@ -13,9 +13,9 @@ namespace Microsoft.OData.Core.Evaluation
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Core.Metadata;
 
     /// <summary>
     /// Generates operations which were omitted by the service because they fully match conventions/templates and are always available.
@@ -41,7 +41,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <param name="metadataContext">The current entry metadata context.</param>
         internal ODataMissingOperationGenerator(IODataEntryMetadataContext entryMetadataContext, IODataMetadataContext metadataContext)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryMetadataContext != null, "entryMetadataCotext != null");
             Debug.Assert(metadataContext != null, "metadataContext != null");
 
@@ -55,7 +54,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The computed missing Actions.</returns>
         internal IEnumerable<ODataAction> GetComputedActions()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.ComputeMissingOperationsToEntry();
             return this.computedActions;
         }
@@ -66,7 +64,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The computed missing Functions.</returns>
         internal IEnumerable<ODataFunction> GetComputedFunctions()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.ComputeMissingOperationsToEntry();
             return this.computedFunctions;
         }
@@ -78,40 +75,40 @@ namespace Microsoft.OData.Core.Evaluation
         /// <param name="model">The edm model to resolve operation imports.</param>
         /// <param name="metadataDocumentUri">The metadata document uri.</param>
         /// <returns>The hash set of operation imports (actions and functions) in the given entry.</returns>
-        private static HashSet<IEdmOperationImport> GetOperationImportsInEntry(ODataEntry entry, IEdmModel model, Uri metadataDocumentUri)
+        private static HashSet<IEdmOperation> GetOperationsInEntry(ODataEntry entry, IEdmModel model, Uri metadataDocumentUri)
         {
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(model != null, "model != null");
             Debug.Assert(metadataDocumentUri != null && metadataDocumentUri.IsAbsoluteUri, "metadataDocumentUri != null && metadataDocumentUri.IsAbsoluteUri");
 
-            HashSet<IEdmOperationImport> operationImportsInEntry = new HashSet<IEdmOperationImport>(EqualityComparer<IEdmOperationImport>.Default);
+            HashSet<IEdmOperation> edmOperationImportsInEntry = new HashSet<IEdmOperation>(EqualityComparer<IEdmOperation>.Default);
             IEnumerable<ODataOperation> operations = ODataUtilsInternal.ConcatEnumerables((IEnumerable<ODataOperation>)entry.NonComputedActions, (IEnumerable<ODataOperation>)entry.NonComputedFunctions);
             if (operations != null)
             {
                 foreach (ODataOperation operation in operations)
                 {
                     Debug.Assert(operation.Metadata != null, "operation.Metadata != null");
-                    string operationMetadataString = UriUtilsCommon.UriToString(operation.Metadata);
+                    string operationMetadataString = UriUtils.UriToString(operation.Metadata);
                     Debug.Assert(
                         ODataJsonLightUtils.IsMetadataReferenceProperty(operationMetadataString),
                         "ODataJsonLightUtils.IsMetadataReferenceProperty(operationMetadataString)");
                     Debug.Assert(
-                        operationMetadataString[0] == JsonLightConstants.ContextUriFragmentIndicator || metadataDocumentUri.IsBaseOf(operation.Metadata),
+                        operationMetadataString[0] == ODataConstants.ContextUriFragmentIndicator || metadataDocumentUri.IsBaseOf(operation.Metadata),
                         "operationMetadataString[0] == JsonLightConstants.ContextUriFragmentIndicator || metadataDocumentUri.IsBaseOf(operation.Metadata)");
 
                     string fullyQualifiedOperationName = ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(metadataDocumentUri, operationMetadataString);
-                    IEnumerable<IEdmOperationImport> operationImports = model.ResolveFunctionImports(fullyQualifiedOperationName);
-                    if (operationImports != null)
+                    IEnumerable<IEdmOperation> edmOperations = model.ResolveOperations(fullyQualifiedOperationName);
+                    if (edmOperations != null)
                     {
-                        foreach (IEdmOperationImport operationImport in operationImports)
+                        foreach (IEdmOperation edmOperation in edmOperations)
                         {
-                            operationImportsInEntry.Add(operationImport);
+                            edmOperationImportsInEntry.Add(edmOperation);
                         }
                     }
                 }
             }
 
-            return operationImportsInEntry;
+            return edmOperationImportsInEntry;
         }
 
         /// <summary>
@@ -119,7 +116,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         private void ComputeMissingOperationsToEntry()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.entryMetadataContext != null, "this.entryMetadataContext != null");
             Debug.Assert(this.metadataContext != null, "this.metadataContext != null");
 
@@ -129,18 +125,18 @@ namespace Microsoft.OData.Core.Evaluation
 
                 this.computedActions = new List<ODataAction>();
                 this.computedFunctions = new List<ODataFunction>();
-                HashSet<IEdmOperationImport> operationsInEntry = GetOperationImportsInEntry(this.entryMetadataContext.Entry, this.metadataContext.Model, this.metadataContext.MetadataDocumentUri);
-                foreach (IEdmOperationImport alwaysBindableOperation in this.entryMetadataContext.SelectedAlwaysBindableOperations)
+                HashSet<IEdmOperation> edmOperations = GetOperationsInEntry(this.entryMetadataContext.Entry, this.metadataContext.Model, this.metadataContext.MetadataDocumentUri);
+                foreach (IEdmOperation bindableOperation in this.entryMetadataContext.SelectedBindableOperations)
                 {
                     // if this operation appears in the payload, skip it.
-                    if (operationsInEntry.Contains(alwaysBindableOperation))
+                    if (edmOperations.Contains(bindableOperation))
                     {
                         continue;
                     }
 
-                    string metadataReferencePropertyName = JsonLightConstants.ContextUriFragmentIndicator + ODataJsonLightUtils.GetMetadataReferenceName(alwaysBindableOperation);
+                    string metadataReferencePropertyName = ODataConstants.ContextUriFragmentIndicator + ODataJsonLightUtils.GetMetadataReferenceName(this.metadataContext.Model, bindableOperation);
                     bool isAction;
-                    ODataOperation operation = ODataJsonLightUtils.CreateODataOperation(this.metadataContext.MetadataDocumentUri, metadataReferencePropertyName, alwaysBindableOperation, out isAction);
+                    ODataOperation operation = ODataJsonLightUtils.CreateODataOperation(this.metadataContext.MetadataDocumentUri, metadataReferencePropertyName, bindableOperation, out isAction);
                     operation.SetMetadataBuilder(this.entryMetadataContext.Entry.MetadataBuilder, this.metadataContext.MetadataDocumentUri);
                     if (isAction)
                     {

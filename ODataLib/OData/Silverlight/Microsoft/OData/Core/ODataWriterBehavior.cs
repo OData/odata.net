@@ -62,8 +62,6 @@ namespace Microsoft.OData.Core
             bool allowNullValuesForNonNullablePrimitiveTypes,
             bool allowDuplicatePropertyNames)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.formatBehaviorKind = formatBehaviorKind;
             this.apiBehaviorKind = apiBehaviorKind;
             this.allowNullValuesForNonNullablePrimitiveTypes = allowNullValuesForNonNullablePrimitiveTypes;
@@ -78,7 +76,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return defaultWriterBehavior;
             }
         }
@@ -90,7 +87,6 @@ namespace Microsoft.OData.Core
         {
             get 
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.allowNullValuesForNonNullablePrimitiveTypes; 
             }
         }
@@ -106,7 +102,6 @@ namespace Microsoft.OData.Core
         {
             get 
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.allowDuplicatePropertyNames; 
             }
         }
@@ -116,7 +111,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.formatBehaviorKind;
             }
         }
@@ -126,7 +120,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.apiBehaviorKind;
             }
         }
@@ -137,7 +130,6 @@ namespace Microsoft.OData.Core
         /// <returns>The created writer behavior.</returns>
         internal static ODataWriterBehavior CreateWcfDataServicesClientBehavior()
         {
-            DebugUtils.CheckNoExternalCallers();
             return new ODataWriterBehavior(
                 ODataBehaviorKind.WcfDataServicesClient,
                 ODataBehaviorKind.WcfDataServicesClient,
@@ -148,15 +140,14 @@ namespace Microsoft.OData.Core
 
 
         /// <summary>
-        /// Create the writer behavior for the WCF Data Services server.
+        /// Create the writer behavior for the OData server.
         /// </summary>
         /// <returns>The created writer behavior.</returns>
-        internal static ODataWriterBehavior CreateWcfDataServicesServerBehavior()
+        internal static ODataWriterBehavior CreateODataServerBehavior()
         {
-            DebugUtils.CheckNoExternalCallers();
             return new ODataWriterBehavior(
-                ODataBehaviorKind.WcfDataServicesServer,
-                ODataBehaviorKind.WcfDataServicesServer,
+                ODataBehaviorKind.ODataServer,
+                ODataBehaviorKind.ODataServer,
                 /*allowNullValuesForNonNullablePrimitiveTypes*/ true,
                 /*allowDuplicatePropertyNames*/ true);
         }
@@ -166,7 +157,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void UseDefaultFormatBehavior()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.formatBehaviorKind = ODataBehaviorKind.Default;
 
             // Also reset all format knobs

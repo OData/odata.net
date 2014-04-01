@@ -46,16 +46,9 @@ namespace Microsoft.OData.Core.UriParser
         public ODataUriParserConfiguration(IEdmModel model, Uri serviceRoot)
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
-            if (serviceRoot != null)
-            {
-                if (!serviceRoot.IsAbsoluteUri)
-                {
-                    throw new ArgumentException(ODataErrorStrings.UriParser_UriMustBeAbsolute(serviceRoot), "serviceRoot");
-                }
-            }
 
             this.model = model;
-            this.serviceRoot = serviceRoot;
+            this.serviceRoot = Core.UriUtils.EnsureTaillingSlash(serviceRoot);
             this.Settings = new ODataUriParserSettings();
         }
 
@@ -103,10 +96,10 @@ namespace Microsoft.OData.Core.UriParser
         /// Gets or Sets a callback that returns a BatchReferenceSegment (to be used for $0 in batch)
         /// </summary>
         public Func<string, BatchReferenceSegment> BatchReferenceCallback { get; set; }
-
+        
         /// <summary>
-        /// Gets or sets a callback that returns the raw string value for an aliased function parameter.
+        /// Gets or sets the parameter aliases info for MetadataBinder to resolve parameter alias' metadata type.
         /// </summary>
-        public Func<string, string> FunctionParameterAliasCallback { get; set; }
+        internal ParameterAliasValueAccessor ParameterAliasValueAccessor { get; set; }
     }
 }

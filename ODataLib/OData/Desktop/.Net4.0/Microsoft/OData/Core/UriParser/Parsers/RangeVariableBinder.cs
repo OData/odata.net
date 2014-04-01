@@ -31,7 +31,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>The bound query node.</returns>
         internal static SingleValueNode BindRangeVariableToken(RangeVariableToken rangeVariableToken, BindingState state)
         {
-            DebugUtils.CheckNoExternalCallers(); 
             ExceptionUtils.CheckArgumentNotNull(rangeVariableToken, "rangeVariableToken");
             
             RangeVariable rangeVariable = state.RangeVariables.SingleOrDefault(p => p.Name == rangeVariableToken.Name);

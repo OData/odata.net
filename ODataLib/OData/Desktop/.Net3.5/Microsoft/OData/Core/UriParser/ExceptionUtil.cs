@@ -20,8 +20,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>A new exception to indicate the requested resource cannot be found.</returns>
         internal static ODataException CreateResourceNotFound(string identifier)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // 404: Not Found
             return ResourceNotFoundError(Strings.RequestUriProcessor_ResourceNotFound(identifier));
         }
@@ -31,8 +29,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>A new exception to indicate the requested resource cannot be found.</returns>
         internal static ODataException ResourceNotFoundError(string errorMessage)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // 404: Not Found
             return new ODataUnrecognizedPathException(errorMessage);
         }
@@ -41,7 +37,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>A new exception to indicate a syntax error.</returns>
         internal static ODataException CreateSyntaxError()
         {
-            DebugUtils.CheckNoExternalCallers();
             return CreateBadRequestError(Strings.RequestUriProcessor_SyntaxError);
         }
 
@@ -52,8 +47,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>A new exception to indicate a bad request error.</returns>
         internal static ODataException CreateBadRequestError(string message)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // 400 - Bad Request
             return new ODataException(message);
         }
@@ -63,7 +56,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <remarks>This helper method is used to keep syntax check code more terse.</remarks>
         internal static void ThrowSyntaxErrorIfNotValid(bool valid)
         {
-            DebugUtils.CheckNoExternalCallers();
             if (!valid)
             {
                 throw CreateSyntaxError();
@@ -76,7 +68,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <remarks>This helper method is used to keep syntax check code more terse.</remarks>
         internal static void ThrowIfResourceDoesNotExist(bool resourceExists, string identifier)
         {
-            DebugUtils.CheckNoExternalCallers();
             if (!resourceExists)
             {
                 throw CreateResourceNotFound(identifier);

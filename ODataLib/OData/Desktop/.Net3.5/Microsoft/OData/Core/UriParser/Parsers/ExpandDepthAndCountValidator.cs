@@ -42,7 +42,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="maxCount">The maximum number of expanded items allowed in a tree.</param>
         internal ExpandDepthAndCountValidator(int maxDepth, int maxCount)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(maxDepth >= 0, "Max depth cannot be negative.");
             Debug.Assert(maxCount >= 0, "Max count cannot be negative.");
             this.maxDepth = maxDepth;
@@ -55,7 +54,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="expandTree">The expand tree to validate.</param>
         internal void Validate(SelectExpandClause expandTree)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.currentCount = 0;
             this.EnsureMaximumCountAndDepthAreNotExceeded(expandTree, /*currentDepth*/ 0);
         }

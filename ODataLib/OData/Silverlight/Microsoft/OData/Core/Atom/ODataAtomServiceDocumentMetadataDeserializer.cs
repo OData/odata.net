@@ -55,8 +55,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomServiceDocumentMetadataDeserializer(ODataAtomInputContext atomInputContext)
             : base(atomInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             XmlNameTable nameTable = this.XmlReader.NameTable;
             this.AtomNamespace = nameTable.Add(AtomConstants.AtomNamespace);
             this.AtomCategoryElementName = nameTable.Add(AtomConstants.AtomCategoryElementName);
@@ -78,7 +76,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void ReadTitleElementInWorkspace(AtomWorkspaceMetadata workspaceMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(workspaceMetadata != null, "workspaceMetadata != null");
             this.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(this.XmlReader.LocalName == AtomConstants.AtomTitleElementName, "Expected element named 'title'.");
@@ -93,31 +90,28 @@ namespace Microsoft.OData.Core.Atom
         }
 
         /// <summary>
-        /// Reads an atom:title element and adds the new information to <paramref name="collectionInfo"/> and (if ATOM metadata reading is on) <paramref name="collectionMetadata"/>.
+        /// Reads an atom:title element and adds the new information to <paramref name="odataServiceDocumentElement"/> and (if ATOM metadata reading is on) <paramref name="collectionMetadata"/>.
         /// </summary>
         /// <param name="collectionMetadata">The collection metadata object to augment, or null if metadata reading is not on.</param>
-        /// <param name="collectionInfo">The non-null collection info object being populated.</param>
+        /// <param name="odataServiceDocumentElement">The non-null service document element info object being populated.</param>
         /// <remarks>
         /// Pre-Condition:  XmlNodeType.Element - The start of the title element.
         /// Post-Condition: Any                 - The next node after the title element. 
         /// </remarks>
-        internal void ReadTitleElementInCollection(AtomResourceCollectionMetadata collectionMetadata, ODataResourceCollectionInfo collectionInfo)
+        internal void ReadTitleElementInCollection(AtomResourceCollectionMetadata collectionMetadata, ODataServiceDocumentElement odataServiceDocumentElement)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!this.ReadAtomMetadata || collectionMetadata != null, "collectionMetadata parameter should be non-null when ATOM metadata reading is enabled.");
-            Debug.Assert(collectionInfo != null, "collectionInfo != null");
+            Debug.Assert(odataServiceDocumentElement != null, "collectionInfo != null");
             this.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(this.XmlReader.LocalName == AtomConstants.AtomTitleElementName, "Expected element named 'title'.");
             Debug.Assert(this.XmlReader.NamespaceURI == AtomConstants.AtomNamespace, "Element 'title' should be in the atom namespace.");
 
-            if (collectionInfo.Name != null)
-            {
-                throw new ODataException(Strings.ODataAtomServiceDocumentMetadataDeserializer_MultipleTitleElementsFound(AtomConstants.AtomPublishingCollectionElementName));
-            }
-
             AtomTextConstruct titleTextConstruct = this.ReadTitleElement();
 
-            collectionInfo.Name = titleTextConstruct.Text;
+            if (odataServiceDocumentElement.Name == null)
+            {
+                odataServiceDocumentElement.Name = titleTextConstruct.Text;
+            }
 
             if (this.ReadAtomMetadata)
             {
@@ -135,7 +129,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void ReadCategoriesElementInCollection(AtomResourceCollectionMetadata collectionMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(collectionMetadata != null, "collectionMetadata != null");
             this.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(this.XmlReader.LocalName == AtomConstants.AtomPublishingCategoriesElementName, "Expected element named 'categories'.");
@@ -223,7 +216,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal void ReadAcceptElementInCollection(AtomResourceCollectionMetadata collectionMetadata)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(collectionMetadata != null, "collectionMetadata != null");
             this.AssertXmlCondition(XmlNodeType.Element);
             Debug.Assert(this.XmlReader.LocalName == AtomConstants.AtomPublishingAcceptElementName, "Expected element named 'accept'.");

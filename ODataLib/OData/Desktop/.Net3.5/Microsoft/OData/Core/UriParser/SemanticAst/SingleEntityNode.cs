@@ -18,9 +18,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     public abstract class SingleEntityNode : SingleValueNode
     {
         /// <summary>
-        /// Gets the EntitySet containing this single entity.
+        /// Gets the navigation source containing this single entity.
         /// </summary>
-        public abstract IEdmEntitySet EntitySet { get; }
+        public abstract IEdmNavigationSource NavigationSource { get; }
     
         /// <summary>
         /// Gets the type of this single entity.

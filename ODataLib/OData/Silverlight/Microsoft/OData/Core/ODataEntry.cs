@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core
         private bool hasNonComputedETag;
 
         /// <summary>The Entry ID, as provided by the user or seen on the wire (never computed).</summary>
-        private string id;
+        private Uri id;
 
         /// <summary>true if an id was provided by the user or seen on the wire, false otherwise.</summary>
         private bool hasNonComputedId;
@@ -59,10 +59,10 @@ namespace Microsoft.OData.Core
         private IEnumerable<ODataProperty> properties;
         
         /// <summary>The entry actions provided by the user or seen on the wire (never computed).</summary>
-        private IEnumerable<ODataAction> actions;
+        private List<ODataAction> actions = new List<ODataAction>();
 
         /// <summary>The entry functions provided by the user or seen on the wire (never computed).</summary>
-        private IEnumerable<ODataFunction> functions;
+        private List<ODataFunction> functions = new List<ODataFunction>();
 
         /// <summary>
         /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataEntry"/>.
@@ -87,7 +87,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>Gets or sets the Entry identifier.</summary>
         /// <returns>The Entry identifier.</returns>
-        public string Id
+        public Uri Id
         {
             get
             {
@@ -117,6 +117,14 @@ namespace Microsoft.OData.Core
             }
         }
 
+        /// <summary>Gets or sets the value that shows if the entry is a transient entry or not</summary>
+        /// <returns>true if the entry is a transient entity, false otherwise.</returns>
+        public bool IsTransient
+        {
+            get;
+            set;
+        }
+
         /// <summary>Gets or sets a link that can be used to read the entry.</summary>
         /// <returns>The link that can be used to read the entry.</returns>
         public Uri ReadLink
@@ -141,28 +149,18 @@ namespace Microsoft.OData.Core
             set { this.mediaResource = value; }
         }
 
-        /// <summary>Gets or sets the association links.</summary>
-        /// <returns>The association links.</returns>
-        public IEnumerable<ODataAssociationLink> AssociationLinks
-        {
-            get;
-            set;
-        }
-
-        /// <summary>Gets or sets the entity actions.</summary>
+        /// <summary>Gets the entity actions.</summary>
         /// <returns>The entity actions.</returns>
         public IEnumerable<ODataAction> Actions
         {
             get { return this.MetadataBuilder.GetActions(); }
-            set { this.actions = value; }
         }
 
-        /// <summary>Gets or sets the entity functions.</summary>
+        /// <summary>Gets the entity functions.</summary>
         /// <returns>The entity functions.</returns>
         public IEnumerable<ODataFunction> Functions
         {
             get { return this.MetadataBuilder.GetFunctions(); }
-            set { this.functions = value; }
         }
 
         /// <summary>Gets or sets the entry properties.</summary>
@@ -201,7 +199,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 if (this.metadataBuilder == null)
                 {
                     this.metadataBuilder = new NoOpEntityMetadataBuilder(this);
@@ -212,7 +209,6 @@ namespace Microsoft.OData.Core
 
             set
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(value != null, "MetadataBuilder != null");
                 this.metadataBuilder = value;
             }
@@ -221,11 +217,10 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Returns the entry's Id property that has been set directly, and was not computed using the metadata builder.
         /// </summary>
-        internal string NonComputedId
+        internal Uri NonComputedId
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.id;
             }
         }
@@ -237,7 +232,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.hasNonComputedId;
             }
         }
@@ -249,7 +243,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.editLink;
             }
         }
@@ -261,7 +254,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.hasNonComputedEditLink;
             }
         }
@@ -273,7 +265,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.readLink;
             }
         }
@@ -285,7 +276,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.hasNonComputedReadLink;
             }
         }
@@ -297,7 +287,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.etag;
             }
         }
@@ -309,7 +298,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.hasNonComputedETag;
             }
         }
@@ -319,7 +307,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.mediaResource;
             }
         }
@@ -329,7 +316,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.properties;
             }
         }
@@ -339,8 +325,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-                return this.actions;
+                return this.actions == null ? null : new ReadOnlyEnumerable<ODataAction>(this.actions);
             }
         }
 
@@ -349,8 +334,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-                return this.functions;
+                return this.functions == null ? null : new ReadOnlyEnumerable<ODataFunction>(this.functions);
             }
         }
 
@@ -362,14 +346,38 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.serializationInfo;
             }
 
             set
             {
-                DebugUtils.CheckNoExternalCallers();
                 this.serializationInfo = ODataFeedAndEntrySerializationInfo.Validate(value);
+            }
+        }
+
+        /// <summary>
+        /// Add action to entry.
+        /// </summary>
+        /// <param name="action">The action to add.</param>
+        public void AddAction(ODataAction action)
+        {
+            ExceptionUtils.CheckArgumentNotNull(action, "action");
+            if (!this.actions.Contains(action))
+            {
+                this.actions.Add(action);
+            }
+        }
+
+        /// <summary>
+        /// Add function to entry.
+        /// </summary>
+        /// <param name="function">The function to add.</param>
+        public void AddFunction(ODataFunction function)
+        {
+            ExceptionUtils.CheckArgumentNotNull(function, "function");
+            if (!this.functions.Contains(function))
+            {
+                this.functions.Add(function);
             }
         }
     }

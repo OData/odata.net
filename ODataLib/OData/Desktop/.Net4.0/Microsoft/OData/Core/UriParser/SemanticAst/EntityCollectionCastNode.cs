@@ -41,9 +41,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private readonly IEdmCollectionTypeReference collectionTypeReference;
 
         /// <summary>
-        /// The EntitySet that our collection comes from.
+        /// The navigation source that our collection comes from.
         /// </summary>
-        private readonly IEdmEntitySet entitySet;
+        private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
         /// Create a CollectionCastNode with the given source node and the given target type.
@@ -57,7 +57,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
             this.source = source;
             this.edmTypeReference = new EdmEntityTypeReference(entityType, false);
-            this.entitySet = source.EntitySet;
+            this.navigationSource = source.NavigationSource;
 
             // creating a new collection type here because the type in the request is just the item type, there is no user-provided collection type.
             this.collectionTypeReference = EdmCoreModel.GetCollection(this.edmTypeReference);
@@ -96,11 +96,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the EntitySet that our collection comes from.
+        /// Gets the navigation source that our collection comes from.
         /// </summary>
-        public override IEdmEntitySet EntitySet
+        public override IEdmNavigationSource NavigationSource
         {
-            get { return this.entitySet; }
+            get { return this.navigationSource; }
         }
 
         /// <summary>
@@ -110,7 +110,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return InternalQueryNodeKind.EntityCollectionCast;
             }
         }
@@ -124,7 +123,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <exception cref="System.ArgumentNullException">Throws if the input visitor is null.</exception>
         public override T Accept<T>(QueryNodeVisitor<T> visitor)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(visitor, "visitor");
             return visitor.Visit(this);
         }

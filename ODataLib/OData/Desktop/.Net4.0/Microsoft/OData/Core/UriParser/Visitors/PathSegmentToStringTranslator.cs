@@ -75,7 +75,18 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         public override string Translate(OperationSegment segment)
         {
             Debug.Assert(segment != null, "segment != null");
-            return segment.Operations.FunctionImportGroupFullName();
+            return segment.Operations.OperationGroupFullName();
+        }
+
+        /// <summary>
+        /// Translate a OperationSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public override string Translate(OperationImportSegment segment)
+        {
+            Debug.Assert(segment != null, "segment != null");
+            return segment.OperationImports.OperationImportGroupFullName();
         }
 
         /// <summary>

@@ -14,8 +14,8 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Helper methods used by the OData reader for the JsonLight format.
@@ -39,10 +39,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>true if <paramref name="propertyName"/> is a name of a metadata reference property, false otherwise.</returns>
         internal static bool IsMetadataReferenceProperty(string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!String.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
-            return propertyName.IndexOf(JsonLightConstants.ContextUriFragmentIndicator) >= 0;
+            return propertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator) >= 0;
         }
 
         /// <summary>
@@ -52,9 +51,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="metadataReferencePropertyName">The metadata reference property name.</param>
         /// <param name="firstParameterTypeName">The first parameter name, if any are present in the given string.</param>
         /// <returns>The fully qualified operation import name.</returns>
-        internal static string GetFullyQualifiedOperationImportName(Uri metadataDocumentUri, string metadataReferencePropertyName, out string firstParameterTypeName)
+        internal static string GetFullyQualifiedOperationName(Uri metadataDocumentUri, string metadataReferencePropertyName, out string firstParameterTypeName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(metadataDocumentUri != null, "metadataDocumentUri != null");
             Debug.Assert(!String.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
 
@@ -82,7 +80,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The Uri fragment which corresponds to action/function names, etc.</returns>
         internal static string GetUriFragmentFromMetadataReferencePropertyName(Uri metadataDocumentUri, string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(metadataDocumentUri != null, "metadataDocumentUri != null");
             Debug.Assert(!String.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
@@ -99,11 +96,10 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The absolute Uri for the metadata reference property name.</returns>
         internal static Uri GetAbsoluteUriFromMetadataReferencePropertyName(Uri metadataDocumentUri, string propertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(metadataDocumentUri != null, "metadataDocumentUri != null");
             Debug.Assert(!String.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
-            if (propertyName[0] == JsonLightConstants.ContextUriFragmentIndicator)
+            if (propertyName[0] == ODataConstants.ContextUriFragmentIndicator)
             {
                 propertyName = UriUtils.EnsureEscapedFragment(propertyName);
                 return new Uri(metadataDocumentUri, propertyName);
@@ -114,25 +110,24 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Calculates the metadata reference name for the given operation import. When there is no overload to the function, this method will
-        /// return the container qualified operation import name.  When there is overload to the function this method will
+        /// Calculates the metadata reference name for the given operation. When there is no overload to the function, this method will
+        /// return the namespace qualified operation name.  When there is overload to the operation this method will
         /// return FQFN([comma separated parameter type names]) to disambiguate between different overloads.
         /// </summary>
-        /// <param name="operationImport">The operation import in question.</param>
-        /// <returns>The metadata reference name for the given operation import.</returns>
+        /// <param name="model">The model of the operations.</param>
+        /// <param name="operation">The operation in question.</param>
+        /// <returns>The metadata reference name for the given operation.</returns>
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
-            Justification = "This method is used for matching the name of the operation import to something written by the server. So using the name is safe without resolving the type from the client.")]
-        internal static string GetMetadataReferenceName(IEdmOperationImport operationImport)
+            Justification = "This method is used for matching the name of the operation to something written by the server. So using the name is safe without resolving the type from the client.")]
+        internal static string GetMetadataReferenceName(IEdmModel model, IEdmOperation operation)
         {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(operationImport != null, "operationImport != null");
+            Debug.Assert(operation != null, "operation != null");
 
-            string metadataReferenceName = operationImport.FullName();
-            Debug.Assert(operationImport.Container != null, "operationImport.Container != null");
-            bool hasOverload = operationImport.Container.FindOperationImports(operationImport.Name).Take(2).Count() > 1;
+            string metadataReferenceName = operation.FullName();
+            bool hasOverload = model.FindDeclaredOperations(operation.FullName()).Take(2).Count() > 1;
             if (hasOverload)
             {
-                metadataReferenceName = operationImport.FullNameWithParameters();
+                metadataReferenceName = operation.FullNameWithParameters();
             }
 
             return metadataReferenceName;
@@ -143,18 +138,16 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="metadataDocumentUri">The metadata document uri.</param>
         /// <param name="metadataReferencePropertyName">The metadata reference property name.</param>
-        /// <param name="operationImport">The operation import to create the ODataOperation for.</param>
+        /// <param name="edmOperation">The operation to create the ODataOperation for.</param>
         /// <param name="isAction">true if the created ODataOperation is an ODataAction, false otherwise.</param>
         /// <returns>The created ODataAction or ODataFunction.</returns>
-        internal static ODataOperation CreateODataOperation(Uri metadataDocumentUri, string metadataReferencePropertyName, IEdmOperationImport operationImport, out bool isAction)
+        internal static ODataOperation CreateODataOperation(Uri metadataDocumentUri, string metadataReferencePropertyName, IEdmOperation edmOperation, out bool isAction)
         {
-            DebugUtils.CheckNoExternalCallers();
-            
             Debug.Assert(metadataDocumentUri != null, "metadataDocumentUri != null");
             Debug.Assert(!string.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
-            Debug.Assert(operationImport != null, "operationImport != null");
+            Debug.Assert(edmOperation != null, "edmOperation != null");
 
-            isAction = operationImport.IsSideEffecting;
+            isAction = edmOperation.IsAction();
             ODataOperation operation = isAction ? (ODataOperation)new ODataAction() : new ODataFunction();
 
             // Note that the property name can be '#name' which is not a valid Uri. We need to prepend the metadata document uri in that case.

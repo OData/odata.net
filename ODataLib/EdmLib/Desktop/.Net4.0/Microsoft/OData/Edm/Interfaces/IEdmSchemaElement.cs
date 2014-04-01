@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents a schema element with unknown or error kind.
         /// </summary>
-        None,
+        None = 0,
 
         /// <summary>
         /// Represents a schema element implementing <see cref="IEdmSchemaType"/>.
@@ -26,19 +26,25 @@ namespace Microsoft.OData.Edm
         TypeDefinition,
 
         /// <summary>
-        /// Represents a schema element implementing <see cref="IEdmOperation"/>.
-        /// </summary>
-        Operation,
-
-        /// <summary>
         /// Represents a schema element implementing <see cref="IEdmValueTerm"/>.
         /// </summary>
-        ValueTerm, 
+        ValueTerm,
+
+
+        /// <summary>
+        /// Represents a schema element implementing <see cref="IEdmAction"/>.
+        /// </summary>
+        Action,
 
         /// <summary>
         /// Represents a schema element implementing <see cref="IEdmEntityContainer"/>
         /// </summary>
-        EntityContainer
+        EntityContainer,
+
+        /// <summary>
+        /// Represents a schema element implementing <see cref="IEdmAction"/>.
+        /// </summary>
+        Function,
     }
 
     /// <summary>

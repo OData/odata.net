@@ -16,26 +16,21 @@ namespace Microsoft.OData.Core
     #endregion Namespaces
 
     /// <summary>
-    /// Represents a collection of entity reference links (the result of a $links query).
+    /// Represents a collection of entity reference links (the result of a $ref query).
     /// Might include an inline count and a next link.
     /// </summary>
     public sealed class ODataEntityReferenceLinks : ODataAnnotatable
     {
-        /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataMessageWriter"/> for this <see cref="ODataEntityReferenceLinks"/>.
-        /// </summary>
-        private ODataEntityReferenceLinksSerializationInfo serializationInfo;
-
-        /// <summary>Gets or sets the optional inline count of the $links collection.</summary>
-        /// <returns>The optional inline count of the $links collection.</returns>
+        /// <summary>Gets or sets the optional inline count of the $ref collection.</summary>
+        /// <returns>The optional inline count of the $ref collection.</returns>
         public long? Count
         {
             get;
             set;
         }
 
-        /// <summary>Gets or sets the optional next link of the $links collection.</summary>
-        /// <returns>The optional next link of the $links collection.</returns>
+        /// <summary>Gets or sets the optional next link of the $ref collection.</summary>
+        /// <returns>The optional next link of the $ref collection.</returns>
         public Uri NextPageLink
         {
             get;
@@ -49,24 +44,6 @@ namespace Microsoft.OData.Core
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataMessageWriter"/> for this <see cref="ODataEntityReferenceLinks"/>.
-        /// </summary>
-        internal ODataEntityReferenceLinksSerializationInfo SerializationInfo
-        {
-            get
-            {
-                DebugUtils.CheckNoExternalCallers();
-                return this.serializationInfo;
-            }
-
-            set
-            {
-                DebugUtils.CheckNoExternalCallers();
-                this.serializationInfo = ODataEntityReferenceLinksSerializationInfo.Validate(value);
-            }
         }
     }
 }

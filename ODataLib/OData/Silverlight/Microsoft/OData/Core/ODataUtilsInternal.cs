@@ -15,6 +15,9 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+
+    using Microsoft.OData.Edm;
+
     #endregion Namespaces
 
     /// <summary>
@@ -23,61 +26,38 @@ namespace Microsoft.OData.Core
     internal static class ODataUtilsInternal
     {
         /// <summary>
-        /// Converts a given <paramref name="version"/> to its <see cref="System.Version"/> representation.
-        /// </summary>
-        /// <param name="version">The <see cref="ODataVersion"/> instance to convert.</param>
-        /// <returns>The <see cref="System.Version"/> representation of the <paramref name="version"/>.</returns>
-        internal static Version ToDataServiceVersion(this ODataVersion version)
-        {
-            DebugUtils.CheckNoExternalCallers();
-
-            switch (version)
-            {
-                case ODataVersion.V4:
-                    return new Version(4, 0);
-
-                default:
-                    string errorMessage = Strings.General_InternalError(InternalErrorCodes.ODataUtilsInternal_ToDataServiceVersion_UnreachableCodePath);
-                    Debug.Assert(false, errorMessage);
-                    throw new ODataException(errorMessage);
-            }
-        }
-
-        /// <summary>
         /// Sets the 'OData-Version' HTTP header on the message based on the protocol version specified in the settings.
         /// </summary>
-        /// <param name="message">The message to set the data service version header on.</param>
+        /// <param name="message">The message to set the OData-Version header on.</param>
         /// <param name="settings">The <see cref="ODataMessageWriterSettings"/> determining the protocol version to use.</param>
-        internal static void SetDataServiceVersion(ODataMessage message, ODataMessageWriterSettings settings)
+        internal static void SetODataVersion(ODataMessage message, ODataMessageWriterSettings settings)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(message != null, "message != null");
             Debug.Assert(settings != null, "settings != null");
             Debug.Assert(settings.Version.HasValue, "settings.Version.HasValue");
 
-            string dataServiceVersionString = ODataUtils.ODataVersionToString(settings.Version.Value) + ";";
-            message.SetHeader(ODataConstants.DataServiceVersionHeader, dataServiceVersionString);
+            string odataVersionString = ODataUtils.ODataVersionToString(settings.Version.Value);
+            message.SetHeader(ODataConstants.ODataVersionHeader, odataVersionString);
         }
 
         /// <summary>
         /// Reads the OData-Version header from the <paramref name="message"/> and parses it.
         /// If no OData-Version header is found it sets the default version to be used for reading.
         /// </summary>
-        /// <param name="message">The message to get the data service version header from.</param>
+        /// <param name="message">The message to get the OData-Version header from.</param>
         /// <param name="defaultVersion">The default version to use if the header was not specified.</param>
         /// <returns>
         /// The <see cref="ODataVersion"/> retrieved from the OData-Version header of the message.
         /// The default version if none is specified in the header.
         /// </returns>
-        internal static ODataVersion GetDataServiceVersion(ODataMessage message, ODataVersion defaultVersion)
+        internal static ODataVersion GetODataVersion(ODataMessage message, ODataVersion defaultVersion)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(message != null, "message != null");
 
-            string originalHeaderValue = message.GetHeader(ODataConstants.DataServiceVersionHeader);
+            string originalHeaderValue = message.GetHeader(ODataConstants.ODataVersionHeader);
             string headerValue = originalHeaderValue;
 
-            return string.IsNullOrEmpty(headerValue) 
+            return string.IsNullOrEmpty(headerValue)
                 ? defaultVersion
                 : ODataUtils.StringToODataVersion(headerValue);
         }
@@ -90,8 +70,6 @@ namespace Microsoft.OData.Core
         /// <returns>true if the <paramref name="payloadKind"/> is valid in a request or response respectively based on <paramref name="inRequest"/>.</returns>
         internal static bool IsPayloadKindSupported(ODataPayloadKind payloadKind, bool inRequest)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             switch (payloadKind)
             {
                 // These payload kinds are valid in requests and responses
@@ -110,6 +88,7 @@ namespace Microsoft.OData.Core
                 case ODataPayloadKind.ServiceDocument:
                 case ODataPayloadKind.MetadataDocument:
                 case ODataPayloadKind.Error:
+                case ODataPayloadKind.IndividualProperty:
                     return !inRequest;
 
                 // These payload kidns are only valid in requests
@@ -132,8 +111,6 @@ namespace Microsoft.OData.Core
         /// <returns>Returns the combined enumerable.</returns>
         internal static IEnumerable<T> ConcatEnumerables<T>(IEnumerable<T> enumerable1, IEnumerable<T> enumerable2)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // Note that we allow null, instead of empty enumerable, to be returned here because the OData OM can return null for IE<T>.
             if (enumerable1 == null)
             {
@@ -149,21 +126,13 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Gets the selected properties from the given <paramref name="metadataDocumentUri"/>.
+        /// Returns true if this reference refers to a nullable type.
         /// </summary>
-        /// <param name="metadataDocumentUri">The <see cref="ODataMetadataDocumentUri"/> instance to get the selected properties node from.</param>
-        /// <returns>The selected properties node instance.</returns>
-        /// <remarks>This can be a property on <see cref="ODataMetadataDocumentUri"/>. Having it as an extension method here so we don't have to do the null check at the call site.</remarks>
-        internal static SelectedPropertiesNode SelectedProperties(this ODataMetadataDocumentUri metadataDocumentUri)
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a nullable type.</returns>
+        internal static bool IsNullable(this IEdmTypeReference type)
         {
-            DebugUtils.CheckNoExternalCallers();
-
-            if (metadataDocumentUri == null)
-            {
-                return SelectedPropertiesNode.Create(null);
-            }
-
-            return SelectedPropertiesNode.Create(metadataDocumentUri.SelectClause);
+            return type == null || type.IsNullable;
         }
     }
 }

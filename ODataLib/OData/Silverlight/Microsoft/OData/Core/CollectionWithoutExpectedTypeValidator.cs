@@ -44,11 +44,9 @@ namespace Microsoft.OData.Core
         /// <param name="itemTypeNameFromCollection">The item type name extracted from the collection type name.</param>
         internal CollectionWithoutExpectedTypeValidator(string itemTypeNameFromCollection)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (itemTypeNameFromCollection != null)
             {
-                this.itemTypeName = itemTypeNameFromCollection;
+                this.itemTypeName = GetItemTypeFullName(itemTypeNameFromCollection);
                 this.itemTypeKind = ComputeExpectedTypeKind(this.itemTypeName, out this.primitiveItemType);
                 this.itemTypeDerivedFromCollectionValue = true;
             }
@@ -59,10 +57,9 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal string ItemTypeNameFromCollection
         {
-            get 
+            get
             {
-                DebugUtils.CheckNoExternalCallers();
-                return this.itemTypeDerivedFromCollectionValue ? this.itemTypeName : null; 
+                return this.itemTypeDerivedFromCollectionValue ? this.itemTypeName : null;
             }
         }
 
@@ -71,10 +68,9 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal EdmTypeKind ItemTypeKindFromCollection
         {
-            get 
+            get
             {
-                DebugUtils.CheckNoExternalCallers();
-                return this.itemTypeDerivedFromCollectionValue ? this.itemTypeKind : EdmTypeKind.None; 
+                return this.itemTypeDerivedFromCollectionValue ? this.itemTypeKind : EdmTypeKind.None;
             }
         }
 
@@ -86,10 +82,8 @@ namespace Microsoft.OData.Core
         /// <param name="collectionItemTypeKind">The type kind of the item from the payload.</param>
         internal void ValidateCollectionItem(string collectionItemTypeName, EdmTypeKind collectionItemTypeKind)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // Only primitive and complex values are allowed in collections
-            if (collectionItemTypeKind != EdmTypeKind.Primitive && collectionItemTypeKind != EdmTypeKind.Complex)
+            if (collectionItemTypeKind != EdmTypeKind.Primitive && collectionItemTypeKind != EdmTypeKind.Enum && collectionItemTypeKind != EdmTypeKind.Complex)
             {
                 throw new ODataException(Strings.CollectionWithoutExpectedTypeValidator_InvalidItemTypeKind(collectionItemTypeKind));
             }
@@ -110,8 +104,8 @@ namespace Microsoft.OData.Core
                 if (this.itemTypeKind == EdmTypeKind.None)
                 {
                     // Compute the kind from the specified type name if available.
-                    this.itemTypeKind = collectionItemTypeName == null 
-                        ? collectionItemTypeKind 
+                    this.itemTypeKind = collectionItemTypeName == null
+                        ? collectionItemTypeKind
                         : ComputeExpectedTypeKind(collectionItemTypeName, out this.primitiveItemType);
 
                     // If no payload type name is specified either default to Edm.String (for primitive type kinds) or leave the type name
@@ -136,7 +130,7 @@ namespace Microsoft.OData.Core
                         this.itemTypeName = collectionItemTypeName;
                     }
                 }
-                
+
                 if (collectionItemTypeName == null && collectionItemTypeKind == EdmTypeKind.Primitive)
                 {
                     // Default to Edm.String if no payload type is specified and the type kind is 'Primitive'
@@ -171,6 +165,22 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// Get the item type full name if it's the primitive type
+        /// </summary>
+        /// <param name="typeName">the original type name</param>
+        /// <returns>the item type full name if it's the primitive type</returns>
+        private static string GetItemTypeFullName(string typeName)
+        {
+            IEdmSchemaType knownType = EdmCoreModel.Instance.FindDeclaredType(typeName);
+            if (knownType != null)
+            {
+                return knownType.FullName();
+            }
+
+            return typeName;
+        }
+
+        /// <summary>
         /// Validate that the expected and actual type names and type kinds are compatible.
         /// </summary>
         /// <param name="collectionItemTypeName">The actual type name.</param>
@@ -189,7 +199,7 @@ namespace Microsoft.OData.Core
                 Debug.Assert(collectionItemTypeName != null, "collectionItemTypeName != null");
 
                 // NOTE: we do support type inheritance for spatial primitive types; otherwise the type names have to match.
-                if (string.CompareOrdinal(this.itemTypeName, collectionItemTypeName) == 0)
+                if (!string.IsNullOrEmpty(this.itemTypeName) && this.itemTypeName.Equals(collectionItemTypeName, System.StringComparison.OrdinalIgnoreCase))
                 {
                     return;
                 }

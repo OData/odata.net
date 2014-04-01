@@ -34,7 +34,6 @@ namespace Microsoft.OData.Core
         internal ODataBatchOperationWriteStream(Stream batchStream, IODataBatchOperationListener listener)
             : base(listener)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(batchStream != null, "batchStream != null");
             this.batchStream = batchStream;
         }

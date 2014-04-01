@@ -18,7 +18,6 @@ namespace Microsoft.OData.Core.UriParser
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -42,7 +41,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="sourceEnumerable">The enumerable to wrap.</param>
         internal ReadOnlyEnumerableForUriParser(IEnumerable<T> sourceEnumerable)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(sourceEnumerable != null, "sourceEnumerable != null");
 
             this.sourceEnumerable = sourceEnumerable;

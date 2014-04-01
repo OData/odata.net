@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core.UriParser
 {
     using System;
     using System.Diagnostics;
-#if !WINDOWS_PHONE && !SILVERLIGHT && !PORTABLELIB
+#if ORCAS
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
     using System.Security.Permissions;
@@ -21,7 +21,7 @@ namespace Microsoft.OData.Core.UriParser
     /// <summary>
     /// The exception that is thrown when path parsing detects an unrecognized or unresolvable token in a path (which servers should treat as a 404).
     /// </summary>
-#if !WINDOWS_PHONE && !SILVERLIGHT && !PORTABLELIB
+#if ORCAS
     [Serializable]
 #endif
     [DebuggerDisplay("{Message}")]
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Core.UriParser
         {
         }
         
-#if !WINDOWS_PHONE && !SILVERLIGHT && !PORTABLELIB
+#if ORCAS
         /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Core.ODataUnrecognizedPathException" /> class from the  specified SerializationInfo and StreamingContext instances.</summary>
         /// <param name="info"> A SerializationInfo containing the information required to serialize the new ODataUnrecognizedPathException. </param>
         /// <param name="context"> A StreamingContext containing the source of the serialized stream  associated with the new ODataUnrecognizedPathException. </param>

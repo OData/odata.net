@@ -35,7 +35,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomCollectionReader(ODataAtomInputContext atomInputContext, IEdmTypeReference expectedItemTypeReference)
             : base(atomInputContext, expectedItemTypeReference, null /*listener*/)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(atomInputContext != null, "atomInputContext != null");
 
             this.atomInputContext = atomInputContext;

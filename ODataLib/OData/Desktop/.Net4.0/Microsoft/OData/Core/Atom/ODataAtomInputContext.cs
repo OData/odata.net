@@ -24,7 +24,7 @@ namespace Microsoft.OData.Core.Atom
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -63,7 +63,6 @@ namespace Microsoft.OData.Core.Atom
             IODataUrlResolver urlResolver)
             : base(format, messageReaderSettings, version, readingResponse, synchronous, model, urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(messageStream != null, "stream != null");
 
             try
@@ -101,7 +100,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(this.xmlReader != null, "Trying to get XmlReader while none is available.");
                 return this.xmlReader;
             }
@@ -113,9 +111,8 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base type for the entries in the feed.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        internal override ODataReader CreateFeedReader(IEdmEntitySet entitySet, IEdmEntityType expectedBaseEntityType)
+        internal override ODataReader CreateFeedReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             return this.CreateFeedReaderImplementation(entitySet, expectedBaseEntityType);
@@ -128,9 +125,8 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base type for the entries in the feed.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        internal override Task<ODataReader> CreateFeedReaderAsync(IEdmEntitySet entitySet, IEdmEntityType expectedBaseEntityType)
+        internal override Task<ODataReader> CreateFeedReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
@@ -141,31 +137,29 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        internal override ODataReader CreateEntryReader(IEdmEntitySet entitySet, IEdmEntityType expectedEntityType)
+        internal override ODataReader CreateEntryReader(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
-            return this.CreateEntryReaderImplementation(entitySet, expectedEntityType);
+            return this.CreateEntryReaderImplementation(navigationSource, expectedEntityType);
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        internal override Task<ODataReader> CreateEntryReaderAsync(IEdmEntitySet entitySet, IEdmEntityType expectedEntityType)
+        internal override Task<ODataReader> CreateEntryReaderAsync(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateEntryReaderImplementation(entitySet, expectedEntityType));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateEntryReaderImplementation(navigationSource, expectedEntityType));
         }
 #endif
 
@@ -176,7 +170,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>Newly create <see cref="ODataCollectionReader"/>.</returns>
         internal override ODataCollectionReader CreateCollectionReader(IEdmTypeReference expectedItemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             return this.CreateCollectionReaderImplementation(expectedItemTypeReference);
@@ -190,7 +183,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>Task which when completed returns the newly create <see cref="ODataCollectionReader"/>.</returns>
         internal override Task<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
@@ -201,12 +193,11 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Read a service document. 
         /// This method reads the service document from the input and returns 
-        /// an <see cref="ODataWorkspace"/> that represents the read service document.
+        /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
-        /// <returns>An <see cref="ODataWorkspace"/> representing the read service document.</returns>
-        internal override ODataWorkspace ReadServiceDocument()
+        /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
+        internal override ODataServiceDocument ReadServiceDocument()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             return this.ReadServiceDocumentImplementation();
@@ -216,12 +207,11 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Asynchronously read a service document. 
         /// This method reads the service document from the input and returns 
-        /// an <see cref="ODataWorkspace"/> that represents the read service document.
+        /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
-        /// <returns>Task which when completed returns an <see cref="ODataWorkspace"/> representing the read service document.</returns>
-        internal override Task<ODataWorkspace> ReadServiceDocumentAsync()
+        /// <returns>Task which when completed returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>
+        internal override Task<ODataServiceDocument> ReadServiceDocumentAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
@@ -238,7 +228,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>An <see cref="ODataProperty"/> representing the read property.</returns>
         internal override ODataProperty ReadProperty(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             return this.ReadPropertyImplementation(property, expectedPropertyTypeReference);
@@ -254,7 +243,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>Task which when completed returns an <see cref="ODataProperty"/> representing the read property.</returns>
         internal override Task<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
@@ -268,7 +256,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>An <see cref="ODataError"/> representing the read error.</returns>
         internal override ODataError ReadError()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             return this.ReadErrorImplementation();
@@ -281,7 +268,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>Task which when completed returns an <see cref="ODataError"/> representing the read error.</returns>
         internal override Task<ODataError> ReadErrorAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
@@ -292,11 +278,9 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Read a set of top-level entity reference links.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference links.</param>
         /// <returns>An <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
-        internal override ODataEntityReferenceLinks ReadEntityReferenceLinks(IEdmNavigationProperty navigationProperty)
+        internal override ODataEntityReferenceLinks ReadEntityReferenceLinks()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             return this.ReadEntityReferenceLinksImplementation();
@@ -306,11 +290,9 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Asynchronously read a set of top-level entity reference links.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference links.</param>
         /// <returns>Task which when completed returns an <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
-        internal override Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync(IEdmNavigationProperty navigationProperty)
+        internal override Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
@@ -321,11 +303,9 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Reads a top-level entity reference link.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference link.</param>
         /// <returns>An <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
-        internal override ODataEntityReferenceLink ReadEntityReferenceLink(IEdmNavigationProperty navigationProperty)
+        internal override ODataEntityReferenceLink ReadEntityReferenceLink()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             return this.ReadEntityReferenceLinkImplementation();
@@ -335,11 +315,9 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Asynchronously read a top-level entity reference link.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference link.</param>
         /// <returns>Task which when completed returns an <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
-        internal override Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync(IEdmNavigationProperty navigationProperty)
+        internal override Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
@@ -354,7 +332,6 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>An enumerable of zero or more payload kinds depending on what payload kinds were detected.</returns>
         internal IEnumerable<ODataPayloadKind> DetectPayloadKind(ODataPayloadKindDetectionInfo detectionInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(detectionInfo != null, "detectionInfo != null");
 
             ODataAtomPayloadKindDetectionDeserializer payloadKindDetectionDeserializer = new ODataAtomPayloadKindDetectionDeserializer(this);
@@ -386,7 +363,7 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base type for the entries in the feed.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        private ODataReader CreateFeedReaderImplementation(IEdmEntitySet entitySet, IEdmEntityType expectedBaseEntityType)
+        private ODataReader CreateFeedReaderImplementation(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
             return new ODataAtomReader(this, entitySet, expectedBaseEntityType, true);
         }
@@ -394,12 +371,12 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        private ODataReader CreateEntryReaderImplementation(IEdmEntitySet entitySet, IEdmEntityType expectedEntityType)
+        private ODataReader CreateEntryReaderImplementation(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
         {
-            return new ODataAtomReader(this, entitySet, expectedEntityType, false);
+            return new ODataAtomReader(this, navigationSource, expectedEntityType, false);
         }
 
         /// <summary>
@@ -427,10 +404,10 @@ namespace Microsoft.OData.Core.Atom
 
         /// <summary>
         /// This methods creates and reads a service document from the input and returns 
-        /// an <see cref="ODataWorkspace"/> representing the service document.
+        /// an <see cref="ODataServiceDocument"/> representing the service document.
         /// </summary>
-        /// <returns>An <see cref="ODataWorkspace"/> representing the service document.</returns>
-        private ODataWorkspace ReadServiceDocumentImplementation()
+        /// <returns>An <see cref="ODataServiceDocument"/> representing the service document.</returns>
+        private ODataServiceDocument ReadServiceDocumentImplementation()
         {
             ODataAtomServiceDocumentDeserializer atomServiceDocumentDeserializer = new ODataAtomServiceDocumentDeserializer(this);
             return atomServiceDocumentDeserializer.ReadServiceDocument();

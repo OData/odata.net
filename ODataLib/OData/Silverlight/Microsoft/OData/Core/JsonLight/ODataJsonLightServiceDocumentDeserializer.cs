@@ -12,6 +12,7 @@ namespace Microsoft.OData.Core.JsonLight
 {
     #region Namespaces
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Diagnostics;
 #if ODATALIB_ASYNC
@@ -32,22 +33,20 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightServiceDocumentDeserializer(ODataJsonLightInputContext jsonLightInputContext)
             : base(jsonLightInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
         /// Read a service document. 
         /// This method reads the service document from the input and returns 
-        /// an <see cref="ODataWorkspace"/> that represents the read service document.
+        /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
-        /// <returns>An <see cref="ODataWorkspace"/> representing the read service document.</returns>
+        /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:        assumes that the JSON reader has not been used yet.
         /// Post-Condition: JsonNodeType.EndOfInput  
         /// </remarks>
-        internal ODataWorkspace ReadServiceDocument()
+        internal ODataServiceDocument ReadServiceDocument()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             this.JsonReader.AssertNotBuffering();
 
@@ -61,7 +60,7 @@ namespace Microsoft.OData.Core.JsonLight
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false);
 
-            ODataWorkspace resultWorkspace = this.ReadServiceDocumentImplementation(duplicatePropertyNamesChecker);
+            ODataServiceDocument serviceDocument = this.ReadServiceDocumentImplementation(duplicatePropertyNamesChecker);
 
             // Read the end of the response.
             this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
@@ -69,23 +68,22 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.EndOfInput, "Post-Condition: expected JsonNodeType.EndOfInput");
             this.JsonReader.AssertNotBuffering();
 
-            return resultWorkspace;
+            return serviceDocument;
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
         /// Read a service document. 
         /// This method reads the service document from the input and returns 
-        /// an <see cref="ODataWorkspace"/> that represents the read service document.
+        /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
-        /// <returns>A task which returns an <see cref="ODataWorkspace"/> representing the read service document.</returns>
+        /// <returns>A task which returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:        assumes that the JSON reader has not been used yet.
         /// Post-Condition: JsonNodeType.EndOfInput  
         /// </remarks>
-        internal Task<ODataWorkspace> ReadServiceDocumentAsync()
+        internal Task<ODataServiceDocument> ReadServiceDocumentAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             this.JsonReader.AssertNotBuffering();
 
@@ -101,7 +99,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                 .FollowOnSuccessWith(t =>
                     {
-                        ODataWorkspace resultWorkspace = this.ReadServiceDocumentImplementation(duplicatePropertyNamesChecker);
+                        ODataServiceDocument serviceDocument = this.ReadServiceDocumentImplementation(duplicatePropertyNamesChecker);
 
                         // Read the end of the response.
                         this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
@@ -109,7 +107,7 @@ namespace Microsoft.OData.Core.JsonLight
                         Debug.Assert(this.JsonReader.NodeType == JsonNodeType.EndOfInput, "Post-Condition: expected JsonNodeType.EndOfInput");
                         this.JsonReader.AssertNotBuffering();
 
-                        return resultWorkspace;
+                        return serviceDocument;
                     });
         }
 #endif
@@ -117,21 +115,21 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Read a service document. 
         /// This method reads the service document from the input and returns 
-        /// an <see cref="ODataWorkspace"/> that represents the read service document.
+        /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the top-level scope.</param>
-        /// <returns>An <see cref="ODataWorkspace"/> representing the read service document.</returns>
+        /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property   The property right after the metadata URI property.
+        /// Pre-Condition:  JsonNodeType.Property   The property right after the context URI property.
         ///                 JsonNodeType.EndObject  The EndObject of the service document.
         /// Post-Condition: Any                     The node after the EndObject of the service document.
         /// </remarks>
-        private ODataWorkspace ReadServiceDocumentImplementation(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        private ODataServiceDocument ReadServiceDocumentImplementation(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            List<ODataResourceCollectionInfo>[] collections = { null };
+            List<ODataServiceDocumentElement>[] serviceDocumentElements = { null };
 
             // Read all the properties in the service document object; we ignore all except 'value'.
             while (this.JsonReader.NodeType == JsonNodeType.Property)
@@ -160,12 +158,12 @@ namespace Microsoft.OData.Core.JsonLight
                                 if (string.CompareOrdinal(JsonLightConstants.ODataValuePropertyName, propertyName) == 0)
                                 {
                                     // Fail if we've already processed a 'value' property.
-                                    if (collections[0] != null)
+                                    if (serviceDocumentElements[0] != null)
                                     {
                                         throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument(JsonLightConstants.ODataValuePropertyName));
                                     }
 
-                                    collections[0] = new List<ODataResourceCollectionInfo>();
+                                    serviceDocumentElements[0] = new List<ODataServiceDocumentElement>();
 
                                     // Read the value of the 'value' property.
                                     this.JsonReader.ReadStartArray();
@@ -173,8 +171,13 @@ namespace Microsoft.OData.Core.JsonLight
 
                                     while (this.JsonReader.NodeType != JsonNodeType.EndArray)
                                     {
-                                        ODataResourceCollectionInfo collection = this.ReadResourceCollection(resourceCollectionDuplicatePropertyNamesChecker);
-                                        collections[0].Add(collection);
+                                        ODataServiceDocumentElement serviceDocumentElement = this.ReadServiceDocumentElement(resourceCollectionDuplicatePropertyNamesChecker);
+                                        
+                                        if (serviceDocumentElement != null)
+                                        {
+                                            serviceDocumentElements[0].Add(serviceDocumentElement);
+                                        }
+
                                         resourceCollectionDuplicatePropertyNamesChecker.Clear();
                                     }
 
@@ -195,7 +198,7 @@ namespace Microsoft.OData.Core.JsonLight
                     });
             }
 
-            if (collections[0] == null)
+            if (serviceDocumentElements[0] == null)
             {
                 throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_MissingValuePropertyInServiceDocument(JsonLightConstants.ODataValuePropertyName));
             }
@@ -203,34 +206,38 @@ namespace Microsoft.OData.Core.JsonLight
             // Read over the end object (nothing else can happen after all properties have been read)
             this.JsonReader.ReadEndObject();
 
-            return new ODataWorkspace
+            return new ODataServiceDocument
             {
-                Collections = new ReadOnlyEnumerable<ODataResourceCollectionInfo>(collections[0])
+                EntitySets = new ReadOnlyEnumerable<ODataEntitySetInfo>(serviceDocumentElements[0].OfType<ODataEntitySetInfo>().ToList()),
+                FunctionImports = new ReadOnlyEnumerable<ODataFunctionImportInfo>(serviceDocumentElements[0].OfType<ODataFunctionImportInfo>().ToList()),
+                Singletons = new ReadOnlyEnumerable<ODataSingletonInfo>(serviceDocumentElements[0].OfType<ODataSingletonInfo>().ToList())
             };
         }
 
         /// <summary>
         /// Reads a resource collection within a service document.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The <see cref="DuplicatePropertyNamesChecker"/> to use for parsing annotations within the resource collection object.</param>
-        /// <returns>A <see cref="ODataResourceCollectionInfo"/> representing the read resource collection.</returns>
+        /// <param name="duplicatePropertyNamesChecker">The <see cref="DuplicatePropertyNamesChecker"/> to use for parsing annotations within the service document element object.</param>
+        /// <returns>A <see cref="ODataEntitySetInfo"/> representing the read resource collection.</returns>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.StartObject:     The beginning of the JSON object representing the resource collection.
+        /// Pre-Condition:  JsonNodeType.StartObject:     The beginning of the JSON object representing the service document element.
         ///                 other:                        Will throw with an appropriate message on any other node type encountered.
         /// Post-Condition: JsonNodeType.StartObject:     The beginning of the next resource collection in the array.
         ///                 JsonNodeType.EndArray:        The end of the array.
-        ///                 other:                        Any other node type occuring after the end object of the current resource collection. (Would be invalid).
+        ///                 other:                        Any other node type occuring after the end object of the current service document element. (Would be invalid).
         /// </remarks>
-        private ODataResourceCollectionInfo ReadResourceCollection(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        private ODataServiceDocumentElement ReadServiceDocumentElement(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
             this.JsonReader.ReadStartObject();
-            string[] entitySetName = { null };
-            string[] entitySetUrl = { null };
+            string[] name = { null };
+            string[] url = { null };
+            string[] kind = { null };
+            string[] title = { null };
 
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                // OData property annotations are not supported in resource collection objects.
-                Func<string, object> propertyAnnotationValueReader = annotationName => { throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationInResourceCollection(annotationName)); };
+                // OData property annotations are not supported in service document element objects.
+                Func<string, object> propertyAnnotationValueReader = annotationName => { throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement(annotationName)); };
 
                 this.ProcessProperty(
                     duplicatePropertyNamesChecker,
@@ -240,7 +247,7 @@ namespace Microsoft.OData.Core.JsonLight
                         switch (propertyParsingResult)
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
-                                throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_InstanceAnnotationInResourceCollection(propertyName));
+                                throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_InstanceAnnotationInServiceDocumentElement(propertyName));
 
                             case PropertyParsingResult.CustomInstanceAnnotation:
                                 this.JsonReader.SkipValue();
@@ -253,28 +260,46 @@ namespace Microsoft.OData.Core.JsonLight
                                 throw new ODataException(Strings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
 
                             case PropertyParsingResult.PropertyWithValue:
-                                if (string.CompareOrdinal(JsonLightConstants.ODataWorkspaceCollectionNameName, propertyName) == 0)
+                                if (string.CompareOrdinal(JsonLightConstants.ODataServiceDocumentElementName, propertyName) == 0)
                                 {
-                                    if (entitySetName[0] != null)
+                                    if (name[0] != null)
                                     {
-                                        throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInResourceCollection(JsonLightConstants.ODataWorkspaceCollectionNameName));
+                                        throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement(JsonLightConstants.ODataServiceDocumentElementName));
                                     }
 
-                                    entitySetName[0] = this.JsonReader.ReadStringValue();
+                                    name[0] = this.JsonReader.ReadStringValue();
                                 }
-                                else if (string.CompareOrdinal(JsonLightConstants.ODataWorkspaceCollectionUrlName, propertyName) == 0)
+                                else if (string.CompareOrdinal(JsonLightConstants.ODataServiceDocumentElementUrlName, propertyName) == 0)
                                 {
-                                    if (entitySetUrl[0] != null)
+                                    if (url[0] != null)
                                     {
-                                        throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInResourceCollection(JsonLightConstants.ODataWorkspaceCollectionUrlName));
+                                        throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement(JsonLightConstants.ODataServiceDocumentElementUrlName));
                                     }
 
-                                    entitySetUrl[0] = this.JsonReader.ReadStringValue();
-                                    ValidationUtils.ValidateResourceCollectionInfoUrl(entitySetUrl[0]);
+                                    url[0] = this.JsonReader.ReadStringValue();
+                                    ValidationUtils.ValidateServiceDocumentElementUrl(url[0]);
+                                }
+                                else if (string.CompareOrdinal(JsonLightConstants.ODataServiceDocumentElementKind, propertyName) == 0)
+                                {
+                                    if (kind[0] != null)
+                                    {
+                                        throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement(JsonLightConstants.ODataServiceDocumentElementKind));
+                                    }
+
+                                    kind[0] = this.JsonReader.ReadStringValue();
+                                }
+                                else if (string.CompareOrdinal(JsonLightConstants.ODataServiceDocumentElementTitle, propertyName) == 0)
+                                {
+                                    if (title[0] != null)
+                                    {
+                                        throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement(JsonLightConstants.ODataServiceDocumentElementTitle));
+                                    }
+
+                                    title[0] = this.JsonReader.ReadStringValue();
                                 }
                                 else
                                 {
-                                    throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_UnexpectedPropertyInResourceCollection(propertyName, JsonLightConstants.ODataWorkspaceCollectionNameName, JsonLightConstants.ODataWorkspaceCollectionUrlName));
+                                    throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement(propertyName, JsonLightConstants.ODataServiceDocumentElementName, JsonLightConstants.ODataServiceDocumentElementUrlName));
                                 }
 
                                 break;
@@ -283,25 +308,48 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             // URL and Name are mandatory
-            if (string.IsNullOrEmpty(entitySetName[0]))
+            if (string.IsNullOrEmpty(name[0]))
             {
-                throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInResourceCollection(JsonLightConstants.ODataWorkspaceCollectionNameName));
+                throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(JsonLightConstants.ODataServiceDocumentElementName));
             }
 
-            if (string.IsNullOrEmpty(entitySetUrl[0]))
+            if (string.IsNullOrEmpty(url[0]))
             {
-                throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInResourceCollection(JsonLightConstants.ODataWorkspaceCollectionUrlName));
+                throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(JsonLightConstants.ODataServiceDocumentElementUrlName));
             }
 
-            ODataResourceCollectionInfo collection = new ODataResourceCollectionInfo 
+            ODataServiceDocumentElement serviceDocumentElement = null;
+            if (kind[0] != null)
             {
-                Url = this.ProcessUriFromPayload(entitySetUrl[0]), 
-                Name = entitySetName[0],
-            };
+                if (kind[0].Equals(JsonLightConstants.ServiceDocumentEntitySetKindName, StringComparison.Ordinal))
+                {
+                    serviceDocumentElement = new ODataEntitySetInfo();
+                }
+                else if (kind[0].Equals(JsonLightConstants.ServiceDocumentFunctionImportKindName, StringComparison.Ordinal))
+                {
+                    serviceDocumentElement = new ODataFunctionImportInfo();
+                }
+                else if (kind[0].Equals(JsonLightConstants.ServiceDocumentSingletonKindName, StringComparison.Ordinal))
+                {
+                    serviceDocumentElement = new ODataSingletonInfo();
+                }
+            }
+            else
+            {
+                // if not specified its an entity set.
+                serviceDocumentElement = new ODataEntitySetInfo();
+            }
+
+            if (serviceDocumentElement != null)
+            {
+                serviceDocumentElement.Url = this.ProcessUriFromPayload(url[0]);
+                serviceDocumentElement.Name = name[0];
+                serviceDocumentElement.Title = title[0];
+            }
 
             this.JsonReader.ReadEndObject();
 
-            return collection;
+            return serviceDocumentElement;
         }
     }
 }

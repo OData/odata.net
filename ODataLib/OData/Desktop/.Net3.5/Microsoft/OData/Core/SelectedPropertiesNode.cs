@@ -15,9 +15,12 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser.Visitors;
+    using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -29,10 +32,10 @@ namespace Microsoft.OData.Core
     internal sealed class SelectedPropertiesNode
     {
         /// <summary>Singleton which indicates that the nothing is selected.</summary>
-        private static readonly SelectedPropertiesNode Empty = new SelectedPropertiesNode(SelectionType.Empty);
+        internal static readonly SelectedPropertiesNode Empty = new SelectedPropertiesNode(SelectionType.Empty);
 
         /// <summary>Singleton which indicates that the entire subtree is selected.</summary>
-        private static readonly SelectedPropertiesNode EntireSubtree = new SelectedPropertiesNode(SelectionType.EntireSubtree);
+        internal static readonly SelectedPropertiesNode EntireSubtree = new SelectedPropertiesNode(SelectionType.EntireSubtree);
 
         /// <summary>An empty set of stream properties to return when nothing is selected.</summary>
         private static readonly Dictionary<string, IEdmStructuralProperty> EmptyStreamProperties = new Dictionary<string, IEdmStructuralProperty>(StringComparer.Ordinal);
@@ -58,15 +61,18 @@ namespace Microsoft.OData.Core
         /// <summary>Indicates that this node had a wildcard selection and all properties at this level should be reported.</summary>
         private bool hasWildcard;
 
+        /// <summary>Current node name, null if root node.</summary>
+        private string nodeName;
+
         /// <summary>
         /// Constructor.
+        /// TODO Task#1678618: Update SelectedPropertiesNode class to adapt to V4, get rid of old style constructor
         /// </summary>
         /// <param name="selectClause">The string representation of the selected property hierarchy using 
         /// the same format as in the $select query option.</param>
         internal SelectedPropertiesNode(string selectClause)
             : this(SelectionType.PartialSubtree)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(selectClause), "!string.IsNullOrEmpty(selectClause)");
 
             // NOTE: The select clause is a list of paths separated by comma (',').
@@ -100,6 +106,7 @@ namespace Microsoft.OData.Core
 
             /// <summary>
             /// Represents the case where an entire subtree is selected.
+            /// TODO Task#1678618: Update SelectedPropertiesNode class to adapt to V4, fix EntireSubtree logic for V4
             /// </summary>
             EntireSubtree = 1,
 
@@ -116,7 +123,6 @@ namespace Microsoft.OData.Core
         /// <returns>A tree representation of the selected properties specified in the query option.</returns>
         internal static SelectedPropertiesNode Create(string selectQueryOption)
         {
-            DebugUtils.CheckNoExternalCallers();
             if (selectQueryOption == null)
             {
                 return EntireSubtree;
@@ -134,6 +140,21 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// Creates a node from the given SelectExpandClause.
+        /// </summary>
+        /// <param name="selectExpandClause">The value of the $select query option.</param>
+        /// <returns>A tree representation of the selected properties specified in the query option.</returns>
+        internal static SelectedPropertiesNode Create(SelectExpandClause selectExpandClause)
+        {
+            if (selectExpandClause.AllSelected)
+            {
+                return EntireSubtree;
+            }
+
+            return CreateFromSelectExpandClause(selectExpandClause);
+        }
+
+        /// <summary>
         /// Recursively combines the left and right nodes. Used when there are type segments present in the select paths which
         /// causes there to be multiple children for the same property/navigation.
         /// </summary>
@@ -142,7 +163,6 @@ namespace Microsoft.OData.Core
         /// <returns>The combined node.</returns>
         internal static SelectedPropertiesNode CombineNodes(SelectedPropertiesNode left, SelectedPropertiesNode right)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(left != null, "left != null");
             Debug.Assert(right != null, "right != null");
 
@@ -224,8 +244,6 @@ namespace Microsoft.OData.Core
         /// <returns>The selected properties node for the property with name <paramref name="navigationPropertyName"/>.</returns>
         internal SelectedPropertiesNode GetSelectedPropertiesForNavigationProperty(IEdmEntityType entityType, string navigationPropertyName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (this.selectionType == SelectionType.Empty)
             {
                 return Empty;
@@ -252,7 +270,7 @@ namespace Microsoft.OData.Core
             if (this.children != null)
             {
                 SelectedPropertiesNode child;
-                
+
                 // try to find an immediate child.
                 if (!this.children.TryGetValue(navigationPropertyName, out child))
                 {
@@ -277,8 +295,6 @@ namespace Microsoft.OData.Core
         /// <returns>The set of selected navigation properties.</returns>
         internal IEnumerable<IEdmNavigationProperty> GetSelectedNavigationProperties(IEdmEntityType entityType)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (this.selectionType == SelectionType.Empty)
             {
                 return EmptyNavigationProperties;
@@ -328,8 +344,6 @@ namespace Microsoft.OData.Core
         /// <returns>The selected stream properties.</returns>
         internal IDictionary<string, IEdmStructuralProperty> GetSelectedStreamProperties(IEdmEntityType entityType)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (this.selectionType == SelectionType.Empty)
             {
                 return EmptyStreamProperties;
@@ -373,20 +387,19 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="entityType">The current entity type.</param>
         /// <param name="operation">The operation.</param>
-        /// <param name="mustBeContainerQualified">Whether or not the operation name must be container qualified in the $select string.</param>
+        /// <param name="mustBeNamespaceQualified">Whether or not the operation name must be container qualified in the $select string.</param>
         /// <returns>
         ///   <c>true</c> if the operation is selected; otherwise, <c>false</c>.
         /// </returns>
-        internal bool IsOperationSelected(IEdmEntityType entityType, IEdmOperationImport operation, bool mustBeContainerQualified)
+        internal bool IsOperationSelected(IEdmEntityType entityType, IEdmOperation operation, bool mustBeNamespaceQualified)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entityType != null, "entityType != null");
-            Debug.Assert(operation != null, "operatio != null");
-            
-            // If the operationImport name conflicts with a property name then it must be container qualified
-            mustBeContainerQualified = mustBeContainerQualified || entityType.FindProperty(operation.Name) != null;
+            Debug.Assert(operation != null, "operation != null");
 
-            return this.IsOperationSelectedAtThisLevel(operation, mustBeContainerQualified) || this.GetMatchingTypeSegments(entityType).Any(typeSegment => typeSegment.IsOperationSelectedAtThisLevel(operation, mustBeContainerQualified));
+            // If the operation name conflicts with a property name then it must be namespace qualified
+            mustBeNamespaceQualified = mustBeNamespaceQualified || entityType.FindProperty(operation.Name) != null;
+
+            return this.IsOperationSelectedAtThisLevel(operation, mustBeNamespaceQualified) || this.GetMatchingTypeSegments(entityType).Any(typeSegment => typeSegment.IsOperationSelectedAtThisLevel(operation, mustBeNamespaceQualified));
         }
 
         /// <summary>
@@ -410,7 +423,7 @@ namespace Microsoft.OData.Core
         private static HashSet<string> CreateSelectedPropertiesHashSet(IEnumerable<string> properties)
         {
             HashSet<string> propertiesHashSet = CreateSelectedPropertiesHashSet();
-            
+
             // doing this so that it works on platforms that don't have the constructor parameter.
             foreach (var property in properties)
             {
@@ -433,31 +446,25 @@ namespace Microsoft.OData.Core
         /// Gets the possible identifiers that could cause the given operation to be selected.
         /// </summary>
         /// <param name="operation">The operation.</param>
-        /// <param name="mustBeContainerQualified">Whether the operations must be container qualified.</param>
+        /// <param name="mustBeNamespaceQualified">Whether the operations must be namespace qualified.</param>
         /// <returns>The identifiers to look for in the $select string when determining if this action is selected.</returns>
-        private static IEnumerable<string> GetPossibleMatchesForSelectedOperation(IEdmOperationImport operation, bool mustBeContainerQualified)
+        private static IEnumerable<string> GetPossibleMatchesForSelectedOperation(IEdmOperation operation, bool mustBeNamespaceQualified)
         {
             string operationName = operation.Name;
             string operationNameWithParameters = operation.NameWithParameters();
 
             // if the operation is defined on an open type, it will need to be container qualified, so skip over the unqualified names.
-            if (!mustBeContainerQualified)
+            if (!mustBeNamespaceQualified)
             {
                 // first, try matching just the name. If there are multiple overloads, this intentionally matches all of them.
                 yield return operationName;
+
+                // then, try matching the name with parameters. This would refer to a specific overload.
+                yield return operationNameWithParameters;
             }
 
-            // then, try matching the name with parameters. This would refer to a specific overload.
-            yield return operationNameWithParameters;
-
-            // then, try matching wildcards and specific names, but qualified with the container name.
-            string containerName = operation.Container.Name + ".";
-            yield return containerName + ProjectedPropertiesAnnotation.StarSegment;
-            yield return containerName + operationName;
-            yield return containerName + operationNameWithParameters;
-
-            // last, try matching wildcards and specific names, but qualified with the namespace-qualified container name.
-            string qualifiedContainerName = operation.Container.FullName() + ".";
+            // last, try matching wildcards and specific names, but qualified with the namespace-qualified name.
+            string qualifiedContainerName = operation.Namespace + ".";
             yield return qualifiedContainerName + ProjectedPropertiesAnnotation.StarSegment;
             yield return qualifiedContainerName + operationName;
             yield return qualifiedContainerName + operationNameWithParameters;
@@ -554,11 +561,11 @@ namespace Microsoft.OData.Core
         /// Determines whether or not the given operation is selected without taking type segments into account.
         /// </summary>
         /// <param name="operation">The operation.</param>
-        /// <param name="mustBeContainerQualified">Whether the operations must be container qualified.</param>
+        /// <param name="mustBeNamespaceQualified">Whether the operations must be container qualified.</param>
         /// <returns>
         ///   <c>true</c> if the operation is selected; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsOperationSelectedAtThisLevel(IEdmOperationImport operation, bool mustBeContainerQualified)
+        private bool IsOperationSelectedAtThisLevel(IEdmOperation operation, bool mustBeNamespaceQualified)
         {
             Debug.Assert(operation != null, "operation != null");
 
@@ -572,7 +579,66 @@ namespace Microsoft.OData.Core
                 return true;
             }
 
-            return GetPossibleMatchesForSelectedOperation(operation, mustBeContainerQualified).Any(possibleMatch => this.selectedProperties.Contains(possibleMatch));
+            return GetPossibleMatchesForSelectedOperation(operation, mustBeNamespaceQualified).Any(possibleMatch => this.selectedProperties.Contains(possibleMatch));
+        }
+
+        /// <summary>Create SelectedPropertiesNode from SelectExpandClause.</summary>
+        /// <param name="selectExpandClause">The SelectExpandClause representing $select and $expand clauses.</param>
+        /// <returns>SelectedPropertiesNode generated using <paramref name="selectExpandClause"/></returns>
+        private static SelectedPropertiesNode CreateFromSelectExpandClause(SelectExpandClause selectExpandClause)
+        {
+            SelectedPropertiesNode node;
+            selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, out node);
+            return node;
+        }
+
+        /// <summary>Process sub expand node, set name for the node.</summary>
+        /// <param name="nodeName">Node name for the subexpandnode.</param>
+        /// <param name="subExpandNode">Generated sub expand node.</param>
+        /// <returns>The sub expanded node passed in.</returns>
+        private static SelectedPropertiesNode ProcessSubExpand(string nodeName, SelectedPropertiesNode subExpandNode)
+        {
+            if (subExpandNode != null)
+            {
+                subExpandNode.nodeName = nodeName;
+            }
+
+            return subExpandNode;
+        }
+
+        /// <summary>Create SelectedPropertiesNode using selected name list and expand node list.</summary>
+        /// <param name="selectList">A list of selected item names.</param>
+        /// <param name="expandList">A list of sub expanded nodes.</param>
+        /// <returns>The generated SelectedPropertiesNode.</returns>
+        private static SelectedPropertiesNode CombineSelectAndExpandResult(IList<string> selectList, IList<SelectedPropertiesNode> expandList)
+        {
+            List<string> rawSelect = selectList.ToList();
+            rawSelect.RemoveAll(expandList.Select(m => m.nodeName).Contains);
+
+            SelectedPropertiesNode node = new SelectedPropertiesNode(SelectionType.PartialSubtree)
+            {
+                selectedProperties = CreateSelectedPropertiesHashSet(),
+                children = new Dictionary<string, SelectedPropertiesNode>(StringComparer.Ordinal)
+            };
+
+            foreach (string selectItem in rawSelect)
+            {
+                if (ProjectedPropertiesAnnotation.StarSegment == selectItem)
+                {
+                    node.hasWildcard = true;
+                }
+                else
+                {
+                    node.selectedProperties.Add(selectItem);
+                }
+            }
+
+            foreach (var expandItem in expandList)
+            {
+                node.children[expandItem.nodeName] = expandItem;
+            }
+
+            return node;
         }
     }
 }

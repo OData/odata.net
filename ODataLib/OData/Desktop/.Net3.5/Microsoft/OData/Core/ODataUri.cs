@@ -1,0 +1,172 @@
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+
+namespace Microsoft.OData.Core
+{
+    #region Namespaces
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using Microsoft.OData.Core.UriParser.Semantic;
+    #endregion Namespaces
+
+    /// <summary>
+    /// The root node of a query. Holds the query itself plus additional metadata about the query.
+    /// </summary>
+    public sealed class ODataUri
+    {
+        /// <summary>
+        /// service Root Uri
+        /// </summary>
+        private Uri serviceRoot;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ODataUri"/> class. 
+        /// </summary>
+        public ODataUri()
+        {
+        }
+
+        /// <summary>
+        /// Create a new ODataUri. This contains the semantic meaning of the 
+        /// entire uri.
+        /// </summary>
+        /// <param name="parameterAliasValueAccessor">The ParameterAliasValueAccessor.</param>
+        /// <param name="path">The top level path for this uri.</param>
+        /// <param name="customQueryOptions">Any custom query options for this uri. Can be null.</param>
+        /// <param name="selectAndExpand">Any $select or $expand option for this uri. Can be null.</param>
+        /// <param name="filter">Any $filter option for this uri. Can be null.</param>
+        /// <param name="orderby">Any $orderby option for this uri. Can be null</param>
+        /// <param name="skip">Any $skip option for this uri. Can be null.</param>
+        /// <param name="top">Any $top option for this uri. Can be null.</param>
+        /// <param name="queryCount">Any query $count option for this uri. Can be null.</param>
+        internal ODataUri(
+            ParameterAliasValueAccessor parameterAliasValueAccessor,
+            ODataPath path,
+            IEnumerable<QueryNode> customQueryOptions,
+            SelectExpandClause selectAndExpand,
+            FilterClause filter,
+            OrderByClause orderby,
+            long? skip,
+            long? top,
+            bool? queryCount)
+        {
+            this.ParameterAliasValueAccessor = parameterAliasValueAccessor;
+            this.Path = path;
+            this.CustomQueryOptions = new ReadOnlyCollection<QueryNode>(customQueryOptions.ToList());
+            this.SelectAndExpand = selectAndExpand;
+            this.Filter = filter;
+            this.OrderBy = orderby;
+            this.Skip = skip;
+            this.Top = top;
+            this.QueryCount = queryCount;
+        }
+
+        /// <summary>
+        /// Gets or sets the request Uri.
+        /// </summary>
+        public Uri RequestUri { get; set; }
+
+        /// <summary>
+        /// Gets or sets the service root Uri.
+        /// </summary>
+        public Uri ServiceRoot
+        {
+            get
+            {
+                return this.serviceRoot;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    this.serviceRoot = null;
+                    return;
+                }
+
+                if (!value.IsAbsoluteUri)
+                {
+                    throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsServiceDocumentUriMustBeNullOrAbsolute(Core.UriUtils.UriToString(value)));
+                }
+
+                this.serviceRoot = Core.UriUtils.EnsureTaillingSlash(value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the top level path for this uri.
+        /// </summary>
+        public ODataPath Path { get; set; }
+
+        /// <summary>
+        /// Gets or sets any custom query options for this uri. 
+        /// </summary>
+        public IEnumerable<QueryNode> CustomQueryOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets any $select or $expand option for this uri.
+        /// </summary>
+        public SelectExpandClause SelectAndExpand { get; set; }
+
+        /// <summary>
+        /// Gets or sets any $filter option for this uri.
+        /// </summary>
+        public FilterClause Filter { get; set; }
+
+        /// <summary>
+        /// Gets or sets any $orderby option for this uri.
+        /// </summary>
+        public OrderByClause OrderBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets any $skip option for this uri.
+        /// </summary>
+        public long? Skip { get; set; }
+
+        /// <summary>
+        /// Gets or sets any $top option for this uri.
+        /// </summary>
+        public long? Top { get; set; }
+
+        /// <summary>
+        /// Get or sets any query $count option for this uri.
+        /// </summary>
+        public bool? QueryCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ParameterAliasValueAccessor.
+        /// </summary>
+        internal ParameterAliasValueAccessor ParameterAliasValueAccessor { get; set; }
+
+        /// <summary>
+        /// Return a copy of current ODataUri.
+        /// </summary>
+        /// <returns>A copy of current ODataUri.</returns>
+        public ODataUri Clone()
+        {
+            return new ODataUri()
+            {
+                RequestUri = RequestUri,
+                ServiceRoot = ServiceRoot,
+                ParameterAliasValueAccessor = ParameterAliasValueAccessor,
+                Path = Path,
+                CustomQueryOptions = CustomQueryOptions,
+                SelectAndExpand = SelectAndExpand,
+                Filter = Filter,
+                OrderBy = OrderBy,
+                Skip = Skip,
+                Top = Top,
+                QueryCount = QueryCount
+            };
+        }
+    }
+}

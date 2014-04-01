@@ -20,6 +20,7 @@ namespace Microsoft.OData.Core.JsonLight
     using Microsoft.OData.Core.Json;
     using Microsoft.OData.Core.Metadata;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -43,7 +44,6 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightParameterDeserializer(ODataJsonLightParameterReader parameterReader, ODataJsonLightInputContext jsonLightInputContext)
             : base(jsonLightInputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.parameterReader = parameterReader;
         }
 
@@ -59,7 +59,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </remarks>
         internal bool ReadNextParameter(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
@@ -120,6 +119,20 @@ namespace Microsoft.OData.Core.JsonLight
                                         state = ODataParameterReaderState.Value;
                                         break;
 
+                                    case EdmTypeKind.Enum:
+                                        IEdmEnumTypeReference enumTypeReference = parameterTypeReference.AsEnum();
+                                        parameterValue = this.ReadNonEntityValue(
+                                            /*payloadTypeName*/ null,
+                                            enumTypeReference,
+                                            /*duplicatePropertyNamesChecker*/ null,
+                                            /*collectionValidator*/ null,
+                                            /*validateNullValue*/ true,
+                                            /*isTopLevelPropertyValue*/ false,
+                                            /*insideComplexValue*/ false,
+                                            parameterName);
+                                        state = ODataParameterReaderState.Value;
+                                        break;
+
                                     case EdmTypeKind.Complex:
                                         parameterValue = this.ReadNonEntityValue(
                                             /*payloadTypeName*/ null,
@@ -168,6 +181,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                                         break;
                                     default:
+
                                         throw new ODataException(ODataErrorStrings.ODataJsonLightParameterDeserializer_UnsupportedParameterTypeKind(parameterName, parameterTypeReference.TypeKind()));
                                 }
 

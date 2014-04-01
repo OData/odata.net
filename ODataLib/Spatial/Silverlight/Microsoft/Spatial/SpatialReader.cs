@@ -13,10 +13,6 @@ namespace Microsoft.Spatial
     using System;
     using System.Diagnostics.CodeAnalysis;
 
-#if WINDOWS_PHONE
-    using System.Runtime.Serialization;
-#endif
-
     /// <summary>
     /// Reader to be used by spatial formats
     /// </summary>

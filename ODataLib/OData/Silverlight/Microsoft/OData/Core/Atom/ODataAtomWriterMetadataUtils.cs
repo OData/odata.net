@@ -47,7 +47,6 @@ namespace Microsoft.OData.Core.Atom
             string title,
             string mediaType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(relation != null, "relation != null");
 
             AtomLinkMetadata mergedMetadata = new AtomLinkMetadata(metadata);
@@ -138,7 +137,6 @@ namespace Microsoft.OData.Core.Atom
         /// </remarks>
         internal static AtomCategoryMetadata MergeCategoryMetadata(AtomCategoryMetadata categoryMetadata, string term, string scheme)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(term != null, "term != null");
             Debug.Assert(scheme != null, "scheme != null");
 

@@ -27,19 +27,19 @@ namespace Microsoft.OData.Core
         /// <summary>The EDM type of the value this annotation is on.</summary>
         private readonly IEdmTypeReference type;
 
-        /// <summary>The entity set of the value this annotation is on. Only applies to entity values.</summary>
-        private readonly IEdmEntitySet entitySet;
+        /// <summary>The navigation source of the value this annotation is on. Only applies to entity values.</summary>
+        private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
         /// Creates a new instance of the type annotation for an entity value.
         /// </summary>
-        /// <param name="entitySet">The entity set the entity belongs to (required).</param>
+        /// <param name="navigationSource">The navigation source the entity belongs to (required).</param>
         /// <param name="entityType">The entity type of the entity value if not the base type of the entity set (optional).</param>
-        public ODataTypeAnnotation(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        public ODataTypeAnnotation(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            ExceptionUtils.CheckArgumentNotNull(entitySet, "entitySet");
+            ExceptionUtils.CheckArgumentNotNull(navigationSource, "navigation source");
             ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
-            this.entitySet = entitySet;
+            this.navigationSource = navigationSource;
             this.type = entityType.ToTypeReference(/*isNullable*/ true);
         }
 
@@ -75,13 +75,13 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The entity set the value belongs to (only applies to entity values).
+        /// The navigation source the value belongs to (only applies to entity values).
         /// </summary>
-        public IEdmEntitySet EntitySet
+        public IEdmNavigationSource NavigationSource
         {
             get
             {
-                return this.entitySet;
+                return this.navigationSource;
             }
         }
     }

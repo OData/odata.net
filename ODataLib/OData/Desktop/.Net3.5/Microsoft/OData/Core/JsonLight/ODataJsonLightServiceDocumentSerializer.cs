@@ -21,8 +21,8 @@ namespace Microsoft.OData.Core.JsonLight
     /// </summary>
     internal sealed class ODataJsonLightServiceDocumentSerializer : ODataJsonLightSerializer
     {
-        /// <summary>The metadata uri builder to use.</summary>
-        private readonly ODataJsonLightContextUriBuilder contextUriBuilder;
+        /// <summary>The context uri builder to use.</summary>
+        private readonly ODataContextUriBuilder contextUriBuilder;
 
         /// <summary>
         /// Constructor.
@@ -31,22 +31,17 @@ namespace Microsoft.OData.Core.JsonLight
         internal ODataJsonLightServiceDocumentSerializer(ODataJsonLightOutputContext jsonLightOutputContext)
             : base(jsonLightOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // DEVNOTE: grab this early so that any validation errors are thrown at creation time rather than when Write___ is called.
-            this.contextUriBuilder = jsonLightOutputContext.CreateMetadataUriBuilder();
+            this.contextUriBuilder = jsonLightOutputContext.CreateContextUriBuilder();
         }
 
         /// <summary>
         /// Writes a service document in JsonLight format.
         /// </summary>
-        /// <param name="defaultWorkspace">The default workspace to write in the service document.</param>
-        internal void WriteServiceDocument(ODataWorkspace defaultWorkspace)
+        /// <param name="serviceDocument">The service document to write.</param>
+        internal void WriteServiceDocument(ODataServiceDocument serviceDocument)
         {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(defaultWorkspace != null, "defaultWorkspace != null");
-
-            IEnumerable<ODataResourceCollectionInfo> collections = defaultWorkspace.Collections;
+            Debug.Assert(serviceDocument != null, "serviceDocument != null");
 
             this.WriteTopLevelPayload(
                 () =>
@@ -54,12 +49,8 @@ namespace Microsoft.OData.Core.JsonLight
                     // "{"
                     this.JsonWriter.StartObjectScope();
 
-                    // "odata.context":...
-                    Uri contextUri;
-                    if (this.contextUriBuilder.TryBuildServiceDocumentContextUri(out contextUri))
-                    {
-                        this.WriteMetadataUriProperty(contextUri);
-                    }
+                    // "@odata.context":...
+                    this.WriteContextUriProperty(() => this.contextUriBuilder.BuildContextUri(ODataPayloadKind.ServiceDocument));
 
                     // "value":
                     this.JsonWriter.WriteValuePropertyName();
@@ -67,31 +58,38 @@ namespace Microsoft.OData.Core.JsonLight
                     // "["
                     this.JsonWriter.StartArrayScope();
 
-                    if (collections != null)
+                    if (serviceDocument.EntitySets != null)
                     {
-                        foreach (ODataResourceCollectionInfo collectionInfo in collections)
+                        foreach (ODataEntitySetInfo collectionInfo in serviceDocument.EntitySets)
                         {
-                            // validate that the collection has a non-null url.
-                            ValidationUtils.ValidateResourceCollectionInfo(collectionInfo);
+                            this.WriteServiceDocumentElement(collectionInfo, JsonLightConstants.ServiceDocumentEntitySetKindName);
+                        }
+                    }
 
-                            if (string.IsNullOrEmpty(collectionInfo.Name))
+                    if (serviceDocument.Singletons != null)
+                    {
+                        foreach (ODataSingletonInfo singletonInfo in serviceDocument.Singletons)
+                        {
+                            this.WriteServiceDocumentElement(singletonInfo, JsonLightConstants.ServiceDocumentSingletonKindName);
+                        }
+                    }
+
+                    HashSet<string> functionImportsWritten = new HashSet<string>(StringComparer.Ordinal);
+
+                    if (serviceDocument.FunctionImports != null)
+                    {
+                        foreach (ODataFunctionImportInfo functionImportInfo in serviceDocument.FunctionImports)
+                        {
+                            if (functionImportInfo == null)
                             {
-                                throw new ODataException(Strings.ODataJsonLightServiceDocumentSerializer_ResourceCollectionMustSpecifyName);
+                                throw new ODataException(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
                             }
 
-                            // "{"
-                            this.JsonWriter.StartObjectScope();
-
-                            // "name": ...
-                            this.JsonWriter.WriteName(JsonLightConstants.ODataWorkspaceCollectionNameName);
-                            this.JsonWriter.WriteValue(collectionInfo.Name);
-
-                            // "url": ...
-                            this.JsonWriter.WriteName(JsonLightConstants.ODataWorkspaceCollectionUrlName);
-                            this.JsonWriter.WriteValue(this.UriToString(collectionInfo.Url));
-
-                            // "}"
-                            this.JsonWriter.EndObjectScope();
+                            if (!functionImportsWritten.Contains(functionImportInfo.Name))
+                            {
+                                functionImportsWritten.Add(functionImportInfo.Name);
+                                this.WriteServiceDocumentElement(functionImportInfo, JsonLightConstants.ServiceDocumentFunctionImportKindName);
+                            }
                         }
                     }
 
@@ -101,6 +99,47 @@ namespace Microsoft.OData.Core.JsonLight
                     // "}"
                     this.JsonWriter.EndObjectScope();
                 });
+        }
+
+        /// <summary>
+        /// Writes a element (EntitySet, Singleton or FunctionImport) in service document.
+        /// </summary>
+        /// <param name="serviceDocumentElement">The element in service document to write.</param>
+        /// <param name="kind">Kind of the service document element, optional for entityset's must for FunctionImport and Singleton.</param>
+        private void WriteServiceDocumentElement(ODataServiceDocumentElement serviceDocumentElement, string kind)
+        {
+            // validate that the resource has a non-null url.
+            ValidationUtils.ValidateServiceDocumentElement(serviceDocumentElement, ODataFormat.Json);
+
+            // "{"
+            this.JsonWriter.StartObjectScope();
+
+            // "name": ...
+            this.JsonWriter.WriteName(JsonLightConstants.ODataServiceDocumentElementName);
+            this.JsonWriter.WriteValue(serviceDocumentElement.Name);
+
+            // Do not write title if it is null or empty, or if title is the same as name.
+            if (!string.IsNullOrEmpty(serviceDocumentElement.Title) && !serviceDocumentElement.Title.Equals(serviceDocumentElement.Name, StringComparison.Ordinal))
+            {
+                // "title": ...
+                this.JsonWriter.WriteName(JsonLightConstants.ODataServiceDocumentElementTitle);
+                this.JsonWriter.WriteValue(serviceDocumentElement.Title);
+            }
+
+            // Not always writing because it can be null if an ODataEntitySetInfo, not necessary to write this. Required for the others though.
+            if (kind != null)
+            {
+                // "kind": ...
+                this.JsonWriter.WriteName(JsonLightConstants.ODataServiceDocumentElementKind);
+                this.JsonWriter.WriteValue(kind);
+            }
+
+            // "url": ...
+            this.JsonWriter.WriteName(JsonLightConstants.ODataServiceDocumentElementUrlName);
+            this.JsonWriter.WriteValue(this.UriToString(serviceDocumentElement.Url));
+
+            // "}"
+            this.JsonWriter.EndObjectScope();
         }
     }
 }

@@ -10,6 +10,8 @@
 
 namespace Microsoft.OData.Edm.Library
 {
+    using Microsoft.OData.Edm.Expressions;
+
     /// <summary>
     /// Represents an EDM action.
     /// </summary>
@@ -18,12 +20,33 @@ namespace Microsoft.OData.Edm.Library
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmAction"/> class.
         /// </summary>
-        /// <param name="namespaceName">Namespace of the action.</param>
-        /// <param name="name">Name of the action.</param>
-        /// <param name="returnType">Return type of the action.</param>
+        /// <param name="namespaceName">Name of the namespace.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="returnType">Type of the return.</param>
+        /// <param name="isBound">if set to <c>true</c> [is bound].</param>
+        /// <param name="entitySetPathExpression">The entity set path expression.</param>
+        public EdmAction(string namespaceName, string name, IEdmTypeReference returnType, bool isBound, IEdmPathExpression entitySetPathExpression)
+            : base(namespaceName, name, returnType, isBound, entitySetPathExpression)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdmAction"/> class.
+        /// </summary>
+        /// <param name="namespaceName">Name of the namespace.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="returnType">Type of the return.</param>
         public EdmAction(string namespaceName, string name, IEdmTypeReference returnType)
             : base(namespaceName, name, returnType)
         {
+        }
+
+        /// <summary>
+        /// Gets the element kind of this schema element kind which is an Action.
+        /// </summary>
+        public override EdmSchemaElementKind SchemaElementKind
+        {
+            get { return EdmSchemaElementKind.Action; }
         }
     }
 }

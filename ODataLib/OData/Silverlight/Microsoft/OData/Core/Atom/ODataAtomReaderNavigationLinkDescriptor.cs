@@ -33,7 +33,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="navigationProperty">The navigation property for the link, if it's available.</param>
         internal ODataAtomReaderNavigationLinkDescriptor(ODataNavigationLink navigationLink, IEdmNavigationProperty navigationProperty)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(navigationLink != null, "navigationLink != null");
 
             this.navigationLink = navigationLink;
@@ -45,7 +44,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.navigationLink;
             }
         }
@@ -55,7 +53,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.navigationProperty;
             }
         }

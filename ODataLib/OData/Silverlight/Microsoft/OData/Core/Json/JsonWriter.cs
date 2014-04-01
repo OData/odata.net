@@ -19,6 +19,7 @@ namespace Microsoft.OData.Core.Json
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.IO;
     #endregion Namespaces
 
@@ -39,17 +40,24 @@ namespace Microsoft.OData.Core.Json
         private readonly Stack<Scope> scopes;
 
         /// <summary>
+        /// If it is IEEE754Compatible, write quoted string for INT64 and decimal to prevent dota loss;
+        /// otherwise keep number without quots.
+        /// </summary>
+        private readonly bool isIeee754Compatible;
+
+        /// <summary>
         /// Creates a new instance of Json writer.
         /// </summary>
         /// <param name="writer">Writer to which text needs to be written.</param>
         /// <param name="indent">If the output should be indented or not.</param>
         /// <param name="jsonFormat">The json-based format to use when writing.</param>
-        internal JsonWriter(TextWriter writer, bool indent, ODataFormat jsonFormat)
+        /// <param name="isIeee754Compatible">if it is IEEE754Compatible</param>
+        internal JsonWriter(TextWriter writer, bool indent, ODataFormat jsonFormat, bool isIeee754Compatible)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonFormat == ODataFormat.Json, "Expected a json-based format.");
             this.writer = new IndentedTextWriter(writer, indent);
             this.scopes = new Stack<Scope>();
+            this.isIeee754Compatible = isIeee754Compatible;
         }
 
         /// <summary>
@@ -78,7 +86,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         public void StartPaddingFunctionScope()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.scopes.Count == 0, "Padding scope can only be the outer most scope.");
             this.StartScope(ScopeType.Padding);
         }
@@ -88,7 +95,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         public void EndPaddingFunctionScope()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.scopes.Count > 0, "No scope to end.");
 
             this.writer.WriteLine();
@@ -105,7 +111,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         public void StartObjectScope()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.StartScope(ScopeType.Object);
         }
 
@@ -114,7 +119,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         public void EndObjectScope()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.scopes.Count > 0, "No scope to end.");
 
             this.writer.WriteLine();
@@ -131,7 +135,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         public void StartArrayScope()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.StartScope(ScopeType.Array);
         }
 
@@ -140,7 +143,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         public void EndArrayScope()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.scopes.Count > 0, "No scope to end.");
 
             this.writer.WriteLine();
@@ -157,7 +159,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         public void WriteDataWrapper()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.writer.Write(JsonConstants.ODataDataWrapper);
         }
 
@@ -166,7 +167,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         public void WriteDataArrayName()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.WriteName(JsonConstants.ODataResultsName);
         }
 
@@ -176,7 +176,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="name">Name of the object property.</param>
         public void WriteName(string name)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(name), "The name must be specified.");
             Debug.Assert(this.scopes.Count > 0, "There must be an active scope for name to be written.");
             Debug.Assert(this.scopes.Peek().Type == ScopeType.Object, "The active scope must be an object scope for name to be written.");
@@ -199,7 +198,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="functionName">Name of the padding function to write.</param>
         public void WritePaddingFunctionName(string functionName)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.writer.Write(functionName);
         }
 
@@ -209,7 +207,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Boolean value to be written.</param>
         public void WriteValue(bool value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);
         }
@@ -220,7 +217,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Integer value to be written.</param>
         public void WriteValue(int value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);
         }
@@ -231,7 +227,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Float value to be written.</param>
         public void WriteValue(float value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);
         }
@@ -242,7 +237,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Short value to be written.</param>
         public void WriteValue(short value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);
         }
@@ -253,9 +247,17 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Long value to be written.</param>
         public void WriteValue(long value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.writer, value);
+
+            // if it is IEEE754Compatible, write numbers with quots; otherwise, write numbers directly.
+            if (isIeee754Compatible)
+            {
+                JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                JsonValueUtils.WriteValue(this.writer, value); 
+            }
         }
 
         /// <summary>
@@ -264,7 +266,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Double value to be written.</param>
         public void WriteValue(double value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);
         }
@@ -275,7 +276,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Guid value to be written.</param>
         public void WriteValue(Guid value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);
         }
@@ -286,31 +286,25 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Decimal value to be written.</param>
         public void WriteValue(decimal value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.writer, value);
-        }
 
-        /// <summary>
-        /// Write a DateTime value
-        /// </summary>
-        /// <param name="value">DateTime value to be written.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        public void WriteValue(DateTime value, ODataVersion odataVersion)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.writer, value, ODataJsonDateTimeFormat.ISO8601DateTime);
+            // if it is not IEEE754Compatible, write numbers directly without quots;
+            if (isIeee754Compatible)
+            {
+                JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                JsonValueUtils.WriteValue(this.writer, value);
+            }
         }
 
         /// <summary>
         /// Writes a DateTimeOffset value
         /// </summary>
         /// <param name="value">DateTimeOffset value to be written.</param>
-        /// <param name="odataVersion">The OData protocol version to be used for writing payloads.</param>
-        public void WriteValue(DateTimeOffset value, ODataVersion odataVersion)
+        public void WriteValue(DateTimeOffset value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value, ODataJsonDateTimeFormat.ISO8601DateTime);
         }
@@ -321,7 +315,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">TimeSpan value to be written.</param>
         public void WriteValue(TimeSpan value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);
         }
@@ -332,7 +325,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">Byte value to be written.</param>
         public void WriteValue(byte value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);
         }
@@ -343,7 +335,6 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">SByte value to be written.</param>
         public void WriteValue(sbyte value)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);
         }
@@ -354,7 +345,16 @@ namespace Microsoft.OData.Core.Json
         /// <param name="value">String value to be written.</param>
         public void WriteValue(string value)
         {
-            DebugUtils.CheckNoExternalCallers();
+            this.WriteValueSeparator();
+            JsonValueUtils.WriteValue(this.writer, value);
+        }
+
+        /// <summary>
+        /// Write a byte array.
+        /// </summary>
+        /// <param name="value">Byte array to be written.</param>
+        public void WriteValue(byte[] value)
+        {
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);
         }
@@ -364,7 +364,6 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         public void Flush()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.writer.Flush();
         }
 

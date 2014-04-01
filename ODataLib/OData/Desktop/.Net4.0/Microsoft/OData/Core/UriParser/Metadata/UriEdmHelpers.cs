@@ -11,17 +11,13 @@
 namespace Microsoft.OData.Core.UriParser.Metadata
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    using System.Linq;
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Values;
 
@@ -85,18 +81,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri Parser does not need to go through the ODL behavior knob.")]
         public static IEdmTypeReference GetOperationImportReturnType(IEdmOperationImport serviceOperation)
         {
-            return serviceOperation.ReturnType;
-        }
-
-        /// <summary>
-        /// Wraps a call to IEdmEntitySet.ElementType.
-        /// </summary>
-        /// <param name="entitySet">The EntitySet to containing the element type.</param>
-        /// <returns>The entity type contained in this entity set.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri Parser does not need to go through the ODL behavior knob.")]
-        public static IEdmEntityType GetEntitySetElementType(IEdmEntitySet entitySet)
-        {
-            return entitySet.ElementType;
+            return serviceOperation.Operation.ReturnType;
         }
 
         /// <summary>
@@ -178,19 +163,6 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         }
 
         /// <summary>
-        /// Is this token a container
-        /// </summary>
-        /// <param name="containerIdentifier">the containerIdentifier of the container to find</param>
-        /// <param name="model">which model to search</param>
-        /// <param name="entityContainer">the container we found, if we found one</param>
-        /// <returns>true if we find a container, false otherwise</returns>
-        public static bool TryGetEntityContainer(string containerIdentifier, IEdmModel model, out IEdmEntityContainer entityContainer)
-        {
-            entityContainer = model.FindEntityContainer(containerIdentifier);
-            return entityContainer != null;
-        }
-
-        /// <summary>
         /// Returns true if this type is an EntityCollection
         /// </summary>
         /// <param name="type">The type to check</param>
@@ -210,55 +182,6 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         }
 
         /// <summary>
-        /// Checks whether all operation imports have the same return type 
-        /// </summary>
-        /// <param name="operationImports">the list to check</param>
-        /// <returns>true if the list of operation imports all have the same return type</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri Parser does not need to go through the ODL behavior knob.")]
-        public static bool AllHaveEqualReturnTypeAndAttributes(this IList<IEdmOperationImport> operationImports)
-        {
-            Debug.Assert(operationImports != null, "operationImports != null");
-           
-            if (!operationImports.Any())
-            {
-                return true;
-            }
-
-            IEdmType firstReturnType = operationImports[0].ReturnType == null ? null : operationImports[0].ReturnType.Definition;
-            bool firstComposability = operationImports[0].IsComposable;
-            bool firstSideEffecting = operationImports[0].IsSideEffecting;
-            foreach (IEdmOperationImport f in operationImports)
-            {
-                if (f.IsComposable != firstComposability)
-                {
-                    return false;
-                }
-
-                if (f.IsSideEffecting != firstSideEffecting)
-                {
-                    return false;
-                }
-
-                if (firstReturnType != null)
-                {
-                    if (f.ReturnType.Definition.ODataFullName() != firstReturnType.ODataFullName())
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (f.ReturnType != null)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// Is this a valid binding type. i.e. is this an entity, entity colleciton, or complex type.
         /// </summary>
         /// <param name="bindingType">the binding type</param>
@@ -275,15 +198,16 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// <param name="value">input string value</param>
         /// <param name="enumValue">output edm enum value</param>
         /// <returns>true if parse succeeds, false if fails</returns>
-        public static bool TryParseEnum(this IEdmEnumType enumType, string value, out IEdmEnumValue enumValue)
+        public static bool TryParseEnum(this IEdmEnumType enumType, string value, out ODataEnumValue enumValue)
         {
-            long parsedValue = 0;
-            bool success = enumType.TryParseEnum(value, true, ref parsedValue);
+            long parsedValue;
+            bool success = enumType.TryParseEnum(value, true, out parsedValue);
             enumValue = null;
             if (success)
             {
-                EdmEnumTypeReference enumTypeReference = new EdmEnumTypeReference(enumType, true);
-                enumValue = new EdmEnumValue(enumTypeReference, new EdmIntegerConstant(parsedValue));
+                // ODataEnumValue.Value will always be numeric string like '3', '10' instead of 'Red', 'Solid,Yellow', etc.
+                // so user code can easily Enum.Parse() them into CLR value.
+                enumValue = new ODataEnumValue(parsedValue.ToString(CultureInfo.InvariantCulture), enumType.ODataFullName());
             }
 
             return success;

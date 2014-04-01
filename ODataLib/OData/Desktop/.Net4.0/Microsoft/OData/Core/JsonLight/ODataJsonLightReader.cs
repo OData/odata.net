@@ -17,6 +17,7 @@ namespace Microsoft.OData.Core.JsonLight
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
+    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Evaluation;
     using Microsoft.OData.Core.Json;
@@ -42,19 +43,18 @@ namespace Microsoft.OData.Core.JsonLight
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightInputContext">The input to read the payload from.</param>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read (in case of entry reader) or entries in the feed to be read (in case of feed reader).</param>
         /// <param name="readingFeed">true if the reader is created for reading a feed; false when it is created for reading an entry.</param>
         /// <param name="listener">If not null, the Json reader will notify the implementer of the interface of relevant state changes in the Json reader.</param>
         internal ODataJsonLightReader(
-            ODataJsonLightInputContext jsonLightInputContext, 
-            IEdmEntitySet entitySet, 
-            IEdmEntityType expectedEntityType, 
-            bool readingFeed, 
+            ODataJsonLightInputContext jsonLightInputContext,
+            IEdmNavigationSource navigationSource,
+            IEdmEntityType expectedEntityType,
+            bool readingFeed,
             IODataReaderWriterListener listener)
             : base(jsonLightInputContext, readingFeed, listener)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(jsonLightInputContext != null, "jsonLightInputContext != null");
             Debug.Assert(
                 expectedEntityType == null || jsonLightInputContext.Model.IsUserModel(),
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             this.jsonLightInputContext = jsonLightInputContext;
             this.jsonLightEntryAndFeedDeserializer = new ODataJsonLightEntryAndFeedDeserializer(jsonLightInputContext);
-            this.topLevelScope = new JsonLightTopLevelScope(entitySet, expectedEntityType);
+            this.topLevelScope = new JsonLightTopLevelScope(navigationSource, expectedEntityType);
             this.EnterScope(this.topLevelScope);
         }
 
@@ -452,10 +452,10 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (this.jsonLightInputContext.ReadingResponse)
             {
-                Debug.Assert(this.jsonLightEntryAndFeedDeserializer.ContextUriParseResult != null, "We should have failed by now if we don't have parse results for metadata URI.");
+                Debug.Assert(this.jsonLightEntryAndFeedDeserializer.ContextUriParseResult != null, "We should have failed by now if we don't have parse results for context URI.");
 
-                // Validate the metadata URI parsed from the payload against the entity set and entity type passed in through the API.
-                ReaderValidationUtils.ValidateFeedOrEntryMetadataUri(this.jsonLightEntryAndFeedDeserializer.ContextUriParseResult, this.CurrentScope);
+                // Validate the context URI parsed from the payload against the entity set and entity type passed in through the API.
+                ReaderValidationUtils.ValidateFeedOrEntryContextUri(this.jsonLightEntryAndFeedDeserializer.ContextUriParseResult, this.CurrentScope, true);
             }
 
             // Get the $select query option from the metadata link, if we have one.
@@ -547,7 +547,7 @@ namespace Microsoft.OData.Core.JsonLight
             if (isTopLevelFeed)
             {
                 Debug.Assert(this.State == ODataReaderState.Start, "this.State == ODataReaderState.Start");
-                
+
                 // Read the end-object node of the feed object and position the reader on the next input node
                 // This can hit the end of the input.
                 this.jsonLightEntryAndFeedDeserializer.JsonReader.Read();
@@ -664,7 +664,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 // NOTE: we rely on the underlying JSON reader to fail if there is more than one value at the root level.
                 Debug.Assert(
-                    this.IsReadingNestedPayload || this.jsonLightEntryAndFeedDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput, 
+                    this.IsReadingNestedPayload || this.jsonLightEntryAndFeedDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput,
                     "Expected JSON reader to have reached the end of input when not reading a nested payload.");
 
                 // read the end-of-payload
@@ -734,7 +734,7 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(
                 this.jsonLightEntryAndFeedDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
                 this.jsonLightEntryAndFeedDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
-                this.jsonLightEntryAndFeedDeserializer.JsonReader.NodeType == JsonNodeType.StartObject || 
+                this.jsonLightEntryAndFeedDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
                 this.jsonLightEntryAndFeedDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
                 this.jsonLightEntryAndFeedDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue && this.jsonLightEntryAndFeedDeserializer.JsonReader.Value == null,
                 "Pre-Condition: expected JsonNodeType.Property, JsonNodeType.EndObject, JsonNodeType.StartObject, JsonNodeType.StartArray or JsonNodeType.Primitive (null)");
@@ -891,7 +891,7 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(feed != null, "feed != null");
 
             this.jsonLightEntryAndFeedDeserializer.ReadFeedContentStart();
-            this.EnterScope(new JsonLightFeedScope(feed, this.CurrentEntitySet, this.CurrentEntityType, selectedProperties));
+            this.EnterScope(new JsonLightFeedScope(feed, this.CurrentNavigationSource, this.CurrentEntityType, selectedProperties, this.CurrentScope.ODataUri));
 
             this.jsonLightEntryAndFeedDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.StartObject);
         }
@@ -939,8 +939,8 @@ namespace Microsoft.OData.Core.JsonLight
                 Debug.Assert(this.jsonLightEntryAndFeedDeserializer.JsonReader.Value == null, "If a primitive value is representing an expanded entity its value must be null.");
 
                 // Expanded null entry
-                // The expected type and expected entity set for an expanded entry are the same as for the navigation link around it.
-                this.EnterScope(new JsonLightEntryScope(ODataReaderState.EntryStart, /*entry*/ null, this.CurrentEntitySet, this.CurrentEntityType, /*duplicatePropertyNamesChecker*/null, /*projectedProperties*/null));
+                // The expected type and expected navigation source for an expanded entry are the same as for the navigation link around it.
+                this.EnterScope(new JsonLightEntryScope(ODataReaderState.EntryStart, /*entry*/ null, this.CurrentNavigationSource, this.CurrentEntityType, /*duplicatePropertyNamesChecker*/null, /*projectedProperties*/null, this.CurrentScope.ODataUri));
             }
             else
             {
@@ -974,28 +974,42 @@ namespace Microsoft.OData.Core.JsonLight
             this.jsonLightEntryAndFeedDeserializer.AssertJsonCondition(JsonNodeType.StartObject, JsonNodeType.Property, JsonNodeType.EndObject);
 
             // If the reader is on StartObject then read over it. This happens for entries in feed.
-            // For top-level entries the reader will be positioned on the first entry property (after odata.metadata if it was present).
+            // For top-level entries the reader will be positioned on the first entry property (after odata.context if it was present).
             if (this.jsonLightEntryAndFeedDeserializer.JsonReader.NodeType == JsonNodeType.StartObject)
             {
                 this.jsonLightEntryAndFeedDeserializer.JsonReader.Read();
             }
 
+            if (this.ReadingFeed || this.IsExpandedLinkContent)
+            {
+                string contextUriStr = this.jsonLightEntryAndFeedDeserializer.ReadContextUriAnnotation(ODataPayloadKind.Entry, duplicatePropertyNamesChecker, false);
+                if (contextUriStr != null)
+                {
+                    contextUriStr = UriUtils.UriToString(this.jsonLightEntryAndFeedDeserializer.ProcessUriFromPayload(contextUriStr));
+                    var parseResult = ODataJsonLightContextUriParser.Parse(
+                            this.jsonLightEntryAndFeedDeserializer.Model,
+                            contextUriStr,
+                            ODataPayloadKind.Entry,
+                            this.jsonLightEntryAndFeedDeserializer.Version,
+                            this.jsonLightEntryAndFeedDeserializer.MessageReaderSettings.ReaderBehavior,
+                            this.jsonLightInputContext.ReadingResponse);
+                    if (this.jsonLightInputContext.ReadingResponse && parseResult != null)
+                    {
+                        ReaderValidationUtils.ValidateFeedOrEntryContextUri(parseResult, this.CurrentScope, false);
+                    }
+                }
+            }
+
             // Setup the new entry state
             this.StartEntry(duplicatePropertyNamesChecker, selectedProperties);
-
-            if (this.jsonLightInputContext.JsonReader.NodeType == JsonNodeType.Property)
-            {
-                // Read and apply an annotation group, if one exists.
-                this.jsonLightEntryAndFeedDeserializer.ApplyAnnotationGroupIfPresent(this.CurrentEntryState);
-            }
 
             // Read the odata.type annotation.
             this.jsonLightEntryAndFeedDeserializer.ReadEntryTypeName(this.CurrentEntryState);
 
             // Resolve the type name
             Debug.Assert(
-                this.CurrentEntitySet != null,
-                "We must always have an expected entity set for each entry (since we can't deduce that from the type name).");
+                this.CurrentNavigationSource != null,
+                "We must always have an expected navigation source for each entry (since we can't deduce that from the type name).");
             this.ApplyEntityTypeNameFromPayload(this.CurrentEntry.TypeName);
 
             // Validate type with feed validator if available
@@ -1007,7 +1021,7 @@ namespace Microsoft.OData.Core.JsonLight
             if (this.CurrentEntityType != null)
             {
                 // NOTE: once we do this for all formats we can do this in ApplyEntityTypeNameFromPayload.
-                this.CurrentEntry.SetAnnotation(new ODataTypeAnnotation(this.CurrentEntitySet, this.CurrentEntityType));
+                this.CurrentEntry.SetAnnotation(new ODataTypeAnnotation(this.CurrentNavigationSource, this.CurrentEntityType));
             }
 
             if (this.jsonLightInputContext.UseServerApiBehavior)
@@ -1056,14 +1070,14 @@ namespace Microsoft.OData.Core.JsonLight
             ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo = this.CurrentJsonLightNavigationLinkScope.NavigationLinkInfo;
             if (navigationLinkInfo.HasEntityReferenceLink)
             {
-                this.EnterScope(new Scope(ODataReaderState.EntityReferenceLink, navigationLinkInfo.ReportEntityReferenceLink(), null, null));
+                this.EnterScope(new Scope(ODataReaderState.EntityReferenceLink, navigationLinkInfo.ReportEntityReferenceLink(), null, null, this.CurrentScope.ODataUri));
             }
             else if (navigationLinkInfo.IsExpanded)
             {
                 if (navigationLinkInfo.NavigationLink.IsCollection == true)
                 {
                     // because this is a request, there is no $select query option.
-                    SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(null);
+                    SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.EntireSubtree;
                     this.ReadFeedStart(new ODataFeed(), selectedProperties);
                 }
                 else
@@ -1089,10 +1103,11 @@ namespace Microsoft.OData.Core.JsonLight
             this.EnterScope(new JsonLightEntryScope(
                 ODataReaderState.EntryStart,
                 ReaderUtils.CreateNewEntry(),
-                this.CurrentEntitySet,
+                this.CurrentNavigationSource,
                 this.CurrentEntityType,
                 duplicatePropertyNamesChecker ?? this.jsonLightInputContext.CreateDuplicatePropertyNamesChecker(),
-                selectedProperties));
+                selectedProperties,
+                this.CurrentScope.ODataUri));
         }
 
         /// <summary>
@@ -1134,31 +1149,33 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (this.jsonLightInputContext.ReadingResponse)
             {
-                // We add the association link also to the collection
-                // due to the fact that the ODataNavigationLink.AssociationLinkUrl was not present in the V1 of ODL.
-                // Also to make the OM look more consistent across formats (Verbose JSON only uses the collection for example).
-                // We always create association link even if there's no association link URL in the payload
-                // since we have to allow templating to fill it in.
-                ODataAssociationLink associationLink = new ODataAssociationLink { Name = navigationLink.Name };
-                if (navigationLink.AssociationLinkUrl != null)
-                {
-                    // Only set the association link url if it's on the wire.
-                    associationLink.Url = navigationLink.AssociationLinkUrl;
-                }
-
-                this.CurrentEntry.AddAssociationLink(associationLink);
-
-                // Hookup the metadata builder to the navigation and association links.
+                // Hookup the metadata builder to the navigation link.
                 // Note that we set the metadata builder even when navigationProperty is null, which is the case when the link is undeclared.
                 // For undeclared links, we will apply conventional metadata evaluation just as declared links.
                 ODataEntityMetadataBuilder entityMetadataBuilder = this.jsonLightEntryAndFeedDeserializer.MetadataContext.GetEntityMetadataBuilderForReader(this.CurrentEntryState);
-                navigationLink.SetMetadataBuilder(entityMetadataBuilder);
-                associationLink.SetMetadataBuilder(entityMetadataBuilder);
+                navigationLink.MetadataBuilder = entityMetadataBuilder;
             }
 
-            Debug.Assert(this.CurrentEntitySet != null, "Json requires an entity set.");
-            IEdmEntitySet targetEntitySet = navigationProperty == null ? null : this.CurrentEntitySet.FindNavigationTarget(navigationProperty);
-            this.EnterScope(new JsonLightNavigationLinkScope(navigationLinkInfo, targetEntitySet, targetEntityType));
+            Debug.Assert(this.CurrentNavigationSource != null, "Json requires an navigation source.");
+
+            IEdmNavigationSource navigationSource = navigationProperty == null ? null : this.CurrentNavigationSource.FindNavigationTarget(navigationProperty);
+            ODataUri odataUri = null;
+            if (navigationLinkInfo.NavigationLink.ContextUrl != null)
+            {
+                ODataPath odataPath = ODataJsonLightContextUriParser.Parse(
+                        this.jsonLightEntryAndFeedDeserializer.Model,
+                        UriUtils.UriToString(navigationLinkInfo.NavigationLink.ContextUrl), 
+                        navigationLinkInfo.NavigationLink.IsCollection.GetValueOrDefault() ? ODataPayloadKind.Feed : ODataPayloadKind.Entry,
+                        this.jsonLightEntryAndFeedDeserializer.Version,
+                        this.jsonLightEntryAndFeedDeserializer.MessageReaderSettings.ReaderBehavior,
+                        this.jsonLightEntryAndFeedDeserializer.JsonLightInputContext.ReadingResponse).Path;
+                odataUri = new ODataUri()
+                {
+                    Path = odataPath 
+                };
+            }
+
+            this.EnterScope(new JsonLightNavigationLinkScope(navigationLinkInfo, navigationSource, targetEntityType, odataUri));
         }
 
         /// <summary>
@@ -1168,7 +1185,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="state">The <see cref="ODataReaderState"/> to use for the new scope.</param>
         private void ReplaceScope(ODataReaderState state)
         {
-            this.ReplaceScope(new Scope(state, this.Item, this.CurrentEntitySet, this.CurrentEntityType));
+            this.ReplaceScope(new Scope(state, this.Item, this.CurrentNavigationSource, this.CurrentEntityType, this.CurrentScope.ODataUri));
         }
 
         /// <summary>
@@ -1178,24 +1195,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             IODataJsonLightReaderEntryState entryState = this.CurrentEntryState;
 
-            // Get all properties we haven't yet processed (this should only be property annotations left over from an annotation group).
-            if (entryState.DuplicatePropertyNamesChecker != null)
-            {
-                foreach (string unprocessedProperty in entryState.DuplicatePropertyNamesChecker.GetAllUnprocessedProperties())
-                {
-                    entryState.AnyPropertyFound = true;
-                    ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo = this.jsonLightEntryAndFeedDeserializer.ReadEntryPropertyWithoutValue(entryState, unprocessedProperty);
-
-                    entryState.DuplicatePropertyNamesChecker.MarkPropertyAsProcessed(unprocessedProperty);
-
-                    if (navigationLinkInfo != null)
-                    {
-                        this.StartNavigationLink(navigationLinkInfo);
-                        return;
-                    }
-                }
-            }
-
             // NOTE: the current entry will be null for an expanded null entry; no template
             //       expansion for null entries.
             if (this.CurrentEntry != null)
@@ -1203,9 +1202,19 @@ namespace Microsoft.OData.Core.JsonLight
                 ODataEntityMetadataBuilder builder = this.jsonLightEntryAndFeedDeserializer.MetadataContext.GetEntityMetadataBuilderForReader(this.CurrentEntryState);
                 if (builder != this.CurrentEntry.MetadataBuilder)
                 {
+                    // Builder should not be used outside the odataentry, lazy builder logic does not work here
+                    // We should refactor this
                     foreach (string navigationPropertyName in this.CurrentEntryState.NavigationPropertiesRead)
                     {
                         builder.MarkNavigationLinkProcessed(navigationPropertyName);
+                    }
+
+                    ODataConventionalEntityMetadataBuilder conventionalEntityMetadataBuilder = builder as ODataConventionalEntityMetadataBuilder;
+
+                    // If it's ODataConventionalEntityMetadataBuilder, then it means we need to build nested relation ship for it in containment case
+                    if (conventionalEntityMetadataBuilder != null)
+                    {
+                        conventionalEntityMetadataBuilder.ODataUri = this.CurrentScope.ODataUri;
                     }
 
                     // Set the metadata builder for the entry itself
@@ -1233,10 +1242,11 @@ namespace Microsoft.OData.Core.JsonLight
                 new JsonLightEntryScope(
                     ODataReaderState.EntryEnd,
                     (ODataEntry)this.Item,
-                    this.CurrentEntitySet,
+                    this.CurrentNavigationSource,
                     this.CurrentEntityType,
                     this.CurrentEntryState.DuplicatePropertyNamesChecker,
-                    this.CurrentEntryState.SelectedProperties));
+                    this.CurrentEntryState.SelectedProperties,
+                    this.CurrentScope.ODataUri));
         }
 
         /// <summary>
@@ -1247,15 +1257,14 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// Constructor creating a new reader scope.
             /// </summary>
-            /// <param name="entitySet">The entity set we are going to read entities for.</param>
+            /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="expectedEntityType">The expected type for the scope.</param>
             /// <remarks>The <paramref name="expectedEntityType"/> has the following meaning
             ///   it's the expected base type of the top-level entry or entries in the top-level feed.
             /// In all cases the specified type must be an entity type.</remarks>
-            internal JsonLightTopLevelScope(IEdmEntitySet entitySet, IEdmEntityType expectedEntityType)
-                : base(ODataReaderState.Start, /*item*/ null, entitySet, expectedEntityType)
+            internal JsonLightTopLevelScope(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+                : base(ODataReaderState.Start, /*item*/ null, navigationSource, expectedEntityType, null)
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>
@@ -1277,10 +1286,11 @@ namespace Microsoft.OData.Core.JsonLight
             /// </summary>
             /// <param name="readerState">The reader state of the new scope that is being created.</param>
             /// <param name="entry">The item attached to this scope.</param>
-            /// <param name="entitySet">The entity set we are going to read entities for.</param>
+            /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="expectedEntityType">The expected type for the scope.</param>
             /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for this entry scope.</param>
             /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
+            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             /// <remarks>The <paramref name="expectedEntityType"/> has the following meaning
             ///   it's the expected base type of the entry. If the entry has no type name specified
             ///   this type will be assumed. Otherwise the specified type name must be
@@ -1288,16 +1298,16 @@ namespace Microsoft.OData.Core.JsonLight
             /// In all cases the specified type must be an entity type.</remarks>
             internal JsonLightEntryScope(
                 ODataReaderState readerState,
-                ODataEntry entry, 
-                IEdmEntitySet entitySet, 
+                ODataEntry entry,
+                IEdmNavigationSource navigationSource,
                 IEdmEntityType expectedEntityType,
-                DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, 
-                SelectedPropertiesNode selectedProperties)
-                : base(readerState, entry, entitySet, expectedEntityType)
+                DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
+                SelectedPropertiesNode selectedProperties,
+                ODataUri odataUri)
+                : base(readerState, entry, navigationSource, expectedEntityType, odataUri)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(
-                    readerState == ODataReaderState.EntryStart || readerState == ODataReaderState.EntryEnd, 
+                    readerState == ODataReaderState.EntryStart || readerState == ODataReaderState.EntryEnd,
                     "readerState == ODataReaderState.EntryStart || readerState == ODataReaderState.EntryEnd");
 
                 this.DuplicatePropertyNamesChecker = duplicatePropertyNamesChecker;
@@ -1371,7 +1381,7 @@ namespace Microsoft.OData.Core.JsonLight
                 get
                 {
                     Debug.Assert(
-                        this.State == ODataReaderState.EntryStart || this.State == ODataReaderState.EntryEnd, 
+                        this.State == ODataReaderState.EntryStart || this.State == ODataReaderState.EntryEnd,
                         "The IODataJsonReaderEntryState is only supported on EntryStart or EntryEnd scope.");
                     return this.EntityType;
                 }
@@ -1387,17 +1397,17 @@ namespace Microsoft.OData.Core.JsonLight
             /// Constructor creating a new reader scope.
             /// </summary>
             /// <param name="feed">The item attached to this scope.</param>
-            /// <param name="entitySet">The entity set we are going to read entities for.</param>
+            /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="expectedEntityType">The expected type for the scope.</param>
             /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
+            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             /// <remarks>The <paramref name="expectedEntityType"/> has the following meaning
             ///   it's the expected base type of the entries in the feed.
             ///   note that it might be a more derived type than the base type of the entity set for the feed.
             /// In all cases the specified type must be an entity type.</remarks>
-            internal JsonLightFeedScope(ODataFeed feed, IEdmEntitySet entitySet, IEdmEntityType expectedEntityType, SelectedPropertiesNode selectedProperties)
-                : base(ODataReaderState.FeedStart, feed, entitySet, expectedEntityType)
+            internal JsonLightFeedScope(ODataFeed feed, IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(ODataReaderState.FeedStart, feed, navigationSource, expectedEntityType, odataUri)
             {
-                DebugUtils.CheckNoExternalCallers();
                 this.SelectedProperties = selectedProperties;
             }
 
@@ -1416,17 +1426,17 @@ namespace Microsoft.OData.Core.JsonLight
             /// Constructor creating a new reader scope.
             /// </summary>
             /// <param name="navigationLinkInfo">The navigation link info attached to this scope.</param>
-            /// <param name="entitySet">The entity set we are going to read entities for.</param>
+            /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="expectedEntityType">The expected type for the scope.</param>
+            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param> 
             /// <remarks>The <paramref name="expectedEntityType"/> has the following meaning
             ///   it's the expected base type the entries in the expanded link (either the single entry
             ///   or entries in the expanded feed).
             /// In all cases the specified type must be an entity type.</remarks>
-            internal JsonLightNavigationLinkScope(ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo, IEdmEntitySet entitySet, IEdmEntityType expectedEntityType)
-                : base(ODataReaderState.NavigationLinkStart, navigationLinkInfo.NavigationLink, entitySet, expectedEntityType)
+            internal JsonLightNavigationLinkScope(ODataJsonLightReaderNavigationLinkInfo navigationLinkInfo, IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType, ODataUri odataUri)
+                : base(ODataReaderState.NavigationLinkStart, navigationLinkInfo.NavigationLink, navigationSource, expectedEntityType, odataUri)
             {
-                DebugUtils.CheckNoExternalCallers();
-                this.NavigationLinkInfo = navigationLinkInfo;
+                this.NavigationLinkInfo = navigationLinkInfo;   
             }
 
             /// <summary>

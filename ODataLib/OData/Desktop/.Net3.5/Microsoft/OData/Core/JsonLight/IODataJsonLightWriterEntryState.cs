@@ -65,7 +65,7 @@ namespace Microsoft.OData.Core.JsonLight
         bool MediaContentTypeWritten { get; set; }
 
         /// <summary>
-        /// Flag which indicates that the odata.mediaETag metadata property has been written.
+        /// Flag which indicates that the odata.mediaEtag metadata property has been written.
         /// </summary>
         bool MediaETagWritten { get; set; }
 

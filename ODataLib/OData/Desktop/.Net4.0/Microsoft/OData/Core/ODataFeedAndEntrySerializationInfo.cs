@@ -10,20 +10,22 @@
 
 namespace Microsoft.OData.Core
 {
+    using Microsoft.OData.Edm;
+
     /// <summary>
     /// Class to provide additional serialization information to the <see cref="ODataWriter"/> for an <see cref="ODataEntry"/>.
     /// </summary>
     public sealed class ODataFeedAndEntrySerializationInfo
     {
         /// <summary>
-        /// The entity set name of the entry to be written. Should be fully qualified if the entity set is not in the default container.
+        /// The navigation source name of the entry to be written. Should be fully qualified if the navigation source is not in the default container.
         /// </summary>
-        private string entitySetName;
+        private string navigationSourceName;
 
         /// <summary>
-        /// The namespace qualified element type name of the entity set.
+        /// The namespace qualified entity type name of the navigation source.
         /// </summary>
-        private string entitySetElementTypeName;
+        private string navigationSourceEntityTypeName;
 
         /// <summary>
         /// The namespace qualified type name of the expected entity type.
@@ -31,38 +33,48 @@ namespace Microsoft.OData.Core
         private string expectedTypeName;
 
         /// <summary>
-        /// The entity set name of the entry to be written. Should be fully qualified if the entity set is not in the default container.
+        /// The navigation source name of the entry to be written. Should be fully qualified if the navigation source is not in the default container.
         /// </summary>
-        public string EntitySetName
+        public string NavigationSourceName
         {
             get
             {
-                return this.entitySetName;
+                return this.navigationSourceName;
             }
 
             set
             {
-                ExceptionUtils.CheckArgumentStringNotNullOrEmpty(value, "EntitySetName");
-                this.entitySetName = value;
+                ExceptionUtils.CheckArgumentStringNotNullOrEmpty(value, "NavigationSourceName");
+                this.navigationSourceName = value;
             }
         }
 
         /// <summary>
-        /// The namespace qualified element type name of the entity set.
+        /// The namespace qualified element type name of the navigation source.
         /// </summary>
-        public string EntitySetElementTypeName
+        public string NavigationSourceEntityTypeName
         {
             get
             {
-                return this.entitySetElementTypeName;
+                return this.navigationSourceEntityTypeName;
             }
 
             set
             {
-                ExceptionUtils.CheckArgumentStringNotNullOrEmpty(value, "EntitySetElementTypeName");
-                this.entitySetElementTypeName = value;
+                ExceptionUtils.CheckArgumentStringNotNullOrEmpty(value, "NavigationSourceEntityTypeName");
+                this.navigationSourceEntityTypeName = value;
             }
         }
+
+        /// <summary>
+        /// The kind of the navigation source.
+        /// </summary>
+        public EdmNavigationSourceKind NavigationSourceKind { get; set; }
+
+        /// <summary>
+        /// The flag we use to identify if the current entry is from a navigation property with collection type or not.
+        /// </summary>
+        public bool IsFromCollection { get; set; }
 
         /// <summary>
         /// The namespace qualified type name of the expected entity type.
@@ -71,7 +83,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return this.expectedTypeName ?? this.EntitySetElementTypeName;
+                return this.expectedTypeName ?? this.NavigationSourceEntityTypeName;
             }
 
             set
@@ -88,11 +100,10 @@ namespace Microsoft.OData.Core
         /// <returns>The <paramref name="serializationInfo"/> instance.</returns>
         internal static ODataFeedAndEntrySerializationInfo Validate(ODataFeedAndEntrySerializationInfo serializationInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
             if (serializationInfo != null)
             {
-                ExceptionUtils.CheckArgumentNotNull(serializationInfo.EntitySetName, "serializationInfo.EntitySetName");
-                ExceptionUtils.CheckArgumentNotNull(serializationInfo.EntitySetElementTypeName, "serializationInfo.EntitySetElementTypeName");
+                ExceptionUtils.CheckArgumentNotNull(serializationInfo.NavigationSourceName, "serializationInfo.NavigationSourceName");
+                ExceptionUtils.CheckArgumentNotNull(serializationInfo.NavigationSourceEntityTypeName, "serializationInfo.NavigationSourceEntityTypeName");
             }
 
             return serializationInfo;

@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
 #if ODATALIB || ODATALIB_QUERY
 namespace Microsoft.OData.Core
 #else
-namespace Microsoft.OData.Edm.Csdl.Internal
+namespace Microsoft.OData.Edm.Csdl
 #endif
 #endif
 #endif
@@ -62,8 +62,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
                     return DecimalAsXml(((IEdmDecimalValue)v).Value);
                 case EdmValueKind.String:
                     return StringAsXml(((IEdmStringValue)v).Value);
-                case EdmValueKind.DateTime:
-                    return DateTimeAsXml(((IEdmDateTimeValue)v).Value);
                 case EdmValueKind.DateTimeOffset:
                     return DateTimeOffsetAsXml(((IEdmDateTimeOffsetValue)v).Value);
                 case EdmValueKind.Duration:
@@ -80,9 +78,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>The value to convert.</returns>
         internal static string StringAsXml(string s)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return s;
         }
 
@@ -93,9 +88,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>A string representation of the Byte[].</returns>
         internal static string BinaryAsXml(byte[] binary)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             var chars = new char[binary.Length * 2];
             for (int i = 0; i < binary.Length; ++i)
             {
@@ -113,9 +105,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>A string representation of the Boolean, that is, "true" or "false".</returns>
         internal static string BooleanAsXml(bool b)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return XmlConvert.ToString(b);
         }
 
@@ -126,9 +115,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>A string representation of the Boolean, that is, "true" or "false".</returns>
         internal static string BooleanAsXml(bool? b)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             Debug.Assert(b.HasValue, "Serialized nullable boolean must have value.");
             return BooleanAsXml(b.Value);
         }
@@ -140,9 +126,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>A string representation of the Int32.</returns>
         internal static string IntAsXml(int i)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return XmlConvert.ToString(i);
         }
 
@@ -153,9 +136,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>A string representation of the Int32.</returns>
         internal static string IntAsXml(int? i)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             Debug.Assert(i.HasValue, "Serialized nullable integer must have value.");
             return IntAsXml(i.Value);
         }
@@ -167,9 +147,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>A string representation of the Int64.</returns>
         internal static string LongAsXml(long l)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return XmlConvert.ToString(l);
         }
 
@@ -180,9 +157,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>A string representation of the Double.</returns>
         internal static string FloatAsXml(double f)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return XmlConvert.ToString(f);
         }
 
@@ -193,23 +167,7 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>A string representation of the Decimal.</returns>
         internal static string DecimalAsXml(decimal d)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return XmlConvert.ToString(d);
-        }
-
-        /// <summary>
-        /// Converts the DateTime to a String.
-        /// </summary>
-        /// <param name="d">The System.DateTime value to convert.</param>
-        /// <returns>A System.String equivalent of the System.DateTime.</returns>
-        internal static string DateTimeAsXml(DateTime d)
-        {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
-            return PlatformHelper.ConvertDateTimeToString(d);
         }
 
         /// <summary>
@@ -219,9 +177,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>A string representation of the TimeSpan.</returns>
         internal static string DurationAsXml(TimeSpan d)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return XmlConvert.ToString(d);
         }
 
@@ -232,9 +187,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>A System.String representation of the supplied System.DateTimeOffset.</returns>
         internal static string DateTimeOffsetAsXml(DateTimeOffset d)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             var value = XmlConvert.ToString(d);
             Debug.Assert(EdmValueParser.DayTimeDurationValidator.IsMatch(value), "Edm.Duration values should not have year or month part");
             return value;
@@ -247,9 +199,6 @@ namespace Microsoft.OData.Edm.Csdl.Internal
         /// <returns>A string representation of the Guid.</returns>
         internal static string GuidAsXml(Guid g)
         {
-#if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
-#endif
             return XmlConvert.ToString(g);
         }
     }

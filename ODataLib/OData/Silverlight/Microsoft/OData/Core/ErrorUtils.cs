@@ -37,15 +37,12 @@ namespace Microsoft.OData.Core
         /// <param name="error">The ODataError instance to extract the error details from.</param>
         /// <param name="code">A data service-defined string which serves as a substatus to the HTTP response code.</param>
         /// <param name="message">A human readable message describing the error.</param>
-        /// <param name="messageLanguage">The language identifier representing the language the error message is in.</param>
-        internal static void GetErrorDetails(ODataError error, out string code, out string message, out string messageLanguage)
+        internal static void GetErrorDetails(ODataError error, out string code, out string message)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(error != null, "error != null");
 
             code = error.ErrorCode ?? string.Empty;
             message = error.Message ?? string.Empty;
-            messageLanguage = error.MessageLanguage ?? ErrorUtils.ODataErrorMessageDefaultLanguage;
         }
         
         /// <summary>
@@ -57,15 +54,14 @@ namespace Microsoft.OData.Core
         /// <param name="maxInnerErrorDepth">The maximumum number of nested inner errors to allow.</param>
         internal static void WriteXmlError(XmlWriter writer, ODataError error, bool includeDebugInformation, int maxInnerErrorDepth)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(error != null, "error != null");
 
-            string code, message, messageLanguage;
-            ErrorUtils.GetErrorDetails(error, out code, out message, out messageLanguage);
+            string code, message;
+            ErrorUtils.GetErrorDetails(error, out code, out message);
 
             ODataInnerError innerError = includeDebugInformation ? error.InnerError : null;
-            WriteXmlError(writer, code, message, messageLanguage, innerError, maxInnerErrorDepth);
+            WriteXmlError(writer, code, message, innerError, maxInnerErrorDepth);
         }
 
         /// <summary>
@@ -74,15 +70,13 @@ namespace Microsoft.OData.Core
         /// <param name="writer">The Xml writer to write to.</param>
         /// <param name="code">The code of the error.</param>
         /// <param name="message">The message of the error.</param>
-        /// <param name="messageLanguage">The language of the message.</param>
         /// <param name="innerError">Inner error details that will be included in debug mode (if present).</param>
         /// <param name="maxInnerErrorDepth">The maximumum number of nested inner errors to allow.</param>
-        private static void WriteXmlError(XmlWriter writer, string code, string message, string messageLanguage, ODataInnerError innerError, int maxInnerErrorDepth)
+        private static void WriteXmlError(XmlWriter writer, string code, string message, ODataInnerError innerError, int maxInnerErrorDepth)
         {
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(code != null, "code != null");
             Debug.Assert(message != null, "message != null");
-            Debug.Assert(messageLanguage != null, "messageLanguage != null");
 
             // <m:error>
             writer.WriteStartElement(AtomConstants.ODataMetadataNamespacePrefix, AtomConstants.ODataErrorElementName, AtomConstants.ODataMetadataNamespace);
@@ -90,16 +84,8 @@ namespace Microsoft.OData.Core
             // <m:code>code</m:code>
             writer.WriteElementString(AtomConstants.ODataMetadataNamespacePrefix, AtomConstants.ODataErrorCodeElementName, AtomConstants.ODataMetadataNamespace, code);
 
-            // <m:message>
-            writer.WriteStartElement(AtomConstants.ODataMetadataNamespacePrefix, AtomConstants.ODataErrorMessageElementName, AtomConstants.ODataMetadataNamespace);
-
-            // xml:lang="..."
-            writer.WriteAttributeString(AtomConstants.XmlNamespacePrefix, AtomConstants.XmlLangAttributeName, AtomConstants.XmlNamespace, messageLanguage);
-
-            writer.WriteString(message);
-
-            // </m:message>
-            writer.WriteEndElement();
+            // <m:message>error message</m:message>
+            writer.WriteElementString(AtomConstants.ODataMetadataNamespacePrefix, AtomConstants.ODataErrorMessageElementName, AtomConstants.ODataMetadataNamespace, message);
 
             if (innerError != null)
             {

@@ -54,9 +54,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>Default singleton instance for keys formatted as segments.</summary>
         private static readonly LiteralFormatter KeyAsSegmentInstance = new KeysAsSegmentsLiteralFormatter();
 
-        /// <summary>Constant table of nibble-to-hex convertion values.</summary>
-        private const string HexValues = "0123456789ABCDEF";
-
 #if ASTORIA_SERVER
         /// <summary>
         /// Gets the literal formatter for ETags.
@@ -81,7 +78,6 @@ namespace Microsoft.OData.Core.Evaluation
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return DefaultInstance;
             }
         }
@@ -95,7 +91,6 @@ namespace Microsoft.OData.Core.Evaluation
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return DefaultInstanceWithoutEncoding;
             }
         }
@@ -108,7 +103,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The literal formatter for keys.</returns>
         internal static LiteralFormatter ForKeys(bool keysAsSegment)
         {
-            DebugUtils.CheckNoExternalCallers();
             return keysAsSegment ? KeyAsSegmentInstance : DefaultInstance;
         }
 
@@ -136,20 +130,8 @@ namespace Microsoft.OData.Core.Evaluation
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Usage is in Debug.Assert only")]
         private static string ConvertByteArrayToKeyString(byte[] byteArray)
         {
-            StringBuilder hexBuilder = new StringBuilder(3 + byteArray.Length * 2);
-            foreach (byte t in byteArray)
-            {
-                hexBuilder.Append(HexValues[t >> 4]);
-                hexBuilder.Append(HexValues[t & 0x0F]);
-            }
-#if DEBUG
-            if (hexBuilder.Length > 0)
-            {
-                string escapee = hexBuilder.ToString(1, hexBuilder.Length - 1);
-                Debug.Assert(escapee == Uri.EscapeDataString(escapee), "binary representation is not expected to require escaping as a data string");
-            }
-#endif
-            return hexBuilder.ToString();
+            Debug.Assert(byteArray != null, "byteArray != null");
+            return Convert.ToBase64String(byteArray, 0, byteArray.Length);
         }
 
         /// <summary>
@@ -177,14 +159,15 @@ namespace Microsoft.OData.Core.Evaluation
                 return XmlConvert.ToString((byte)value);
             }
 
+#if ASTORIA_SERVER
             if (value is DateTime)
             {
-#if PORTABLELIB
-                return PlatformHelper.ConvertDateTimeToString((DateTime)value);
-#else
-                return XmlConvert.ToString((DateTime)value, XmlDateTimeSerializationMode.RoundtripKind);
-#endif
+                // Since the server/client supports DateTime values, convert the DateTime value
+                // to DateTimeOffset and use XmlCOnvert to convert to String.
+                DateTimeOffset dto = WebUtil.ConvertDateTimeToDateTimeOffset((DateTime)value);
+                return XmlConvert.ToString(dto);
             }
+#endif
 
             if (value is decimal)
             {
@@ -270,7 +253,7 @@ namespace Microsoft.OData.Core.Evaluation
 
             string result = FormatRawLiteral(value);
             Debug.Assert(result != null, "result != null");
-            
+
             if (value is string)
             {
                 result = result.Replace("'", "''");
@@ -362,26 +345,6 @@ namespace Microsoft.OData.Core.Evaluation
             }
 
             /// <summary>
-            /// Returns whether a 'd' literal suffix to a double value based on its value.
-            /// DEVNOTE: The WCF DS client never added the 'd', but WCF DS Server and ODL do.
-            /// </summary>
-            /// <param name="value">The value itself.</param>
-            /// <returns>Whether or not to append the 'd' suffix.</returns>
-            [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "value", Justification = "Parameter is used in server and ODL assemblies, but not the client.")]
-            internal static bool ShouldAppendLiteralSuffixToDouble(double value)
-            {
-#if !ASTORIA_CLIENT
-                // DEVNOTE: The client never added the 'd' marker for doubles in V2,
-                // and it would be a breaking change to do so now.
-                if (!Double.IsInfinity(value) && !Double.IsNaN(value))
-                {
-                    return true;
-                }
-#endif
-                return false;
-            }
-
-            /// <summary>
             /// Tries to convert an instance of System.Data.Linq.Binary to a byte array.
             /// </summary>
             /// <param name="value">The original value which might be an instance of System.Data.Linq.Binary.</param>
@@ -424,7 +387,7 @@ namespace Microsoft.OData.Core.Evaluation
                 : this(false /*disableUrlEncoding*/)
             {
             }
-            
+
 #if ODATALIB
             /// <summary>
             /// Creates a new instance of <see cref="DefaultLiteralFormatter"/>.
@@ -440,7 +403,6 @@ namespace Microsoft.OData.Core.Evaluation
 #endif
             {
                 this.disableUrlEncoding = disableUrlEncoding;
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>Converts the specified value to an encoded, serializable string for URI key.</summary>
@@ -448,7 +410,6 @@ namespace Microsoft.OData.Core.Evaluation
             /// <returns>value converted to a serializable string for URI key.</returns>
             internal override string Format(object value)
             {
-                DebugUtils.CheckNoExternalCallers();
                 object converted;
                 if (SharedUtils.TryConvertToStandardType(value, out converted))
                 {
@@ -486,50 +447,10 @@ namespace Microsoft.OData.Core.Evaluation
                 Debug.Assert(value != null, "value != null. Null values need to be handled differently in some cases.");
 
                 string result = this.FormatAndEscapeLiteral(value);
-                            
+
                 if (value is byte[])
                 {
-                    return ExpressionConstants.LiteralPrefixShortBinary + "'" + result + "'";
-                }
-
-                if (value is DateTime)
-                {
-                    return ExpressionConstants.LiteralPrefixDateTime + "'" + result + "'";
-                }
-
-                if (value is DateTimeOffset)
-                {
-                    return ExpressionConstants.LiteralPrefixDateTimeOffset + "'" + result + "'";
-                }
-
-                if (value is decimal)
-                {
-                    return result + ExpressionConstants.LiteralSuffixDecimal;
-                }
-
-                if (value is Guid)
-                {
-                    return ExpressionConstants.LiteralPrefixGuid + "'" + result + "'";
-                }
-
-                if (value is long)
-                {
-                    return result + ExpressionConstants.LiteralSuffixInt64;
-                }
-
-                if (value is float)
-                {
-                    return result + ExpressionConstants.LiteralSuffixSingle;
-                }
-
-                if (value is double)
-                {
-                    if (SharedUtils.ShouldAppendLiteralSuffixToDouble((double)value))
-                    {
-                        return result + ExpressionConstants.LiteralSuffixDouble;
-                    }
-
-                    return result;
+                    return ExpressionConstants.LiteralPrefixBinary + "'" + result + "'";
                 }
 
                 if (value is Geography)
@@ -552,6 +473,7 @@ namespace Microsoft.OData.Core.Evaluation
                     return "'" + result + "'";
                 }
 
+                // for int32,int64,float,double, decimal, Infinity/NaN, just output them without prefix or suffix such as L/M/D/F.
                 return result;
             }
         }
@@ -567,7 +489,6 @@ namespace Microsoft.OData.Core.Evaluation
             /// </summary>
             internal KeysAsSegmentsLiteralFormatter()
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>Converts the specified value to an encoded, serializable string for URI key.</summary>
@@ -575,7 +496,6 @@ namespace Microsoft.OData.Core.Evaluation
             /// <returns>value converted to a serializable string for URI key.</returns>
             internal override string Format(object value)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(value != null, "value != null");
 
                 object converted;

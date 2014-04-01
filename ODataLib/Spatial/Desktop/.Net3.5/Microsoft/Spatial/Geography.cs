@@ -12,14 +12,8 @@ namespace Microsoft.Spatial
 {
     using System.Collections.Generic;
     using System.Linq;
-#if WINDOWS_PHONE
-    using Runtime.Serialization;
-#endif
 
     /// <summary>Represents a base class of geography shapes.</summary>
-#if WINDOWS_PHONE
-    [DataContract]
-#endif
     public abstract class Geography : ISpatial
     {
         /// <summary>
@@ -45,9 +39,6 @@ namespace Microsoft.Spatial
 
         /// <summary>Gets the coordinate system of the geography.</summary>
         /// <returns>The coordinate system of the geography.</returns>
-#if WINDOWS_PHONE
-        [DataMember]
-#endif
         public CoordinateSystem CoordinateSystem
         {
             get
@@ -68,9 +59,6 @@ namespace Microsoft.Spatial
         /// <summary>
         /// Gets the implementation that created this instance.
         /// </summary>
-#if WINDOWS_PHONE
-        [DataMember]
-#endif
         internal SpatialImplementation Creator
         {
             get { return this.creator; }

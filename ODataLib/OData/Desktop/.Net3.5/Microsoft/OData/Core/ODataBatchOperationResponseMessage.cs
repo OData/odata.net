@@ -29,6 +29,10 @@ namespace Microsoft.OData.Core
     public sealed class ODataBatchOperationResponseMessage : IODataResponseMessage, IODataUrlResolver
 #endif
     {
+        /// <summary>Gets or Sets the Content-ID for this response message.</summary>
+        /// <returns>The Content-ID for this response message.</returns>
+        public readonly string ContentId;
+
         /// <summary>
         /// The actual implementation of the message.
         /// We don't derive from this class since we want the actual implementation to remain internal
@@ -45,12 +49,14 @@ namespace Microsoft.OData.Core
         /// <param name="contentStreamCreatorFunc">A function to retrieve the content stream for this batch operation message.</param>
         /// <param name="headers">The headers of the batch operation message.</param>
         /// <param name="operationListener">Listener interface to be notified of part changes.</param>
+        /// <param name="contentId">The content-ID for the operation response message.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
         private ODataBatchOperationResponseMessage(
             Func<Stream> contentStreamCreatorFunc,
-            ODataBatchOperationHeaders headers, 
+            ODataBatchOperationHeaders headers,
             IODataBatchOperationListener operationListener,
+            string contentId,
             IODataUrlResolver urlResolver,
             bool writing)
         {
@@ -58,6 +64,7 @@ namespace Microsoft.OData.Core
             Debug.Assert(operationListener != null, "operationListener != null");
 
             this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, urlResolver, writing);
+            this.ContentId = contentId;
         }
 
         /// <summary>Gets or sets the result status code of the response message.</summary>
@@ -90,7 +97,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.message;
             }
         }
@@ -148,10 +154,8 @@ namespace Microsoft.OData.Core
             IODataBatchOperationListener operationListener,
             IODataUrlResolver urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, operationListener);
-            return new ODataBatchOperationResponseMessage(streamCreatorFunc, /*headers*/ null, operationListener, urlResolver, /*writing*/ true);
+            return new ODataBatchOperationResponseMessage(streamCreatorFunc, /*headers*/ null, operationListener, /*contentId*/ null, urlResolver, /*writing*/ true);
         }
 
         /// <summary>
@@ -160,6 +164,7 @@ namespace Microsoft.OData.Core
         /// <param name="batchReaderStream">The batch stream underyling the operation response message.</param>
         /// <param name="statusCode">The status code to use for the operation response message.</param>
         /// <param name="headers">The headers to use for the operation response message.</param>
+        /// <param name="contentId">The content-ID for the operation response message.</param>
         /// <param name="operationListener">The operation listener.</param>
         /// <param name="urlResolver">The (optional) URL resolver for the message to create.</param>
         /// <returns>An <see cref="ODataBatchOperationResponseMessage"/> that can be used to read the operation content.</returns>
@@ -167,16 +172,16 @@ namespace Microsoft.OData.Core
             ODataBatchReaderStream batchReaderStream,
             int statusCode,
             ODataBatchOperationHeaders headers,
+            string contentId,
             IODataBatchOperationListener operationListener,
             IODataUrlResolver urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationReadStream(batchReaderStream, headers, operationListener);
-            ODataBatchOperationResponseMessage responseMessage = 
-                new ODataBatchOperationResponseMessage(streamCreatorFunc, headers, operationListener, urlResolver, /*writing*/ false);
+            ODataBatchOperationResponseMessage responseMessage =
+                new ODataBatchOperationResponseMessage(streamCreatorFunc, headers, operationListener, contentId, urlResolver, /*writing*/ false);
             responseMessage.statusCode = statusCode;
             return responseMessage;
         }

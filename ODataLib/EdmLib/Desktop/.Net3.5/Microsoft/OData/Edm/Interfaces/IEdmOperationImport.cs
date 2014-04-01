@@ -15,24 +15,12 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents an EDM operation import.
     /// </summary>
-    public interface IEdmOperationImport : IEdmFunctionBase, IEdmEntityContainerElement
+    public interface IEdmOperationImport : IEdmEntityContainerElement
     {
         /// <summary>
-        /// Gets a value indicating whether this operation import has side-effects.
-        /// <see cref="IsSideEffecting"/> cannot be set to true if <see cref="IsComposable"/> is set to true.
+        /// Gets the operation.
         /// </summary>
-        bool IsSideEffecting { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether this functon import can be composed inside expressions.
-        /// <see cref="IsComposable"/> cannot be set to true if <see cref="IsSideEffecting"/> is set to true.
-        /// </summary>
-        bool IsComposable { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether this operation import can be used as an extension method for the type of the first parameter of this operation import.
-        /// </summary>
-        bool IsBindable { get; }
+        IEdmOperation Operation { get; }
 
         /// <summary>
         /// Gets the entity set containing entities returned by this operation import.

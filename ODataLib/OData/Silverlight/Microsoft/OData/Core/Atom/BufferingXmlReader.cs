@@ -22,7 +22,7 @@ namespace Microsoft.OData.Core.Atom
     /// <summary>
     /// XML reader which supports look-ahead.
     /// </summary>
-    internal sealed class BufferingXmlReader : XmlReader
+    internal sealed class BufferingXmlReader : XmlReader, IXmlLineInfo
     {
         #region Atomized strings
         /// <summary>The "http://www.w3.org/XML/1998/namespace" namespace for the "xml" prefix.</summary>
@@ -30,9 +30,6 @@ namespace Microsoft.OData.Core.Atom
 
         /// <summary>The "base" name for the XML base attribute.</summary>
         internal readonly string XmlBaseAttributeName;
-
-        /// <summary>The 'lang' attribute local name of the xml:lang attribute.</summary>
-        internal readonly string XmlLangAttributeName;
 
         /// <summary>XML namespace for data service annotations.</summary>
         internal readonly string ODataMetadataNamespace;
@@ -43,6 +40,9 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>The 'error' local name of the error element.</summary>
         internal readonly string ODataErrorElementName;
         #endregion Atomized strings
+
+        /// <summary>Object converted from this.reader to provide line number and position (if presented).</summary>
+        private readonly IXmlLineInfo lineInfo;
 
         /// <summary>The underlying XML reader this buffering reader is wrapping.</summary>
         private readonly XmlReader reader;
@@ -107,11 +107,11 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="maxInnerErrorDepth">The maximum number of recursive internalexception elements to allow when reading in-stream errors.</param>
         internal BufferingXmlReader(XmlReader reader, Uri parentXmlBaseUri, Uri documentBaseUri, bool disableXmlBase, int maxInnerErrorDepth)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
             Debug.Assert(documentBaseUri == null || documentBaseUri.IsAbsoluteUri, "The document Base URI must be absolute if it's specified.");
 
             this.reader = reader;
+            this.lineInfo = reader as IXmlLineInfo;
             this.documentBaseUri = documentBaseUri;
             this.disableXmlBase = disableXmlBase;
             this.maxInnerErrorDepth = maxInnerErrorDepth;
@@ -119,7 +119,6 @@ namespace Microsoft.OData.Core.Atom
             XmlNameTable nameTable = this.reader.NameTable;
             this.XmlNamespace = nameTable.Add(AtomConstants.XmlNamespace);
             this.XmlBaseAttributeName = nameTable.Add(AtomConstants.XmlBaseAttributeName);
-            this.XmlLangAttributeName = nameTable.Add(AtomConstants.XmlLangAttributeName);
             this.ODataMetadataNamespace = nameTable.Add(AtomConstants.ODataMetadataNamespace);
             this.ODataNamespace = nameTable.Add(AtomConstants.ODataNamespace);
             this.ODataErrorElementName = nameTable.Add(AtomConstants.ODataErrorElementName);
@@ -323,14 +322,30 @@ namespace Microsoft.OData.Core.Atom
         }
 
         /// <summary>
+        /// Explicit IXmlLineInfo.LineNumber implementation.
+        /// This property provides current line number of this reader.
+        /// </summary>
+        int IXmlLineInfo.LineNumber
+        {
+            get { return this.HasLineInfo() ? lineInfo.LineNumber : 0; }
+        }
+
+        /// <summary>
+        /// Explicit IXmlLineInfo.LinePosition implementation.
+        /// This property provides current line position of this reader.
+        /// </summary>
+        int IXmlLineInfo.LinePosition
+        {
+            get { return this.HasLineInfo() ? lineInfo.LinePosition : 0; }
+        }
+
+        /// <summary>
         /// The active XML base URI for the current node.
         /// </summary>
         internal Uri XmlBaseUri
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 return this.xmlBaseStack.Count > 0 ? this.xmlBaseStack.Peek().BaseUri : null;
             }
         }
@@ -342,8 +357,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 if (this.xmlBaseStack.Count == 0)
                 {
                     return null;
@@ -376,13 +389,11 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.disableInStreamErrorDetection;
             }
 
             set
             {
-                DebugUtils.CheckNoExternalCallers();
                 this.disableInStreamErrorDetection = value;
             }
         }
@@ -395,8 +406,6 @@ namespace Microsoft.OData.Core.Atom
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 return this.isBuffering;
             }
         }
@@ -781,11 +790,20 @@ namespace Microsoft.OData.Core.Atom
         }
 
         /// <summary>
+        /// Explicit IXmlLineInfo.HasLineInfo() implementation.
+        /// Check if this reader has line info.
+        /// </summary>
+        /// <returns>If line info is presented.</returns>
+        bool IXmlLineInfo.HasLineInfo()
+        {
+            return this.HasLineInfo();
+        }
+
+        /// <summary>
         /// Puts the reader into the state where it buffers read nodes.
         /// </summary>
         internal void StartBuffering()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!this.isBuffering, "Buffering is already turned on. Must not call StartBuffering again.");
             Debug.Assert(this.NodeType != XmlNodeType.Attribute, "Buffering cannot start on an attribute.");
             this.ValidateInternalState();
@@ -843,7 +861,6 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         internal void StopBuffering()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.isBuffering, "Buffering is not turned on. Must not call StopBuffering in this state.");
             this.ValidateInternalState();
 
@@ -869,7 +886,6 @@ namespace Microsoft.OData.Core.Atom
 
             this.ValidateInternalState();
         }
-
 
         /// <summary>
         /// The actual implementatin of the Read method. Moves the reader to the next node.
@@ -1231,6 +1247,15 @@ namespace Microsoft.OData.Core.Atom
 
             Debug.Assert(this.bufferStartXmlBaseStack == null || this.isBuffering, "The buffered XML base stack should only be used when buffering.");
 #endif
+        }
+
+        /// <summary>
+        /// Check if this reader has line info.
+        /// </summary>
+        /// <returns>If line info is presented.</returns>
+        private bool HasLineInfo()
+        {
+            return lineInfo != null && lineInfo.HasLineInfo();
         }
 
         /// <summary>

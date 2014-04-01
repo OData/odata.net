@@ -20,6 +20,7 @@ namespace Microsoft.OData.Core.UriParser
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>Use this class to parse an expression in the OData URI format.</summary>
@@ -28,21 +29,44 @@ namespace Microsoft.OData.Core.UriParser
     /// Null            null
     /// Boolean         true | false
     /// Int32           (digit+)
-    /// Int64           (digit+)(L|l)
-    /// Decimal         (digit+ ['.' digit+])(M|m)
-    /// Float           (digit+ ['.' digit+][e|E [+|-] digit+)(f|F)
-    /// Double          (digit+ ['.' digit+][e|E [+|-] digit+)
+    /// Int64           (digit+)[L|l]
+    /// Decimal         (digit+ ['.' digit+])[M|m]
+    /// Float           (digit+ ['.' digit+][e|E [+|-] digit+)[f|F]
+    /// Double          (digit+ ['.' digit+][e|E [+|-] digit+)[d|D]
     /// String          "'" .* "'"
     /// DateTime        datetime"'"dddd-dd-dd[T|' ']dd:mm[ss[.fffffff]]"'"
-    /// DateTimeOffset  datetimeoffset"'"dddd-dd-dd[T|' ']dd:mm[ss[.fffffff]]-dd:mm"'"
+    /// DateTimeOffset  dddd-dd-dd[T|' ']dd:mm[ss[.fffffff]]-dd:mm
     /// Duration            time"'"dd:mm[ss[.fffffff]]"'"
     /// Binary          (binary|X)'digit*'
-    /// GUID            guid'digit*'
+    /// GUID            8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
+    /// 
+    /// Note: ABNF v4.0 actually has forbidden numeric string's trailing L,M,F,D though we allow them to be optional
+    /// http://docs.oasis-open.org/odata/odata/v4.0/cs01/abnf/odata-abnf-construction-rules.txt
+    /// decimalValue = [SIGN] 1*DIGIT ["." 1*DIGIT]
+    /// doubleValue = decimalValue [ "e" [SIGN] 1*DIGIT ] / nanInfinity ; with restricted number range
+    /// singleValue = doubleValue                                       ; with restricted number range
+    /// nanInfinity = 'NaN' / '-INF' / 'INF'
+    ///
     /// </remarks>
-    [DebuggerDisplay("ExpressionLexer ({text} @ {textPos} [{token}]")]
-    internal sealed class ExpressionLexer
+    [DebuggerDisplay("ExpressionLexer ({text} @ {textPos} [{token}])")]
+    internal class ExpressionLexer
     {
-        #region Private fields
+        #region Protected and Private fields
+
+        /// <summary>Text being parsed.</summary>
+        protected readonly string Text;
+
+        /// <summary>Length of text being parsed.</summary>
+        protected readonly int TextLen;
+
+        /// <summary>Position on text being parsed.</summary>
+        protected int textPos;
+
+        /// <summary>Character being processed.</summary>
+        protected char? ch;
+
+        /// <summary>Token being processed.</summary>
+        protected ExpressionToken token;
 
         /// <summary>
         /// For an identifier, EMD supports chars that match the regex  [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}]
@@ -57,31 +81,16 @@ namespace Microsoft.OData.Core.UriParser
             UnicodeCategory.Format
         };
 
-        /// <summary>Text being parsed.</summary>
-        private readonly string text;
-
-        /// <summary>Length of text being parsed.</summary>
-        private readonly int textLen;
-
         /// <summary> flag to indicate whether to delimit on a semicolon. </summary>
         private readonly bool useSemicolonDelimeter;
 
         /// <summary>Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</summary>
         private readonly bool parsingFunctionParameters;
 
-        /// <summary>Position on text being parsed.</summary>
-        private int textPos;
-
-        /// <summary>Character being processed.</summary>
-        private char ch;
-
-        /// <summary>Token being processed.</summary>
-        private ExpressionToken token;
-
         /// <summary>Lexer ignores whitespace</summary>
         private bool ignoreWhitespace;
 
-        #endregion Private fields
+        #endregion Protected and Private fields
 
         #region Constructors
 
@@ -92,7 +101,6 @@ namespace Microsoft.OData.Core.UriParser
         internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimeter)
             : this(expression, moveToFirstToken, useSemicolonDelimeter, false /*parsingFunctionParameters*/)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>Initializes a new <see cref="ExpressionLexer"/>.</summary>
@@ -102,12 +110,11 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="parsingFunctionParameters">Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</param>
         internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimeter, bool parsingFunctionParameters)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(expression != null, "expression != null");
 
             this.ignoreWhitespace = true;
-            this.text = expression;
-            this.textLen = this.text.Length;
+            this.Text = expression;
+            this.TextLen = this.Text.Length;
             this.useSemicolonDelimeter = useSemicolonDelimeter;
             this.parsingFunctionParameters = parsingFunctionParameters;
 
@@ -128,13 +135,11 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.token;
             }
 
             set
             {
-                DebugUtils.CheckNoExternalCallers();
                 this.token = value;
             }
         }
@@ -144,8 +149,7 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-                return this.text;
+                return this.Text;
             }
         }
 
@@ -154,7 +158,6 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.token.Position;
             }
         }
@@ -163,6 +166,28 @@ namespace Microsoft.OData.Core.UriParser
 
         #region Private properties
         /// <summary>
+        /// Gets if the current char is whitespace.
+        /// </summary>
+        protected bool IsValidWhiteSpace
+        {
+            get
+            {
+                return this.ch != null && Char.IsWhiteSpace(this.ch.Value);
+            }
+        }
+
+        /// <summary>
+        /// Gets if the current char is digit.
+        /// </summary>
+        private bool IsValidDigit
+        {
+            get
+            {
+                return this.ch != null && Char.IsDigit(this.ch.Value);
+            }
+        }
+
+        /// <summary>
         /// Is the current char a valid starting char for an identifier.
         /// Valid starting chars for identifier include all that are supported by EDM ([\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}]) and '_'.
         /// </summary>
@@ -170,11 +195,11 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                return
-                    Char.IsLetter(this.ch) ||       // IsLetter covers: Ll, Lu, Lt, Lo, Lm
+                return this.ch != null && (
+                    Char.IsLetter(this.ch.Value) ||       // IsLetter covers: Ll, Lu, Lt, Lo, Lm
                     this.ch == '_' ||
                     this.ch == '$' ||
-                    PlatformHelper.GetUnicodeCategory(this.ch) == UnicodeCategory.LetterNumber;
+                    PlatformHelper.GetUnicodeCategory(this.ch.Value) == UnicodeCategory.LetterNumber);
             }
         }
 
@@ -188,9 +213,9 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                return
-                    Char.IsLetterOrDigit(this.ch) ||    // covers: Ll, Lu, Lt, Lo, Lm, Nd
-                    AdditionalUnicodeCategoriesForIdentifier.Contains(PlatformHelper.GetUnicodeCategory(this.ch));  // covers the rest
+                return this.ch != null && (
+                    Char.IsLetterOrDigit(this.ch.Value) ||    // covers: Ll, Lu, Lt, Lo, Lm, Nd
+                    AdditionalUnicodeCategoriesForIdentifier.Contains(PlatformHelper.GetUnicodeCategory(this.ch.Value)));  // covers the rest
             }
         }
         #endregion
@@ -204,10 +229,8 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>True if the next token can be processed, false otherwise.</returns>
         internal bool TryPeekNextToken(out ExpressionToken resultToken, out Exception error)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             int savedTextPos = this.textPos;
-            char savedChar = this.ch;
+            char? savedChar = this.ch;
             ExpressionToken savedToken = this.token;
 
             resultToken = this.NextTokenImplementation(out error);
@@ -224,8 +247,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <remarks>Throws on error.</remarks>
         internal ExpressionToken NextToken()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             Exception error = null;
             ExpressionToken nextToken = this.NextTokenImplementation(out error);
 
@@ -246,8 +267,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The dotted identifier starting at the current identifier.</returns>
         internal string ReadDottedIdentifier(bool acceptStar)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.ValidateToken(ExpressionTokenKind.Identifier);
             StringBuilder builder = null;
             string result = this.CurrentToken.Text;
@@ -263,12 +282,12 @@ namespace Microsoft.OData.Core.UriParser
                         // if we accept a star and this is the last token in the identifier, then we're ok... otherwise we throw.
                         if (!acceptStar || (this.PeekNextToken().Kind != ExpressionTokenKind.End && this.PeekNextToken().Kind != ExpressionTokenKind.Comma))
                         {
-                            throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.text));
+                            throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.Text));
                         }
                     }
                     else
                     {
-                        throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.text));
+                        throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.Text));
                     }
                 }
 
@@ -294,8 +313,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The next token.</returns>
         internal ExpressionToken PeekNextToken()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             ExpressionToken outToken;
             Exception error;
             this.TryPeekNextToken(out outToken, out error);
@@ -314,8 +331,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>True if the current identifier is a function call</returns>
         internal bool ExpandIdentifierAsFunction()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // FUNCTION := (<ID> {<DOT>}) ... <ID> <OpenParen>
             // if we fail to match then we leave the token as it
             ExpressionTokenKind id = this.token.Kind;
@@ -325,7 +340,7 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             int savedTextPos = this.textPos;
-            char savedChar = this.ch;
+            char? savedChar = this.ch;
             ExpressionToken savedToken = this.token;
             bool savedIgnoreWs = this.ignoreWhitespace;
             this.ignoreWhitespace = false;
@@ -341,7 +356,7 @@ namespace Microsoft.OData.Core.UriParser
 
             if (matched)
             {
-                this.token.Text = this.text.Substring(tokenStartPos, this.textPos - tokenStartPos);
+                this.token.Text = this.Text.Substring(tokenStartPos, this.textPos - tokenStartPos);
                 this.token.Position = tokenStartPos;
             }
             else
@@ -360,11 +375,9 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="t">Expected token kind.</param>
         internal void ValidateToken(ExpressionTokenKind t)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (this.token.Kind != t)
             {
-                throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.text));
+                throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.Text));
             }
         }
 
@@ -376,7 +389,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>All of the text that was read.</returns>
         internal string AdvanceThroughExpandOption()
         {
-            DebugUtils.CheckNoExternalCallers();
             int startingPosition = this.textPos;
             string textToReturn;
 
@@ -396,13 +408,13 @@ namespace Microsoft.OData.Core.UriParser
 
                 if (this.ch == ';' || this.ch == ')')
                 {
-                    textToReturn = this.text.Substring(startingPosition, this.textPos - startingPosition);
+                    textToReturn = this.Text.Substring(startingPosition, this.textPos - startingPosition);
                     break;
                 }
 
-                if (this.ch == '\0')
+                if (this.ch == null)
                 {
-                    textToReturn = this.text.Substring(startingPosition);
+                    textToReturn = this.Text.Substring(startingPosition);
                     break;
                 }
 
@@ -414,7 +426,7 @@ namespace Microsoft.OData.Core.UriParser
 
             return textToReturn;
         }
-        
+
         /// <summary>
         /// Advances through a balanced expression that we do not want to parse, beginning with a '(' and ending with a ')'.
         /// </summary>
@@ -428,11 +440,9 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The parenthesis expression, including the outer parenthesis.</returns>
         internal string AdvanceThroughBalancedParentheticalExpression()
         {
-            DebugUtils.CheckNoExternalCallers();
-
             int startPosition = this.Position;
             this.AdvanceThroughBalancedExpression('(', ')');
-            var expressionText = this.text.Substring(startPosition, this.textPos - startPosition);
+            var expressionText = this.Text.Substring(startPosition, this.textPos - startPosition);
 
             //// TODO Consider introducing a token type and setting up the current token instead of returning string.
             //// We've done weird stuff, and the state of hte lexer is weird now. All will be well once NextToken() is called, 
@@ -447,19 +457,57 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>Creates an exception for a parse error.</summary>
         /// <param name="message">Message text.</param>
         /// <returns>A new Exception.</returns>
-        private static Exception ParseError(string message)
+        protected static Exception ParseError(string message)
         {
-            DebugUtils.CheckNoExternalCallers();
             return new ODataException(message);
         }
-     
+
+        /// <summary>Advanced to the next character.</summary>
+        protected void NextChar()
+        {
+            if (this.textPos < this.TextLen)
+            {
+                this.textPos++;
+                if (this.textPos < this.TextLen)
+                {
+                    this.ch = this.Text[this.textPos];
+                    return;
+                }
+            }
+
+            this.ch = null;
+        }
+
+        /// <summary>
+        /// Parses white spaces
+        /// </summary>
+        protected void ParseWhitespace()
+        {
+            while (this.IsValidWhiteSpace)
+            {
+                this.NextChar();
+            }
+        }
+
+        /// <summary>
+        /// Advance the pointer to the next occurance of the given value, swallowing all characters in between.
+        /// </summary>
+        /// <param name="endingValue">the ending delimiter.</param>
+        protected void AdvanceToNextOccuranceOf(char endingValue)
+        {
+            this.NextChar();
+            while (this.ch.HasValue && (this.ch != endingValue))
+            {
+                this.NextChar();
+            }
+        }
+
         /// <summary>Reads the next token, skipping whitespace as necessary.</summary> 
         /// <param name="error">Error that occurred while trying to process the next token.</param>
         /// <returns>The next token, which may be 'bad' if an error occurs.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "This parser method is all about the switch statement and would be harder to maintain if it were broken up.")]
-        private ExpressionToken NextTokenImplementation(out Exception error)
+        protected virtual ExpressionToken NextTokenImplementation(out Exception error)
         {
-            DebugUtils.CheckNoExternalCallers();
             error = null;
 
             if (this.ignoreWhitespace)
@@ -484,10 +532,10 @@ namespace Microsoft.OData.Core.UriParser
                     t = ExpressionTokenKind.Comma;
                     break;
                 case '-':
-                    bool hasNext = this.textPos + 1 < this.textLen;
-                    if (hasNext && Char.IsDigit(this.text[this.textPos + 1]))
+                    bool hasNext = this.textPos + 1 < this.TextLen;
+                    if (hasNext && Char.IsDigit(this.Text[this.textPos + 1]))
                     {
-                        this.NextChar();
+                        // don't separate '-' and its following digits : -2147483648 is valid int.MinValue, but 2147483648 is long.
                         t = this.ParseFromDigit();
                         if (ExpressionLexerUtils.IsNumeric(t))
                         {
@@ -498,11 +546,11 @@ namespace Microsoft.OData.Core.UriParser
                         // we'll rewind and fall through to a simple '-' token.
                         this.SetTextPos(tokenPos);
                     }
-                    else if (hasNext && this.text[tokenPos + 1] == ExpressionConstants.InfinityLiteral[0])
+                    else if (hasNext && this.Text[tokenPos + 1] == ExpressionConstants.InfinityLiteral[0])
                     {
                         this.NextChar();
                         this.ParseIdentifier();
-                        string currentIdentifier = this.text.Substring(tokenPos + 1, this.textPos - tokenPos - 1);
+                        string currentIdentifier = this.Text.Substring(tokenPos + 1, this.textPos - tokenPos - 1);
 
                         if (ExpressionLexerUtils.IsInfinityLiteralDouble(currentIdentifier))
                         {
@@ -539,19 +587,19 @@ namespace Microsoft.OData.Core.UriParser
                     t = ExpressionTokenKind.Dot;
                     break;
                 case '\'':
-                    char quote = this.ch;
+                    char quote = this.ch.Value;
                     do
                     {
                         this.AdvanceToNextOccuranceOf(quote);
 
-                        if (this.textPos == this.textLen)
+                        if (this.textPos == this.TextLen)
                         {
-                            error = ParseError(ODataErrorStrings.ExpressionLexer_UnterminatedStringLiteral(this.textPos, this.text));
+                            error = ParseError(ODataErrorStrings.ExpressionLexer_UnterminatedStringLiteral(this.textPos, this.Text));
                         }
 
                         this.NextChar();
                     }
-                    while (this.ch == quote);
+                    while (this.ch.HasValue && (this.ch.Value == quote));
                     t = ExpressionTokenKind.StringLiteral;
                     break;
                 case '*':
@@ -573,7 +621,7 @@ namespace Microsoft.OData.Core.UriParser
                     t = ExpressionTokenKind.BracketedExpression;
                     break;
                 default:
-                    if (Char.IsWhiteSpace(this.ch))
+                    if (this.IsValidWhiteSpace)
                     {
                         Debug.Assert(!this.ignoreWhitespace, "should not hit ws while ignoring it");
                         this.ParseWhitespace();
@@ -584,17 +632,27 @@ namespace Microsoft.OData.Core.UriParser
                     if (this.IsValidStartingCharForIdentifier)
                     {
                         this.ParseIdentifier();
+
+                        // Guids will have '-' in them
+                        // guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
+                        if (this.ch == '-'
+                            && this.TryParseGuid(tokenPos))
+                        {
+                            t = ExpressionTokenKind.GuidLiteral;
+                            break;
+                        }
+
                         t = ExpressionTokenKind.Identifier;
                         break;
                     }
 
-                    if (Char.IsDigit(this.ch))
+                    if (this.IsValidDigit)
                     {
                         t = this.ParseFromDigit();
                         break;
                     }
 
-                    if (this.textPos == this.textLen)
+                    if (this.textPos == this.TextLen)
                     {
                         t = ExpressionTokenKind.End;
                         break;
@@ -611,16 +669,16 @@ namespace Microsoft.OData.Core.UriParser
                     {
                         this.NextChar();
 
-                        if (this.textPos == this.textLen)
+                        if (this.textPos == this.TextLen)
                         {
-                            error = ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.text));
+                            error = ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.Text));
                             t = ExpressionTokenKind.Unknown;
                             break;
                         }
 
                         if (!this.IsValidStartingCharForIdentifier)
                         {
-                            error = ParseError(ODataErrorStrings.ExpressionLexer_InvalidCharacter(this.ch, this.textPos, this.text));
+                            error = ParseError(ODataErrorStrings.ExpressionLexer_InvalidCharacter(this.ch, this.textPos, this.Text));
                             t = ExpressionTokenKind.Unknown;
                             break;
                         }
@@ -630,13 +688,13 @@ namespace Microsoft.OData.Core.UriParser
                         break;
                     }
 
-                    error = ParseError(ODataErrorStrings.ExpressionLexer_InvalidCharacter(this.ch, this.textPos, this.text));
+                    error = ParseError(ODataErrorStrings.ExpressionLexer_InvalidCharacter(this.ch, this.textPos, this.Text));
                     t = ExpressionTokenKind.Unknown;
                     break;
             }
 
             this.token.Kind = t;
-            this.token.Text = this.text.Substring(tokenPos, this.textPos - tokenPos);
+            this.token.Text = this.Text.Substring(tokenPos, this.textPos - tokenPos);
             this.token.Position = tokenPos;
 
             // Handle type-prefixed literals such as binary, datetime or guid.
@@ -701,24 +759,11 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             string tokenText = this.token.Text;
-            if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixDateTime, StringComparison.OrdinalIgnoreCase))
-            {
-                id = ExpressionTokenKind.DateTimeLiteral;
-            }
-            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixDateTimeOffset, StringComparison.OrdinalIgnoreCase))
-            {
-                id = ExpressionTokenKind.DateTimeOffsetLiteral;
-            }
-            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixDuration, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixDuration, StringComparison.OrdinalIgnoreCase))
             {
                 id = ExpressionTokenKind.DurationLiteral;
             }
-            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixGuid, StringComparison.OrdinalIgnoreCase))
-            {
-                id = ExpressionTokenKind.GuidLiteral;
-            }
-            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixBinary, StringComparison.OrdinalIgnoreCase) ||
-                String.Equals(tokenText, ExpressionConstants.LiteralPrefixShortBinary, StringComparison.OrdinalIgnoreCase))
+            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixBinary, StringComparison.OrdinalIgnoreCase))
             {
                 id = ExpressionTokenKind.BinaryLiteral;
             }
@@ -730,13 +775,10 @@ namespace Microsoft.OData.Core.UriParser
             {
                 id = ExpressionTokenKind.GeometryLiteral;
             }
-            else if (this.parsingFunctionParameters && string.Equals(tokenText, ExpressionConstants.KeywordNull, StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(tokenText, ExpressionConstants.KeywordNull, StringComparison.OrdinalIgnoreCase))
             {
-                id = ExpressionTokenKind.NullLiteral;
-            }
-            else if (!this.parsingFunctionParameters && string.Equals(tokenText, ExpressionConstants.KeywordNull, StringComparison.OrdinalIgnoreCase))
-            {
-                return;
+                // typed null literals are not supported.
+                throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.Text));
             }
             else
             {
@@ -749,52 +791,65 @@ namespace Microsoft.OData.Core.UriParser
             {
                 this.NextChar();
             }
-            while (this.ch != '\0' && this.ch != '\'');
+            while (this.ch.HasValue && this.ch != '\'');
 
-            if (this.ch == '\0')
+            if (this.ch == null)
             {
-                throw ParseError(ODataErrorStrings.ExpressionLexer_UnterminatedLiteral(this.textPos, this.text));
+                throw ParseError(ODataErrorStrings.ExpressionLexer_UnterminatedLiteral(this.textPos, this.Text));
             }
 
             this.NextChar();
             this.token.Kind = id;
-            this.token.Text = this.text.Substring(tokenPos, this.textPos - tokenPos);
-        }
-
-        /// <summary>Advanced to the next character.</summary>
-        private void NextChar()
-        {
-            if (this.textPos < this.textLen)
-            {
-                this.textPos++;
-            }
-
-            this.ch = this.textPos < this.textLen ? this.text[this.textPos] : '\0';
+            this.token.Text = this.Text.Substring(tokenPos, this.textPos - tokenPos);
         }
 
         /// <summary>Parses a token that starts with a digit.</summary>
         /// <returns>The kind of token recognized.</returns>
         private ExpressionTokenKind ParseFromDigit()
         {
-            Debug.Assert(Char.IsDigit(this.ch), "Char.IsDigit(this.ch)");
+            Debug.Assert(this.IsValidDigit || ('-' == this.ch), "this.IsValidDigit || ('-' == this.ch)");
             ExpressionTokenKind result;
-            char startChar = this.ch;
+            int tokenPos = this.textPos;
+            char startChar = this.ch.Value;
             this.NextChar();
-            if (startChar == '0' && this.ch == 'x' || this.ch == 'X')
+            if (startChar == '0' && (this.ch == 'x' || this.ch == 'X'))
             {
                 result = ExpressionTokenKind.BinaryLiteral;
                 do
                 {
                     this.NextChar();
                 }
-                while (UriPrimitiveTypeParser.IsCharHexDigit(this.ch));
+                while (this.ch.HasValue && UriPrimitiveTypeParser.IsCharHexDigit(this.ch.Value));
             }
             else
             {
                 result = ExpressionTokenKind.IntegerLiteral;
-                while (Char.IsDigit(this.ch))
+                while (this.IsValidDigit)
                 {
                     this.NextChar();
+                }
+
+                // DateTimeOffset and Guids will have '-' in them
+                if (this.ch == '-')
+                {
+                    if (this.TryParseDateTimeoffset(tokenPos))
+                    {
+                        return ExpressionTokenKind.DateTimeOffsetLiteral;
+                    }
+                    else if (this.TryParseGuid(tokenPos))
+                    {
+                        return ExpressionTokenKind.GuidLiteral;
+                    }
+                }
+
+                // Guids will have alpha-numeric characters along with '-', so if a letter is encountered
+                // try to see if this is Guid or not. 
+                if (this.ch.HasValue && Char.IsLetter(this.ch.Value))
+                {
+                    if (this.TryParseGuid(tokenPos))
+                    {
+                        return ExpressionTokenKind.GuidLiteral;
+                    }
                 }
 
                 if (this.ch == '.')
@@ -807,7 +862,7 @@ namespace Microsoft.OData.Core.UriParser
                     {
                         this.NextChar();
                     }
-                    while (Char.IsDigit(this.ch));
+                    while (this.IsValidDigit);
                 }
 
                 if (this.ch == 'E' || this.ch == 'e')
@@ -824,7 +879,7 @@ namespace Microsoft.OData.Core.UriParser
                     {
                         this.NextChar();
                     }
-                    while (Char.IsDigit(this.ch));
+                    while (this.IsValidDigit);
                 }
 
                 if (this.ch == 'M' || this.ch == 'm')
@@ -847,20 +902,163 @@ namespace Microsoft.OData.Core.UriParser
                     result = ExpressionTokenKind.SingleLiteral;
                     this.NextChar();
                 }
+                else
+                {
+                    string valueStr = this.Text.Substring(tokenPos, this.textPos - tokenPos);
+                    result = MakeBestGuessOnNoSuffixStr(valueStr, result);
+                }
             }
 
             return result;
         }
 
         /// <summary>
-        /// Parses white spaces
+        /// Tries to parse Guid from current text
+        /// If it's not Guid, then this.textPos and this.ch are reset
         /// </summary>
-        private void ParseWhitespace()
+        /// <param name="tokenPos">Start index</param>
+        /// <returns>True if the substring that starts from tokenPos is a Guid, false otherwise</returns>
+        private bool TryParseGuid(int tokenPos)
         {
-            while (Char.IsWhiteSpace(this.ch))
+            int initialIndex = this.textPos;
+
+            string guidStr = ParseLiteral(tokenPos);
+
+            Guid tmpGuidValue;
+            if (UriUtils.TryUriStringToGuid(guidStr, out tmpGuidValue))
+            {
+                return true;
+            }
+            else
+            {
+                this.textPos = initialIndex;
+                this.ch = this.Text[initialIndex];
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tries to parse Guid from current text
+        /// If it's not Guid, then this.textPos and this.ch are reset
+        /// </summary>
+        /// <param name="tokenPos">Start index</param>
+        /// <returns>True if the substring that starts from tokenPos is a Guid, false otherwise</returns>
+        private bool TryParseDateTimeoffset(int tokenPos)
+        {
+            int initialIndex = this.textPos;
+
+            string datetimeOffsetStr = ParseLiteral(tokenPos);
+
+            DateTimeOffset tmpdatetimeOffsetValue;
+            if (UriUtils.TryUriStringToDateTimeOffset(datetimeOffsetStr, out tmpdatetimeOffsetValue))
+            {
+                return true;
+            }
+            else
+            {
+                this.textPos = initialIndex;
+                this.ch = this.Text[initialIndex];
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Parses a literal be checking for delimiting characters '\0', ',',')' and ' '
+        /// </summary>
+        /// <param name="tokenPos">Index from which the substring starts</param>
+        /// <returns>Substring from this.text that has parsed the literal and ends in one of above delimiting characters</returns>
+        private string ParseLiteral(int tokenPos)
+        {
+            do
             {
                 this.NextChar();
             }
+            while (this.ch.HasValue && this.ch != ',' && this.ch != ')' && this.ch != ' ');
+
+            if (this.ch == null)
+            {
+                this.NextChar();
+            }
+
+            string numericStr = this.Text.Substring(tokenPos, this.textPos - tokenPos);
+            return numericStr;
+        }
+
+        /// <summary>
+        /// Makes best guess on numeric string without trailing letter like L, F, M, D
+        /// </summary>
+        /// <param name="numericStr">The numeric string.</param>
+        /// <param name="guessedKind">The possbile kind (IntegerLiteral or DoubleLiteral) from ParseFromDigit() method.</param>
+        /// <returns>A more accurate ExpressionTokenKind</returns>
+        private ExpressionTokenKind MakeBestGuessOnNoSuffixStr(string numericStr, ExpressionTokenKind guessedKind)
+        {
+            // no suffix, so 
+            // (1) make a best guess (note: later we support promoting each to later one: int32->int64->single->double->decimal).
+            // look at value:       "2147483647" may be Int32/long, "2147483649" must be long.
+            // look at precision:   "3258.67876576549" may be sinle/double/decimal, "3258.678765765489753678965390" must be decimal.
+            // (2) then let MetadataUtilsCommon.CanConvertPrimitiveTypeTo() method does further promotion when knowing expected sematics type. 
+            int tmpInt = 0;
+            long tmpLong = 0;
+            float tmpFloat = 0;
+            double tmpDouble = 0;
+            decimal tmpDecimal = 0;
+
+            if (guessedKind == ExpressionTokenKind.IntegerLiteral)
+            {
+                if (int.TryParse(numericStr, out tmpInt))
+                {
+                    return ExpressionTokenKind.IntegerLiteral;
+                }
+
+                if (long.TryParse(numericStr, out tmpLong))
+                {
+                    return ExpressionTokenKind.Int64Literal;
+                }
+            }
+
+            bool canBeSingle = float.TryParse(numericStr, out tmpFloat);
+            bool canBeDouble = double.TryParse(numericStr, out tmpDouble);
+            bool canBeDecimal = decimal.TryParse(numericStr, out tmpDecimal);
+
+            // 1. try high precision -> low precision
+            if (canBeDouble && canBeDecimal)
+            {
+                decimal doubleToDecimalR;
+                decimal doubleToDecimalN;
+
+                // To keep the full presion of the current value, which if necessary is all 17 digits of precision supported by the Double type.
+                bool doubleCanBeDecimalR = decimal.TryParse(tmpDouble.ToString("R", CultureInfo.InvariantCulture), out doubleToDecimalR);
+
+                // To cover the scientific notation case, such as 1e+19 in the tmpDouble
+                bool doubleCanBeDecimalN = decimal.TryParse(tmpDouble.ToString("N29", CultureInfo.InvariantCulture), out doubleToDecimalN);
+
+                if ((doubleCanBeDecimalR && doubleToDecimalR != tmpDecimal) || (!doubleCanBeDecimalR && doubleCanBeDecimalN && doubleToDecimalN != tmpDecimal))
+                {
+                    // losing precision as double, so choose decimal
+                    return ExpressionTokenKind.DecimalLiteral;
+                }
+            }
+
+            // here can't use normal casting like the above double VS decimal.
+            // prevent losing precision in float -> double, e.g. (double)1.234f will be 1.2339999675750732d not 1.234d
+            if (canBeSingle && canBeDouble && (double.Parse(tmpFloat.ToString("R", CultureInfo.InvariantCulture), CultureInfo.InvariantCulture) != tmpDouble))
+            {
+                // losing precision as single, so choose double
+                return ExpressionTokenKind.DoubleLiteral;
+            }
+
+            // 2. try most compatible -> least compatible
+            if (canBeSingle)
+            {
+                return ExpressionTokenKind.SingleLiteral;
+            }
+
+            if (canBeDouble)
+            {
+                return ExpressionTokenKind.DoubleLiteral;
+            }
+
+            throw new ODataException(ODataErrorStrings.ExpressionLexer_InvalidNumericString(numericStr));
         }
 
         /// <summary>
@@ -889,7 +1087,7 @@ namespace Microsoft.OData.Core.UriParser
                     currentBracketDepth--;
                 }
 
-                if (this.ch == '\0')
+                if (this.ch == null)
                 {
                     throw new ODataException(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
                 }
@@ -898,18 +1096,7 @@ namespace Microsoft.OData.Core.UriParser
             }
         }
 
-        /// <summary>
-        /// Advance the pointer to the next occurance of the given value, swallowing all characters in between.
-        /// </summary>
-        /// <param name="endingValue">the ending delimiter.</param>
-        private void AdvanceToNextOccuranceOf(char endingValue)
-        {
-            this.NextChar();
-            while (this.ch != endingValue && this.ch != '\0')
-            {
-                this.NextChar();
-            }
-        }
+       
 
         /// <summary>Parses an identifier by advancing the current character.</summary>
         private void ParseIdentifier()
@@ -927,15 +1114,15 @@ namespace Microsoft.OData.Core.UriParser
         private void SetTextPos(int pos)
         {
             this.textPos = pos;
-            this.ch = this.textPos < this.textLen ? this.text[this.textPos] : '\0';
+            this.ch = this.textPos < this.TextLen ? this.Text[this.textPos] : (char?)null;
         }
 
         /// <summary>Validates the current character is a digit.</summary>
         private void ValidateDigit()
         {
-            if (!Char.IsDigit(this.ch))
+            if (!this.IsValidDigit)
             {
-                throw ParseError(ODataErrorStrings.ExpressionLexer_DigitExpected(this.textPos, this.text));
+                throw ParseError(ODataErrorStrings.ExpressionLexer_DigitExpected(this.textPos, this.Text));
             }
         }
 

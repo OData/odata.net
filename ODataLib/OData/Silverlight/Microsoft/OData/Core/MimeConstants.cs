@@ -63,29 +63,32 @@ namespace Microsoft.OData.Core
         /// <summary>Parameter value for type 'feed'.</summary>
         internal const string MimeTypeParameterValueFeed = "feed";
 
-        /// <summary>Parameter name for 'odata.metadata' parameters.</summary>
-        internal const string MimeODataParameterName = "odata.metadata";
+        /// <summary>JSON Light parameter name for 'odata.metadata' parameter.</summary>
+        internal const string MimeMetadataParameterName = "odata.metadata";
 
         /// <summary>Parameter value for 'verbose' JSON.</summary>
-        internal const string MimeODataParameterValueVerbose = "verbose";
+        internal const string MimeMetadataParameterValueVerbose = "verbose";
 
         /// <summary>JSON Light parameter value 'full'.</summary>
-        internal const string MimeODataParameterValueFullMetadata = "full";
+        internal const string MimeMetadataParameterValueFull = "full";
 
         /// <summary>JSON Light parameter value 'minimal'.</summary>
-        internal const string MimeODataParameterValueMinimalMetadata = "minimal";
+        internal const string MimeMetadataParameterValueMinimal = "minimal";
 
         /// <summary>JSON Light parameter value 'none'.</summary>
-        internal const string MimeODataParameterValueNoMetadata = "none";
+        internal const string MimeMetadataParameterValueNone = "none";
 
-        /// <summary>Parameter name for 'streaming' parameter.</summary>
-        internal const string MimeStreamingParameterName = "streaming";
+        /// <summary>JSON Light Parameter name for 'odata.streaming' parameter.</summary>
+        internal const string MimeStreamingParameterName = "odata.streaming";
 
-        /// <summary>JSON Light streaming parameter value 'true'.</summary>
-        internal const string MimeStreamingParameterValueTrue = "true";
+        /// <summary>JSON Light parameter name for 'IEEE754Compatible' parameter.</summary>
+        internal const string MimeIeee754CompatibleParameterName = "IEEE754Compatible";
 
-        /// <summary>JSON Light streaming parameter value 'false'.</summary>
-        internal const string MimeStreamingParameterValueFalse = "false";
+        /// <summary>JSON Light parameter value 'true'.</summary>
+        internal const string MimeParameterValueTrue = "true";
+
+        /// <summary>JSON Light parameter value 'false'.</summary>
+        internal const string MimeParameterValueFalse = "false";
 
         /// <summary>Media type for XML bodies.</summary>
         internal const string MimeApplicationXml = MimeApplicationType + Separator + MimeXmlSubType;

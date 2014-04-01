@@ -45,6 +45,9 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>A skip query option name.</summary>
         internal const string SkipQueryOption = "$skip";
 
+        /// <summary>An entity id query option name. </summary>
+        internal const string IdQueryOption = "$id";
+
         /// <summary>A valid value to denote all-properties access.</summary>
         internal const string Star = "*";
 
@@ -56,5 +59,8 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>A format query option name.</summary>
         internal const string FormatQueryOption = "$format";
+
+        /// <summary>A search query option name.</summary>
+        internal const string SearchQueryOption = "$search";
     }
 }

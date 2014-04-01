@@ -13,9 +13,10 @@ namespace Microsoft.OData.Core.Evaluation
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.JsonLight;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Interface used for substitutability of the metadata-centric responsibilities of <see cref="ODataJsonLightDeserializer"/>.
@@ -38,6 +39,11 @@ namespace Microsoft.OData.Core.Evaluation
         Uri MetadataDocumentUri { get; }
 
         /// <summary>
+        /// Gets the OData uri.
+        /// </summary>
+        ODataUri ODataUri { get; }
+
+        /// <summary>
         /// Gets an entity metadata builder for the given entry.
         /// </summary>
         /// <param name="entryState">Entry state to use as reference for information needed by the builder.</param>
@@ -45,11 +51,11 @@ namespace Microsoft.OData.Core.Evaluation
         ODataEntityMetadataBuilder GetEntityMetadataBuilderForReader(IODataJsonLightReaderEntryState entryState);
 
         /// <summary>
-        /// Gets the list of operations that are always bindable to a type.
+        /// Gets the list of operations that are bindable to a type.
         /// </summary>
         /// <param name="bindingType">The binding type in question.</param>
         /// <returns>The list of operations that are always bindable to a type.</returns>
-        IEdmOperationImport[] GetAlwaysBindableOperationsForType(IEdmType bindingType);
+        IEdmOperation[] GetBindableOperationsForType(IEdmType bindingType);
 
         /// <summary>
         /// Determines whether operations bound to this type must be qualified with the operation they belong to when appearing in a $select clause.
@@ -75,9 +81,9 @@ namespace Microsoft.OData.Core.Evaluation
         private readonly EdmTypeResolver edmTypeResolver;
 
         /// <summary>
-        /// Cache of operations that are always bindable to entity types.
+        /// Cache of operations that are bindable to entity types.
         /// </summary>
-        private readonly Dictionary<IEdmType, IEdmOperationImport[]> alwaysBindableOperationsCache;
+        private readonly Dictionary<IEdmType, IEdmOperation[]> bindableOperationsCache;
 
         /// <summary>
         /// true if we are reading or writing a response payload, false otherwise.
@@ -95,9 +101,19 @@ namespace Microsoft.OData.Core.Evaluation
         private readonly Uri metadataDocumentUri;
 
         /// <summary>
+        /// The OData Uri.
+        /// </summary>
+        private readonly ODataUri odataUri;
+
+        /// <summary>
         /// The service base Uri.
         /// </summary>
         private Uri serviceBaseUri;
+
+        /// <summary>
+        /// The MetadataLevel.
+        /// </summary>
+        private JsonLightMetadataLevel metadataLevel;
 
         /// <summary>
         /// Constructs an ODataMetadataContext.
@@ -105,9 +121,10 @@ namespace Microsoft.OData.Core.Evaluation
         /// <param name="isResponse">true if we are writing a response payload, false otherwise.</param>
         /// <param name="model">The Edm model.</param>
         /// <param name="metadataDocumentUri">The metadata document uri.</param>
+        /// <param name="odataUri">The request Uri.</param>
         /// <remarks>This overload should only be used by the writer.</remarks>
-        public ODataMetadataContext(bool isResponse, IEdmModel model, Uri metadataDocumentUri)
-            : this(isResponse, /*OperationsBoundToEntityTypeMustBeContainerQualified*/ null, EdmTypeWriterResolver.Instance, model, metadataDocumentUri)
+        public ODataMetadataContext(bool isResponse, IEdmModel model, Uri metadataDocumentUri, ODataUri odataUri)
+            : this(isResponse, /*OperationsBoundToEntityTypeMustBeContainerQualified*/ null, EdmTypeWriterResolver.Instance, model, metadataDocumentUri, odataUri)
         {
         }
 
@@ -119,8 +136,15 @@ namespace Microsoft.OData.Core.Evaluation
         /// <param name="edmTypeResolver">EdmTypeResolver instance to resolve entity set base type.</param>
         /// <param name="model">The Edm model.</param>
         /// <param name="metadataDocumentUri">The metadata document Uri.</param>
+        /// <param name="odataUri">The request Uri.</param>
         /// <remarks>This overload should only be used by the reader.</remarks>
-        public ODataMetadataContext(bool isResponse, Func<IEdmEntityType, bool> operationsBoundToEntityTypeMustBeContainerQualified, EdmTypeResolver edmTypeResolver, IEdmModel model, Uri metadataDocumentUri)
+        public ODataMetadataContext(
+            bool isResponse,
+            Func<IEdmEntityType, bool> operationsBoundToEntityTypeMustBeContainerQualified,
+            EdmTypeResolver edmTypeResolver,
+            IEdmModel model,
+            Uri metadataDocumentUri,
+            ODataUri odataUri)
         {
             Debug.Assert(edmTypeResolver != null, "edmTypeResolver != null");
             Debug.Assert(model != null, "model != null");
@@ -130,7 +154,34 @@ namespace Microsoft.OData.Core.Evaluation
             this.edmTypeResolver = edmTypeResolver;
             this.model = model;
             this.metadataDocumentUri = metadataDocumentUri;
-            this.alwaysBindableOperationsCache = new Dictionary<IEdmType, IEdmOperationImport[]>(ReferenceEqualityComparer<IEdmType>.Instance);
+            this.bindableOperationsCache = new Dictionary<IEdmType, IEdmOperation[]>(ReferenceEqualityComparer<IEdmType>.Instance);
+            this.odataUri = odataUri;
+        }
+
+        /// <summary>
+        /// Constructs an ODataMetadataContext.
+        /// </summary>
+        /// <param name="isResponse">true if we are reading a response payload, false otherwise.</param>
+        /// <param name="operationsBoundToEntityTypeMustBeContainerQualified">Callback to determine whether operations bound to this type must be qualified with the operation they belong to when appearing in a $select clause.</param>
+        /// <param name="edmTypeResolver">EdmTypeResolver instance to resolve entity set base type.</param>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="metadataDocumentUri">The metadata document Uri.</param>
+        /// <param name="odataUri">The request Uri.</param>
+        /// <param name="metadataLevel">Current Json Light MetadataLevel</param>
+        /// <remarks>This overload should only be used by the reader.</remarks>
+        public ODataMetadataContext(
+            bool isResponse,
+            Func<IEdmEntityType, bool> operationsBoundToEntityTypeMustBeContainerQualified,
+            EdmTypeResolver edmTypeResolver,
+            IEdmModel model,
+            Uri metadataDocumentUri,
+            ODataUri odataUri,
+            JsonLightMetadataLevel metadataLevel)
+            : this(isResponse, operationsBoundToEntityTypeMustBeContainerQualified, edmTypeResolver, model, metadataDocumentUri, odataUri)
+        {
+            Debug.Assert(metadataLevel != null, "MetadataLevel != null");
+
+            this.metadataLevel = metadataLevel;
         }
 
         /// <summary>
@@ -138,7 +189,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         public IEdmModel Model
         {
-            get 
+            get
             {
                 Debug.Assert(this.model != null, "this.model != null");
                 return this.model;
@@ -171,6 +222,17 @@ namespace Microsoft.OData.Core.Evaluation
         }
 
         /// <summary>
+        /// Gets the OData uri.
+        /// </summary>
+        public ODataUri ODataUri
+        {
+            get
+            {
+                return this.odataUri;
+            }
+        }
+
+        /// <summary>
         /// Gets an entity metadata builder for the given entry.
         /// </summary>
         /// <param name="entryState">Entry state to use as reference for information needed by the builder.</param>
@@ -186,27 +248,17 @@ namespace Microsoft.OData.Core.Evaluation
                 if (this.isResponse)
                 {
                     ODataTypeAnnotation typeAnnotation = entry.GetAnnotation<ODataTypeAnnotation>();
-                    Debug.Assert(typeAnnotation != null, "The JSON light reader should have already set the ODataTypeAnnotation.");
-                    IEdmEntitySet entitySet = typeAnnotation.EntitySet;
 
-                    IEdmEntityType entitySetElementType = this.edmTypeResolver.GetElementType(entitySet);
-                    IODataFeedAndEntryTypeContext typeContext = ODataFeedAndEntryTypeContext.Create(
-                        /*serializationInfo*/ null,
-                        entitySet,
-                        entitySetElementType,
-                        entryState.EntityType,
-                        this.model,
-                        /*throwIfMissingTypeInfo*/ true);
-                    IODataEntryMetadataContext entryMetadataContext = ODataEntryMetadataContext.Create(
-                        entry,
-                        typeContext,
-                        /*serializationInfo*/null,
-                        (IEdmEntityType)entry.GetEdmType().Definition,
-                        this,
-                        entryState.SelectedProperties);
+                    Debug.Assert(typeAnnotation != null, "The JSON light reader should have already set the ODataTypeAnnotation.");
+                    IEdmNavigationSource navigationSource = typeAnnotation.NavigationSource;
+
+                    IEdmEntityType navigationSourceElementType = this.edmTypeResolver.GetElementType(navigationSource);
+                    IODataFeedAndEntryTypeContext typeContext = ODataFeedAndEntryTypeContext.Create(/*serializationInfo*/ null, navigationSource, navigationSourceElementType, entryState.EntityType, this.model, /*throwIfMissingTypeInfo*/ true);
+                    IODataEntryMetadataContext entryMetadataContext = ODataEntryMetadataContext.Create(entry, typeContext, /*serializationInfo*/null, (IEdmEntityType)entry.GetEdmType().Definition, this, entryState.SelectedProperties);
 
                     UrlConvention urlConvention = UrlConvention.ForUserSettingAndTypeContext(/*keyAsSegment*/ null, typeContext);
                     ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri, urlConvention);
+
                     entryState.MetadataBuilder = new ODataConventionalEntityMetadataBuilder(entryMetadataContext, this, uriBuilder);
                 }
                 else
@@ -223,20 +275,20 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         /// <param name="bindingType">The binding type in question.</param>
         /// <returns>The list of operations that are always bindable to a type.</returns>
-        public IEdmOperationImport[] GetAlwaysBindableOperationsForType(IEdmType bindingType)
+        public IEdmOperation[] GetBindableOperationsForType(IEdmType bindingType)
         {
             Debug.Assert(bindingType != null, "bindingType != null");
-            Debug.Assert(this.alwaysBindableOperationsCache != null, "this.alwaysBindableOperationsCache != null");
+            Debug.Assert(this.bindableOperationsCache != null, "this.bindableOperationsCache != null");
             Debug.Assert(this.isResponse, "this.readingResponse");
 
-            IEdmOperationImport[] alwaysBindableOperations;
-            if (!this.alwaysBindableOperationsCache.TryGetValue(bindingType, out alwaysBindableOperations))
+            IEdmOperation[] bindableOperations;
+            if (!this.bindableOperationsCache.TryGetValue(bindingType, out bindableOperations))
             {
-                alwaysBindableOperations = MetadataUtils.CalculateAlwaysBindableOperationsForType(bindingType, this.model, this.edmTypeResolver);
-                this.alwaysBindableOperationsCache.Add(bindingType, alwaysBindableOperations);
+                bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, this.edmTypeResolver);
+                this.bindableOperationsCache.Add(bindingType, bindableOperations);
             }
 
-            return alwaysBindableOperations;
+            return bindableOperations;
         }
 
         /// <summary>
@@ -251,6 +303,6 @@ namespace Microsoft.OData.Core.Evaluation
             Debug.Assert(this.operationsBoundToEntityTypeMustBeContainerQualified != null, "this.operationsBoundToEntityTypeMustBeContainerQualified != null");
 
             return this.operationsBoundToEntityTypeMustBeContainerQualified(entityType);
-        }        
+        }
     }
 }

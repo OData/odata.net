@@ -122,7 +122,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.value;
             }
         }
@@ -135,7 +134,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.originalText;
             }
         }
@@ -156,7 +154,6 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created instance of <see cref="HttpHeaderValueLexer"/>.</returns>
         internal static HttpHeaderValueLexer Create(string httpHeaderName, string httpHeaderValue)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(httpHeaderName), "!string.IsNullOrEmpty(httpHeaderName)");
 
             return new HttpHeaderStart(httpHeaderName, httpHeaderValue);
@@ -168,7 +165,6 @@ namespace Microsoft.OData.Core
         /// <returns>A new <see cref="HttpHeaderValue"/> instance populated with the content from this <see cref="HttpHeaderValueLexer"/> instance.</returns>
         internal HttpHeaderValue ToHttpHeaderValue()
         {
-            DebugUtils.CheckNoExternalCallers();
             HttpHeaderValueLexer lexer = this;
             Debug.Assert(
                 lexer.Type == HttpHeaderValueItemType.Start,
@@ -366,7 +362,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return HttpHeaderValueItemType.Start;
                 }
             }
@@ -382,7 +377,6 @@ namespace Microsoft.OData.Core
             /// <returns>Returns an instance of <see cref="HttpHeaderValueLexer"/> to parse the rest of the items on the header value.</returns>
             internal override HttpHeaderValueLexer ReadNext()
             {
-                DebugUtils.CheckNoExternalCallers();
                 if (this.httpHeaderValue == null || this.EndOfHeaderValue())
                 {
                     return HttpHeaderEnd.Instance;
@@ -421,7 +415,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return HttpHeaderValueItemType.Token;
                 }
             }
@@ -437,7 +430,6 @@ namespace Microsoft.OData.Core
             /// <returns>Returns an instance of <see cref="HttpHeaderValueLexer"/> to parse the rest of the items on the header value.</returns>
             internal override HttpHeaderValueLexer ReadNext()
             {
-                DebugUtils.CheckNoExternalCallers();
                 if (this.EndOfHeaderValue())
                 {
                     return HttpHeaderEnd.Instance;
@@ -477,7 +469,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return HttpHeaderValueItemType.QuotedString;
                 }
             }
@@ -493,7 +484,6 @@ namespace Microsoft.OData.Core
             /// <returns>Returns an instance of <see cref="HttpHeaderValueLexer"/> to parse the rest of the items on the header value.</returns>
             internal override HttpHeaderValueLexer ReadNext()
             {
-                DebugUtils.CheckNoExternalCallers();
                 if (this.EndOfHeaderValue())
                 {
                     return HttpHeaderEnd.Instance;
@@ -541,7 +531,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     switch (this.Value)
                     {
                         case ElementSeparator:
@@ -566,7 +555,6 @@ namespace Microsoft.OData.Core
             /// <returns>Returns an instance of <see cref="HttpHeaderValueLexer"/> to parse the rest of the items on the header value.</returns>
             internal override HttpHeaderValueLexer ReadNext()
             {
-                DebugUtils.CheckNoExternalCallers();
                 if (this.EndOfHeaderValue())
                 {
                     throw new ODataException(Strings.HttpHeaderValueLexer_EndOfFileAfterSeparator(this.httpHeaderName, this.httpHeaderValue, this.startIndexOfNextItem, this.originalText));
@@ -608,7 +596,6 @@ namespace Microsoft.OData.Core
             {
                 get
                 {
-                    DebugUtils.CheckNoExternalCallers();
                     return HttpHeaderValueItemType.End;
                 }
             }
@@ -624,7 +611,6 @@ namespace Microsoft.OData.Core
             /// <returns>Returns an instance of <see cref="HttpHeaderValueLexer"/> to parse the rest of the items on the header value.</returns>
             internal override HttpHeaderValueLexer ReadNext()
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(false, "Already reached EndOfHeaderValue, our code should never call HttpHeaderEnd.ReadNext().");
                 return null;
             }

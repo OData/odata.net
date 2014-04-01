@@ -40,8 +40,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The Geography object if succeeded, else a ParseErrorException is thrown.</returns>
         internal static Geography ParseGeography(string text)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             using (StringReader reader = new StringReader(text))
             {
                 return Formatter.Read<Geography>(reader);
@@ -55,8 +53,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The Geometry object if succeeded, else a ParseErrorException is thrown.</returns>
         internal static Geometry ParseGeometry(string text)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             using (StringReader reader = new StringReader(text))
             {
                 return Formatter.Read<Geometry>(reader);
@@ -70,7 +66,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>Well-known text representation.</returns>
         internal static string ToWellKnownText(Geography instance)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Formatter.Write(instance);
         }
 
@@ -81,7 +76,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>Well-known text representation.</returns>
         internal static string ToWellKnownText(Geometry instance)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Formatter.Write(instance);
         }
     }

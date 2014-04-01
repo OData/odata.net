@@ -57,7 +57,6 @@ namespace Microsoft.OData.Core
             IODataUrlResolver urlResolver)
             : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(messageStream != null, "messageStream != null");
             Debug.Assert(synchronous, "Metadata output context is only supported in synchronous operations.");
 
@@ -83,7 +82,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void Flush()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             // XmlWriter.Flush will call the underlying Stream.Flush.
@@ -108,7 +106,6 @@ namespace Microsoft.OData.Core
         /// </remarks>
         internal override void WriteInStreamError(ODataError error, bool includeDebugInformation)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             ODataAtomWriterUtils.WriteError(this.xmlWriter, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth);
@@ -121,7 +118,6 @@ namespace Microsoft.OData.Core
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
         internal override void WriteMetadataDocument()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             IEnumerable<EdmError> errors;

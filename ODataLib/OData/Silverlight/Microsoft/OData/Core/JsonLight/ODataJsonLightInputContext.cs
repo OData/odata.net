@@ -19,12 +19,12 @@ namespace Microsoft.OData.Core.JsonLight
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
-// ReSharper disable RedundantUsingDirective
+    // ReSharper disable RedundantUsingDirective
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
-// ReSharper restore RedundantUsingDirective
+    // ReSharper restore RedundantUsingDirective
     #endregion Namespaces
 
     /// <summary>
@@ -32,6 +32,11 @@ namespace Microsoft.OData.Core.JsonLight
     /// </summary>
     internal sealed class ODataJsonLightInputContext : ODataInputContext
     {
+        /// <summary>
+        /// The json metadata level (i.e., full, none, minimal) being written.
+        /// </summary>
+        private readonly JsonLightMetadataLevel metadataLevel;
+
         /// <summary>JSON Light specific state stored during payload kind detection.</summary>
         private readonly ODataJsonLightPayloadKindDetectionState payloadKindDetectionState;
 
@@ -71,7 +76,6 @@ namespace Microsoft.OData.Core.JsonLight
             ODataJsonLightPayloadKindDetectionState payloadKindDetectionState)
             : this(format, CreateTextReaderForMessageStreamConstructor(messageStream, encoding), contentType, messageReaderSettings, version, readingResponse, synchronous, model, urlResolver, payloadKindDetectionState)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>Constructor.</summary>
@@ -99,7 +103,6 @@ namespace Microsoft.OData.Core.JsonLight
             ODataJsonLightPayloadKindDetectionState payloadKindDetectionState)
             : base(format, messageReaderSettings, version, readingResponse, synchronous, model, urlResolver)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(reader != null, "reader != null");
             Debug.Assert(contentType != null, "contentType != null");
 
@@ -123,14 +126,15 @@ namespace Microsoft.OData.Core.JsonLight
                 {
                     this.jsonReader = new BufferingJsonReader(
                         this.textReader,
-                        ODataAnnotationNames.ODataError,
+                        JsonLightConstants.ODataErrorPropertyName,
                         messageReaderSettings.MessageQuotas.MaxNestingDepth,
-                        ODataFormat.Json);
+                        ODataFormat.Json,
+                        contentType.HasIeee754CompatibleSetToTrue());
                 }
                 else
                 {
                     // If we have a non-streaming Json Light content type we need to use the re-ordering Json reader
-                    this.jsonReader = new ReorderingJsonReader(this.textReader, messageReaderSettings.MessageQuotas.MaxNestingDepth);
+                    this.jsonReader = new ReorderingJsonReader(this.textReader, messageReaderSettings.MessageQuotas.MaxNestingDepth, contentType.HasIeee754CompatibleSetToTrue());
                 }
             }
             catch (Exception e)
@@ -145,6 +149,22 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             this.payloadKindDetectionState = payloadKindDetectionState;
+
+            // dont know how to get MetadataDocumentUri uri here, messageReaderSettings do not have one
+            // Uri metadataDocumentUri = messageReaderSettings..MetadataDocumentUri == null ? null : messageReaderSettings.MetadataDocumentUri.BaseUri;
+            // the uri here is used here to create the FullMetadataLevel can pass null in
+            this.metadataLevel = JsonLight.JsonLightMetadataLevel.Create(contentType, null, model, readingResponse);
+        }
+
+        /// <summary>
+        /// The json metadata level (i.e., full, none, minimal) being written.
+        /// </summary>
+        internal JsonLightMetadataLevel MetadataLevel
+        {
+            get
+            {
+                return this.metadataLevel;
+            }
         }
 
         /// <summary>
@@ -154,7 +174,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(this.jsonReader != null, "Trying to get JsonReader while none is available.");
                 return this.jsonReader;
             }
@@ -167,7 +186,6 @@ namespace Microsoft.OData.Core.JsonLight
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.payloadKindDetectionState;
             }
         }
@@ -178,9 +196,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the feed.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        internal override ODataReader CreateFeedReader(IEdmEntitySet entitySet, IEdmEntityType expectedBaseEntityType)
+        internal override ODataReader CreateFeedReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
             this.VerifyCanCreateODataReader(entitySet, expectedBaseEntityType);
 
@@ -194,9 +211,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the feed.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        internal override Task<ODataReader> CreateFeedReaderAsync(IEdmEntitySet entitySet, IEdmEntityType expectedBaseEntityType)
+        internal override Task<ODataReader> CreateFeedReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
             this.VerifyCanCreateODataReader(entitySet, expectedBaseEntityType);
 
@@ -208,33 +224,31 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        internal override ODataReader CreateEntryReader(IEdmEntitySet entitySet, IEdmEntityType expectedEntityType)
+        internal override ODataReader CreateEntryReader(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
-            this.VerifyCanCreateODataReader(entitySet, expectedEntityType);
+            this.VerifyCanCreateODataReader(navigationSource, expectedEntityType);
 
-            return this.CreateEntryReaderImplementation(entitySet, expectedEntityType);
+            return this.CreateEntryReaderImplementation(navigationSource, expectedEntityType);
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
         /// Asynchronously creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        internal override Task<ODataReader> CreateEntryReaderAsync(IEdmEntitySet entitySet, IEdmEntityType expectedEntityType)
+        internal override Task<ODataReader> CreateEntryReaderAsync(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
-            this.VerifyCanCreateODataReader(entitySet, expectedEntityType);
+            this.VerifyCanCreateODataReader(navigationSource, expectedEntityType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateEntryReaderImplementation(entitySet, expectedEntityType));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateEntryReaderImplementation(navigationSource, expectedEntityType));
         }
 #endif
 
@@ -245,7 +259,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>Newly create <see cref="ODataCollectionReader"/>.</returns>
         internal override ODataCollectionReader CreateCollectionReader(IEdmTypeReference expectedItemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
             this.VerifyCanCreateCollectionReader(expectedItemTypeReference);
 
@@ -260,7 +273,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>Task which when completed returns the newly create <see cref="ODataCollectionReader"/>.</returns>
         internal override Task<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
             this.VerifyCanCreateCollectionReader(expectedItemTypeReference);
 
@@ -268,47 +280,44 @@ namespace Microsoft.OData.Core.JsonLight
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateCollectionReaderImplementation(expectedItemTypeReference));
         }
 #endif
-
+        
         /// <summary>
         /// Create a <see cref="ODataParameterReader"/>.
         /// </summary>
-        /// <param name="operationImport">The operation import whose parameters are being read.</param>
+        /// <param name="operation">The operation whose parameters are being read.</param>
         /// <returns>The newly created <see cref="ODataParameterReader"/>.</returns>
-        internal override ODataParameterReader CreateParameterReader(IEdmOperationImport operationImport)
+        internal override ODataParameterReader CreateParameterReader(IEdmOperation operation)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
-            this.VerifyCanCreateParameterReader(operationImport);
+            this.VerifyCanCreateParameterReader(operation);
 
-            return this.CreateParameterReaderImplementation(operationImport);
+            return this.CreateParameterReaderImplementation(operation);
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
         /// Asynchronously create a <see cref="ODataParameterReader"/>.
         /// </summary>
-        /// <param name="operationImport">The operation import whose parameters are being read.</param>
+        /// <param name="operation">The operation whose parameters are being read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataParameterReader"/>.</returns>
-        internal override Task<ODataParameterReader> CreateParameterReaderAsync(IEdmOperationImport operationImport)
+        internal override Task<ODataParameterReader> CreateParameterReaderAsync(IEdmOperation operation)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
-            this.VerifyCanCreateParameterReader(operationImport);
+            this.VerifyCanCreateParameterReader(operation);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateParameterReaderImplementation(operationImport));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateParameterReaderImplementation(operation));
         }
 #endif
 
         /// <summary>
         /// Read a service document. 
         /// This method reads the service document from the input and returns 
-        /// an <see cref="ODataWorkspace"/> that represents the read service document.
+        /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
-        /// <returns>An <see cref="ODataWorkspace"/> representing the read service document.</returns>
-        internal override ODataWorkspace ReadServiceDocument()
+        /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
+        internal override ODataServiceDocument ReadServiceDocument()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             ODataJsonLightServiceDocumentDeserializer jsonLightServiceDocumentDeserializer = new ODataJsonLightServiceDocumentDeserializer(this);
@@ -319,12 +328,11 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Asynchronously read a service document. 
         /// This method reads the service document from the input and returns 
-        /// an <see cref="ODataWorkspace"/> that represents the read service document.
+        /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
-        /// <returns>Task which when completed returns an <see cref="ODataWorkspace"/> representing the read service document.</returns>
-        internal override Task<ODataWorkspace> ReadServiceDocumentAsync()
+        /// <returns>Task which when completed returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>
+        internal override Task<ODataServiceDocument> ReadServiceDocumentAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             ODataJsonLightServiceDocumentDeserializer jsonLightServiceDocumentDeserializer = new ODataJsonLightServiceDocumentDeserializer(this);
@@ -341,7 +349,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>An <see cref="ODataProperty"/> representing the read property.</returns>
         internal override ODataProperty ReadProperty(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
             this.VerifyCanReadProperty();
 
@@ -359,7 +366,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>Task which when completed returns an <see cref="ODataProperty"/> representing the read property.</returns>
         internal override Task<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
             this.VerifyCanReadProperty();
 
@@ -374,7 +380,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>An <see cref="ODataError"/> representing the read error.</returns>
         internal override ODataError ReadError()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
 
             ODataJsonLightErrorDeserializer jsonLightErrorDeserializer = new ODataJsonLightErrorDeserializer(this);
@@ -388,7 +393,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>Task which when completed returns an <see cref="ODataError"/> representing the read error.</returns>
         internal override Task<ODataError> ReadErrorAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
 
             ODataJsonLightErrorDeserializer jsonLightErrorDeserializer = new ODataJsonLightErrorDeserializer(this);
@@ -399,64 +403,56 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Read a set of top-level entity reference links.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference links.</param>
         /// <returns>An <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
-        internal override ODataEntityReferenceLinks ReadEntityReferenceLinks(IEdmNavigationProperty navigationProperty)
+        internal override ODataEntityReferenceLinks ReadEntityReferenceLinks()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.ReadingResponse, "Should have verified that we are reading a response.");
             this.AssertSynchronous();
 
             ODataJsonLightEntityReferenceLinkDeserializer jsonLightEntityReferenceLinkDeserializer = new ODataJsonLightEntityReferenceLinkDeserializer(this);
-            return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinks(navigationProperty);
+            return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinks();
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
         /// Asynchronously read a set of top-level entity reference links.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference links.</param>
         /// <returns>Task which when completed returns an <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
-        internal override Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync(IEdmNavigationProperty navigationProperty)
+        internal override Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.ReadingResponse, "Should have verified that we are reading a response.");
             this.AssertAsynchronous();
 
             ODataJsonLightEntityReferenceLinkDeserializer jsonLightEntityReferenceLinkDeserializer = new ODataJsonLightEntityReferenceLinkDeserializer(this);
-            return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync(navigationProperty);
+            return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync();
         }
 #endif
 
         /// <summary>
         /// Reads a top-level entity reference link.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference link.</param>
         /// <returns>An <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
-        internal override ODataEntityReferenceLink ReadEntityReferenceLink(IEdmNavigationProperty navigationProperty)
+        internal override ODataEntityReferenceLink ReadEntityReferenceLink()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertSynchronous();
-            this.VerifyCanReadEntityReferenceLink(navigationProperty);
+            this.VerifyCanReadEntityReferenceLink();
 
             ODataJsonLightEntityReferenceLinkDeserializer jsonLightEntityReferenceLinkDeserializer = new ODataJsonLightEntityReferenceLinkDeserializer(this);
-            return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLink(navigationProperty);
+            return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLink();
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
         /// Asynchronously read a top-level entity reference link.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference link.</param>
         /// <returns>Task which when completed returns an <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
-        internal override Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync(IEdmNavigationProperty navigationProperty)
+        internal override Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
         {
-            DebugUtils.CheckNoExternalCallers();
             this.AssertAsynchronous();
-            this.VerifyCanReadEntityReferenceLink(navigationProperty);
+            this.VerifyCanReadEntityReferenceLink();
 
             ODataJsonLightEntityReferenceLinkDeserializer jsonLightEntityReferenceLinkDeserializer = new ODataJsonLightEntityReferenceLinkDeserializer(this);
-            return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync(navigationProperty);
+            return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync();
         }
 #endif
 
@@ -467,7 +463,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>An enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
         internal IEnumerable<ODataPayloadKind> DetectPayloadKind(ODataPayloadKindDetectionInfo detectionInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(detectionInfo != null, "detectionInfo != null");
             this.VerifyCanDetectPayloadKind();
 
@@ -483,7 +478,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>A task which returns an enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
         internal Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataPayloadKindDetectionInfo detectionInfo)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(detectionInfo != null, "detectionInfo != null");
             this.VerifyCanDetectPayloadKind();
 
@@ -542,43 +536,43 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Verifies that CreateParameterReader can be called.
         /// </summary>
-        /// <param name="operationImport">The operation import whose parameters are being read.</param>
-        private void VerifyCanCreateParameterReader(IEdmOperationImport operationImport)
+        /// <param name="operation">The operation whose parameters are being read.</param>
+        private void VerifyCanCreateParameterReader(IEdmOperation operation)
         {
             this.VerifyUserModel();
 
-            if (operationImport == null)
+            if (operation == null)
             {
-                throw new ArgumentNullException("operationImport", ODataErrorStrings.ODataJsonLightInputContext_FunctionImportCannotBeNullForCreateParameterReader("operationImport"));
+                throw new ArgumentNullException("operation", ODataErrorStrings.ODataJsonLightInputContext_OperationCannotBeNullForCreateParameterReader("operation"));
             }
         }
 
         /// <summary>
         /// Verifies that CreateEntryReader or CreateFeedReader can be called.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="entityType">The expected entity type for the entry/entries to be read.</param>
-        private void VerifyCanCreateODataReader(IEdmEntitySet entitySet, IEdmEntityType entityType)
+        private void VerifyCanCreateODataReader(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            Debug.Assert(entitySet == null || entityType != null, "If an entity set is specified, the entity type must be specified as well.");
+            Debug.Assert(navigationSource == null || entityType != null, "If an navigation source is specified, the entity type must be specified as well.");
 
             // We require metadata information for reading requests.
             if (!this.ReadingResponse)
             {
                 this.VerifyUserModel();
 
-                if (entitySet == null)
+                if (navigationSource == null)
                 {
                     throw new ODataException(ODataErrorStrings.ODataJsonLightInputContext_NoEntitySetForRequest);
                 }
             }
 
             // We only check that the base type of the entity set is assignable from the specified entity type.
-            // If no entity set/entity type is specified in the API, we will read it from the metadata URI.
-            IEdmEntityType entitySetElementType = this.EdmTypeResolver.GetElementType(entitySet);
-            if (entitySet != null && entityType != null && !entityType.IsOrInheritsFrom(entitySetElementType))
+            // If no entity set/entity type is specified in the API, we will read it from the context URI.
+            IEdmEntityType entitySetElementType = this.EdmTypeResolver.GetElementType(navigationSource);
+            if (navigationSource != null && entityType != null && !entityType.IsOrInheritsFrom(entitySetElementType))
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType(entityType.FullName(), entitySetElementType.FullName(), entitySet.FullName()));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType(entityType.FullName(), entitySetElementType.FullName(), navigationSource.FullNavigationSourceName()));
             }
         }
 
@@ -603,19 +597,13 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Verifies that ReadEntityReferenceLink can be called.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property for which to read the entity reference link.</param>
-        private void VerifyCanReadEntityReferenceLink(IEdmNavigationProperty navigationProperty)
+        private void VerifyCanReadEntityReferenceLink()
         {
             // We require metadata information for reading requests.
             if (!this.ReadingResponse)
             {
-            this.VerifyUserModel();
-
-                if (navigationProperty == null)
-            {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightInputContext_NavigationPropertyRequiredForReadEntityReferenceLinkInRequests);
+                this.VerifyUserModel();
             }
-        }
         }
 
         /// <summary>
@@ -646,7 +634,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         private void VerifyUserModel()
         {
-            DebugUtils.CheckNoExternalCallers();
             if (!this.Model.IsUserModel())
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightInputContext_ModelRequiredForReading);
@@ -659,7 +646,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the feed.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        private ODataReader CreateFeedReaderImplementation(IEdmEntitySet entitySet, IEdmEntityType expectedBaseEntityType)
+        private ODataReader CreateFeedReaderImplementation(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
             return new ODataJsonLightReader(this, entitySet, expectedBaseEntityType, true, null /*listener*/);
         }
@@ -667,12 +654,12 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        private ODataReader CreateEntryReaderImplementation(IEdmEntitySet entitySet, IEdmEntityType expectedEntityType)
+        private ODataReader CreateEntryReaderImplementation(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
         {
-            return new ODataJsonLightReader(this, entitySet, expectedEntityType, false, null /*listener*/);
+            return new ODataJsonLightReader(this, navigationSource, expectedEntityType, false, null /*listener*/);
         }
 
         /// <summary>
@@ -692,7 +679,18 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The newly created <see cref="ODataParameterReader"/>.</returns>
         private ODataParameterReader CreateParameterReaderImplementation(IEdmOperationImport operationImport)
         {
-            return new ODataJsonLightParameterReader(this, operationImport);
+            IEdmOperation operation = operationImport != null ? operationImport.Operation : null;
+            return new ODataJsonLightParameterReader(this, operation);
+        }
+
+        /// <summary>
+        /// Create a <see cref="ODataParameterReader"/>.
+        /// </summary>
+        /// <param name="operation">The operation import whose parameters are being read.</param>
+        /// <returns>The newly created <see cref="ODataParameterReader"/>.</returns>
+        private ODataParameterReader CreateParameterReaderImplementation(IEdmOperation operation)
+        {
+            return new ODataJsonLightParameterReader(this, operation);
         }
     }
 }

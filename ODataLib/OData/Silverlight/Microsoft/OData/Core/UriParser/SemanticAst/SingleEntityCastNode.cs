@@ -36,9 +36,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private readonly IEdmEntityTypeReference entityTypeReference;
 
         /// <summary>
-        /// The EntitySet containing the source entity.
+        /// The navigation source containing the source entity.
         /// </summary>
-        private readonly IEdmEntitySet entitySet;
+        private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
         /// Created a SingleEntityCastNode with the given source node and the given type to cast to.
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
             this.source = source;
-            this.entitySet = source != null ? source.EntitySet : null;
+            this.navigationSource = source != null ? source.NavigationSource : null;
             this.entityTypeReference = new EdmEntityTypeReference(entityType, false);
         }
 
@@ -79,11 +79,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the EntitySet containing the source entity..
+        /// Gets the navigation source containing the source entity..
         /// </summary>
-        public override IEdmEntitySet EntitySet
+        public override IEdmNavigationSource NavigationSource
         {
-            get { return this.entitySet; }
+            get { return this.navigationSource; }
         }
 
         /// <summary>
@@ -93,7 +93,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return InternalQueryNodeKind.SingleEntityCast;
             }
         }
@@ -106,7 +105,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <returns>An object whose type is determined by the type parameter of the visitor.</returns>
         public override T Accept<T>(QueryNodeVisitor<T> visitor)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(visitor, "visitor");
             return visitor.Visit(this);
         }

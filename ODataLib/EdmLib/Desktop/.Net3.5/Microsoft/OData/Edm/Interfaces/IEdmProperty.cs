@@ -16,6 +16,11 @@ namespace Microsoft.OData.Edm
     public enum EdmPropertyKind
     {
         /// <summary>
+        /// Represents a property with an unknown or error kind.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
         /// Represents a property implementing <see cref="IEdmStructuralProperty"/>.
         /// </summary>
         Structural,
@@ -24,11 +29,6 @@ namespace Microsoft.OData.Edm
         /// Represents a property implementing <see cref="IEdmNavigationProperty"/>. 
         /// </summary>
         Navigation,
-
-        /// <summary>
-        /// Represents a property with an unknown or error kind.
-        /// </summary>
-        None
     }
 
     /// <summary>

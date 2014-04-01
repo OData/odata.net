@@ -19,6 +19,7 @@ namespace Microsoft.OData.Core.Metadata
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
@@ -56,12 +57,9 @@ namespace Microsoft.OData.Core.Metadata
         /// <summary>Type reference for Edm.Byte.</summary>
         private static readonly EdmPrimitiveTypeReference ByteTypeReference = ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Byte), false);
 
-        /// <summary>Type reference for Edm.DateTime.</summary>
-        private static readonly EdmPrimitiveTypeReference DateTimeTypeReference = ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTime), false);
-
         /// <summary>Type reference for Edm.Decimal.</summary>
         private static readonly EdmPrimitiveTypeReference DecimalTypeReference = ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Decimal), false);
-        
+
         /// <summary>Type reference for Edm.Double.</summary>
         private static readonly EdmPrimitiveTypeReference DoubleTypeReference = ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Double), false);
 
@@ -101,7 +99,6 @@ namespace Microsoft.OData.Core.Metadata
         {
             PrimitiveTypeReferenceMap.Add(typeof(Boolean), BooleanTypeReference);
             PrimitiveTypeReferenceMap.Add(typeof(Byte), ByteTypeReference);
-            PrimitiveTypeReferenceMap.Add(typeof(DateTime), DateTimeTypeReference);
             PrimitiveTypeReferenceMap.Add(typeof(Decimal), DecimalTypeReference);
             PrimitiveTypeReferenceMap.Add(typeof(Double), DoubleTypeReference);
             PrimitiveTypeReferenceMap.Add(typeof(Int16), Int16TypeReference);
@@ -111,6 +108,9 @@ namespace Microsoft.OData.Core.Metadata
             PrimitiveTypeReferenceMap.Add(typeof(String), StringTypeReference);
             PrimitiveTypeReferenceMap.Add(typeof(Single), SingleTypeReference);
 
+#if ASTORIA_SERVER
+            PrimitiveTypeReferenceMap.Add(typeof(DateTime), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), false));
+#endif
             PrimitiveTypeReferenceMap.Add(typeof(DateTimeOffset), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), false));
             PrimitiveTypeReferenceMap.Add(typeof(Guid), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Guid), false));
             PrimitiveTypeReferenceMap.Add(typeof(TimeSpan), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Duration), false));
@@ -119,9 +119,11 @@ namespace Microsoft.OData.Core.Metadata
 
             PrimitiveTypeReferenceMap.Add(typeof(Boolean?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Boolean), true));
             PrimitiveTypeReferenceMap.Add(typeof(Byte?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Byte), true));
-            PrimitiveTypeReferenceMap.Add(typeof(DateTime?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTime), true));
+#if ASTORIA_SERVER
+            PrimitiveTypeReferenceMap.Add(typeof(DateTime?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), true));
+#endif
             PrimitiveTypeReferenceMap.Add(typeof(DateTimeOffset?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), true));
-            
+
             PrimitiveTypeReferenceMap.Add(typeof(Decimal?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Decimal), true));
             PrimitiveTypeReferenceMap.Add(typeof(Double?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Double), true));
             PrimitiveTypeReferenceMap.Add(typeof(Int16?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int16), true));
@@ -132,10 +134,470 @@ namespace Microsoft.OData.Core.Metadata
             PrimitiveTypeReferenceMap.Add(typeof(Guid?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Guid), true));
             PrimitiveTypeReferenceMap.Add(typeof(TimeSpan?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Duration), true));
         }
-        
+
         #region Internal methods
         #region ODataLib only
 #if !ODATALIB_QUERY && !ASTORIA_SERVER && !ASTORIA_CLIENT
+
+        /// <summary>
+        /// Returns the fully qualified name of a navigation source.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source to get the full name for.</param>
+        /// <returns>The full qualified name of the navigation source.</returns>
+        internal static string FullNavigationSourceName(this IEdmNavigationSource navigationSource)
+        {
+            Debug.Assert(navigationSource != null, "navigationSource != null");
+
+            return string.Join(".", navigationSource.Path.Path.ToArray());
+        }
+
+        /// <summary>
+        /// Filters functions by the parameter names.
+        /// </summary>
+        /// <param name="functionImports">The operation imports.</param>
+        /// <param name="parameterNames">The parameter names.</param>
+        /// <returns>Return the operation imports that match the parameter names.</returns>
+        internal static IEnumerable<IEdmFunctionImport> FilterFunctionsByParameterNames(this IEnumerable<IEdmFunctionImport> functionImports, IEnumerable<string> parameterNames)
+        {
+            Debug.Assert(functionImports != null, "functionImports");
+            Debug.Assert(parameterNames != null, "parameterNames");
+
+            IList<string> parameterNameList = parameterNames.ToList();
+
+            // TODO: 1631831 - update code that is duplicate between operation and operation import, add more tests.
+            foreach (IEdmFunctionImport functionImport in functionImports)
+            {
+                IEnumerable<IEdmOperationParameter> parametersToMatch = functionImport.Operation.Parameters;
+
+                // bindable functions don't require the first parameter be specified, since its already implied in the path.
+                if (functionImport.Function.IsBound)
+                {
+                    parametersToMatch = parametersToMatch.Skip(1);
+                }
+
+                // if any parameter count is different, don't consider it a match.
+                List<IEdmOperationParameter> operationImportParameters = parametersToMatch.ToList();
+                if (operationImportParameters.Count != parameterNameList.Count)
+                {
+                    continue;
+                }
+
+                // if any parameter was missing, don't consider it a match.
+                if (operationImportParameters.Any(p => parameterNameList.All(k => k != p.Name)))
+                {
+                    continue;
+                }
+
+                yield return functionImport;
+            }
+        }
+
+        /// <summary>
+        /// Filters the type of the bound operations in by the bindingtype inheritance hierarchy to type closest to bindingtype. 
+        /// </summary>
+        /// <param name="operations">The operations.</param>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>The closest Bound Operations to the specified binding type.</returns>
+        internal static IEnumerable<IEdmOperation> FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(this IEnumerable<IEdmOperation> operations, IEdmType bindingType)
+        {
+            Debug.Assert(operations != null, "operations");
+            Debug.Assert(bindingType != null, "bindingType");
+
+            IEdmStructuredType nonCollectionBindingType = bindingType as IEdmStructuredType;
+            if (bindingType.TypeKind == EdmTypeKind.Collection)
+            {
+                nonCollectionBindingType = ((IEdmCollectionType)bindingType).ElementType.Definition as IEdmStructuredType;
+            }
+
+            // If its a type that can't have inheritance then no filtering is necessary
+            if (nonCollectionBindingType == null)
+            {
+                return operations;
+            }
+
+            Dictionary<IEdmType, List<IEdmOperation>> sortedOperations = new Dictionary<IEdmType, List<IEdmOperation>>(new EdmTypeEqualityComparer());
+            IEdmType currentClosestType = null;
+            int currentInheritanceLevelsFromBase = int.MaxValue;
+            foreach (IEdmOperation operation in operations)
+            {
+                if (!operation.IsBound || !operation.Parameters.Any())
+                {
+                    continue;
+                }
+
+                IEdmType operationBindingType = operation.Parameters.First().Type.Definition;
+                IEdmStructuredType operationBindingStructuralType = operationBindingType as IEdmStructuredType;
+
+                if (operationBindingType.TypeKind == EdmTypeKind.Collection)
+                {
+                    IEdmCollectionType operationBindingCollectionType = operationBindingType as IEdmCollectionType;
+                    operationBindingStructuralType = operationBindingCollectionType.ElementType.Definition as IEdmStructuredType;
+                }
+
+                if (operationBindingStructuralType == null || !operationBindingStructuralType.IsOrInheritsFrom(nonCollectionBindingType))
+                {
+                    continue;
+                }
+
+                int inheritanceLevelsFromBase = operationBindingStructuralType.InheritanceLevelFromSpecifiedInheritedType(nonCollectionBindingType);
+
+                if (currentInheritanceLevelsFromBase > inheritanceLevelsFromBase)
+                {
+                    currentInheritanceLevelsFromBase = inheritanceLevelsFromBase;
+                    currentClosestType = operationBindingType;
+                }
+
+                if (!sortedOperations.ContainsKey(operationBindingType))
+                {
+                    sortedOperations[operationBindingType] = new List<IEdmOperation>();
+                }
+
+                sortedOperations[operationBindingType].Add(operation);
+            }
+
+            if (currentClosestType != null)
+            {
+                return sortedOperations[currentClosestType];
+            }
+
+            return Enumerable.Empty<IEdmOperation>();
+        }
+
+        /// <summary>
+        /// Given a list of possible operations and a list of parameter names, filter operations that exactly matches
+        /// the parameter names. If more than one function matches, throw.
+        /// </summary>
+        /// <remarks>
+        /// Binding parameters will be ignored in this method. Only non-binding parameters are matched.
+        /// </remarks>
+        /// <param name="functions">The list of functions to search.</param>
+        /// <param name="parameters">The list of non-binding parameter names to match.</param>
+        /// <returns>All operation imports matches the parameter names exactly or an empty enumerable.</returns>
+        internal static IEnumerable<IEdmFunction> FilterFunctionsByParameterNames(this IEnumerable<IEdmFunction> functions, IEnumerable<string> parameters)
+        {
+            return functions.Cast<IEdmOperation>().FilterOperationsByParameterNames(parameters).Cast<IEdmFunction>();
+        }
+
+        /// <summary>
+        /// Filters the operations by parameter names.
+        /// </summary>
+        /// <param name="operations">The operations.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>Operations filtered by parameter.</returns>
+        internal static IEnumerable<IEdmOperation> FilterOperationsByParameterNames(this IEnumerable<IEdmOperation> operations, IEnumerable<string> parameters)
+        {
+            Debug.Assert(operations != null, "operations");
+            Debug.Assert(parameters != null, "parameters");
+
+            IList<string> parametersList = parameters.ToList();
+
+            // TODO: 1631831 - update code that is duplicate between operation and operation import, add more tests.
+            foreach (IEdmOperation operation in operations)
+            {
+                IEnumerable<IEdmOperationParameter> parametersToMatch = operation.Parameters;
+
+                // bindable functions don't require the first parameter be specified, since its already implied in the path.
+                if (operation.IsBound)
+                {
+                    parametersToMatch = parametersToMatch.Skip(1);
+                }
+
+                // if any parameter count is different, don't consider it a match.
+                List<IEdmOperationParameter> functionImportParameters = parametersToMatch.ToList();
+                if (functionImportParameters.Count != parametersList.Count)
+                {
+                    continue;
+                }
+
+                // if any parameter was missing, don't consider it a match.
+                if (functionImportParameters.Any(p => parametersList.All(k => k != p.Name)))
+                {
+                    continue;
+                }
+
+                yield return operation;
+            }
+        }
+
+        /// <summary>
+        /// Ensures that operations are bound and have a binding parameter, other wise throws an exception.
+        /// </summary>
+        /// <param name="operations">The operations.</param>
+        /// <returns>Bound Operations with binding parameters.</returns>
+        internal static IEnumerable<IEdmOperation> EnsureOperationsBoundWithBindingParameter(this IEnumerable<IEdmOperation> operations)
+        {
+            foreach (IEdmOperation operation in operations)
+            {
+                if (!operation.IsBound)
+                {
+                    throw new ODataException(ErrorStrings.EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
+                }
+
+                if (!operation.Parameters.Any())
+                {
+                    throw new ODataException(ErrorStrings.EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
+                }
+
+                yield return operation;
+            }
+        }
+
+        /// <summary>
+        /// Finds the operation group with the specified namespace and name. If the name contains the function parameters, this
+        /// method will return the operation with matching parameters.
+        /// </summary>
+        /// <param name="model">The model to find the operation in.</param>
+        /// <param name="namespaceQualifiedOperationName">The namespace qualified name of the operation.</param>
+        /// <returns>The <see cref="IEdmOperation"/> Operation group with the specified name or null if no such operation exists.</returns>
+        internal static IEnumerable<IEdmOperation> ResolveOperations(this IEdmModel model, string namespaceQualifiedOperationName)
+        {
+            return model.ResolveOperations(namespaceQualifiedOperationName, true /*allowParameterNames*/);
+        }
+
+        /// <summary>
+        /// Resolves an operation or operation group.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="operationName">The operation name to resolve. The name may be namespace qualified and it may contain parameter type names, e.g. Function1(P1Type,P2Type)</param>
+        /// <param name="allowParameterTypeNames">Whether parameter type names are allowed to appear in the operation name to resolve.</param>
+        /// <returns>The resolved operation or operation group.</returns>
+        internal static IEnumerable<IEdmOperation> ResolveOperations(this IEdmModel model, string operationName, bool allowParameterTypeNames)
+        {
+            // TODO:1631831 Resolve duplication of operationImport and operation
+            if (string.IsNullOrEmpty(operationName))
+            {
+                return Enumerable.Empty<IEdmOperation>();
+            }
+
+            int indexOfParameterStart = operationName.IndexOf(JsonLightConstants.FunctionParameterStart);
+            string operationNameWithoutParameterTypes;
+            if (indexOfParameterStart > 0)
+            {
+                if (!allowParameterTypeNames)
+                {
+                    return Enumerable.Empty<IEdmOperation>();
+                }
+
+                operationNameWithoutParameterTypes = operationName.Substring(0, indexOfParameterStart);
+            }
+            else
+            {
+                operationNameWithoutParameterTypes = operationName;
+            }
+
+            IEnumerable<IEdmOperation> operations = model.FindDeclaredOperations(operationNameWithoutParameterTypes);
+
+            if (operations == null)
+            {
+                return Enumerable.Empty<IEdmOperation>();
+            }
+
+            if (indexOfParameterStart > 0)
+            {
+                return operations.Where(f => f.FullNameWithParameters().Equals(operationName, StringComparison.Ordinal));
+            }
+
+            return ValidateOperationGroupReturnsOnlyOnKind(operations, operationNameWithoutParameterTypes);
+        }
+
+        /// <summary>
+        /// Checks whether all operation imports have the same return type 
+        /// </summary>
+        /// <param name="operationImports">the list to check</param>
+        /// <returns>true if the list of operation imports all have the same return type</returns>
+        internal static bool AllHaveEqualReturnTypeAndAttributes(this IList<IEdmOperationImport> operationImports)
+        {
+            // TODO:1631831 Resolve duplication of operationImport and operation
+            Debug.Assert(operationImports != null, "operationImports != null");
+
+            if (!operationImports.Any())
+            {
+                return true;
+            }
+
+            IEdmType firstReturnType = operationImports[0].Operation.ReturnType == null ? null : operationImports[0].Operation.ReturnType.Definition;
+            bool firstIsFunction = operationImports[0].IsFunctionImport();
+            bool firstIsAction = operationImports[0].IsActionImport();
+            foreach (IEdmOperationImport f in operationImports)
+            {
+                if (f.IsFunctionImport() != firstIsFunction)
+                {
+                    return false;
+                }
+
+                if (f.IsActionImport() != firstIsAction)
+                {
+                    return false;
+                }
+
+                if (firstReturnType != null)
+                {
+                    if (f.Operation.ReturnType.Definition.FullTypeName() != firstReturnType.FullTypeName())
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (f.Operation.ReturnType != null)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks whether all operations have the same return type 
+        /// </summary>
+        /// <param name="operations">the list to check</param>
+        /// <returns>true if the list of operation imports all have the same return type</returns>
+        internal static bool AllHaveEqualReturnTypeAndAttributes(this IList<IEdmOperation> operations)
+        {
+            // TODO:1631831 Resolve duplication of operationImport and operation
+            Debug.Assert(operations != null, "operations != null");
+
+            if (!operations.Any())
+            {
+                return true;
+            }
+
+            IEdmType firstReturnType = operations[0].ReturnType == null ? null : operations[0].ReturnType.Definition;
+            bool firstIsFunction = operations[0].IsFunction();
+            bool firstIsAction = operations[0].IsAction();
+            foreach (IEdmOperation f in operations)
+            {
+                if (f.IsFunction() != firstIsFunction)
+                {
+                    return false;
+                }
+
+                if (f.IsAction() != firstIsAction)
+                {
+                    return false;
+                }
+
+                if (firstReturnType != null)
+                {
+                    if (f.ReturnType.Definition.FullTypeName() != firstReturnType.FullTypeName())
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (f.ReturnType != null)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Name of the operation with parameters.
+        /// </summary>
+        /// <param name="operation">Operation in question.</param>
+        /// <returns>Name of the operation import with parameters.</returns>
+        internal static string NameWithParameters(this IEdmOperation operation)
+        {
+            Debug.Assert(operation != null, "operation != null");
+
+            return operation.Name + operation.ParameterTypesToString();
+        }
+
+        /// <summary>
+        /// Full name of the operation with parameters.
+        /// </summary>
+        /// <param name="operation">Operation in question.</param>
+        /// <returns>Full name of the operation with parameters.</returns>
+        internal static string FullNameWithParameters(this IEdmOperation operation)
+        {
+            Debug.Assert(operation != null, "operation != null");
+
+            return operation.FullName() + operation.ParameterTypesToString();
+        }
+
+        /// <summary>
+        /// Name of the operation import with parameters.
+        /// </summary>
+        /// <param name="operationImport">Operation import in question.</param>
+        /// <returns>Name of the operation import with parameters.</returns>
+        internal static string NameWithParameters(this IEdmOperationImport operationImport)
+        {
+            Debug.Assert(operationImport != null, "operationImport != null");
+
+            return operationImport.Name + operationImport.ParameterTypesToString();
+        }
+
+        /// <summary>
+        /// Full name of the operation import with parameters.
+        /// </summary>
+        /// <param name="operationImport">Operation import in question.</param>
+        /// <returns>Full name of the operation import with parameters.</returns>
+        internal static string FullNameWithParameters(this IEdmOperationImport operationImport)
+        {
+            Debug.Assert(operationImport != null, "operationImport != null");
+
+            return operationImport.FullName() + operationImport.ParameterTypesToString();
+        }
+
+        /// <summary>
+        /// Removes the actions.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="actionItems">The action items.</param>
+        /// <returns>Only the functions from the operation sequence.</returns>
+        internal static IEnumerable<IEdmFunction> RemoveActions(this IEnumerable<IEdmOperation> source, out IList<IEdmAction> actionItems)
+        {
+            List<IEdmFunction> functions = new List<IEdmFunction>();
+
+            actionItems = new List<IEdmAction>();
+            foreach (var item in source)
+            {
+                if (item.IsAction())
+                {
+                    actionItems.Add((IEdmAction)item);
+                }
+                else
+                {
+                    functions.Add((IEdmFunction)item);
+                }
+            }
+
+            return functions;
+        }
+
+        /// <summary>
+        /// Removes the action imports.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="actionImportItems">The action import items.</param>
+        /// <returns>Only the function imports from the operation Import sequence.</returns>
+        internal static IEnumerable<IEdmFunctionImport> RemoveActionImports(this IEnumerable<IEdmOperationImport> source, out IList<IEdmActionImport> actionImportItems)
+        {
+            List<IEdmFunctionImport> functions = new List<IEdmFunctionImport>();
+
+            actionImportItems = new List<IEdmActionImport>();
+            foreach (var item in source)
+            {
+                if (item.IsActionImport())
+                {
+                    actionImportItems.Add((IEdmActionImport)item);
+                }
+                else
+                {
+                    functions.Add((IEdmFunctionImport)item);
+                }
+            }
+
+            return functions;
+        }
+
         /// <summary>
         /// A method that determines whether a given model is a user model or one of the built-in core models
         /// that can only used for primitive type resolution.
@@ -144,7 +606,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="model"/> is a user model; otherwise false.</returns>
         internal static bool IsUserModel(this IEdmModel model)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(model != null, "model != null");
 
             return !(model is EdmCoreModel);
@@ -157,7 +618,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="clrType"/> is a supported primitive type; otherwise false.</returns>
         internal static bool IsPrimitiveType(Type clrType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(clrType != null, "clrType != null");
 
             // PERF
@@ -165,7 +625,6 @@ namespace Microsoft.OData.Core.Metadata
             {
                 case TypeCode.Boolean:
                 case TypeCode.Byte:
-                case TypeCode.DateTime:
                 case TypeCode.Decimal:
                 case TypeCode.Double:
                 case TypeCode.Int16:
@@ -182,25 +641,6 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
-        /// Returns all the entity types in a model.
-        /// </summary>
-        /// <param name="model">The <see cref="IEdmModel"/> to get the entity types for (must not be null).</param>
-        /// <returns>An enumerable of all <see cref="IEdmEntityType"/> instances in the <paramref name="model"/>.</returns>
-        internal static IEnumerable<IEdmEntityType> EntityTypes(this IEdmModel model)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(model != null, "model != null");
-
-            IEnumerable<IEdmSchemaElement> schemaElements = model.SchemaElements;
-            if (schemaElements != null)
-            {
-                return schemaElements.OfType<IEdmEntityType>();
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Creates a collection value type for the specified <paramref name="itemTypeReference"/>.
         /// </summary>
         /// <param name="itemTypeReference">The <see cref="IEdmPrimitiveTypeReference"/> for the item type.</param>
@@ -208,8 +648,6 @@ namespace Microsoft.OData.Core.Metadata
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "Extension method for primitive type references only.")]
         internal static IEdmCollectionTypeReference ToCollectionTypeReference(this IEdmPrimitiveTypeReference itemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             IEdmCollectionType collectionType = new EdmCollectionType(itemTypeReference);
             return (IEdmCollectionTypeReference)ToTypeReference(collectionType);
         }
@@ -222,8 +660,6 @@ namespace Microsoft.OData.Core.Metadata
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "Extension method for complex type references only.")]
         internal static IEdmCollectionTypeReference ToCollectionTypeReference(this IEdmComplexTypeReference itemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             IEdmCollectionType collectionType = new EdmCollectionType(itemTypeReference);
             return (IEdmCollectionTypeReference)ToTypeReference(collectionType);
         }
@@ -239,7 +675,6 @@ namespace Microsoft.OData.Core.Metadata
         /// or any other facets of the type reference.</remarks>
         internal static bool IsAssignableFrom(this IEdmTypeReference baseType, IEdmTypeReference subtype)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(baseType != null, "baseType != null");
             Debug.Assert(subtype != null, "subtype != null");
 
@@ -256,7 +691,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true, if the <paramref name="baseType"/> is assignable to <paramref name="subtype"/>. Otherwise returns false.</returns>
         internal static bool IsAssignableFrom(this IEdmType baseType, IEdmType subtype)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(baseType != null, "baseType != null");
             Debug.Assert(subtype != null, "subtype != null");
 
@@ -297,7 +731,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The common base type or null if no common base type exists.</returns>
         internal static IEdmStructuredType GetCommonBaseType(this IEdmStructuredType firstType, IEdmStructuredType secondType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(firstType != null, "firstType != null");
             Debug.Assert(secondType != null, "secondType != null");
 
@@ -341,7 +774,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The common base type or null if no common base type exists.</returns>
         internal static IEdmPrimitiveType GetCommonBaseType(this IEdmPrimitiveType firstType, IEdmPrimitiveType secondType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(firstType != null, "firstType != null");
             Debug.Assert(secondType != null, "secondType != null");
 
@@ -382,7 +814,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The base type of the <paramref name="type"/> or null if no base type exists.</returns>
         internal static IEdmPrimitiveType BaseType(this IEdmPrimitiveType type)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(type != null, "type != null");
 
             switch (type.PrimitiveKind)
@@ -391,7 +822,6 @@ namespace Microsoft.OData.Core.Metadata
                 case EdmPrimitiveTypeKind.Binary:
                 case EdmPrimitiveTypeKind.Boolean:
                 case EdmPrimitiveTypeKind.Byte:
-                case EdmPrimitiveTypeKind.DateTime:
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Decimal:
                 case EdmPrimitiveTypeKind.Double:
@@ -462,8 +892,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>An <see cref="IEdmComplexTypeReference"/> instance or null if the <paramref name="typeReference"/> cannot be converted.</returns>
         internal static IEdmComplexTypeReference AsComplexOrNull(this IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (typeReference == null)
             {
                 return null;
@@ -479,8 +907,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>An <see cref="IEdmCollectionTypeReference"/> instance or null if the <paramref name="typeReference"/> cannot be converted.</returns>
         internal static IEdmCollectionTypeReference AsCollectionOrNull(this IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (typeReference == null)
             {
                 return null;
@@ -508,7 +934,6 @@ namespace Microsoft.OData.Core.Metadata
         /// or null if no such type could be found.</returns>
         internal static IEdmSchemaType ResolvePrimitiveTypeName(string typeName)
         {
-            DebugUtils.CheckNoExternalCallers();
             return EdmCoreModel.Instance.FindDeclaredType(typeName);
         }
 
@@ -519,8 +944,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The item type of the <paramref name="typeReference"/>.</returns>
         internal static IEdmTypeReference GetCollectionItemType(this IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             IEdmCollectionTypeReference collectionType = typeReference.AsCollectionOrNull();
             return collectionType == null ? null : collectionType.ElementType();
         }
@@ -532,7 +955,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>An <see cref="IEdmCollectionType"/> instance using the <paramref name="itemType"/> as Collection item type.</returns>
         internal static IEdmCollectionType GetCollectionType(IEdmType itemType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(itemType != null, "itemType != null");
 
             IEdmTypeReference itemTypeReference = itemType.ToTypeReference();
@@ -546,12 +968,11 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>An <see cref="IEdmCollectionType"/> instance using the <paramref name="itemTypeReference"/> as Collection item type.</returns>
         internal static IEdmCollectionType GetCollectionType(IEdmTypeReference itemTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(itemTypeReference != null, "itemTypeReference != null");
 
-            if (!itemTypeReference.IsODataPrimitiveTypeKind() && !itemTypeReference.IsODataComplexTypeKind())
+            if (!itemTypeReference.IsODataPrimitiveTypeKind() && !itemTypeReference.IsODataComplexTypeKind() && !itemTypeReference.IsODataEnumTypeKind())
             {
-                throw new ODataException(ErrorStrings.EdmLibraryExtensions_CollectionItemCanBeOnlyPrimitiveOrComplex);
+                throw new ODataException(ErrorStrings.EdmLibraryExtensions_CollectionItemCanBeOnlyPrimitiveEnumComplex);
             }
 
             return new EdmCollectionType(itemTypeReference);
@@ -564,8 +985,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="typeReference"/> is a Geography type; otherwise false.</returns>
         internal static bool IsGeographyType(this IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             IEdmPrimitiveTypeReference primitiveTypeReference = typeReference.AsPrimitiveOrNull();
             if (primitiveTypeReference == null)
             {
@@ -595,8 +1014,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="typeReference"/> is a Geometry type; otherwise false.</returns>
         internal static bool IsGeometryType(this IEdmTypeReference typeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             IEdmPrimitiveTypeReference primitiveTypeReference = typeReference.AsPrimitiveOrNull();
             if (primitiveTypeReference == null)
             {
@@ -626,35 +1043,30 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>CollectionValue element type name or null if not a collectionValue.</returns>
         internal static string GetCollectionItemTypeName(string typeName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return GetCollectionItemTypeName(typeName, false);
         }
-        
-        /// <summary>
-        /// Name of the operation import with parameters.
-        /// </summary>
-        /// <param name="operationImport">Operation import in question.</param>
-        /// <returns>Name of the operation import with parameters.</returns>
-        internal static string NameWithParameters(this IEdmOperationImport operationImport)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(operationImport != null, "operationImport != null");
-
-            return operationImport.Name + operationImport.ParameterTypesToString();
-        }
 
         /// <summary>
-        /// Full name of the operation import with parameters.
+        /// Gets the collection full type name from the given type string.
         /// </summary>
-        /// <param name="operationImport">Operation import in question.</param>
-        /// <returns>Full name of the operation import with parameters.</returns>
-        internal static string FullNameWithParameters(this IEdmOperationImport operationImport)
+        /// <param name="typeName">The original collection type string.</param>
+        /// <returns>The full type name for the given origin type name/>.</returns>
+        internal static string GetCollectionTypeFullName(string typeName)
         {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(operationImport != null, "operationImport != null");
+            if (typeName != null)
+            {
+                string innerTypeName = GetCollectionItemTypeName(typeName);
+                if (innerTypeName != null)
+                {
+                    IEdmSchemaType primitiveType = EdmCoreModel.Instance.FindDeclaredType(innerTypeName);
+                    if (primitiveType != null)
+                    {
+                        return GetCollectionTypeName(primitiveType.FullName());
+                    }
+                }
+            }
 
-            return operationImport.FullName() + operationImport.ParameterTypesToString();
+            return typeName;
         }
 
         /// <summary>
@@ -664,7 +1076,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>True if the operations must be container qualified, otherwise false.</returns>
         internal static bool OperationsBoundToEntityTypeMustBeContainerQualified(this IEdmEntityType entityType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entityType != null, "entityType != null");
             return entityType.IsOpen;
         }
@@ -686,7 +1097,6 @@ namespace Microsoft.OData.Core.Metadata
         internal static string ODataFullName(this IEdmTypeReference typeReference)
         {
 #if !ASTORIA_SERVER
-            DebugUtils.CheckNoExternalCallers();
 #endif
             Debug.Assert(typeReference != null, "typeReference != null");
             Debug.Assert(typeReference.Definition != null, "typeReference.Definition != null");
@@ -706,7 +1116,6 @@ namespace Microsoft.OData.Core.Metadata
         internal static string ODataFullName(this IEdmType type)
         {
 #if !ASTORIA_SERVER
-            DebugUtils.CheckNoExternalCallers();
 #endif
             Debug.Assert(type != null, "type != null");
 
@@ -729,6 +1138,59 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
+        /// Gets the Partail name of the definition referred to by the type reference.
+        /// </summary>
+        /// <param name="typeReference">The type reference to get the partial name for.</param>
+        /// <returns>The partial name of this <paramref name="typeReference"/>.</returns>
+        /// <remarks>
+        /// Note that this method is different from the EdmLib PartialName extension method in that it also returns
+        /// names for collection types. For EdmLib, collection types are functions and thus don't have a Partial name.
+        /// The name/string they use in CSDL is just shorthand for them.
+        /// </remarks>
+        internal static string ODataShortQualifiedName(this IEdmTypeReference typeReference)
+        {
+#if !ASTORIA_SERVER
+#endif
+            Debug.Assert(typeReference != null, "typeReference != null");
+            Debug.Assert(typeReference.Definition != null, "typeReference.Definition != null");
+            return typeReference.Definition.ODataShortQualifiedName();
+        }
+
+        /// <summary>
+        /// Gets the Partial name of the type.
+        /// </summary>
+        /// <param name="type">The type to get the partial name for.</param>
+        /// <returns>The partial name of the <paramref name="type"/>.</returns>
+        /// <remarks>
+        /// Note that this method is different from the EdmLib PartialName extension method in that it also returns
+        /// names for collection types. For EdmLib, collection types are functions and thus don't have a full name.
+        /// The name/string they use in CSDL is just shorthand for them.
+        /// </remarks>
+        internal static string ODataShortQualifiedName(this IEdmType type)
+        {
+#if !ASTORIA_SERVER
+#endif
+            Debug.Assert(type != null, "type != null");
+
+            // Handle collection type names here since for EdmLib collection values are functions
+            // that do not have a full name
+            IEdmCollectionType collectionType = type as IEdmCollectionType;
+            if (collectionType != null)
+            {
+                string elementTypeName = collectionType.ElementType.ODataShortQualifiedName();
+                if (elementTypeName == null)
+                {
+                    return null;
+                }
+
+                return GetCollectionTypeName(elementTypeName);
+            }
+
+            var namedDefinition = type as IEdmSchemaElement;
+            return namedDefinition != null ? namedDefinition.ShortQualifiedName() : null;
+        }
+
+        /// <summary>
         /// Clones the specified type reference.
         /// </summary>
         /// <param name="typeReference">The type reference to clone.</param>
@@ -737,8 +1199,6 @@ namespace Microsoft.OData.Core.Metadata
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "The clone logic should stay in one place.")]
         internal static IEdmTypeReference Clone(this IEdmTypeReference typeReference, bool nullable)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (typeReference == null)
             {
                 return null;
@@ -769,8 +1229,7 @@ namespace Microsoft.OData.Core.Metadata
                                 primitiveType,
                                 nullable,
                                 binaryTypeReference.IsUnbounded,
-                                binaryTypeReference.MaxLength,
-                                binaryTypeReference.IsFixedLength);
+                                binaryTypeReference.MaxLength);
 
                         case EdmPrimitiveTypeKind.String:
                             IEdmStringTypeReference stringTypeReference = (IEdmStringTypeReference)typeReference;
@@ -779,15 +1238,12 @@ namespace Microsoft.OData.Core.Metadata
                                 nullable,
                                 stringTypeReference.IsUnbounded,
                                 stringTypeReference.MaxLength,
-                                stringTypeReference.IsFixedLength,
-                                stringTypeReference.IsUnicode,
-                                stringTypeReference.Collation);
+                                stringTypeReference.IsUnicode);
 
                         case EdmPrimitiveTypeKind.Decimal:
                             IEdmDecimalTypeReference decimalTypeReference = (IEdmDecimalTypeReference)typeReference;
                             return new EdmDecimalTypeReference(primitiveType, nullable, decimalTypeReference.Precision, decimalTypeReference.Scale);
 
-                        case EdmPrimitiveTypeKind.DateTime:
                         case EdmPrimitiveTypeKind.DateTimeOffset:
                         case EdmPrimitiveTypeKind.Duration:
                             IEdmTemporalTypeReference temporalTypeReference = (IEdmTemporalTypeReference)typeReference;
@@ -822,11 +1278,8 @@ namespace Microsoft.OData.Core.Metadata
                 case EdmTypeKind.Complex:
                     return new EdmComplexTypeReference((IEdmComplexType)typeReference.Definition, nullable);
 
-                case EdmTypeKind.Row:
-                    return new EdmRowTypeReference((IEdmRowType)typeReference.Definition, nullable);
-
                 case EdmTypeKind.Collection:
-                    return new EdmCollectionTypeReference((IEdmCollectionType)typeReference.Definition, nullable);
+                    return new EdmCollectionTypeReference((IEdmCollectionType)typeReference.Definition);
 
                 case EdmTypeKind.EntityReference:
                     return new EdmEntityReferenceTypeReference((IEdmEntityReferenceType)typeReference.Definition, nullable);
@@ -847,7 +1300,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The name of the operation import group.</returns>
         internal static string FunctionImportGroupName(this IEnumerable<IEdmOperationImport> functionImportGroup)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(functionImportGroup != null && functionImportGroup.Any(), "functionImportGroup != null && functionImportGroup.Any()");
 
             string name = functionImportGroup.First().Name;
@@ -856,17 +1308,32 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
-        /// Gets the full name of a operation import group.
+        /// Gets the full name of a operation group.
         /// </summary>
-        /// <param name="functionImportGroup">The operation import group in question.</param>
-        /// <returns>The full name of the operation import group.</returns>
-        internal static string FunctionImportGroupFullName(this IEnumerable<IEdmOperationImport> functionImportGroup)
+        /// <param name="operationGroup">The operation group in question.</param>
+        /// <returns>The full name of the operation group.</returns>
+        internal static string OperationGroupFullName(this IEnumerable<IEdmOperation> operationGroup)
         {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(functionImportGroup != null && functionImportGroup.Any(), "functionImportGroup != null && functionImportGroup.Any()");
+            // TODO:1631831 Resolve duplication of operationImport and operation
+            Debug.Assert(operationGroup != null && operationGroup.Any(), "operationGroup != null && operationGroup.Any()");
 
-            string fullName = functionImportGroup.First().FullName();
-            Debug.Assert(functionImportGroup.All(f => f.FullName() == fullName), "functionImportGroup.All(f => f.FullName() == fullName)");
+            string fullName = operationGroup.First().FullName();
+            Debug.Assert(operationGroup.All(f => f.FullName() == fullName), "operationGroup.All(f => f.FullName() == fullName)");
+            return fullName;
+        }
+
+        /// <summary>
+        /// Gets the full name of a operation import  group.
+        /// </summary>
+        /// <param name="operationImportGroup">The operation import group in question.</param>
+        /// <returns>The full name of the operation import group.</returns>
+        internal static string OperationImportGroupFullName(this IEnumerable<IEdmOperationImport> operationImportGroup)
+        {
+            // TODO:1631831 Resolve duplication of operationImport and operation
+            Debug.Assert(operationImportGroup != null && operationImportGroup.Any(), "operationImportGroup != null && operationImportGroup.Any()");
+
+            string fullName = operationImportGroup.First().FullName();
+            Debug.Assert(operationImportGroup.All(f => f.FullName() == fullName), "operationImportGroup.All(f => f.FullName() == fullName)");
             return fullName;
         }
 #endif
@@ -885,7 +1352,6 @@ namespace Microsoft.OData.Core.Metadata
         /// to use the real method whenever we release EdmLib again.</remarks>
         internal static EdmMultiplicity TargetMultiplicityTemporary(this IEdmNavigationProperty property)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(property != null, "property != null");
 
             IEdmTypeReference type = property.Type;
@@ -912,7 +1378,6 @@ namespace Microsoft.OData.Core.Metadata
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "Extension method for structured types only.")]
         internal static bool IsAssignableFrom(this IEdmStructuredType baseType, IEdmStructuredType subtype)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(baseType != null, "baseType != null");
             Debug.Assert(subtype != null, "subtype != null");
 
@@ -940,7 +1405,7 @@ namespace Microsoft.OData.Core.Metadata
 
             return false;
         }
-        
+
         /// <summary>
         /// Checks if the primitive type is a geography or geometry type.
         /// </summary>
@@ -948,7 +1413,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true, if the <paramref name="primitiveType"/> is a geography or geometry type.</returns>
         internal static bool IsSpatialType(this IEdmPrimitiveType primitiveType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(primitiveType != null, "primitiveType != null");
 
             switch (primitiveType.PrimitiveKind)
@@ -975,7 +1439,6 @@ namespace Microsoft.OData.Core.Metadata
                 case EdmPrimitiveTypeKind.Binary:
                 case EdmPrimitiveTypeKind.Boolean:
                 case EdmPrimitiveTypeKind.Byte:
-                case EdmPrimitiveTypeKind.DateTime:
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Decimal:
                 case EdmPrimitiveTypeKind.Double:
@@ -1003,7 +1466,6 @@ namespace Microsoft.OData.Core.Metadata
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Need to keep code together.")]
         internal static bool IsAssignableFrom(this IEdmPrimitiveType baseType, IEdmPrimitiveType subtype)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(baseType != null, "baseType != null");
             Debug.Assert(subtype != null, "subtype != null");
 
@@ -1104,10 +1566,9 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The CLR type for the primitive type reference.</returns>
         internal static Type GetPrimitiveClrType(IEdmPrimitiveTypeReference primitiveTypeReference)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(primitiveTypeReference != null, "primitiveTypeReference != null");
 
-            return GetPrimitiveClrType(primitiveTypeReference.PrimitiveDefinition(), primitiveTypeReference.IsNullable); 
+            return GetPrimitiveClrType(primitiveTypeReference.PrimitiveDefinition(), primitiveTypeReference.IsNullable);
         }
 
         /// <summary>
@@ -1117,7 +1578,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>A non-nullable type reference for the <paramref name="type"/>.</returns>
         internal static IEdmTypeReference ToTypeReference(this IEdmType type)
         {
-            DebugUtils.CheckNoExternalCallers();
             return ToTypeReference(type, false /*nullable*/);
         }
 
@@ -1128,7 +1588,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="type"/> is an open type; otherwise false.</returns>
         internal static bool IsOpenType(this IEdmType type)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(type != null, "type != null");
 
             IEdmStructuredType structuredType = type as IEdmStructuredType;
@@ -1147,7 +1606,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="type"/> represents a stream; otherwise false.</returns>
         internal static bool IsStream(this IEdmType type)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(type != null, "type != null");
 
             IEdmPrimitiveType primitiveType = type as IEdmPrimitiveType;
@@ -1170,7 +1628,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="property"/> is defined for the <paramref name="type"/>; otherwise false.</returns>
         internal static bool ContainsProperty(this IEdmType type, IEdmProperty property)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(type != null, "type != null");
             Debug.Assert(property != null, "property != null");
 
@@ -1201,7 +1658,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the <paramref name="property"/> is defined for the <paramref name="typeReference"/>; otherwise false.</returns>
         internal static bool ContainsProperty(this IEdmTypeReference typeReference, IEdmProperty property)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(typeReference != null, "typeReference != null");
             Debug.Assert(property != null, "property != null");
 
@@ -1229,7 +1685,6 @@ namespace Microsoft.OData.Core.Metadata
         internal static string FullName(this IEdmEntityContainerElement containerElement)
         {
 #if !ASTORIA_SERVER && !ASTORIA_CLIENT
-            DebugUtils.CheckNoExternalCallers();
 #endif
             Debug.Assert(containerElement != null, "containerElement != null");
 
@@ -1245,7 +1700,6 @@ namespace Microsoft.OData.Core.Metadata
         [SuppressMessage("Microsoft.Maintainability", "CA1502", Justification = "cyclomatic complexity")]
         internal static IEdmPrimitiveTypeReference GetPrimitiveTypeReference(Type clrType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(clrType != null, "clrType != null");
 
             TypeCode typeCode = Type.GetTypeCode(clrType);
@@ -1256,9 +1710,6 @@ namespace Microsoft.OData.Core.Metadata
 
                 case TypeCode.Byte:
                     return ByteTypeReference;
-
-                case TypeCode.DateTime:
-                    return DateTimeTypeReference;
 
                 case TypeCode.Decimal:
                     return DecimalTypeReference;
@@ -1378,7 +1829,6 @@ namespace Microsoft.OData.Core.Metadata
         internal static IEdmTypeReference ToTypeReference(this IEdmType type, bool nullable)
         {
 #if !ASTORIA_CLIENT
-            DebugUtils.CheckNoExternalCallers();
 #endif
 
             if (type == null)
@@ -1390,14 +1840,14 @@ namespace Microsoft.OData.Core.Metadata
             {
                 case EdmTypeKind.Primitive:
                     return ToTypeReference((IEdmPrimitiveType)type, nullable);
+                case EdmTypeKind.Enum:
+                    return new EdmEnumTypeReference((IEdmEnumType)type, nullable);
                 case EdmTypeKind.Complex:
                     return new EdmComplexTypeReference((IEdmComplexType)type, nullable);
                 case EdmTypeKind.Entity:
                     return new EdmEntityTypeReference((IEdmEntityType)type, nullable);
                 case EdmTypeKind.Collection:
-                    return new EdmCollectionTypeReference((IEdmCollectionType)type, nullable);
-                case EdmTypeKind.Row:
-                    return new EdmRowTypeReference((IEdmRowType)type, nullable);
+                    return new EdmCollectionTypeReference((IEdmCollectionType)type);
                 case EdmTypeKind.EntityReference:
                     return new EdmEntityReferenceTypeReference((IEdmEntityReferenceType)type, nullable);
                 case EdmTypeKind.None:
@@ -1405,7 +1855,7 @@ namespace Microsoft.OData.Core.Metadata
                     throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_ToTypeReference));
             }
         }
-        
+
         /// <summary>
         /// Creates the EDM type name for a collection of the specified item type name. E.g. Collection(Edm.String)
         /// </summary>
@@ -1414,68 +1864,11 @@ namespace Microsoft.OData.Core.Metadata
         internal static string GetCollectionTypeName(string itemTypeName)
         {
 #if !ASTORIA_SERVER && !ASTORIA_CLIENT
-            DebugUtils.CheckNoExternalCallers();
 #endif
             return string.Format(CultureInfo.InvariantCulture, CollectionTypeFormat, itemTypeName);
         }
 
-        /// <summary>
-        /// Finds the entity set with the specified container and name.
-        /// </summary>
-        /// <param name="model">The model to find the entity set in.</param>
-        /// <param name="containerQualifiedEntitySetName">The container qualified name of the entity set.</param>
-        /// <returns>The <see cref="IEdmEntitySet"/> with the specified name or null if no such entity set exists.</returns>
-        internal static IEdmEntitySet ResolveEntitySet(this IEdmModel model, string containerQualifiedEntitySetName)
-        {
 #if !ASTORIA_CLIENT
-            DebugUtils.CheckNoExternalCallers();
-#endif
-
-            return ResolveContainerQualifiedElementName(
-                model,
-                containerQualifiedEntitySetName,
-                (container, entitySetName) =>
-                {
-                    IEdmEntitySet entitySet = container.FindEntitySet(entitySetName);
-                    return entitySet == null ? Enumerable.Empty<IEdmEntityContainerElement>() : new[] { entitySet };
-                })
-                .Cast<IEdmEntitySet>().SingleOrDefault();
-        }
-
-#if !ASTORIA_CLIENT
-        /// <summary>
-        /// Finds the operation import group with the specified container and name. If the name contains the function parameters, this
-        /// method will return the operation import with matching parameters.
-        /// </summary>
-        /// <param name="model">The model to find the operation import in.</param>
-        /// <param name="containerQualifiedFunctionImportName">The container qualified name of the operation import.</param>
-        /// <returns>The <see cref="IEdmOperationImport"/> group with the specified name or null if no such operation import exists.</returns>
-        internal static IEnumerable<IEdmOperationImport> ResolveFunctionImports(this IEdmModel model, string containerQualifiedFunctionImportName)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            return ResolveOperationImports(model, containerQualifiedFunctionImportName, true);
-        }
-
-        /// <summary>
-        /// Finds the operation import group with the specified container and name. If the name contains the operation parameters, this
-        /// method will return the operation import with matching parameters.
-        /// </summary>
-        /// <param name="model">The model to find the operation import in.</param>
-        /// <param name="containerQualifiedOperationImportName">The container qualified name of the operation import. May contain parameter type names, e.g. Function1(P1Type,P2Type) only if <paramref name="allowParameterTypeNames"/> is true.</param>
-        /// <param name="allowParameterTypeNames">Whether parameter type names are allowed to appear in the operation import name to resolve.</param>
-        /// <returns>The <see cref="IEdmOperationImport"/> group with the specified name or null if no such operation import exists.</returns>
-        internal static IEnumerable<IEdmOperationImport> ResolveOperationImports(this IEdmModel model, string containerQualifiedOperationImportName, bool allowParameterTypeNames)
-        {
-            DebugUtils.CheckNoExternalCallers();
-
-            return ResolveContainerQualifiedElementName(
-                model,
-                containerQualifiedOperationImportName,
-                /*Silverlight and pre-DotNet40 doesn't support covariance and contravariance. We need to explicitly cast for those platforms to compile.*/
-                (container, functionImportName) => ResolveOperationImports(container, functionImportName, allowParameterTypeNames).Cast<IEdmEntityContainerElement>())
-                .Cast<IEdmOperationImport>();
-        }
-
         /// <summary>
         /// Resolves a operation import or operation import group.
         /// </summary>
@@ -1484,7 +1877,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The resolved operation import or operation import group.</returns>
         internal static IEnumerable<IEdmOperationImport> ResolveOperationImports(this IEdmEntityContainer container, string operationImportName)
         {
-            DebugUtils.CheckNoExternalCallers();
             return ResolveOperationImports(container, operationImportName, true);
         }
 
@@ -1498,7 +1890,7 @@ namespace Microsoft.OData.Core.Metadata
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "allowParameterTypeNames", Justification = "Used in the ODL version of the method.")]
         internal static IEnumerable<IEdmOperationImport> ResolveOperationImports(this IEdmEntityContainer container, string operationImportName, bool allowParameterTypeNames)
         {
-            DebugUtils.CheckNoExternalCallers();
+            // TODO:1631831 Resolve duplication of operationImport and operation
             Debug.Assert(container != null, "container != null");
 
             if (string.IsNullOrEmpty(operationImportName))
@@ -1508,7 +1900,7 @@ namespace Microsoft.OData.Core.Metadata
 
 #if !ASTORIA_SERVER && !ASTORIA_CLIENT && !ODATALIB_QUERY
             int indexOfParameterStart = operationImportName.IndexOf(JsonLightConstants.FunctionParameterStart);
-            string functionImportNameWithoutParameterTypes;
+            string functionImportNameWithoutParameterTypes = operationImportName;
             if (indexOfParameterStart > 0)
             {
                 if (!allowParameterTypeNames)
@@ -1518,65 +1910,34 @@ namespace Microsoft.OData.Core.Metadata
 
                 functionImportNameWithoutParameterTypes = operationImportName.Substring(0, indexOfParameterStart);
             }
-            else
-            {
-                functionImportNameWithoutParameterTypes = operationImportName;
-            }
 #else
             Debug.Assert(!allowParameterTypeNames, "Parameter type names not supported in the server version of this method.");
             string functionImportNameWithoutParameterTypes = operationImportName;
 #endif
+            string containerName = null;
+            string operationNameWithoutContainerOrNamespace = functionImportNameWithoutParameterTypes;
+            int lastPeriodPos = functionImportNameWithoutParameterTypes.LastIndexOf('.');
+            if (lastPeriodPos > -1)
+            {
+                operationNameWithoutContainerOrNamespace = functionImportNameWithoutParameterTypes.Substring(lastPeriodPos, functionImportNameWithoutParameterTypes.Length - lastPeriodPos).TrimStart('.');
+                containerName = functionImportNameWithoutParameterTypes.Substring(0, lastPeriodPos);
+            }
 
-            IEnumerable<IEdmOperationImport> operationImports = container.FindOperationImports(functionImportNameWithoutParameterTypes);
+            // if the container name of the operationImport doesn't equal the current container, don't search just return empty as there are no matches.
+            if (containerName != null && !(container.Name.Equals(containerName) || container.FullName().Equals(containerName)))
+            {
+                return Enumerable.Empty<IEdmOperationImport>();
+            }
+
+            IEnumerable<IEdmOperationImport> operationImports = container.FindOperationImports(operationNameWithoutContainerOrNamespace);
             Debug.Assert(operationImports != null, "operationImports != null");
 #if !ASTORIA_SERVER && !ASTORIA_CLIENT && !ODATALIB_QUERY
             if (indexOfParameterStart > 0)
             {
-                return operationImports.Where(f => f.NameWithParameters().Equals(operationImportName, StringComparison.Ordinal));
+                return FilterByOperationParameterTypes(operationImports, functionImportNameWithoutParameterTypes, operationImportName);
             }
 #endif
-
             return operationImports;
-        }
-
-        /// <summary>
-        /// Finds all operation imports with the given name which are bindable to an instance of the giving binding type or a more derived type.
-        /// </summary>
-        /// <param name="model">The model to find the operation import in.</param>
-        /// <param name="bindingType">The binding type.</param>
-        /// <param name="functionImportName">The name of the operation imports to find. May be qualified with an entity container name.</param>
-        /// <returns>The operation imports that match the search criteria.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
-            Justification = "This method is used during URI parsing to resolve operations in either the path or $select. It does not need to use the resolver.")]
-        internal static IEnumerable<IEdmOperationImport> FindFunctionImportsByBindingParameterTypeHierarchy(this IEdmModel model, IEdmType bindingType, string functionImportName)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            return model.ResolveOperationImports(functionImportName, false /*allowParameterTypeNames*/)
-                        .Where(f => f.IsBindable
-                                    && f.Parameters.Any()
-                                    && f.Parameters.First().Type.Definition.IsOrInheritsFrom(bindingType));
-        }
-
-        /// <summary>
-        /// Finds all operation imports with the given name which are bindable to an instance of the giving binding type or a more derived type.
-        /// </summary>
-        /// <param name="model">The model to find the operation import in.</param>
-        /// <param name="bindingType">The binding entity type.</param>
-        /// <param name="functionImportName">The name of the operation imports to find. May be qualified with an entity container name.</param>
-        /// <returns>The operation imports that match the search criteria.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
-            Justification = "This method is used during URI parsing to resolve operations in either the path or $select. It does not need to use the resolver.")]
-        internal static IEnumerable<IEdmOperationImport> FindFunctionImportsBySpecificBindingParameterType(this IEdmModel model, IEdmType bindingType, string functionImportName)
-        {
-            DebugUtils.CheckNoExternalCallers();
-
-            // TODO: throw on collision.
-            if (bindingType != null)
-            {
-                return model.ResolveOperationImports(functionImportName, false /*allowParameterTypeNames*/).Where(f => f.IsBindable && f.Parameters.Any() && f.Parameters.First().Type.Definition.ODataFullName() == bindingType.ODataFullName());
-            }
-
-            return model.ResolveOperationImports(functionImportName, false /*allowParameterTypeNames*/).Where(f => !f.IsBindable);
         }
 
         /// <summary>
@@ -1589,7 +1950,6 @@ namespace Microsoft.OData.Core.Metadata
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Class coupling is with all the primitive Clr types only.")]
         internal static Type GetPrimitiveClrType(IEdmPrimitiveType primitiveType, bool isNullable)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(primitiveType != null, "primitiveType != null");
 
             switch (primitiveType.PrimitiveKind)
@@ -1600,8 +1960,6 @@ namespace Microsoft.OData.Core.Metadata
                     return isNullable ? typeof(Boolean?) : typeof(Boolean);
                 case EdmPrimitiveTypeKind.Byte:
                     return isNullable ? typeof(Byte?) : typeof(Byte);
-                case EdmPrimitiveTypeKind.DateTime:
-                    return isNullable ? typeof(DateTime?) : typeof(DateTime);
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                     return isNullable ? typeof(DateTimeOffset?) : typeof(DateTimeOffset);
                 case EdmPrimitiveTypeKind.Decimal:
@@ -1662,6 +2020,7 @@ namespace Microsoft.OData.Core.Metadata
                     return null;
             }
         }
+
 #endif
         #endregion
         #endregion
@@ -1669,6 +2028,48 @@ namespace Microsoft.OData.Core.Metadata
         #region Private methods
         #region ODataLib only
 #if ODATALIB
+
+        /// <summary>
+        /// Validates the kind of the operation group returns only on.
+        /// </summary>
+        /// <param name="operations">The operations.</param>
+        /// <param name="operationNameWithoutParameterTypes">The operation name without parameter types.</param>
+        /// <returns>Enumerable list of operations.</returns>
+        /// <exception cref="ODataException">If there is an action and function in the sequence.</exception>
+        private static IEnumerable<IEdmOperation> ValidateOperationGroupReturnsOnlyOnKind(IEnumerable<IEdmOperation> operations, string operationNameWithoutParameterTypes)
+        {
+            EdmSchemaElementKind? operationKind = null;
+            foreach (IEdmOperation operation in operations)
+            {
+                if (operationKind == null)
+                {
+                    operationKind = operation.SchemaElementKind;
+                }
+                else
+                {
+                    if (operation.SchemaElementKind != operationKind)
+                    {
+                        throw new ODataException(ErrorStrings.EdmLibraryExtensions_OperationGroupReturningActionsAndFunctionsModelInvalid(operationNameWithoutParameterTypes));
+                    }
+                }
+
+                yield return operation;
+            }
+        }
+        
+        /// <summary>
+        /// Gets the operation parameter types in string.
+        /// </summary>
+        /// <param name="operation">Operation in question.</param>
+        /// <returns>Comma separated operation parameter types enclosed in parantheses.</returns>
+        private static string ParameterTypesToString(this IEdmOperation operation)
+        {
+            // TODO:1631831 Resolve duplication of operationImport and operation
+            return JsonLightConstants.FunctionParameterStart +
+                string.Join(JsonLightConstants.FunctionParameterSeparator, operation.Parameters.Select(p => p.Type.FullName()).ToArray()) +
+                JsonLightConstants.FunctionParameterEnd;
+        }
+
         /// <summary>
         /// Returns Collection item type name or null if the provided type name is not a collection.
         /// </summary>
@@ -1722,11 +2123,64 @@ namespace Microsoft.OData.Core.Metadata
             Justification = "This method is used for matching the name of the operation import to something written by the server. So using the name is safe without resolving the type from the client.")]
         private static string ParameterTypesToString(this IEdmOperationImport operationImport)
         {
+            // TODO:1631831 Resolve duplication of operationImport and operation
             return JsonLightConstants.FunctionParameterStart +
-                string.Join(JsonLightConstants.FunctionParameterSeparator, operationImport.Parameters.Select(p => p.Type.ODataFullName()).ToArray()) +
+                string.Join(JsonLightConstants.FunctionParameterSeparator, operationImport.Operation.Parameters.Select(p => p.Type.ODataFullName()).ToArray()) +
                 JsonLightConstants.FunctionParameterEnd;
         }
 
+        /// <summary>
+        /// Filters the by operation parameter types.
+        /// </summary>
+        /// <param name="operationImports">The operation imports.</param>
+        /// <param name="operationNameWithoutParameterTypes">The operation name without parameter types.</param>
+        /// <param name="originalFullOperationImportName">Name of the original full operation import.</param>
+        /// <returns>A list of EdmOperations that filters out operations that don't match.</returns>
+        private static IEnumerable<IEdmOperationImport> FilterByOperationParameterTypes(this IEnumerable<IEdmOperationImport> operationImports, string operationNameWithoutParameterTypes, string originalFullOperationImportName)
+        {
+            Debug.Assert(operationImports != null, "operationImports != null");
+
+            foreach (IEdmOperationImport operationImport in operationImports)
+            {
+                // If the operation name is not a full name then filter accordingly by parameter name.
+                if (operationNameWithoutParameterTypes.IndexOf(".", StringComparison.Ordinal) > -1)
+                {
+                    if ((operationImport.FullNameWithParameters().Equals(originalFullOperationImportName, StringComparison.Ordinal)) ||
+                        ((operationImport.Container.Name + "." + operationImport.NameWithParameters()).Equals(originalFullOperationImportName, StringComparison.Ordinal)))
+                    {
+                        yield return operationImport;
+                    }
+                }
+                else
+                {
+                    if (operationImport.NameWithParameters().Equals(originalFullOperationImportName, StringComparison.Ordinal))
+                    {
+                        yield return operationImport;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Inheritances the type of the level from specified inherited.
+        /// </summary>
+        /// <param name="structuredType">Type of the structured.</param>
+        /// <param name="rootType">Type of the root.</param>
+        /// <returns>Get the inheritance level.</returns>
+        private static int InheritanceLevelFromSpecifiedInheritedType(this IEdmStructuredType structuredType, IEdmStructuredType rootType)
+        {
+            Debug.Assert(structuredType.IsOrInheritsFrom(rootType), "Roottype should be a base of the structuredtype.");
+
+            IEdmStructuredType currentType = structuredType;
+            int inheritanceLevelsFromBase = 0;
+            while (currentType.InheritsFrom(rootType))
+            {
+                currentType = currentType.BaseType;
+                inheritanceLevelsFromBase++;
+            }
+
+            return inheritanceLevelsFromBase;
+        }
 #endif
         #endregion
 
@@ -1759,7 +2213,6 @@ namespace Microsoft.OData.Core.Metadata
                     return new EdmStringTypeReference(primitiveType, nullable);
                 case EdmPrimitiveTypeKind.Decimal:
                     return new EdmDecimalTypeReference(primitiveType, nullable);
-                case EdmPrimitiveTypeKind.DateTime:
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Duration:
                     return new EdmTemporalTypeReference(primitiveType, nullable);
@@ -1786,100 +2239,36 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
-        /// Gets the single entity container or the default one if there are multiple containers.
+        /// Equality comparer for an IEdmType.
         /// </summary>
-        /// <param name="model">Model to find entity containers in.</param>
-        /// <param name="foundContainer">Single container that was found.</param>
-        /// <returns>Entity Container found in the model</returns>
-        private static bool TryGetSingleOrDefaultEntityContainer(this IEdmModel model, out IEdmEntityContainer foundContainer)
+        private sealed class EdmTypeEqualityComparer : IEqualityComparer<IEdmType>
         {
-            IEdmEntityContainer[] entityContainers = model.EntityContainers().ToArray();
-            foundContainer = null;
-
-            Debug.Assert(entityContainers.Length != 0, "Can't get an entity container from a model that has none");
-
-            if (entityContainers.Length > 1)
+            /// <summary>
+            /// Determines whether the specified objects are equal.
+            /// </summary>
+            /// <param name="x">The first object of type to compare.</param>
+            /// <param name="y">The second object of type to compare.</param>
+            /// <returns>
+            /// true if the specified objects are equal; otherwise, false.
+            /// </returns>
+            public bool Equals(IEdmType x, IEdmType y)
             {
-                // Get the default entity container if there are more than one
-                IEdmEntityContainer defaultContainer = entityContainers.SingleOrDefault(model.IsDefaultEntityContainer);
-                if (defaultContainer != null)
-                {
-                    foundContainer = defaultContainer;
-                }
-            }
-            else if (entityContainers.Length == 1)
-            {
-                foundContainer = entityContainers[0];
+                return x.IsEquivalentTo(y);
             }
 
-            return foundContainer != null;
+            /// <summary>
+            /// Returns a hash code for this instance.
+            /// </summary>
+            /// <param name="obj">The obj.</param>
+            /// <returns>
+            /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            /// </returns>
+            public int GetHashCode(IEdmType obj)
+            {
+                return obj.GetHashCode();
+            }
         }
 
-        /// <summary>
-        /// Finds the container elements with the specified container and name.
-        /// </summary>
-        /// <param name="model">The model to find the element in.</param>
-        /// <param name="containerQualifiedElementName">The container qualified name of the elements.</param>
-        /// <param name="resolver">The resolver method to resolve the elements.</param>
-        /// <returns>The enumeration of <see cref="IEdmEntityContainerElement"/> with the specified name or null if no such element exists.</returns>
-        private static IEnumerable<IEdmEntityContainerElement> ResolveContainerQualifiedElementName(IEdmModel model, string containerQualifiedElementName, Func<IEdmEntityContainer, string, IEnumerable<IEdmEntityContainerElement>> resolver)
-        {
-            Debug.Assert(model != null, "model != null");
-            Debug.Assert(resolver != null, "resolver != null");
-
-            if (string.IsNullOrEmpty(containerQualifiedElementName))
-            {
-                return Enumerable.Empty<IEdmEntityContainerElement>();
-            }
-
-            IEdmEntityContainer container = null;
-            string elementName = null;
-
-            // If there is no namespace or . in the name this may just be an entitySet in the default container, hand back the default container
-            if (containerQualifiedElementName.IndexOf('.') < 0)
-            {
-                if (TryGetSingleOrDefaultEntityContainer(model, out container))
-                {
-                    elementName = containerQualifiedElementName;
-                }
-                else
-                {
-                    return Enumerable.Empty<IEdmEntityContainerElement>();
-                }
-            }
-            else
-            {
-                // Find the last index of '.' before '('
-#if !ASTORIA_CLIENT && !ASTORIA_SERVER && !ODATALIB_QUERY
-                const char FunctionParameterStart = JsonLightConstants.FunctionParameterStart;
-#else
-                const char FunctionParameterStart = '(';
-#endif
-
-                int indexOfParameterStart = containerQualifiedElementName.IndexOf(FunctionParameterStart);
-                string nameBeforeParameterStart = indexOfParameterStart < 0 ? containerQualifiedElementName : containerQualifiedElementName.Substring(0, indexOfParameterStart);
-                int indexOfContainerNameAndElementNameSeparator = nameBeforeParameterStart.LastIndexOf('.');
-                if (indexOfContainerNameAndElementNameSeparator < 0)
-                {
-                    return Enumerable.Empty<IEdmEntityContainerElement>();
-                }
-
-                string containerName = containerQualifiedElementName.Substring(0, indexOfContainerNameAndElementNameSeparator);
-                elementName = containerQualifiedElementName.Substring(indexOfContainerNameAndElementNameSeparator + 1);
-                if (string.IsNullOrEmpty(containerName) || string.IsNullOrEmpty(elementName))
-                {
-                    return Enumerable.Empty<IEdmEntityContainerElement>();
-                }
-
-                container = model.FindEntityContainer(containerName);
-                if (container == null)
-                {
-                    return Enumerable.Empty<IEdmEntityContainerElement>();
-                }
-            }
-
-            return resolver(container, elementName);
-        }
         #endregion
         #endregion
     }

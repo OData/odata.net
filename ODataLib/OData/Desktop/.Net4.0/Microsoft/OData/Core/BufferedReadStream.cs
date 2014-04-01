@@ -132,7 +132,6 @@ namespace Microsoft.OData.Core
         {
             // Note that it's OK to assert the inputs as this stream should never be exposed to the user
             // it will only be used internally.
-            DebugUtils.CheckNoExternalCallers(true);
             ExceptionUtils.CheckArgumentNotNull(buffer, "buffer");
             Debug.Assert(offset < buffer.Length, "offset < buffer.Length");
             Debug.Assert(count <= buffer.Length - offset, "count <= buffer.Length - offset");
@@ -215,7 +214,6 @@ namespace Microsoft.OData.Core
         /// <returns>A task which returns the buffered stream.</returns>
         internal static Task<BufferedReadStream> BufferStreamAsync(Stream inputStream)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(inputStream != null, "inputStream != null");
 
             BufferedReadStream bufferedReadStream = new BufferedReadStream(inputStream);
@@ -236,7 +234,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal void ResetForReading()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.inputStream == null, "Can't start reading until the buffering is finished.");
 
             this.currentBufferIndex = this.buffers.Count == 0 ? -1 : 0;

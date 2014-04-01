@@ -48,7 +48,6 @@ namespace Microsoft.OData.Core.Evaluation
         internal static KeySerializer Create(UrlConvention urlConvention)
         {
 #if ODATALIB
-            DebugUtils.CheckNoExternalCallers();
 #endif
             Debug.Assert(urlConvention != null, "UrlConvention != null");
 
@@ -145,7 +144,6 @@ namespace Microsoft.OData.Core.Evaluation
             /// </summary>
             internal DefaultKeySerializer()
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 #endif
             /// <summary>
@@ -159,7 +157,6 @@ namespace Microsoft.OData.Core.Evaluation
             internal override void AppendKeyExpression<TProperty>(StringBuilder builder, ICollection<TProperty> keyProperties, Func<TProperty, string> getPropertyName, Func<TProperty, object> getPropertyValue)
             {
 #if ODATALIB
-                DebugUtils.CheckNoExternalCallers();
 #endif
                 AppendKeyWithParentheses(builder, keyProperties, getPropertyName, getPropertyValue);
             }
@@ -175,7 +172,6 @@ namespace Microsoft.OData.Core.Evaluation
             /// </summary>
             internal SegmentKeySerializer()
             {
-                DebugUtils.CheckNoExternalCallers();
             }
 
             /// <summary>
@@ -188,7 +184,6 @@ namespace Microsoft.OData.Core.Evaluation
             /// <param name="getPropertyValue">The callback to get each property's value.</param>
             internal override void AppendKeyExpression<TProperty>(StringBuilder builder, ICollection<TProperty> keyProperties, Func<TProperty, string> getPropertyName, Func<TProperty, object> getPropertyValue)
             {
-                DebugUtils.CheckNoExternalCallers();
                 Debug.Assert(builder != null, "builder != null");
                 Debug.Assert(keyProperties != null, "keyProperties != null");
 

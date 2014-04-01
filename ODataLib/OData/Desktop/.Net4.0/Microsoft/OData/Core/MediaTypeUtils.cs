@@ -39,6 +39,7 @@ namespace Microsoft.OData.Core
             ODataPayloadKind.Batch,
             ODataPayloadKind.Error,
             ODataPayloadKind.Parameter,
+            ODataPayloadKind.IndividualProperty
         };
 
         /// <summary>UTF-8 encoding, without the BOM preamble.</summary>
@@ -67,7 +68,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return encodingUtf8NoPreamble;
             }
         }
@@ -89,7 +89,6 @@ namespace Microsoft.OData.Core
             out MediaType mediaType,
             out Encoding encoding)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(settings != null, "settings != null");
 
             // compute format, media type and encoding
@@ -183,7 +182,6 @@ namespace Microsoft.OData.Core
             out ODataPayloadKind selectedPayloadKind,
             out string batchBoundary)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!supportedPayloadKinds.Contains(ODataPayloadKind.Unsupported), "!supportedPayloadKinds.Contains(ODataPayloadKind.Unsupported)");
 
             ODataFormat format = GetFormatFromContentType(contentTypeHeader, supportedPayloadKinds, mediaTypeResolver, out mediaType, out encoding, out selectedPayloadKind);
@@ -235,7 +233,6 @@ namespace Microsoft.OData.Core
         /// <returns>The list of payload kinds and formats supported for the specified <paramref name="contentTypeHeader"/>.</returns>
         internal static IList<ODataPayloadKindDetectionResult> GetPayloadKindsForContentType(string contentTypeHeader, MediaTypeResolver mediaTypeResolver, out MediaType contentType, out Encoding encoding)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!String.IsNullOrEmpty(contentTypeHeader), "Content-Type header must not be null or empty.");
 
             string charset;
@@ -278,7 +275,6 @@ namespace Microsoft.OData.Core
         /// <returns>true if the <paramref name="firstTypeAndSubtype"/> is equal to <paramref name="secondTypeAndSubtype"/>; otherwise false.</returns>
         internal static bool MediaTypeAndSubtypeAreEqual(string firstTypeAndSubtype, string secondTypeAndSubtype)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(firstTypeAndSubtype, "firstTypeAndSubtype");
             ExceptionUtils.CheckArgumentNotNull(secondTypeAndSubtype, "secondTypeAndSubtype");
 
@@ -293,7 +289,6 @@ namespace Microsoft.OData.Core
         /// <returns>true if the <paramref name="mediaType"/> starts with <paramref name="typeAndSubtype"/>; otherwise false.</returns>
         internal static bool MediaTypeStartsWithTypeAndSubtype(string mediaType, string typeAndSubtype)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(mediaType, "mediaType");
             ExceptionUtils.CheckArgumentNotNull(typeAndSubtype, "typeAndSubtype");
 
@@ -310,7 +305,6 @@ namespace Microsoft.OData.Core
         /// with value <paramref name="parameterValue"/>; otherwise false.</returns>
         internal static bool MediaTypeHasParameterWithValue(this MediaType mediaType, string parameterName, string parameterValue)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(mediaType != null, "mediaType != null");
             Debug.Assert(parameterName != null, "parameterName != null");
 
@@ -333,8 +327,19 @@ namespace Microsoft.OData.Core
         /// </returns>
         internal static bool HasStreamingSetToTrue(this MediaType mediaType)
         {
-            DebugUtils.CheckNoExternalCallers();
-            return mediaType.MediaTypeHasParameterWithValue(MimeConstants.MimeStreamingParameterName, MimeConstants.MimeStreamingParameterValueTrue);
+            return mediaType.MediaTypeHasParameterWithValue(MimeConstants.MimeStreamingParameterName, MimeConstants.MimeParameterValueTrue);
+        }
+
+        /// <summary>
+        /// Determines whether the media type has a 'IEEE754Compatible' parameter with the value 'true'.
+        /// </summary>
+        /// <param name="mediaType">The media type to check</param>
+        /// <returns>
+        ///   <c>true</c> if  the media type has a 'IEEE754Compatible' parameter with the value 'true'; otherwise, <c>false</c>.
+        /// </returns>
+        internal static bool HasIeee754CompatibleSetToTrue(this MediaType mediaType)
+        {
+            return mediaType.MediaTypeHasParameterWithValue(MimeConstants.MimeIeee754CompatibleParameterName, MimeConstants.MimeParameterValueTrue);
         }
 
         /// <summary>
@@ -343,7 +348,6 @@ namespace Microsoft.OData.Core
         /// <param name="mediaType">The <see cref="MediaType"/> to check.</param>
         internal static void CheckMediaTypeForWildCards(MediaType mediaType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(mediaType != null, "mediaType != null");
 
             if (HttpUtils.CompareMediaTypeNames(MimeConstants.MimeStar, mediaType.TypeName) ||
@@ -360,7 +364,6 @@ namespace Microsoft.OData.Core
         /// <returns>New content-type value string.</returns>
         internal static string AlterContentTypeForJsonPadding(string contentType)
         {
-            DebugUtils.CheckNoExternalCallers();
             if (contentType.StartsWith(MimeConstants.MimeApplicationJson, StringComparison.OrdinalIgnoreCase))
             {
                 return contentType.Remove(0, MimeConstants.MimeApplicationJson.Length).Insert(0, MimeConstants.TextJavaScript);
@@ -570,13 +573,13 @@ namespace Microsoft.OData.Core
                     HttpUtils.CompareMediaTypeNames(mediaType.TypeName, MimeConstants.MimeApplicationType))
                 {
                     if (mediaType.Parameters == null ||
-                        !mediaType.Parameters.Any(p => HttpUtils.CompareMediaTypeParameterNames(p.Key, MimeConstants.MimeODataParameterName)))
+                        !mediaType.Parameters.Any(p => HttpUtils.CompareMediaTypeParameterNames(p.Key, MimeConstants.MimeMetadataParameterName)))
                     {
                         // application/json detected; convert it to Json Light
                         IList<KeyValuePair<string, string>> existingParams = mediaType.Parameters;
                         int newCount = existingParams == null ? 1 : existingParams.Count + 1;
                         List<KeyValuePair<string, string>> newParams = new List<KeyValuePair<string, string>>(newCount);
-                        newParams.Add(new KeyValuePair<string, string>(MimeConstants.MimeODataParameterName, MimeConstants.MimeODataParameterValueMinimalMetadata));
+                        newParams.Add(new KeyValuePair<string, string>(MimeConstants.MimeMetadataParameterName, MimeConstants.MimeMetadataParameterValueMinimal));
                         if (existingParams != null)
                         {
                             newParams.AddRange(existingParams);

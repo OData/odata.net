@@ -13,10 +13,11 @@ namespace Microsoft.OData.Core.Evaluation
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Values;
-    using Microsoft.OData.Core.Metadata;
+
     #endregion Namespaces
 
     /// <summary>
@@ -36,7 +37,6 @@ namespace Microsoft.OData.Core.Evaluation
         internal ODataEdmCollectionValue(ODataCollectionValue collectionValue)
             : base(collectionValue.GetEdmType())
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(collectionValue != null, "collectionValue != null");
 
             this.collectionValue = collectionValue;

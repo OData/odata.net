@@ -10,7 +10,7 @@
 
 namespace Microsoft.OData.Core.UriParser.Semantic
 {
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -25,9 +25,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private readonly ODataExpandPath pathToNavigationProperty;
 
         /// <summary>
-        /// The entity set for this expansion level.
+        /// The navigation source for this expansion level.
         /// </summary>
-        private readonly IEdmEntitySet entitySet;
+        private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
         /// The filter expand option for this expandItem. Can be null if not specified(and will always be null in NonOptionMode).
@@ -52,7 +52,12 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// The query count option for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
         /// </summary>
-        private readonly bool? countQueryOption;
+        private readonly bool? countOption;
+
+        /// <summary>
+        /// The levels option for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
+        /// </summary>
+        private readonly LevelsClause levelsOption;
 
         /// <summary>
         /// The select that applies to this level, and any sub expand levels below this one.
@@ -63,11 +68,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Create an Expand item using a nav prop, its entity set and a SelectExpandClause 
         /// </summary>
         /// <param name="pathToNavigationProperty">the path to the navigation property for this expand item, including any type segments</param>
-        /// <param name="entitySet">the entity set for this ExpandItem</param>
+        /// <param name="navigationSource">the navigation source for this ExpandItem</param>
         /// <param name="selectExpandOption">This level select and any sub expands for this expand item.</param>
         /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
-        public ExpandedNavigationSelectItem(ODataExpandPath pathToNavigationProperty, IEdmEntitySet entitySet, SelectExpandClause selectExpandOption)
-            : this(pathToNavigationProperty, entitySet, null, null, null, null, null, selectExpandOption)
+        public ExpandedNavigationSelectItem(ODataExpandPath pathToNavigationProperty, IEdmNavigationSource navigationSource, SelectExpandClause selectExpandOption)
+            : this(pathToNavigationProperty, navigationSource, null, null, null, null, null, null, selectExpandOption)
         {
         }
 
@@ -75,34 +80,36 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Create an expand item, using a navigationProperty, its entity set, and any expand options.
         /// </summary>
         /// <param name="pathToNavigationProperty">the path to the navigation property for this expand item, including any type segments</param>
-        /// <param name="entitySet">the entity set for this expand level.</param>
+        /// <param name="navigationSource">the navigation source for this expand level.</param>
         /// <param name="filterOption">A filter clause for this expand (can be null)</param>
         /// <param name="orderByOption">An Orderby clause for this expand (can be null)</param>
         /// <param name="topOption">A top clause for this expand (can be null)</param>
         /// <param name="skipOption">A skip clause for this expand (can be null)</param>
-        /// <param name="countQueryOption">An query count clause for this expand (can be null)</param>
+        /// <param name="countOption">An query count clause for this expand (can be null)</param>
+        /// <param name="levelsOption">An levels clause for this expand (can be null)</param>
         /// <param name="selectAndExpand">This level select and any sub expands for this expand item.</param>
         /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
-       internal ExpandedNavigationSelectItem(
-            ODataExpandPath pathToNavigationProperty, 
-            IEdmEntitySet entitySet,
-            FilterClause filterOption, 
-            OrderByClause orderByOption, 
-            long? topOption, 
-            long? skipOption,
-            bool? countQueryOption, 
-            SelectExpandClause selectAndExpand)
+        internal ExpandedNavigationSelectItem(
+             ODataExpandPath pathToNavigationProperty,
+             IEdmNavigationSource navigationSource,
+             FilterClause filterOption,
+             OrderByClause orderByOption,
+             long? topOption,
+             long? skipOption,
+             bool? countOption,
+             LevelsClause levelsOption,
+             SelectExpandClause selectAndExpand)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(pathToNavigationProperty, "navigationProperty");
 
             this.pathToNavigationProperty = pathToNavigationProperty;
-            this.entitySet = entitySet;
+            this.navigationSource = navigationSource;
             this.filterOption = filterOption;
             this.orderByOption = orderByOption;
             this.topOption = topOption;
             this.skipOption = skipOption;
-            this.countQueryOption = countQueryOption;
+            this.countOption = countOption;
+            this.levelsOption = levelsOption;
             this.selectAndExpand = selectAndExpand;
         }
 
@@ -119,13 +126,13 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the EntitySet for this level.
+        /// Gets the navigation source for this level.
         /// </summary>
-        public IEdmEntitySet EntitySet
+        public IEdmNavigationSource NavigationSource
         {
             get
             {
-                return this.entitySet;
+                return this.navigationSource;
             }
         }
 
@@ -143,23 +150,32 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// The filter clause for this expand item
         /// </summary>
-        internal FilterClause FilterOption
+        public FilterClause FilterOption
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.filterOption;
+            }
+        }
+
+        /// <summary>
+        /// Gets the levels clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
+        /// </summary>
+        public LevelsClause LevelsOption
+        {
+            get
+            {
+                return this.levelsOption;
             }
         }
 
         /// <summary>
         /// Gets the orderby clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
         /// </summary>
-        internal OrderByClause OrderByOption
+        public OrderByClause OrderByOption
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.orderByOption;
             }
         }
@@ -167,11 +183,10 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// Gets the top clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
         /// </summary>
-        internal long? TopOption
+        public long? TopOption
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.topOption;
             }
         }
@@ -179,11 +194,10 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// Gets the skip clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
         /// </summary>
-        internal long? SkipOption
+        public long? SkipOption
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
                 return this.skipOption;
             }
         }
@@ -191,13 +205,34 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// Gets the count clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
         /// </summary>
-        internal bool? CountQueryOption
+        public bool? CountOption
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-                return this.countQueryOption;
+                return this.countOption;
             }
+        }
+
+        /// <summary>
+        /// Translate using a <see cref="SelectItemTranslator{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">Type that the translator will return after visiting this item.</typeparam>
+        /// <param name="translator">An implementation of the translator interface.</param>
+        /// <returns>An object whose type is determined by the type parameter of the translator.</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input translator is null.</exception>
+        public override T TranslateWith<T>(SelectItemTranslator<T> translator)
+        {
+            return translator.Translate(this);
+        }
+
+        /// <summary>
+        /// Handle using a <see cref="SelectItemHandler"/>.
+        /// </summary>
+        /// <param name="handler">An implementation of the handler interface.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input handler is null.</exception>
+        public override void HandleWith(SelectItemHandler handler)
+        {
+            handler.Handle(this);
         }
     }
 }

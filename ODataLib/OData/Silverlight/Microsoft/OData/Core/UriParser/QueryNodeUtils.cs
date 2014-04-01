@@ -18,6 +18,7 @@ namespace Microsoft.OData.Core.UriParser
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Semantic;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -32,7 +33,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The converted <see cref="CollectionNode"/> or null if <paramref name="query"/> is not an entity collection node.</returns>
         internal static EntityCollectionNode AsEntityCollectionNode(this QueryNode query)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(query != null, "query != null");
 
             EntityCollectionNode collectionNode = query as EntityCollectionNode;
@@ -53,7 +53,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The converted <see cref="CollectionNode"/> or null if <paramref name="query"/> is not a collection node.</returns>
         internal static CollectionNode AsCollectionNode(this QueryNode query)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(query != null, "query != null");
 
             CollectionNode collectionNode = query as CollectionNode;
@@ -74,7 +73,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The result type reference of the binary operator.</returns>
         internal static IEdmPrimitiveTypeReference GetBinaryOperatorResultType(IEdmPrimitiveTypeReference typeReference, BinaryOperatorKind operatorKind)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(typeReference != null, "type != null");
 
             switch (operatorKind)

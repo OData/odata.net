@@ -11,6 +11,8 @@
 namespace Microsoft.OData.Core
 {
     #region Namespaces
+
+    using System;
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
@@ -31,7 +33,6 @@ namespace Microsoft.OData.Core
         /// <returns>The type with the given name and kind if a user model was available, otherwise null.</returns>
         internal static IEdmType ResolveAndValidateTypeName(IEdmModel model, string typeName, EdmTypeKind expectedTypeKind)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(model != null, "model != null");
 
             if (typeName == null)
@@ -76,7 +77,6 @@ namespace Microsoft.OData.Core
         /// <returns>A type for the <paramref name="value"/> or null if no metadata is available.</returns>
         internal static IEdmTypeReference ResolveAndValidateTypeNameForValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataValue value, bool isOpenProperty)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(model != null, "model != null");
             Debug.Assert(value != null, "value != null");
 
@@ -133,7 +133,7 @@ namespace Microsoft.OData.Core
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
-                return collectionValue.TypeName;
+                return EdmLibraryExtensions.GetCollectionTypeFullName(collectionValue.TypeName);
             }
 
             IEdmPrimitiveTypeReference primitiveTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
@@ -157,11 +157,10 @@ namespace Microsoft.OData.Core
         /// <returns>A type for the <paramref name="typeName"/> or null if no type name is specified and no metadata is available.</returns>
         private static IEdmTypeReference ResolveAndValidateTypeFromNameAndMetadata(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, string typeName, EdmTypeKind typeKindFromValue, bool isOpenPropertyType)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(model != null, "model != null");
             Debug.Assert(
-                typeKindFromValue == EdmTypeKind.Complex || typeKindFromValue == EdmTypeKind.Collection,
-                "Only complex or collection types are supported by this method. This method assumes that the types in question don't support inheritance.");
+                typeKindFromValue == EdmTypeKind.Complex || typeKindFromValue == EdmTypeKind.Collection || typeKindFromValue == EdmTypeKind.Enum,
+                "Only complex or collection or enum types are supported by this method. This method assumes that the types in question don't support inheritance.");
 
             // if we have metadata, the type name of an open property value must not be null
             if (typeName == null && model.IsUserModel() && isOpenPropertyType)
@@ -178,6 +177,12 @@ namespace Microsoft.OData.Core
             IEdmTypeReference typeReferenceFromValue = ValidateMetadataType(typeReferenceFromMetadata, typeFromValue == null ? null : typeFromValue.ToTypeReference());
             if (typeKindFromValue == EdmTypeKind.Collection && typeReferenceFromValue != null)
             {
+                // update nullability from metadata
+                if (typeReferenceFromMetadata != null)
+                {
+                    typeReferenceFromValue = typeReferenceFromMetadata;
+                }
+
                 // validate that the collection type represents a valid Collection type (e.g., is unordered).
                 typeReferenceFromValue = ValidationUtils.ValidateCollectionType(typeReferenceFromValue);
             }

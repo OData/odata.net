@@ -31,7 +31,6 @@ namespace Microsoft.OData.Core
         /// <returns>The parameters of the media type not including the 'charset' parameter.</returns>
         internal static IList<KeyValuePair<string, string>> ReadMimeType(string contentType, out string mediaTypeName, out string mediaTypeCharset)
         {
-            DebugUtils.CheckNoExternalCallers();
             if (String.IsNullOrEmpty(contentType))
             {
                 throw new ODataContentTypeException(Strings.HttpUtils_ContentTypeMissing);
@@ -58,7 +57,6 @@ namespace Microsoft.OData.Core
         /// <returns>The value for the Content-Type header.</returns>
         internal static string BuildContentType(MediaType mediaType, Encoding encoding)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(mediaType != null, "mediaType != null");
 
             return mediaType.ToText(encoding);
@@ -69,8 +67,6 @@ namespace Microsoft.OData.Core
         /// <returns>An enumerable object with key/value pairs of media type descriptions with their (optional) charset parameter values.</returns>
         internal static IList<KeyValuePair<MediaType, string>> MediaTypesFromString(string text)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (string.IsNullOrEmpty(text))
             {
                 return null;
@@ -87,8 +83,6 @@ namespace Microsoft.OData.Core
         /// <returns>returns true if the media type names are the same.</returns>
         internal static bool CompareMediaTypeNames(string mediaTypeName1, string mediaTypeName2)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return string.Equals(mediaTypeName1, mediaTypeName2, StringComparison.OrdinalIgnoreCase);
         }
 
@@ -100,8 +94,6 @@ namespace Microsoft.OData.Core
         /// <returns>returns true if the parameter names are the same.</returns>
         internal static bool CompareMediaTypeParameterNames(string parameterName1, string parameterName2)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             return string.Equals(parameterName1, parameterName2, StringComparison.OrdinalIgnoreCase);
         }
 
@@ -115,7 +107,6 @@ namespace Microsoft.OData.Core
         /// <returns>An Encoding object appropriate to the specifed charset request.</returns>
         internal static Encoding EncodingFromAcceptableCharsets(string acceptableCharsets, MediaType mediaType, Encoding utf8Encoding, Encoding defaultEncoding)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(mediaType != null, "mediaType != null");
 
             // Determines the appropriate encoding mapping according to
@@ -185,8 +176,6 @@ namespace Microsoft.OData.Core
         /// </remarks>
         internal static void ReadQualityValue(string text, ref int textIndex, out int qualityValue)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             char digit = text[textIndex++];
             switch (digit)
             {
@@ -241,7 +230,6 @@ namespace Microsoft.OData.Core
         /// <param name="httpMethodString">The HTTP method string to validate.</param>
         internal static void ValidateHttpMethod(string httpMethodString)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(httpMethodString, "httpMethodString");
 
             if (string.CompareOrdinal(httpMethodString, ODataConstants.MethodGet) != 0
@@ -261,7 +249,6 @@ namespace Microsoft.OData.Core
         /// <returns>True if the given httpMethod is GET.</returns>
         internal static bool IsQueryMethod(string httpMethod)
         {
-            DebugUtils.CheckNoExternalCallers();
             return string.CompareOrdinal(httpMethod, ODataConstants.MethodGet) == 0;
         }
 
@@ -273,8 +260,6 @@ namespace Microsoft.OData.Core
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "This is a large switch on all the Http response codes; no complexity here.")]
         internal static string GetStatusMessage(int statusCode)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             // Non-localized messages for status codes.
             // These are the recommended reason phrases as per HTTP RFC 2616, Section 6.1.1
             switch (statusCode)
@@ -371,11 +356,9 @@ namespace Microsoft.OData.Core
         /// <returns>The encoding object or null if such encoding is not supported.</returns>
         internal static Encoding GetEncodingFromCharsetName(string charsetName)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             try
             {
-#if SILVERLIGHT || PORTABLELIB
+#if !ORCAS
                 // The default behavior without the fallbacks is to use either replacement or best-fit for unencodable characters.
                 // That would be the wrong behavior for us. On the other hand in Silverlight the only supported encodings
                 // are UTF-8 and UTF-16 (LE and BE), all of which can encode any character, so the fallbacks are never used.
@@ -404,8 +387,6 @@ namespace Microsoft.OData.Core
         /// <returns>The token or quoted-string value that was read from the header.</returns>
         internal static string ReadTokenOrQuotedStringValue(string headerName, string headerText, ref int textIndex, out bool isQuotedString, Func<string, Exception> createException)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             //// NOTE: See RFC 2616, Sections 3.6 and 2.2 for the full grammar for HTTP parameter values
             ////
             //// parameter-value    =   token | quoted-string
@@ -497,7 +478,6 @@ namespace Microsoft.OData.Core
         /// <returns>true if the end of the string was reached, false otherwise.</returns>
         internal static bool SkipWhitespace(string text, ref int textIndex)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(text != null, "text != null");
             Debug.Assert(text.Length >= 0, "text >= 0");
             Debug.Assert(textIndex <= text.Length, "text <= text.Length");
@@ -520,7 +500,6 @@ namespace Microsoft.OData.Core
         /// </returns>
         private static IEnumerable<CharsetPart> AcceptCharsetParts(string headerValue)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!String.IsNullOrEmpty(headerValue), "!String.IsNullOrEmpty(headerValuer)");
 
             // PERF: optimize for common patterns.

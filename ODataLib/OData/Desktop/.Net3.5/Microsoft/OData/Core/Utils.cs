@@ -32,8 +32,6 @@ namespace Microsoft.OData.Core
         /// <returns>'True' if IDisposable.Dispose() was called; 'false' otherwise.</returns>
         internal static bool TryDispose(object o)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             IDisposable disposable = o as IDisposable;
             if (disposable != null)
             {
@@ -52,7 +50,6 @@ namespace Microsoft.OData.Core
         /// <returns>Task which represents the pending Flush operation.</returns>
         internal static Task FlushAsync(this Stream stream)
         {
-            DebugUtils.CheckNoExternalCallers();
             return Task.Factory.StartNew(stream.Flush);
         }
 #endif
@@ -67,7 +64,6 @@ namespace Microsoft.OData.Core
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "Array.Sort is causing this, but it is needed in order to sort the KeyValuePairs using our own comparer.")]
         internal static KeyValuePair<int, T>[] StableSort<T>(this T[] array, Comparison<T> comparison)
         {
-            DebugUtils.CheckNoExternalCallers();
             ExceptionUtils.CheckArgumentNotNull(array, "array");
             ExceptionUtils.CheckArgumentNotNull(comparison, "comparison");
 

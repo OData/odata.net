@@ -101,7 +101,7 @@ namespace Microsoft.OData.Core.Atom
 
         /// <summary>Gets or sets the identifier for the feed if used as metadata of an Atom:source element.</summary>
         /// <returns>The identifier for the feed if used as metadata of an Atom:source element.</returns>
-        public string SourceId
+        public Uri SourceId
         {
             get;
             set;

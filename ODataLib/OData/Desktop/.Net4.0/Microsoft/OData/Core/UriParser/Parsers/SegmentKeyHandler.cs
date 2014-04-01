@@ -19,6 +19,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using Microsoft.OData.Core.Evaluation;
     using Microsoft.OData.Core.UriParser.Semantic;
     using ErrorStrings = Microsoft.OData.Core.Strings;
+
     #endregion Namespaces
 
     /// <summary>
@@ -28,12 +29,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     {
         /// <summary>Tries to create a key segment for the given filter if it is non empty.</summary>
         /// <param name="previous">Segment on which to compose.</param>
+        /// <param name="previousKeySegment">The parent node's key segment.</param>
         /// <param name="parenthesisExpression">Parenthesis expression of segment.</param>
         /// <param name="keySegment">The key segment that was created if the key was non-empty.</param>
         /// <returns>Whether the key was non-empty.</returns>
-        internal static bool TryCreateKeySegmentFromParentheses(ODataPathSegment previous, string parenthesisExpression, out ODataPathSegment keySegment)
+        internal static bool TryCreateKeySegmentFromParentheses(ODataPathSegment previous, KeySegment previousKeySegment, string parenthesisExpression, out ODataPathSegment keySegment)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(parenthesisExpression != null, "parenthesisExpression != null");
             Debug.Assert(previous != null, "segment!= null");
 
@@ -49,7 +50,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return false;
             }
 
-            keySegment = CreateKeySegment(previous, key);
+            keySegment = CreateKeySegment(previous, previousKeySegment, key);
             return true;
         }
 
@@ -58,12 +59,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="segmentText">The segment text.</param>
         /// <param name="previous">The previous segment.</param>
+        /// <param name="previousKeySegment">The parent node's key segment.</param>
         /// <param name="urlConvention">The current url convention for the server.</param>
         /// <param name="keySegment">The key segment that was created if the segment could be interpreted as a key.</param>
         /// <returns>Whether or not the segment was interpreted as a key.</returns>
-        internal static bool TryHandleSegmentAsKey(string segmentText, ODataPathSegment previous, UrlConvention urlConvention, out KeySegment keySegment)
+        internal static bool TryHandleSegmentAsKey(string segmentText, ODataPathSegment previous, KeySegment previousKeySegment, UrlConvention urlConvention, out KeySegment keySegment)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(previous != null, "previous != null");
             Debug.Assert(urlConvention != null, "urlConvention != null");
 
@@ -104,7 +105,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             // At this point it must be treated as a key, so fail if it is malformed.
             Debug.Assert(keyProperties.Count == 1, "keyProperties.Count == 1");
-            keySegment = CreateKeySegment(previous, SegmentArgumentParser.FromSegment(segmentText));
+            keySegment = CreateKeySegment(previous, previousKeySegment, SegmentArgumentParser.FromSegment(segmentText));
 
             return true;
         }
@@ -134,9 +135,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// Parses the key properties based on the segment's target type, then creates a new segment for the key.
         /// </summary>
         /// <param name="segment">The segment to apply the key to.</param>
+        /// <param name="previousKeySegment">The parent node's key segment.</param>
         /// <param name="key">The key to apply.</param>
         /// <returns>The newly created key segment.</returns>
-        private static KeySegment CreateKeySegment(ODataPathSegment segment, SegmentArgumentParser key)
+        private static KeySegment CreateKeySegment(ODataPathSegment segment, KeySegment previousKeySegment, SegmentArgumentParser key)
         {
             Debug.Assert(segment != null, "segment != null");
             Debug.Assert(key != null && !key.IsEmpty, "key != null && !key.IsEmpty");
@@ -150,7 +152,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             var keyProperties = targetEntityType.Key().ToList();
             if (keyProperties.Count != key.ValueCount)
             {
-                throw ExceptionUtil.CreateBadRequestError(ErrorStrings.BadRequest_KeyCountMismatch(targetEntityType.FullName()));
+                NavigationPropertySegment currentNavPropSegment = segment as NavigationPropertySegment;
+                if (currentNavPropSegment != null)
+                {
+                    key = KeyFinder.FindAndUseKeysFromRelatedSegment(key, keyProperties, currentNavPropSegment.NavigationProperty, previousKeySegment);
+                }
+
+                // if we still didn't find any keys, then throw an error.
+                if (keyProperties.Count != key.ValueCount)
+                {
+                    throw ExceptionUtil.CreateBadRequestError(ErrorStrings.BadRequest_KeyCountMismatch(targetEntityType.FullName()));
+                }
             }
 
             if (!key.AreValuesNamed && key.ValueCount > 1)
@@ -165,7 +177,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             bool isEntity = segment.TargetEdmType.IsEntityOrEntityCollectionType(out entityType);
             Debug.Assert(isEntity, "Key target type should be an entity type.");
 
-            var keySegment = new KeySegment(keyPairs, entityType, segment.TargetEdmEntitySet);
+            var keySegment = new KeySegment(keyPairs, entityType, segment.TargetEdmNavigationSource);
             keySegment.CopyValuesFrom(segment);
             keySegment.SingleResult = true;
 

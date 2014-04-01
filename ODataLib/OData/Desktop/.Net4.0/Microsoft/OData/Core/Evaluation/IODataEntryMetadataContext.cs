@@ -57,8 +57,8 @@ namespace Microsoft.OData.Core.Evaluation
         IDictionary<string, IEdmStructuralProperty> SelectedStreamProperties { get; }
 
         /// <summary>
-        /// The selected always bindable operations.
+        /// The selected bindable operations.
         /// </summary>
-        IEnumerable<IEdmOperationImport> SelectedAlwaysBindableOperations { get; }
+        IEnumerable<IEdmOperation> SelectedBindableOperations { get; }
     }
 }

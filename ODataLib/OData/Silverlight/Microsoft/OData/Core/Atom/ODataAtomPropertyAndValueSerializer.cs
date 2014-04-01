@@ -38,7 +38,6 @@ namespace Microsoft.OData.Core.Atom
         internal ODataAtomPropertyAndValueSerializer(ODataAtomOutputContext atomOutputContext)
             : base(atomOutputContext)
         {
-            DebugUtils.CheckNoExternalCallers();
         }
 
         /// <summary>
@@ -47,8 +46,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="property">The property to write out.</param>
         internal void WriteTopLevelProperty(ODataProperty property)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             this.WritePayloadStart();
             this.AssertRecursionDepthIsZero();
             this.WriteProperty(
@@ -70,7 +67,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="tracker">The tracker to track which instance annotations have been written.</param>
         internal void WriteInstanceAnnotations(IEnumerable<AtomInstanceAnnotation> instanceAnnotations, InstanceAnnotationWriteTracker tracker)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             Debug.Assert(tracker != null, "tracker should not be null if we called this");
 
@@ -96,7 +92,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="instanceAnnotation">The instance annotation to write.</param>
         internal void WriteInstanceAnnotation(AtomInstanceAnnotation instanceAnnotation)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(instanceAnnotation != null, "instanceAnnotation != null");
             Debug.Assert(!string.IsNullOrEmpty(instanceAnnotation.TermName), "!string.IsNullOrEmpty(instanceAnnotation.TermName)");
 
@@ -177,8 +172,6 @@ namespace Microsoft.OData.Core.Atom
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
             ProjectedPropertiesAnnotation projectedProperties)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             if (cachedProperties == null)
             {
                 return false;
@@ -218,7 +211,6 @@ namespace Microsoft.OData.Core.Atom
             IEdmTypeReference expectedTypeReference,
             SerializationTypeNameAnnotation typeNameAnnotation)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(value != null, "value != null");
 
             IEdmPrimitiveTypeReference primitiveTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
@@ -250,6 +242,35 @@ namespace Microsoft.OData.Core.Atom
         }
 
         /// <summary>
+        /// Writes an enumeration value.
+        /// </summary>
+        /// <param name="value">The value to write.</param>
+        /// <param name="collectionValidator">The collection validator instance.</param>
+        /// <param name="expectedTypeReference">The expected type of the enumeration value.</param>
+        /// <param name="typeNameAnnotation">The optional type name annotation provided by the user on the OM for this enumeration value. The annotation value will override whatever type name is being written.</param>
+        internal void WriteEnumValue(
+            ODataEnumValue value,
+            CollectionWithoutExpectedTypeValidator collectionValidator,
+            IEdmTypeReference expectedTypeReference,
+            SerializationTypeNameAnnotation typeNameAnnotation)
+        {
+            Debug.Assert(value != null, "value != null");
+
+            // write type name without validation:
+            string collectionItemTypeName;
+            string typeName = this.AtomOutputContext.TypeNameOracle.GetValueTypeNameForWriting(value, expectedTypeReference, typeNameAnnotation, collectionValidator, out collectionItemTypeName);
+            Debug.Assert(collectionItemTypeName == null, "collectionItemTypeName == null");
+            if (typeName != null)
+            {
+                Debug.Assert(typeName != EdmConstants.EdmStringTypeName, "Enum typeName != EdmConstants.StringTypeName");
+                this.WritePropertyTypeAttribute(typeName);
+            }
+
+            // write string value without validation:
+            AtomValueUtils.WritePrimitiveValue(this.XmlWriter, value.Value);
+        }
+
+        /// <summary>
         /// Writes out the value of a complex property.
         /// </summary>
         /// <param name="complexValue">The complex value to write.</param>
@@ -274,7 +295,6 @@ namespace Microsoft.OData.Core.Atom
             CollectionWithoutExpectedTypeValidator collectionValidator,
             ProjectedPropertiesAnnotation projectedProperties)
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(complexValue != null, "complexValue != null");
 
             string typeName = complexValue.TypeName;
@@ -335,7 +355,6 @@ namespace Microsoft.OData.Core.Atom
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "The this is needed in DEBUG build.")]
         internal void AssertRecursionDepthIsZero()
         {
-            DebugUtils.CheckNoExternalCallers();
             Debug.Assert(this.recursionDepth == 0, "The current recursion depth must be 0.");
         }
 
@@ -378,7 +397,7 @@ namespace Microsoft.OData.Core.Atom
                 DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = null;
                 foreach (object item in items)
                 {
-                    ValidationUtils.ValidateCollectionItem(item, false /* isStreamable */);
+                    ValidationUtils.ValidateCollectionItem(item, expectedItemTypeReference.IsNullable());
 
                     this.XmlWriter.WriteStartElement(AtomConstants.ODataMetadataNamespacePrefix, AtomConstants.ODataCollectionItemElementName, AtomConstants.ODataMetadataNamespace);
                     ODataComplexValue complexValue = item as ODataComplexValue;
@@ -407,8 +426,24 @@ namespace Microsoft.OData.Core.Atom
                         Debug.Assert(!(item is ODataCollectionValue), "!(item is ODataCollectionValue)");
                         Debug.Assert(!(item is ODataStreamReferenceValue), "!(item is ODataStreamReferenceValue)");
 
-                        // Note: Currently there is no way for a user to control primitive type information when the primitive values are part of a collection.
-                        this.WritePrimitiveValue(item, collectionValidator, expectedItemTypeReference, /*serializationTypeNameAnnotation*/ null);
+                        ODataEnumValue enumValue = item as ODataEnumValue;
+                        if (enumValue != null)
+                        {
+                            // Note: Currently there is no way for a user to control enum type's serializationTypeNameAnnotation information when the enum values are part of a collection.
+                            this.WriteEnumValue(enumValue, collectionValidator, expectedItemTypeReference, /*serializationTypeNameAnnotation*/ null);
+                        }
+                        else
+                        {
+                            // Note: Currently there is no way for a user to control primitive type information when the primitive values are part of a collection.
+                            if (item != null)
+                            {
+                                this.WritePrimitiveValue(item, collectionValidator, expectedItemTypeReference, /*serializationTypeNameAnnotation*/ null);
+                            }
+                            else
+                            {
+                                this.WriteNullCollectionElementValue(expectedItemTypeReference);
+                            }
+                        }
                     }
 
                     this.XmlWriter.WriteEndElement();
@@ -466,8 +501,6 @@ namespace Microsoft.OData.Core.Atom
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
             ProjectedPropertiesAnnotation projectedProperties)
         {
-            DebugUtils.CheckNoExternalCallers();
-
             WriterValidationUtils.ValidatePropertyNotNull(property);
 
             object value = property.Value;
@@ -486,7 +519,7 @@ namespace Microsoft.OData.Core.Atom
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
             IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(propertyName, owningType);
             IEdmTypeReference propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
-            
+
             if (value is ODataStreamReferenceValue)
             {
                 throw new ODataException(ODataErrorStrings.ODataWriter_StreamPropertiesMustBePropertiesOfODataEntry(propertyName));
@@ -508,13 +541,13 @@ namespace Microsoft.OData.Core.Atom
             if (complexValue != null)
             {
                 return this.WriteComplexValueProperty(
-                    complexValue, 
-                    propertyName, 
-                    isTopLevel, 
-                    isWritingCollection, 
-                    beforePropertyAction, 
-                    propertyTypeReference, 
-                    isOpenPropertyType, 
+                    complexValue,
+                    propertyName,
+                    isTopLevel,
+                    isWritingCollection,
+                    beforePropertyAction,
+                    propertyTypeReference,
+                    isOpenPropertyType,
                     complexValueProjectedProperties);
             }
 
@@ -522,21 +555,30 @@ namespace Microsoft.OData.Core.Atom
             if (collectionValue != null)
             {
                 this.WriteCollectionValueProperty(
-                    collectionValue, 
-                    propertyName, 
-                    isTopLevel, 
-                    isWritingCollection, 
-                    beforePropertyAction, 
-                    propertyTypeReference, 
+                    collectionValue,
+                    propertyName,
+                    isTopLevel,
+                    isWritingCollection,
+                    beforePropertyAction,
+                    propertyTypeReference,
                     isOpenPropertyType);
 
                 return true;
             }
 
-            // If the value isn't one of the value types tested for already, it must be a non-null primitive.
-            this.WritePropertyStart(beforePropertyAction, propertyName, isWritingCollection, isTopLevel);
+            // If the value isn't one of the value types tested for already, it must be a non-null primitive or enum type.
+            this.WritePropertyStart(beforePropertyAction, property, isWritingCollection, isTopLevel);
             SerializationTypeNameAnnotation serializationTypeNameAnnotation = property.ODataValue.GetAnnotation<SerializationTypeNameAnnotation>();
-            this.WritePrimitiveValue(value, /*collectionValidator*/ null, propertyTypeReference, serializationTypeNameAnnotation);
+            ODataEnumValue enumValue = value as ODataEnumValue;
+            if (enumValue != null)
+            {
+                this.WriteEnumValue(enumValue, /*collectionValidator*/ null, propertyTypeReference, serializationTypeNameAnnotation);
+            }
+            else
+            {
+                this.WritePrimitiveValue(value, /*collectionValidator*/ null, propertyTypeReference, serializationTypeNameAnnotation);
+            }
+
             this.WritePropertyEnd();
             return true;
         }
@@ -554,13 +596,13 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="complexValueProjectedProperties">Set of projected properties, or null if all properties should be written.</param>
         /// <returns>true if anything was written, false otherwise.</returns>
         private bool WriteComplexValueProperty(
-            ODataComplexValue complexValue, 
-            string propertyName, 
-            bool isTopLevel, 
+            ODataComplexValue complexValue,
+            string propertyName,
+            bool isTopLevel,
             bool isWritingCollection,
-            Action beforeValueAction, 
-            IEdmTypeReference propertyTypeReference, 
-            bool isOpenPropertyType, 
+            Action beforeValueAction,
+            IEdmTypeReference propertyTypeReference,
+            bool isOpenPropertyType,
             ProjectedPropertiesAnnotation complexValueProjectedProperties)
         {
             // Complex properties are written recursively.
@@ -569,17 +611,18 @@ namespace Microsoft.OData.Core.Atom
             {
                 // Top-level property must always write the property element
                 Debug.Assert(complexValueProjectedProperties == null, "complexValueProjectedProperties == null");
-                this.WritePropertyStart(beforeValueAction, propertyName, isWritingCollection, /*isTopLevel*/ true);
+                this.WritePropertyStart(beforeValueAction, propertyName, complexValue, isWritingCollection, /*isTopLevel*/ true);
+
                 this.AssertRecursionDepthIsZero();
                 this.WriteComplexValue(
-                    complexValue, 
-                    propertyTypeReference, 
-                    isOpenPropertyType, 
-                    isWritingCollection, 
-                    null /* beforeValueAction */, 
-                    null /* afterValueAction */, 
-                    complexValuePropertyNamesChecker, 
-                    null /* collectionValidator */, 
+                    complexValue,
+                    propertyTypeReference,
+                    isOpenPropertyType,
+                    isWritingCollection,
+                    null /* beforeValueAction */,
+                    null /* afterValueAction */,
+                    complexValuePropertyNamesChecker,
+                    null /* collectionValidator */,
                     null /* projectedProperties */);
                 this.AssertRecursionDepthIsZero();
                 this.WritePropertyEnd();
@@ -587,14 +630,14 @@ namespace Microsoft.OData.Core.Atom
             }
 
             return this.WriteComplexValue(
-                complexValue, 
-                propertyTypeReference, 
-                isOpenPropertyType, 
-                isWritingCollection, 
-                () => this.WritePropertyStart(beforeValueAction, propertyName, isWritingCollection, /*isTopLevel*/ false),
-                this.WritePropertyEnd, 
-                complexValuePropertyNamesChecker, 
-                null /* collectionValidator */, 
+                complexValue,
+                propertyTypeReference,
+                isOpenPropertyType,
+                isWritingCollection,
+                () => this.WritePropertyStart(beforeValueAction, propertyName, complexValue, isWritingCollection, /*isTopLevel*/ false),
+                this.WritePropertyEnd,
+                complexValuePropertyNamesChecker,
+                null /* collectionValidator */,
                 complexValueProjectedProperties);
         }
 
@@ -609,15 +652,15 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="propertyTypeReference">The type reference of the collection value (or null if no metadata is available).</param>
         /// <param name="isOpenPropertyType">true if this property is undeclared and the owning type is open.</param>
         private void WriteCollectionValueProperty(
-            ODataCollectionValue collectionValue, 
-            string propertyName, 
-            bool isTopLevel, 
-            bool isWritingTopLevelCollection, 
-            Action beforePropertyAction, 
-            IEdmTypeReference propertyTypeReference, 
+            ODataCollectionValue collectionValue,
+            string propertyName,
+            bool isTopLevel,
+            bool isWritingTopLevelCollection,
+            Action beforePropertyAction,
+            IEdmTypeReference propertyTypeReference,
             bool isOpenPropertyType)
         {
-            this.WritePropertyStart(beforePropertyAction, propertyName, isWritingTopLevelCollection, isTopLevel);
+            this.WritePropertyStart(beforePropertyAction, propertyName, collectionValue, isWritingTopLevelCollection, isTopLevel);
             this.WriteCollectionValue(collectionValue, propertyTypeReference, isOpenPropertyType, isWritingTopLevelCollection);
             this.WritePropertyEnd();
         }
@@ -655,7 +698,7 @@ namespace Microsoft.OData.Core.Atom
             WriterValidationUtils.ValidateNullPropertyValue(propertyTypeReference, propertyName, this.MessageWriterSettings.WriterBehavior, this.Model);
 
             // <d:PropertyName
-            this.WritePropertyStart(beforePropertyAction, propertyName, isWritingCollection, isTopLevel);
+            this.WritePropertyStart(beforePropertyAction, propertyName, new ODataNullValue(), isWritingCollection, isTopLevel);
 
             // The default behavior is to not write type name for null values.
             if (propertyTypeReference != null && !this.UseDefaultFormatBehavior)
@@ -682,13 +725,32 @@ namespace Microsoft.OData.Core.Atom
         }
 
         /// <summary>
+        /// Write null collection element value.
+        /// </summary>
+        /// <param name="propertyTypeReference">The property type reference.</param>
+        private void WriteNullCollectionElementValue(IEdmTypeReference propertyTypeReference)
+        {
+            ValidationUtils.ValidateNullCollectionItem(
+                propertyTypeReference,
+                this.AtomOutputContext.MessageWriterSettings.WriterBehavior);
+
+            // NOTE can't use ODataAtomWriterUtils.WriteNullAttribute because that method assumes the
+            //      default 'm' prefix for the metadata namespace.
+            this.AtomOutputContext.XmlWriter.WriteAttributeString(
+                AtomConstants.ODataNullAttributeName,
+                AtomConstants.ODataMetadataNamespace,
+                AtomConstants.AtomTrueLiteral);
+        }
+
+        /// <summary>
         /// Writes the property start element.
         /// </summary>
         /// <param name="beforePropertyCallback">Action called before anything else is written (if it's not null).</param>
         /// <param name="propertyName">The name of the property to write.</param>
+        /// <param name="value">The odata value to write.</param>
         /// <param name="isWritingCollection">true if we are writing a collection instead of an entry.</param>
         /// <param name="isTopLevel">true if writing a top-level property payload; otherwise false.</param>
-        private void WritePropertyStart(Action beforePropertyCallback, string propertyName, bool isWritingCollection, bool isTopLevel)
+        private void WritePropertyStart(Action beforePropertyCallback, string propertyName, ODataValue value, bool isWritingCollection, bool isTopLevel)
         {
             if (beforePropertyCallback != null)
             {
@@ -699,7 +761,7 @@ namespace Microsoft.OData.Core.Atom
             {
                 // <d:propertyname>
                 this.XmlWriter.WriteStartElement(
-                    isWritingCollection ? string.Empty : AtomConstants.ODataNamespacePrefix, 
+                    isWritingCollection ? string.Empty : AtomConstants.ODataNamespacePrefix,
                     propertyName,
                     AtomConstants.ODataNamespace);
             }
@@ -707,8 +769,8 @@ namespace Microsoft.OData.Core.Atom
             {
                 // <m:value>
                 this.XmlWriter.WriteStartElement(
-                    AtomConstants.ODataMetadataNamespacePrefix, 
-                    AtomConstants.ODataValueElementName, 
+                    AtomConstants.ODataMetadataNamespacePrefix,
+                    AtomConstants.ODataValueElementName,
                     AtomConstants.ODataMetadataNamespace);
 
                 DefaultNamespaceFlags namespaces = DefaultNamespaceFlags.Gml | DefaultNamespaceFlags.GeoRss;
@@ -721,7 +783,26 @@ namespace Microsoft.OData.Core.Atom
                 }
 
                 this.WriteDefaultNamespaceAttributes(namespaces);
+
+                ODataContextUriBuilder contextUriBuilder = this.AtomOutputContext.CreateContextUriBuilder();
+
+                ODataPayloadKind kind = this.AtomOutputContext.MessageWriterSettings.IsIndividualProperty ? ODataPayloadKind.IndividualProperty : ODataPayloadKind.Property;
+
+                ODataContextUrlInfo contextInfo = ODataContextUrlInfo.Create(value, this.AtomOutputContext.MessageWriterSettings.ODataUri);
+                this.WriteContextUriProperty(contextUriBuilder.BuildContextUri(kind, contextInfo));
             }
+        }
+
+        /// <summary>
+        /// Writes the property start element.
+        /// </summary>
+        /// <param name="beforePropertyCallback">Action called before anything else is written (if it's not null).</param>
+        /// <param name="property">The odata property to write.</param>
+        /// <param name="isWritingCollection">true if we are writing a collection instead of an entry.</param>
+        /// <param name="isTopLevel">true if writing a top-level property payload; otherwise false.</param>
+        private void WritePropertyStart(Action beforePropertyCallback, ODataProperty property, bool isWritingCollection, bool isTopLevel)
+        {
+            this.WritePropertyStart(beforePropertyCallback, property.Name, property.ODataValue, isWritingCollection, isTopLevel);
         }
 
         /// <summary>
@@ -772,7 +853,7 @@ namespace Microsoft.OData.Core.Atom
                 AtomConstants.ODataMetadataNamespacePrefix,
                 AtomConstants.AtomTypeAttributeName,
                 AtomConstants.ODataMetadataNamespace,
-                typeName);
+                ODataAtomWriterUtils.PrefixTypeName(WriterUtils.RemoveEdmPrefixFromTypeName(typeName)));
         }
 
         /// <summary>

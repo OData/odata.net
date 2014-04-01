@@ -49,8 +49,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                DebugUtils.CheckNoExternalCallers();
-
                 if (instance == null)
                 {
                     ReferenceEqualityComparer<T> newInstance = new ReferenceEqualityComparer<T>();

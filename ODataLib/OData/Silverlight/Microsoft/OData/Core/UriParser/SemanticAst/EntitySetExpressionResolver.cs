@@ -13,7 +13,6 @@ namespace Microsoft.OData.Core.UriParser
     using System;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Core;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>
@@ -29,7 +28,6 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The resolved EntitySet.</returns>
         internal static IEdmEntitySet ResolveEntitySetFromExpression(IEdmExpression expression)
         {
-            DebugUtils.CheckNoExternalCallers();
             if (expression == null)
             {
                 return null;
