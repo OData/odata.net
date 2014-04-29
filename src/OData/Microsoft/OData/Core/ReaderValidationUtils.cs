@@ -286,12 +286,13 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="targetTypeReference">The target type reference to which the conversion failed.</param>
         /// <param name="innerException">Possible inner exception with more information about the failure.</param>
+        /// <param name="stringValue">The string representation for the value.</param>
         /// <returns>The exception object to throw.</returns>
-        internal static ODataException GetPrimitiveTypeConversionException(IEdmPrimitiveTypeReference targetTypeReference, Exception innerException)
+        internal static ODataException GetPrimitiveTypeConversionException(IEdmPrimitiveTypeReference targetTypeReference, Exception innerException, string stringValue)
         {
             Debug.Assert(targetTypeReference != null, "targetTypeReference != null");
 
-            return new ODataException(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue(targetTypeReference.ODataFullName()), innerException);
+            return new ODataException(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue(stringValue, targetTypeReference.ODataFullName()), innerException);
         }
 
         /// <summary>
@@ -661,6 +662,8 @@ namespace Microsoft.OData.Core
             if (!encoding.IsSingleByte && Encoding.UTF8.CodePage != encoding.CodePage)
 #endif
             {
+                // TODO: Batch reader does not support multi codepoint encodings
+                // We decided to not support multi-byte encodings other than UTF8 for now.
                 throw new ODataException(Strings.ODataBatchReaderStream_MultiByteEncodingsNotSupported(encoding.WebName));
             }
         }
@@ -982,7 +985,7 @@ namespace Microsoft.OData.Core
             // Note that we compare the type definitions, since we want to ignore nullability (the payload type doesn't specify nullability).
             IEdmStructuredType structuredExpectedType = expectedTypeReference.AsStructured().StructuredDefinition();
             IEdmStructuredType structuredPayloadType = (IEdmStructuredType)payloadType;
-            
+
             if (!EdmLibraryExtensions.IsAssignableFrom(structuredExpectedType, structuredPayloadType))
             {
                 if (failIfNotRelated)

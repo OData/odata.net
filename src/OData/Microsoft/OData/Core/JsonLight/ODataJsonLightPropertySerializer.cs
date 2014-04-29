@@ -36,10 +36,11 @@ namespace Microsoft.OData.Core.JsonLight
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightOutputContext">The output context to write to.</param>
-        internal ODataJsonLightPropertySerializer(ODataJsonLightOutputContext jsonLightOutputContext)
-            : base(jsonLightOutputContext)
+        /// <param name="initContextUriBuilder">Whether contextUriBuilder should be initialized.</param>
+        internal ODataJsonLightPropertySerializer(ODataJsonLightOutputContext jsonLightOutputContext, bool initContextUriBuilder = false)
+            : base(jsonLightOutputContext, initContextUriBuilder)
         {
-            this.jsonLightValueSerializer = new ODataJsonLightValueSerializer(this);
+            this.jsonLightValueSerializer = new ODataJsonLightValueSerializer(this, initContextUriBuilder);
         }
 
         /// <summary>
@@ -67,11 +68,10 @@ namespace Microsoft.OData.Core.JsonLight
                 () =>
                 {
                     this.JsonWriter.StartObjectScope();
-                    ODataContextUriBuilder contextUriBuilder = this.JsonLightOutputContext.CreateContextUriBuilder();
                     ODataPayloadKind kind = this.JsonLightOutputContext.MessageWriterSettings.IsIndividualProperty ? ODataPayloadKind.IndividualProperty : ODataPayloadKind.Property;
 
                     ODataContextUrlInfo contextInfo = ODataContextUrlInfo.Create(property.ODataValue, this.JsonLightOutputContext.MessageWriterSettings.ODataUri);
-                    this.WriteContextUriProperty(() => contextUriBuilder.BuildContextUri(kind, contextInfo));
+                    this.WriteContextUriProperty(kind, () => contextInfo);
 
                     // Note we do not allow named stream properties to be written as top level property.
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();

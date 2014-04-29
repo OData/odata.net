@@ -98,13 +98,29 @@ namespace Microsoft.OData.Core.UriParser
         private static object ParseTypedLiteral(this ExpressionLexer expressionLexer, IEdmPrimitiveTypeReference targetTypeReference)
         {
             object targetValue;
-            if (!UriPrimitiveTypeParser.TryUriStringToPrimitive(expressionLexer.CurrentToken.Text, targetTypeReference, out targetValue))
+            string reason;
+            if (!UriPrimitiveTypeParser.TryUriStringToPrimitive(expressionLexer.CurrentToken.Text, targetTypeReference, out targetValue, out reason))
             {
-                string message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteral(
-                    targetTypeReference.FullName(),
-                    expressionLexer.CurrentToken.Text,
-                    expressionLexer.CurrentToken.Position,
-                    expressionLexer.ExpressionText);
+                string message;
+
+                if (reason == null)
+                {
+                    message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteral(
+                        targetTypeReference.FullName(),
+                        expressionLexer.CurrentToken.Text,
+                        expressionLexer.CurrentToken.Position,
+                        expressionLexer.ExpressionText);
+                }
+                else
+                {
+                    message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteralWithReason(
+                        targetTypeReference.FullName(),
+                        expressionLexer.CurrentToken.Text,
+                        expressionLexer.CurrentToken.Position,
+                        expressionLexer.ExpressionText,
+                        reason);
+                }
+                
                 throw new ODataException(message);
             }
 

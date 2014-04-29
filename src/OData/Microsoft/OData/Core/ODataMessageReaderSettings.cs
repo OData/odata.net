@@ -42,6 +42,7 @@ namespace Microsoft.OData.Core
             this.readerBehavior = ODataReaderBehavior.DefaultBehavior;
 
             this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
+            this.EnableAtom = false;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageReaderSettings" /> class.</summary>
@@ -59,6 +60,7 @@ namespace Microsoft.OData.Core
 
             // NOTE: reader behavior is immutable; copy by reference is ok.
             this.readerBehavior = other.ReaderBehavior;
+            this.EnableAtom = other.EnableAtom;
         }
 
         /// <summary>
@@ -279,6 +281,11 @@ namespace Microsoft.OData.Core
                 return this.UndeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty);
             }
         }
+
+        /// <summary>
+        /// Whether ATOM support is enabled.
+        /// </summary>
+        internal bool EnableAtom { get; set; }
 
         /// <summary>Enables the default behavior.</summary>
         public void EnableDefaultBehavior()

@@ -285,7 +285,7 @@ namespace Microsoft.OData.Core
                     throw;
                 }
 
-                throw ReaderValidationUtils.GetPrimitiveTypeConversionException(targetTypeReference, e);
+                throw ReaderValidationUtils.GetPrimitiveTypeConversionException(targetTypeReference, e, text);
             }
         }
 

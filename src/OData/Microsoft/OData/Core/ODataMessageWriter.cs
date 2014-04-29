@@ -177,6 +177,15 @@ namespace Microsoft.OData.Core
             }
         }
 
+        /// <summary>The <see cref="MediaType"/> of the payload to be written with this writer.</summary>
+        internal MediaType MediaType
+        {
+            get
+            {
+                return this.mediaType;
+            }
+        }
+
         /// <summary>
         /// The media type resolver to use when interpreting the content type.
         /// </summary>
@@ -187,7 +196,7 @@ namespace Microsoft.OData.Core
                 if (this.mediaTypeResolver == null)
                 {
                     Debug.Assert(this.settings.Version.HasValue, "Version should have been set by now.");
-                    this.mediaTypeResolver = MediaTypeResolver.GetWriterMediaTypeResolver(this.settings.Version.Value);
+                    this.mediaTypeResolver = MediaTypeResolver.GetMediaTypeResolver(this.settings.EnableAtom);
                 }
 
                 return this.mediaTypeResolver;
@@ -257,6 +266,38 @@ namespace Microsoft.OData.Core
                 ODataPayloadKind.Feed,
                 null /* verifyHeaders */,
                 (context) => context.CreateODataFeedWriterAsync(entitySet, entityType));
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataDeltaWriter" /> to write a delta response.
+        /// </summary>
+        /// <returns>The created writer.</returns>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        public ODataDeltaWriter CreateODataDeltaWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        {
+            this.VerifyCanCreateODataDeltaWriter();
+            return this.WriteToOutput(
+                ODataPayloadKind.Feed,
+                null /* verifyHeaders */,
+                (context) => context.CreateODataDeltaWriter(entitySet, entityType));
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataDeltaWriter" /> to write a delta response.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        public Task<ODataDeltaWriter> CreateODataDeltaWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        {
+            this.VerifyCanCreateODataFeedWriter();
+            return this.WriteToOutputAsync(
+                ODataPayloadKind.Feed,
+                null /* verifyHeaders */,
+                (context) => context.CreateODataDeltaWriterAsync(entitySet, entityType));
         }
 #endif
 
@@ -760,6 +801,8 @@ namespace Microsoft.OData.Core
                     Debug.Assert(this.format == ODataFormat.Batch, "$batch should only support batch format since it's format independent.");
                     Debug.Assert(this.mediaType.FullTypeName == MimeConstants.MimeMultipartMixed, "$batch content type is currently only supported to be multipart/mixed.");
 
+                    //// TODO: What about the encoding - should we verify that it's 7bit US-ASCII only?
+
                     this.batchBoundary = ODataBatchWriterUtils.CreateBatchBoundary(this.writingResponse);
 
                     // Set the content type header here since all headers have to be set before getting the stream
@@ -795,6 +838,21 @@ namespace Microsoft.OData.Core
         /// </summary>
         private void VerifyCanCreateODataFeedWriter()
         {
+            this.VerifyWriterNotDisposedAndNotUsed();
+        }
+
+        /// <summary>
+        /// Verifies that delta writer can be created.
+        /// </summary>
+        private void VerifyCanCreateODataDeltaWriter()
+        {
+            if (!this.writingResponse)
+            {
+                throw new ODataException(Strings.ODataMessageWriter_DeltaInRequest);
+            }
+
+            // VerifyWriterNotDisposedAndNotUsed changes the state of the message writer, it should be called after
+            // we check the error conditions above.
             this.VerifyWriterNotDisposedAndNotUsed();
         }
 
@@ -975,6 +1033,8 @@ namespace Microsoft.OData.Core
         {
             if (value == null)
             {
+                // TODO: OIPI doc seems to indicate in Section 2.2.6.4.1 that 'null' is permissible but the product does not support it.
+                // We also throw in this case.
                 throw new ODataException(Strings.ODataMessageWriter_CannotWriteNullInRawFormat);
             }
 

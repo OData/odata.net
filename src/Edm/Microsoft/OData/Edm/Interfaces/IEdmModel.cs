@@ -34,7 +34,7 @@ namespace Microsoft.OData.Edm
         IEnumerable<Annotations.IEdmVocabularyAnnotation> VocabularyAnnotations { get; }
 
         /// <summary>
-        /// Gets the collection of models referred to by this model.
+        /// Gets the collection of models referred to by this model (mainly by the this.References).
         /// </summary>
         IEnumerable<IEdmModel> ReferencedModels { get; }
 

@@ -66,7 +66,7 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The media type of the data returned by the link.</returns>
         public string MediaType
         {
-            // TODO: ckerer - validation
+            // TODO: validation
             // atomMediaType = xsd:string { pattern = ".+/.+" }
             get;
             set;
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Core.Atom
         /// <returns>The language tag of the resource pointed to by the link.</returns>
         public string HrefLang
         {
-            // TODO: ckerer - validation
+            // TODO: validation
             // atomLanguageTag = xsd:string {
             //     pattern = "[A-Za-z]{1,8}(-[A-Za-z0-9]{1,8})*"
             //   }

@@ -138,6 +138,7 @@ namespace Microsoft.OData.Core {
         internal const string ODataMessageWriter_ErrorPayloadInRequest = "ODataMessageWriter_ErrorPayloadInRequest";
         internal const string ODataMessageWriter_ServiceDocumentInRequest = "ODataMessageWriter_ServiceDocumentInRequest";
         internal const string ODataMessageWriter_MetadataDocumentInRequest = "ODataMessageWriter_MetadataDocumentInRequest";
+        internal const string ODataMessageWriter_DeltaInRequest = "ODataMessageWriter_DeltaInRequest";
         internal const string ODataMessageWriter_CannotWriteNullInRawFormat = "ODataMessageWriter_CannotWriteNullInRawFormat";
         internal const string ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind = "ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind";
         internal const string ODataMessageWriter_IncompatiblePayloadKinds = "ODataMessageWriter_IncompatiblePayloadKinds";
@@ -287,6 +288,7 @@ namespace Microsoft.OData.Core {
         internal const string ODataMessageReader_ErrorPayloadInRequest = "ODataMessageReader_ErrorPayloadInRequest";
         internal const string ODataMessageReader_ServiceDocumentInRequest = "ODataMessageReader_ServiceDocumentInRequest";
         internal const string ODataMessageReader_MetadataDocumentInRequest = "ODataMessageReader_MetadataDocumentInRequest";
+        internal const string ODataMessageReader_DeltaInRequest = "ODataMessageReader_DeltaInRequest";
         internal const string ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata = "ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata";
         internal const string ODataMessageReader_EntitySetSpecifiedWithoutMetadata = "ODataMessageReader_EntitySetSpecifiedWithoutMetadata";
         internal const string ODataMessageReader_OperationImportSpecifiedWithoutMetadata = "ODataMessageReader_OperationImportSpecifiedWithoutMetadata";
@@ -799,6 +801,7 @@ namespace Microsoft.OData.Core {
         internal const string ExpressionLexer_InvalidNumericString = "ExpressionLexer_InvalidNumericString";
         internal const string ExpressionLexer_InvalidEscapeSequence = "ExpressionLexer_InvalidEscapeSequence";
         internal const string UriQueryExpressionParser_UnrecognizedLiteral = "UriQueryExpressionParser_UnrecognizedLiteral";
+        internal const string UriQueryExpressionParser_UnrecognizedLiteralWithReason = "UriQueryExpressionParser_UnrecognizedLiteralWithReason";
         internal const string ValueParser_InvalidDuration = "ValueParser_InvalidDuration";
         internal const string PlatformHelper_DateTimeOffsetMustContainTimeZone = "PlatformHelper_DateTimeOffsetMustContainTimeZone";
         internal const string JsonReader_UnexpectedComma = "JsonReader_UnexpectedComma";
@@ -813,6 +816,7 @@ namespace Microsoft.OData.Core {
         internal const string JsonReader_MissingComma = "JsonReader_MissingComma";
         internal const string JsonReader_InvalidPropertyNameOrUnexpectedComma = "JsonReader_InvalidPropertyNameOrUnexpectedComma";
         internal const string JsonReaderExtensions_UnexpectedNodeDetected = "JsonReaderExtensions_UnexpectedNodeDetected";
+        internal const string JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName = "JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName";
         internal const string JsonReaderExtensions_CannotReadPropertyValueAsString = "JsonReaderExtensions_CannotReadPropertyValueAsString";
         internal const string JsonReaderExtensions_CannotReadValueAsString = "JsonReaderExtensions_CannotReadValueAsString";
         internal const string JsonReaderExtensions_CannotReadValueAsDouble = "JsonReaderExtensions_CannotReadValueAsDouble";

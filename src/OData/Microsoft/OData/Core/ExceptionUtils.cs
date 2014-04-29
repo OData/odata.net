@@ -189,7 +189,7 @@ namespace Microsoft.OData.Core
             else if (value.Count == 0)
             {
 #if !ASTORIA_CLIENT
-                // TODO STRINGS The string is fine; just rename it to just ArgumentEmpty
+                // TODO: STRINGS The string is fine; just rename it to just ArgumentEmpty
                 throw new ArgumentException(Strings.ExceptionUtils_ArgumentStringEmpty, parameterName);
 #endif
             }

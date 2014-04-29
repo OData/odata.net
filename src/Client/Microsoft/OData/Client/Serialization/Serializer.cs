@@ -1,8 +1,12 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="Serializer.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client
 {
@@ -55,7 +59,7 @@ namespace Microsoft.OData.Client
         /// <param name="requestInfo">the request info.</param>
         /// <param name="options">the save change options.</param>
         internal Serializer(RequestInfo requestInfo, SaveChangesOptions options)
-            : this(requestInfo) 
+            : this(requestInfo)
         {
             this.options = options;
         }
@@ -69,7 +73,7 @@ namespace Microsoft.OData.Client
         /// <returns>An instance of ODataMessageWriter.</returns>
         internal static ODataMessageWriter CreateMessageWriter(ODataRequestMessageWrapper requestMessage, RequestInfo requestInfo, bool isParameterPayload)
         {
-            var writerSettings = requestInfo.WriteHelper.CreateSettings(requestMessage.IsBatchPartRequest);
+            var writerSettings = requestInfo.WriteHelper.CreateSettings(requestMessage.IsBatchPartRequest, requestInfo.Context.EnableAtom);
             return requestMessage.CreateWriter(writerSettings, isParameterPayload);
         }
 
@@ -149,7 +153,7 @@ namespace Microsoft.OData.Client
                         {
                             case EdmTypeKind.Collection:
                                 {
-                                    // TODO challenh p2: just call ODataPropertyConverter.CreateODataCollection()
+                                    // TODO: just call ODataPropertyConverter.CreateODataCollection()
                                     IEnumerator enumerator = ((ICollection)operationParameter.Value).GetEnumerator();
                                     ODataCollectionWriter collectionWriter = parameterWriter.CreateCollectionWriter(operationParameter.Name);
                                     ODataCollectionStart odataCollectionStart = new ODataCollectionStart();
@@ -280,9 +284,11 @@ namespace Microsoft.OData.Client
                 }
 
                 IEnumerable<ClientPropertyAnnotation> properties;
-                if (!Util.IsFlagSet(this.options, SaveChangesOptions.ReplaceOnUpdate) &&
+                if ((!Util.IsFlagSet(this.options, SaveChangesOptions.ReplaceOnUpdate) &&
                     entityDescriptor.State == EntityStates.Modified &&
-                    entityDescriptor.PropertiesToSerialize.Any())
+                    entityDescriptor.PropertiesToSerialize.Any()) ||
+                    (Util.IsFlagSet(this.options, SaveChangesOptions.PostOnlySetProperties) &&
+                    entityDescriptor.State == EntityStates.Added))
                 {
                     properties = entityType.PropertiesToSerialize().Where(prop => entityDescriptor.PropertiesToSerialize.Contains(prop.PropertyName));
                 }
@@ -312,8 +318,8 @@ namespace Microsoft.OData.Client
         /// <param name="odataWriter">The ODataWriter used to write the navigation link.</param>
         internal void WriteNavigationLink(EntityDescriptor entityDescriptor, IEnumerable<LinkDescriptor> relatedLinks, ODataWriterWrapper odataWriter)
         {
-            // TODO:: create instance of odatawriter.
-            // TODO:: send clientType once, so that we dont need entity descriptor
+            // TODO: create instance of odatawriter.
+            // TODO: send clientType once, so that we dont need entity descriptor
             Debug.Assert(EntityStates.Added == entityDescriptor.State, "entity not added state");
 
             Dictionary<string, List<LinkDescriptor>> groupRelatedLinks = new Dictionary<string, List<LinkDescriptor>>(EqualityComparer<string>.Default);
@@ -541,10 +547,16 @@ namespace Microsoft.OData.Client
                         case EdmTypeKind.Enum:
                             {
                                 ClientTypeAnnotation typeAnnotation = model.GetClientTypeAnnotation(edmType);
-                                string typeName = this.requestInfo.GetServerTypeName(model.GetClientTypeAnnotation(edmType));
-                                string memberValue = ClientTypeUtil.GetServerDefinedName(typeAnnotation.ElementType.GetMember(value.ToString())[0]);
+                                string typeNameInEdm = this.requestInfo.GetServerTypeName(model.GetClientTypeAnnotation(edmType));
+                                MemberInfo member = typeAnnotation.ElementType.GetMember(value.ToString()).FirstOrDefault();
+                                if (member == null)
+                                {
+                                    throw new NotSupportedException(Strings.Serializer_InvalidEnumMemberValue(typeAnnotation.ElementType.Name, value.ToString()));
+                                }
 
-                                valueInODataFormat = new ODataEnumValue(memberValue, typeAnnotation.ElementTypeName ?? typeName);
+                                string memberValue = ClientTypeUtil.GetServerDefinedName(member);
+
+                                valueInODataFormat = new ODataEnumValue(memberValue, typeNameInEdm ?? typeAnnotation.ElementTypeName);
                                 needsSpecialEscaping = true;
                             }
 

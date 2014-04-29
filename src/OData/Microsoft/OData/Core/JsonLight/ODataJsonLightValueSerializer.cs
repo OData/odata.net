@@ -42,8 +42,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// Initializes a new instance of the <see cref="ODataJsonLightValueSerializer"/> class.
         /// </summary>
         /// <param name="propertySerializer">The property serializer to use when writing complex values.</param>
-        internal ODataJsonLightValueSerializer(ODataJsonLightPropertySerializer propertySerializer)
-            : base(propertySerializer.JsonLightOutputContext)
+        /// <param name="initContextUriBuilder">Whether contextUriBuilder should be initialized.</param>
+        internal ODataJsonLightValueSerializer(ODataJsonLightPropertySerializer propertySerializer, bool initContextUriBuilder = false)
+            : base(propertySerializer.JsonLightOutputContext, initContextUriBuilder)
         {
             this.propertySerializer = propertySerializer;
         }
@@ -52,8 +53,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// Initializes a new instance of the <see cref="ODataJsonLightValueSerializer"/> class.
         /// </summary>
         /// <param name="outputContext">The output context to use.</param>
-        internal ODataJsonLightValueSerializer(ODataJsonLightOutputContext outputContext)
-            : base(outputContext)
+        /// <param name="initContextUriBuilder">Whether contextUriBuilder should be initialized.</param>
+        internal ODataJsonLightValueSerializer(ODataJsonLightOutputContext outputContext, bool initContextUriBuilder = false)
+            : base(outputContext, initContextUriBuilder)
         {
         }
 
@@ -203,7 +205,14 @@ namespace Microsoft.OData.Core.JsonLight
             ODataEnumValue value,
             IEdmTypeReference expectedTypeReference)
         {
-            this.JsonWriter.WritePrimitiveValue(value.Value);
+            if (value.Value == null)
+            {
+                this.WriteNullValue();
+            }
+            else
+            {
+                this.JsonWriter.WritePrimitiveValue(value.Value);
+            }
         }
 
         /// <summary>

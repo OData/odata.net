@@ -14,6 +14,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using Microsoft.OData.Edm.Annotations;
+using Microsoft.OData.Edm.Csdl.CsdlSemantics;
+using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Expressions;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Values;
@@ -24,6 +26,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     {
         protected XmlWriter xmlWriter;
         protected Version version;
+        private readonly string edmxNamespace;
         private readonly VersioningDictionary<string, string> namespaceAliasMappings;
         private readonly IEdmModel model;
 
@@ -31,6 +34,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             this.xmlWriter = xmlWriter;
             this.version = edmVersion;
+            this.edmxNamespace = CsdlConstants.SupportedEdmxVersions[edmVersion];
             this.model = model;
             this.namespaceAliasMappings = namespaceAliasMappings;
         }
@@ -38,6 +42,32 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal static string PathAsXml(IEnumerable<string> path)
         {
             return EdmUtil.JoinInternal("/", path);
+        }
+
+        internal void WriteReferenceElementHeader(IEdmReference reference)
+        {
+            // e.g. <edmx:Reference Uri="http://host/schema/VipCustomer.xml">
+            this.xmlWriter.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Reference, this.edmxNamespace);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Uri, reference.Uri, EdmValueWriter.StringAsXml);
+        }
+
+        internal void WriteIncludeElement(IEdmInclude include)
+        {
+            // e.g. <edmx:Include Namespace="NS.Ref1" Alias="VPCT" />
+            this.xmlWriter.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Include, this.edmxNamespace);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Namespace, include.Namespace, EdmValueWriter.StringAsXml);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Alias, include.Alias, EdmValueWriter.StringAsXml);
+            this.xmlWriter.WriteEndElement();
+        }
+
+        internal void WriteIncludeAnnotationsElement(IEdmIncludeAnnotations includeAnnotations)
+        {
+            // e.g. <edmx:IncludeAnnotations ... />
+            this.xmlWriter.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_IncludeAnnotations, this.edmxNamespace);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_TermNamespace, includeAnnotations.TermNamespace, EdmValueWriter.StringAsXml);
+            this.WriteOptionalAttribute(CsdlConstants.Attribute_Qualifier, includeAnnotations.Qualifier, EdmValueWriter.StringAsXml);
+            this.WriteOptionalAttribute(CsdlConstants.Attribute_TargetNamespace, includeAnnotations.TargetNamespace, EdmValueWriter.StringAsXml);
+            this.xmlWriter.WriteEndElement();
         }
 
         internal void WriteValueTermElementHeader(IEdmValueTerm term, bool inlineType)
@@ -77,6 +107,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_EntityContainer);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, container.Name, EdmValueWriter.StringAsXml);
+            CsdlSemanticsEntityContainer tmp = container as CsdlSemanticsEntityContainer;
+            CsdlEntityContainer csdlContainer = null;
+            if (tmp != null && (csdlContainer = tmp.Element as CsdlEntityContainer) != null)
+            {
+                this.WriteOptionalAttribute(CsdlConstants.Attribute_Extends, csdlContainer.Extends, EdmValueWriter.StringAsXml);
+            }
         }
 
         internal void WriteEntitySetElementHeader(IEdmEntitySet entitySet)

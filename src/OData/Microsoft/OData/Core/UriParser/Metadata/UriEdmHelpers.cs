@@ -103,12 +103,12 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// <exception cref="ODataException">Throws if the two types are not related.</exception>
         public static void CheckRelatedTo(IEdmType parentType, IEdmType childType)
         {
-            IEdmEntityType childEntityType = childType as IEdmEntityType;
-            if (!childEntityType.IsOrInheritsFrom(parentType) && !parentType.IsOrInheritsFrom(childEntityType))
+            IEdmStructuredType childStructuredType = childType as IEdmStructuredType;
+            if (!childStructuredType.IsOrInheritsFrom(parentType) && !parentType.IsOrInheritsFrom(childStructuredType))
             {
                 // If the parentType is an open property, parentType will be null and can't have an ODataFullName.
                 string parentTypeName = (parentType != null) ? parentType.ODataFullName() : "<null>";
-                throw new ODataException(OData.Core.Strings.MetadataBinder_HierarchyNotFollowed(childEntityType.FullName(), parentTypeName));
+                throw new ODataException(OData.Core.Strings.MetadataBinder_HierarchyNotFollowed(childStructuredType.FullTypeName(), parentTypeName));
             }
         }
 

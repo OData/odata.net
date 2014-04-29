@@ -1,13 +1,12 @@
+;   OData .NET Libraries
+;   Copyright (c) Microsoft Corporation
+;   All rights reserved. 
 
-; NOTE: see AS/URT bug 15116
-; NOTE: don't use \", use ' instead
-; NOTE: don't use #, use ; instead for comments
-; NOTE: leave the [strings] alone
+;   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
 
-; See ResourceManager documentation and the ResGen tool.
+;   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Error Messages
+;   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 Batch_ExpectedContentType=The expected content type for a batch requests is "multipart/mixed;boundary=batch" not "{0}".
 Batch_ExpectedResponse=The POST request expected a response with content. ID={0}
@@ -46,6 +45,7 @@ Context_RelationNotRefOrCollection=The sourceProperty is not a reference or coll
 Context_AddLinkCollectionOnly=AddLink and DeleteLink methods only work when the sourceProperty is a collection.
 Context_AddRelatedObjectCollectionOnly=AddRelatedObject method only works when the sourceProperty is a collection.
 Context_AddRelatedObjectSourceDeleted=AddRelatedObject method only works if the source entity is in a non-deleted state.
+Context_UpdateRelatedObjectNonCollectionOnly=UpdateRelatedObject method only works when the sourceProperty is not collection.
 Context_SetLinkReferenceOnly=SetLink method only works when the sourceProperty is not a collection.
 
 Context_NoContentTypeForMediaLink=Media link object of type '{0}' is configured to use the MIME type specified in the property '{1}'. However, that property's value is null or empty.
@@ -80,6 +80,7 @@ Context_CannotChangeStateToModifiedIfNotUnchanged=The entity's state can only be
 Context_CannotChangeStateIfAdded=An entity in the 'Added' state cannot be changed to '{0}', it can only be changed to 'Detached'.
 Context_OnMessageCreatingReturningNull=DataServiceContext.Configurations.RequestPipeline.OnMessageCreating property must not return a null value. Please return a non-null value for this property.
 Context_SendingRequest_InvalidWhenUsingOnMessageCreating=SendingRequest cannot be used in combination with the DataServiceContext.Configurations.RequestPipeline.OnMessageCreating property. Please use SendingRequest2 with DataServiceContext.Configurations.RequestPipeline.OnMessageCreating property instead.
+Context_MustBeUsedWith='{0}' must be used with '{1}'.
 
 DataServiceClientFormat_LoadServiceModelRequired=When you call the UseJson method without a parameter, you must use the LoadServiceModel property to provide a valid IEdmModel instance.
 DataServiceClientFormat_ValidServiceModelRequiredForJson=To use the JSON format, you must first call DataServiceContext.Format.UseJson() and supply a valid service model.
@@ -90,12 +91,12 @@ Collection_NullCollectionReference={0}.{1} must return a non-null open property 
 ClientType_MissingOpenProperty=The open object property '{0}:{1}' is not defined.
 Clienttype_MultipleOpenProperty={0} has multiple definitions for OpenObjectAttribute.
 ClientType_MissingProperty=The closed type {0} does not have a corresponding {1} settable property.
-ClientType_KeysMustBeSimpleTypes={0} has key properties declared on a non-simple type.
+ClientType_KeysMustBeSimpleTypes=The key property '{0}' on for type '{1}' is of type '{2}', which is not a simple type. Only properties of simple type can be key properties.
 ClientType_KeysOnDifferentDeclaredType={0} has key properties declared at different levels within its type hierarchy.
 ClientType_MissingMimeTypeProperty=Type '{0}' has a MimeTypeProperty attribute that references the MIME type property '{1}'. However, this type does not have a property '{1}'.
 ClientType_MissingMimeTypeDataProperty=Type '{0}' has a MimeTypeProperty attribute that references the data property '{1}'. However, this type does not have a property '{1}'.
 ClientType_MissingMediaEntryProperty=Type '{0}' has a MediaEntry attribute that references a property called '{1}'. However, this type does not have a property '{1}'.
-ClientType_NoSettableFields=The type '{0}' has no settable properties.
+ClientType_NoSettableFields=The complex type '{0}' has no settable properties.
 ClientType_MultipleImplementationNotSupported=Multiple implementations of ICollection<T> is not supported.
 ClientType_NullOpenProperties=The open type property '{0}' returned a null instance.
 ClientType_Ambiguous=Resolving type from '{0}' that inherits from '{1}' is ambiguous.
@@ -206,6 +207,7 @@ ALinq_AnyAllNotSupportedInOrderBy=The method '{0}' is not supported by the 'orde
 ALinq_FormatQueryOptionNotSupported=The '$format' query option is not supported. Use the DataServiceContext.Format property to set the desired format.
 ALinq_IllegalSystemQueryOption=Found the following illegal system token while building a projection or expansion path: '{0}'
 ALinq_IllegalPathStructure=Found a projection as a non-leaf segment in an expand path. Please rephrase your query. The projected property was : '{0}'
+ALinq_TypeTokenWithNoTrailingNavProp=Found an illegal type token '{0}' without a trailing navigation property. 
 
 DSKAttribute_MustSpecifyAtleastOnePropertyName=DataServiceKey attribute must specify at least one property name.
 
@@ -258,6 +260,7 @@ Serializer_InvalidCollectionParamterItemType=The operation parameter named '{0}'
 Serializer_NullCollectionParamterItemValue=The operation parameter named '{0}' has a null collection item. The items of a collection must not be null.
 Serializer_InvalidParameterType=The operation parameter named '{0}' was of Edm type kind '{1}'. An operation parameter must be either a primitive type, a complex type or a collection of primitive or complex types.
 Serializer_UriDoesNotContainParameterAlias=The parameter alias '{0}' was not present in the request URI. All parameters passed as alias must be present in the request URI.
+Serializer_InvalidEnumMemberValue=The enum type '{0}' has no member named '{1}'.
 
 ; NOTE: error message copied from Silverlight because the portable library requires this
 DataServiceQuery_EnumerationNotSupported=This target framework does not enable you to directly enumerate over a data service query. This is because enumeration automatically sends a synchronous request to the data service. Because this framework only supports asynchronous operations, you must instead call the BeginExecute and EndExecute methods to obtain a query result that supports enumeration.
@@ -280,6 +283,8 @@ EdmValueUtils_CannotConvertTypeToClrValue=A value with primitive kind '{0}' cann
 ; NOTE: these error messages are copied from EdmLib because they appear in shared source files.
 ValueParser_InvalidDuration=The value '{0}' is not a valid duration value.
 
+; Note: The below list of error messages are common to the ODataLib, EdmLib, Spatial, Server and Client projects.
+PlatformHelper_DateTimeOffsetMustContainTimeZone=The time zone information is missing on the DateTimeOffset value '{0}'. A DateTimeOffset value must contain the time zone information.
 ;END
 
 ; NOTE: see AS/URT bug 15116
@@ -305,3 +310,4 @@ DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity=The LoadAsync method 
 DataServiceCollection_LoadAsyncRequiresDataServiceQuery=Only a typed DataServiceQuery object can be supplied when calling the LoadAsync method on DataServiceCollection.
 
 ;END
+Silverlight_BrowserHttp_NotSupported=Silverlight Browser Http Stack is not supported on the Portable Library, only Client Http is supported.

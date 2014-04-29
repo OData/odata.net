@@ -57,6 +57,9 @@ namespace Microsoft.OData.Core
         /// <summary>Payload kind for individual property in an entity.</summary>
         IndividualProperty = 13,
 
+        /// <summary>Payload kind for delta.</summary>
+        Delta = 14,
+
         /// <summary>Unknown format</summary>
         Unsupported = int.MaxValue,
     }

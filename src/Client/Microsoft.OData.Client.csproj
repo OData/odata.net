@@ -37,21 +37,23 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <ProjectReference Include="..\..\..\ODataLib\EdmLib\Desktop\.Net4.0\Microsoft.OData.Edm.csproj">
+    <ProjectReference Include="..\Edm\Desktop\.Net4.0\Microsoft.OData.Edm.csproj">
       <Project>{A934C8C2-9252-453C-9360-54381E4D276A}</Project>
       <Name>Microsoft.Data.Edm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\ODataLib\Spatial\Desktop\.Net4.0\Microsoft.Spatial.csproj">
+    <ProjectReference Include="..\Spatial\Desktop\.Net4.0\Microsoft.Spatial.csproj">
       <Project>{D8E09813-D0EA-40eb-8A96-EB30DAC029E2}</Project>
       <Name>System.Spatial</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\ODataLib\OData\Desktop\.Net4.0\Microsoft.OData.Core.csproj">
+    <ProjectReference Include="..\OData\Desktop\.Net4.0\Microsoft.OData.Core.csproj">
       <Project>{34B74905-DF66-4BF7-958B-62C50ED1203C}</Project>
       <Name>Microsoft.Data.OData</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <!-- Files reused from the server code base. -->
+    <Content Include="Microsoft.OData.Client.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Microsoft\OData\Client\EdmValueParser.cs" />
     <Compile Include="Microsoft\OData\Client\EdmValueWriter.cs" />
     <Compile Include="Microsoft\OData\Client\EdmValueUtils.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="Microsoft\OData\Client\UrlConvention.cs" />
     <Compile Include="Microsoft\OData\Client\XmlConstants.cs" />
     <Compile Include="Microsoft\OData\Client\Serialization\DataStringEscapeBuilder.cs" />
+    <Compile Include="Microsoft\OData\Client\MessageSettingsHelper.cs" />
     <Compile Include="Microsoft\OData\Client\Metadata\EdmLibraryExtensions.cs" />
     <Compile Include="Microsoft\OData\Client\InternalErrorCodesCommon.cs" />
     <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\AllToken.cs" />
@@ -316,16 +319,12 @@
     <Compile Include="Microsoft\OData\Client\Metadata\ClientTypeUtil.cs" />
     <Compile Include="Microsoft\OData\Client\Metadata\ClientTypeCache.cs" />
     <Compile Include="Microsoft\OData\Client\PlatformHelper.cs" />
-    <Compile Include="Parameterized.Microsoft.OData.Client.cs">
-      <Visible>False</Visible>
-    </Compile>
     <Compile Include="Microsoft.OData.Client.cs">
       <Visible>False</Visible>
     </Compile>
-    <Compile Include="AssemblyKeys.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Microsoft.OData.Client.txt" />
+    <Compile Include="Parameterized.Microsoft.OData.Client.cs">
+      <Visible>False</Visible>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Microsoft.OData.Client.resources">

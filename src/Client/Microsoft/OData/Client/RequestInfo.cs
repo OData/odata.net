@@ -1,8 +1,12 @@
-//---------------------------------------------------------------------
-// <copyright file="RequestInfo.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client
 {
@@ -48,7 +52,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(context != null, "context != null");
             this.Context = context;
             this.WriteHelper = new ODataMessageWritingHelper(this);
-            this.typeResolver = new TypeResolver(context.Model, context.ResolveTypeFromName, context.ResolveNameFromType, context.Format.ServiceModel);
+            this.typeResolver = new TypeResolver(context.Model, context.ResolveTypeFromName, context.ResolveNameFromTypeInternal, context.Format.ServiceModel);
         }
 
         #region Properties
@@ -331,7 +335,7 @@ namespace Microsoft.OData.Client
         /// <returns>type for the server</returns>
         internal string ResolveNameFromType(Type type)
         {
-            return this.Context.ResolveNameFromType(type);
+            return this.Context.ResolveNameFromTypeInternal(type);
         }
 
         /// <summary>

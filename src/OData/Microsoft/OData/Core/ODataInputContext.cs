@@ -255,6 +255,30 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
+        /// Creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the delta response.</param>
+        /// <returns>The newly created <see cref="ODataDeltaReader"/>.</returns>
+        internal virtual ODataDeltaReader CreateDeltaReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Feed);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the delta response.</param>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataDeltaReader"/>.</returns>
+        internal virtual Task<ODataDeltaReader> CreateDeltaReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Feed);
+        }
+#endif
+
+        /// <summary>
         /// Creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to read entities for.</param>

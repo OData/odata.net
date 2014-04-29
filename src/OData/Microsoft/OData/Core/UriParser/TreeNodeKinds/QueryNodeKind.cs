@@ -148,6 +148,16 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// Node describing access to a open property which is a non-entity collection value.
         /// </summary>
         CollectionOpenPropertyAccess = InternalQueryNodeKind.CollectionOpenPropertyAccess,
+
+        /// <summary>
+        /// Cast on a collection property.
+        /// </summary>
+        CollectionPropertyCast = InternalQueryNodeKind.CollectionPropertyCast,
+
+        /// <summary>
+        /// Cast on a single value property.
+        /// </summary>
+        SingleValueCast = InternalQueryNodeKind.SingleValueCast,
     }
 
     /// <summary>
@@ -284,5 +294,15 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// Node describing access to a open property which is a non-entity collection value.
         /// </summary>
         CollectionOpenPropertyAccess = 25,
+
+        /// <summary>
+        /// Cast on a collection property.
+        /// </summary>
+        CollectionPropertyCast = 26,
+
+        /// <summary>
+        /// Cast on a single value.
+        /// </summary>
+        SingleValueCast = 27,
     }
 }

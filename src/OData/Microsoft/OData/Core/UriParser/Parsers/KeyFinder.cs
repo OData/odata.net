@@ -51,8 +51,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 return rawKeyValuesFromUri;
             }
-            
-            // TODO p2 merge the below 2 pieces of codes
+
+            // TODO: p2 merge the below 2 pieces of codes
             // find out if any target entity key properties have referential constraints that link them to the previous rawKeyValuesFromUri.
             List<EdmReferentialConstraintPropertyPair> keysFromReferentialIntegrityConstraint = ExtractMatchingPropertyPairsFromNavProp(currentNavigationProperty, targetKeyPropertyList).ToList();
 

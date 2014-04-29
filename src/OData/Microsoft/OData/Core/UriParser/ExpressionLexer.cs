@@ -444,7 +444,7 @@ namespace Microsoft.OData.Core.UriParser
             this.AdvanceThroughBalancedExpression('(', ')');
             var expressionText = this.Text.Substring(startPosition, this.textPos - startPosition);
 
-            //// TODO Consider introducing a token type and setting up the current token instead of returning string.
+            //// TODO: Consider introducing a token type and setting up the current token instead of returning string.
             //// We've done weird stuff, and the state of hte lexer is weird now. All will be well once NextToken() is called, 
             //// but until then CurrentToken is stale and misleading.
 

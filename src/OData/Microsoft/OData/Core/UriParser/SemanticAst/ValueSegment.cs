@@ -50,7 +50,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 
             if (previousType is IEdmEntityType)
             {
-                // TODO Throw if the entity type does not have a HasStream attribute
+                // TODO: Throw if the entity type does not have a HasStream attribute
                 // $value on an entity type means default stream
                 this.edmType = EdmCoreModel.Instance.GetStream(false).Definition;
             }

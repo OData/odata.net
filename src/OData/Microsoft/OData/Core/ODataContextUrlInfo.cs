@@ -36,6 +36,17 @@ namespace Microsoft.OData.Core
         /// <summary>ODataUri information for context Url</summary>
         private ODataUri odataUri;
 
+        /// <summary>
+        /// Default constructor for <see cref="ODataContextUrlInfo"/>
+        /// </summary>
+        private ODataContextUrlInfo()
+        {
+            DeltaKind = ODataDeltaKind.None;
+        }
+
+        /// <summary>The delta kind used for building context Url</summary>
+        internal ODataDeltaKind DeltaKind { get; set; }
+
         /// <summary>Name of navigation path used for building context Url</summary>
         internal string NavigationPath
         {
@@ -171,6 +182,58 @@ namespace Microsoft.OData.Core
                     IncludeFragmentItemSelector = isSingle && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
                     odataUri = odataUri
                 };
+        }
+
+        /// <summary>
+        /// Create contextUrlInfo for delta
+        /// </summary>
+        /// <param name="typeContext">The ODataFeedAndEntryTypeContext to be used.</param>
+        /// <param name="kind">The delta kind.</param>
+        /// <param name="odataUri">The odata uri info for current query.</param>
+        /// <returns>The generated ODataContextUrlInfo.</returns>
+        internal static ODataContextUrlInfo Create(ODataFeedAndEntryTypeContext typeContext, ODataDeltaKind kind, ODataUri odataUri = null)
+        {
+            Debug.Assert(typeContext != null, "typeContext != null");
+
+            ODataContextUrlInfo contextUriInfo = new ODataContextUrlInfo()
+            {
+                isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
+                navigationSource = typeContext.NavigationSourceName,
+                TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedEntityTypeName ? null : typeContext.ExpectedEntityTypeName,
+                TypeName = typeContext.NavigationSourceEntityTypeName,
+                IncludeFragmentItemSelector = kind == ODataDeltaKind.Entry && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
+                DeltaKind = kind,
+            };
+
+            // Only use odata uri in with model case.
+            if (typeContext is ODataFeedAndEntryTypeContext.ODataFeedAndEntryTypeContextWithModel)
+            {
+                contextUriInfo.odataUri = odataUri;
+            }
+
+            return contextUriInfo;
+        }
+
+        /// <summary>
+        /// Determine whether current contextUrlInfo could be determined from parent contextUrlInfo.
+        /// </summary>
+        /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
+        /// <returns>Whether current contextUrlInfo could be determined from parent contextUrlInfo.</returns>
+        internal bool IsHiddenBy(ODataContextUrlInfo parentContextUrlInfo)
+        {
+            if (parentContextUrlInfo == null)
+            {
+                return false;
+            }
+
+            if (parentContextUrlInfo.NavigationPath == NavigationPath &&
+                parentContextUrlInfo.DeltaKind == ODataDeltaKind.Feed &&
+                this.DeltaKind == ODataDeltaKind.Entry)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

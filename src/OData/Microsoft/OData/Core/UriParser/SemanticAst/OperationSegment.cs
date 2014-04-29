@@ -27,7 +27,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     /// <summary>
     /// A segment representing a call to an action, function, or service operation.
     /// </summary>
-    //// TODO: 1631831 - update code that is duplicate between operation and operation import segment, likely could share a baseclass.
+    //// TODO: update code that is duplicate between operation and operation import segment, likely could share a baseclass.
     public sealed class OperationSegment : ODataPathSegment
     {
         /// <summary>
@@ -91,7 +91,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             ExceptionUtils.CheckArgumentCollectionNotNullOrEmpty(this.operations, "operations");
 
             // Determine the return type of the operation. This is only possible if all the candidate operations agree on the return type.
-            // TODO Because we work on types and not type references, if there are nullability differences we'd ignore them...
+            // TODO: Because we work on types and not type references, if there are nullability differences we'd ignore them...
             IEdmType typeSoFar = this.operations.First().ReturnType != null
                                      ? this.operations.First().ReturnType.Definition
                                      : null;

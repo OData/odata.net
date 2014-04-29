@@ -222,6 +222,37 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
+        /// Creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the delta response.</param>
+        /// <returns>The newly created <see cref="ODataDeltaReader"/>.</returns>
+        internal override ODataDeltaReader CreateDeltaReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        {
+            this.AssertSynchronous();
+            this.VerifyCanCreateODataReader(entitySet, expectedBaseEntityType);
+
+            return this.CreateDeltaReaderImplementation(entitySet, expectedBaseEntityType);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the delta response.</param>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataDeltaReader"/>.</returns>
+        internal override Task<ODataDeltaReader> CreateDeltaReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        {
+            this.AssertAsynchronous();
+            this.VerifyCanCreateODataReader(entitySet, expectedBaseEntityType);
+
+            // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateDeltaReaderImplementation(entitySet, expectedBaseEntityType));
+        }
+#endif
+
+        /// <summary>
         /// Creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
@@ -548,7 +579,7 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Verifies that CreateEntryReader or CreateFeedReader can be called.
+        /// Verifies that CreateEntryReader or CreateFeedReader or CreateDeltaReader can be called.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="entityType">The expected entity type for the entry/entries to be read.</param>
@@ -649,6 +680,17 @@ namespace Microsoft.OData.Core.JsonLight
         private ODataReader CreateFeedReaderImplementation(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
             return new ODataJsonLightReader(this, entitySet, expectedBaseEntityType, true, null /*listener*/);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the delta response.</param>
+        /// <returns>The newly created <see cref="ODataReader"/>.</returns>
+        private ODataDeltaReader CreateDeltaReaderImplementation(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        {
+            return new ODataJsonLightDeltaReader(this, entitySet, expectedBaseEntityType);
         }
 
         /// <summary>

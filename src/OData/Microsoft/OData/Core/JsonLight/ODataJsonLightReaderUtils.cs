@@ -14,6 +14,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System;
     using System.Diagnostics;
     using System.Globalization;
+    using Microsoft.OData.Core.Json;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
@@ -99,11 +100,11 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>Object which is in sync with the property type (modulo the V1 exception of converting numbers to non-compatible target types).</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static object ConvertValue(
-            object value, 
+            object value,
             IEdmPrimitiveTypeReference primitiveTypeReference,
-            ODataMessageReaderSettings messageReaderSettings, 
-            ODataVersion version, 
-            bool validateNullValue, 
+            ODataMessageReaderSettings messageReaderSettings,
+            ODataVersion version,
+            bool validateNullValue,
             string propertyName)
         {
             Debug.Assert(primitiveTypeReference != null, "primitiveTypeReference != null");
@@ -115,7 +116,7 @@ namespace Microsoft.OData.Core.JsonLight
                     EdmCoreModel.Instance,
                     primitiveTypeReference,
                     messageReaderSettings,
-                    validateNullValue, 
+                    validateNullValue,
                     version,
                     propertyName);
                 return null;
@@ -199,7 +200,7 @@ namespace Microsoft.OData.Core.JsonLight
                     throw;
                 }
 
-                throw ReaderValidationUtils.GetPrimitiveTypeConversionException(primitiveTypeReference, e);
+                throw ReaderValidationUtils.GetPrimitiveTypeConversionException(primitiveTypeReference, e, value.ToString());
             }
 
             // otherwise just return the value without doing any conversion
@@ -338,6 +339,21 @@ namespace Microsoft.OData.Core.JsonLight
             if (targetType == typeof(DateTimeOffset))
             {
                 return PlatformHelper.ConvertStringToDateTimeOffset(stringValue);
+            }
+
+            if (targetType == typeof(Double) || targetType == typeof(Single))
+            {
+                // Accept Infinity and -Infinity to perserve consistence
+                if (stringValue == CultureInfo.InvariantCulture.NumberFormat.PositiveInfinitySymbol)
+                {
+                    stringValue = JsonValueUtils.ODataJsonPositiveInfinitySymbol;
+                }
+                else if (stringValue == CultureInfo.InvariantCulture.NumberFormat.NegativeInfinitySymbol)
+                {
+                    stringValue = JsonValueUtils.ODataJsonNegativeInfinitySymbol;
+                }
+
+                return Convert.ChangeType(stringValue, targetType, JsonValueUtils.ODataNumberFormatInfo);
             }
 
             // For string types, we support conversion to all possible primitive types

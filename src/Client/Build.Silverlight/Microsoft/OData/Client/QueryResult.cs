@@ -1,11 +1,12 @@
-//---------------------------------------------------------------------
-// <copyright file="QueryResult.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-// <summary>
-// query object
-// </summary>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client
 {
@@ -197,7 +198,7 @@ namespace Microsoft.OData.Client
                     asyncResult = BaseAsyncResult.InvokeAsync(this.Request.BeginGetResponse, this.AsyncEndGetResponse, asyncStateBag);
                 }
 
-                // TODO:: Bug: 298920: Async execute methods for query (QueryResult.cs), should not need to maintain "CompletedSynchronously" information in two state variables.
+                // TODO: 298920: Async execute methods for query (QueryResult.cs), should not need to maintain "CompletedSynchronously" information in two state variables.
                 pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously);
                 this.SetCompletedSynchronously(asyncResult.CompletedSynchronously);
             }

@@ -1,8 +1,12 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="ODataPropertyConverter.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client
 {
@@ -159,7 +163,13 @@ namespace Microsoft.OData.Client
                 return null;
             }
 
-            string memberValue = ClientTypeUtil.GetServerDefinedName(enumClrType.GetMember(value.ToString())[0]);
+            MemberInfo member = enumClrType.GetMember(value.ToString()).FirstOrDefault();
+            if (member == null)
+            {
+                throw new NotSupportedException(Strings.Serializer_InvalidEnumMemberValue(enumClrType.Name, value.ToString())); 
+            }
+
+            string memberValue = ClientTypeUtil.GetServerDefinedName(member);
             return new ODataEnumValue(memberValue, enumTypeAnnotation.ElementTypeName);
         }
 
@@ -211,15 +221,26 @@ namespace Microsoft.OData.Client
                     enumerablePropertyValue,
                     (val) =>
                     {
-                        WebUtil.ValidateCollectionItem(val);
-                        WebUtil.ValidateComplexCollectionItem(val, propertyName, collectionItemType);
                         if (areEnumItems)
                         {
-                            string memberValue = ClientTypeUtil.GetServerDefinedName(collectionItemType.GetMember(val.ToString())[0]);
+                            if (val == null)
+                            {
+                                return new ODataEnumValue(null, collectionItemType.FullName) as ODataValue;
+                            }
+
+                            MemberInfo member = collectionItemTypeTmp.GetMember(val.ToString()).FirstOrDefault();
+                            if (member == null)
+                            {
+                                throw new NotSupportedException(Strings.Serializer_InvalidEnumMemberValue(collectionItemType.Name, value.ToString())); 
+                            }
+
+                            string memberValue = ClientTypeUtil.GetServerDefinedName(member);
                             return new ODataEnumValue(memberValue, collectionItemType.FullName) as ODataValue;
                         }
                         else
                         {
+                            WebUtil.ValidateCollectionItem(val);
+                            WebUtil.ValidateComplexCollectionItem(val, propertyName, collectionItemType);
                             return this.CreateODataComplexValue(collectionItemType, val, propertyName, true /*isCollectionItem*/, visitedComplexTypeObjects)
                                  as ODataValue;
                         }
@@ -372,7 +393,22 @@ namespace Microsoft.OData.Client
 
             if (property.IsEnumType)
             {
-                string enumValue = propertyValue == null ? null : ClientTypeUtil.GetServerDefinedName(property.PropertyType.GetMember(propertyValue.ToString())[0]);
+                string enumValue;
+                if (propertyValue == null)
+                {
+                    enumValue = null;
+                }
+                else
+                {
+                    MemberInfo member = property.PropertyType.GetMember(propertyValue.ToString()).FirstOrDefault();
+                    if (member == null)
+                    {
+                        throw new NotSupportedException(Strings.Serializer_InvalidEnumMemberValue(property.PropertyType.Name, propertyValue.ToString()));
+                    }
+
+                    enumValue = ClientTypeUtil.GetServerDefinedName(member);
+                }
+
                 string typeNameInMetadata = this.requestInfo.ResolveNameFromType(property.PropertyType);
                 odataValue = new ODataEnumValue(enumValue, typeNameInMetadata);
                 return true;

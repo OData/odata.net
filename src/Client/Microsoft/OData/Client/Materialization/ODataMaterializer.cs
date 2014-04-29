@@ -1,12 +1,12 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="ODataMaterializer.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-// <summary>
-// Base class of materializers that materialize values from OData
-// messages
-// </summary>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client.Materialization
 {
@@ -359,7 +359,9 @@ namespace Microsoft.OData.Client.Materialization
                 }
 
                 // Astoria client only supports atom, jsonlight and raw value payloads.
+#pragma warning disable 618
                 if (detectionResult.Format != ODataFormat.Atom && detectionResult.Format != ODataFormat.Json && detectionResult.Format != ODataFormat.RawValue)
+#pragma warning restore 618
                 {
                     throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidContentTypeEncountered(responseMessage.GetHeader(XmlConstants.HttpContentType)));
                 }

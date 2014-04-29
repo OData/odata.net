@@ -134,7 +134,9 @@ namespace Microsoft.OData.Core.Atom
         private void WriteEntitySetInfo(ODataEntitySetInfo entitySetInfo)
         {
             // validate that the resource has a non-null url.
+#pragma warning disable 618
             ValidationUtils.ValidateServiceDocumentElement(entitySetInfo, ODataFormat.Atom);
+#pragma warning restore 618
 
             // <app:collection>
             this.XmlWriter.WriteStartElement(string.Empty, AtomConstants.AtomPublishingCollectionElementName, AtomConstants.AtomPublishingNamespace);
@@ -175,7 +177,9 @@ namespace Microsoft.OData.Core.Atom
         private void WriteNonEntitySetInfoElement(ODataServiceDocumentElement serviceDocumentElement, string elementName)
         {
             // validate that the resource has a non-null url.
+#pragma warning disable 618
             ValidationUtils.ValidateServiceDocumentElement(serviceDocumentElement, ODataFormat.Atom);
+#pragma warning restore 618
 
             // <metadata:elementName>
             this.XmlWriter.WriteStartElement(AtomConstants.ODataMetadataNamespacePrefix, elementName, AtomConstants.ODataMetadataNamespace);

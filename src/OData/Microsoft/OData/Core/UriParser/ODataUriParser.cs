@@ -82,6 +82,26 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
+        /// Build an ODataUriParser
+        /// </summary>
+        /// <param name="model">Model to use for metadata binding.</param>
+        /// <param name="fullUri">full Uri to be parsed, it should be a relative Uri.</param>
+        public ODataUriParser(IEdmModel model, Uri fullUri)
+        {
+            ExceptionUtils.CheckArgumentNotNull(fullUri, "fullUri");
+
+            if (fullUri.IsAbsoluteUri)
+            {
+                // TODO: update localization string resource
+                throw new ODataException("fullUri must be a relative Uri if serviceRoot is not specified.");
+            }
+
+            this.configuration = new ODataUriParserConfiguration(model);
+            this.fullUri = fullUri;
+            this.queryOptions = UriUtils.ParseQueryOptions(UriUtils.CreateMockAbsoluteUri(this.fullUri));
+        }
+
+        /// <summary>
         /// The settings for this instance of <see cref="ODataUriParser"/>. Refer to the documentation for the individual properties of <see cref="ODataUriParserSettings"/> for more information.
         /// </summary>
         public ODataUriParserSettings Settings
@@ -127,7 +147,7 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>
         /// Whether Uri template parsing is enabled. Uri template for keys and function parameters are supported.
-        /// See <see cref="UriTemplateParser"/> class for detail.
+        /// See <see cref="UriTemplateExpression"/> class for detail.
         /// </summary>
         public bool EnableUriTemplateParsing
         {
@@ -220,7 +240,16 @@ namespace Microsoft.OData.Core.UriParser
 
             if (!idUri.IsAbsoluteUri)
             {
-                idUri = new Uri(this.fullUri, idUri);
+                if (!this.fullUri.IsAbsoluteUri)
+                {
+                    Uri baseUri = UriUtils.CreateMockAbsoluteUri();
+                    Uri c = new Uri(UriUtils.CreateMockAbsoluteUri(this.fullUri), idUri);
+                    idUri = baseUri.MakeRelativeUri(c);
+                }
+                else
+                {
+                    idUri = new Uri(this.fullUri, idUri);
+                }
             }
 
             this.entityIdSegment = new EntityIdSegment(idUri);
@@ -290,11 +319,6 @@ namespace Microsoft.OData.Core.UriParser
         {
             Uri pathUri = this.fullUri;
             ExceptionUtils.CheckArgumentNotNull(pathUri, "pathUri");
-
-            if (!pathUri.IsAbsoluteUri)
-            {
-                throw new ODataException(ODataErrorStrings.UriParser_UriMustBeAbsolute(pathUri));
-            }
 
             UriPathParser pathParser = new UriPathParser(this.Settings.PathLimit);
             var rawSegments = pathParser.ParsePathIntoSegments(pathUri, this.ServiceRoot);

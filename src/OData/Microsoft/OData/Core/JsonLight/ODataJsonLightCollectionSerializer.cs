@@ -26,21 +26,15 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>true when writing a top-level collection that requires the 'value' wrapper object; otherwise false.</summary>
         private readonly bool writingTopLevelCollection;
 
-        /// <summary>The context uri builder to use.</summary>
-        private readonly ODataContextUriBuilder contextUriBuilder;
-
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightOutputContext">The output context to write to.</param>
         /// <param name="writingTopLevelCollection">true when writing a top-level collection that requires the 'value' wrapper object; otherwise false.</param>
         internal ODataJsonLightCollectionSerializer(ODataJsonLightOutputContext jsonLightOutputContext, bool writingTopLevelCollection)
-            : base(jsonLightOutputContext)
+            : base(jsonLightOutputContext, /*initContextUriBuilder*/true)
         {
             this.writingTopLevelCollection = writingTopLevelCollection;
-
-            // DEVNOTE: grab this early so that any validation errors are thrown at creation time rather than when Write___ is called.
-            this.contextUriBuilder = jsonLightOutputContext.CreateContextUriBuilder();
         }
 
         /// <summary>
@@ -58,7 +52,7 @@ namespace Microsoft.OData.Core.JsonLight
                 this.JsonWriter.StartObjectScope();
 
                 // "@odata.context":...
-                this.WriteContextUriProperty(() => this.contextUriBuilder.BuildContextUri(ODataPayloadKind.Collection, ODataContextUrlInfo.Create(collectionStart.SerializationInfo, itemTypeReference)));
+                this.WriteContextUriProperty(ODataPayloadKind.Collection, () => ODataContextUrlInfo.Create(collectionStart.SerializationInfo, itemTypeReference));
 
                 // "value":
                 this.JsonWriter.WriteValuePropertyName();

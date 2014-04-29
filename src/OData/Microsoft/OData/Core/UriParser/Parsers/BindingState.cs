@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
     /// <summary>
     /// Encapsulates the state of metadata binding.
-    /// TODO finish moving fields from MetadataBinder here and see if anything can be removed.
+    /// TODO: finish moving fields from MetadataBinder here and see if anything can be removed.
     /// </summary>
     internal sealed class BindingState
     {
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             this.BindingRecursionDepth++;
 
-            // TODO challenh: add BindingLimit, use uniform error message
+            // TODO: add BindingLimit, use uniform error message
             if (this.BindingRecursionDepth > this.configuration.Settings.FilterLimit)
             {
                 throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_TooDeep);

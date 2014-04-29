@@ -331,7 +331,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             List<FunctionParameterToken> syntacticArguments = arguments == null ? new List<FunctionParameterToken>() : arguments.ToList();
             if (!FunctionOverloadResolver.ResolveOperationFromList(identifier, syntacticArguments.Select(ar => ar.ParameterName).ToList(), bindingType, state.Model, out operation))
             {
-                // TODO challenh: FunctionOverloadResolver.ResolveOperationFromList() looks up the function by parameter names, but it shouldn't ignore parameter types. (test case ParseFilter_AliasInFunction_PropertyAsValue_TypeMismatch should fail)
+                // TODO: FunctionOverloadResolver.ResolveOperationFromList() looks up the function by parameter names, but it shouldn't ignore parameter types. (test case ParseFilter_AliasInFunction_PropertyAsValue_TypeMismatch should fail)
                 return false;
             }
 
@@ -349,7 +349,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             IEdmFunction function = (IEdmFunction)operation;
 
-            // TODO challenh:  $filter $orderby parameter expression which contains complex or collection should NOT be supported in this way
+            // TODO:  $filter $orderby parameter expression which contains complex or collection should NOT be supported in this way
             //     but should be parsed into token tree, and binded to node tree: parsedParameters.Select(p => this.bindMethod(p));
             ICollection<FunctionParameterToken> parsedParameters = HandleComplexOrCollectionParameterValueIfExists(state.Configuration.Model, function, syntacticArguments);
 
@@ -396,7 +396,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
              Justification = "Parameter type is needed here to check whether can be convert from source")]
         internal static List<OperationSegmentParameter> BindSegmentParameters(ODataUriParserConfiguration configuration, IEdmOperation functionOrOpertion, ICollection<FunctionParameterToken> segmentParameterTokens)
         {
-            // TODO challenh: HandleComplexOrCollectionParameterValueIfExists  is temp work around for single copmlex or colleciton type, it can't handle nested complex or collection value.
+            // TODO: HandleComplexOrCollectionParameterValueIfExists  is temp work around for single copmlex or colleciton type, it can't handle nested complex or collection value.
             ICollection<FunctionParameterToken> parametersParsed = FunctionCallBinder.HandleComplexOrCollectionParameterValueIfExists(configuration.Model, functionOrOpertion, segmentParameterTokens, configuration.EnableUriTemplateParsing);
 
             // Bind it to metadata
@@ -441,7 +441,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>
         /// This is temp work around for $filter $orderby parameter expression which contains complex or collection
         ///     like "Fully.Qualified.Namespace.CanMoveToAddresses(addresses=[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}])";
-        /// TODO challenh:  $filter $orderby parameter expression which contains nested complex or collection should NOT be supported in this way
+        /// TODO:  $filter $orderby parameter expression which contains nested complex or collection should NOT be supported in this way
         ///     but should be parsed into token tree, and binded to node tree: parsedParameters.Select(p => this.bindMethod(p));
         /// </summary>
         /// <param name="model">The model.</param>
@@ -635,7 +635,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 // throw if cast not-string to enum :
                 while (returnType is IEdmEnumTypeReference)
                 {
-                    IEdmPrimitiveTypeReference referenceTmp = args[0].GetEdmTypeReference() as IEdmPrimitiveTypeReference;
+                    IEdmTypeReference edmTypeReference = args[0].GetEdmTypeReference();
+                    if (edmTypeReference == null)
+                    {
+                        // Support cast null to enum
+                        break;
+                    }
+
+                    IEdmPrimitiveTypeReference referenceTmp = edmTypeReference as IEdmPrimitiveTypeReference;
                     if (referenceTmp != null)
                     {
                         IEdmPrimitiveType typeTmp = referenceTmp.Definition as IEdmPrimitiveType;

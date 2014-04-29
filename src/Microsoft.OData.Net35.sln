@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Core", "OData\Microsoft.OData.Core.Net35.csproj", "{BB5BFBA0-A4D7-4EE8-8FE9-F9B6421A250D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Edm", "Edm\Microsoft.OData.Edm.Net35.csproj", "{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Spatial", "Spatial\Microsoft.Spatial.Net35.csproj", "{A1EBA295-EC08-48D4-8C6D-C8A2289B7C40}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB5BFBA0-A4D7-4EE8-8FE9-F9B6421A250D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB5BFBA0-A4D7-4EE8-8FE9-F9B6421A250D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB5BFBA0-A4D7-4EE8-8FE9-F9B6421A250D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB5BFBA0-A4D7-4EE8-8FE9-F9B6421A250D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1EBA295-EC08-48D4-8C6D-C8A2289B7C40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1EBA295-EC08-48D4-8C6D-C8A2289B7C40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1EBA295-EC08-48D4-8C6D-C8A2289B7C40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1EBA295-EC08-48D4-8C6D-C8A2289B7C40}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

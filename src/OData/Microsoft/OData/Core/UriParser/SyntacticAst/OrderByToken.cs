@@ -83,7 +83,8 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// <returns>An object whose type is determined by the type parameter of the visitor.</returns>
         public override T Accept<T>(ISyntacticTreeVisitor<T> visitor)
         {
-            throw new NotImplementedException(); // TODO
+            // TODO
+            throw new NotImplementedException();
         }
     }
 }

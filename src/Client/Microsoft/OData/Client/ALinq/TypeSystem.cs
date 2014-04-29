@@ -1,8 +1,13 @@
-//---------------------------------------------------------------------
-// <copyright file="TypeSystem.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+
 namespace Microsoft.OData.Client
 {
     using System;
@@ -14,6 +19,12 @@ namespace Microsoft.OData.Client
     /// <summary>Utility functions for processing Expression trees</summary>
     internal static class TypeSystem
     {
+        /// <summary>Used for comparison with external assemblies for silverlight like Microsoft.VisualBasic.</summary>
+        private const string OfficialSilverLightPublicKeyToken = "31bf3856ad364e35";
+
+        /// <summary>Used for comparison with external assemblies for desktop like Microsoft.VisualBasic.</summary>
+        private const string OfficialDesktopPublicKeyToken = "b03f5f7f11d50a3a";
+
         /// <summary> Method map for methods in URI query options</summary>
         private static readonly Dictionary<MethodInfo, string> expressionMethodMap;
 
@@ -37,9 +48,9 @@ namespace Microsoft.OData.Client
         /// <summary> VB Assembly public key token</summary>
 #pragma warning disable 436
 #if !ASTORIA_LIGHT
-        private const string VisualBasicAssemblyPublicKeyToken = "PublicKeyToken=" + AssemblyRef.OfficialDesktopPublicKeyToken;
+        private const string VisualBasicAssemblyPublicKeyToken = "PublicKeyToken=" + OfficialDesktopPublicKeyToken;
 #else
-        private const string VisualBasicAssemblyPublicKeyToken = "PublicKeyToken=" + AssemblyRef.OfficialSilverLightPublicKeyToken;
+        private const string VisualBasicAssemblyPublicKeyToken = "PublicKeyToken=" + OfficialSilverLightPublicKeyToken;
 #endif
 #pragma warning restore 436
         /// <summary>

@@ -1278,5 +1278,10 @@ namespace Microsoft.OData.Edm.Validation
         /// The binding on navigation property of collection type must not target to singleton.
         /// </summary>
         NavigationPropertyOfCollectionTypeMustNotTargetToSingleton = 371,
+
+        /// <summary>
+        /// Reference must contatin at least one Include or IncludeAnnotations
+        /// </summary>
+        ReferenceElementMustContainAtLeastOneIncludeOrIncludeAnnotationsElement = 372,
     }
 }

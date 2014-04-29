@@ -27,6 +27,11 @@ namespace Microsoft.OData.Core.UriParser
     internal static class UriUtils
     {
         /// <summary>
+        /// Base mock Uri
+        /// </summary>
+        private static readonly Uri BaseMockUri = new Uri("http://host/");
+
+        /// <summary>
         /// Determines whether the <paramref name="baseUri"/> Uri instance is a 
         /// base of the specified Uri instance. 
         /// </summary>
@@ -197,6 +202,28 @@ namespace Microsoft.OData.Core.UriParser
             catch (FormatException)
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Create mock absoulte Uri from given Uri
+        /// </summary>
+        /// <param name="uri">The Uri to be operated on.</param>
+        /// <returns>The mock Uri, the base Uri if given <paramref name="uri"/> is null</returns>
+        internal static Uri CreateMockAbsoluteUri(Uri uri = null)
+        {
+            if (uri == null)
+            {
+                return BaseMockUri;
+            }
+
+            if (uri.IsAbsoluteUri)
+            {
+                return uri;
+            }
+            else
+            {
+                return new Uri(BaseMockUri, uri);
             }
         }
 

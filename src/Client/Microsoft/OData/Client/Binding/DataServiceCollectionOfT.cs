@@ -1,12 +1,13 @@
-//---------------------------------------------------------------------
-// <copyright file="DataServiceCollectionOfT.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-// <summary>
-//   DataServiceCollection class
-// </summary>
-//
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+
 namespace Microsoft.OData.Client
 {
     #region Namespaces
@@ -706,6 +707,8 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(context != null, "Must have a valid context to initialize.");
             Debug.Assert(this.observer == null, "Must have no observer which implies Initialize should only be called once.");
+
+            context.UsingDataServiceCollection = true;
 
             // Verify that T corresponds to an entity type.
             // Validate here before any items are added to the collection because if this fails we want to prevent the collection from being populated.

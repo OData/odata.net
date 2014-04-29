@@ -105,6 +105,7 @@ namespace Microsoft.OData.Edm.Csdl
         private void WriteODataEdmx()
         {
             this.WriteEdmxElement();
+            this.WriteReferenceElements();
             this.WriteDataServicesElement();
             this.WriteSchemas();
             this.EndElement(); // </DataServices>
@@ -138,6 +139,12 @@ namespace Microsoft.OData.Edm.Csdl
             this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_ConceptualModels, this.edmxNamespace);
         }
 
+        private void WriteReferenceElements()
+        {
+            EdmModelReferenceElementsVisitor visitor = new EdmModelReferenceElementsVisitor(this.model, this.writer, this.edmxVersion);
+            visitor.VisitEdmReferences(this.model);
+        }
+
         private void WriteDataServicesElement()
         {
             this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_DataServices, this.edmxNamespace);
@@ -145,6 +152,7 @@ namespace Microsoft.OData.Edm.Csdl
 
         private void WriteSchemas()
         {
+            // TODO: for referenced mnodel - write alias as is, instead of writing its namespace.
             EdmModelCsdlSerializationVisitor visitor;
             Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest;
             foreach (EdmSchema schema in this.schemas)

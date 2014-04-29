@@ -49,8 +49,24 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Complexity is not too high; handling all the cases in one method is preferable to refactoring.")]
         internal static bool TryUriStringToPrimitive(string text, IEdmTypeReference targetType, out object targetValue)
         {
+            string reason;
+            return TryUriStringToPrimitive(text, targetType, out targetValue, out reason);
+        }
+
+        /// <summary>Converts a string to a primitive value.</summary>
+        /// <param name="text">String text to convert.</param>
+        /// <param name="targetType">Type to convert string to.</param>
+        /// <param name="targetValue">After invocation, converted value.</param>
+        /// <param name="reason">The detailed reason of parsing error.</param>
+        /// <returns>true if the value was converted; false otherwise.</returns>
+        /// <remarks>Copy of the WebConvert.TryKeyStringToPrimitive</remarks>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Complexity is not too high; handling all the cases in one method is preferable to refactoring.")]
+        internal static bool TryUriStringToPrimitive(string text, IEdmTypeReference targetType, out object targetValue, out string reason)
+        {
             Debug.Assert(text != null, "text != null");
             Debug.Assert(targetType != null, "targetType != null");
+
+            reason = null;
 
             if (targetType.IsNullable)
             {
@@ -106,14 +122,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             else if (targetTypeKind == EdmPrimitiveTypeKind.Geography)
             {
                 Geography geographyValue;
-                bool result = TryUriStringToGeography(text, out geographyValue);
+                bool result = TryUriStringToGeography(text, out geographyValue, out reason);
                 targetValue = geographyValue;
                 return result;
             }
             else if (targetTypeKind == EdmPrimitiveTypeKind.Geometry)
             {
                 Geometry geometryValue;
-                bool result = TryUriStringToGeometry(text, out geometryValue);
+                bool result = TryUriStringToGeometry(text, out geometryValue, out reason);
                 targetValue = geometryValue;
                 return result;
             }
@@ -373,9 +389,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="text">Text to parse.</param>
         /// <param name="targetValue">Geography to return.</param>
+        /// <param name="reason">The detailed reason of parsing error.</param>
         /// <returns>True if succeeds, false if not.</returns>
-        private static bool TryUriStringToGeography(string text, out Geography targetValue)
+        private static bool TryUriStringToGeography(string text, out Geography targetValue, out string reason)
         {
+            reason = null;
+
             if (!TryRemoveLiteralPrefix(ExpressionConstants.LiteralPrefixGeography, ref text))
             {
                 targetValue = default(Geography);
@@ -393,9 +412,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 targetValue = LiteralUtils.ParseGeography(text);
                 return true;
             }
-            catch (ParseErrorException)
+            catch (ParseErrorException e)
             {
                 targetValue = default(Geography);
+                reason = e.Message;
                 return false;
             }
         }
@@ -405,9 +425,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="text">Text to parse.</param>
         /// <param name="targetValue">Geometry to return.</param>
+        /// <param name="reason">The detailed reason of parsing error.</param>
         /// <returns>True if succeeds, false if not.</returns>
-        private static bool TryUriStringToGeometry(string text, out Geometry targetValue)
+        private static bool TryUriStringToGeometry(string text, out Geometry targetValue, out string reason)
         {
+            reason = null;
+
             if (!TryRemoveLiteralPrefix(ExpressionConstants.LiteralPrefixGeometry, ref text))
             {
                 targetValue = default(Geometry);
@@ -425,9 +448,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 targetValue = LiteralUtils.ParseGeometry(text);
                 return true;
             }
-            catch (ParseErrorException)
+            catch (ParseErrorException e)
             {
                 targetValue = default(Geometry);
+                reason = e.Message;
                 return false;
             }
         }

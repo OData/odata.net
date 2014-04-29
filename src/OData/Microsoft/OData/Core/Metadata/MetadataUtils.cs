@@ -198,7 +198,7 @@ namespace Microsoft.OData.Core.Metadata
             List<IEdmOperation> operations = null;
             try
             {
-                operations = model.FindDeclaredBoundOperations(bindingType).ToList();
+                operations = model.FindBoundOperations(bindingType).ToList();
             }
             catch (Exception exc)
             {

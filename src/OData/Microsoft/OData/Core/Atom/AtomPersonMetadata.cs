@@ -43,7 +43,7 @@ namespace Microsoft.OData.Core.Atom
 
             set
             {
-                // TODO ckerer: validate that the value is not null
+                // TODO: validate that the value is not null
                 this.name = value;
             }
         }
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Core.Atom
 
             set
             {
-                // TODO ckerer: validate required format
+                // TODO: validate required format
                 // xsd:string { pattern = ".+@.+" }
                 // If we add this validation we will have to make an exception for EPM, so either some internal setter
                 // or internal property as for Uri.

@@ -613,7 +613,7 @@ namespace Microsoft.OData.Core.JsonLight
                 {
                     // We manually throw JSON exception here to get a nicer error message (we expect primitive value and got object).
                     // Otherwise the ReadPrimitiveValue would fail with something like "expected primitive value but found property/end object" which is rather confusing.
-                    throw new ODataException(ODataErrorStrings.JsonReaderExtensions_UnexpectedNodeDetected(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject));
+                    throw new ODataException(ODataErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, propertyName));
                 }
 
                 result = this.JsonReader.ReadPrimitiveValue();
@@ -667,7 +667,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 // We manually throw JSON exception here to get a nicer error message (we expect primitive value and got object).
                 // Otherwise the ReadPrimitiveValue would fail with something like "expected primitive value but found property/end object" which is rather confusing.
-                throw new ODataException(ODataErrorStrings.JsonReaderExtensions_UnexpectedNodeDetected(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject));
+                throw new ODataException(ODataErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, propertyName));
             }
 
             string enumStr = this.JsonReader.ReadStringValue();
@@ -982,7 +982,7 @@ namespace Microsoft.OData.Core.JsonLight
                         {
                             // We manually throw JSON exception here to get a nicer error message (we expect array value and got object).
                             // Otherwise the ReadCollectionValue would fail with something like "expected array value but found property/end object" which is rather confusing.
-                            throw new ODataException(ODataErrorStrings.JsonReaderExtensions_UnexpectedNodeDetected(JsonNodeType.StartArray, JsonNodeType.StartObject));
+                            throw new ODataException(ODataErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName(JsonNodeType.StartArray, JsonNodeType.StartObject, propertyName));
                         }
 
                         result = this.ReadCollectionValue(

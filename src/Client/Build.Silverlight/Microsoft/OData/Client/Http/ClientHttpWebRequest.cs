@@ -1,17 +1,18 @@
-//---------------------------------------------------------------------
-// <copyright file="ClientHttpWebRequest.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Service.Http
 {
     #region Namespaces.
 
     using System;
-#if WIN8
-    using Microsoft.OData.Client;
-#endif
     using System.Globalization;
     using System.IO;
     using System.Text;
@@ -36,14 +37,6 @@ namespace Microsoft.OData.Service.Http
         /// </summary>
         private ClientWebHeaderCollection headerCollection;
 
-#if WIN8
-        /// <summary>
-        /// Flag to indicate if we need to get the request stream and flush it before sending the request. This is required in scenarios
-        /// where there is no content in the request but the server expects to see a Content-Length header with the value 0. There is
-        /// no way to directly set the ContentLength on the request, so we have to force it to be set by accessing the stream.
-        /// </summary>
-        private bool requestStreamFlushRequired;
-#endif
 
         /// <summary>
         /// Constructor
@@ -52,7 +45,7 @@ namespace Microsoft.OData.Service.Http
         public ClientHttpWebRequest(Uri requestUri)
         {
             Debug.Assert(requestUri != null, "requestUri can't be null.");
-#if WIN8 || PORTABLELIB
+#if PORTABLELIB
             this.innerRequest = System.Net.HttpWebRequest.CreateHttp(requestUri);
 #else
             this.innerRequest = (System.Net.HttpWebRequest)System.Net.Browser.WebRequestCreator.ClientHttp.Create(requestUri);
@@ -82,12 +75,6 @@ namespace Microsoft.OData.Service.Http
                 // Content-Length is not supported by the Client stack
                 // because it will have no effect, the stack will determine the actual length on its own
                 // and set the header accordingly
-#if WIN8
-                if (value == 0)
-                {
-                    this.requestStreamFlushRequired = true;
-                }
-#endif
                 return;
             }
         }
@@ -227,26 +214,8 @@ namespace Microsoft.OData.Service.Http
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0013", Justification = "The WebUtil wrapper is the calling method in this case, so we actually need to call the underlying HttpWebRequest method here.")]
         public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
         {
-#if WIN8
-            // When there is no content in the request stream, the server may still expect Content-Length to be 0. Since there is no way to directly
-            // set this property, we have to access the request stream and flush it so the runtime will set the property for us.
-            if (this.requestStreamFlushRequired)
-            {
-                return this.innerRequest.GetRequestStreamAsync()
-                    .FollowOnSuccessWithTask(t => t.Result.FlushAsync()
-                        .FollowOnSuccessWith(t2 =>
-                            {
-                                this.innerRequest.BeginGetResponse(callback, state);
-                            }));
-            }
-            else
-            {
-                return this.innerRequest.BeginGetResponse(callback, state);
-            }
-#else
 
             return this.innerRequest.BeginGetResponse(callback, state);
-#endif
         }
 
         /// <summary>

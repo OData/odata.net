@@ -1,11 +1,12 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="ODataEntityMaterializer.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-// <summary>
-// Base class for entity materialization from ODataEntry objects.
-// </summary>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client.Materialization
 {
@@ -743,7 +744,6 @@ namespace Microsoft.OData.Client.Materialization
                         EntryValueMaterializationPolicy.ValidatePropertyMatch(property, odataProperty);
 
                         // So the payload is for non-entity types. If we encounter an entity in the client side, we should throw
-                        // Bug 10095: this is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
                         if (ClientTypeUtil.TypeOrElementTypeIsEntity(property.PropertyType))
                         {
                             throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));

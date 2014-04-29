@@ -39,7 +39,7 @@ namespace Microsoft.OData.Edm.Library
         /// </summary>
         public override IEnumerable<IEdmSchemaElement> SchemaElements
         {
-            // TODO challenh REF plus referneced elements
+            // TODO: REF plus referneced elements
             get { return this.elements; }
         }
 
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Edm.Library
         /// <summary>
         /// Adds a model reference to this model.
         /// </summary>
-        /// <param name="model">The model to reference.</param>
+        /// <param name="model">The model to be referenced.</param>
         public new void AddReferencedModel(IEdmModel model)
         {
             base.AddReferencedModel(model);

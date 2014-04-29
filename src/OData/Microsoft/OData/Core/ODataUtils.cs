@@ -12,6 +12,7 @@ namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
@@ -203,6 +204,92 @@ namespace Microsoft.OData.Core
                 .Select(functionImport => new ODataFunctionImportInfo() { Name = functionImport.Name, Title = functionImport.Name, Url = new Uri(functionImport.Name, UriKind.RelativeOrAbsolute) }).ToList();
 
             return serviceDocument;
+        }
+
+        /// <summary>
+        /// Append default values required by OData to specified HTTP header.
+        /// 
+        /// When header name is ODataConstants.ContentTypeHeader:
+        ///     If header value is application/json, append the following default values:
+        ///         odata.metadata=minimal
+        ///         odata.streaming=true
+        ///         IEEE754Compatible=false
+        /// </summary>
+        /// <param name="headerName">The name of the header to append default values.</param>
+        /// <param name="headerValue">The original header value string.</param>
+        /// <returns>The header value string with appended default values.</returns>
+        public static string AppendDefaultHeaderValue(string headerName, string headerValue)
+        {
+            if (string.CompareOrdinal(headerName, ODataConstants.ContentTypeHeader) != 0)
+            {
+                return headerValue;
+            }
+
+            if (headerValue == null)
+            {
+                return null;
+            }
+
+            var mediaTypeList = HttpUtils.MediaTypesFromString(headerValue);
+            var mediaType = mediaTypeList.Single().Key;
+
+            if (string.CompareOrdinal(mediaType.FullTypeName, MimeConstants.MimeApplicationJson) != 0)
+            {
+                return headerValue;
+            }
+
+            var extendedParameters = new List<KeyValuePair<string, string>>();
+            var extendedMediaType = new MediaType(mediaType.TypeName, mediaType.SubTypeName, extendedParameters);
+
+            var hasMetadata = false;
+            var hasStreaming = false;
+            var hasIeee754Compatible = false;
+
+            if (mediaType.Parameters != null)
+            {
+                foreach (var parameter in mediaType.Parameters)
+                {
+                    extendedParameters.Add(parameter);
+
+                    if (string.CompareOrdinal(parameter.Key, MimeConstants.MimeMetadataParameterName) == 0)
+                    {
+                        hasMetadata = true;
+                    }
+
+                    if (string.CompareOrdinal(parameter.Key, MimeConstants.MimeStreamingParameterName) == 0)
+                    {
+                        hasStreaming = true;
+                    }
+
+                    if (string.CompareOrdinal(parameter.Key, MimeConstants.MimeIeee754CompatibleParameterName) == 0)
+                    {
+                        hasIeee754Compatible = true;
+                    }
+                }
+            }
+
+            if (!hasMetadata)
+            {
+                extendedMediaType.Parameters.Add(new KeyValuePair<string, string>(
+                    MimeConstants.MimeMetadataParameterName,
+                    MimeConstants.MimeMetadataParameterValueMinimal));
+            }
+
+            if (!hasStreaming)
+            {
+                extendedMediaType.Parameters.Add(new KeyValuePair<string, string>(
+                    MimeConstants.MimeStreamingParameterName,
+                    MimeConstants.MimeParameterValueTrue));
+            }
+
+            if (!hasIeee754Compatible)
+            {
+                extendedMediaType.Parameters.Add(new KeyValuePair<string, string>(
+                    MimeConstants.MimeIeee754CompatibleParameterName,
+                    MimeConstants.MimeParameterValueFalse));
+            }
+
+            return extendedMediaType.ToText();
         }
     }
 }

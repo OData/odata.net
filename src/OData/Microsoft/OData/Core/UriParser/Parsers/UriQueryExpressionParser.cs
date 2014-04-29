@@ -132,7 +132,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetString(true), Microsoft.OData.Core.Metadata.EdmConstants.EdmStringTypeName);
                 case ExpressionTokenKind.BracketedExpression:
                     {
-                        // TODO challenh: need a BracketLiteralToken for real complex type vaule like [\"Barky\",\"Junior\"]  or {...}
+                        // TODO: need a BracketLiteralToken for real complex type vaule like [\"Barky\",\"Junior\"]  or {...}
                         LiteralToken result = new LiteralToken(lexer.CurrentToken.Text, lexer.CurrentToken.Text);
                         lexer.NextToken();
                         return result;
@@ -267,13 +267,29 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             Debug.Assert(lexer != null, "lexer != null");
 
             object targetValue;
-            if (!UriPrimitiveTypeParser.TryUriStringToPrimitive(lexer.CurrentToken.Text, targetTypeReference, out targetValue))
+            string reason;
+            if (!UriPrimitiveTypeParser.TryUriStringToPrimitive(lexer.CurrentToken.Text, targetTypeReference, out targetValue, out reason))
             {
-                string message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteral(
-                    targetTypeName,
-                    lexer.CurrentToken.Text,
-                    lexer.CurrentToken.Position,
-                    lexer.ExpressionText);
+                string message;
+
+                if (reason == null)
+                {
+                    message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteral(
+                        targetTypeName,
+                        lexer.CurrentToken.Text,
+                        lexer.CurrentToken.Position,
+                        lexer.ExpressionText);
+                }
+                else
+                {
+                    message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteralWithReason(
+                        targetTypeName,
+                        lexer.CurrentToken.Text,
+                        lexer.CurrentToken.Position,
+                        lexer.ExpressionText,
+                        reason);
+                }
+
                 throw ParseError(message);
             }
 

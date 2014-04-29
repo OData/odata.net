@@ -93,8 +93,8 @@ namespace Microsoft.OData.Core.Evaluation
 
             StringBuilder builder = new StringBuilder(UriUtils.UriToString(baseUri));
 
-            // TODO TASK 904843: What should be done about escaping the values.
-            // TODO TASK 904842: What should happen if the URL does end with a slash?
+            // TODO: What should be done about escaping the values.
+            // TODO: What should happen if the URL does end with a slash?
             this.AppendKeyExpression(builder, keyProperties, entityTypeName);
             return new Uri(builder.ToString(), UriKind.Absolute);
         }

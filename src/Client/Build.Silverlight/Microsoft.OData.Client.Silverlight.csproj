@@ -1,0 +1,379 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <AssemblyName>Microsoft.Data.Services.Client</AssemblyName>
+    <RootNamespace>Microsoft.Data.Services.Client</RootNamespace>
+    <DefineConstants>ASTORIA_CLIENT;PORTABLELIB;</DefineConstants>
+    <OutputType>Library</OutputType>
+    <ProjectGuid>{B2667D84-F31E-482D-A604-1323905D582F}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{FAE04Ec0-301F-11d3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib.dll" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows" />
+    <ProjectReference Include="..\..\Edm\Microsoft.OData.Edm.Silverlight.csproj">
+      <Project>{A934C8C2-9252-453C-9360-54381E4D276A}</Project>
+      <Name>Microsoft.Data.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Spatial\Microsoft.Spatial.Silverlight.csproj">
+      <Project>{D8E09813-D0EA-40eb-8A96-EB30DAC029E2}</Project>
+      <Name>System.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OData\Microsoft.OData.Core.Silverlight.csproj">
+      <Project>{34B74905-DF66-4BF7-958B-62C50ED1203C}</Project>
+      <Name>Microsoft.Data.OData</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Microsoft.OData.Client.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Microsoft\OData\Client\EdmValueParser.cs" />
+    <Compile Include="Microsoft\OData\Client\EdmValueWriter.cs" />
+    <Compile Include="Microsoft\OData\Client\EdmValueUtils.cs" />
+    <Compile Include="Microsoft\OData\Client\ODataEntityMetadataBuilder.cs" />
+    <Compile Include="Microsoft\OData\Client\ODataUriBuilder.cs" />
+    <Compile Include="Microsoft\OData\Client\Serialization\JsonSharedUtils.cs" />
+    <Compile Include="Microsoft\OData\Client\SimpleLazy.cs" />
+    <Compile Include="Microsoft\OData\Client\CommonUtil.cs" />
+    <Compile Include="Microsoft\OData\Client\ContentTypeUtil.cs" />
+    <Compile Include="Microsoft\OData\Client\LiteralFormatter.cs" />
+    <Compile Include="Microsoft\OData\Client\Metadata\EdmComplexTypeWithDelayLoadedProperties.cs" />
+    <Compile Include="Microsoft\OData\Client\Metadata\EdmEntityTypeWithDelayLoadedProperties.cs" />
+    <Compile Include="Microsoft\OData\Client\Metadata\EdmEnumTypeWithDelayLoadedMembers.cs" />
+    <Compile Include="Microsoft\OData\Client\KeySerializer.cs" />
+    <Compile Include="Microsoft\OData\Client\UrlConvention.cs" />
+    <Compile Include="Microsoft\OData\Client\XmlConstants.cs" />
+    <Compile Include="Microsoft\OData\Client\Serialization\DataStringEscapeBuilder.cs" />
+    <Compile Include="Microsoft\OData\Client\MessageSettingsHelper.cs" />
+    <Compile Include="Microsoft\OData\Client\Metadata\EdmLibraryExtensions.cs" />
+    <Compile Include="Microsoft\OData\Client\InternalErrorCodesCommon.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\AllToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\AnyToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\BinaryOperatorToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\CustomQueryOptionToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\DottedIdentifierToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\EndPathToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\ExceptionUtils.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\ExpandTermToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\ExpandToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\FunctionCallToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\FunctionParameterAliasToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\FunctionParameterToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\InnerPathToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\Visitors\IPathSegmentTokenVisitor.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\Visitors\ISyntacticTreeVisitor.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\LambdaToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\LiteralToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\NamedValue.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\NonSystemToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\OrderByToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\PathSegmentToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\PathToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\QueryToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\TreeNodeKinds\QueryTokenKind.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\RangeVariableToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\ReadOnlyEnumerableForUriParser.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\SelectToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\StarToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\SystemToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\UnaryOperatorToken.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Microsoft\OData\Client\ActionDescriptor.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\QueryableResourceExpression.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\ResourceSetExpression.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\SingletonResourceExpression.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\ExpandOnlyPathToStringVisitor.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\SelectExpandPathToStringVisitor.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\AddNewEndingTokenVisitor.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\NewTreeBuilder.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\RemoveWildcardVisitor.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\SelectExpandPathBuilder.cs" />
+    <Compile Include="Microsoft\OData\Client\Attribute\OriginalNameAttribute.cs" />
+    <Compile Include="Microsoft\OData\Client\BaseEntityType.cs" />
+    <Compile Include="Microsoft\OData\Client\BaseSaveResult.cs" />
+    <Compile Include="Microsoft\OData\Client\BatchSaveResult.cs" />
+    <Compile Include="Microsoft\OData\Client\BodyOperationParameter.cs" />
+    <Compile Include="Microsoft\OData\Client\BuildingRequestEventArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\ClientEdmCollectionValue.cs" />
+    <Compile Include="Microsoft\OData\Client\ClientEdmModel.cs" />
+    <Compile Include="Microsoft\OData\Client\ClientEdmStructuredValue.cs" />
+    <Compile Include="Microsoft\OData\Client\Common.cs" />
+    <Compile Include="Microsoft\OData\Client\ContentStream.cs" />
+    <Compile Include="Microsoft\OData\Client\ConventionalODataEntityMetadataBuilder.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceClientMessageWriterSettingsShim.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceClientMessageReaderSettingsShim.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\EnumValueMaterializationPolicy.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataLoadNavigationPropertyMaterializer.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceClientRequestMessageArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\HttpStack.cs" />
+    <Compile Include="Microsoft\OData\Client\MessageReaderSettingsArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\MessageWriterSettingsArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceClientConfigurations.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\CollectionValueMaterializationPolicy.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ComplexValueMaterializationPolicy.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\EntityTrackingAdapter.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\EntryValueMaterializationPolicy.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\MaterializationPolicy.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataReaderWrapper.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\PrimitivePropertyConverter.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\PrimitiveValueMaterializationPolicy.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\StructuralValueMaterializationPolicy.cs" />
+    <Compile Include="Microsoft\OData\Client\MaterializedEntityArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\Serialization\DataServiceClientRequestMessage.cs" />
+    <Compile Include="Microsoft\OData\Client\WritingEntityReferenceLinkArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\WritingEntryArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\WritingNavigationLinkArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceClientRequestPipelineConfiguration.cs" />
+    <Compile Include="Microsoft\OData\Client\ReadingNavigationLinkArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\ReadingFeedArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\EntityTrackerBase.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataMaterializerContext.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\IODataMaterializerContext.cs" />
+    <Compile Include="Microsoft\OData\Client\ReadingEntryArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceClientResponsePipelineConfiguration.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\FeedAndEntryMaterializerAdapter.cs" />
+    <Compile Include="Microsoft\OData\Client\DictionaryExtensions.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceClientFormat.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceQueryContinuation.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceResponsePreference.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceSaveStream.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceStreamLink.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceWebException.cs" />
+    <Compile Include="Microsoft\OData\Client\DynamicProxyMethodGenerator.cs" />
+    <Compile Include="Microsoft\OData\Client\EntityTracker.cs" />
+    <Compile Include="Microsoft\OData\Client\FunctionDescriptor.cs" />
+    <Compile Include="Microsoft\OData\Client\InternalODataRequestMessage.cs" />
+    <Compile Include="Microsoft\OData\Client\InvokeResponse.cs" />
+    <Compile Include="Microsoft\OData\Client\LinkInfo.cs" />
+    <Compile Include="Microsoft\OData\Client\LoadPropertyResult.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataCollectionMaterializer.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataEntriesEntityMaterializer.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataEntityMaterializer.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataEntityMaterializerInvoker.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataItemExtensions.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataLinksMaterializer.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataMaterializer.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataMessageReaderMaterializer.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataPropertyMaterializer.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataReaderEntityMaterializer.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\ODataValueMaterializer.cs" />
+    <Compile Include="Microsoft\OData\Client\MemberAssignmentAnalysis.cs" />
+    <Compile Include="Microsoft\OData\Client\ODataMessageReadingHelper.cs" />
+    <Compile Include="Microsoft\OData\Client\ODataMessageWritingHelper.cs" />
+    <Compile Include="Microsoft\OData\Client\ODataRequestMessageWrapper.cs" />
+    <Compile Include="Microsoft\OData\Client\OperationDescriptor.cs" />
+    <Compile Include="Microsoft\OData\Client\OperationParameter.cs" />
+    <Compile Include="Microsoft\OData\Client\ProjectionPath.cs" />
+    <Compile Include="Microsoft\OData\Client\ProjectionPathBuilder.cs" />
+    <Compile Include="Microsoft\OData\Client\ProjectionPathSegment.cs" />
+    <Compile Include="Microsoft\OData\Client\ProjectionPlan.cs" />
+    <Compile Include="Microsoft\OData\Client\ProjectionPlanCompiler.cs" />
+    <Compile Include="Microsoft\OData\Client\ReceivingResponseEventArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\HeaderCollection.cs" />
+    <Compile Include="Microsoft\OData\Client\RequestInfo.cs" />
+    <Compile Include="Microsoft\OData\Client\ResponseInfo.cs" />
+    <Compile Include="Microsoft\OData\Client\SendingRequest2EventArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\Serialization\ODataWriterWrapper.cs" />
+    <Compile Include="Microsoft\OData\Client\Serialization\HttpWebRequestMessage.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\HttpWebResponseMessage.cs" />
+    <Compile Include="Microsoft\OData\Client\Serialization\ODataPropertyConverter.cs" />
+    <Compile Include="Microsoft\OData\Client\Serialization\PrimitiveXmlConverter.cs" />
+    <Compile Include="Microsoft\OData\Client\Serialization\PrimitiveType.cs" />
+    <Compile Include="Microsoft\OData\Client\Serialization\PrimitiveParserToken.cs" />
+    <Compile Include="Microsoft\OData\Client\ReferenceEqualityComparer.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\ProjectionRewriter.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Microsoft\OData\Client\GetReadStreamResult.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\ProjectionAnalyzer.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Microsoft\OData\Client\ALinq\ProjectionQueryOptionExpression.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Microsoft\OData\Client\QueryResult.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\QueryComponents.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\ReflectionUtil.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Microsoft\OData\Client\ALinq\InputReferenceExpression.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\ResourceExpression.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Microsoft\OData\Client\ALinq\Evaluator.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\ExpressionNormalizer.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Microsoft\OData\Client\ALinq\ALinqExpressionVisitor.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\FilterQueryOptionExpression.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\InputBinder.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\OrderByQueryOptionExpression.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\QueryOptionExpression.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\ResourceBinder.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Microsoft\OData\Client\ALinq\ResourceExpressionType.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\NavigationPropertySingletonExpression.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\SkipQueryOptionExpression.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\TakeQueryOptionExpression.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\TypeSystem.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriHelper.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\ExpressionWriter.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\UriWriter.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\DataServiceExpressionVisitor.cs" />
+    <Compile Include="Microsoft\OData\Client\ALinq\DataServiceQueryProvider.cs" />
+    <Compile Include="Microsoft\OData\Client\ArraySet.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Microsoft\OData\Client\AtomMaterializerLog.cs" />
+    <Compile Include="Microsoft\OData\Client\BaseAsyncResult.cs" />
+    <Compile Include="Microsoft\OData\Client\Binding\BindingEntityInfo.cs" />
+    <Compile Include="Microsoft\OData\Client\Binding\BindingGraph.cs" />
+    <Compile Include="Microsoft\OData\Client\Binding\BindingObserver.cs" />
+    <Compile Include="Microsoft\OData\Client\Binding\BindingUtils.cs" />
+    <Compile Include="Microsoft\OData\Client\Binding\DataServiceSaveChangesEventArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\Binding\EntityChangedParams.cs" />
+    <Compile Include="Microsoft\OData\Client\Binding\EntityCollectionChangedParams.cs" />
+    <Compile Include="Microsoft\OData\Client\Binding\DataServiceCollectionOfT.cs" />
+    <Compile Include="Microsoft\OData\Client\Attribute\EntitySetAttribute.cs" />
+    <Compile Include="Microsoft\OData\Client\Attribute\EntityTypeAttribute.cs" />
+    <Compile Include="Microsoft\OData\Client\Attribute\KeyAttribute.cs" />
+    <Compile Include="Microsoft\OData\Client\ODataProtocolVersion.cs" />
+    <Compile Include="Microsoft\OData\Client\Attribute\HasStreamAttribute.cs" />
+    <Compile Include="Microsoft\OData\Client\Attribute\NamedStreamAttribute.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceQueryException.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceRequestArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceRequestException.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceStreamResponse.cs" />
+    <Compile Include="Microsoft\OData\Client\Descriptor.cs" />
+    <Compile Include="Microsoft\OData\Client\LinkDescriptor.cs" />
+    <Compile Include="Microsoft\OData\Client\ChangesetResponse.cs" />
+    <Compile Include="Microsoft\OData\Client\ClientConvert.cs" />
+    <Compile Include="Microsoft\OData\Client\Metadata\ClientTypeAnnotation.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceClientException.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceQuery.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceRequest.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceRequestOfT.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceResponse.cs" />
+    <Compile Include="Microsoft\OData\Client\OperationResponse.cs" />
+    <Compile Include="Microsoft\OData\Client\QueryOperationResponseOfT.cs" />
+    <Compile Include="Microsoft\OData\Client\QueryOperationResponse.cs" />
+    <Compile Include="Microsoft\OData\Client\Error.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Microsoft\OData\Client\MaterializeFromAtom.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Microsoft\OData\Client\Materialization\MaterializerEntry.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\MaterializerFeed.cs" />
+    <Compile Include="Microsoft\OData\Client\Materialization\MaterializerNavigationLink.cs" />
+    <Compile Include="Microsoft\OData\Client\MediaEntryAttribute.cs" />
+    <Compile Include="Microsoft\OData\Client\MergeOption.cs" />
+    <Compile Include="Microsoft\OData\Client\MimeTypePropertyAttribute.cs" />
+    <Compile Include="Microsoft\OData\Client\OpenObject.cs" />
+    <Compile Include="Microsoft\OData\Client\OpenObjectAttribute.cs" />
+    <Compile Include="Microsoft\OData\Client\EntityDescriptor.cs" />
+    <Compile Include="Microsoft\OData\Client\EntityStates.cs" />
+    <Compile Include="Microsoft\OData\Client\SaveChangesOptions.cs" />
+    <Compile Include="Microsoft\OData\Client\SaveResult.cs" />
+    <Compile Include="Microsoft\OData\Client\SendingRequestEventArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\Serialization\Serializer.cs" />
+    <Compile Include="Microsoft\OData\Client\StreamDescriptor.cs" />
+    <Compile Include="Microsoft\OData\Client\TypeResolver.cs" />
+    <Compile Include="Microsoft\OData\Client\UriOperationParameter.cs" />
+    <Compile Include="Microsoft\OData\Client\UriResolver.cs" />
+    <Compile Include="Microsoft\OData\Client\UriUtil.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceUrlConventions.cs" />
+    <Compile Include="Microsoft\OData\Client\Util.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceContext.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceQueryOfT.cs" />
+    <Compile Include="Microsoft\OData\Client\WebUtil.cs" />
+    <Compile Include="Microsoft\OData\Client\Metadata\ClientPropertyAnnotation.cs" />
+    <Compile Include="Microsoft\OData\Client\Metadata\ClientTypeUtil.cs" />
+    <Compile Include="Microsoft\OData\Client\Metadata\ClientTypeCache.cs" />
+    <Compile Include="Microsoft\OData\Client\PlatformHelper.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\CaseInsensitiveAscii.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\ClientHttpWebRequest.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\ClientHttpWebResponse.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\ClientWebHeaderCollection.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\HeaderInfo.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\HeaderInfoTable.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\HttpHeaderToName.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\HttpRequestHeader.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\HttpStatusCode.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\HttpWebRequest.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\HttpWebResponse.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\NameValueFromDictionary.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\ValidationHelper.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\WebException.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\WebHeaderCollection.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\WebHeaderCollectionType.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\WebRequest.cs" />
+    <Compile Include="Microsoft\OData\Client\Http\WebResponse.cs" />
+    <Compile Include="Microsoft\OData\Client\Client\Binding\LoadCompletedEventArgs.cs" />
+    <Compile Include="Microsoft\OData\Client\Client\TaskUtils.cs" />
+    <Compile Include="Microsoft.OData.Client.cs">
+      <Visible>False</Visible>
+    </Compile>
+    <Compile Include="Parameterized.Microsoft.OData.Client.cs">
+      <Visible>False</Visible>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Microsoft.OData.Client.resources">
+      <Visible>False</Visible>
+      <LogicalName>Microsoft.OData.Client.resources</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <Target Name="BeforeBuild">
+    <GenerateResource Sources="Microsoft.OData.Client.txt" OutputResources="Microsoft.OData.Client.resources" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

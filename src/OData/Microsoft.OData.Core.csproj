@@ -35,11 +35,11 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
-    <ProjectReference Include="..\..\Spatial\Dev10\Microsoft.Spatial.csproj">
+    <ProjectReference Include="..\Spatial\Microsoft.Spatial.csproj">
       <Project>{D8E09813-D0EA-40eb-8A96-EB30DAC029E2}</Project>
       <Name>Microsoft.Spatial</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\EdmLib\Dev10\Microsoft.OData.Edm.csproj">
+    <ProjectReference Include="..\Edm\Microsoft.OData.Edm.csproj">
       <Project>{A934C8C2-9252-453C-9360-54381E4D276A}</Project>
       <Name>Microsoft.OData.Edm</Name>
     </ProjectReference>
@@ -50,6 +50,20 @@
     <Compile Include="Microsoft\OData\Core\Evaluation\LiteralFormatter.cs" />
     <Compile Include="Microsoft\OData\Core\Evaluation\KeySerializer.cs" />
     <Compile Include="Microsoft\OData\Core\Evaluation\UrlConvention.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaSerializationInfo.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaFeedSerializationInfo.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightDeltaReader.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaReaderState.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaReader.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaKind.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataFeedBase.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightDeltaWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaLinkBase.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaDeletedLink.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaLink.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaDeletedEntry.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaFeed.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaWriter.cs" />
     <Compile Include="Microsoft\OData\Core\Json\NonIndentedTextWriter.cs" />
     <Compile Include="Microsoft\OData\Core\Json\GeoJsonWriterAdapter.cs" />
     <Compile Include="Microsoft\OData\Core\ODataContextUrlInfo.cs" />
@@ -86,6 +100,8 @@
     <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectExpandTermParser.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectTreeNormalizer.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\CollectionOpenPropertyAccessNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\CollectionPropertyCastNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SingleValueCastNode.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SearchTermNode.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\LevelsClause.cs" />
     <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ParameterAliasNode.cs" />

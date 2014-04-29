@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     {        
         /// <summary>
         /// Method to bind the value of a key.
-        /// TODO Make it of return type SingleValueQueryNode.
+        /// TODO: Make it of return type SingleValueQueryNode.
         /// </summary>
         private readonly MetadataBinder.QueryTokenVisitor bind;
 

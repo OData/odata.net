@@ -65,6 +65,8 @@ namespace Microsoft.OData.Core.Atom
         {
             this.XmlReader.AssertNotBuffering();
 
+            // TODO: When we implement the XmlReader extensibility this code will have to change since we should not
+            // read over top-level nodes before and after the top-level element.
             this.XmlReader.ReadPayloadStart();
 
             this.XmlReader.AssertNotBuffering();
@@ -77,6 +79,8 @@ namespace Microsoft.OData.Core.Atom
         {
             this.XmlReader.AssertNotBuffering();
 
+            // TODO: When we implement the XmlReader extensibility this code will have to change since we should not
+            // read over top-level nodes before and after the top-level element.
             this.XmlReader.ReadPayloadEnd();
 
             this.XmlReader.AssertNotBuffering();

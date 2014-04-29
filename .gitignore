@@ -1,1 +1,10 @@
-/ODataLib/planning/projection.html
+[Dd]ebug/
+[Bb]in
+[Oo]bj
+[Tt]est[Rr]esults
+*.suo
+*.exe
+*.dll
+*.sdf
+*.opensdf
+*.vsp

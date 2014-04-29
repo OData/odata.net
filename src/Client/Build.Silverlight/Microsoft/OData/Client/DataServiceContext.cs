@@ -1,13 +1,12 @@
-//---------------------------------------------------------------------
-// <copyright file="DataServiceContext.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-// <summary>
-// context
-// </summary>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
 
-// #define TESTUNIXNEWLINE
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client
 {
@@ -213,6 +212,8 @@ namespace Microsoft.OData.Client
             this.urlConventions = DataServiceUrlConventions.Default;
             this.Configurations = new DataServiceClientConfigurations(this);
             this.httpStack = HttpStack.Auto;
+            this.UsingDataServiceCollection = false;
+            this.EnableAtom = false;
 
 #if ASTORIA_LIGHT
             this.UsePostTunneling = true;
@@ -659,6 +660,16 @@ namespace Microsoft.OData.Client
             get { return this.model; }
         }
 
+        /// <summary>
+        /// Indicates whether user is using <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> to track changes.
+        /// </summary>
+        internal bool UsingDataServiceCollection { get; set; }
+
+        /// <summary>
+        /// Interal flag for whether Atom support is enabled.
+        /// </summary>
+        internal bool EnableAtom { get; set; }
+
         #region Entity and Link Tracking
 
         /// <summary>Gets the <see cref="T:Microsoft.OData.Client.EntityDescriptor" /> for the supplied entity object.</summary>
@@ -787,7 +798,7 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "required for this feature")]
         public Uri GetMetadataUri()
         {
-            // TODO: SQLBUDT 552138 - resolve the location of the metadata endpoint for the service by using an HTTP OPTIONS request
+            // TODO: resolve the location of the metadata endpoint for the service by using an HTTP OPTIONS request
             Uri metadataUri = UriUtil.CreateUri(UriUtil.UriToString(this.BaseUriResolver.GetBaseUriWithSlash()) + XmlConstants.UriMetadataSegment, UriKind.Absolute);
             return metadataUri;
         }
@@ -1213,7 +1224,7 @@ namespace Microsoft.OData.Client
         /// <param name="queries">The array of query requests to include in the batch request.</param>
         public IAsyncResult BeginExecuteBatch(AsyncCallback callback, object state, params DataServiceRequest[] queries)
         {
-            Util.CheckArgumentNotEmpty(queries, "queries");            
+            Util.CheckArgumentNotEmpty(queries, "queries");
             BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatch", queries, SaveChangesOptions.BatchWithSingleChangeset, callback, state);
             result.BatchBeginRequest();
             return result;
@@ -1460,7 +1471,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Asynchronously submits the pending changes to the data service collected by the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> since the last time changes were saved.</summary>
         /// <returns>An <see cref="T:System.IAsyncResult" /> that represents the status of the asynchronous operation.</returns>
-        /// <param name="options">The options for how the client can save the pending set of changes.</param>
+        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
         /// <param name="callback">The delegate to call when the operation is completed.</param>
         /// <param name="state">The user-defined state object that is used to pass context data to the callback method.</param>
         /// <remarks>
@@ -1510,7 +1521,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Saves the changes that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
         /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges" />.</returns>
-        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.MergeOption" /> enumeration that specifies the materialization option.</param>
+        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
         public DataServiceResponse SaveChanges(SaveChangesOptions options)
         {
             DataServiceResponse errors = null;
@@ -2130,7 +2141,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="type">client type</param>
         /// <returns>type for the server</returns>
-        internal string ResolveNameFromType(Type type)
+        internal string ResolveNameFromTypeInternal(Type type)
         {
             Debug.Assert(null != type, "null type");
             Func<Type, string> resolve = this.ResolveName;
@@ -2488,8 +2499,8 @@ namespace Microsoft.OData.Client
         /// <param name="options">options as specified by the user.</param>
         private void ValidateSaveChangesOptions(SaveChangesOptions options)
         {
-            const SaveChangesOptions All = SaveChangesOptions.ContinueOnError | SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ReplaceOnUpdate;
-          
+            const SaveChangesOptions All = SaveChangesOptions.ContinueOnError | SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ReplaceOnUpdate | SaveChangesOptions.PostOnlySetProperties;
+
             // Make sure no higher order bits are set.
             if ((options | All) != All)
             {
@@ -2512,6 +2523,12 @@ namespace Microsoft.OData.Client
             if (Util.IsFlagSet(options, SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ContinueOnError))
             {
                 throw Error.ArgumentOutOfRange("options");
+            }
+
+            // OnlyPostExplicitProperties cannot be used without DataServiceCollection to track properties change
+            if (Util.IsFlagSet(options, SaveChangesOptions.PostOnlySetProperties) && !this.UsingDataServiceCollection)
+            {
+                throw Error.InvalidOperation(Strings.Context_MustBeUsedWith("SaveChangesOptions.OnlyPostExplicitProperties", "DataServiceCollection"));
             }
         }
 
@@ -2794,7 +2811,6 @@ namespace Microsoft.OData.Client
             }
 
             // Because the user could be re-using the args class, make a copy of the headers they have set so far before adding any more.
-            // This is the fix for SQL BU TFS Bug #1238363: SendingRequest cannot set Accept-Charset header for SetSaveStream if reusing request arg
             HeaderCollection headers = args.HeaderCollection.Copy();
 
             // Validate and set the request DSV header
@@ -2834,7 +2850,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(descriptor != null, "descriptor != null");
 
-            // TODO TASK: http://vstspioneer:8080/tfs/VSTSDF/DevDiv/OData/_workitems#_a=edit&id=874413
+            // TODO://vstspioneer:8080/tfs/VSTSDF/DevDiv/OData/_workitems#_a=edit&id=874413 :
             // Should things with slashes still be passed down? We will need to make a decision one way or the other.
             // For now we will pass them down.
             ODataEntityMetadataBuilder entityMetadataBuilder = this.GetEntityMetadataBuilder(descriptor.EntitySetName, descriptor.EdmValue);

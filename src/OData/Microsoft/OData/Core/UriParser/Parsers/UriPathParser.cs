@@ -13,6 +13,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     #region Namespaces
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     #endregion Namespaces
 
@@ -51,7 +52,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             //   so for example /Customers('abc/pqr') is treated as two segments, which is wrong.
             string[] segments = escapedRelativePathUri.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            // TODO lookup astoria max segments...
+            // TODO: lookup astoria max segments...
             if (segments.Length >= this.maxSegments)
             {
                 throw new ODataException(Strings.UriQueryPathParser_TooManySegments);
@@ -63,19 +64,26 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>
         /// Returns list of segments in the specified path (eg: /abc/pqr -&gt; abc, pqr).
         /// </summary>
-        /// <param name="absoluteUri">The absolute URI of the request.</param>
+        /// <param name="fullUri">The full URI of the request.</param>
         /// <param name="serviceBaseUri">The service base URI for the request.</param>
         /// <returns>List of unescaped segments.</returns>
-        internal ICollection<string> ParsePathIntoSegments(Uri absoluteUri, Uri serviceBaseUri)
+        internal ICollection<string> ParsePathIntoSegments(Uri fullUri, Uri serviceBaseUri)
         {
-            if (!UriUtils.UriInvariantInsensitiveIsBaseOf(serviceBaseUri, absoluteUri))
+            if (serviceBaseUri == null)
             {
-                throw new ODataException(Strings.UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri(absoluteUri, serviceBaseUri));
+                Debug.Assert(!fullUri.IsAbsoluteUri, "fullUri must be relative Uri");
+                serviceBaseUri = UriUtils.CreateMockAbsoluteUri();
+                fullUri = UriUtils.CreateMockAbsoluteUri(fullUri);
+            }
+
+            if (!UriUtils.UriInvariantInsensitiveIsBaseOf(serviceBaseUri, fullUri))
+            {
+                throw new ODataException(Strings.UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri(fullUri, serviceBaseUri));
             }
 
             try
             {
-                Uri uri = absoluteUri;
+                Uri uri = fullUri;
                 int numberOfSegmentsToSkip = 0;
 
                 // Skip over the base URI segments

@@ -38,7 +38,7 @@ namespace Microsoft.OData.Core.UriParser
                 case EdmExpressionKind.EntitySetReference:
                     return ((IEdmEntitySetReferenceExpression)expression).ReferencedEntitySet;
                 default:
-                    // TODO we should support all the other options
+                    // TODO: we should support all the other options
                     throw new NotSupportedException(
                         ODataErrorStrings.Nodes_NonStaticEntitySetExpressionsAreNotSupportedInThisRelease);
             }

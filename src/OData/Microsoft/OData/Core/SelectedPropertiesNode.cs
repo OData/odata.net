@@ -66,7 +66,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>
         /// Constructor.
-        /// TODO Task#1678618: Update SelectedPropertiesNode class to adapt to V4, get rid of old style constructor
+        /// TODO: Update SelectedPropertiesNode class to adapt to V4, get rid of old style constructor
         /// </summary>
         /// <param name="selectClause">The string representation of the selected property hierarchy using 
         /// the same format as in the $select query option.</param>
@@ -106,7 +106,7 @@ namespace Microsoft.OData.Core
 
             /// <summary>
             /// Represents the case where an entire subtree is selected.
-            /// TODO Task#1678618: Update SelectedPropertiesNode class to adapt to V4, fix EntireSubtree logic for V4
+            /// TODO: Update SelectedPropertiesNode class to adapt to V4, fix EntireSubtree logic for V4
             /// </summary>
             EntireSubtree = 1,
 

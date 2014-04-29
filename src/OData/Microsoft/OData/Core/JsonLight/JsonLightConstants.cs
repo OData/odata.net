@@ -33,6 +33,27 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>The 'error' property name for the Json Light value property.</summary>
         internal const string ODataErrorPropertyName = "error";
 
+        /// <summary>The 'source' property name for the Json Light value property.</summary>
+        internal const string ODataSourcePropertyName = "source";
+
+        /// <summary>The 'target' property name for the Json Light value property.</summary>
+        internal const string ODataTargetPropertyName = "target";
+
+        /// <summary>The 'relationship' property name for the Json Light value property.</summary>
+        internal const string ODataRelationshipPropertyName = "relationship";
+
+        /// <summary>The 'id' property name for the Json Light value property.</summary>
+        internal const string ODataIdPropertyName = "id";
+
+        /// <summary>The 'reason' property name for the Json Light value property.</summary>
+        internal const string ODataReasonPropertyName = "reason";
+
+        /// <summary>The value 'changed' for the Json Light 'reason' property.</summary>
+        internal const string ODataReasonChangedValue = "changed";
+
+        /// <summary>The value 'deleted' for the Json Light 'reason' property.</summary>
+        internal const string ODataReasonDeletedValue = "deleted";
+
         /// <summary>The name of the property returned for a URL of a service document element.</summary>
         internal const string ODataServiceDocumentElementUrlName = "url";
 

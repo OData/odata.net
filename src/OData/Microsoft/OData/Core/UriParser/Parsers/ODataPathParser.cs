@@ -121,17 +121,28 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 this.segmentQueue.Enqueue(segment);
             }
 
-            string segmentText;
-            while (this.TryGetNextSegmentText(out segmentText))
+            string segmentText = null;
+
+            try
             {
-                if (this.parsedSegments.Count == 0)
+                while (this.TryGetNextSegmentText(out segmentText))
                 {
-                    this.CreateFirstSegment(segmentText);
+                    if (this.parsedSegments.Count == 0)
+                    {
+                        this.CreateFirstSegment(segmentText);
+                    }
+                    else
+                    {
+                        this.CreateNextSegment(segmentText);
+                    }
                 }
-                else
-                {
-                    this.CreateNextSegment(segmentText);
-                }
+            }
+            catch (ODataUnrecognizedPathException ex)
+            {
+                ex.ParsedSegments = this.parsedSegments;
+                ex.CurrentSegment = segmentText;
+                ex.UnparsedSegments = this.segmentQueue.ToList();
+                throw ex;
             }
 
             List<ODataPathSegment> validatedSegments = new List<ODataPathSegment>(this.parsedSegments.Count);

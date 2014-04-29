@@ -51,7 +51,7 @@ namespace Microsoft.OData.Edm.Library
         /// </summary>
         /// <param name="property">The navigation property.</param>
         /// <returns>The entity set that the navigation propertion targets, or null if no such entity set exists.</returns>
-        /// todo fareast\michdai change null logic to using UnknownEntitySet
+        /// TODO: change null logic to using UnknownEntitySet
         public override IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property)
         {
             return null;

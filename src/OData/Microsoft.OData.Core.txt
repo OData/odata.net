@@ -23,7 +23,7 @@ ODataOutputContext_UnsupportedPayloadKindForFormat=The format '{0}' does not sup
 
 ODataInputContext_UnsupportedPayloadKindForFormat=The format '{0}' does not support reading a payload of kind '{1}'.
 
-ODataOutputContext_MetadataDocumentUriMissing=The ODataMessageWriterSettings used to write a payload do not specify a metadata document URI.
+ODataOutputContext_MetadataDocumentUriMissing=The ServiceRoot property in ODataMessageWriterSettings.ODataUri must be set when when writing a payload.
 
 ODataJsonLightSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata=A relative URI value '{0}' was specified in the data to write, but the metadata document URI or the metadata for the item to be written was not specified for the writer. The metadata document URI and the metadata for the item to be written must be provided to the writer when using relative URI values.
 
@@ -88,6 +88,7 @@ ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed=Top-level entity refe
 ODataMessageWriter_ErrorPayloadInRequest=An error cannot be written to a request payload. Errors are only supported in responses.
 ODataMessageWriter_ServiceDocumentInRequest=A service document cannot be written to request payloads. Service documents are only supported in responses.
 ODataMessageWriter_MetadataDocumentInRequest=A metadata document cannot be written to request payloads. Metadata documents are only supported in responses.
+ODataMessageWriter_DeltaInRequest=Cannot write delta in request payload.
 ODataMessageWriter_CannotWriteNullInRawFormat=Cannot write the value 'null' in raw format.
 ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind=Cannot set message headers for the invalid payload kind '{0}'.
 ODataMessageWriter_IncompatiblePayloadKinds=The payload kind '{0}' used in the last call to ODataUtils.SetHeadersForPayload is incompatible with the payload being written, which is of kind '{1}'.
@@ -247,7 +248,7 @@ ReaderValidationUtils_NullNamedValueForNonNullableType=A null value was found fo
 ReaderValidationUtils_EntityReferenceLinkMissingUri=No URI value was found for an entity reference link. A single URI value was expected.
 ReaderValidationUtils_ValueWithoutType=A value without a type name was found and no expected type is available. When the model is specified, each value in the payload must have a type which can be either specified in the payload, explicitly by the caller or implicitly inferred from the parent value.
 ReaderValidationUtils_EntryWithoutType=An entry without a type name was found, but no expected type was specified. To allow entries without type information, the expected type must also be specified when the model is specified.
-ReaderValidationUtils_CannotConvertPrimitiveValue=Cannot convert a primitive value to the expected type '{0}'. See the inner exception for more details.
+ReaderValidationUtils_CannotConvertPrimitiveValue=Cannot convert the literal '{0}' to the expected type '{1}'.
 ReaderValidationUtils_MessageReaderSettingsBaseUriMustBeNullOrAbsolute=The base URI '{0}' specified in ODataMessageReaderSettings.BaseUri is invalid; it must be either null or an absolute URI.
 ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest=The ODataMessageReaderSettings.UndeclaredPropertyBehaviorKinds is not set to ODataUndeclaredPropertyBehaviorKinds.None. When reading request payloads, the ODataMessageReaderSettings.UndeclaredPropertyBehaviorKinds property must be set to ODataUndeclaredPropertyBehaviorKinds.None; other values are not supported.
 ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet=The context URI '{0}' references the entity set with name '{1}'; however, the name of the expected entity set is '{2}' and does not match the entity set referenced in the context URI.
@@ -262,6 +263,7 @@ ODataMessageReader_ReaderAlreadyUsed=The ODataMessageReader has already been use
 ODataMessageReader_ErrorPayloadInRequest=A top-level error cannot be read from request payloads. Top-level errors are only supported in responses.
 ODataMessageReader_ServiceDocumentInRequest=A service document cannot be read from request payloads. Service documents are only supported in responses.
 ODataMessageReader_MetadataDocumentInRequest=A metadata document cannot be read from request payloads. Metadata documents are only supported in responses.
+ODataMessageReader_DeltaInRequest=Delta are only supported in responses.
 ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata=The parameter '{0}' is specified with a non-null value, but no metadata is available for the reader. The expected type can only be specified if metadata is made available to the reader.
 ODataMessageReader_EntitySetSpecifiedWithoutMetadata=The parameter '{0}' is specified with a non-null value, but no metadata is available for the reader. The entity set can only be specified if metadata is made available to the reader.
 ODataMessageReader_OperationImportSpecifiedWithoutMetadata=The parameter '{0}' is specified with a non-null value, but no metadata is available for the reader. The operation import can only be specified if metadata is made available to the reader.
@@ -528,8 +530,8 @@ ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedFeed=The ODataFeed.
 ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForComplexValueRequest=Neither an expected type nor a type name in the OData object model was provided for a complex value. When writing a request payload, either an expected type or a type name has to be specified.
 ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest=Neither an expected type nor a type name in the OData object model was provided for a collection property. When writing a request payload, either an expected type or a type name has to be specified.
 
-ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing=When writing a JSON response, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateEntryWriter method or the ODataFeedAndEntrySerializationInfo must be set on the ODataEntry or ODataFeed that is being writen.
-ODataFeedAndEntryTypeContext_ODataEntryTypeNameMissing=When writing a JSON response in full metadata mode with ODataMessageWriterSettings.AutoComputePayloadMetadataInJson set to true, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateEntryWriter method or the ODataEntry.TypeName must be set.
+ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing=When writing a JSON response, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateODataEntryWriter method or the ODataFeedAndEntrySerializationInfo must be set on the ODataEntry or ODataFeed that is being writen.
+ODataFeedAndEntryTypeContext_ODataEntryTypeNameMissing=When writing a JSON response in full metadata mode with ODataMessageWriterSettings.AutoComputePayloadMetadataInJson set to true, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateODataEntryWriter method or the ODataEntry.TypeName must be set.
 
 ODataContextUriBuilder_ValidateDerivedType=The base type '{0}' of the entity set specified for writing a payload is not assignable from the specified entity type '{1}'. When an entity type is specified it has to be the same or derived from the base type of the entity set.
 ODataContextUriBuilder_TypeNameMissingForTopLevelCollection=The collection type name for the top level collection is unknown. When writing a response, the item type must be passed to the ODataMessageWriter.CreateODataCollectionWriter method or the ODataCollectionStartSerializationInfo must be set on the ODataCollectionStart.
@@ -586,9 +588,9 @@ ODataJsonLightEntryAndFeedDeserializer_StreamPropertyInRequest=A stream property
 ODataJsonLightEntryAndFeedDeserializer_UnexpectedStreamPropertyAnnotation=The stream property '{0}' has a property annotation '{1}'. Stream property can only have the 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaEtag' and 'odata.mediaContentType' property annotations.
 ODataJsonLightEntryAndFeedDeserializer_StreamPropertyWithValue=A stream property '{0}' has a value in the payload. In OData, stream property must not have a value, it must only use property annotations.
 ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation=The navigation property '{0}' has a property annotation '{1}'. Deferred navigation links can only have the 'odata.navigationLink' and 'odata.associationLink' property annotations.
-ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue=A node of type '{0}' was read from the JSON reader when trying to read the contents of a resource reference navigation link; however, a 'StartObject' node or 'PrimitiveValue' node with null value was expected.
-ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue=A node of type '{0}' was read from the JSON reader when trying to read the contents of an entity set reference navigation link; however, a 'StartArray' node was expected.
-ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue=A 'PrimitiveValue' node with non-null value was found when trying to read the value of a navigation property; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected.
+ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue=A node of type '{0}' was read from the JSON reader when trying to read the contents of the navigation property '{1}'; however, a 'StartObject' node or 'PrimitiveValue' node with null value was expected.
+ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue=A node of type '{0}' was read from the JSON reader when trying to read the contents of the navigation property '{1}'; however, a 'StartArray' node was expected.
+ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue=A 'PrimitiveValue' node with non-null value was found when trying to read the value of the navigation property '{0}'; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected.
 ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation=The navigation property '{0}' has a property annotation '{1}'. Expanded entry navigation links can only have the 'odata.context', 'odata.navigationLink' and 'odata.associationLink' property annotations.
 ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation=The navigation property '{0}' has a property annotation '{1}'. Expanded feed navigation links can only have the 'odata.context', 'odata.navigationLink', 'odata.associationLink' and 'odata.nextLink' property annotations.
 ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation=Multiple property annotations '{0}' were found when reading the expanded navigation link '{1}'. Only a single property annotation '{0}' can be specified for an expanded navigation link.
@@ -894,6 +896,7 @@ ExpressionLexer_InvalidNumericString=Numeric string '{0}' is not a valid Int32/I
 ExpressionLexer_InvalidEscapeSequence=An unrecognized escape sequence '\\{0}' was found at position {1} in '{2}'.
 
 UriQueryExpressionParser_UnrecognizedLiteral=Unrecognized '{0}' literal '{1}' at '{2}' in '{3}'.
+UriQueryExpressionParser_UnrecognizedLiteralWithReason=Unrecognized '{0}' literal '{1}' at '{2}' in '{3}' with reason '{4}'.
 
 ; NOTE: these error messages are copied from EdmLib because they appear in shared source files.
 ValueParser_InvalidDuration=The value '{0}' is not a valid duration value.
@@ -917,6 +920,7 @@ JsonReader_MissingComma=Invalid JSON. A comma character ',' was expected in scop
 JsonReader_InvalidPropertyNameOrUnexpectedComma=Invalid JSON. The property name '{0}' is not valid. The name of a property cannot be empty.
 
 JsonReaderExtensions_UnexpectedNodeDetected=An unexpected '{1}' node was found when reading from the JSON reader. A '{0}' node was expected.
+JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName=An unexpected '{1}' node was found for property named '{2}' when reading from the JSON reader. A '{0}' node was expected.
 JsonReaderExtensions_CannotReadPropertyValueAsString=Cannot read the value '{0}' for the property '{1}' as a quoted JSON string value.
 JsonReaderExtensions_CannotReadValueAsString=Cannot read the value '{0}' as a quoted JSON string value.
 JsonReaderExtensions_CannotReadValueAsDouble=Cannot read the value '{0}' as a double numeric value.

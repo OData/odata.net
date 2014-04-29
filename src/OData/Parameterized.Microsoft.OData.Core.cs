@@ -103,7 +103,7 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "The ODataMessageWriterSettings used to write a payload do not specify a metadata document URI."
+        /// A string like "The ServiceRoot property in ODataMessageWriterSettings.ODataUri must be set when when writing a payload."
         /// </summary>
         internal static string ODataOutputContext_MetadataDocumentUriMissing {
             get {
@@ -542,6 +542,15 @@ namespace Microsoft.OData.Core {
         internal static string ODataMessageWriter_MetadataDocumentInRequest {
             get {
                 return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataMessageWriter_MetadataDocumentInRequest);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Cannot write delta in request payload."
+        /// </summary>
+        internal static string ODataMessageWriter_DeltaInRequest {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataMessageWriter_DeltaInRequest);
             }
         }
 
@@ -1599,10 +1608,10 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "Cannot convert a primitive value to the expected type '{0}'. See the inner exception for more details."
+        /// A string like "Cannot convert the literal '{0}' to the expected type '{1}'."
         /// </summary>
-        internal static string ReaderValidationUtils_CannotConvertPrimitiveValue(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ReaderValidationUtils_CannotConvertPrimitiveValue,p0);
+        internal static string ReaderValidationUtils_CannotConvertPrimitiveValue(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ReaderValidationUtils_CannotConvertPrimitiveValue,p0,p1);
         }
 
         /// <summary>
@@ -1703,6 +1712,15 @@ namespace Microsoft.OData.Core {
         internal static string ODataMessageReader_MetadataDocumentInRequest {
             get {
                 return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataMessageReader_MetadataDocumentInRequest);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Delta are only supported in responses."
+        /// </summary>
+        internal static string ODataMessageReader_DeltaInRequest {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataMessageReader_DeltaInRequest);
             }
         }
 
@@ -3328,7 +3346,7 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "When writing a JSON response, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateEntryWriter method or the ODataFeedAndEntrySerializationInfo must be set on the ODataEntry or ODataFeed that is being writen."
+        /// A string like "When writing a JSON response, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateODataEntryWriter method or the ODataFeedAndEntrySerializationInfo must be set on the ODataEntry or ODataFeed that is being writen."
         /// </summary>
         internal static string ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing {
             get {
@@ -3337,7 +3355,7 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "When writing a JSON response in full metadata mode with ODataMessageWriterSettings.AutoComputePayloadMetadataInJson set to true, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateEntryWriter method or the ODataEntry.TypeName must be set."
+        /// A string like "When writing a JSON response in full metadata mode with ODataMessageWriterSettings.AutoComputePayloadMetadataInJson set to true, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateODataEntryWriter method or the ODataEntry.TypeName must be set."
         /// </summary>
         internal static string ODataFeedAndEntryTypeContext_ODataEntryTypeNameMissing {
             get {
@@ -3713,26 +3731,24 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the contents of a resource reference navigation link; however, a 'StartObject' node or 'PrimitiveValue' node with null value was expected."
+        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the contents of the navigation property '{1}'; however, a 'StartObject' node or 'PrimitiveValue' node with null value was expected."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue,p0);
+        internal static string ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue,p0,p1);
         }
 
         /// <summary>
-        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the contents of an entity set reference navigation link; however, a 'StartArray' node was expected."
+        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the contents of the navigation property '{1}'; however, a 'StartArray' node was expected."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue,p0);
+        internal static string ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue,p0,p1);
         }
 
         /// <summary>
-        /// A string like "A 'PrimitiveValue' node with non-null value was found when trying to read the value of a navigation property; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected."
+        /// A string like "A 'PrimitiveValue' node with non-null value was found when trying to read the value of the navigation property '{0}'; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue {
-            get {
-                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue);
-            }
+        internal static string ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue,p0);
         }
 
         /// <summary>
@@ -5571,6 +5587,13 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "Unrecognized '{0}' literal '{1}' at '{2}' in '{3}' with reason '{4}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_UnrecognizedLiteralWithReason(object p0, object p1, object p2, object p3, object p4) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_UnrecognizedLiteralWithReason,p0,p1,p2,p3,p4);
+        }
+
+        /// <summary>
         /// A string like "The value '{0}' is not a valid duration value."
         /// </summary>
         internal static string ValueParser_InvalidDuration(object p0) {
@@ -5674,6 +5697,13 @@ namespace Microsoft.OData.Core {
         /// </summary>
         internal static string JsonReaderExtensions_UnexpectedNodeDetected(object p0, object p1) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.JsonReaderExtensions_UnexpectedNodeDetected,p0,p1);
+        }
+
+        /// <summary>
+        /// A string like "An unexpected '{1}' node was found for property named '{2}' when reading from the JSON reader. A '{0}' node was expected."
+        /// </summary>
+        internal static string JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName(object p0, object p1, object p2) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName,p0,p1,p2);
         }
 
         /// <summary>

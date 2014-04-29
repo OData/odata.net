@@ -22,7 +22,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 
     /// <summary>
     /// Node representing an entity set.
-    /// TODO This should be deleted but it is used in many, many tests.
+    /// TODO: This should be deleted but it is used in many, many tests.
     /// </summary>
     internal sealed class EntitySetNode : EntityCollectionNode
     {

@@ -1,8 +1,12 @@
-//---------------------------------------------------------------------
-// <copyright file="ResourceBinder.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client
 {
@@ -916,7 +920,7 @@ namespace Microsoft.OData.Client
         {
             UnaryExpression ue = e as UnaryExpression;
 
-            // Dev10 Bug# 546646: We are going to allow either of DataServiceQuery or DataServiceOrderedQuery 
+            // TODO: We are going to allow either of DataServiceQuery or DataServiceOrderedQuery 
             // to be the type of ResourceExpression in the cast parameter. Although this might be considered 
             // overly relaxed we want to avoid causing breaking changes by just having the Ordered version
             if (ue != null && ue.NodeType == ExpressionType.Convert && ue.Type.BaseType == typeof(DataServiceContext))
@@ -1100,7 +1104,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(elementType != null, "elementType != null -- otherwise the set isn't going to act like a collection");
             Type expressionType = typeof(IOrderedQueryable<>).MakeGenericType(elementType);
 
-            // TODO bixu Should we create SingletonExpression here?
+            // TODO: Should we create SingletonExpression here?
             ResourceSetExpression newResource = new ResourceSetExpression(expressionType, source, memberExpression, resourceType, source.ExpandPaths.ToList(), source.CountOption, source.CustomQueryOptions.ToDictionary(kvp => kvp.Key, kvp => kvp.Value), null /*projection*/, null /*resourceTypeAs*/, source.UriVersion);
             source.ExpandPaths.Clear();
             source.CountOption = CountOption.None;
@@ -2886,7 +2890,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-        // Devdiv Bug#489444: By default, C#/Vb compilers uses declaring type for property expression when
+        // TODO: By default, C#/Vb compilers uses declaring type for property expression when
         // we pass property name while creating the property expression. But its totally fine to use 
         // property info reflected from any subtype while creating property expressions.
         // The problem is when one creates the property expression from a property info reflected from one

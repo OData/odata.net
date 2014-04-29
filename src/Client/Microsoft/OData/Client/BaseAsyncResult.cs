@@ -1,11 +1,12 @@
-//---------------------------------------------------------------------
-// <copyright file="BaseAsyncResult.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-// <summary>
-// query object
-// </summary>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client
 {
@@ -373,7 +374,7 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal void HandleCompleted()
         {
-            // Dev10 Bug #524145: even if background thread of async operation encounters
+            // TODO: even if background thread of async operation encounters
             // an "uncatchable" exception, do the minimum to unblock the async result.
             if (this.IsCompletedInternally && (System.Threading.Interlocked.Exchange(ref this.userNotified, 1) == 0))
             {

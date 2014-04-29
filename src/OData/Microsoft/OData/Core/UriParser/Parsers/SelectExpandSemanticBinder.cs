@@ -17,7 +17,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     /// <summary>
     /// Add semantic meaning to a Select or Expand token.
     /// </summary>
-    //// TODO 1466134 Rename this to SelectExpandSemanticBinder when we're only using V4
+    //// TODO: Rename this to SelectExpandSemanticBinder when we're only using V4
     internal sealed class SelectExpandSemanticBinder
     {
         /// <summary>

@@ -22,7 +22,7 @@ namespace Microsoft.OData.Edm.Csdl
     {
         #region Public Constants
 
-        // TODO: Task 1348129 : Remove old versions of EDM and EDMX
+        // TODO: Remove old versions of EDM and EDMX
         #region Old EDMX namespaces
 
         /// <summary>
@@ -51,6 +51,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string IsSerializedAsElementAnnotation = "IsSerializedAsElement";
         internal const string NamespaceAliasAnnotation = "NamespaceAlias";
         internal const string UsedNamespacesAnnotation = "UsedNamespaces";
+        internal const string ReferencesAnnotation = "References";
 
         internal const string Attribute_Abstract = "Abstract";
         internal const string Attribute_Action = "Action";

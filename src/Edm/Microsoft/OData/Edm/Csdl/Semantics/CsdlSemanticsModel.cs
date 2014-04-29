@@ -12,10 +12,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Expressions;
 using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm.Library.Annotations;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
@@ -25,7 +27,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class CsdlSemanticsModel : EdmModelBase, IEdmCheckable
     {
-        private readonly IEdmModel mainEdmModel;    // parent IEdmModel
+        private readonly CsdlSemanticsModel mainEdmModel;    // parent IEdmModel
         private readonly CsdlModel astModel;        // current internal CsdlModel
         private readonly List<CsdlSemanticsSchema> schemata = new List<CsdlSemanticsSchema>();
         private readonly Dictionary<string, List<CsdlSemanticsAnnotations>> outOfLineAnnotations = new Dictionary<string, List<CsdlSemanticsAnnotations>>();
@@ -42,7 +44,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             : base(referencedModels, annotationsManager)
         {
             this.astModel = astModel;
-
+            this.SetEdmReferences(astModel.CurrentModelReferences);
             foreach (CsdlSchema schema in this.astModel.Schemata)
             {
                 this.AddSchema(schema);
@@ -59,19 +61,20 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             : base(Enumerable.Empty<IEdmModel>(), annotationsManager)
         {
             this.astModel = mainCsdlModel;
+            this.SetEdmReferences(astModel.CurrentModelReferences);
 
             // 1. build semantics for referenced models
             foreach (var tmp in referencedCsdlModels)
             {
-                foreach (var include in tmp.Includes)
-                {
-                    this.SetNamespaceAlias(include.Namespace, include.Alias);
-                }
-
                 this.AddReferencedModel(new CsdlSemanticsModel(tmp, this.DirectValueAnnotationsManager, this));
             }
 
             // 2. build semantics for current model
+            foreach (var include in mainCsdlModel.CurrentModelReferences.SelectMany(s => s.Includes))
+            {
+                this.SetNamespaceAlias(include.Namespace, include.Alias);
+            }
+
             foreach (CsdlSchema schema in this.astModel.Schemata)
             {
                 this.AddSchema(schema);
@@ -88,28 +91,36 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             : base(Enumerable.Empty<IEdmModel>(), annotationsManager)
         {
             this.mainEdmModel = mainCsdlSemanticsModel;
-            Debug.Assert(referencedCsdlModel.Includes.Any() || referencedCsdlModel.IncludeAnnotations.Any(), "referencedCsdlModel.Includes.Any() || referencedCsdlModel.IncludeAnnotations.Any()");
+            Debug.Assert(referencedCsdlModel.ParentModelReferences.Any(), "referencedCsdlModel.ParentModelReferences.Any()");
+            this.astModel = referencedCsdlModel;
+            this.SetEdmReferences(referencedCsdlModel.CurrentModelReferences);
 
-            foreach (var tmp in referencedCsdlModel.Includes)
+            foreach (var tmp in referencedCsdlModel.ParentModelReferences.SelectMany(s => s.Includes))
             {
                 string includeNs = tmp.Namespace;
                 if (!referencedCsdlModel.Schemata.Any(s => s.Namespace == includeNs))
                 {
                     // edmx:include must be an existing namespace
-                    // TODO challenh REF throw exception
+                    // TODO: REF throw exception: should include a namespace that exists in referenced model.
                 }
+            }
+
+            foreach (var tmp in referencedCsdlModel.CurrentModelReferences.SelectMany(s => s.Includes))
+            {
+                // in any referenced model, alias may point to a further referenced model, now make alias available:
+                this.SetNamespaceAlias(tmp.Namespace, tmp.Alias);
             }
 
             foreach (var schema in referencedCsdlModel.Schemata)
             {
                 string schemaNamespace = schema.Namespace;
-                IEdmInclude edmInclude = referencedCsdlModel.Includes.FirstOrDefault(s => s.Namespace == schemaNamespace);
+                IEdmInclude edmInclude = referencedCsdlModel.ParentModelReferences.SelectMany(s => s.Includes).FirstOrDefault(s => s.Namespace == schemaNamespace);
                 if (edmInclude != null)
                 {
                     this.AddSchema(schema, false /*addAnnotations*/);
                 }
 
-                // TODO challenh REF add annotations
+                // TODO: REF add annotations
             }
         }
 
@@ -241,7 +252,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         /// <summary>
         /// Gets the main model that is referencing this model. The value may be null.
         /// </summary>
-        internal IEdmModel MainModel
+        internal CsdlSemanticsModel MainModel
         {
             get { return this.mainEdmModel; }
         }
@@ -277,7 +288,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             return inlineAnnotations;
 
-            // TODO challenh REF
+            // TODO: REF
             // find annotation in referenced models
         }
 
@@ -529,7 +540,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                                 this.derivedTypeMappings[baseTypeName] = derivedTypes;
                             }
 
-                            derivedTypes.Add(structuredType); // TODO challenh REF referenced derived types
+                            // TODO: REF referenced derived types
+                            derivedTypes.Add(structuredType); 
                         }
                     }
                 }

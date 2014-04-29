@@ -23,18 +23,13 @@ namespace Microsoft.OData.Core.JsonLight
     /// </summary>
     internal sealed class ODataJsonLightEntryAndFeedSerializer : ODataJsonLightPropertySerializer
     {
-        /// <summary>The context uri builder to use.</summary>
-        private readonly ODataContextUriBuilder contextUriBuilder;
-
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightOutputContext">The output context to write to.</param>
         internal ODataJsonLightEntryAndFeedSerializer(ODataJsonLightOutputContext jsonLightOutputContext)
-            : base(jsonLightOutputContext)
+            : base(jsonLightOutputContext, /*initContextUriBuilder*/ true)
         {
-            // DEVNOTE: grab this early so that any validation errors are thrown at creation time rather than when Write___ is called.
-            this.contextUriBuilder = jsonLightOutputContext.CreateContextUriBuilder();
         }
 
         /// <summary>
@@ -250,7 +245,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="contextUrlInfo">The contextUrl information for current element.</param>
         internal void WriteNavigationLinkContextUrl(ODataNavigationLink navigationLink, ODataContextUrlInfo contextUrlInfo)
         {
-            this.WriteContextUriProperty(() => this.contextUriBuilder.BuildContextUri(ODataPayloadKind.Entry, contextUrlInfo), () => true, navigationLink.Name);
+            this.WriteContextUriProperty(ODataPayloadKind.Entry, () => contextUrlInfo, /* parentContextUrlInfo*/ null, navigationLink.Name);
         }
 
         /// <summary>
@@ -279,23 +274,38 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// Tries to writes the context URI property for delta entry/feed/link into the payload if one is available.
+        /// </summary>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry.</param>
+        /// <param name="kind">The delta kind to write.</param>
+        /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
+        /// <returns>The created context uri info.</returns>
+        internal ODataContextUrlInfo WriteDeltaContextUri(ODataFeedAndEntryTypeContext typeContext, ODataDeltaKind kind, ODataContextUrlInfo parentContextUrlInfo = null)
+        {
+            ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
+            return this.WriteContextUriProperty(ODataPayloadKind.Delta, () => ODataContextUrlInfo.Create(typeContext, kind, odataUri), parentContextUrlInfo);
+        }
+
+        /// <summary>
         /// Tries to writes the context URI property for an entry into the payload if one is available.
         /// </summary>
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry.</param>
-        internal void TryWriteEntryContextUri(ODataFeedAndEntryTypeContext typeContext)
+        /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
+        internal void WriteEntryContextUri(ODataFeedAndEntryTypeContext typeContext, ODataContextUrlInfo parentContextUrlInfo = null)
         {
             ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
-            this.WriteContextUriProperty(() => this.contextUriBuilder.BuildContextUri(ODataPayloadKind.Entry, ODataContextUrlInfo.Create(typeContext, /* isSingle */ true, odataUri)));
+            this.WriteContextUriProperty(ODataPayloadKind.Entry, () => ODataContextUrlInfo.Create(typeContext, /* isSingle */ true, odataUri), parentContextUrlInfo);
         }
 
         /// <summary>
         /// Tries to writes the context URI property for a feed into the payload if one is available.
         /// </summary>
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the feed.</param>
-        internal void TryWriteFeedContextUri(ODataFeedAndEntryTypeContext typeContext)
+        /// <returns>The contextUrlInfo, if the context URI was successfully written.</returns>
+        internal ODataContextUrlInfo WriteFeedContextUri(ODataFeedAndEntryTypeContext typeContext)
         {
             ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
-            this.WriteContextUriProperty(() => this.contextUriBuilder.BuildContextUri(ODataPayloadKind.Feed, ODataContextUrlInfo.Create(typeContext, /* isSingle */ false, odataUri)));
+            return this.WriteContextUriProperty(ODataPayloadKind.Feed, () => ODataContextUrlInfo.Create(typeContext, /* isSingle */ false, odataUri));
         }
 
         /// <summary>

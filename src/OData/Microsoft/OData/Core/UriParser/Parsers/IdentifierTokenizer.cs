@@ -65,7 +65,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             this.lexer.ValidateToken(ExpressionTokenKind.Identifier);
 
             // An open paren here would indicate calling a method in regular C# syntax.
-            // ToDo: Make this more generalized to work with any kind of function. 
+            // TODO: Make this more generalized to work with any kind of function. 
             bool identifierIsFunction = this.lexer.ExpandIdentifierAsFunction();
             if (identifierIsFunction)
             {

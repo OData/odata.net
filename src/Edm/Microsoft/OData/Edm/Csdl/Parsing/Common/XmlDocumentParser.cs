@@ -368,7 +368,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                     this.ReportUnexpectedElement(this.Location, this.reader.Name);
                     if (!emptyElement)
                     {
-                        this.reader.Read();
+                        int depth = reader.Depth;
+                        do
+                        {
+                            reader.Read();
+                        } 
+                        while (reader.Depth > depth);
                     }
 
                     return;

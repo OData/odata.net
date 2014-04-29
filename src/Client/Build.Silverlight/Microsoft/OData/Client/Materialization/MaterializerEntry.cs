@@ -1,12 +1,12 @@
-//---------------------------------------------------------------------
-// <copyright file="MaterializerEntry.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-// <summary>
-// Provides a struct abstracting the materializer state for a given
-// ODataEntry
-// </summary>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client.Materialization
 {
@@ -58,9 +58,9 @@ namespace Microsoft.OData.Client.Materialization
             this.entry = entry;
             this.Format = format;
             this.entityDescriptor = new EntityDescriptor(model);
-
+#pragma warning disable 618
             this.isAtomOrTracking = isTracking || this.Format == ODataFormat.Atom;
-            
+#pragma warning restore 618
             string serverTypeName = this.Entry.TypeName;
             SerializationTypeNameAnnotation serializationTypeNameAnnotation = entry.GetAnnotation<SerializationTypeNameAnnotation>();
             if (serializationTypeNameAnnotation != null)
@@ -87,7 +87,9 @@ namespace Microsoft.OData.Client.Materialization
         {
             this.entityDescriptor = entityDescriptor;
             this.Format = format;
+#pragma warning disable 618
             this.isAtomOrTracking = isTracking || this.Format == ODataFormat.Atom;
+#pragma warning restore 618
             this.SetFlagValue(EntryFlags.ShouldUpdateFromPayload | EntryFlags.EntityHasBeenResolved | EntryFlags.ForLoadProperty, true);
         }
 

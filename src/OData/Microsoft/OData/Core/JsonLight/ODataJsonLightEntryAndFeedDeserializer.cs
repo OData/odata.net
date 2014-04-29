@@ -245,7 +245,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// false when parsing the instance annotations after the feed property.</param>
         /// <param name="readAllFeedProperties">true if we should scan ahead for the annotations and ignore the actual data properties (used with
         /// the reordering reader); otherwise false.</param>
-        internal void ReadTopLevelFeedAnnotations(ODataFeed feed, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, bool forFeedStart, bool readAllFeedProperties)
+        internal void ReadTopLevelFeedAnnotations(ODataFeedBase feed, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, bool forFeedStart, bool readAllFeedProperties)
         {
             Debug.Assert(feed != null, "feed != null");
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
@@ -636,7 +636,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// Post-Condition: JsonNodeType.EndObject              The end of the feed object
         ///                 JsonNodeType.Property               The next annotation after the current annotation
         /// </remarks>
-        internal void ReadAndApplyFeedInstanceAnnotationValue(string annotationName, ODataFeed feed, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        internal void ReadAndApplyFeedInstanceAnnotationValue(string annotationName, ODataFeedBase feed, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             Debug.Assert(feed != null, "feed != null");
@@ -745,7 +745,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="expandedNavigationLinkInfo">The information about the expanded link. This must be non-null if we're reading an expanded feed, and must be null if we're reading a top-level feed.</param>
         /// <param name="duplicatePropertyNamesChecker">The top-level duplicate property names checker, if we're reading a top-level feed.</param>
         internal void ReadNextLinkAnnotationAtFeedEnd(
-            ODataFeed feed,
+            ODataFeedBase feed,
             ODataJsonLightReaderNavigationLinkInfo expandedNavigationLinkInfo,
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
@@ -1073,7 +1073,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="feed">The feed that was just read.</param>
         /// <param name="expandedNavigationLinkInfo">The information for the current expanded navigation link being read.</param>
-        private void ReadExpandedFeedAnnotationsAtFeedEnd(ODataFeed feed, ODataJsonLightReaderNavigationLinkInfo expandedNavigationLinkInfo)
+        private void ReadExpandedFeedAnnotationsAtFeedEnd(ODataFeedBase feed, ODataJsonLightReaderNavigationLinkInfo expandedNavigationLinkInfo)
         {
             Debug.Assert(expandedNavigationLinkInfo != null, "expandedNavigationLinkInfo != null");
             Debug.Assert(expandedNavigationLinkInfo.NavigationLink.IsCollection == true, "Only collection navigation properties can have feed content.");
@@ -1171,7 +1171,7 @@ namespace Microsoft.OData.Core.JsonLight
                 {
                     // Expanded link
                     bool isCollection = navigationProperty.Type.IsCollection();
-                    this.ValidateExpandedNavigationLinkPropertyValue(isCollection);
+                    this.ValidateExpandedNavigationLinkPropertyValue(isCollection, navigationProperty.Name);
                     if (isCollection)
                     {
                         navigationLinkInfo = this.ReadingResponse
@@ -1369,7 +1369,7 @@ namespace Microsoft.OData.Core.JsonLight
                             throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, entryState.EntityType.ODataFullName()));
                         }
 
-                        this.ValidateExpandedNavigationLinkPropertyValue(null);
+                        this.ValidateExpandedNavigationLinkPropertyValue(null, propertyName);
 
                         // Since we marked the navigation link as deffered the reader will not try to read its content
                         // instead it will behave as if it was a real deferred link (without a property value).
@@ -1694,7 +1694,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// Validates that the value of a JSON property can represent expanded navigation link.
         /// </summary>
         /// <param name="isCollection">true if the property is entity set reference property; false for a resource reference property, null if unknown.</param>
-        private void ValidateExpandedNavigationLinkPropertyValue(bool? isCollection)
+        /// <param name="propertyName">Name for the navigation property, used in error message only.</param>
+        private void ValidateExpandedNavigationLinkPropertyValue(bool? isCollection, string propertyName)
         {
             // an expanded link with entry requires a StartObject node here;
             // an expanded link with feed requires a StartArray node here;
@@ -1704,7 +1705,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 if (isCollection == false)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue(nodeType));
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue(nodeType, propertyName));
                 }
             }
             else if ((nodeType == JsonNodeType.PrimitiveValue && this.JsonReader.Value == null) || nodeType == JsonNodeType.StartObject)
@@ -1712,13 +1713,13 @@ namespace Microsoft.OData.Core.JsonLight
                 // Expanded entry (null or non-null)
                 if (isCollection == true)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue(nodeType));
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue(nodeType, propertyName));
                 }
             }
             else
             {
                 Debug.Assert(nodeType == JsonNodeType.PrimitiveValue, "nodeType == JsonNodeType.PrimitiveValue");
-                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue);
+                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue(propertyName));
             }
         }
 

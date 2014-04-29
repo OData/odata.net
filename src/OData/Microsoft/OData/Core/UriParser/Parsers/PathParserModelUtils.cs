@@ -120,9 +120,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     IEdmEntitySetBase currentEntitySet = sourceEntitySet;
                     foreach (var navigation in path)
                     {
-                        // Todo these will be removed after following step is done
-                        // Todo fareast\michdai implementation of ContainedEntitySet and UnknownEntitySet is done
-                        // Todo fareast\bixu implementation of Singleton is done
+                        // TODO: these will be removed after following step is done
+                        // TODO: implementation of ContainedEntitySet and UnknownEntitySet is done
+                        // TODO: implementation of Singleton is done
                         currentEntitySet = currentEntitySet.FindNavigationTarget(navigation) as IEdmEntitySetBase;
                         if (currentEntitySet == null || currentEntitySet is IEdmUnknownEntitySet)
                         {
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         }
                     }
 
-                    // TODO bixu what if the target is not entity set? Should throw exception?
+                    // TODO: what if the target is not entity set? Should throw exception?
                     return (IEdmEntitySetBase)target;
                 }
                 else

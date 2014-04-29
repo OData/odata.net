@@ -183,7 +183,7 @@ namespace Microsoft.OData.Core.Atom
             string etag = entry.ETag;
             if (etag != null)
             {
-                // TODO, ckerer: if this is a top-level entry also put the ETag into the headers.
+                // TODO: if this is a top-level entry also put the ETag into the headers.
                 ODataAtomWriterUtils.WriteETag(this.atomOutputContext.XmlWriter, etag);
             }
 

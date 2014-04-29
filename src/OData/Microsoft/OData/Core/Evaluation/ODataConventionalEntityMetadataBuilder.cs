@@ -446,7 +446,7 @@ namespace Microsoft.OData.Core.Evaluation
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(operationName, "operationName");
 
-            // TODO TASK 905785: What is the convention for operation title?
+            // TODO: What is the convention for operation title?
             return operationName;
         }
 
@@ -546,7 +546,12 @@ namespace Microsoft.OData.Core.Evaluation
                 IODataFeedAndEntryTypeContext typeContext = parent.entryMetadataContext.TypeContext;
                 if (typeContext.NavigationSourceEntityTypeName != typeContext.ExpectedEntityTypeName)
                 {
-                    uri = new Uri(uri, parent.entryMetadataContext.ActualEntityTypeName);
+                    // Do not append type cast if we know that the navigation property is in base type, not in derived type.
+                    ODataFeedAndEntryTypeContext.ODataFeedAndEntryTypeContextWithModel typeContextWithModel = typeContext as ODataFeedAndEntryTypeContext.ODataFeedAndEntryTypeContextWithModel;
+                    if (typeContextWithModel == null || typeContextWithModel.NavigationSourceEntityType.FindProperty(this.entryMetadataContext.TypeContext.NavigationSourceName) == null)
+                    {
+                        uri = new Uri(Core.UriUtils.EnsureTaillingSlash(uri), parent.entryMetadataContext.ActualEntityTypeName);    
+                    }
                 }
             }
             else
@@ -636,7 +641,7 @@ namespace Microsoft.OData.Core.Evaluation
             ODataPath path = odataUri.Path;
             List<ODataPathSegment> segments = path.ToList();
             ODataPathSegment lastSegment = segments.Last();
-            while (lastSegment is NavigationPropertySegment == false)
+            while (!(lastSegment is NavigationPropertySegment))
             {
                 segments.Remove(lastSegment);
                 lastSegment = segments.Last();
@@ -644,6 +649,23 @@ namespace Microsoft.OData.Core.Evaluation
 
             // also removed the last navigation property segment
             segments.Remove(lastSegment);
+
+            // Remove the unnecessary type cast segment.
+            ODataPathSegment nextToLastSegment = segments.Last();
+            while (nextToLastSegment is TypeSegment)
+            {
+                ODataPathSegment previousSegment = segments[segments.Count - 2];
+                IEdmEntityType ownerType = previousSegment.TargetEdmType as IEdmEntityType;
+                if (ownerType != null && ownerType.FindProperty(lastSegment.Identifier) != null)
+                {
+                    segments.Remove(nextToLastSegment);
+                    nextToLastSegment = segments.Last();
+                }
+                else
+                {
+                    break;
+                }
+            }
 
             // append each segment to base uri
             Uri uri = baseUri;

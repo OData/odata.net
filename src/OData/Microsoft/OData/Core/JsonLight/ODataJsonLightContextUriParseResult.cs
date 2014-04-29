@@ -85,5 +85,10 @@ namespace Microsoft.OData.Core.JsonLight
         /// ODataPath parsed from context Url
         /// </summary>
         internal ODataPath Path { get; set; }
+
+        /// <summary>
+        /// DeltaKind from context Url, only applicable when payload kind is Delta
+        /// </summary>
+        internal ODataDeltaKind DeltaKind { get; set; }
     }
 }

@@ -110,6 +110,6 @@ namespace Microsoft.OData.Core.Atom
             return collectionMetadata;
         }
 
-        // TODO Task 1665240: Association Link - Add back support for customizing association link element in Atom
+        // TODO: Association Link - Add back support for customizing association link element in Atom
     }
 }

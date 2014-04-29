@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2C123656-AD5F-4360-93C2-C7F159E160D9}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Spatial</RootNamespace>
+    <AssemblyName>Microsoft.Spatial</AssemblyName>
+    <DefineConstants>SILVERLIGHT;SPATIAL;PORTABLELIB</DefineConstants>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\Silverlight\</OutputPath>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\Silverlight\</OutputPath>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Microsoft\Spatial\PlatformHelper.cs" />
+    <Compile Include="Microsoft\Spatial\WrappedGeoJsonWriter.cs" />
+    <Compile Include="Microsoft\Spatial\GeoJsonObjectFormatterImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeoJsonObjectWriter.cs" />
+    <Compile Include="Microsoft\Spatial\GeoJsonWriterBase.cs" />
+    <Compile Include="Microsoft\Spatial\IGeoJsonWriter.cs" />
+    <Compile Include="Microsoft\Spatial\TypeWashedToGeographyLatLongPipeline.cs" />
+    <Compile Include="Microsoft\Spatial\TypeWashedToGeographyLongLatPipeline.cs" />
+    <Compile Include="Microsoft\Spatial\GeoJsonObjectReader.cs" />
+    <Compile Include="Microsoft\Spatial\CompositeKey.cs" />
+    <Compile Include="Microsoft\Spatial\FormatterExtensions.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyPipeline.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyFullGlobe.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyCurve.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyLineString.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyMultiCurve.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyMultiLineString.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyMultiPoint.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyMultiPolygon.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyMultiSurface.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyPoint.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyPolygon.cs" />
+    <Compile Include="Microsoft\Spatial\Geography.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyCollection.cs" />
+    <Compile Include="Microsoft\Spatial\GeographySurface.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryPipeline.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryCollection.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryCurve.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryLineString.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryMultiCurve.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryMultiLineString.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryMultiPoint.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryMultiPolygon.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryMultiSurface.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryPoint.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryPolygon.cs" />
+    <Compile Include="Microsoft\Spatial\GeometrySurface.cs" />
+    <Compile Include="Microsoft\Spatial\Geometry.cs" />
+    <Compile Include="Microsoft\Spatial\IGeographyProvider.cs" />
+    <Compile Include="Microsoft\Spatial\IGeometryProvider.cs" />
+    <Compile Include="Microsoft\Spatial\IShapeProvider.cs" />
+    <Compile Include="Microsoft\Spatial\ISpatial.cs" />
+    <Compile Include="Microsoft\Spatial\GeoJsonObjectFormatter.cs" />
+    <Compile Include="Microsoft\Spatial\ParseErrorException.cs" />
+    <Compile Include="Microsoft\Spatial\SpatialBuilder.cs" />
+    <Compile Include="Microsoft\Spatial\SpatialFormatter.cs" />
+    <Compile Include="Microsoft\Spatial\SpatialReader.cs" />
+    <Compile Include="Microsoft\Spatial\SpatialType.cs" />
+    <Compile Include="Microsoft\Spatial\SpatialTypeExtensions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Microsoft\Spatial\CoordinateSystem.cs" />
+    <Compile Include="Microsoft\Spatial\ActionOnDispose.cs" />
+    <Compile Include="Microsoft\Spatial\GmlFormatter.cs" />
+    <Compile Include="Microsoft\Spatial\WellKnownTextSqlFormatter.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyPosition.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryPosition.cs" />
+    <Compile Include="Microsoft\Spatial\SpatialValidator.cs" />
+    <Compile Include="Microsoft\Spatial\SpatialPipeline.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyOperationsExtensions.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryOperationsExtensions.cs" />
+    <Compile Include="Microsoft\Spatial\SpatialImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\SpatialOperations.cs" />
+    <Compile Include="Microsoft\Spatial\OrcasExtensions.cs" />
+    <Compile Include="Microsoft\Spatial\DrawBoth.cs" />
+    <Compile Include="Microsoft\Spatial\WellKnownTextSqlFormatterImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GmlWriter.cs" />
+    <Compile Include="Microsoft\Spatial\GmlFormatterImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\WellKnownTextLexer.cs" />
+    <Compile Include="Microsoft\Spatial\WellKnownTextTokenType.cs" />
+    <Compile Include="Microsoft\Spatial\DataServicesSpatialImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyBuilderImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryBuilderImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyLineStringImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyMultiLineStringImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyMultiPointImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyMultiPolygonImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyPointImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyPolygonImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyCollectionImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyHelperMethods.cs" />
+    <Compile Include="Microsoft\Spatial\GeographyFullGlobeImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryLineStringImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryMultiLineStringImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryMultiPointImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryMultiPolygonImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryPointImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryPolygonImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryCollectionImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\DebugUtils.cs" />
+    <Compile Include="Microsoft\Spatial\GeometryHelperMethods.cs" />
+    <Compile Include="Microsoft\Spatial\GmlReader.cs" />
+    <Compile Include="Microsoft\Spatial\GmlConstants.cs" />
+    <Compile Include="Microsoft\Spatial\WellKnownTextConstants.cs" />
+    <Compile Include="Microsoft\Spatial\SpatialTreeBuilder.cs" />
+    <Compile Include="Microsoft\Spatial\TypeWashedPipeline.cs" />
+    <Compile Include="Microsoft\Spatial\TypeWashedToGeometryPipeline.cs" />
+    <Compile Include="Microsoft\Spatial\SpatialValidatorImplementation.cs" />
+    <Compile Include="Microsoft\Spatial\ExtensionMethods.cs" />
+    <Compile Include="Microsoft\Spatial\LexerToken.cs" />
+    <Compile Include="Microsoft\Spatial\TextLexerBase.cs" />
+    <Compile Include="Microsoft\Spatial\WellKnownTextSqlReader.cs" />
+    <Compile Include="Microsoft\Spatial\WellKnownTextSqlWriter.cs" />
+    <Compile Include="Microsoft\Spatial\GeoJsonMember.cs" />
+    <Compile Include="Microsoft\Spatial\GeoJsonConstants.cs" />
+    <Compile Include="Microsoft\Spatial\ForwardingSegment.cs" />
+    <Compile Include="Microsoft\Spatial\Util.cs" />
+    <Compile Include="Microsoft\Spatial\XmlConstants.cs" />
+    <Compile Include="Microsoft.Spatial.cs">
+      <Visible>False</Visible>
+    </Compile>
+    <Compile Include="Parameterized.Microsoft.Spatial.cs">
+      <Visible>False</Visible>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Microsoft.Spatial.resources">
+      <Visible>False</Visible>
+      <LogicalName>Microsoft.Spatial.resources</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Microsoft.Spatial.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="BeforeBuild">
+    <GenerateResource Sources="Microsoft.Spatial.txt" OutputResources="Microsoft.Spatial.resources" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

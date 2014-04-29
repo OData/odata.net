@@ -532,6 +532,7 @@ namespace Microsoft.OData.Core
                         byteCount = this.batchBuffer.NumberOfBytesInBuffer;
                         if (byteCount > 0)
                         {
+                            // TODO: [Design] Consider security limits for data being read
                             ODataBatchUtils.EnsureArraySize(ref bytesForString, lineBufferSize, byteCount);
                             Buffer.BlockCopy(this.batchBuffer.Bytes, this.batchBuffer.CurrentReadPosition, bytesForString, lineBufferSize, byteCount);
                             lineBufferSize += byteCount;

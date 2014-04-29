@@ -164,7 +164,7 @@ namespace Microsoft.OData.Core.Metadata
 
             IList<string> parameterNameList = parameterNames.ToList();
 
-            // TODO: 1631831 - update code that is duplicate between operation and operation import, add more tests.
+            // TODO: update code that is duplicate between operation and operation import, add more tests.
             foreach (IEdmFunctionImport functionImport in functionImports)
             {
                 IEnumerable<IEdmOperationParameter> parametersToMatch = functionImport.Operation.Parameters;
@@ -293,7 +293,7 @@ namespace Microsoft.OData.Core.Metadata
 
             IList<string> parametersList = parameters.ToList();
 
-            // TODO: 1631831 - update code that is duplicate between operation and operation import, add more tests.
+            // TODO: update code that is duplicate between operation and operation import, add more tests.
             foreach (IEdmOperation operation in operations)
             {
                 IEnumerable<IEdmOperationParameter> parametersToMatch = operation.Parameters;
@@ -365,7 +365,7 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The resolved operation or operation group.</returns>
         internal static IEnumerable<IEdmOperation> ResolveOperations(this IEdmModel model, string operationName, bool allowParameterTypeNames)
         {
-            // TODO:1631831 Resolve duplication of operationImport and operation
+            // TODO: Resolve duplication of operationImport and operation
             if (string.IsNullOrEmpty(operationName))
             {
                 return Enumerable.Empty<IEdmOperation>();
@@ -409,7 +409,7 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the list of operation imports all have the same return type</returns>
         internal static bool AllHaveEqualReturnTypeAndAttributes(this IList<IEdmOperationImport> operationImports)
         {
-            // TODO:1631831 Resolve duplication of operationImport and operation
+            // TODO: Resolve duplication of operationImport and operation
             Debug.Assert(operationImports != null, "operationImports != null");
 
             if (!operationImports.Any())
@@ -458,7 +458,7 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>true if the list of operation imports all have the same return type</returns>
         internal static bool AllHaveEqualReturnTypeAndAttributes(this IList<IEdmOperation> operations)
         {
-            // TODO:1631831 Resolve duplication of operationImport and operation
+            // TODO: Resolve duplication of operationImport and operation
             Debug.Assert(operations != null, "operations != null");
 
             if (!operations.Any())
@@ -1316,7 +1316,7 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The full name of the operation group.</returns>
         internal static string OperationGroupFullName(this IEnumerable<IEdmOperation> operationGroup)
         {
-            // TODO:1631831 Resolve duplication of operationImport and operation
+            // TODO: Resolve duplication of operationImport and operation
             Debug.Assert(operationGroup != null && operationGroup.Any(), "operationGroup != null && operationGroup.Any()");
 
             string fullName = operationGroup.First().FullName();
@@ -1331,7 +1331,7 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>The full name of the operation import group.</returns>
         internal static string OperationImportGroupFullName(this IEnumerable<IEdmOperationImport> operationImportGroup)
         {
-            // TODO:1631831 Resolve duplication of operationImport and operation
+            // TODO: Resolve duplication of operationImport and operation
             Debug.Assert(operationImportGroup != null && operationImportGroup.Any(), "operationImportGroup != null && operationImportGroup.Any()");
 
             string fullName = operationImportGroup.First().FullName();
@@ -1892,7 +1892,7 @@ namespace Microsoft.OData.Core.Metadata
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "allowParameterTypeNames", Justification = "Used in the ODL version of the method.")]
         internal static IEnumerable<IEdmOperationImport> ResolveOperationImports(this IEdmEntityContainer container, string operationImportName, bool allowParameterTypeNames)
         {
-            // TODO:1631831 Resolve duplication of operationImport and operation
+            // TODO: Resolve duplication of operationImport and operation
             Debug.Assert(container != null, "container != null");
 
             if (string.IsNullOrEmpty(operationImportName))
@@ -2068,7 +2068,7 @@ namespace Microsoft.OData.Core.Metadata
             Justification = "This method is used for matching the name of the operation to something written by the server. So using the name is safe without resolving the type from the client.")]
         private static string ParameterTypesToString(this IEdmOperation operation)
         {
-            // TODO:1631831 Resolve duplication of operationImport and operation
+            // TODO: Resolve duplication of operationImport and operation
             return JsonLightConstants.FunctionParameterStart +
                 string.Join(JsonLightConstants.FunctionParameterSeparator, operation.Parameters.Select(p => p.Type.FullName()).ToArray()) +
                 JsonLightConstants.FunctionParameterEnd;
@@ -2127,7 +2127,7 @@ namespace Microsoft.OData.Core.Metadata
             Justification = "This method is used for matching the name of the operation import to something written by the server. So using the name is safe without resolving the type from the client.")]
         private static string ParameterTypesToString(this IEdmOperationImport operationImport)
         {
-            // TODO:1631831 Resolve duplication of operationImport and operation
+            // TODO: Resolve duplication of operationImport and operation
             return JsonLightConstants.FunctionParameterStart +
                 string.Join(JsonLightConstants.FunctionParameterSeparator, operationImport.Operation.Parameters.Select(p => p.Type.ODataFullName()).ToArray()) +
                 JsonLightConstants.FunctionParameterEnd;

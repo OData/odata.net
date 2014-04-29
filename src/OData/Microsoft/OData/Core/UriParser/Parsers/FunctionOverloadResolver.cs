@@ -89,12 +89,18 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return true;
             }
 
+            // If parameter count is zero and there is one function import whoese parameter count is zero, return this function import.
+            if (candidateMatchingOperationImports.Count > 1 && parameterNames.Count == 0)
+            {
+                candidateMatchingOperationImports = candidateMatchingOperationImports.Where(operationImport => operationImport.Operation.Parameters.Count() == 0).ToList();
+            }
+
             if (candidateMatchingOperationImports.Count == 0)
             {
                 matchingOperationImport = null;
                 return false;
             }
-            
+
             if (candidateMatchingOperationImports.Count > 1)
             {
                 throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads(identifier));
@@ -132,17 +138,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             IList<IEdmOperation> candidateMatchingOperations = null;
 
-            // FindDeclaredBoundOperations can be implemented by anyone and it could throw any type of exception
+            // The extension method FindBoundOperations & FindOperations call IEdmModel.FindDeclaredBoundOperations which can be implemented by anyone and it could throw any type of exception
             // so catching all of them and simply putting it in the inner exception.
             try
             {
                 if (bindingType != null)
                 {
-                    candidateMatchingOperations = model.FindDeclaredBoundOperations(identifier, bindingType).ToList();
+                    candidateMatchingOperations = model.FindBoundOperations(identifier, bindingType).ToList();
                 }
                 else
                 {
-                    candidateMatchingOperations = model.FindDeclaredOperations(identifier).ToList();
+                    candidateMatchingOperations = model.FindOperations(identifier).ToList();
                 }
             }
             catch (Exception exc)

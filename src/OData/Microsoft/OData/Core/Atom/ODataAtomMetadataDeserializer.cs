@@ -157,6 +157,8 @@ namespace Microsoft.OData.Core.Atom
                 this.XmlReader.LocalName == AtomConstants.AtomPublishedElementName,
                 "Only atom:updated and atom:published elements are supported by this method.");
 
+            // TODO: Note that OData V3 doesn't support m:null for Updated and Published, because syndication API didn't allow us to do so
+            // Now with ODataLib we might want to reenable this
             string stringValue = this.ReadElementStringValue();
 
             // The following algorithm is a copy of the algorithm in Syndication API used for parsing the DateTimeOffset
@@ -225,6 +227,7 @@ namespace Microsoft.OData.Core.Atom
                 this.XmlReader.LocalName == AtomConstants.AtomTitleElementName,
                 "Only atom:rights, atom:summary, atom:subtitle, and atom:title elements are supported by this method.");
 
+            // TODO: Client ignores the type attribute and reads everything as plain text.
             AtomTextConstruct textConstruct = new AtomTextConstruct();
 
             string typeValue = null;

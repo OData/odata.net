@@ -772,7 +772,7 @@ namespace Microsoft.OData.Core
                 return this.CurrentScope.EntityType;
             }
 
-            // TODO TASK 884340 Clean up handling of expected types/sets during writing
+            // TODO: Clean up handling of expected types/sets during writing
             return (IEdmEntityType)TypeNameOracle.ResolveAndValidateTypeName(this.outputContext.Model, entry.TypeName, EdmTypeKind.Entity);
         }
 

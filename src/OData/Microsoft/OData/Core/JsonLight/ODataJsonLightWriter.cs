@@ -209,7 +209,7 @@ namespace Microsoft.OData.Core.JsonLight
             if (this.IsTopLevel)
             {
                 // Write odata.context
-                this.jsonLightEntryAndFeedSerializer.TryWriteEntryContextUri(entryScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model, this.jsonLightOutputContext.WritingResponse));
+                this.jsonLightEntryAndFeedSerializer.WriteEntryContextUri(entryScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model, this.jsonLightOutputContext.WritingResponse));
             }
 
             // Write the metadata
@@ -279,7 +279,7 @@ namespace Microsoft.OData.Core.JsonLight
                 jsonWriter.StartObjectScope();
 
                 // @odata.context
-                this.jsonLightEntryAndFeedSerializer.TryWriteFeedContextUri(this.CurrentFeedScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model, this.jsonLightOutputContext.WritingResponse));
+                this.jsonLightEntryAndFeedSerializer.WriteFeedContextUri(this.CurrentFeedScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model, this.jsonLightOutputContext.WritingResponse));
 
                 if (this.jsonLightOutputContext.WritingResponse)
                 {

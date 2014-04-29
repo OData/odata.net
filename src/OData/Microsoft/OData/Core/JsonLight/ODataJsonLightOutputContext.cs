@@ -204,6 +204,34 @@ namespace Microsoft.OData.Core.JsonLight
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataFeedWriterImplementation(entitySet, entityType));
         }
 #endif
+        /// <summary>
+        /// Creates an <see cref="ODataDeltaWriter" /> to write a delta response.
+        /// </summary>
+        /// <returns>The created writer.</returns>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override ODataDeltaWriter CreateODataDeltaWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        {
+            this.AssertSynchronous();
+            return this.CreateODataDeltaWriterImplementation(entitySet, entityType);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataDeltaWriter" /> to write a delta response.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override Task<ODataDeltaWriter> CreateODataDeltaWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataDeltaWriterImplementation(entitySet, entityType));
+        }
+#endif
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write an entry.
@@ -509,6 +537,19 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// Creates an <see cref="ODataDeltaWriter" /> to write a delta response.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <returns>The created writer.</returns>
+        private ODataDeltaWriter CreateODataDeltaWriterImplementation(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        {
+            ODataJsonLightDeltaWriter odataJsonDeltaWriter = new ODataJsonLightDeltaWriter(this, entitySet, entityType);
+            this.outputInStreamErrorListener = odataJsonDeltaWriter;
+            return odataJsonDeltaWriter;
+        }
+
+        /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write an entry.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
@@ -583,7 +624,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="property">The property to write.</param>
         private void WritePropertyImplementation(ODataProperty property)
         {
-            ODataJsonLightPropertySerializer jsonLightPropertySerializer = new ODataJsonLightPropertySerializer(this);
+            ODataJsonLightPropertySerializer jsonLightPropertySerializer = new ODataJsonLightPropertySerializer(this, /*initContextUriBuilder*/ true);
             jsonLightPropertySerializer.WriteTopLevelProperty(property);
         }
 
@@ -608,7 +649,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </param>
         private void WriteErrorImplementation(ODataError error, bool includeDebugInformation)
         {
-            ODataJsonLightSerializer jsonLightSerializer = new ODataJsonLightSerializer(this);
+            ODataJsonLightSerializer jsonLightSerializer = new ODataJsonLightSerializer(this, false);
             jsonLightSerializer.WriteTopLevelError(error, includeDebugInformation);
         }
 

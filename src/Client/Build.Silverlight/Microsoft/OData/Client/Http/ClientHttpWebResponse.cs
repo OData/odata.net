@@ -1,14 +1,12 @@
-//---------------------------------------------------------------------
-// <copyright file="ClientHttpWebResponse.cs" company="Microsoft">
-//      Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-// <summary>
-//      Provides an HTTP-specific implementation of the WebResponse class.
-//      Based on the Silverlight's Client HTTP stack.
-// </summary>
-//
-// @owner  markash
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Service.Http
 {
@@ -38,15 +36,6 @@ namespace Microsoft.OData.Service.Http
         /// </summary>
         private ClientHttpWebRequest request;
 
-#if WIN8
-        /// <summary>
-        /// Wrapped status code. Used in cases where the status is being accessed after the response is closed.
-        /// This is specific to Win8 because on other platforms, we can call Close and still access some of the members.
-        /// On Win8, the Close method has been removed and Dispose is used instead. However, no members are accessible
-        /// after Dispose, so we need to cache the ones we need.
-        /// </summary>
-        private Microsoft.OData.Service.Http.HttpStatusCode statusCode;
-#endif
 
         /// <summary>
         /// Constructor
@@ -114,13 +103,6 @@ namespace Microsoft.OData.Service.Http
         {
             get
             {
-#if WIN8
-                if (this.innerResponse == null)
-                {
-                    return this.statusCode;
-                }
-                else
-#endif
                 {
                     return (System.Net.HttpStatusCode)(int)this.innerResponse.StatusCode;
                 }
@@ -132,25 +114,10 @@ namespace Microsoft.OData.Service.Http
         /// <summary>Closes the response stream.</summary>
         public override void Close()
         {
-#if WIN8 
-            if (this.innerResponse != null)
-            {
-                // Save the headers first if we don't have them already
-                if (this.headerCollection == null)
-                {
-                    this.headerCollection = new ClientWebHeaderCollection(this.innerResponse.Headers);
-                }
-
-                this.statusCode = (Microsoft.OData.Service.Http.HttpStatusCode)(int)this.innerResponse.StatusCode;
-
-                this.innerResponse.Dispose();
-                this.innerResponse = null;
-            }
-#endif
 #if PORTABLELIB
             this.innerResponse.Dispose();
 #endif
-#if !WIN8 && !PORTABLELIB
+#if !PORTABLELIB
             this.innerResponse.Close();
 #endif
         }

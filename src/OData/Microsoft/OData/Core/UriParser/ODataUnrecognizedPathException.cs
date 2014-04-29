@@ -11,12 +11,14 @@
 namespace Microsoft.OData.Core.UriParser
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
 #if ORCAS
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
     using System.Security.Permissions;
 #endif
+    using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>
     /// The exception that is thrown when path parsing detects an unrecognized or unresolvable token in a path (which servers should treat as a 404).
@@ -70,5 +72,20 @@ namespace Microsoft.OData.Core.UriParser
         {
         }
 #endif
+        
+        /// <summary>
+        /// Segments that have been successfully parsed when this exception was thrown.
+        /// </summary>
+        public IEnumerable<ODataPathSegment> ParsedSegments { get; set; }
+
+        /// <summary>
+        /// Current segment UriParser was dealing with when exception was thrown.
+        /// </summary>
+        public string CurrentSegment { get; set; }
+
+        /// <summary>
+        /// Unparsed segments.
+        /// </summary>
+        public IEnumerable<string> UnparsedSegments { get; set; }
     }
 }

@@ -79,26 +79,9 @@ namespace Microsoft.OData.Edm
                 for (int i = 0; i < values.Length; i++)
                 {
                     long itemValue;
-                    bool isValidValue = false;
-
                     if (long.TryParse(values[i], out itemValue))
                     {
-                        if (enumType.IsFlags)
-                        {
-                            // if item value is contained in fullBits, it's a valid value
-                            if (((ulong)itemValue & fullBits) == (ulong)itemValue)
-                            {
-                                isValidValue = true;
-                            }
-                        }
-                        else
-                        {
-                            isValidValue = enumValues.Any(v => v == (ulong)itemValue);
-                        }
-                    }
-
-                    if (isValidValue)
-                    {
+                        // allow any number value, don't validate it against enum definition.
                         num |= (ulong)itemValue;
                     }
                     else

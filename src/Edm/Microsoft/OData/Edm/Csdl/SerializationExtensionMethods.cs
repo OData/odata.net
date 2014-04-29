@@ -229,7 +229,7 @@ namespace Microsoft.OData.Edm.Csdl
 
         /// <summary>
         /// Sets the serialization alias for a given namespace(including current model's schemas namespace-alias, and referenced models' schemas namespace-alias)
-        /// TODO challenh REF make sure no duplicated alias.
+        /// TODO: REF make sure no duplicated alias.
         /// </summary>
         /// <param name="model">Model that will be serialized.</param>
         /// <param name="namespaceName">The namespace to set the alias for.</param>

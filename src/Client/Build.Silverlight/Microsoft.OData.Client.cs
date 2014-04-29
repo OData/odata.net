@@ -1,9 +1,12 @@
-//------------------------------------------------------------------------------
-// <copyright from='1997' to='2001' company='Microsoft Corporation'>           
-//    Copyright (c) Microsoft Corporation. All Rights Reserved.                
-//    Information Contained Herein is Proprietary and Confidential.            
-// </copyright>                                                                
-//------------------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client {
     using System;
@@ -92,6 +95,7 @@ namespace Microsoft.OData.Client {
         internal const string Context_CannotChangeStateIfAdded = "Context_CannotChangeStateIfAdded";
         internal const string Context_OnMessageCreatingReturningNull = "Context_OnMessageCreatingReturningNull";
         internal const string Context_SendingRequest_InvalidWhenUsingOnMessageCreating = "Context_SendingRequest_InvalidWhenUsingOnMessageCreating";
+        internal const string Context_MustBeUsedWith = "Context_MustBeUsedWith";
         internal const string DataServiceClientFormat_LoadServiceModelRequired = "DataServiceClientFormat_LoadServiceModelRequired";
         internal const string DataServiceClientFormat_ValidServiceModelRequiredForJson = "DataServiceClientFormat_ValidServiceModelRequiredForJson";
         internal const string DataServiceClientFormat_JsonVerboseUnsupported = "DataServiceClientFormat_JsonVerboseUnsupported";
@@ -253,6 +257,7 @@ namespace Microsoft.OData.Client {
         internal const string Serializer_NullCollectionParamterItemValue = "Serializer_NullCollectionParamterItemValue";
         internal const string Serializer_InvalidParameterType = "Serializer_InvalidParameterType";
         internal const string Serializer_UriDoesNotContainParameterAlias = "Serializer_UriDoesNotContainParameterAlias";
+        internal const string Serializer_InvalidEnumMemberValue = "Serializer_InvalidEnumMemberValue";
         internal const string DataServiceQuery_EnumerationNotSupported = "DataServiceQuery_EnumerationNotSupported";
         internal const string Context_SendingRequestEventArgsNotHttp = "Context_SendingRequestEventArgsNotHttp";
         internal const string General_InternalError = "General_InternalError";

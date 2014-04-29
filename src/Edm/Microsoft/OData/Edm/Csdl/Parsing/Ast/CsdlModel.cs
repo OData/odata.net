@@ -18,26 +18,23 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     internal class CsdlModel
     {
         private readonly List<CsdlSchema> schemata = new List<CsdlSchema>();
-        private readonly List<IEdmInclude> includes = new List<IEdmInclude>();
-        private readonly List<IEdmIncludeAnnotations> includeAnnotations = new List<IEdmIncludeAnnotations>();
+        private readonly List<IEdmReference> currentModelReferences = new List<IEdmReference>();
+        private readonly List<IEdmReference> parentModelReferences = new List<IEdmReference>();
 
         /// <summary>
-        /// if count ==0, includes all types. 
-        /// It represents $lt;edmx:Include Namespace="Org.OData.Capabilities.V1" /&gt;
-        /// TODO challenh REF p2 rename it to 'ToBeExported'
+        /// Represents current model's $lt;edmx:Reference /&gt;
         /// </summary>
-        public IEnumerable<IEdmInclude> Includes
+        public IEnumerable<IEdmReference> CurrentModelReferences
         {
-            get { return includes; }
+            get { return currentModelReferences; }
         }
 
         /// <summary>
-        /// if count ==0, includes all annotations.
-        /// It represents $lt;edmx:IncludeAnnotations ... /&gt;
+        /// Represents parent model's $lt;edmx:Reference ... /&gt;
         /// </summary>
-        public IEnumerable<IEdmIncludeAnnotations> IncludeAnnotations
+        public IEnumerable<IEdmReference> ParentModelReferences
         {
-            get { return includeAnnotations; }
+            get { return parentModelReferences; }
         }
 
         public IEnumerable<CsdlSchema> Schemata
@@ -50,14 +47,22 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             this.schemata.Add(schema);
         }
 
-        public void AddIncludes(IEnumerable<IEdmInclude> includesToAdd)
+        /// <summary>
+        /// Adds from current model.
+        /// </summary>
+        /// <param name="referencesToAdd">The items to add.</param>
+        public void AddCurrentModelReferences(IEnumerable<IEdmReference> referencesToAdd)
         {
-            this.includes.AddRange(includesToAdd);
+            this.currentModelReferences.AddRange(referencesToAdd);
         }
 
-        public void AddIncludeAnnotations(IEnumerable<IEdmIncludeAnnotations> includeAnnotationsToAdd)
+        /// <summary>
+        /// Adds from main model.
+        /// </summary>
+        /// <param name="referenceToAdd">The IEdmReference to add.</param>
+        public void AddParentModelReferences(IEdmReference referenceToAdd)
         {
-            this.includeAnnotations.AddRange(includeAnnotationsToAdd);
+            this.parentModelReferences.Add(referenceToAdd);
         }
     }
 }

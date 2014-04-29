@@ -96,7 +96,7 @@ namespace Microsoft.OData.Core
             ODataEnumValue enumValue = value as ODataEnumValue;
             if (enumValue != null)
             {
-                return ResolveAndValidateTypeFromNameAndMetadata(model, typeReferenceFromMetadata, null, EdmTypeKind.Enum, isOpenProperty);
+                return ResolveAndValidateTypeFromNameAndMetadata(model, typeReferenceFromMetadata, enumValue.TypeName, EdmTypeKind.Enum, isOpenProperty);
             }
 
             ODataCollectionValue collectionValue = (ODataCollectionValue)value;
@@ -167,7 +167,13 @@ namespace Microsoft.OData.Core
             {
                 throw new ODataException(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
             }
-            
+
+            // starting from enum type, we want to skip validation (but still let the above makes sure open type's enum value has .TypeName)
+            if (typeKindFromValue == EdmTypeKind.Enum)
+            {
+                return null;
+            }
+
             IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, typeKindFromValue);
             if (typeReferenceFromMetadata != null)
             {

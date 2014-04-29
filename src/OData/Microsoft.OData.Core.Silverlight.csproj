@@ -1,0 +1,651 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0F0FE3FE-7A09-461C-85D4-2D4CBF58113F}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.OData.Core</RootNamespace>
+    <AssemblyName>Microsoft.OData.Core</AssemblyName>
+    <DefineConstants>SILVERLIGHT;ODATALIB;PORTABLELIB</DefineConstants>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\Silverlight\</OutputPath>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\Silverlight\</OutputPath>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\Spatial\Microsoft.Spatial.Silverlight.csproj">
+      <Project>{2C123656-AD5F-4360-93C2-C7F159E160D9}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Edm\Microsoft.OData.Edm.Silverlight.csproj">
+      <Project>{50A5667C-6663-440A-8F86-609A4E565159}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Microsoft\OData\Core\EdmValueParser.cs" />
+    <Compile Include="Microsoft\OData\Core\EdmValueWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\LiteralFormatter.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\KeySerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\UrlConvention.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaSerializationInfo.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaFeedSerializationInfo.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightDeltaReader.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaReaderState.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaReader.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaKind.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataFeedBase.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightDeltaWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaLinkBase.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaDeletedLink.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaLink.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaDeletedEntry.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaFeed.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeltaWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\NonIndentedTextWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\GeoJsonWriterAdapter.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataContextUrlInfo.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataContextUrlLevel.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataFunctionImportInfo.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataSingletonInfo.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataContextUriBuilder.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataServiceDocumentElement.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ODataQueryOptionParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SearchBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\UriTemplateParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SearchLexer.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\BinaryOperatorBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\BindingState.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SearchParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\EnumBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\ExpandOptionParser.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataEnumValue.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ODataUriParserConfiguration.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\DottedIdentifierBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\DataServiceProviderMethods.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ExceptionUtil.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\ExpandDepthAndCountValidator.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\ExpandTreeNormalizer.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\FunctionParameterParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\KeyFinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\ParameterAliasBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectExpandBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectExpandClauseFinisher.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectExpandParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectExpandSemanticBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectExpandSyntacticUnifier.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectExpandTermParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectTreeNormalizer.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\CollectionOpenPropertyAccessNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\CollectionPropertyCastNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SingleValueCastNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SearchTermNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\LevelsClause.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ParameterAliasNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ParameterAliasValueAccessor.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SearchClause.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SingletonSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\EntityIdSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\OperationImportSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\UriTemplateExpression.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\StringLiteralToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\SplitEndingSegmentOfTypeHandler.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\PathSegmentToResourcePathTranslator.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\SelectItemHandler.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\SelectItemTranslator.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\PathSegmentToStringTranslator.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectExpandSyntacticParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SelectExpandClauseExtensions.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\FunctionParameterAliasToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\FunctionParameterToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\NamedFunctionParameterNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ODataUriParserSettings.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\ODataUriSemanticBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\FunctionOverloadResolver.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\CollectionFunctionCallNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\DetermineNavigationSourceTranslator.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ExpressionLexerLiteralExtensions.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ExpressionLexerUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\FilterBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\FunctionCallBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\FunctionCallParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\IdentifierTokenizer.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\IFunctionCallParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\IPathSegmentTokenVisitor.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\ISyntacticTreeVisitor.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\KeyBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SegmentArgumentParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\LambdaBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\LiteralBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\LiteralParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\MetadataBindingUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Metadata\UriEdmHelpers.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\InnerPathTokenBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\NodeFactory.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\PathSegmentHandler.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\EntityCollectionFunctionCallNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\IsCollectionTranslator.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\NavigationPropertyLinkSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ODataExpandPath.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ODataPathExtensions.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\ODataPathFactory.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ODataUriParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ODataUnrecognizedPathException.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ODataUrlConventions.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\OrderByBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\PathParserModelUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\PathReverser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\PathSegmentTokenEqualityComparer.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\PathSegmentTokenVisitor.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\PathSegmentTranslator.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\RangeVariableBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\EndPathBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\TreeNodeKinds\RequestTargetKind.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\ODataPathParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SegmentKeyHandler.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectPathSegmentTokenBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\BatchReferenceSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\BatchSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\NamespaceQualifiedWildcardSelectItem.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\CountSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\EntitySetExpressionResolver.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\EntitySetSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ExpandedNavigationSelectItem.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\KeySegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\MetadataSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\NavigationPropertySegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ODataPath.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ODataSelectPath.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\OpenPropertySegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\OperationSegmentParameter.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\PathSelectItem.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\PropertySegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ODataPathSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SelectExpandClause.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\EntityCollectionCastNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\CollectionNavigationNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\EntityCollectionNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\FilterClause.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\OrderByClause.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\EntityRangeVariable.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\EntityRangeVariableReferenceNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\NonentityRangeVariable.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\NonentityRangeVariableReferenceNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\RangeVariable.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\RangeVariableKind.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SelectItem.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\OperationSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SingleEntityFunctionCallNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SingleEntityNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\CollectionPropertyAccessNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ReadOnlyEnumerableForUriParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\TypeSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ODataUnresolvedFunctionParameterAlias.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\UriParserErrorHelper.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ValueSegment.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\WildcardSelectItem.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\QueryNodeVisitor.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\ExpandTermToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\ExpandToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\NonSystemToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\PathSegmentToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\PathToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\SystemToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\SelectPropertyVisitor.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Visitors\SyntacticTreeVisitor.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\SelectExpandPathBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\InternalErrorCodes.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\AllNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\AllToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\LambdaNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\LambdaToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\AnyNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\AnyToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Metadata\ODataQueryEdmTypeAnnotation.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Metadata\ODataQueryEdmPropertyAnnotation.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\InnerPathToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ODataQueryUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\BinaryOperatorToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\TreeNodeKinds\BinaryOperatorKind.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\BuiltInFunctions.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\CollectionNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ConstantNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\ConvertNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\BinaryOperatorNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\TreeNodeKinds\KeywordKind.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\LiteralUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\OpenTypeMethods.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\RangeVariableToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\CustomQueryOptionToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\QueryTokenUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\SelectToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SingleValueFunctionCallNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\FunctionSignature.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\StarToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\TypePromotionUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\PropertyInfoExtensionMethods.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\PropertyInfoTypeAnnotation.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SingleValuePropertyAccessNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SingleEntityCastNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\DottedIdentifierToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\UnaryOperatorNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\QueryNodeUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ExpressionLexer.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\ExpressionToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\TreeNodeKinds\ExpressionTokenKind.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\FunctionCallToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\KeyLookupNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\KeyPropertyValue.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\NamedValue.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\LiteralToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\MetadataBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\OrderByDirection.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\OrderByToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\EndPathToken.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataUri.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticTree.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\QueryNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\TreeNodeKinds\QueryNodeKind.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\QueryOptionUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\EntitySetNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SingleValueNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\UriPrimitiveTypeParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\QueryToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\TreeNodeKinds\QueryTokenKind.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SyntacticAst\UnaryOperatorToken.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\TreeNodeKinds\UnaryOperatorKind.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\UriQueryConstants.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\UriQueryExpressionParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\UriPathParser.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\Parsers\UnaryOperatorBinder.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SingleNavigationNode.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\UriUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\UriParser\SemanticAst\SingleValueOpenPropertyAccessNode.cs" />
+    <Compile Include="Microsoft\OData\Core\AnnotationFilter.cs" />
+    <Compile Include="Microsoft\OData\Core\AnnotationFilterPattern.cs" />
+    <Compile Include="Microsoft\OData\Core\AsyncBufferedStream.cs" />
+    <Compile Include="Microsoft\OData\Core\AtomAndVerboseJsonTypeNameOracle.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomCategoriesMetadata.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomCategoryMetadata.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomConstants.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomEntryMetadata.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomFeedMetadata.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomGeneratorMetadata.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomInstanceAnnotation.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomLinkMetadata.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomMetadataReaderUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomPersonMetadata.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomResourceCollectionMetadata.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomStreamReferenceMetadata.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomTextConstruct.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomTextConstructKind.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomValueUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\AtomWorkspaceMetadata.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\BufferingXmlReader.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\DefaultNamespaceCompensatingXmlWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\EntryPropertiesValueCache.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ExtensionMethods.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\IODataAtomReaderEntryState.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\IODataAtomReaderFeedState.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomAnnotationReader.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomCollectionDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomCollectionReader.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomCollectionSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomCollectionWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomConvert.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomDeserializerExpandedNavigationLinkContent.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomEntityReferenceLinkDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomEntityReferenceLinkSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomEntryAndFeedDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomEntryAndFeedSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomEntryMetadataDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomEntryMetadataSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomErrorDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomFeedMetadataDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomFeedMetadataSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomFormat.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomInputContext.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomMetadataDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomMetadataSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomOutputContext.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomPayloadKindDetectionDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomPropertyAndValueDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomPropertyAndValueSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomReader.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomReaderNavigationLinkDescriptor.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomReaderUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomServiceDocumentDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomServiceDocumentMetadataDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomServiceDocumentMetadataSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomServiceDocumentSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomWriterMetadataUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\ODataAtomWriterUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\XmlReaderExtensions.cs" />
+    <Compile Include="Microsoft\OData\Core\BufferedReadStream.cs" />
+    <Compile Include="Microsoft\OData\Core\BufferingReadStream.cs" />
+    <Compile Include="Microsoft\OData\Core\CollectionWithoutExpectedTypeValidator.cs" />
+    <Compile Include="Microsoft\OData\Core\DuplicatePropertyNamesChecker.cs" />
+    <Compile Include="Microsoft\OData\Core\ErrorUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\EdmValueUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\IODataEntryMetadataContext.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\NoOpEntityMetadataBuilder.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\ODataConventionalEntityMetadataBuilder.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\ODataConventionalUriBuilder.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\ODataEdmCollectionValue.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\ODataEdmNullValue.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\ODataEdmStructuredValue.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\ODataEdmValueUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\ODataEntityMetadataBuilder.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\ODataEntryMetadataContext.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\ODataMetadataContext.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\ODataMissingOperationGenerator.cs" />
+    <Compile Include="Microsoft\OData\Core\Evaluation\ODataUriBuilder.cs" />
+    <Compile Include="Microsoft\OData\Core\ExceptionUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\FeedWithoutExpectedTypeValidator.cs" />
+    <Compile Include="Microsoft\OData\Core\GeographyTypeConverter.cs" />
+    <Compile Include="Microsoft\OData\Core\GeometryTypeConverter.cs" />
+    <Compile Include="Microsoft\OData\Core\HttpHeaderValue.cs" />
+    <Compile Include="Microsoft\OData\Core\HttpHeaderValueElement.cs" />
+    <Compile Include="Microsoft\OData\Core\HttpHeaderValueLexer.cs" />
+    <Compile Include="Microsoft\OData\Core\HttpUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\InstanceAnnotationWriteTracker.cs" />
+    <Compile Include="Microsoft\OData\Core\InternalErrorCodes.cs" />
+    <Compile Include="Microsoft\OData\Core\InternalErrorCodesCommon.cs" />
+    <Compile Include="Microsoft\OData\Core\IODataBatchOperationListener.cs" />
+    <Compile Include="Microsoft\OData\Core\IODataFeedAndEntryTypeContext.cs" />
+    <Compile Include="Microsoft\OData\Core\IODataOutputInStreamErrorListener.cs" />
+    <Compile Include="Microsoft\OData\Core\IODataReaderWriterListener.cs" />
+    <Compile Include="Microsoft\OData\Core\IODataRequestMessage.cs" />
+    <Compile Include="Microsoft\OData\Core\IODataRequestMessageAsync.cs" />
+    <Compile Include="Microsoft\OData\Core\IODataResponseMessage.cs" />
+    <Compile Include="Microsoft\OData\Core\IODataResponseMessageAsync.cs" />
+    <Compile Include="Microsoft\OData\Core\IODataUrlResolver.cs" />
+    <Compile Include="Microsoft\OData\Core\IPrimitiveTypeConverter.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\IODataJsonLightReaderEntryState.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\IODataJsonLightValueSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\IODataJsonLightWriterEntryState.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\JsonFullMetadataLevel.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\JsonFullMetadataTypeNameOracle.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\JsonLightConstants.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\JsonLightMetadataLevel.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\JsonLightTypeNameOracle.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\JsonMinimalMetadataLevel.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\JsonMinimalMetadataTypeNameOracle.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\JsonNoMetadataLevel.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\JsonNoMetadataTypeNameOracle.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataAnnotationNames.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightCollectionDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightCollectionReader.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightCollectionSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightCollectionWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightEntityReferenceLinkDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightEntityReferenceLinkSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightEntryAndFeedDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightEntryAndFeedSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightErrorDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightFormat.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightInputContext.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightContextUriParser.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightContextUriParseResult.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightOutputContext.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightParameterDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightParameterReader.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightParameterWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightPayloadKindDetectionDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightPayloadKindDetectionState.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightPropertyAndValueDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightPropertySerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightReader.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightReaderNavigationLinkInfo.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightReaderUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightServiceDocumentDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightServiceDocumentSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightValidationUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightValueSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightWriterUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ReorderingJsonReader.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\BufferingJsonReader.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\IJsonWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\IndentedTextWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\TextWriterWrapper.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\IODataJsonOperationsDeserializerContext.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\JsonConstants.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\JsonLightInstanceAnnotationWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\JsonNodeType.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\JsonReader.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\JsonReaderExtensions.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\JsonSharedUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\JsonValueUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\JsonWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\JsonWriterExtensions.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\ODataJsonOutputContextBase.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\ODataJsonReaderCoreUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\ODataJsonWriterUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\MediaType.cs" />
+    <Compile Include="Microsoft\OData\Core\MediaTypeResolver.cs" />
+    <Compile Include="Microsoft\OData\Core\MediaTypeUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\MediaTypeWithFormat.cs" />
+    <Compile Include="Microsoft\OData\Core\MessageStreamWrapper.cs" />
+    <Compile Include="Microsoft\OData\Core\Metadata\CachedPrimitiveKeepInContentAnnotation.cs" />
+    <Compile Include="Microsoft\OData\Core\Metadata\EdmConstants.cs" />
+    <Compile Include="Microsoft\OData\Core\Metadata\EdmLibraryExtensions.cs" />
+    <Compile Include="Microsoft\OData\Core\Metadata\EdmTypeReaderResolver.cs" />
+    <Compile Include="Microsoft\OData\Core\Metadata\EdmTypeResolver.cs" />
+    <Compile Include="Microsoft\OData\Core\Metadata\EdmTypeWriterResolver.cs" />
+    <Compile Include="Microsoft\OData\Core\Metadata\MetadataUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Metadata\MetadataUtilsCommon.cs" />
+    <Compile Include="Microsoft\OData\Core\Metadata\ODataEdmPropertyAnnotation.cs" />
+    <Compile Include="Microsoft\OData\Core\Metadata\ODataNullValueBehaviorKind.cs" />
+    <Compile Include="Microsoft\OData\Core\MimeConstants.cs" />
+    <Compile Include="Microsoft\OData\Core\NonDisposingStream.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataAction.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataAnnotatable.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchFormat.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchOperationHeaders.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchOperationMessage.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchOperationReadStream.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchOperationRequestMessage.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchOperationResponseMessage.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchOperationStream.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchOperationWriteStream.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchReader.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchReaderState.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchReaderStream.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchReaderStreamBuffer.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchReaderStreamScanResult.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchUrlResolver.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchWriterUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBehaviorKind.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataCollectionReader.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataCollectionReaderCore.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataCollectionReaderCoreAsync.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataCollectionReaderState.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataCollectionStart.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataCollectionStartSerializationInfo.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataCollectionValue.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataCollectionWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataCollectionWriterCore.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataComplexValue.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataConstants.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataContentTypeException.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataEntityReferenceLink.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataEntityReferenceLinks.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataEntry.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataError.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataErrorException.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataException.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataFeed.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataFeedAndEntrySerializationInfo.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataFeedAndEntryTypeContext.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataFormat.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataFunction.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataInnerError.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataInputContext.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataInstanceAnnotation.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataItem.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataJsonDateTimeFormat.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMessage.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMessageExtensions.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMessageQuotas.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMessageReader.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMessageReaderSettings.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMessageReaderSettingsBase.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMessageWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMessageWriterSettings.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMessageWriterSettingsBase.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMetadataFormat.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMetadataInputContext.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMetadataOutputContext.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataNavigationLink.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataNullValue.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataObjectModelExtensions.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataOperation.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataOutputContext.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataParameterReader.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataParameterReaderCore.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataParameterReaderCoreAsync.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataParameterReaderState.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataParameterWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataParameterWriterCore.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataPayloadKind.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataPayloadKindDetectionInfo.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataPayloadKindDetectionResult.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataPreferenceHeader.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataPrimitiveValue.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataProperty.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataPropertyKind.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataPropertySerializationInfo.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataRawInputContext.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataRawOutputContext.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataRawValueFormat.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataReader.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataReaderBehavior.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataReaderCore.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataReaderCoreAsync.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataReaderState.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataRequestMessage.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataEntitySetInfo.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataResponseMessage.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataSerializer.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataStreamReferenceValue.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataTypeAnnotation.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataUndeclaredPropertyBehaviorKinds.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataUtilsInternal.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataValue.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataValueUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataVersion.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataVersionCache.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataServiceDocument.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataWriterBehavior.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataWriterCore.cs" />
+    <Compile Include="Microsoft\OData\Core\PrimitiveConverter.cs" />
+    <Compile Include="Microsoft\OData\Core\ProjectedPropertiesAnnotation.cs" />
+    <Compile Include="Microsoft\OData\Core\Query\ExpressionConstants.cs" />
+    <Compile Include="Microsoft\OData\Core\Query\ODataUriConversionUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Query\ODataUriUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\RawValueWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\ReaderUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\ReaderValidationUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\ReadOnlyEnumerable.cs" />
+    <Compile Include="Microsoft\OData\Core\ReadOnlyEnumerableExtensions.cs" />
+    <Compile Include="Microsoft\OData\Core\ReadOnlyEnumerableOfT.cs" />
+    <Compile Include="Microsoft\OData\Core\ReferenceEqualityComparer.cs" />
+    <Compile Include="Microsoft\OData\Core\SelectedPropertiesNode.cs" />
+    <Compile Include="Microsoft\OData\Core\SerializationTypeNameAnnotation.cs" />
+    <Compile Include="Microsoft\OData\Core\SimpleLazy.cs" />
+    <Compile Include="Microsoft\OData\Core\TaskUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\TypeNameOracle.cs" />
+    <Compile Include="Microsoft\OData\Core\TypeUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\UriUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Utils.cs" />
+    <Compile Include="Microsoft\OData\Core\ValidationUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\WriterUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\WriterValidationUtils.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\Common\AtomSyndicationTextContentKind.cs" />
+    <Compile Include="Microsoft\OData\Core\Atom\Common\AtomSyndicationItemProperty.cs" />
+    <Compile Include="Microsoft\OData\Core\PlatformHelper.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Microsoft.OData.Core.cs">
+      <Visible>False</Visible>
+    </Compile>
+    <Compile Include="Parameterized.Microsoft.OData.Core.cs">
+      <Visible>False</Visible>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Microsoft.OData.Core.resources">
+      <Visible>False</Visible>
+      <LogicalName>Microsoft.OData.Core.resources</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Microsoft.OData.Core.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="BeforeBuild">
+    <GenerateResource Sources="Microsoft.OData.Core.txt" OutputResources="Microsoft.OData.Core.resources" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

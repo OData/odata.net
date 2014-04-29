@@ -24,6 +24,11 @@ namespace Microsoft.OData.Core
     public sealed class ODataUri
     {
         /// <summary>
+        /// Cache MetadataSegment as relative Uri
+        /// </summary>
+        private static readonly Uri MetadataSegment = new Uri(ODataConstants.UriMetadataSegment, UriKind.Relative);
+
+        /// <summary>
         /// service Root Uri
         /// </summary>
         private Uri serviceRoot;
@@ -90,6 +95,7 @@ namespace Microsoft.OData.Core
                 if (value == null)
                 {
                     this.serviceRoot = null;
+                    this.MetadataDocumentUri = null;
                     return;
                 }
 
@@ -99,6 +105,7 @@ namespace Microsoft.OData.Core
                 }
 
                 this.serviceRoot = Core.UriUtils.EnsureTaillingSlash(value);
+                this.MetadataDocumentUri = new Uri(this.serviceRoot, MetadataSegment);
             }
         }
 
@@ -143,6 +150,11 @@ namespace Microsoft.OData.Core
         public bool? QueryCount { get; set; }
 
         /// <summary>
+        /// Get or sets the MetadataDocumentUri, which is always ServiceRoot + $metadata
+        /// </summary>
+        internal Uri MetadataDocumentUri { get; private set; }
+
+        /// <summary>
         /// Gets or sets the ParameterAliasValueAccessor.
         /// </summary>
         internal ParameterAliasValueAccessor ParameterAliasValueAccessor { get; set; }
@@ -156,7 +168,7 @@ namespace Microsoft.OData.Core
             return new ODataUri()
             {
                 RequestUri = RequestUri,
-                ServiceRoot = ServiceRoot,
+                ServiceRoot = ServiceRoot, // Copy ServiceRoot will also create new MeatadataDocumentUri
                 ParameterAliasValueAccessor = ParameterAliasValueAccessor,
                 Path = Path,
                 CustomQueryOptions = CustomQueryOptions,

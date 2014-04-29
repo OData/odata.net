@@ -89,6 +89,8 @@ namespace Microsoft.OData.Core
         /// <summary>Content-Transfer-Encoding value for batch payloads.</summary>
         internal const string BatchContentTransferEncoding = "binary";
 
+        // TODO: What should be the default version of ODataLib?
+
         /// <summary>The default protocol version to use in ODataLib if none is specified.</summary>
 #if DISABLE_V3
         internal const ODataVersion ODataDefaultProtocolVersion = ODataVersion.V2;
@@ -170,7 +172,7 @@ namespace Microsoft.OData.Core
         internal const char ContextUriFragmentIndicator = '#';
 
         /// <summary>The $entity token that indicates that the payload is a single item from a set.</summary>
-        internal const string ContextUriFragmentItemSelector = "$entity";
+        internal const string ContextUriFragmentItemSelector = "/$entity";
 
         /// <summary>The '(' used to mark the start of Select and Expand clauses in the fragment of a context URI.</summary>
         internal const char ContextUriProjectionStart = '(';
@@ -184,6 +186,17 @@ namespace Microsoft.OData.Core
         /// <summary>The token that indicates the payload is a property with null value.</summary>
         internal const string ContextUriFragmentNull = "Edm.Null";
 
+        /// <summary>The $delta token indicates delta feed.</summary>
+        internal const string ContextUriDeltaFeed = "/$delta";
+
+        /// <summary>The $deletedEntity token indicates delta entry.</summary>
+        internal const string ContextUriDeletedEntry = "/$deletedEntity";
+
+        /// <summary>The $delta token indicates delta link.</summary>
+        internal const string ContextUriDeltaLink = "/$link";
+
+        /// <summary>The $deletedLink token indicates delta deleted link.</summary>
+        internal const string ContextUriDeletedLink = "/$deletedLink";
         #endregion Context URL
     }
 }

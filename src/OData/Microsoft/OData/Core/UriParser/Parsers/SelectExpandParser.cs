@@ -45,7 +45,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         /// <summary>
         /// Build the ExpandOption strategy.
-        /// TODO Really should not take the clauseToParse here. Instead it should be provided with a call to ParseSelect() or ParseExpand().
+        /// TODO: Really should not take the clauseToParse here. Instead it should be provided with a call to ParseSelect() or ParseExpand().
         /// </summary>
         /// <param name="clauseToParse">the clause to parse</param>
         /// <param name="maxRecursiveDepth">max recursive depth</param>
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             this.isSelect = true;
 
-            // TODO Why are we using the max recursion depth as the max path length? Weird.
+            // TODO: Why are we using the max recursion depth as the max path length? Weird.
             var termParser = new SelectExpandTermParser(this.lexer, this.MaxRecursiveDepth, this.isSelect);
             return termParser.ParseTerm();
         }
@@ -108,7 +108,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             this.isSelect = false;
 
-            // TODO Why are we using the max recursion depth as the max path length? Weird.
+            // TODO: Why are we using the max recursion depth as the max path length? Weird.
             var termParser = new SelectExpandTermParser(this.lexer, this.maxRecursiveDepth, this.isSelect);
             PathSegmentToken pathToken = termParser.ParseTerm();
 

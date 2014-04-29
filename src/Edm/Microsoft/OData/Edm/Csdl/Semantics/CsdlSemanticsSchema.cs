@@ -106,12 +106,12 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public IEnumerable<IEdmOperation> FindOperations(string name)
         {
-            return FindSchemaElement<IEnumerable<IEdmOperation>>(name, FindOperations);
+            return FindSchemaElement<IEnumerable<IEdmOperation>>(name, ExtensionMethods.FindOperationsInModelTree);
         }
 
         public IEdmSchemaType FindType(string name)
         {
-            return FindSchemaElement<IEdmSchemaType>(name, FindType);
+            return FindSchemaElement<IEdmSchemaType>(name, ExtensionMethods.FindTypeInModelTree);
         }
 
         public IEdmValueTerm FindValueTerm(string name)
@@ -179,16 +179,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         internal string ReplaceAlias(string name)
         {
             return this.model.ReplaceAlias(name);
-        }
-
-        private static IEnumerable<IEdmOperation> FindOperations(IEdmModel model, string name)
-        {
-            return model.FindOperations(name);
-        }
-
-        private static IEdmSchemaType FindType(CsdlSemanticsModel model, string name)
-        {
-            return model.FindTypeInAllModels(name);
         }
 
         private static IEdmValueTerm FindValueTerm(IEdmModel model, string name)

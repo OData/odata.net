@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Library;
@@ -93,7 +94,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.context; }
         }
 
-        private IEdmEntityContainer Extends
+        internal IEdmEntityContainer Extends
         {
             get { return this.extendsCache.GetValue(this, ComputeExtendsFunc, OnCycleExtendsFunc); }
         }
@@ -151,28 +152,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             List<IEdmEntityContainerElement> elements = new List<IEdmEntityContainerElement>();
 
-            // Extends is either a CsdlSemanticsEntityContainer or BadEntityContainer.
-            CsdlSemanticsEntityContainer csdlEntityContainer = this.Extends as CsdlSemanticsEntityContainer;
-            if (csdlEntityContainer != null)
-            {
-                foreach (CsdlEntitySet entitySet in csdlEntityContainer.entityContainer.EntitySets)
-                {
-                    CsdlSemanticsEntitySet semanticsSet = new CsdlSemanticsEntitySet(this, entitySet);
-                    elements.Add(semanticsSet);
-                }
-
-                foreach (CsdlSingleton singleton in csdlEntityContainer.entityContainer.Singletons)
-                {
-                    CsdlSemanticsSingleton semanticsSingleton = new CsdlSemanticsSingleton(this, singleton);
-                    elements.Add(semanticsSingleton);
-                }
-
-                foreach (CsdlOperationImport operationImport in csdlEntityContainer.entityContainer.OperationImports)
-                {
-                    this.AddOperationImport(operationImport, elements);
-                }
-            }
-
+            // don't import this.Extends' elements.
+            // (all IEdmxxx like IEdmEntityContainer should let extension methods handle cross model searches).
             foreach (CsdlEntitySet entitySet in this.entityContainer.EntitySets)
             {
                 CsdlSemanticsEntitySet semanticsSet = new CsdlSemanticsEntitySet(this, entitySet);
@@ -205,7 +186,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
 
             // 1610669 : OperationImports only work with non-bound operations hence this extra logic in the where clause
-            var operations = this.context.Model.FindDeclaredOperations(operationImport.SchemaOperationQualifiedTypeName).Where(o => o.SchemaElementKind == filterKind && !o.IsBound);
+            var operations = this.context.FindOperations(operationImport.SchemaOperationQualifiedTypeName).Where(o => o.SchemaElementKind == filterKind && !o.IsBound);
 
             int operationsCount = 0;
             foreach (IEdmOperation operation in operations)
@@ -250,7 +231,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             {
                 errors.AddRange(((IEdmCheckable)this.Extends).Errors);
             }
-  
+
             return errors;
         }
 
@@ -289,16 +270,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmEntityContainer ComputeExtends()
         {
-            if (this.entityContainer.Extends != null)
+            string containerFullNameExtended = this.entityContainer.Extends;
+            if (containerFullNameExtended != null)
             {
-                CsdlSemanticsEntityContainer csdlContainer = this.Model.EntityContainer as CsdlSemanticsEntityContainer;
-                if (csdlContainer != null)
-                {
-                    IEdmEntityContainer junk = csdlContainer.Extends; // Evaluate the inductive step to detect cycles.
-                    return csdlContainer;
-                }
-
-                return new UnresolvedEntityContainer(this.entityContainer.Extends, this.Location);
+                IEdmEntityContainer ret = this.Context.FindEntityContainer(containerFullNameExtended);
+                return ret ?? new UnresolvedEntityContainer(this.entityContainer.Extends, this.Location);
             }
 
             return null;

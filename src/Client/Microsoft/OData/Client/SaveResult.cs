@@ -1,11 +1,12 @@
-//---------------------------------------------------------------------
-// <copyright file="SaveResult.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-// <summary>
-// // class reponsible for creating requests and handles responses for non-batch request (both sync and async)
-// </summary>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client
 {
@@ -530,7 +531,7 @@ namespace Microsoft.OData.Client
         /// <returns>An instance of ODataRequestMessage to do POST to the media resource</returns>
         private ODataRequestMessageWrapper CheckAndProcessMediaEntryPost(EntityDescriptor entityDescriptor)
         {
-            // TODO: SQLBUDT 596662 - Revisit the design of how media link entries are handled during update
+            // TODO: Revisit the design of how media link entries are handled during update
             ClientEdmModel model = this.RequestInfo.Model;
             ClientTypeAnnotation type = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
 
@@ -604,7 +605,6 @@ namespace Microsoft.OData.Client
                     contentLength = buffer.Length;
 
 #if PORTABLELIB
-                    // Win8 doesn't allow accessing the buffer, so the constructor we normally use doesn't exist
                     this.mediaResourceRequestStream = new MemoryStream(buffer, 0, buffer.Length, false);
 #else
                     // Need to specify that the buffer is publicly visible as we need to access it later on
@@ -717,7 +717,7 @@ namespace Microsoft.OData.Client
             // to pass around with the request info.
             ODataRequestMessageWrapper requestMessage = this.CreateRequestMessage(method, requestUri, headers, HttpStack.ClientHttp, descriptor, null /*contentId*/);
 #endif
-            // TODO since under the hood this is a header, we should put it in our dictionary of headers that the user gets in BuildingRequest
+            // TODO: since under the hood this is a header, we should put it in our dictionary of headers that the user gets in BuildingRequest
             // and later on handle the setting of the strongly named property on the underlying request
             requestMessage.SendChunked = sendChunked;
             return requestMessage;

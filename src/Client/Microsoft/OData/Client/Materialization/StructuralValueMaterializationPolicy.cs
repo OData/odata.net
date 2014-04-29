@@ -1,8 +1,12 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="StructuralValueMaterializationPolicy.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client.Materialization
 {
@@ -187,7 +191,7 @@ namespace Microsoft.OData.Client.Materialization
                 ODataEnumValue enumValue = property.Value as ODataEnumValue;
                 object tmpValue = EnumValueMaterializationPolicy.MaterializeODataEnumValue(enumTypeTmp, enumValue);
 
-                // TODO challenh: 1. use EnumValueMaterializationPolicy 2. handle nullable enum property
+                // TODO: 1. use EnumValueMaterializationPolicy 2. handle nullable enum property
                 prop.SetValue(instance, tmpValue, property.Name, false /* allowAdd? */);
             }
             else
@@ -213,12 +217,12 @@ namespace Microsoft.OData.Client.Materialization
                     if (prop.PropertyType.Name != property.Name)
                     {
                         complexType = this.MaterializerContext.ResolveTypeForMaterialization(prop.PropertyType, complexValue.TypeName);
-                        
+
                         // recreate complexInstance with derived type
                         complexInstance = null;
                     }
-                    
-                    if (complexInstance == null)
+
+                    if (complexValue.Properties.Any() || complexInstance == null)
                     {
                         complexInstance = this.CreateNewInstance(complexType.EdmTypeReference, complexType.ElementType);
                         needToSet = true;
@@ -273,7 +277,6 @@ namespace Microsoft.OData.Client.Materialization
                 }
 
                 // we should throw if the property type on the client does not match with the property type in the server
-                // Bug 10095: this is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
                 if (ClientTypeUtil.TypeOrElementTypeIsEntity(property.PropertyType))
                 {
                     throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));

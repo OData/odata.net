@@ -32,7 +32,7 @@ namespace Microsoft.OData.Core
         /// Whether to throw exception when error(missing fields) occurs.
         /// </summary>
         private readonly bool throwIfMissingInfo;
-        
+
         /// <summary>
         /// Stores the validation method mapping for supported payload kind.
         /// </summary>
@@ -46,6 +46,7 @@ namespace Microsoft.OData.Core
             { ODataPayloadKind.Property,                ValidateType },
             { ODataPayloadKind.Entry,                   ValidateNavigationPath },
             { ODataPayloadKind.Feed,                    ValidateNavigationPath },
+            { ODataPayloadKind.Delta,                   ValidateDelta },
         };
 
         /// <summary>
@@ -138,24 +139,45 @@ namespace Microsoft.OData.Core
                 // #ContainerName.NavigationSourceName
                 builder.Append(info.NavigationPath);
 
-                // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName/Namespace.DerivedTypeName
-                if (!string.IsNullOrEmpty(info.TypeCast))
+                if (info.DeltaKind == ODataDeltaKind.None || info.DeltaKind == ODataDeltaKind.Feed || info.DeltaKind == ODataDeltaKind.Entry)
                 {
-                    builder.Append(ODataConstants.UriSegmentSeparatorChar);
-                    builder.Append(info.TypeCast);
+                    // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName/Namespace.DerivedTypeName
+                    if (!string.IsNullOrEmpty(info.TypeCast))
+                    {
+                        builder.Append(ODataConstants.UriSegmentSeparatorChar);
+                        builder.Append(info.TypeCast);
+                    }
+
+                    // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName(selectedPropertyList)
+                    if (!string.IsNullOrEmpty(info.QueryClause))
+                    {
+                        builder.Append(info.QueryClause);
+                    }
                 }
 
-                // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName(selectedPropertyList)
-                if (!string.IsNullOrEmpty(info.QueryClause))
+                switch (info.DeltaKind)
                 {
-                    builder.Append(info.QueryClause);
-                }
+                    case ODataDeltaKind.None:
+                    case ODataDeltaKind.Entry:
+                        if (info.IncludeFragmentItemSelector)
+                        {
+                            // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName/$entity
+                            builder.Append(ODataConstants.ContextUriFragmentItemSelector);
+                        }
 
-                if (info.IncludeFragmentItemSelector)
-                {
-                    // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName/$entity
-                    builder.Append(ODataConstants.UriSegmentSeparatorChar);
-                    builder.Append(ODataConstants.ContextUriFragmentItemSelector);
+                        break;
+                    case ODataDeltaKind.Feed:
+                        builder.Append(ODataConstants.ContextUriDeltaFeed);
+                        break;
+                    case ODataDeltaKind.DeletedEntry:
+                        builder.Append(ODataConstants.ContextUriDeletedEntry);
+                        break;
+                    case ODataDeltaKind.Link:
+                        builder.Append(ODataConstants.ContextUriDeltaLink);
+                        break;
+                    case ODataDeltaKind.DeletedLink:
+                        builder.Append(ODataConstants.ContextUriDeletedLink);
+                        break;
                 }
             }
             else if (!string.IsNullOrEmpty(info.TypeName))
@@ -217,6 +239,15 @@ namespace Microsoft.OData.Core
             {
                 throw new ODataException(Strings.ODataContextUriBuilder_ODataUriMissingForIndividualProperty);
             }
+        }
+
+        /// <summary>
+        /// Validate the given ODataContextUrlInfo for delta
+        /// </summary>
+        /// <param name="contextUrlInfo">The ODataContextUrlInfo to evaluate on.</param>
+        private static void ValidateDelta(ODataContextUrlInfo contextUrlInfo)
+        {
+            Debug.Assert(contextUrlInfo.DeltaKind != ODataDeltaKind.None, "contextUrlInfo.DeltaKind != ODataDeltaKind.None");
         }
     }
 }

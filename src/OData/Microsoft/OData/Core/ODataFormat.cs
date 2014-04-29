@@ -44,6 +44,8 @@ namespace Microsoft.OData.Core
 
         /// <summary>Specifies the ATOM format; we also use this for all Xml based formats (if ATOM can't be used).</summary>
         /// <returns>The ATOM format.</returns>
+        /// TODO: Fix localization strings
+        [System.Obsolete("ATOM support is obsolete.")]
         public static ODataFormat Atom
         {
             get

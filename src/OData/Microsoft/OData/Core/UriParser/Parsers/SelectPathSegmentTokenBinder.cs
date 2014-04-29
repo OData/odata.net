@@ -126,7 +126,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 if (wildCardPos > -1)
                 {
                     string namespaceName = pathToken.Identifier.Substring(0, wildCardPos - 1);
-                    possibleFunctions = model.FindDeclaredBoundOperations(entityType).Where(o => o.Namespace == namespaceName).ToList();
+                    possibleFunctions = model.FindBoundOperations(entityType).Where(o => o.Namespace == namespaceName).ToList();
                 }
                 else
                 {
@@ -140,11 +140,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     if (parameterNames.Count > 0)
                     {
                         // Always force to use fully qualified name when select operation
-                        possibleFunctions = model.FindDeclaredBoundOperations(entityType).FilterByName(true, pathToken.Identifier).FilterOperationsByParameterNames(parameterNames).ToList();
+                        possibleFunctions = model.FindBoundOperations(entityType).FilterByName(true, pathToken.Identifier).FilterOperationsByParameterNames(parameterNames).ToList();
                     }
                     else
                     {
-                        possibleFunctions = model.FindDeclaredBoundOperations(entityType).FilterByName(true, pathToken.Identifier).ToList();
+                        possibleFunctions = model.FindBoundOperations(entityType).FilterByName(true, pathToken.Identifier).ToList();
                     }
                 }
             }

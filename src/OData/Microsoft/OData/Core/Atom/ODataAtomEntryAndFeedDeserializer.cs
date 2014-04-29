@@ -1645,7 +1645,7 @@ namespace Microsoft.OData.Core.Atom
 
             ReaderUtils.CheckForDuplicateAssociationLinkAndUpdateNavigationLink(entryState.DuplicatePropertyNamesChecker, associationLinkName, associationLinkUrl);
 
-            // TODO Task 1665240: Association Link - Add back support for customizing association link element in Atom
+            // TODO: Association Link - Add back support for customizing association link element in Atom
 
             this.XmlReader.Skip();
             return true;

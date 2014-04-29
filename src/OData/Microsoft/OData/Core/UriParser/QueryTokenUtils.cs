@@ -36,7 +36,7 @@ namespace Microsoft.OData.Core.UriParser
                 return null;
             }
 
-            // TODO - we ignore the case since this is the value of a query option
+            // TODO: we ignore the case since this is the value of a query option
             if (string.Equals(count, ExpressionConstants.KeywordTrue, StringComparison.OrdinalIgnoreCase))
             {
                 return true;

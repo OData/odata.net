@@ -42,8 +42,9 @@ namespace Microsoft.OData.Core
         /// As a result the default media type for a given payloadKind is the first entry in the MediaTypeWithFormat array.
         /// </remarks>
         private static readonly MediaTypeWithFormat[][] defaultMediaTypes =
+#pragma warning disable 618
             new MediaTypeWithFormat[][]
-            {
+                {
                 // feed
                 new MediaTypeWithFormat[]
                 { 
@@ -138,16 +139,106 @@ namespace Microsoft.OData.Core
                     new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = ApplicationXmlMediaType },
                     new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = TextXmlMediaType },
                 }
+#pragma warning restore 618
+            };
+
+        /// <summary>
+        /// An array that maps stores the supported media types for all <see cref="ODataPayloadKind"/>, ATOM excluded
+        /// </summary>
+        /// <remarks>
+        /// The set of supported media types is ordered (desc) by their precedence/priority with respect to (1) format and (2) media type.
+        /// As a result the default media type for a given payloadKind is the first entry in the MediaTypeWithFormat array.
+        /// </remarks>
+        private static readonly MediaTypeWithFormat[][] defaultMediaTypesWithoutAtom =
+            new MediaTypeWithFormat[][]
+                {
+                // feed
+                new MediaTypeWithFormat[]
+                { 
+                },
+
+                // entry
+                new MediaTypeWithFormat[] 
+                { 
+                },
+
+                // property
+                new MediaTypeWithFormat[]
+                { 
+                },
+
+                // entity reference link
+                new MediaTypeWithFormat[]
+                { 
+                },
+
+                // entity reference links
+                new MediaTypeWithFormat[]
+                {
+                },
+
+                // value
+                new MediaTypeWithFormat[]
+                { 
+                    new MediaTypeWithFormat { Format = ODataFormat.RawValue, MediaType = new MediaType(MimeConstants.MimeTextType, MimeConstants.MimePlainSubType) },
+                },
+
+                // binary
+                new MediaTypeWithFormat[]
+                { 
+                    new MediaTypeWithFormat { Format = ODataFormat.RawValue, MediaType = new MediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeOctetStreamSubType) },
+                },
+
+                // collection
+                new MediaTypeWithFormat[]
+                { 
+                },
+
+                // service document
+                new MediaTypeWithFormat[]
+                { 
+                },
+
+                // metadata document
+                new MediaTypeWithFormat[]
+                { 
+                    new MediaTypeWithFormat { Format = ODataFormat.Metadata, MediaType = ApplicationXmlMediaType },
+                },
+
+                // error
+                new MediaTypeWithFormat[]
+                { 
+                },
+
+                // batch
+                new MediaTypeWithFormat[]
+                { 
+                    // Note that as per spec the multipart/mixed must have a boundary parameter which is not specified here. We will add that parameter
+                    // when using this mime type because we need to generate a new boundary every time.
+                    new MediaTypeWithFormat { Format = ODataFormat.Batch, MediaType = new MediaType(MimeConstants.MimeMultipartType, MimeConstants.MimeMixedSubType) },
+                },
+
+                // parameter
+                new MediaTypeWithFormat[]
+                {
+                },
+
+                 // individual property
+                new MediaTypeWithFormat[]
+                { 
+                }
             };
         #endregion Default media types per payload kind
 
-        /// <summary>Cache for MediaTypeResolvers for each version.</summary>
-        private static readonly ODataVersionCache<MediaTypeResolver> MediaTypeResolverCache = new ODataVersionCache<MediaTypeResolver>(version => new MediaTypeResolver(version));
+        /// <summary>
+        /// MediaTypeResolver without atom support
+        /// </summary>
+        private static readonly MediaTypeResolver MediaTypeResolverWithoutAtom;
 
         /// <summary>
-        /// The version the media type resolver is used with.
+        /// MediaTypeResolver with atom support
         /// </summary>
-        private readonly ODataVersion version;
+        private static readonly MediaTypeResolver MediaTypeResolverWithAtom;
 
         /// <summary>
         /// Array of supported media types and formats for each payload kind.
@@ -173,13 +264,24 @@ namespace Microsoft.OData.Core
         };
 
         /// <summary>
+        /// Static constructor for MedaiTypeResolver
+        /// </summary>
+        static MediaTypeResolver()
+        {
+            MediaTypeResolverWithAtom = new MediaTypeResolver(true);
+            MediaTypeResolverWithoutAtom = new MediaTypeResolver(false);
+        }
+
+        /// <summary>
         /// Creates a new media type resolver for writers with the mappings for the specified version.
         /// </summary>
-        /// <param name="version">The version used to write the payload.</param>
-        private MediaTypeResolver(ODataVersion version)
+        /// <param name="enableAtom">Whether to enable ATOM.</param>
+        private MediaTypeResolver(bool enableAtom)
         {
-            this.version = version;
-            this.mediaTypesForPayloadKind = CloneDefaultMediaTypes();
+            this.EnableAtom = enableAtom;
+
+            // TODO: change parameter to EnableAtom
+            this.mediaTypesForPayloadKind = CloneDefaultMediaTypes(enableAtom);
 
             // Add JSON-light media types into the media type table
             this.AddJsonLightMediaTypes();
@@ -192,39 +294,23 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return MediaTypeResolverCache[ODataVersion.V4];
+                return MediaTypeResolverWithoutAtom;
             }
         }
 
         /// <summary>
-        /// Accesses the version of the media type resolver.
+        /// Whether atom is supported.
         /// </summary>
-        internal ODataVersion Version
-        {
-            get
-            {
-                return this.version;
-            }
-        }
+        internal bool EnableAtom { get; private set; }
 
         /// <summary>
         /// Creates a new media type resolver for writers with the mappings for the specified version.
         /// </summary>
-        /// <param name="version">The version used to write the payload.</param>
+        /// <param name="enableAtom">Whether atom support is enabled.</param>
         /// <returns>A new media type resolver for readers with the mappings for the specified version and behavior kind.</returns>
-        internal static MediaTypeResolver GetWriterMediaTypeResolver(ODataVersion version)
+        internal static MediaTypeResolver GetMediaTypeResolver(bool enableAtom)
         {
-            return MediaTypeResolverCache[version];
-        }
-
-        /// <summary>
-        /// Creates a new media type resolver for readers with the mappings for the specified version and behavior kind.
-        /// </summary>
-        /// <param name="version">The version used to read the payload.</param>
-        /// <returns>A new media type resolver for readers with the mappings for the specified version and behavior kind.</returns>
-        internal static MediaTypeResolver CreateReaderMediaTypeResolver(ODataVersion version)
-        {
-            return new MediaTypeResolver(version);
+            return enableAtom ? MediaTypeResolverWithAtom : MediaTypeResolverWithoutAtom;
         }
 
         /// <summary>
@@ -240,14 +326,17 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Clones the default media types.
         /// </summary>
+        /// <param name="includeAtom">Whether include Atom mediatypes.</param>
         /// <returns>The cloned media type table.</returns>
-        private static IList<MediaTypeWithFormat>[] CloneDefaultMediaTypes()
+        private static IList<MediaTypeWithFormat>[] CloneDefaultMediaTypes(bool includeAtom)
         {
-            IList<MediaTypeWithFormat>[] clone = new IList<MediaTypeWithFormat>[defaultMediaTypes.Length];
+            MediaTypeWithFormat[][] mediaTypes = includeAtom ? defaultMediaTypes : defaultMediaTypesWithoutAtom;
 
-            for (int i = 0; i < defaultMediaTypes.Length; i++)
+            IList<MediaTypeWithFormat>[] clone = new IList<MediaTypeWithFormat>[mediaTypes.Length];
+
+            for (int i = 0; i < mediaTypes.Length; i++)
             {
-                clone[i] = new List<MediaTypeWithFormat>(defaultMediaTypes[i]);
+                clone[i] = new List<MediaTypeWithFormat>(mediaTypes[i]);
             }
 
             return clone;

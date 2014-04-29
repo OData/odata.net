@@ -1,8 +1,12 @@
-//---------------------------------------------------------------------
-// <copyright file="ClientEdmStructuredValue.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client
 {
@@ -41,15 +45,18 @@ namespace Microsoft.OData.Client
             Debug.Assert(structuredValue != null, "entity != null");
             Debug.Assert(model != null, "model != null");
             Debug.Assert(clientTypeAnnotation != null, "clientTypeAnnotation != null");
-            
+
             if (clientTypeAnnotation.EdmType.TypeKind == EdmTypeKind.Complex)
             {
-                this.Type = new EdmComplexTypeReference((IEdmComplexType)clientTypeAnnotation.EdmType, true); // TODO: nullable?
+                // TODO: nullable?
+                this.Type = new EdmComplexTypeReference((IEdmComplexType)clientTypeAnnotation.EdmType, true);
             }
             else
             {
                 Debug.Assert(clientTypeAnnotation.EdmType.TypeKind == EdmTypeKind.Entity, "Only complex and entity values supported");
-                this.Type = new EdmEntityTypeReference((IEdmEntityType)clientTypeAnnotation.EdmType, true); // TODO: nullable?
+                
+                // TODO: nullable?
+                this.Type = new EdmEntityTypeReference((IEdmEntityType)clientTypeAnnotation.EdmType, true);
             }
 
             this.structuredValue = structuredValue;
@@ -62,7 +69,8 @@ namespace Microsoft.OData.Client
         /// </summary>
         public IEdmTypeReference Type
         {
-            get; private set;
+            get;
+            private set;
         }
 
         /// <summary>

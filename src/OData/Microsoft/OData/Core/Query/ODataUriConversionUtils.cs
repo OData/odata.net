@@ -42,8 +42,8 @@ namespace Microsoft.OData.Core.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(value, "value");
 
+            // TODO: Differences between Astoria and ODL's Uri literals
             /* This should have the same behavior of Astoria with these differences: (iawillia, 10/7/11)
-             * TODO BUG 292670: Differences between Astoria and ODL's Uri literals
              * 1) Cannot handle the System.Data.Linq.Binary type
              * 2) Cannot handle the System.Data.Linq.XElement type
              * 3) Astoria does not put a 'd' or 'D' on double values
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Core.UriParser
                 {
                     ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(context);
 
-                    // TODO The way JSON array literals look in the URI is different that response payload with an array in it.
+                    // TODO: The way JSON array literals look in the URI is different that response payload with an array in it.
                     // The fact that we have to manually setup the underlying reader shows this different in the protocol.
                     // There is a discussion on if we should change this or not.
                     deserializer.JsonReader.Read(); // Move to first thing

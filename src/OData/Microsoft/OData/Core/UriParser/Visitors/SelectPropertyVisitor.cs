@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
     /// <summary>
     /// Visit a Select property and use it to decorate a SelectExpand Tree
     /// </summary>
-    /// TODO 1466134 Once we are using V4 completely, then rename this class to SelectPropertyVisitor
+    /// TODO: Once we are using V4 completely, then rename this class to SelectPropertyVisitor
     internal sealed class SelectPropertyVisitor : PathSegmentTokenVisitor
     {
         /// <summary>

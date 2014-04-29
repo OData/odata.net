@@ -21,7 +21,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     /// <summary>
     /// Translate a select tree into the right format to be used with an expand tree.
     /// </summary>
-    //// TODO 1466134 Rename this to SelectTreeNormalizer when we're only using V4
+    //// TODO: Rename this to SelectTreeNormalizer when we're only using V4
     internal sealed class SelectTreeNormalizer
     {
         /// <summary>

@@ -417,7 +417,7 @@ namespace Microsoft.OData.Core
 
                 // match the specified media types against the supported/default ones
                 // and get the format
-                var cacheKey = new MatchInfoCacheKey(mediaTypeResolver.Version, supportedPayloadKind, contentTypeName);
+                var cacheKey = new MatchInfoCacheKey(mediaTypeResolver.EnableAtom, supportedPayloadKind, contentTypeName);
                 MediaTypeMatchInfo matchInfo;
 
                 if (!MatchInfoCache.TryGetValue(cacheKey, out matchInfo))
@@ -926,20 +926,20 @@ namespace Microsoft.OData.Core
             /// <summary>
             /// Constructor.
             /// </summary>
-            /// <param name="version">Version of the mediaTypeResolver.</param>
+            /// <param name="enableAtom">Whether atom is enabled for MediaTypeResolver.</param>
             /// <param name="payloadKind">Kind of the payload.</param>
             /// <param name="contentTypeName">Name of content type.</param>
-            public MatchInfoCacheKey(ODataVersion version, ODataPayloadKind payloadKind, string contentTypeName)
+            public MatchInfoCacheKey(bool enableAtom, ODataPayloadKind payloadKind, string contentTypeName)
             {
-                this.Version = version;
+                this.EnableAtom = enableAtom;
                 this.PayloadKind = payloadKind;
                 this.ContentTypeName = contentTypeName;
             }
 
             /// <summary>
-            /// Version of the mediaTypeResolver.
+            /// Type of the mediaTypeResolver.
             /// </summary>
-            public ODataVersion Version { get; set; }
+            public bool EnableAtom { get; set; }
 
             /// <summary>
             /// Kind of the payload.
@@ -960,7 +960,7 @@ namespace Microsoft.OData.Core
             {
                 MatchInfoCacheKey cacheKey = obj as MatchInfoCacheKey;
                 return cacheKey != null &&
-                    this.Version == cacheKey.Version &&
+                    this.EnableAtom == cacheKey.EnableAtom &&
                     this.PayloadKind == cacheKey.PayloadKind &&
                     this.ContentTypeName == cacheKey.ContentTypeName;
             }
@@ -971,7 +971,7 @@ namespace Microsoft.OData.Core
             /// <returns>A 32-bit signed integer hash code.</returns>
             public override int GetHashCode()
             {
-                int result = this.Version.GetHashCode() ^ this.PayloadKind.GetHashCode();
+                int result = this.EnableAtom.GetHashCode() ^ this.PayloadKind.GetHashCode();
                 return this.ContentTypeName != null ? result ^ this.ContentTypeName.GetHashCode() : result;
             }
         }

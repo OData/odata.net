@@ -30,8 +30,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     /// 6. SingleValueFunctionCallNode
     /// 7. SingleEntityFunctionCallNode
     /// </summary>
-    /// <remarks>TODO The binder does support key lookup on collection navigation properties, however at this time
-    /// the synctactic parser does not set things up correctly to allow end-to-end scenarios to work.</remarks>
+    /// <remarks>
+    /// TODO: The binder does support key lookup on collection navigation properties, however at this time
+    /// the synctactic parser does not set things up correctly to allow end-to-end scenarios to work.
+    /// </remarks>
     internal sealed class InnerPathTokenBinder
     {
         /// <summary>

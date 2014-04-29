@@ -149,6 +149,15 @@ namespace Microsoft.OData.Core.JsonLight
                     detectedPayloadKindMatchesExpectation = true;
                 }
             }
+            else if (detectedPayloadKind == ODataPayloadKind.Entry)
+            {
+                this.parseResult.DetectedPayloadKinds = new[] { ODataPayloadKind.Entry, ODataPayloadKind.Delta };
+                if (expectedPayloadKind == ODataPayloadKind.Delta)
+                {
+                    this.parseResult.DeltaKind = ODataDeltaKind.Entry;
+                    detectedPayloadKindMatchesExpectation = true;
+                }
+            }
             else
             {
                 this.parseResult.DetectedPayloadKinds = new[] { detectedPayloadKind };
@@ -167,7 +176,7 @@ namespace Microsoft.OData.Core.JsonLight
             string selectQueryOption = this.parseResult.SelectQueryOption;
             if (selectQueryOption != null)
             {
-                if (detectedPayloadKind != ODataPayloadKind.Feed && detectedPayloadKind != ODataPayloadKind.Entry)
+                if (detectedPayloadKind != ODataPayloadKind.Feed && detectedPayloadKind != ODataPayloadKind.Entry && detectedPayloadKind != ODataPayloadKind.Delta)
                 {
                     throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidPayloadKindWithSelectQueryOption(expectedPayloadKind.ToString()));
                 }
@@ -184,13 +193,37 @@ namespace Microsoft.OData.Core.JsonLight
         [SuppressMessage("Microsoft.Maintainability", "CA1502", Justification = "Will be moving to non case statements later, no point in investing in reducing this now")]
         private ODataPayloadKind ParseContextUriFragment(string fragment, ODataReaderBehavior readerBehavior, ODataVersion version)
         {
+            bool hasItemSelector = false;
+            ODataDeltaKind kind = ODataDeltaKind.None;
+
             // Deal with /$entity
-            string partSep = ODataConstants.UriSegmentSeparatorChar + ODataConstants.ContextUriFragmentItemSelector;
-            bool hasItemSelector = fragment.EndsWith(partSep, StringComparison.Ordinal);
-            if (hasItemSelector)
+            if (fragment.EndsWith(ODataConstants.ContextUriFragmentItemSelector, StringComparison.Ordinal))
             {
-                fragment = fragment.Substring(0, fragment.Length - partSep.Length);
+                hasItemSelector = true;
+                fragment = fragment.Substring(0, fragment.Length - ODataConstants.ContextUriFragmentItemSelector.Length);
             }
+            else if (fragment.EndsWith(ODataConstants.ContextUriDeltaFeed, StringComparison.Ordinal))
+            {
+                kind = ODataDeltaKind.Feed;
+                fragment = fragment.Substring(0, fragment.Length - ODataConstants.ContextUriDeltaFeed.Length);
+            }
+            else if (fragment.EndsWith(ODataConstants.ContextUriDeletedEntry, StringComparison.Ordinal))
+            {
+                kind = ODataDeltaKind.DeletedEntry;
+                fragment = fragment.Substring(0, fragment.Length - ODataConstants.ContextUriDeletedEntry.Length);
+            }
+            else if (fragment.EndsWith(ODataConstants.ContextUriDeltaLink, StringComparison.Ordinal))
+            {
+                kind = ODataDeltaKind.Link;
+                fragment = fragment.Substring(0, fragment.Length - ODataConstants.ContextUriDeltaLink.Length);
+            }
+            else if (fragment.EndsWith(ODataConstants.ContextUriDeletedLink, StringComparison.Ordinal))
+            {
+                kind = ODataDeltaKind.DeletedLink;
+                fragment = fragment.Substring(0, fragment.Length - ODataConstants.ContextUriDeletedLink.Length);
+            }
+
+            this.parseResult.DeltaKind = kind;
 
             // Deal with query option
             if (fragment.EndsWith(")", StringComparison.Ordinal))
@@ -236,7 +269,7 @@ namespace Microsoft.OData.Core.JsonLight
             ODataPayloadKind detectedPayloadKind = ODataPayloadKind.Unsupported;
             EdmTypeResolver edmTypeResolver = new EdmTypeReaderResolver(this.model, readerBehavior, version);
 
-            if (!fragment.Contains(ODataConstants.UriSegmentSeparator) && !hasItemSelector)
+            if (!fragment.Contains(ODataConstants.UriSegmentSeparator) && !hasItemSelector && kind == ODataDeltaKind.None)
             {
                 // Service document: no fragment
                 if (fragment.Length == 0)
@@ -315,7 +348,14 @@ namespace Microsoft.OData.Core.JsonLight
                 ODataPathSegment lastSegment = path.TrimEndingTypeSegment().LastSegment;
                 if (lastSegment is EntitySetSegment || lastSegment is NavigationPropertySegment)
                 {
-                    detectedPayloadKind = hasItemSelector ? ODataPayloadKind.Entry : ODataPayloadKind.Feed;
+                    if (kind != ODataDeltaKind.None)
+                    {
+                        detectedPayloadKind = ODataPayloadKind.Delta;
+                    }
+                    else
+                    {
+                        detectedPayloadKind = hasItemSelector ? ODataPayloadKind.Entry : ODataPayloadKind.Feed;
+                    }
 
                     if (this.parseResult.EdmType is IEdmCollectionType)
                     {

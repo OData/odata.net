@@ -18,8 +18,9 @@ namespace Microsoft.OData.Core.JsonLight
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
 
     #endregion Namespaces
 
@@ -159,7 +160,15 @@ namespace Microsoft.OData.Core.JsonLight
                 }
                 else if ((enumVal = item as ODataEnumValue) != null)
                 {
-                    this.jsonLightCollectionSerializer.WritePrimitiveValue(enumVal.Value, expectedItemType);
+                    if (enumVal.Value == null)
+                    {
+                        this.jsonLightCollectionSerializer.WriteNullValue();
+                    }
+                    else
+                    {
+                        // write ODataEnumValue.Value as string value
+                        this.jsonLightCollectionSerializer.WritePrimitiveValue(enumVal.Value, EdmCoreModel.Instance.GetString(true));
+                    }
                 }
                 else
                 {

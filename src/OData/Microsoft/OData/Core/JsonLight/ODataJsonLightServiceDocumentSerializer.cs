@@ -21,18 +21,13 @@ namespace Microsoft.OData.Core.JsonLight
     /// </summary>
     internal sealed class ODataJsonLightServiceDocumentSerializer : ODataJsonLightSerializer
     {
-        /// <summary>The context uri builder to use.</summary>
-        private readonly ODataContextUriBuilder contextUriBuilder;
-
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightOutputContext">The output context to write to.</param>
         internal ODataJsonLightServiceDocumentSerializer(ODataJsonLightOutputContext jsonLightOutputContext)
-            : base(jsonLightOutputContext)
+            : base(jsonLightOutputContext, /*initContextUriBuilder*/ true)
         {
-            // DEVNOTE: grab this early so that any validation errors are thrown at creation time rather than when Write___ is called.
-            this.contextUriBuilder = jsonLightOutputContext.CreateContextUriBuilder();
         }
 
         /// <summary>
@@ -50,7 +45,7 @@ namespace Microsoft.OData.Core.JsonLight
                     this.JsonWriter.StartObjectScope();
 
                     // "@odata.context":...
-                    this.WriteContextUriProperty(() => this.contextUriBuilder.BuildContextUri(ODataPayloadKind.ServiceDocument));
+                    this.WriteContextUriProperty(ODataPayloadKind.ServiceDocument);
 
                     // "value":
                     this.JsonWriter.WriteValuePropertyName();

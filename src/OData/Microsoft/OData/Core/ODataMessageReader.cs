@@ -189,7 +189,7 @@ namespace Microsoft.OData.Core
             {
                 if (this.mediaTypeResolver == null)
                 {
-                    this.mediaTypeResolver = MediaTypeResolver.CreateReaderMediaTypeResolver(this.version);
+                    this.mediaTypeResolver = MediaTypeResolver.GetMediaTypeResolver(this.settings.EnableAtom);
                 }
 
                 return this.mediaTypeResolver;
@@ -384,6 +384,38 @@ namespace Microsoft.OData.Core
             expectedBaseEntityType = expectedBaseEntityType ?? this.edmTypeResolver.GetElementType(entitySet);
             return this.ReadFromInputAsync(
                 (context) => context.CreateFeedReaderAsync(entitySet, expectedBaseEntityType),
+                ODataPayloadKind.Feed);
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="expectedBaseEntityType">The expected base type for the entities in the delta response.</param>
+        /// <returns>The created reader.</returns>
+        public ODataDeltaReader CreateODataDeltaReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        {
+            this.VerifyCanCreateODataDeltaReader(entitySet, expectedBaseEntityType);
+            expectedBaseEntityType = expectedBaseEntityType ?? this.edmTypeResolver.GetElementType(entitySet);
+            return this.ReadFromInput(
+                (context) => context.CreateDeltaReader(entitySet, expectedBaseEntityType),
+                ODataPayloadKind.Feed);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="expectedBaseEntityType">The expected base type for the entities in the delta response.</param>
+        /// <returns>A running task for the created reader.</returns>
+        public Task<ODataDeltaReader> CreateODataDeltaReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        {
+            this.VerifyCanCreateODataFeedReader(entitySet, expectedBaseEntityType);
+            expectedBaseEntityType = expectedBaseEntityType ?? this.edmTypeResolver.GetElementType(entitySet);
+            return this.ReadFromInputAsync(
+                (context) => context.CreateDeltaReaderAsync(entitySet, expectedBaseEntityType),
                 ODataPayloadKind.Feed);
         }
 #endif
@@ -838,6 +870,34 @@ namespace Microsoft.OData.Core
         private void VerifyCanCreateODataFeedReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
             this.VerifyReaderNotDisposedAndNotUsed();
+
+            if (!this.model.IsUserModel())
+            {
+                if (entitySet != null)
+                {
+                    throw new ArgumentException(Strings.ODataMessageReader_EntitySetSpecifiedWithoutMetadata("entitySet"), "entitySet");
+                }
+
+                if (expectedBaseEntityType != null)
+                {
+                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("expectedBaseEntityType"), "expectedBaseEntityType");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Verify arguments for creation of an <see cref="ODataDeltaReader" /> to read a feed.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="expectedBaseEntityType">The expected base entity type for the entities in the delta response.</param>
+        private void VerifyCanCreateODataDeltaReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        {
+            this.VerifyReaderNotDisposedAndNotUsed();
+
+            if (!this.readingResponse)
+            {
+                throw new ODataException(Strings.ODataMessageReader_DeltaInRequest);
+            }
 
             if (!this.model.IsUserModel())
             {

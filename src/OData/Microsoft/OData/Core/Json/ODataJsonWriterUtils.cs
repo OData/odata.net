@@ -101,56 +101,6 @@ namespace Microsoft.OData.Core.Json
         }
 
         /// <summary>
-        /// Returns the string representation of the URI; Converts the URI into an absolute URI if the <paramref name="makeAbsolute"/> parameter is set to true.
-        /// </summary>
-        /// <param name="outputContext">The output context for which to convert the URI.</param>
-        /// <param name="uri">The uri to process.</param>
-        /// <param name="makeAbsolute">true, if the URI needs to be translated into an absolute URI; false otherwise.</param>
-        /// <returns>If the <paramref name="makeAbsolute"/> parameter is set to true, then a string representation of an absolute URI which is either the 
-        /// specified <paramref name="uri"/> if it was absolute, or it's a combination of the PayloadBaseUri and the relative <paramref name="uri"/>; 
-        /// otherwise a string representation of the specified <paramref name="uri"/>.
-        /// </returns>
-        /// <remarks>This method will fail if <paramref name="makeAbsolute"/> is set to true and the specified <paramref name="uri"/> is relative and there's no base URI available.</remarks>
-        internal static string UriToUriString(ODataOutputContext outputContext, Uri uri, bool makeAbsolute)
-        {
-            Debug.Assert(uri != null, "uri != null");
-
-            Uri resultUri;
-            if (outputContext.UrlResolver != null)
-            {
-                // The resolver returns 'null' if no custom resolution is desired.
-                resultUri = outputContext.UrlResolver.ResolveUrl(outputContext.MessageWriterSettings.PayloadBaseUri, uri);
-                if (resultUri != null)
-                {
-                    return UriUtils.UriToString(resultUri);
-                }
-            }
-
-            resultUri = uri;
-
-            if (!resultUri.IsAbsoluteUri)
-            {
-                if (makeAbsolute)
-                {
-                    if (outputContext.MessageWriterSettings.PayloadBaseUri == null)
-                    {
-                        throw new ODataException(Strings.ODataWriter_RelativeUriUsedWithoutBaseUriSpecified(UriUtils.UriToString(uri)));
-                    }
-
-                    resultUri = UriUtils.UriToAbsoluteUri(outputContext.MessageWriterSettings.PayloadBaseUri, uri);
-                }
-                else
-                {
-                    // NOTE: the only URIs that are allowed to be relative are context URIs 
-                    //       in operations; for such context URIs there is no base URI.
-                    resultUri = UriUtils.EnsureEscapedRelativeUri(resultUri);
-                }
-            }
-
-            return UriUtils.UriToString(resultUri);
-        }
-
-        /// <summary>
         /// Write an error message.
         /// </summary>
         /// <param name="jsonWriter">JSON writer.</param>

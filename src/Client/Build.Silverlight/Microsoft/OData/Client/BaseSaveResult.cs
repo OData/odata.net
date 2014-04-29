@@ -1,8 +1,12 @@
-//---------------------------------------------------------------------
-// <copyright file="BaseSaveResult.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client
 {
@@ -18,9 +22,6 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Text;
     using System.Threading;
-#if WIN8
-    using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Core;
     using Microsoft.OData.Client.Metadata;
 
@@ -474,11 +475,7 @@ namespace Microsoft.OData.Client
                     do
                     {
                         Util.DebugInjectFault("SaveAsyncResult::AsyncEndGetResponse_BeforeBeginRead");
-#if WIN8
-                        asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
-#else
                         asyncResult = InvokeAsync(httpResponseStream.BeginRead, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
-#endif
                         pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously); // BeginRead
                     }
                     while (asyncResult.CompletedSynchronously && !pereq.RequestCompleted && !this.IsCompletedInternally && httpResponseStream.CanRead);
@@ -1285,30 +1282,15 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if WIN8
-        /// <summary>Handle responseStream.ReadAsync and complete the read operation.</summary>
-        /// <param name="task">Task that has completed.</param>
-        /// <param name="asyncState">State associated with the Task.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        private void AsyncEndRead(Task task, object asyncState)
-#else
 
         /// <summary>handle responseStream.BeginRead with responseStream.EndRead</summary>
         /// <param name="asyncResult">async result</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
         [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void AsyncEndRead(IAsyncResult asyncResult)
-#endif
         {
-#if WIN8
-            IAsyncResult asyncResult = (IAsyncResult)task;
-#endif
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
-#if WIN8
-            AsyncReadState state = (AsyncReadState)asyncState;
-#else
             AsyncReadState state = (AsyncReadState)asyncResult.AsyncState;
-#endif
             PerRequest pereq = state.Pereq;
             int count = 0;
             try
@@ -1320,11 +1302,7 @@ namespace Microsoft.OData.Client
                 Stream httpResponseStream = Util.NullCheck(pereq.ResponseStream, InternalError.InvalidEndReadStream);
 
                 Util.DebugInjectFault("SaveAsyncResult::AsyncEndRead_BeforeEndRead");
-#if WIN8
-                count = ((Task<int>)task).Result;
-#else
                 count = httpResponseStream.EndRead(asyncResult);
-#endif
                 if (0 < count)
                 {
                     Stream outputResponse = Util.NullCheck(this.ResponseStream, InternalError.InvalidEndReadCopy);
@@ -1336,11 +1314,7 @@ namespace Microsoft.OData.Client
                         // if CompletedSynchronously then caller will call and we reduce risk of stack overflow
                         do
                         {
-#if WIN8
-                            asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));                            
-#else
                             asyncResult = InvokeAsync(httpResponseStream.BeginRead, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, state);
-#endif
                             pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously); // BeginRead
                         }
                         while (asyncResult.CompletedSynchronously && !pereq.RequestCompleted && !this.IsCompletedInternally && httpResponseStream.CanRead);

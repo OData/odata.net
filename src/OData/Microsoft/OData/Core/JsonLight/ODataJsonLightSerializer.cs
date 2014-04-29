@@ -23,6 +23,9 @@ namespace Microsoft.OData.Core.JsonLight
     /// </summary>
     internal class ODataJsonLightSerializer : ODataSerializer
     {
+        /// <summary>The context uri builder to use.</summary>
+        protected readonly ODataContextUriBuilder ContextUriBuilder;
+
         /// <summary>
         /// The JsonLight output context to write to.
         /// </summary>
@@ -43,7 +46,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightOutputContext">The output context to write to.</param>
-        internal ODataJsonLightSerializer(ODataJsonLightOutputContext jsonLightOutputContext)
+        /// <param name="initContextUriBuilder">Whether contextUriBuilder should be initialized.</param>
+        internal ODataJsonLightSerializer(ODataJsonLightOutputContext jsonLightOutputContext, bool initContextUriBuilder = false)
             : base(jsonLightOutputContext)
         {
             Debug.Assert(jsonLightOutputContext != null, "jsonLightOutputContext != null");
@@ -51,6 +55,12 @@ namespace Microsoft.OData.Core.JsonLight
             this.jsonLightOutputContext = jsonLightOutputContext;
             this.instanceAnnotationWriter = new SimpleLazy<JsonLightInstanceAnnotationWriter>(() =>
                 new JsonLightInstanceAnnotationWriter(new ODataJsonLightValueSerializer(jsonLightOutputContext), jsonLightOutputContext.TypeNameOracle));
+
+            if (initContextUriBuilder)
+            {
+                // DEVNOTE: grab this early so that any validation errors are thrown at creation time rather than when Write___ is called.
+                this.ContextUriBuilder = jsonLightOutputContext.CreateContextUriBuilder();
+            }
         }
 
         /// <summary>
@@ -107,30 +117,34 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Writes the context URI property and the specified value into the payload.
         /// </summary>
-        /// <param name="contextUriGen">Function to generate context Uri.</param>
-        /// <param name="condition">Condition for testing whether context uri need to be written, always write if condition is null.</param>
+        /// <param name="payloadKind">The ODataPayloadKind for the context URI.</param>
+        /// <param name="contextUrlInfoGen">Function to generate contextUrlInfo.</param>
+        /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
         /// <param name="propertyName">Property name to write contextUri on.</param>
-        internal void WriteContextUriProperty(Func<Uri> contextUriGen, Func<bool> condition = null, string propertyName = null)
+        /// <returns>The contextUrlInfo, if the context URI was successfully written.</returns>
+        internal ODataContextUrlInfo WriteContextUriProperty(ODataPayloadKind payloadKind, Func<ODataContextUrlInfo> contextUrlInfoGen = null, ODataContextUrlInfo parentContextUrlInfo = null, string propertyName = null)
         {
-            switch (this.jsonLightOutputContext.ContextUrlLevel)
+            if (this.jsonLightOutputContext.ContextUrlLevel == ODataContextUrlLevel.None)
             {
-                case ODataContextUrlLevel.None:
-                    return;
-                case ODataContextUrlLevel.OnDemand:
-                    if (condition != null && !condition())
-                    {
-                        return;
-                    }
-
-                    break;
+                return null;
             }
 
             Uri contextUri = null;
+            ODataContextUrlInfo contextUrlInfo = null;
 
-            if (contextUriGen != null)
+            if (contextUrlInfoGen != null)
             {
-                contextUri = contextUriGen();
+                contextUrlInfo = contextUrlInfoGen();
             }
+
+            if (this.jsonLightOutputContext.ContextUrlLevel == ODataContextUrlLevel.OnDemand
+                && contextUrlInfo != null
+                && contextUrlInfo.IsHiddenBy(parentContextUrlInfo))
+            {
+                return null;
+            }
+
+            contextUri = this.ContextUriBuilder.BuildContextUri(payloadKind, contextUrlInfo);
 
             if (contextUri != null)
             {
@@ -145,7 +159,10 @@ namespace Microsoft.OData.Core.JsonLight
 
                 this.JsonWriter.WritePrimitiveValue(contextUri.AbsoluteUri);
                 this.allowRelativeUri = true;
+                return contextUrlInfo;
             }
+
+            return null;
         }
 
         /// <summary>

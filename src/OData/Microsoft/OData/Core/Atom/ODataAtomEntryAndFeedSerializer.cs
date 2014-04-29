@@ -211,7 +211,7 @@ namespace Microsoft.OData.Core.Atom
 
             if (navigationLink.AssociationLinkUrl != null)
             {
-                // TODO Task 1665240:Association Link - Add back support for customizing association link element in Atom
+                // TODO:Association Link - Add back support for customizing association link element in Atom
                 this.WriteAssociationLink(navigationLink.Name, navigationLink.AssociationLinkUrl, null);
             }
 

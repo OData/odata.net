@@ -144,7 +144,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// The context object to answer basic questions regarding the type of the entry or feed based on the serialization info.
         /// </summary>
-        private sealed class ODataFeedAndEntryTypeContextWithoutModel : ODataFeedAndEntryTypeContext
+        internal sealed class ODataFeedAndEntryTypeContextWithoutModel : ODataFeedAndEntryTypeContext
         {
             /// <summary>
             /// The serialization info of the entry for writing without model.
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// The context object to answer basic questions regarding the type of the entry or feed based on the metadata.
         /// </summary>
-        private sealed class ODataFeedAndEntryTypeContextWithModel : ODataFeedAndEntryTypeContext
+        internal sealed class ODataFeedAndEntryTypeContextWithModel : ODataFeedAndEntryTypeContext
         {
             /// <summary>
             /// The Edm model instance to use.
@@ -364,6 +364,14 @@ namespace Microsoft.OData.Core
             public override bool IsFromCollection
             {
                 get { return this.isFromCollection; }
+            }
+
+            /// <summary>
+            /// The entity type of the navigation source of the feed or entry.
+            /// </summary>
+            internal IEdmEntityType NavigationSourceEntityType
+            {
+                get { return this.navigationSourceEntityType; }
             }
         }
     }

@@ -67,10 +67,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             SingleEntityNode parentAsSingleValue = parent as SingleEntityNode;
-
             IEdmSchemaType childType = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifierToken.Identifier);
-            IEdmEntityType childEntityType = childType as IEdmEntityType;
-            if (childEntityType == null)
+            IEdmStructuredType childStructuredType = childType as IEdmStructuredType;
+            if (childStructuredType == null)
             {
                 FunctionCallBinder functionCallBinder = new FunctionCallBinder(bindMethod);
                 QueryNode functionCallNode;
@@ -78,8 +77,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 {
                     return functionCallNode;
                 }
-                else if ((dottedIdentifierToken.Identifier != null)
-                    && (dottedIdentifierToken.Identifier.Length > 0)
+                else if ((!string.IsNullOrEmpty(dottedIdentifierToken.Identifier))
                     && (dottedIdentifierToken.Identifier[dottedIdentifierToken.Identifier.Length - 1] == '\''))
                 {
                     // check if it is enum or not
@@ -97,7 +95,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 else
                 {
                     IEdmTypeReference edmTypeReference = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifierToken.Identifier).ToTypeReference();
-                    if (edmTypeReference is IEdmPrimitiveTypeReference)
+                    if (edmTypeReference is IEdmPrimitiveTypeReference || edmTypeReference is IEdmEnumTypeReference)
                     {
                         return new ConstantNode(dottedIdentifierToken.Identifier);
                     }
@@ -111,20 +109,45 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // Check whether childType is a derived type of the type of its parent node
             UriEdmHelpers.CheckRelatedTo(parentType, childType);
 
-            EntityCollectionNode parentAsCollection = parent as EntityCollectionNode;
-            if (parentAsCollection != null)
+            IEdmEntityType childEntityType = childStructuredType as IEdmEntityType;
+            if (childEntityType != null)
             {
-                return new EntityCollectionCastNode(parentAsCollection, childEntityType);
-            }
+                EntityCollectionNode parentAsCollection = parent as EntityCollectionNode;
+                if (parentAsCollection != null)
+                {
+                    return new EntityCollectionCastNode(parentAsCollection, childEntityType);
+                }
 
-            // parent can be null for casts on the implicit parameter; this is OK
-            if (parent == null)
+                // parent can be null for casts on the implicit parameter; this is OK
+                if (parent == null)
+                {
+                    return new SingleEntityCastNode(null, childEntityType);
+                }
+
+                Debug.Assert(parentAsSingleValue != null, "If parent of the cast node was not collection, it should be a single value.");
+                return new SingleEntityCastNode(parentAsSingleValue, childEntityType);
+            }
+            else
             {
-                return new SingleEntityCastNode(null, childEntityType);
-            }
+                IEdmComplexType childComplexType = childStructuredType as IEdmComplexType;
+                Debug.Assert(childComplexType != null, "If it is not entity type, it should be complex type");
 
-            Debug.Assert(parentAsSingleValue != null, "If parent of the cast node was not collection, it should be a single value.");
-            return new SingleEntityCastNode(parentAsSingleValue, childEntityType);
+                CollectionPropertyAccessNode parentAsCollectionProperty = parent as CollectionPropertyAccessNode;
+                if (parentAsCollectionProperty != null)
+                {
+                    return new CollectionPropertyCastNode(parentAsCollectionProperty, childComplexType);
+                }
+
+                // parent can be null for casts on the implicit parameter; this is OK
+                if (parent == null)
+                {
+                    return new SingleValueCastNode(null, childComplexType);
+                }
+
+                SingleValueNode parentAsSingleValueNode = parent as SingleValueNode;
+                Debug.Assert(parentAsSingleValueNode != null, "If parent of the cast node was not collection, it should be a single value.");
+                return new SingleValueCastNode(parentAsSingleValueNode, childComplexType);
+            }
         }
     }
 }

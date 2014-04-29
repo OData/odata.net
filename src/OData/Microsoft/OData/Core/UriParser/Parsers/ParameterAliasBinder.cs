@@ -86,7 +86,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private SingleValueNode ParseAndBindParameterAliasValueExpression(BindingState bindingState, string aliasValueExpression)
         {
             // Get the syntactic representation of the filter expression
-            // TODO challenh: change Settings.FilterLimit to ParameterAliasValueLimit
+            // TODO: change Settings.FilterLimit to ParameterAliasValueLimit
             UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(bindingState.Configuration.Settings.FilterLimit);
             QueryToken aliasValueToken = expressionParser.ParseExpressionText(aliasValueExpression);
 
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             SingleValueNode result = aliasValueNode as SingleValueNode;
             if (result == null)
             {
-                // TODO challenh: add string resource
+                // TODO: add string resource
                 throw new ODataException("ODataErrorStrings.MetadataBinder_ParameterAliasValueExpressionNotSingleValue");
             }
 

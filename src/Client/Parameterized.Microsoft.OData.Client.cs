@@ -1,14 +1,12 @@
+//   OData .NET Libraries
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
 
-//------------------------------------------------------------------------------
-// <copyright from='1997' to='2006' company='Microsoft Corporation'>           
-//    Copyright (c) Microsoft Corporation. All Rights Reserved.                
-//    Information Contained Herein is Proprietary and Confidential.   
-//
-//    GENERATED FILE.  DO NOT MODIFY.
-//    Source is: Microsoft.OData.Client.txt         
-//
-// </copyright>                                                                
-//------------------------------------------------------------------------------
+//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
 namespace Microsoft.OData.Client {
     using System;
@@ -581,6 +579,13 @@ namespace Microsoft.OData.Client {
             get {
                 return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_SendingRequest_InvalidWhenUsingOnMessageCreating);
             }
+        }
+
+        /// <summary>
+        /// A string like "'{0}' must be used with '{1}'."
+        /// </summary>
+        internal static string Context_MustBeUsedWith(object p0, object p1) {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_MustBeUsedWith,p0,p1);
         }
 
         /// <summary>
@@ -1842,6 +1847,13 @@ namespace Microsoft.OData.Client {
         /// </summary>
         internal static string Serializer_UriDoesNotContainParameterAlias(object p0) {
             return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Serializer_UriDoesNotContainParameterAlias,p0);
+        }
+
+        /// <summary>
+        /// A string like "The enum type '{0}' has no member named '{1}'."
+        /// </summary>
+        internal static string Serializer_InvalidEnumMemberValue(object p0, object p1) {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Serializer_InvalidEnumMemberValue,p0,p1);
         }
 
         /// <summary>

@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         /// <summary>
         /// Delegate for a function that visits a QueryToken and translates it into a bound QueryNode.
-        /// TODO Eventually replace this with a real interface for a visitor.
+        /// TODO: Eventually replace this with a real interface for a visitor.
         /// </summary>
         /// <param name="token">QueryToken to visit.</param>
         /// <returns>Metadata bound QueryNode.</returns>

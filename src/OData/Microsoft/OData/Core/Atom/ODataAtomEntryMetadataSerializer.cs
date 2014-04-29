@@ -67,7 +67,7 @@ namespace Microsoft.OData.Core.Atom
             Debug.Assert(DateTimeOffset.TryParse(updatedTime, out tempDateTimeOffset), "DateTimeOffset.TryParse(updatedTime, out tempDateTimeOffset)");
 #endif
 
-            // TODO, ckerer: implement the rule around authors (an entry has to have an author directly or in the <entry:source> unless the feed has an author).
+            // TODO: implement the rule around authors (an entry has to have an author directly or in the <entry:source> unless the feed has an author).
             //               currently we make all entries have an author.
             if (entryMetadata == null)
             {

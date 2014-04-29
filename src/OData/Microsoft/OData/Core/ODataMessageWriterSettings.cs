@@ -68,7 +68,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         private bool alwaysUseDefaultXmlNamespaceForRootElement;
 
-
         /// <summary>
         /// The parse result of request Uri
         /// </summary>
@@ -85,6 +84,7 @@ namespace Microsoft.OData.Core
         {
             // Create the default writer behavior
             this.writerBehavior = ODataWriterBehavior.DefaultBehavior;
+            this.EnableAtom = false;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageWriterSettings" /> class with specified settings.</summary>
@@ -110,6 +110,7 @@ namespace Microsoft.OData.Core
 
             // NOTE: writer behavior is immutable; copy by reference is ok.
             this.writerBehavior = other.writerBehavior;
+            this.EnableAtom = other.EnableAtom;
         }
 
         /// <summary>Gets or sets the OData protocol version to be used for writing payloads. </summary>
@@ -280,12 +281,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                if (this.ODataUri.ServiceRoot != null)
-                {
-                    return new Uri(this.ODataUri.ServiceRoot, ODataConstants.UriMetadataSegment);
-                }
-
-                return null;
+                return this.ODataUri.MetadataDocumentUri;
             }
         }
 
@@ -340,6 +336,11 @@ namespace Microsoft.OData.Core
                 this.shouldIncludeAnnotation = value;
             }
         }
+
+        /// <summary>
+        /// Whether ATOM support is enabled.
+        /// </summary>
+        internal bool EnableAtom { get; set; }
 
         /// <summary>Sets the acceptable media types and character sets from which the content type will be computed when writing the payload.</summary>
         /// <param name="acceptableMediaTypes">The acceptable media types used to determine the content type of the message. This is a comma separated list of content types as specified in RFC 2616, Section 14.1.</param>
@@ -414,7 +415,6 @@ namespace Microsoft.OData.Core
         /// <returns>Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should not be writen, false otherwise.</returns>
         internal bool ShouldSkipAnnotation(string annotationName)
         {
-            Debug.Assert(this.Version.HasValue, "The version should be set by now.");
             return this.ShouldIncludeAnnotation == null || !this.ShouldIncludeAnnotation(annotationName);
         }
     }

@@ -86,7 +86,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 this.lexer.NextToken();
                                 string filterText = this.ReadQueryOption();
 
-                                // TODO using the wrong max depth here - should use filter's. We need the settings object.
+                                // TODO: using the wrong max depth here - should use filter's. We need the settings object.
                                 UriQueryExpressionParser filterParser = new UriQueryExpressionParser(this.maxRecursionDepth);
                                 filterOption = filterParser.ParseFilter(filterText);
                                 break;
@@ -98,7 +98,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 this.lexer.NextToken();
                                 string orderByText = this.ReadQueryOption();
 
-                                // TODO using the wrong max depth here - should use orderbys's. We need the settings object.
+                                // TODO: using the wrong max depth here - should use orderbys's. We need the settings object.
                                 UriQueryExpressionParser orderbyParser = new UriQueryExpressionParser(this.maxRecursionDepth);
                                 orderByOptions = orderbyParser.ParseOrderBy(orderByText);
                                 break;
@@ -195,7 +195,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 this.lexer.NextToken();
                                 string searchText = this.ReadQueryOption();
 
-                                // TODO using the wrong max depth here - should use searchs's. We need the settings object.
+                                // TODO: using the wrong max depth here - should use searchs's. We need the settings object.
                                 SearchParser searchParser = new SearchParser(this.maxRecursionDepth);
                                 searchOption = searchParser.ParseSearch(searchText);
 
@@ -208,7 +208,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 this.lexer.NextToken();
                                 string selectText = this.ReadQueryOption();
 
-                                // TODO test max depth.
+                                // TODO: test max depth.
                                 SelectExpandParser innerSelectParser = new SelectExpandParser(selectText, this.maxRecursionDepth);
                                 selectOption = innerSelectParser.ParseSelect();
                                 break;
@@ -220,7 +220,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 this.lexer.NextToken();
                                 string expandText = this.ReadQueryOption();
 
-                                // TODO test max depth. Not sure if this works
+                                // TODO: test max depth. Not sure if this works
                                 SelectExpandParser innerExpandParser = new SelectExpandParser(expandText, this.maxRecursionDepth - 1);
                                 expandOption = innerExpandParser.ParseExpand();
                                 break;

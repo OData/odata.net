@@ -103,7 +103,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="containerQualifiedElementName">Name of the container qualified container element.</param>
         /// <param name="containerName">Name of the container that was determined.</param>
-        /// <param name="containerElementName">Name of the container element that was determined.</param>
+        /// <param name="containerElementName">The fully qualified name of the container element that was determined.</param>
         /// <returns>Returns true if parsing was successful and false if not.</returns>
         internal static bool TryParseContainerQualifiedElementName(string containerQualifiedElementName, out string containerName, out string containerElementName)
         {

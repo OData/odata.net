@@ -29,6 +29,21 @@ namespace Microsoft.OData.Core.Json
     internal static class JsonValueUtils
     {
         /// <summary>
+        /// PositiveInfinitySymbol used in OData Json format
+        /// </summary>
+        internal static readonly string ODataJsonPositiveInfinitySymbol = "INF";
+
+        /// <summary>
+        /// NegativeInfinitySymbol used in OData Json format
+        /// </summary>
+        internal static readonly string ODataJsonNegativeInfinitySymbol = "-INF";
+
+        /// <summary>
+        /// The NumberFormatInfo used in OData Json format.
+        /// </summary>
+        internal static readonly NumberFormatInfo ODataNumberFormatInfo;
+
+        /// <summary>
         /// Const tick value for caculating tick values.
         /// </summary>
         private static readonly long JsonDateTimeMinTimeTicks = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks;
@@ -42,6 +57,16 @@ namespace Microsoft.OData.Core.Json
         /// Map of special characters to strings.
         /// </summary>
         private static readonly string[] SpecialCharToEscapedStringMap = CreateSpecialCharToEscapedStringMap();
+
+        /// <summary>
+        /// Initialize static properties 
+        /// </summary>
+        static JsonValueUtils()
+        {
+            ODataNumberFormatInfo = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
+            ODataNumberFormatInfo.PositiveInfinitySymbol = ODataJsonPositiveInfinitySymbol;
+            ODataNumberFormatInfo.NegativeInfinitySymbol = ODataJsonNegativeInfinitySymbol;
+        }
 
         /// <summary>
         /// Write a boolean value.
@@ -78,7 +103,7 @@ namespace Microsoft.OData.Core.Json
 
             if (float.IsInfinity(value) || float.IsNaN(value))
             {
-                WriteQuoted(writer, value.ToString(null, CultureInfo.InvariantCulture));
+                WriteQuoted(writer, value.ToString(ODataNumberFormatInfo));
             }
             else
             {
@@ -124,7 +149,7 @@ namespace Microsoft.OData.Core.Json
 
             if (JsonSharedUtils.IsDoubleValueSerializedAsString(value))
             {
-                WriteQuoted(writer, value.ToString(null, CultureInfo.InvariantCulture));
+                WriteQuoted(writer, value.ToString(ODataNumberFormatInfo));
             }
             else
             {
