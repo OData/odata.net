@@ -37,15 +37,15 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <ProjectReference Include="..\Edm\Desktop\.Net4.0\Microsoft.OData.Edm.csproj">
+    <ProjectReference Include="..\Edm\Microsoft.OData.Edm.csproj">
       <Project>{A934C8C2-9252-453C-9360-54381E4D276A}</Project>
       <Name>Microsoft.Data.Edm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Spatial\Desktop\.Net4.0\Microsoft.Spatial.csproj">
+    <ProjectReference Include="..\Spatial\Microsoft.Spatial.csproj">
       <Project>{D8E09813-D0EA-40eb-8A96-EB30DAC029E2}</Project>
       <Name>System.Spatial</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OData\Desktop\.Net4.0\Microsoft.OData.Core.csproj">
+    <ProjectReference Include="..\OData\Microsoft.OData.Core.csproj">
       <Project>{34B74905-DF66-4BF7-958B-62C50ED1203C}</Project>
       <Name>Microsoft.Data.OData</Name>
     </ProjectReference>

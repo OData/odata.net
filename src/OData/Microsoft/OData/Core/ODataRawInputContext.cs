@@ -103,6 +103,27 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// Create an <see cref="ODataAsynchronousReader"/>.
+        /// </summary>
+        /// <returns>The newly created <see cref="ODataAsynchronousReader"/>.</returns>
+        internal override ODataAsynchronousReader CreateAsynchronousReader()
+        {
+            return this.CreateAsynchronousReaderImplementation();
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously create an <see cref="ODataAsynchronousReader"/>.
+        /// </summary>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataAsynchronousReader"/>.</returns>
+        internal override Task<ODataAsynchronousReader> CreateAsynchronousReaderAsync()
+        {
+            // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateAsynchronousReaderImplementation());
+        }
+#endif
+
+        /// <summary>
         /// Create a <see cref="ODataBatchReader"/>.
         /// </summary>
         /// <param name="batchBoundary">The batch boundary to use.</param>
@@ -169,6 +190,15 @@ namespace Microsoft.OData.Core
                 this.textReader = null;
                 this.stream = null;
             }
+        }
+
+        /// <summary>
+        /// Create a <see cref="ODataAsynchronousReader"/>.
+        /// </summary>
+        /// <returns>The newly created <see cref="ODataAsynchronousReader"/>.</returns>
+        private ODataAsynchronousReader CreateAsynchronousReaderImplementation()
+        {
+            return new ODataAsynchronousReader(this, this.encoding);
         }
 
         /// <summary>

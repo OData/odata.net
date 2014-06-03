@@ -20,6 +20,7 @@ namespace Microsoft.OData.Core
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
+    using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.Metadata;
@@ -226,7 +227,7 @@ namespace Microsoft.OData.Core
             {
                 // Group the payload kinds by format so we call the payload kind detection method only
                 // once per format.
-                IEnumerable<IGrouping<ODataFormat, ODataPayloadKindDetectionResult>> payloadKindFromContentTypeGroups = 
+                IEnumerable<IGrouping<ODataFormat, ODataPayloadKindDetectionResult>> payloadKindFromContentTypeGroups =
                     payloadKindsFromContentType.GroupBy(kvp => kvp.Format);
 
                 foreach (IGrouping<ODataFormat, ODataPayloadKindDetectionResult> payloadKindGroup in payloadKindFromContentTypeGroups)
@@ -234,7 +235,7 @@ namespace Microsoft.OData.Core
                     ODataPayloadKindDetectionInfo detectionInfo = new ODataPayloadKindDetectionInfo(
                         this.contentType,
                         this.encoding,
-                        this.settings, 
+                        this.settings,
                         this.model,
                         payloadKindGroup.Select(pkg => pkg.PayloadKind));
 
@@ -319,6 +320,28 @@ namespace Microsoft.OData.Core
 
                         return (IEnumerable<ODataPayloadKindDetectionResult>)detectedPayloadKinds;
                     });
+        }
+#endif
+
+        /// <summary>Creates an <see cref="T:Microsoft.OData.Core.ODataAsyncReader" /> to read an async response.</summary>
+        /// <returns>The created async reader.</returns>
+        public ODataAsynchronousReader CreateODataAsynchronousReader()
+        {
+            this.VerifyCanCreateODataAsynchronousReader();
+            return this.ReadFromInput(
+                (context) => context.CreateAsynchronousReader(),
+                ODataPayloadKind.Asynchronous);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataAsyncReader" /> to read an async response.</summary>
+        /// <returns>A running task for the created async reader.</returns>
+        public Task<ODataAsynchronousReader> CreateODataAsynchronousReaderAsync()
+        {
+            this.VerifyCanCreateODataAsynchronousReader();
+            return this.ReadFromInputAsync(
+                (context) => context.CreateAsynchronousReaderAsync(),
+                ODataPayloadKind.Asynchronous);
         }
 #endif
 
@@ -772,7 +795,21 @@ namespace Microsoft.OData.Core
         {
             this.VerifyCanReadMetadataDocument();
             return this.ReadFromInput(
-                (context) => context.ReadMetadataDocument(),
+                (context) => context.ReadMetadataDocument(null),
+                ODataPayloadKind.MetadataDocument);
+        }
+
+        /// <summary>Reads the message body as metadata document.</summary>
+        /// <param name="getReferencedModelReaderFunc">The function to load referenced model xml. If null, will stop loading the referenced models. Normally it should throw no exception.</param>
+        /// <returns>Returns <see cref="T:Microsoft.OData.Edm.IEdmModel" />.</returns>
+        /// <remarks>
+        /// User should handle the disposal of XmlReader created by getReferencedModelReaderFunc.
+        /// </remarks>
+        public IEdmModel ReadMetadataDocument(Func<Uri, XmlReader> getReferencedModelReaderFunc)
+        {
+            this.VerifyCanReadMetadataDocument();
+            return this.ReadFromInput(
+                (context) => context.ReadMetadataDocument(getReferencedModelReaderFunc),
                 ODataPayloadKind.MetadataDocument);
         }
 
@@ -810,7 +847,7 @@ namespace Microsoft.OData.Core
             Debug.Assert(!payloadKinds.Contains(ODataPayloadKind.Unsupported), "!payloadKinds.Contains(ODataPayloadKind.Unsupported)");
             Debug.Assert(this.format == null, "this.format == null");
             Debug.Assert(this.readerPayloadKind == ODataPayloadKind.Unsupported, "this.readerPayloadKind == ODataPayloadKind.Unsupported");
-            
+
             // Set the format, encoding and payload kind.
             string contentTypeHeader = this.GetContentTypeHeader(payloadKinds);
             this.format = MediaTypeUtils.GetFormatFromContentType(contentTypeHeader, payloadKinds, this.MediaTypeResolver, out this.contentType, out this.encoding, out this.readerPayloadKind, out this.batchBoundary);
@@ -843,10 +880,10 @@ namespace Microsoft.OData.Core
                 }
                 else
                 {
-                    contentTypeHeader = MimeConstants.MimeApplicationJson;   
+                    contentTypeHeader = MimeConstants.MimeApplicationJson;
                 }
             }
-            
+
             return contentTypeHeader;
         }
 
@@ -962,13 +999,21 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// Verify arguments for creation of an async response as the message body.
+        /// </summary>
+        private void VerifyCanCreateODataAsynchronousReader()
+        {
+            this.VerifyReaderNotDisposedAndNotUsed();
+        }
+
+        /// <summary>
         /// Verify arguments for creation of a batch as the message body.
         /// </summary>
         private void VerifyCanCreateODataBatchReader()
         {
             this.VerifyReaderNotDisposedAndNotUsed();
         }
-        
+
         /// <summary>
         /// Verify arguments for creation of an <see cref="ODataParameterReader" /> to read the parameters for <paramref name="operation"/>.
         /// </summary>
@@ -1290,8 +1335,8 @@ namespace Microsoft.OData.Core
                 ODataPayloadKindDetectionInfo detectionInfo = new ODataPayloadKindDetectionInfo(
                     this.contentType,
                     this.encoding,
-                    this.settings, 
-                    this.model, 
+                    this.settings,
+                    this.model,
                     payloadKindGroup.Select(pkg => pkg.PayloadKind));
 
                 // Call the payload kind detection code on the format

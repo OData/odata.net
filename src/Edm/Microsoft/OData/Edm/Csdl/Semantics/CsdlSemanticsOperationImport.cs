@@ -81,7 +81,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
                 else
                 {
-                    IEdmEntitySet entitySet = this.container.FindEntitySet(this.operationImport.EntitySet) ?? new UnresolvedEntitySet(this.operationImport.EntitySet, this.Container, this.Location);
+                    IEdmEntitySet entitySet = this.container.FindEntitySetExtended(this.operationImport.EntitySet) ?? new UnresolvedEntitySet(this.operationImport.EntitySet, this.Container, this.Location);
                     return new OperationImportEntitySetReferenceExpression(entitySet) { Location = this.Location };
                 }
             }

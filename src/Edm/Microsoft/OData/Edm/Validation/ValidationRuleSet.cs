@@ -67,6 +67,7 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.OperationEntitySetPathMustBeValid,
                 ValidationRules.OperationReturnTypeEntityTypeMustBeValid,
                 ValidationRules.OperationImportEntitySetExpressionIsInvalid,
+                ValidationRules.FunctionImportWithParameterShouldNotBeIncludedInServiceDocument,
                 ValidationRules.BinaryTypeReferenceBinaryUnboundedNotValidForMaxLength,
                 ValidationRules.StringTypeReferenceStringUnboundedNotValidForMaxLength,
                 ValidationRules.ImmediateValueAnnotationElementAnnotationIsValid,

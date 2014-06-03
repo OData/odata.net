@@ -68,6 +68,7 @@ EdmModel_Validator_Semantic_OperationImportEntitySetExpressionKindIsInvalid=The 
 EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid=The operation import '{0}' specifies an entity set expression which is not valid. Operation import entity set expression can be either an entity set reference or a path starting with a operation import parameter and traversing navigation properties.
 EdmModel_Validator_Semantic_OperationImportSpecifiesEntitySetButNotEntityType=The operation import '{0}' specifies an entity set but does not return entities.
 EdmModel_Validator_Semantic_OperationImportCannotImportBoundOperation=The operation import '{0}' imports operation '{1}' that is bound. Only an unbound operation can be imported using an operation import.
+EdmModel_Validator_Semantic_FunctionImportWithParameterShouldNotBeIncludedInServiceDocument=The function import '{0}' should not be included in service document because it has parameter.
 EdmModel_Validator_Semantic_FunctionMustHaveReturnType=The function '{0}' must specify a return type.
 EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate=Each parameter name in a operation must be unique. The parameter name '{0}' is already defined.
 EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName=Each member name in an EntityContainer must be unique. A member with name '{0}' is already defined.
@@ -88,6 +89,7 @@ EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined=An element with the 
 EdmModel_Validator_Semantic_InvalidMemberNameMatchesTypeName=The member name '{0}' cannot be used in a type with the same name. Member names cannot be the same as their enclosing type.
 EdmModel_Validator_Semantic_PropertyNameAlreadyDefined=Each property name in a type must be unique. Property name '{0}' is already defined.
 EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind=The base type kind of a structured type must be the same as its derived type.
+EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen=The base type of open type '{0}' is not open type.
 EdmModel_Validator_Semantic_KeyPropertyMustBelongToEntity=The key property '{0}' must belong to the entity '{1}'.
 EdmModel_Validator_Semantic_DependentPropertiesMustBelongToDependentEntity=The dependent property '{0}' must belong to the dependent entity '{1}'.
 EdmModel_Validator_Semantic_DeclaringTypeMustBeCorrect=The property '{0}' cannot belong to a type other than its declaring type. 
@@ -227,6 +229,7 @@ CsdlSemantics_DuplicateAlias=The schema '{0}' contains the alias '{1}' more than
 ;EdmxParser
 EdmxParser_EdmxVersionMismatch=The EDMX version specified in the 'Version' attribute does not match the version corresponding to the namespace of the 'Edmx' element.
 EdmxParser_BodyElement=Unexpected {0} element while parsing Edmx. Edmx is expected to have at most one of 'Runtime' or 'DataServices' elements.
+EdmxParser_InvalidReferenceIncorrectNumberOfIncludes=edmx:Reference must contain at least one edmx:Includes or edmx:IncludeAnnotations.
 
 ;EdxmParseException
 EdmParseException_ErrorsEncounteredInEdmx=Encountered the following errors when parsing the EDMX document: \r\n{0}

@@ -168,7 +168,8 @@ namespace Microsoft.OData.Core
             return new ODataUri()
             {
                 RequestUri = RequestUri,
-                ServiceRoot = ServiceRoot, // Copy ServiceRoot will also create new MeatadataDocumentUri
+                serviceRoot = ServiceRoot, // Use field instead of property for perf.
+                MetadataDocumentUri = MetadataDocumentUri,
                 ParameterAliasValueAccessor = ParameterAliasValueAccessor,
                 Path = Path,
                 CustomQueryOptions = CustomQueryOptions,

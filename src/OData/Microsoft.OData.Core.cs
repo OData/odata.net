@@ -81,6 +81,7 @@ namespace Microsoft.OData.Core {
         internal const string ODataResponseMessage_StreamTaskIsNull = "ODataResponseMessage_StreamTaskIsNull";
         internal const string ODataResponseMessage_MessageStreamIsNull = "ODataResponseMessage_MessageStreamIsNull";
         internal const string AsyncBufferedStream_WriterDisposedWithoutFlush = "AsyncBufferedStream_WriterDisposedWithoutFlush";
+        internal const string ODataFormat_AtomFormatObsoleted = "ODataFormat_AtomFormatObsoleted";
         internal const string ODataOutputContext_UnsupportedPayloadKindForFormat = "ODataOutputContext_UnsupportedPayloadKindForFormat";
         internal const string ODataInputContext_UnsupportedPayloadKindForFormat = "ODataInputContext_UnsupportedPayloadKindForFormat";
         internal const string ODataOutputContext_MetadataDocumentUriMissing = "ODataOutputContext_MetadataDocumentUriMissing";
@@ -139,6 +140,7 @@ namespace Microsoft.OData.Core {
         internal const string ODataMessageWriter_ServiceDocumentInRequest = "ODataMessageWriter_ServiceDocumentInRequest";
         internal const string ODataMessageWriter_MetadataDocumentInRequest = "ODataMessageWriter_MetadataDocumentInRequest";
         internal const string ODataMessageWriter_DeltaInRequest = "ODataMessageWriter_DeltaInRequest";
+        internal const string ODataMessageWriter_AsyncInRequest = "ODataMessageWriter_AsyncInRequest";
         internal const string ODataMessageWriter_CannotWriteNullInRawFormat = "ODataMessageWriter_CannotWriteNullInRawFormat";
         internal const string ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind = "ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind";
         internal const string ODataMessageWriter_IncompatiblePayloadKinds = "ODataMessageWriter_IncompatiblePayloadKinds";
@@ -225,6 +227,22 @@ namespace Microsoft.OData.Core {
         internal const string ODataBatchReaderStream_MultiByteEncodingsNotSupported = "ODataBatchReaderStream_MultiByteEncodingsNotSupported";
         internal const string ODataBatchReaderStream_UnexpectedEndOfInput = "ODataBatchReaderStream_UnexpectedEndOfInput";
         internal const string ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached = "ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached";
+        internal const string ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse = "ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse";
+        internal const string ODataAsyncWriter_CannotCreateResponseMoreThanOnce = "ODataAsyncWriter_CannotCreateResponseMoreThanOnce";
+        internal const string ODataAsyncWriter_SyncCallOnAsyncWriter = "ODataAsyncWriter_SyncCallOnAsyncWriter";
+        internal const string ODataAsyncWriter_AsyncCallOnSyncWriter = "ODataAsyncWriter_AsyncCallOnSyncWriter";
+        internal const string ODataAsyncWriter_CannotWriteInStreamErrorForAsync = "ODataAsyncWriter_CannotWriteInStreamErrorForAsync";
+        internal const string ODataAsyncReader_InvalidHeaderSpecified = "ODataAsyncReader_InvalidHeaderSpecified";
+        internal const string ODataAsyncReader_CannotCreateResponseWhenNotReadingResponse = "ODataAsyncReader_CannotCreateResponseWhenNotReadingResponse";
+        internal const string ODataAsyncReader_InvalidResponseLine = "ODataAsyncReader_InvalidResponseLine";
+        internal const string ODataAsyncReader_InvalidHttpVersionSpecified = "ODataAsyncReader_InvalidHttpVersionSpecified";
+        internal const string ODataAsyncReader_NonIntegerHttpStatusCode = "ODataAsyncReader_NonIntegerHttpStatusCode";
+        internal const string ODataAsyncReader_DuplicateHeaderFound = "ODataAsyncReader_DuplicateHeaderFound";
+        internal const string ODataAsyncReader_MultiByteEncodingsNotSupported = "ODataAsyncReader_MultiByteEncodingsNotSupported";
+        internal const string ODataAsyncReader_InvalidNewLineEncountered = "ODataAsyncReader_InvalidNewLineEncountered";
+        internal const string ODataAsyncReader_UnexpectedEndOfInput = "ODataAsyncReader_UnexpectedEndOfInput";
+        internal const string ODataAsyncReader_SyncCallOnAsyncReader = "ODataAsyncReader_SyncCallOnAsyncReader";
+        internal const string ODataAsyncReader_AsyncCallOnSyncReader = "ODataAsyncReader_AsyncCallOnSyncReader";
         internal const string HttpUtils_MediaTypeUnspecified = "HttpUtils_MediaTypeUnspecified";
         internal const string HttpUtils_MediaTypeRequiresSlash = "HttpUtils_MediaTypeRequiresSlash";
         internal const string HttpUtils_MediaTypeRequiresSubType = "HttpUtils_MediaTypeRequiresSubType";
@@ -307,6 +325,7 @@ namespace Microsoft.OData.Core {
         internal const string ODataMessageReader_PayloadKindDetectionInServerMode = "ODataMessageReader_PayloadKindDetectionInServerMode";
         internal const string ODataMessageReader_ParameterPayloadInResponse = "ODataMessageReader_ParameterPayloadInResponse";
         internal const string ODataMessageReader_SingletonNavigationPropertyForEntityReferenceLinks = "ODataMessageReader_SingletonNavigationPropertyForEntityReferenceLinks";
+        internal const string ODataAsyncResponseMessage_MustNotModifyMessage = "ODataAsyncResponseMessage_MustNotModifyMessage";
         internal const string ODataMessage_MustNotModifyMessage = "ODataMessage_MustNotModifyMessage";
         internal const string ODataReaderCore_SyncCallOnAsyncReader = "ODataReaderCore_SyncCallOnAsyncReader";
         internal const string ODataReaderCore_AsyncCallOnSyncReader = "ODataReaderCore_AsyncCallOnSyncReader";
@@ -735,6 +754,7 @@ namespace Microsoft.OData.Core {
         internal const string UriSelectParser_InvalidLevelsOption = "UriSelectParser_InvalidLevelsOption";
         internal const string UriSelectParser_SystemTokenInSelectExpand = "UriSelectParser_SystemTokenInSelectExpand";
         internal const string UriParser_MissingExpandOption = "UriParser_MissingExpandOption";
+        internal const string UriParser_FullUriMustBeRelative = "UriParser_FullUriMustBeRelative";
         internal const string UriParser_NeedServiceRootForThisOverload = "UriParser_NeedServiceRootForThisOverload";
         internal const string UriParser_UriMustBeAbsolute = "UriParser_UriMustBeAbsolute";
         internal const string UriParser_NegativeLimit = "UriParser_NegativeLimit";

@@ -89,6 +89,8 @@ namespace Microsoft.OData.Core
                 case ODataPayloadKind.MetadataDocument:
                 case ODataPayloadKind.Error:
                 case ODataPayloadKind.IndividualProperty:
+                case ODataPayloadKind.Delta:
+                case ODataPayloadKind.Asynchronous:
                     return !inRequest;
 
                 // These payload kidns are only valid in requests

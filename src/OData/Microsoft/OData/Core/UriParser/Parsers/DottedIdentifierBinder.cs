@@ -97,7 +97,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     IEdmTypeReference edmTypeReference = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifierToken.Identifier).ToTypeReference();
                     if (edmTypeReference is IEdmPrimitiveTypeReference || edmTypeReference is IEdmEnumTypeReference)
                     {
-                        return new ConstantNode(dottedIdentifierToken.Identifier);
+                        return new ConstantNode(dottedIdentifierToken.Identifier, dottedIdentifierToken.Identifier);
                     }
                     else
                     {

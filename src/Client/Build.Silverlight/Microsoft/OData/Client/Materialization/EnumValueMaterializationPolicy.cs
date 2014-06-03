@@ -37,12 +37,17 @@ namespace Microsoft.OData.Client.Materialization
         /// Materializes the enum data value.
         /// </summary>
         /// <param name="valueType">Type of the collection item.</param>
-        /// <param name="value">The ODataEnumValue.</param>
+        /// <param name="property">The ODataProperty.</param>
         /// <returns>Materialized enum data CLR value.</returns>
-        public object MaterializeEnumTypeValue(Type valueType, ODataEnumValue value)
+        public object MaterializeEnumTypeProperty(Type valueType, ODataProperty property)
         {
             object materializedValue = null;
+            ODataEnumValue value = property.Value as ODataEnumValue;
             this.MaterializeODataEnumValue(valueType, value.TypeName, value.Value, () => "TODO: Is this reachable?", out materializedValue);
+            if (!property.HasMaterializedValue())
+            {
+                property.SetMaterializedValue(materializedValue);
+            }
 
             return materializedValue;
         }

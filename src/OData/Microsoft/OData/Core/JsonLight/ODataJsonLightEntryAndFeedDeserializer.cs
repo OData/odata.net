@@ -262,7 +262,7 @@ namespace Microsoft.OData.Core.JsonLight
                     {
                         // If this is not called for reading FeedStart and we already scanned ahead and processed all feed properties, we already checked for duplicate property names.
                         // Use an empty duplicate property name checker since this.ParseProperty() read through the same property annotation of instance annotations again. 
-                        duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(/*allowDuplicateProperties*/ true, this.JsonLightInputContext.ReadingResponse);
+                        duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(/*allowDuplicateProperties*/ true, this.JsonLightInputContext.ReadingResponse, !this.JsonLightInputContext.MessageReaderSettings.EnableFullValidation);
                     }
 
                     this.ProcessProperty(

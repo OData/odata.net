@@ -12,6 +12,7 @@ namespace Microsoft.OData.Core
 {
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Globalization;
 
     /// <summary>
     /// Class to set the "Prefer" header on an <see cref="IODataRequestMessage"/> or 
@@ -40,6 +41,16 @@ namespace Microsoft.OData.Core
         private const string ODataAnnotationPreferenceToken = "odata.include-annotations";
 
         /// <summary>
+        /// The respond-async preference token.
+        /// </summary>
+        private const string RespondAsyncPreferenceToken = "respond-async";
+
+        /// <summary>
+        /// The wait preference token.
+        /// </summary>
+        private const string WaitPreferenceTokenName = "wait";
+
+        /// <summary>
         /// The Prefer header name.
         /// </summary>
         private const string PreferHeaderName = "Prefer";
@@ -63,6 +74,11 @@ namespace Microsoft.OData.Core
         /// The return=representation preference.
         /// </summary>
         private static readonly HttpHeaderValueElement ReturnRepresentationPreference = new HttpHeaderValueElement(ReturnPreferenceTokenName, ReturnRepresentationPreferenceTokenValue, EmptyParameters);
+
+        /// <summary>
+        /// The respond-async preference.
+        /// </summary>
+        private static readonly HttpHeaderValueElement RespondAsyncPreference = new HttpHeaderValueElement(RespondAsyncPreferenceToken, null, EmptyParameters);
 
         /// <summary>
         /// The message to set the preference header to and to get the preference header from.
@@ -202,6 +218,68 @@ namespace Microsoft.OData.Core
                 else
                 {
                     this.Set(new HttpHeaderValueElement(ODataAnnotationPreferenceToken, AddQuotes(value), EmptyParameters));                    
+                }
+            }
+        }
+
+        /// <summary>
+        /// Property to get and set the "respond-async" preference to the "Prefer" header on the underlying IODataRequestMessage or
+        /// the "Preference-Applied" header on the underlying IODataResponseMessage.
+        /// Setting true sets the "respond-async" preference.
+        /// Setting false clears the "respond-async" preference.
+        /// Returns true if the "respond-async" preference is on the header. Otherwise returns false if the "respond-async" is not on the header.
+        /// </summary>
+        public bool RespondAsync
+        {
+            get
+            {
+                return this.Get(RespondAsyncPreferenceToken) != null;
+            }
+
+            set
+            {
+                if (value)
+                {
+                    this.Set(RespondAsyncPreference);
+                }
+                else
+                {
+                    this.Clear(RespondAsyncPreferenceToken);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Property to get and set the "wait" preference to the "Prefer" header on the underlying IODataRequestMessage or
+        /// the "Preference-Applied" header on the underlying IODataResponseMessage.
+        /// Setting N sets the "wait=N" preference.
+        /// Setting null clears the "wait" preference.
+        /// Returns N if the "wait=N" preference is on the header.
+        /// Returning null indicates that "wait" is not on the header.
+        /// </summary>
+        public int? Wait
+        {
+            get
+            {
+                var wait = this.Get(WaitPreferenceTokenName);
+
+                if (wait != null)
+                {
+                    return int.Parse(wait.Value, CultureInfo.InvariantCulture);
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value != null)
+                {
+                    this.Set(new HttpHeaderValueElement(WaitPreferenceTokenName, string.Format(CultureInfo.InvariantCulture, "{0}", value), EmptyParameters));
+                }
+                else
+                {
+                    this.Clear(WaitPreferenceTokenName);
                 }
             }
         }

@@ -127,8 +127,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Indicates that the client should use the Atom format.
         /// </summary>
-        /// TODO: Fix localization strings
-        [System.Obsolete("ATOM support is obsolete.")]
+        [Obsolete("ATOM support is obsolete.")]
         public void UseAtom()
         {
             this.ODataFormat = ODataFormat.Atom;

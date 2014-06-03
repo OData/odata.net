@@ -203,6 +203,17 @@ namespace Microsoft.OData.Core
             }
         }
 
+        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataAsyncWriter" /> to write an async response. </summary>
+        /// <returns>The created writer.</returns>
+        public ODataAsynchronousWriter CreateODataAsynchronousWriter()
+        {
+            this.VerifyCanCreateODataAsyncWriter();
+            return this.WriteToOutput(
+                ODataPayloadKind.Asynchronous,
+                null /* verifyHeaders */,
+                context => context.CreateODataAsynchronousWriter());
+        }
+
         /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a feed. </summary>
         /// <returns>The created writer.</returns>
         public ODataWriter CreateODataFeedWriter()
@@ -236,6 +247,17 @@ namespace Microsoft.OData.Core
         }
 
 #if ODATALIB_ASYNC
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataAsyncWriter" /> to write an async response. </summary>
+        /// <returns>A running task for the created writer.</returns>
+        public Task<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
+        {
+            this.VerifyCanCreateODataAsyncWriter();
+            return this.WriteToOutputAsync(
+                ODataPayloadKind.Asynchronous,
+                null /* verifyHeaders */,
+                (context) => context.CreateODataAsynchronousWriterAsync());
+        }
+
         /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a feed. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataFeedWriterAsync()
@@ -831,6 +853,21 @@ namespace Microsoft.OData.Core
                 // NOTE: set the content type header here since all headers have to be set before getting the stream
                 this.message.SetHeader(ODataConstants.ContentTypeHeader, contentType);
             }
+        }
+
+        /// <summary>
+        /// Verifies that async writer can be created.
+        /// </summary>
+        private void VerifyCanCreateODataAsyncWriter()
+        {
+            if (!this.writingResponse)
+            {
+                throw new ODataException(Strings.ODataMessageWriter_AsyncInRequest);
+            }
+
+            // VerifyWriterNotDisposedAndNotUsed changes the state of the message writer, it should be called after
+            // we check the error conditions above.
+            this.VerifyWriterNotDisposedAndNotUsed();
         }
 
         /// <summary>

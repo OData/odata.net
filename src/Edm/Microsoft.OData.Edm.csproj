@@ -31,15 +31,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Data.dll" />
-    <Reference Include="System.Xml.dll" />
-    <Reference Include="System.Xml.Linq.dll" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\CsdlLocation.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmParseException.cs" />
+    <Compile Include="Microsoft\OData\Edm\Csdl\EdmxReaderSettings.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmxTarget.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmValueParser.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmValueWriter.cs" />

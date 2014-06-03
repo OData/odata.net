@@ -23,14 +23,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     internal sealed class SelectExpandParser
     {
         /// <summary>
-        /// Object to handle the parsing of any nested expand options that we discover.
-        /// </summary>
-        private readonly ExpandOptionParser expandOptionParser;
-
-        /// <summary>
         /// The maximum allowable recursive depth.
         /// </summary>
         private readonly int maxRecursiveDepth;
+
+        /// <summary>
+        /// Object to handle the parsing of any nested expand options that we discover.
+        /// </summary>
+        private ExpandOptionParser expandOptionParser;
 
         /// <summary>
         /// Lexer used to parse an the $select or $expand string.
@@ -52,7 +52,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         public SelectExpandParser(string clauseToParse, int maxRecursiveDepth)
         {
             this.maxRecursiveDepth = maxRecursiveDepth;
-            expandOptionParser = new ExpandOptionParser(this.maxRecursiveDepth);
+
+            // Set max recursive depth for path, $filter, $orderby and $search to maxRecursiveDepth in case they were not be be specified.
+            this.MaxPathDepth = maxRecursiveDepth;
+            this.MaxFilterDepth = maxRecursiveDepth;
+            this.MaxOrderByDepth = maxRecursiveDepth;
+            this.MaxSearchDepth = maxRecursiveDepth;
 
             // Sets up our lexer. We don't turn useSemicolonDelimiter on since the parsing code for expand options, 
             // which is the only thing that needs it, is in a different class that uses it's own lexer.
@@ -60,12 +65,24 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// The maximum recursive depth.
+        /// The maximum depth for path nested in $expand.
         /// </summary>
-        public int MaxRecursiveDepth 
-        {
-            get { return this.maxRecursiveDepth; }
-        }
+        internal int MaxPathDepth { get; set; }
+
+        /// <summary>
+        /// The maximum depth for $filter nested in $expand.
+        /// </summary>
+        internal int MaxFilterDepth { get; set; }
+
+        /// <summary>
+        /// The maximum depth for $orderby nested in $expand.
+        /// </summary>
+        internal int MaxOrderByDepth { get; set; }
+
+        /// <summary>
+        /// The maximum depth for $search nested in $expand.
+        /// </summary>
+        internal int MaxSearchDepth { get; set; }
 
         /// <summary>
         /// Parses a full $select expression.
@@ -95,8 +112,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             this.isSelect = true;
 
-            // TODO: Why are we using the max recursion depth as the max path length? Weird.
-            var termParser = new SelectExpandTermParser(this.lexer, this.MaxRecursiveDepth, this.isSelect);
+            var termParser = new SelectExpandTermParser(this.lexer, this.MaxPathDepth, this.isSelect);
             return termParser.ParseTerm();
         }
 
@@ -108,8 +124,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             this.isSelect = false;
 
-            // TODO: Why are we using the max recursion depth as the max path length? Weird.
-            var termParser = new SelectExpandTermParser(this.lexer, this.maxRecursiveDepth, this.isSelect);
+            var termParser = new SelectExpandTermParser(this.lexer, this.MaxPathDepth, this.isSelect);
             PathSegmentToken pathToken = termParser.ParseTerm();
 
             string optionsText = null;
@@ -119,6 +134,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
                 // Move lexer to what is after the parenthesis expression. Now CurrentToken will be the next thing.
                 this.lexer.NextToken();
+            }
+
+            if (expandOptionParser == null)
+            {
+                expandOptionParser = new ExpandOptionParser(this.maxRecursiveDepth)
+                {
+                    MaxFilterDepth = MaxFilterDepth,
+                    MaxOrderByDepth = MaxOrderByDepth,
+                    MaxSearchDepth = MaxSearchDepth
+                };
             }
 
             return this.expandOptionParser.BuildExpandTermToken(pathToken, optionsText);

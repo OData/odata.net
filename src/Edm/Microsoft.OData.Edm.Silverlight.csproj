@@ -47,15 +47,16 @@
   </PropertyGroup>
   <!-- References -->
   <ItemGroup>
-    <Reference Include="mscorlib.dll" />
-    <Reference Include="System.dll" />
-    <Reference Include="System.Xml.dll" />
-    <Reference Include="System.Xml.Linq.dll" />
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\CsdlLocation.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmParseException.cs" />
+    <Compile Include="Microsoft\OData\Edm\Csdl\EdmxReaderSettings.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmxTarget.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmValueParser.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmValueWriter.cs" />

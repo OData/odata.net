@@ -11,12 +11,14 @@
 namespace Microsoft.OData.Client
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using System.Collections;
+    using System.Threading.Tasks;
+
 #if ASTORIA_LIGHT && !PORTABLELIB
     using Microsoft.OData.Service.Http;
 #endif
@@ -122,6 +124,13 @@ namespace Microsoft.OData.Client
             return base.BeginExecute(this, this.Context, callback, state, Util.ExecuteMethodName);
         }
 
+        /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
+        /// <returns>A task that represents an <see cref="T:System.Collections.Generic.IEnumerable`1" />  that contains the results of the query operation.</returns>
+        public new Task<IEnumerable<TElement>> ExecuteAsync()
+        {
+            return Task<IEnumerable<TElement>>.Factory.FromAsync(this.BeginExecute, this.EndExecute, null);
+        }
+
         /// <summary>Ends an asynchronous query request to a data service.</summary>
         /// <returns>Returns an <see cref="T:System.Collections.Generic.IEnumerable`1" />  that contains the results of the query operation.</returns>
         /// <param name="asyncResult">The pending asynchronous query request.</param>
@@ -129,6 +138,17 @@ namespace Microsoft.OData.Client
         public new IEnumerable<TElement> EndExecute(IAsyncResult asyncResult)
         {
             return DataServiceRequest.EndExecute<TElement>(this, this.Context, Util.ExecuteMethodName, asyncResult);
+        }
+
+        /// <summary>
+        /// Asynchronously sends a request to get all items by auto iterating all pages
+        /// </summary>
+        /// <returns>A task that represents an <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains the results of the query operation.</returns>
+        public Task<IEnumerable<TElement>> GetAllPagesAsync()
+        {
+            var currentTask = Task<IEnumerable<TElement>>.Factory.FromAsync(this.BeginExecute, this.EndExecute, null);
+            var nextTask = currentTask.ContinueWith(t => this.ContinuePage(t.Result));
+            return nextTask;
         }
 
 #if !ASTORIA_LIGHT && !PORTABLELIB // Synchronous methods not available
@@ -139,6 +159,16 @@ namespace Microsoft.OData.Client
         public new IEnumerable<TElement> Execute()
         {
             return this.Execute<TElement>(this.Context, this.Translate());
+        }
+
+        /// <summary>
+        /// Get all items by auto iterating all pages, will send the request of first page as default, regardless if it's iterated.
+        /// </summary>
+        /// <returns>The items retrieved</returns>
+        public IEnumerable<TElement> GetAllPages()
+        {
+            QueryOperationResponse<TElement> response = this.Execute<TElement>(this.Context, this.Translate());
+            return this.GetRestPages(response);
         }
 #endif
 
@@ -299,6 +329,59 @@ namespace Microsoft.OData.Client
 
             return this.queryComponents;
         }
+
+        /// <summary>
+        /// Continues to asynchronously send a request to get items of the next page
+        /// </summary>
+        /// <param name="response">The response of the previous page</param>
+        /// <returns>The items retrieved</returns>
+        private IEnumerable<TElement> ContinuePage(IEnumerable<TElement> response)
+        {
+            foreach (var element in response)
+            {
+                yield return element;
+            }
+
+            var continuation = (response as QueryOperationResponse).GetContinuation() as DataServiceQueryContinuation<TElement>;
+            if (continuation != null)
+            {
+                var currentTask = Task<IEnumerable<TElement>>.Factory.FromAsync(this.Context.BeginExecute(continuation, null, null), this.Context.EndExecute<TElement>);
+                var nextTask = currentTask.ContinueWith(t => this.ContinuePage(t.Result));
+                nextTask.Wait();
+                foreach (var element in nextTask.Result)
+                {
+                    yield return element;
+                }
+            }
+        }
+
+#if !ASTORIA_LIGHT && !PORTABLELIB
+        /// Synchronous methods not available
+        /// <summary>
+        /// Returns an IEnumerable from an Internet resource. 
+        /// </summary>
+        /// <param name="response">The response of the previous page</param>
+        /// <returns>An IEnumerable that contains the response from the Internet resource.</returns>
+        private IEnumerable<TElement> GetRestPages(IEnumerable<TElement> response)
+        {
+            foreach (var element in response)
+            {
+                yield return element;
+            }
+
+            var continuation = (response as QueryOperationResponse<TElement>).GetContinuation();
+            while (continuation != null)
+            {
+                response = this.Context.Execute(continuation);
+                foreach (var element in response)
+                {
+                    yield return element;
+                }
+
+                continuation = (response as QueryOperationResponse<TElement>).GetContinuation();
+            }
+        }
+#endif
 
         /// <summary>
         /// Ordered DataServiceQuery which implements IOrderedQueryable.

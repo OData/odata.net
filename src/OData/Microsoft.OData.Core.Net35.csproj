@@ -39,7 +39,7 @@
       <Project>{A1EBA295-EC08-48d4-8C6D-C8A2289B7C40}</Project>
       <Name>Microsoft.Spatial</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Edm\Microsoft.OData.Edm.Net35csproj">
+    <ProjectReference Include="..\Edm\Microsoft.OData.Edm.Net35.csproj">
       <Project>{D3FFDC7B-73CA-4006-A416-056EE7FC7C14}</Project>
       <Name>Microsoft.OData.Edm</Name>
     </ProjectReference>
@@ -50,6 +50,9 @@
     <Compile Include="Microsoft\OData\Core\Evaluation\LiteralFormatter.cs" />
     <Compile Include="Microsoft\OData\Core\Evaluation\KeySerializer.cs" />
     <Compile Include="Microsoft\OData\Core\Evaluation\UrlConvention.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataAsynchronousReader.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataAsynchronousResponseMessage.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataAsynchronousWriter.cs" />
     <Compile Include="Microsoft\OData\Core\ODataDeltaSerializationInfo.cs" />
     <Compile Include="Microsoft\OData\Core\ODataDeltaFeedSerializationInfo.cs" />
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightDeltaReader.cs" />

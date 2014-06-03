@@ -242,9 +242,13 @@ namespace Microsoft.OData.Edm.Csdl
                 mappings = VersioningDictionary<string, string>.Create(string.CompareOrdinal);
             }
 
-            if (alias == null)
+            if (EdmUtil.IsNullOrWhiteSpaceInternal(alias))
             {
-                mappings = mappings.Remove(namespaceName);
+                string val;
+                if (mappings.TryGetValue(namespaceName, out val))
+                {
+                    mappings = mappings.Remove(namespaceName);
+                }
             }
             else
             {

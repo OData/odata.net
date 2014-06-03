@@ -20,6 +20,7 @@ namespace Microsoft.OData.Client
     using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
     using System.Xml.Linq;
 #if !ASTORIA_LIGHT
     using System.Net;
@@ -818,6 +819,15 @@ namespace Microsoft.OData.Client
             return this.BeginLoadProperty(entity, propertyName, (Uri)null /*nextLinkUri*/, callback, state);
         }
 
+        /// <summary>Asynchronously loads the value of the specified property from the data service.</summary>
+        /// <returns>A task that represents the response to the load operation.</returns>
+        /// <param name="entity">The entity that contains the property to load.</param>
+        /// <param name="propertyName">The name of the property on the specified entity to load.</param>
+        public Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName)
+        {
+            return Task<QueryOperationResponse>.Factory.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, null);
+        }
+
         /// <summary>Asynchronously loads a page of related entities from the data service by using the supplied next link URI.</summary>
         /// <returns>An <see cref="T:System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
         /// <param name="entity">The entity that contains the property to load.</param>
@@ -830,6 +840,16 @@ namespace Microsoft.OData.Client
             LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, callback, state, nextLinkUri, null);
             result.BeginExecuteQuery();
             return result;
+        }
+
+        /// <summary>Asynchronously loads a page of related entities from the data service by using the supplied next link URI.</summary>
+        /// <returns>A task that represents the response to the load operation.</returns>
+        /// <param name="entity">The entity that contains the property to load.</param>
+        /// <param name="propertyName">The name of the property on the specified entity to load.</param>
+        /// <param name="nextLinkUri">The URI used to load the next results page.</param>
+        public Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName, Uri nextLinkUri)
+        {
+            return Task<QueryOperationResponse>.Factory.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, nextLinkUri, null);
         }
 
         /// <summary>Asynchronously loads the next page of related entities from the data service by using the supplied query continuation object.</summary>
@@ -845,6 +865,16 @@ namespace Microsoft.OData.Client
             LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, callback, state, null /*requestUri*/, continuation);
             result.BeginExecuteQuery();
             return result;
+        }
+
+        /// <summary>Asynchronously loads the next page of related entities from the data service by using the supplied query continuation object.</summary>
+        /// <returns>A Task that represents the response to the load operation.</returns>
+        /// <param name="entity">The entity that contains the property to load.</param>
+        /// <param name="propertyName">The name of the property on the specified entity to load.</param>
+        /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of related entity data to return from the data service.</param>
+        public Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName, DataServiceQueryContinuation continuation)
+        {
+            return Task<QueryOperationResponse>.Factory.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, continuation, null);
         }
 
         /// <summary>Called to complete the <see cref="M:Microsoft.OData.Client.DataServiceContext.BeginLoadProperty(System.Object,System.String,System.AsyncCallback,System.Object)" /> operation.</summary>
@@ -948,6 +978,8 @@ namespace Microsoft.OData.Client
         }
 
 #endif
+
+
         #endregion
 
         #region GetReadStreamUri
@@ -1005,6 +1037,17 @@ namespace Microsoft.OData.Client
             return result;
         }
 
+        /// <summary>Asynchronously gets the binary data stream that belongs to the specified entity, by using the specified message headers.</summary>
+        /// <returns>A Task that represents an instance of <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> which contains the response stream along with its metadata.</returns>
+        /// <param name="entity">The entity that has a the binary data stream to retrieve. </param>
+        /// <param name="args">Instance of the <see cref="T:Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
+        /// <exception cref="T:System.ArgumentNullException">Any of the parameters supplied to the method is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="T:Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related binary data stream.</exception>
+        public Task<DataServiceStreamResponse> GetReadStreamAsync(object entity, DataServiceRequestArgs args)
+        {
+            return Task<DataServiceStreamResponse>.Factory.FromAsync(this.BeginGetReadStream, this.EndGetReadStream, entity, args, null);
+        }
+
         /// <summary>Asynchronously gets a named binary data stream that belongs to the specified entity, by using the specified message headers.</summary>
         /// <returns>An <see cref="T:System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
         /// <param name="entity">The entity that has the binary data stream to retrieve.</param>
@@ -1019,6 +1062,16 @@ namespace Microsoft.OData.Client
             GetReadStreamResult result = this.CreateGetReadStreamResult(entity, args, callback, state, name);
             result.Begin();
             return result;
+        }
+
+        /// <summary>Asynchronously gets the binary data stream that belongs to the specified entity, by using the specified message headers.</summary>
+        /// <returns>A task that represents an instance of <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> which contains the response stream along with its metadata.</returns>
+        /// <param name="entity">The entity that has a the binary data stream to retrieve. </param>
+        /// <param name="name">The name of the binary stream to request.</param>
+        /// <param name="args">Instance of the <see cref="T:Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
+        public Task<DataServiceStreamResponse> GetReadStreamAsync(object entity, string name, DataServiceRequestArgs args)
+        {
+            return Task<DataServiceStreamResponse>.Factory.FromAsync(this.BeginGetReadStream, this.EndGetReadStream, entity, name, args, null);
         }
 
         /// <summary>Called to complete the asynchronous operation of retrieving a binary data stream.</summary>
@@ -1230,6 +1283,14 @@ namespace Microsoft.OData.Client
             return result;
         }
 
+        /// <summary>Asynchronously submits a group of queries as a batch to the data service.</summary>
+        /// <returns>An Task that represents the DataServiceResult object that indicates the result of the batch operation.</returns>
+        /// <param name="queries">The array of query requests to include in the batch request.</param>
+        public Task<DataServiceResponse> ExecuteBatchAsync(params DataServiceRequest[] queries)
+        {
+            return Task<DataServiceResponse>.Factory.FromAsync((callback, state) => this.BeginExecuteBatch(callback, state, queries), this.EndExecuteBatch, null);
+        }
+
         /// <summary>Called to complete the <see cref="M:Microsoft.OData.Client.DataServiceContext.BeginExecuteBatch(System.AsyncCallback,System.Object,Microsoft.OData.Client.DataServiceRequest[])" />.</summary>
         /// <returns>The DataServiceResult object that indicates the result of the batch operation.</returns>
         /// <param name="asyncResult">An <see cref="T:System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
@@ -1269,6 +1330,15 @@ namespace Microsoft.OData.Client
             return this.InnerBeginExecute<TElement>(requestUri, callback, state, XmlConstants.HttpMethodGet, Util.ExecuteMethodName, null /*singleResult*/);
         }
 
+        /// <summary>Asynchronously sends the request so that this call does not block processing while waiting for the results from the service.</summary>
+        /// <returns>A task represents the result of the operation. </returns>
+        /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI; it can contain $ query parameters.</param>
+        /// <typeparam name="TElement">The type returned by the query.</typeparam>
+        public Task<IEnumerable<TElement>> ExecuteAsync<TElement>(Uri requestUri)
+        {
+            return Task<IEnumerable<TElement>>.Factory.FromAsync(this.BeginExecute<TElement>, this.EndExecute<TElement>, requestUri, null);
+        }
+
         /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
         /// <returns>The result of the operation.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent.</param>
@@ -1283,6 +1353,16 @@ namespace Microsoft.OData.Client
         public IAsyncResult BeginExecute(Uri requestUri, AsyncCallback callback, object state, string httpMethod, params OperationParameter[] operationParameters)
         {
             return this.InnerBeginExecute<object>(requestUri, callback, state, httpMethod, Util.ExecuteMethodNameForVoidResults, false, operationParameters);
+        }
+
+        /// <summary>Asynchronously sends the request so that this call does not block processing while waiting for the results from the service.</summary>
+        /// <returns>A task represents the result of the operation. </returns>
+        /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI; it can contain $ query parameters.</param>
+        /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
+        /// <param name="operationParameters">The operation parameters used.</param>
+        public Task<OperationResponse> ExecuteAsync(Uri requestUri, string httpMethod, params OperationParameter[] operationParameters)
+        {
+            return Task<OperationResponse>.Factory.FromAsync((callback, state) => this.BeginExecute(requestUri, callback, state, httpMethod, operationParameters), this.EndExecute, null);
         }
 
         /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
@@ -1300,6 +1380,18 @@ namespace Microsoft.OData.Client
             return this.InnerBeginExecute<TElement>(requestUri, callback, state, httpMethod, Util.ExecuteMethodName, singleResult, operationParameters);
         }
 
+        /// <summary>Asynchronously sends the request so that this call does not block processing while waiting for the results from the service.</summary>
+        /// <returns>A task represents the result of the operation. </returns>
+        /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI; it can contain $ query parameters.</param>
+        /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
+        /// <param name="singleResult">Attribute used on service operations to specify that they return a single instance of their return element.</param>
+        /// <param name="operationParameters">The operation parameters used.</param>
+        /// <typeparam name="TElement">The type returned by the query.</typeparam>
+        public Task<IEnumerable<TElement>> ExecuteAsync<TElement>(Uri requestUri, string httpMethod, bool singleResult, params OperationParameter[] operationParameters)
+        {
+            return Task<IEnumerable<TElement>>.Factory.FromAsync((callback, state) => this.BeginExecute<TElement>(requestUri, callback, state, httpMethod, singleResult, operationParameters), this.EndExecute<TElement>, null);
+        }
+
         /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
         /// <returns>The result of the operation.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent.</param>
@@ -1315,6 +1407,17 @@ namespace Microsoft.OData.Client
             return this.InnerBeginExecute<TElement>(requestUri, callback, state, httpMethod, Util.ExecuteMethodName, singleResult, operationParameters);
         }
 
+        /// <summary>Asynchronously sends the request so that this call does not block processing while waiting for the results from the service.</summary>
+        /// <returns>A task represents the result of the operation. </returns>
+        /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI; it can contain $ query parameters.</param>
+        /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
+        /// <param name="operationParameters">The operation parameters used.</param>
+        /// <typeparam name="TElement">The type returned by the query.</typeparam>
+        public Task<IEnumerable<TElement>> ExecuteAsync<TElement>(Uri requestUri, string httpMethod, params OperationParameter[] operationParameters)
+        {
+            return Task<IEnumerable<TElement>>.Factory.FromAsync((callback, state) => this.BeginExecute<TElement>(requestUri, callback, state, httpMethod, operationParameters), this.EndExecute<TElement>, null);
+        }
+
         /// <summary>Asynchronously sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
         /// <returns>An <see cref="T:System.IAsyncResult" /> that represents the status of the operation.</returns>
         /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of data to return from the data service.</param>
@@ -1328,6 +1431,15 @@ namespace Microsoft.OData.Client
             QueryComponents qc = continuation.CreateQueryComponents();
             Uri requestUri = qc.Uri;
             return (new DataServiceRequest<T>(requestUri, qc, continuation.Plan)).BeginExecute(this, this, callback, state, Util.ExecuteMethodName);
+        }
+
+        /// <summary>Asynchronously sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
+        /// <returns>A task that represents the results returned by the query operation.</returns>
+        /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of data to return from the data service.</param>
+        /// <typeparam name="TElement">The type returned by the query.</typeparam>
+        public Task<IEnumerable<TElement>> ExecuteAsync<TElement>(DataServiceQueryContinuation<TElement> continuation)
+        {
+            return Task<IEnumerable<TElement>>.Factory.FromAsync(this.BeginExecute, this.EndExecute<TElement>, continuation, null);
         }
 
         /// <summary>Called to complete the <see cref="M:Microsoft.OData.Client.DataServiceContext.BeginExecute``1(System.Uri,System.AsyncCallback,System.Object)" />.</summary>
@@ -1470,7 +1582,14 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Asynchronously submits the pending changes to the data service collected by the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> since the last time changes were saved.</summary>
-        /// <returns>An <see cref="T:System.IAsyncResult" /> that represents the status of the asynchronous operation.</returns>
+        /// <returns>A task that represents a <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> object that indicates the result of the batch operation.</returns>
+        public Task<DataServiceResponse> SaveChangesAsync()
+        {
+            return SaveChangesAsync(this.SaveChangesDefaultOptions);
+        }
+
+        /// <summary>Asynchronously submits the pending changes to the data service collected by the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> since the last time changes were saved.</summary>
+        /// <returns>A task that represents a <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> object that indicates the result of the batch operation.</returns>
         /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
         /// <param name="callback">The delegate to call when the operation is completed.</param>
         /// <param name="state">The user-defined state object that is used to pass context data to the callback method.</param>
@@ -1492,6 +1611,14 @@ namespace Microsoft.OData.Client
             }
 
             return result;
+        }
+
+        /// <summary>Asynchronously submits the pending changes to the data service collected by the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> since the last time changes were saved.</summary>
+        /// <returns>A task that represents a <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> object that indicates the result of the batch operation.</returns>
+        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
+        public Task<DataServiceResponse> SaveChangesAsync(SaveChangesOptions options)
+        {
+            return Task<DataServiceResponse>.Factory.FromAsync(this.BeginSaveChanges, this.EndSaveChanges, options, null);
         }
 
         /// <summary>Called to complete the <see cref="M:Microsoft.OData.Client.DataServiceContext.BeginSaveChanges(System.AsyncCallback,System.Object)" /> operation.</summary>
@@ -2026,7 +2153,49 @@ namespace Microsoft.OData.Client
 
         #endregion
 
+        /// <summary>
+        /// Asynchronously loads all pages of related entities for a specified property from the data service.
+        /// </summary>
+        /// <param name="entity">The entity that contains the property to load.</param>
+        /// <param name="propertyName">The name of the property of the specified entity to load.</param>
+        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the last page request.</returns>
+        internal Task<QueryOperationResponse> LoadPropertyAllPagesAsync(object entity, string propertyName)
+        {
+            var currentTask = Task<QueryOperationResponse>.Factory.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, null);
+            var nextTask = currentTask.ContinueWith(t => this.ContinuePage(t.Result, entity, propertyName));
+            return nextTask;
+        }
+
 #if !ASTORIA_LIGHT && !PORTABLELIB
+
+        /// <summary>
+        /// Loads all pages of related entities for a specified property from the data service.Not supported by the WCF Data Services 5.0 client for Silverlight.
+        /// </summary>
+        /// <param name="entity">The entity that contains the property to load.</param>
+        /// <param name="propertyName">The name of the property of the specified entity to load.</param>
+        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the last page request.</returns>
+        internal QueryOperationResponse LoadPropertyAllPages(object entity, string propertyName)
+        {
+            DataServiceQueryContinuation continuation = null;
+            QueryOperationResponse response;
+            do
+            {
+                if (continuation == null)
+                {
+                    response = this.LoadProperty(entity, propertyName, (Uri)null);
+                }
+                else
+                {
+                    response = this.LoadProperty(entity, propertyName, continuation);
+                }
+
+                continuation = response.GetContinuation();
+            }
+            while (continuation != null);
+
+            return response;
+        }
+
         /// <summary>
         /// Execute the <paramref name="requestUri"/> using <paramref name="httpMethod"/>.
         /// </summary>
@@ -2361,6 +2530,27 @@ namespace Microsoft.OData.Client
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Continue to asynchronously loads the next page of related entities for a specified property from the data service.
+        /// </summary>
+        /// <param name="response">The response of previous page</param>
+        /// <param name="entity">The entity that contains the property to load.</param>
+        /// <param name="propertyName">The name of the property of the specified entity to load.</param>
+        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the request.</returns>
+        private QueryOperationResponse ContinuePage(QueryOperationResponse response, object entity, string propertyName)
+        {
+            var continuation = response.GetContinuation();
+            if (continuation != null)
+            {
+                var currentTask = Task<QueryOperationResponse>.Factory.FromAsync(this.BeginLoadProperty(entity, propertyName, continuation, null, null), this.EndLoadProperty);
+                var nextTask = currentTask.ContinueWith(t => this.ContinuePage(t.Result, entity, propertyName));
+                Task.WaitAll(new Task[] { currentTask, nextTask });
+                return nextTask.Result;
+            }
+
+            return response;
         }
 
         /// <summary

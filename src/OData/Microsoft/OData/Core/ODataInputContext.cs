@@ -17,6 +17,7 @@ namespace Microsoft.OData.Core
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
+    using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Values;
     using Microsoft.OData.Core.Evaluation;
@@ -231,6 +232,26 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// Create an <see cref="ODataAsynchronousReader"/>.
+        /// </summary>
+        /// <returns>The newly created <see cref="ODataAsynchronousReader"/>.</returns>
+        internal virtual ODataAsynchronousReader CreateAsynchronousReader()
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Asynchronous);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously create an <see cref="ODataAsynchronousReader"/>.
+        /// </summary>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataAsynchronousReader"/>.</returns>
+        internal virtual Task<ODataAsynchronousReader> CreateAsynchronousReaderAsync()
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Asynchronous);
+        }
+#endif
+
+        /// <summary>
         /// Creates an <see cref="ODataReader" /> to read a feed.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
@@ -403,8 +424,9 @@ namespace Microsoft.OData.Core
         /// This method reads the metadata document from the input and returns 
         /// an <see cref="IEdmModel"/> that represents the read metadata document.
         /// </summary>
+        /// <param name="getReferencedModelReaderFunc">The function to load referenced model xml. If null, will stop loading the referenced models. Normally it should throw no exception.</param>
         /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
-        internal virtual IEdmModel ReadMetadataDocument()
+        internal virtual IEdmModel ReadMetadataDocument(Func<Uri, XmlReader> getReferencedModelReaderFunc)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.MetadataDocument);
         }
@@ -559,7 +581,7 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created instance of duplicate property names checker.</returns>
         internal DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
         {
-            return new DuplicatePropertyNamesChecker(this.MessageReaderSettings.ReaderBehavior.AllowDuplicatePropertyNames, this.ReadingResponse);
+            return new DuplicatePropertyNamesChecker(this.MessageReaderSettings.ReaderBehavior.AllowDuplicatePropertyNames, this.ReadingResponse, !this.messageReaderSettings.EnableFullValidation);
         }
 
         /// <summary>

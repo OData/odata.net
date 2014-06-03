@@ -138,7 +138,20 @@ namespace Microsoft.OData.Core
                 { 
                     new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = ApplicationXmlMediaType },
                     new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = TextXmlMediaType },
-                }
+                },
+
+                // delta
+                new MediaTypeWithFormat[]
+                { 
+                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = new MediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeAtomXmlSubType, new KeyValuePair<string, string>(MimeConstants.MimeTypeParameterName, MimeConstants.MimeTypeParameterValueFeed)) },
+                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = ApplicationAtomXmlMediaType },
+                },
+
+                // async
+                new MediaTypeWithFormat[]
+                { 
+                    new MediaTypeWithFormat { Format = ODataFormat.RawValue, MediaType = new MediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeHttpSubType) },
+                },
 #pragma warning restore 618
             };
 
@@ -226,7 +239,18 @@ namespace Microsoft.OData.Core
                  // individual property
                 new MediaTypeWithFormat[]
                 { 
-                }
+                },
+
+                // delta
+                new MediaTypeWithFormat[]
+                { 
+                },
+
+                // async
+                new MediaTypeWithFormat[]
+                { 
+                    new MediaTypeWithFormat { Format = ODataFormat.RawValue, MediaType = new MediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeHttpSubType) },
+                },
             };
         #endregion Default media types per payload kind
 
@@ -280,7 +304,6 @@ namespace Microsoft.OData.Core
         {
             this.EnableAtom = enableAtom;
 
-            // TODO: change parameter to EnableAtom
             this.mediaTypesForPayloadKind = CloneDefaultMediaTypes(enableAtom);
 
             // Add JSON-light media types into the media type table

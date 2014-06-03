@@ -244,6 +244,32 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
+        /// Creates an <see cref="ODataAsynchronousWriter" /> to write an async response.
+        /// </summary>
+        /// <returns>The created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override ODataAsynchronousWriter CreateODataAsynchronousWriter()
+        {
+            this.AssertSynchronous();
+
+            return this.CreateODataAsynchronousWriterImplementation();
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataAsynchronousWriter" /> to write an async response.
+        /// </summary>
+        /// <returns>A running task for the created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override Task<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataAsynchronousWriterImplementation());
+        }
+#endif
+
+        /// <summary>
         /// Writes a single value as the message body.
         /// </summary>
         /// <param name="value">The value to write.</param>
@@ -412,6 +438,19 @@ namespace Microsoft.OData.Core
             ODataBatchWriter batchWriter = new ODataBatchWriter(this, batchBoundary);
             this.outputInStreamErrorListener = batchWriter;
             return batchWriter;
+        }
+
+        /// <summary>
+        /// Creates an async writer.
+        /// </summary>
+        /// <returns>The newly created async writer.</returns>
+        private ODataAsynchronousWriter CreateODataAsynchronousWriterImplementation()
+        {
+            // Async writer needs the default encoding to not use the preamble.
+            this.encoding = this.encoding ?? MediaTypeUtils.EncodingUtf8NoPreamble;
+            ODataAsynchronousWriter asyncWriter = new ODataAsynchronousWriter(this);
+            this.outputInStreamErrorListener = asyncWriter;
+            return asyncWriter;
         }
     }
 }

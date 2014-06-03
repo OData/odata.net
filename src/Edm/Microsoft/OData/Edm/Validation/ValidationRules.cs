@@ -942,7 +942,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             complexType.Location(),
                             EdmErrorCode.InvalidAbstractComplexType,
-                            Strings.EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind);
+                            Strings.EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen(complexType.FullName()));
                     }
                 });
 
@@ -1438,7 +1438,7 @@ namespace Microsoft.OData.Edm.Validation
                                 // for the error below.
                                 if (!context.IsBad(entitySet))
                                 {
-                                    IEdmEntitySet foundEntitySet = operationImport.Container.FindEntitySet(entitySet.Name);
+                                    IEdmEntitySet foundEntitySet = operationImport.Container.FindEntitySetExtended(entitySet.Name);
                                     if (foundEntitySet == null)
                                     {
                                         context.AddError(
@@ -1518,6 +1518,27 @@ namespace Microsoft.OData.Edm.Validation
                                 EdmErrorCode.OperationImportSpecifiesEntitySetButDoesNotReturnEntityType,
                                 Strings.EdmModel_Validator_Semantic_OperationImportSpecifiesEntitySetButNotEntityType(operationImport.Name));
                         }
+                    }
+                });
+
+        #endregion
+
+        #region IEdmFunctionImport
+
+        /// <summary>
+        /// Validates that the function import included in service document must not have parameters.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly ValidationRule<IEdmFunctionImport> FunctionImportWithParameterShouldNotBeIncludedInServiceDocument =
+            new ValidationRule<IEdmFunctionImport>(
+                (context, functionImport) =>
+                {
+                    if (functionImport.IncludeInServiceDocument && functionImport.Function.Parameters.Any())
+                    {
+                        context.AddError(
+                            functionImport.Location(),
+                            EdmErrorCode.FunctionImportWithParameterShouldNotBeIncludedInServiceDocument,
+                            Strings.EdmModel_Validator_Semantic_FunctionImportWithParameterShouldNotBeIncludedInServiceDocument(functionImport.Name));
                     }
                 });
 
@@ -2091,7 +2112,7 @@ namespace Microsoft.OData.Edm.Validation
                             IEdmEntityContainer container = entitySet.Container as IEdmEntityContainer;
                             if (container != null)
                             {
-                                foundTarget = (container.FindEntitySet(entitySet.Name) != null);
+                                foundTarget = (container.FindEntitySetExtended(entitySet.Name) != null);
                             }
                         }
                         else
@@ -2120,7 +2141,7 @@ namespace Microsoft.OData.Edm.Validation
                                         IEdmOperationImport operationImport = target as IEdmOperationImport;
                                         if (operationImport != null)
                                         {
-                                            foundTarget = operationImport.Container.FindOperationImports(operationImport.Name).Any();
+                                            foundTarget = operationImport.Container.FindOperationImportsExtended(operationImport.Name).Any();
                                         }
                                         else
                                         {
@@ -2159,7 +2180,7 @@ namespace Microsoft.OData.Edm.Validation
                                                         if (declaringFunctionImport != null)
                                                         {
                                                             var container = declaringFunctionImport.Container as IEdmEntityContainer;
-                                                            foreach (var currentFunction in container.FindOperationImports(declaringFunctionImport.Name))
+                                                            foreach (var currentFunction in container.FindOperationImportsExtended(declaringFunctionImport.Name))
                                                             {
                                                                 if (currentFunction.Operation.FindParameter(operationParameter.Name) != null)
                                                                 {

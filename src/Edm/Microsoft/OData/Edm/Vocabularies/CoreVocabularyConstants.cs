@@ -15,10 +15,13 @@ namespace Microsoft.OData.Edm.Vocabularis
     /// </summary>
     public static class CoreVocabularyConstants
     {
-        /// <summary>Core.OptimisticConcurrencyControl </summary>
-        public const string CoreOptimisticConcurrencyControl = "Core.OptimisticConcurrencyControl";
+        /// <summary>Org.OData.Core.V1.OptimisticConcurrencyControl </summary>
+        public const string CoreOptimisticConcurrencyControl = "Org.OData.Core.V1.OptimisticConcurrencyControl";
 
-        /// <summary>Core.Description </summary>
-        public const string CoreDescription = "Core.Description";
+        /// <summary>Org.OData.Core.V1.Description </summary>
+        public const string CoreDescription = "Org.OData.Core.V1.Description";
+
+        /// <summary>Org.OData.Core.V1.LongDescription </summary>
+        public const string CoreLongDescription = "Org.OData.Core.V1.LongDescription";
     }
 }

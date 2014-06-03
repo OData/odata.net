@@ -51,7 +51,7 @@ namespace Microsoft.OData.Client.Materialization
             // must have been false otherwise we would have not end up here). 
             // This bug is about investigating when we actually do call type resolver and fix it so that we call it when needed and don't
             // call it when we should not (i.e. it should not be called for types created with "new" operator").
-            if (WebUtil.IsWireTypeCollection(complexValue.TypeName))
+            if (!string.IsNullOrEmpty(complexValue.TypeName))
             {
                 complexType = this.MaterializerContext.ResolveTypeForMaterialization(propertyType, complexValue.TypeName);
             }
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Client.Materialization
                 complexType = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(propertyType));
             }
 
-            object complexInstance = this.CreateNewInstance(complexType.EdmType.ToEdmTypeReference(true), propertyType);
+            object complexInstance = this.CreateNewInstance(complexType.EdmType.ToEdmTypeReference(true), complexType.ElementType);
             this.MaterializeDataValues(complexType, complexValue.Properties, this.MaterializerContext.IgnoreMissingProperties);
             this.ApplyDataValues(complexType, complexValue.Properties, complexInstance);
             complexValue.SetMaterializedValue(complexInstance);

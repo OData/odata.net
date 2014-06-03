@@ -25,6 +25,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for one CsdlModel and its referenced CsdlModels.
     /// </summary>
+    [DebuggerDisplay("CsdlSemanticsModel({string.Join(\",\", DeclaredNamespaces)})")]
     internal class CsdlSemanticsModel : EdmModelBase, IEdmCheckable
     {
         private readonly CsdlSemanticsModel mainEdmModel;    // parent IEdmModel
@@ -318,7 +319,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             if (list != null && mappings != null && name.Contains("."))
             {
                 var typeAlias = name.Split('.').First();
-                var ns = list.FirstOrDefault(n => mappings.Get(n) == typeAlias);
+                var ns = list.FirstOrDefault(n =>
+                {
+                    string alias;
+                    return mappings.TryGetValue(n, out alias) && alias == typeAlias;
+                });
                 return (ns != null) ? string.Format(CultureInfo.InvariantCulture, "{0}.{1}", ns, name.Substring(typeAlias.Length + 1)) : null;
             }
 

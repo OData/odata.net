@@ -35,7 +35,7 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public static class ExtensionMethods
     {
-        private const int ContainerExtendsMaxDeepth = 100;
+        private const int ContainerExtendsMaxDepth = 100;
         private const string CollectionTypeFormat = EdmConstants.Type_Collection + "({0})";
 
         #region IEdmModel
@@ -715,27 +715,47 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets description for term Core.Description from a target annotatable
+        /// Gets description for term Org.OData.Core.V1.Description from a target annotatable
         /// </summary>
         /// <param name="model">The model referenced to.</param>
         /// <param name="target">The target Annotatable to find annotation</param>
-        /// <returns>Description for term Core.Description</returns>
+        /// <returns>Description for term Org.OData.Core.V1.Description</returns>
         public static string GetDescriptionAnnotation(this IEdmModel model, IEdmVocabularyAnnotatable target)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(target, "target");
 
-            string fullName = EdmUtil.FullyQualifiedName(target);
-            if (fullName != null)
+            IEdmValueAnnotation annotation = model.FindVocabularyAnnotations<IEdmValueAnnotation>(target, CoreVocabularyModel.DescriptionTerm).FirstOrDefault();
+            if (annotation != null)
             {
-                IEdmVocabularyAnnotation annotation = model.VocabularyAnnotations.FirstOrDefault(p => EdmUtil.FullyQualifiedName(p.Target) == fullName && p.Term.FullName() == CoreVocabularyConstants.CoreDescription);
-                if (annotation is IEdmValueAnnotation)
+                IEdmStringConstantExpression stringConstant = annotation.Value as IEdmStringConstantExpression;
+                if (stringConstant != null)
                 {
-                    IEdmStringConstantExpression stringConstant = (annotation as IEdmValueAnnotation).Value as IEdmStringConstantExpression;
-                    if (stringConstant != null)
-                    {
-                        return stringConstant.Value;
-                    }
+                    return stringConstant.Value;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets description for term Org.OData.Core.V1.LongDescription from a target annotatable
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="target">The target Annotatable to find annotation</param>
+        /// <returns>Description for term Org.OData.Core.V1.LongDescription</returns>
+        public static string GetLongDescriptionAnnotation(this IEdmModel model, IEdmVocabularyAnnotatable target)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+
+            IEdmValueAnnotation annotation = model.FindVocabularyAnnotations<IEdmValueAnnotation>(target, CoreVocabularyModel.LongDescriptionTerm).FirstOrDefault();
+            if (annotation != null)
+            {
+                IEdmStringConstantExpression stringConstant = annotation.Value as IEdmStringConstantExpression;
+                if (stringConstant != null)
+                {
+                    return stringConstant.Value;
                 }
             }
 
@@ -856,7 +876,7 @@ namespace Microsoft.OData.Edm
                     IEdmEntityContainer container = model.EntityContainer;
                     if (container != null)
                     {
-                        entitySet = FindInContainerAndExtendsRecursively(container, simpleEntitySetName, (c, n) => c.FindEntitySet(n), ContainerExtendsMaxDeepth);
+                        entitySet = container.FindEntitySetExtended(simpleEntitySetName);
                     }
                 }
             }
@@ -883,8 +903,7 @@ namespace Microsoft.OData.Edm
             {
                 if (model.ExistsContainer(containerName))
                 {
-                    // TODO: REF: also find in the extended container
-                    singleton = model.EntityContainer.FindSingleton(simpleSingletonName);
+                    singleton = model.EntityContainer.FindSingletonExtended(simpleSingletonName);
 
                     if (singleton != null)
                     {
@@ -913,8 +932,7 @@ namespace Microsoft.OData.Edm
             {
                 if (model.ExistsContainer(containerName))
                 {
-                    // TODO: REF: also find in the extended container
-                    operationImports = model.EntityContainer.FindOperationImports(simpleOperationName);
+                    operationImports = model.EntityContainer.FindOperationImportsExtended(simpleOperationName);
 
                     if (operationImports != null && operationImports.Count() > 0)
                     {
@@ -941,7 +959,7 @@ namespace Microsoft.OData.Edm
                 IEdmEntityContainer container = model.EntityContainer;
                 if (container != null)
                 {
-                    return FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindEntitySet(n), ContainerExtendsMaxDeepth);
+                    return container.FindEntitySetExtended(qualifiedName);
                 }
             }
 
@@ -963,7 +981,7 @@ namespace Microsoft.OData.Edm
                 IEdmEntityContainer container = model.EntityContainer;
                 if (container != null)
                 {
-                    return FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindSingleton(n), ContainerExtendsMaxDeepth);
+                    return container.FindSingletonExtended(qualifiedName);
                 }
             }
 
@@ -1003,7 +1021,7 @@ namespace Microsoft.OData.Edm
                 IEdmEntityContainer container = model.EntityContainer;
                 if (container != null)
                 {
-                    return FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindOperationImports(n), ContainerExtendsMaxDeepth);
+                    return container.FindOperationImportsExtended(qualifiedName);
                 }
             }
 
@@ -1015,7 +1033,7 @@ namespace Microsoft.OData.Edm
         #region EdmModel
 
         /// <summary>
-        /// Set annotation Core.OptimisticConcurrencyControl to EntitySet
+        /// Set annotation Org.OData.Core.V1.OptimisticConcurrencyControl to EntitySet
         /// </summary>
         /// <param name="model">The model to add annotation</param>
         /// <param name="target">The target entitySet to set the inline annotation</param>
@@ -1036,7 +1054,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Set Core.Description to target.
+        /// Set Org.OData.Core.V1.Description to target.
         /// </summary>
         /// <param name="model">The model referenced to.</param>
         /// <param name="target">The target Annotatable to add annotation.</param>
@@ -1052,6 +1070,22 @@ namespace Microsoft.OData.Edm
             model.SetVocabularyAnnotation(annotation);
         }
 
+        /// <summary>
+        /// Set Org.OData.Core.V1.LongDescription to target.
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="target">The target Annotatable to add annotation.</param>
+        /// <param name="description">Decription to be added.</param>
+        public static void SetLongDescriptionAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, string description)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+            EdmUtil.CheckArgumentNull(description, "description");
+
+            EdmAnnotation annotation = new EdmAnnotation(target, CoreVocabularyModel.LongDescriptionTerm, new EdmStringConstant(description));
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+        }
         #endregion
 
         #region IEdmElement
@@ -1127,7 +1161,7 @@ namespace Microsoft.OData.Edm
         public static IEnumerable<IEdmEntitySet> EntitySets(this IEdmEntityContainer container)
         {
             EdmUtil.CheckArgumentNull(container, "container");
-            return container.Elements.OfType<IEdmEntitySet>();
+            return container.AllElements().OfType<IEdmEntitySet>();
         }
 
         /// <summary>
@@ -1138,7 +1172,7 @@ namespace Microsoft.OData.Edm
         public static IEnumerable<IEdmSingleton> Singletons(this IEdmEntityContainer container)
         {
             EdmUtil.CheckArgumentNull(container, "container");
-            return container.Elements.OfType<IEdmSingleton>();
+            return container.AllElements().OfType<IEdmSingleton>();
         }
 
         /// <summary>
@@ -1149,7 +1183,7 @@ namespace Microsoft.OData.Edm
         public static IEnumerable<IEdmOperationImport> OperationImports(this IEdmEntityContainer container)
         {
             EdmUtil.CheckArgumentNull(container, "container");
-            return container.Elements.OfType<IEdmOperationImport>();
+            return container.AllElements().OfType<IEdmOperationImport>();
         }
 
         #endregion
@@ -2277,6 +2311,55 @@ namespace Microsoft.OData.Edm
             model.SetAnnotationValue(element, EdmConstants.DocumentationUri, EdmConstants.DocumentationAnnotation, documentation);
         }
 
+        internal static IEnumerable<IEdmEntityContainerElement> AllElements(this IEdmEntityContainer container, int depth = ContainerExtendsMaxDepth)
+        {
+            if (depth <= 0)
+            {
+                throw new InvalidOperationException(Edm.Strings.Bad_CyclicEntityContainer(container.FullName()));
+            }
+
+            CsdlSemanticsEntityContainer semanticsEntityContainer = container as CsdlSemanticsEntityContainer;
+            if (semanticsEntityContainer == null || semanticsEntityContainer.Extends == null)
+            {
+                return container.Elements;
+            }
+
+            return container.Elements.Concat(semanticsEntityContainer.Extends.AllElements(depth - 1));
+        }
+
+        /// <summary>
+        /// Searches for entity set by the given name that may be container qualified in default container and .Extends containers.
+        /// </summary>
+        /// <param name="container">The container to search.</param>
+        /// <param name="qualifiedName">The name which might be container qualified. If no container name is provided, then default container will be searched.</param>
+        /// <returns>The entity set found or empty if none found.</returns>
+        internal static IEdmEntitySet FindEntitySetExtended(this IEdmEntityContainer container, string qualifiedName)
+        {
+            return FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindEntitySet(n), ContainerExtendsMaxDepth);
+        }
+
+        /// <summary>
+        /// Searches for singleton by the given name that may be container qualified in default container and .Extends containers. If no container name is provided, then default container will be searched.
+        /// </summary>
+        /// <param name="container">The container to search.</param>
+        /// <param name="qualifiedName">The name which might be container qualified. If no container name is provided, then default container will be searched.</param>
+        /// <returns>The singleton found or empty if none found.</returns>
+        internal static IEdmSingleton FindSingletonExtended(this IEdmEntityContainer container, string qualifiedName)
+        {
+            return FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindSingleton(n), ContainerExtendsMaxDepth);
+        }
+
+        /// <summary>
+        /// Searches for the operation imports by the specified name in default container and .Extends containers, returns an empty enumerable if no operation import exists.
+        /// </summary>
+        /// <param name="container">The container to search.</param>
+        /// <param name="qualifiedName">The qualified name of the operation import which may or may not include the container name.</param>
+        /// <returns>All operation imports that can be found by the specified name, returns an empty enumerable if no operation import exists.</returns>
+        internal static IEnumerable<IEdmOperationImport> FindOperationImportsExtended(this IEdmEntityContainer container, string qualifiedName)
+        {
+            return FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindOperationImports(n), ContainerExtendsMaxDepth);
+        }
+
         private static T FindAcrossModels<T, TInput>(this IEdmModel model, TInput qualifiedName, Func<IEdmModel, TInput, T> finder, Func<T, T, T> ambiguousCreator)
         {
             T candidate = finder(model, qualifiedName);
@@ -2363,7 +2446,9 @@ namespace Microsoft.OData.Edm
             }
 
             T ret = finderFunc(container, simpleName);
-            if (ret == null)
+            if (ret == null
+                || ret is IEnumerable<IEdmOperationImport>
+                    && !(ret as IEnumerable<IEdmOperationImport>).Any())
             {
                 // for CsdlSemanticsEntityContainer, try searching .Extends container :
                 // (after IEdmModel has public Extends property, don't need to check CsdlSemanticsEntityContainer)

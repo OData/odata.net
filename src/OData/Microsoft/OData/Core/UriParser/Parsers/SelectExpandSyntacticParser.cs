@@ -32,10 +32,19 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             out ExpandToken expandTree, 
             out SelectToken selectTree)
         {
-            SelectExpandParser selectParser = new SelectExpandParser(selectClause, configuration.Settings.SelectExpandLimit);
+            SelectExpandParser selectParser = new SelectExpandParser(selectClause, configuration.Settings.SelectExpandLimit)
+            {
+                MaxPathDepth = configuration.Settings.PathLimit
+            };
             selectTree = selectParser.ParseSelect();
 
-            SelectExpandParser expandParser = new SelectExpandParser(expandClause, configuration.Settings.SelectExpandLimit);
+            SelectExpandParser expandParser = new SelectExpandParser(expandClause, configuration.Settings.SelectExpandLimit)
+            {
+                MaxPathDepth = configuration.Settings.PathLimit,
+                MaxFilterDepth = configuration.Settings.FilterLimit,
+                MaxOrderByDepth = configuration.Settings.OrderByLimit,
+                MaxSearchDepth = configuration.Settings.SearchLimit
+            };
             expandTree = expandParser.ParseExpand();
         }
     }

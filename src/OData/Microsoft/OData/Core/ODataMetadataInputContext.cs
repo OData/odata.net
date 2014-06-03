@@ -95,10 +95,11 @@ namespace Microsoft.OData.Core
         /// This method reads the metadata document from the input and returns 
         /// an <see cref="IEdmModel"/> that represents the read metadata document.
         /// </summary>
+        /// <param name="getReferencedModelReaderFunc">The function to load referenced model xml. If null, will stop loading the referenced models. Normally it should throw no exception.</param>
         /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
-        internal override IEdmModel ReadMetadataDocument()
+        internal override IEdmModel ReadMetadataDocument(Func<Uri, XmlReader> getReferencedModelReaderFunc)
         {
-            return this.ReadMetadataDocumentImplementation();
+            return this.ReadMetadataDocumentImplementation(getReferencedModelReaderFunc);
         }
 
         /// <summary>
@@ -124,12 +125,13 @@ namespace Microsoft.OData.Core
         /// This methods reads the metadata from the input and returns an <see cref="IEdmModel"/>
         /// representing the read metadata information.
         /// </summary>
+        /// <param name="getReferencedModelReaderFunc">The function to load referenced model xml. If null, will stop loading the referenced models. Normally it should throw no exception.</param>
         /// <returns>An <see cref="IEdmModel"/> instance representing the read metadata.</returns>
-        private IEdmModel ReadMetadataDocumentImplementation()
+        private IEdmModel ReadMetadataDocumentImplementation(Func<Uri, XmlReader> getReferencedModelReaderFunc)
         {
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            if (!EdmxReader.TryParse(this.xmlReader, out model, out errors))
+            if (!EdmxReader.TryParse(this.xmlReader, getReferencedModelReaderFunc, out model, out errors))
             {
                 Debug.Assert(errors != null, "errors != null");
 

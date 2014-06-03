@@ -1283,5 +1283,15 @@ namespace Microsoft.OData.Edm.Validation
         /// Reference must contatin at least one Include or IncludeAnnotations
         /// </summary>
         ReferenceElementMustContainAtLeastOneIncludeOrIncludeAnnotationsElement = 372,
+
+        /// <summary>
+        /// Function import must not have parameters if included in service document.
+        /// </summary>
+        FunctionImportWithParameterShouldNotBeIncludedInServiceDocument = 373,
+
+        /// <summary>
+        /// Unresolved Uri found in edmx:Reference, getReferencedModelReaderFunc should not return null when the URI is not a well-known schema.
+        /// </summary>
+        UnresolvedReferenceUriInEdmxReference = 374,
     }
 }

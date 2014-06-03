@@ -130,7 +130,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="owningType">The owning type of the property.</param>
         /// <param name="edmProperty">The metadata of the property.</param>
         /// <returns>true if the property is an open property; false if it is not, or if openness cannot be determined</returns>
-        private static bool IsOpenPropertyType(ODataProperty property, IEdmStructuredType owningType, IEdmProperty edmProperty)
+        private bool IsOpenProperty(ODataProperty property, IEdmStructuredType owningType, IEdmProperty edmProperty)
         {
             Debug.Assert(property != null, "property != null");
             if (property.SerializationInfo != null)
@@ -138,7 +138,8 @@ namespace Microsoft.OData.Core.JsonLight
                 return property.SerializationInfo.PropertyKind == ODataPropertyKind.Open;
             }
 
-            return owningType != null && owningType.IsOpen && edmProperty == null;
+            return (!this.WritingResponse && owningType == null) // Treat property as dynamic property when writing request and owning type is null
+                || (owningType != null && owningType.IsOpen && edmProperty == null);
         }
 
         /// <summary>
@@ -170,9 +171,14 @@ namespace Microsoft.OData.Core.JsonLight
 
             WriterValidationUtils.ValidatePropertyName(propertyName);
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
-            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(propertyName, owningType);
-            IEdmTypeReference propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
-
+            IEdmProperty edmProperty = null;
+            IEdmTypeReference propertyTypeReference = null;
+            if (this.JsonLightOutputContext.MessageWriterSettings.EnableFullValidation)
+            {
+                edmProperty = WriterValidationUtils.ValidatePropertyDefined(propertyName, owningType);
+                propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
+            }
+            
             ODataValue value = property.ODataValue;
             ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
 
@@ -212,8 +218,8 @@ namespace Microsoft.OData.Core.JsonLight
                 return;
             }
 
-            bool isOpenPropertyType = IsOpenPropertyType(property, owningType, edmProperty);
-            if (isOpenPropertyType)
+            bool isOpenPropertyType = this.IsOpenProperty(property, owningType, edmProperty);
+            if (isOpenPropertyType && this.JsonLightOutputContext.MessageWriterSettings.EnableFullValidation)
             {
                 ValidationUtils.ValidateOpenPropertyValue(propertyName, value);
             }

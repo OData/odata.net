@@ -233,34 +233,13 @@ namespace Microsoft.OData.Core.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(entitySetName, "entitySetName");
-
-            IEdmEntitySet entitySet = model.TryResolveEntitySet(entitySetName);
+            IEdmEntitySet entitySet = model.FindDeclaredEntitySet(entitySetName);
             if (entitySet == null)
             {
                 throw new ODataException(ODataErrorStrings.ODataQueryUtils_DidNotFindEntitySet(entitySetName));
             }
 
             return entitySet;
-        }
-
-        /// <summary>
-        /// Resolves a name to an <see cref="IEdmEntitySet"/> instance.
-        /// </summary>
-        /// <param name="model">The model to resolve the name against.</param>
-        /// <param name="entitySetName">The name of the entity set to look up.</param>
-        /// <returns>An <see cref="IEdmEntitySet"/> instance with the specified <paramref name="entitySetName"/> or null if no such entity set exists.</returns>
-        public static IEdmEntitySet TryResolveEntitySet(this IEdmModel model, string entitySetName)
-        {
-            ExceptionUtils.CheckArgumentNotNull(model, "model");
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(entitySetName, "entitySetName");
-
-            IEdmEntityContainer entityContainer = model.EntityContainer;
-            if (entityContainer != null)
-            {
-                return entityContainer.FindEntitySet(entitySetName);               
-            }
-
-            return null;
         }
     }
 }

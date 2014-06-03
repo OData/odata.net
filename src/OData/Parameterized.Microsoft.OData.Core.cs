@@ -89,6 +89,15 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "ATOM support is obsolete."
+        /// </summary>
+        internal static string ODataFormat_AtomFormatObsoleted {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataFormat_AtomFormatObsoleted);
+            }
+        }
+
+        /// <summary>
         /// A string like "The format '{0}' does not support writing a payload of kind '{1}'."
         /// </summary>
         internal static string ODataOutputContext_UnsupportedPayloadKindForFormat(object p0, object p1) {
@@ -103,7 +112,7 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "The ServiceRoot property in ODataMessageWriterSettings.ODataUri must be set when when writing a payload."
+        /// A string like "The ServiceRoot property in ODataMessageWriterSettings.ODataUri must be set when writing a payload."
         /// </summary>
         internal static string ODataOutputContext_MetadataDocumentUriMissing {
             get {
@@ -551,6 +560,15 @@ namespace Microsoft.OData.Core {
         internal static string ODataMessageWriter_DeltaInRequest {
             get {
                 return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataMessageWriter_DeltaInRequest);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Cannot write async in request payload."
+        /// </summary>
+        internal static string ODataMessageWriter_AsyncInRequest {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataMessageWriter_AsyncInRequest);
             }
         }
 
@@ -1249,6 +1267,136 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "When not writing an async response, you cannot create an async response message."
+        /// </summary>
+        internal static string ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse);
+            }
+        }
+
+        /// <summary>
+        /// A string like "You cannot create an async response message more than once."
+        /// </summary>
+        internal static string ODataAsyncWriter_CannotCreateResponseMoreThanOnce {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncWriter_CannotCreateResponseMoreThanOnce);
+            }
+        }
+
+        /// <summary>
+        /// A string like "A synchronous operation was called on an asynchronous async writer. Calls on an async writer instance must be either all synchronous or all asynchronous."
+        /// </summary>
+        internal static string ODataAsyncWriter_SyncCallOnAsyncWriter {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncWriter_SyncCallOnAsyncWriter);
+            }
+        }
+
+        /// <summary>
+        /// A string like "An asynchronous operation was called on a synchronous async writer. Calls on an async writer instance must be either all synchronous or all asynchronous."
+        /// </summary>
+        internal static string ODataAsyncWriter_AsyncCallOnSyncWriter {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncWriter_AsyncCallOnSyncWriter);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The WriteError and WriteErrorAsync methods on ODataMessageWriter cannot be called when an async message is being written by using ODataAsyncWriter. In OData, writing an in-stream error for an async payload is not supported."
+        /// </summary>
+        internal static string ODataAsyncWriter_CannotWriteInStreamErrorForAsync {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncWriter_CannotWriteInStreamErrorForAsync);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The message header '{0}' is invalid. The header value must be of the format '&lt;header name&gt;: &lt;header value&gt;'."
+        /// </summary>
+        internal static string ODataAsyncReader_InvalidHeaderSpecified(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncReader_InvalidHeaderSpecified,p0);
+        }
+
+        /// <summary>
+        /// A string like "When not reading an async response, you cannot create an async response message."
+        /// </summary>
+        internal static string ODataAsyncReader_CannotCreateResponseWhenNotReadingResponse {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncReader_CannotCreateResponseWhenNotReadingResponse);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The response line '{0}' is invalid. The response line at the start of the async reponse must be of the format 'HttpVersion StatusCode StatusCodeString'."
+        /// </summary>
+        internal static string ODataAsyncReader_InvalidResponseLine(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncReader_InvalidResponseLine,p0);
+        }
+
+        /// <summary>
+        /// A string like "The HTTP version '{0}' used in an async response is not valid. The value must be '{1}'."
+        /// </summary>
+        internal static string ODataAsyncReader_InvalidHttpVersionSpecified(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncReader_InvalidHttpVersionSpecified,p0,p1);
+        }
+
+        /// <summary>
+        /// A string like "The HTTP status code '{0}' is invalid. An HTTP status code must be an integer value."
+        /// </summary>
+        internal static string ODataAsyncReader_NonIntegerHttpStatusCode(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncReader_NonIntegerHttpStatusCode,p0);
+        }
+
+        /// <summary>
+        /// A string like "The header '{0}' was specified multiple times. Each header must appear only once."
+        /// </summary>
+        internal static string ODataAsyncReader_DuplicateHeaderFound(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncReader_DuplicateHeaderFound,p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid multi-byte encoding '{0}' detected. Multi-byte encodings other than UTF-8 are only supported for async payloads. They are not supported in batch or change set parts."
+        /// </summary>
+        internal static string ODataAsyncReader_MultiByteEncodingsNotSupported(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncReader_MultiByteEncodingsNotSupported,p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid new line '{0}' encountered. Should be '\r\n'."
+        /// </summary>
+        internal static string ODataAsyncReader_InvalidNewLineEncountered(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncReader_InvalidNewLineEncountered,p0);
+        }
+
+        /// <summary>
+        /// A string like "Encountered an unexpected end of input while reading the async payload. Could be due to calling CreateResponseMessage() more than once."
+        /// </summary>
+        internal static string ODataAsyncReader_UnexpectedEndOfInput {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncReader_UnexpectedEndOfInput);
+            }
+        }
+
+        /// <summary>
+        /// A string like "A synchronous operation was called on an asynchronous async reader. Calls on an async reader instance must be either all synchronous or all asynchronous."
+        /// </summary>
+        internal static string ODataAsyncReader_SyncCallOnAsyncReader {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncReader_SyncCallOnAsyncReader);
+            }
+        }
+
+        /// <summary>
+        /// A string like "An asynchronous operation was called on a synchronous async reader. Calls on an async reader instance must be either all synchronous or all asynchronous."
+        /// </summary>
+        internal static string ODataAsyncReader_AsyncCallOnSyncReader {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncReader_AsyncCallOnSyncReader);
+            }
+        }
+
+        /// <summary>
         /// A string like "The MIME type '{0}' is invalid or unspecified."
         /// </summary>
         internal static string HttpUtils_MediaTypeUnspecified(object p0) {
@@ -1868,6 +2016,15 @@ namespace Microsoft.OData.Core {
         /// </summary>
         internal static string ODataMessageReader_SingletonNavigationPropertyForEntityReferenceLinks(object p0, object p1) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataMessageReader_SingletonNavigationPropertyForEntityReferenceLinks,p0,p1);
+        }
+
+        /// <summary>
+        /// A string like "An attempt was made to modify the message. The message cannot be modified."
+        /// </summary>
+        internal static string ODataAsyncResponseMessage_MustNotModifyMessage {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataAsyncResponseMessage_MustNotModifyMessage);
+            }
         }
 
         /// <summary>
@@ -5084,6 +5241,15 @@ namespace Microsoft.OData.Core {
         /// </summary>
         internal static string UriParser_MissingExpandOption(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriParser_MissingExpandOption,p0);
+        }
+
+        /// <summary>
+        /// A string like "Parameter 'fullUri' must be a relative Uri if serviceRoot is not specified."
+        /// </summary>
+        internal static string UriParser_FullUriMustBeRelative {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriParser_FullUriMustBeRelative);
+            }
         }
 
         /// <summary>

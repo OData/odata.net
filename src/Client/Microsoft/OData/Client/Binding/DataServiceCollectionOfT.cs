@@ -245,7 +245,6 @@ namespace Microsoft.OData.Client
 
             set
             {
-                Debug.Assert(!this.rootCollection, "Must be a child collection to have the Observer setter called.");
                 Debug.Assert(typeof(System.ComponentModel.INotifyPropertyChanged).IsAssignableFrom(typeof(T)), "The entity type must be trackable (by implementing INotifyPropertyChanged interface)");
                 this.observer = value;
             }

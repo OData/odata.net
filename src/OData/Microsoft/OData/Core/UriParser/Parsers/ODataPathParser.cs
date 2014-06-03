@@ -596,19 +596,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             string nextSegmentText;
 
-            // if there is another segment, it must either be a key or $count.
-            // [Resources]/[Property]/$ref/$count is valid
-            if (this.TryGetNextSegmentText(out nextSegmentText)
-                && !this.TryHandleAsKeySegment(nextSegmentText)
-                && !this.TryCreateCountSegment(nextSegmentText))
-            {
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_CannotSpecifyAfterPostLinkSegment(nextSegmentText, UriQueryConstants.RefSegment));
-            }
-
-            // nothing else is allowed after $ref.
+            // Nothing is allowed after $ref.
             if (this.TryGetNextSegmentText(out nextSegmentText))
             {
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_CannotSpecifyAfterPostLinkSegment(nextSegmentText, UriQueryConstants.RefSegment));
+                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
             }
 
             return true;

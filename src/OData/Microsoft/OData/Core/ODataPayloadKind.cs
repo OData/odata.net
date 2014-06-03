@@ -60,6 +60,9 @@ namespace Microsoft.OData.Core
         /// <summary>Payload kind for delta.</summary>
         Delta = 14,
 
+        /// <summary>Payload kind for async.</summary>
+        Asynchronous = 15,
+
         /// <summary>Unknown format</summary>
         Unsupported = int.MaxValue,
     }

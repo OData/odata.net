@@ -170,13 +170,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     container = this.schema.FindEntityContainer(targetSegments[0]);
                     if (container != null)
                     {
-                        IEdmEntityContainerElement containerElement = container.FindEntitySet(targetSegments[1]);
+                        IEdmEntityContainerElement containerElement = container.FindEntitySetExtended(targetSegments[1]);
                         if (containerElement != null)
                         {
                             return containerElement;
                         }
 
-                        IEdmOperationImport operationImport = this.FindParameterizedOperationImport(targetSegments[1], container.FindOperationImports, this.CreateAmbiguousOperationImport);
+                        IEdmOperationImport operationImport = this.FindParameterizedOperationImport(targetSegments[1], container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
                         if (operationImport != null)
                         {
                             return operationImport;
@@ -222,7 +222,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     container = this.Model.FindEntityContainer(containerName);
                     if (container != null)
                     {
-                        IEdmOperationImport operationImport = this.FindParameterizedOperationImport(operationName, container.FindOperationImports, this.CreateAmbiguousOperationImport);
+                        IEdmOperationImport operationImport = this.FindParameterizedOperationImport(operationName, container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
                         if (operationImport != null)
                         {
                             IEdmOperationParameter parameter = operationImport.Operation.FindParameter(parameterName);

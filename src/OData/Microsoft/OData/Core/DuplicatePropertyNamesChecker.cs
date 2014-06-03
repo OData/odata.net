@@ -36,6 +36,9 @@ namespace Microsoft.OData.Core
         /// <summary>true if we're processing a response; false if it's a request.</summary>
         private readonly bool isResponse;
 
+        /// <summary>Disable the check process if it is true.</summary>
+        private readonly bool disabled;
+
 #if DEBUG
         /// <summary>Name of the navigation link for which we were asked to check duplication on its start.</summary>
         /// <remarks>If this is set, the next call must be a real check for the same navigation link.</remarks>
@@ -54,10 +57,12 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="allowDuplicateProperties">true if duplicate properties are allowed; otherwise false.</param>
         /// <param name="isResponse">true if we're processing a response; false if it's a request.</param>
-        public DuplicatePropertyNamesChecker(bool allowDuplicateProperties, bool isResponse)
+        /// <param name="disabled">Disable the check process if it is true.</param>
+        public DuplicatePropertyNamesChecker(bool allowDuplicateProperties, bool isResponse, bool disabled = false)
         {
             this.allowDuplicateProperties = allowDuplicateProperties;
             this.isResponse = isResponse;
+            this.disabled = disabled;
         }
 
         /// <summary>
@@ -94,6 +99,11 @@ namespace Microsoft.OData.Core
         /// <param name="property">The property to be checked.</param>
         internal void CheckForDuplicatePropertyNames(ODataProperty property)
         {
+            if (this.disabled)
+            {
+                return;
+            }
+
             Debug.Assert(property != null, "property != null");
 #if DEBUG
             Debug.Assert(this.startNavigationLinkName == null, "CheckForDuplicatePropertyNamesOnNavigationLinkStart was followed by a CheckForDuplicatePropertyNames(ODataProperty).");
@@ -139,6 +149,11 @@ namespace Microsoft.OData.Core
         /// <param name="navigationLink">The navigation link to be checked.</param>
         internal void CheckForDuplicatePropertyNamesOnNavigationLinkStart(ODataNavigationLink navigationLink)
         {
+            if (this.disabled)
+            {
+                return;
+            }
+
             Debug.Assert(navigationLink != null, "navigationLink != null");
 #if DEBUG
             this.startNavigationLinkName = navigationLink.Name;
@@ -166,6 +181,10 @@ namespace Microsoft.OData.Core
         /// <returns>The association link uri with the same name if there already was one.</returns>
         internal Uri CheckForDuplicatePropertyNames(ODataNavigationLink navigationLink, bool isExpanded, bool? isCollection)
         {
+            if (this.disabled)
+            {
+                return null;
+            }
 #if DEBUG
             this.startNavigationLinkName = null;
 #endif
@@ -241,6 +260,11 @@ namespace Microsoft.OData.Core
         /// <returns>The navigation link with the same name as the association link if there's one.</returns>
         internal ODataNavigationLink CheckForDuplicateAssociationLinkNames(string associationLinkName, Uri associationLinkUrl)
         {
+            if (this.disabled)
+            {
+                return null;
+            }
+
             Debug.Assert(associationLinkName != null, "associationLinkName != null");
 #if DEBUG
             Debug.Assert(this.startNavigationLinkName == null, "CheckForDuplicatePropertyNamesOnNavigationLinkStart was followed by a CheckForDuplicatePropertyNames(ODataProperty).");
@@ -382,6 +406,11 @@ namespace Microsoft.OData.Core
         /// </remarks>
         internal void MarkPropertyAsProcessed(string propertyName)
         {
+            if (this.disabled)
+            {
+                return;
+            }
+
             Debug.Assert(propertyName != null, "propertyName != null");
 
             DuplicationRecord duplicationRecord;

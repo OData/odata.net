@@ -14,6 +14,7 @@ namespace Microsoft.OData.Client
     using System.Collections;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     /// <summary>non-generic placeholder for generic implementation</summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1010", Justification = "required for this feature")]
@@ -65,6 +66,13 @@ namespace Microsoft.OData.Client
         public IAsyncResult BeginExecute(AsyncCallback callback, object state)
         {
             return this.BeginExecuteInternal(callback, state);
+        }
+
+        /// <summary>Asynchronously sends a request to execute the data service query.</summary>
+        /// <returns>A task represents An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains the results of the query operation.</returns>
+        public Task<IEnumerable> ExecuteAsync()
+        {
+            return Task<IEnumerable>.Factory.FromAsync(this.BeginExecute, this.EndExecute, null);
         }
 
         /// <summary>Called to complete the asynchronous operation of executing a data service query.</summary>

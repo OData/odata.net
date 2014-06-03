@@ -88,7 +88,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 
             this.name = name;
             this.functions = new ReadOnlyCollection<IEdmFunction>(functions != null ? functions.ToList() : new List<IEdmFunction>());
-            this.parameters = parameters;
+            this.parameters = new ReadOnlyCollection<QueryNode>(parameters == null ? new List<QueryNode>() : parameters.ToList());
             this.returnedEntityTypeReference = returnedEntityTypeReference;
             this.navigationSource = navigationSource;
             this.source = source;

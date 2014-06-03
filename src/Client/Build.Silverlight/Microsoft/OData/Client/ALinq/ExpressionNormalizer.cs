@@ -152,6 +152,7 @@ namespace Microsoft.OData.Client
         /// ORIGINAL: x as t, where t is assignable from typeof(x)
         /// ORIGINAL: and typeof(x) or t are not known primitives unless typeof(x) == t
         /// ORIGINAL: and x is not a collection of entity types
+        /// ORIGINAL: and x is not a enum type
         /// NORMALIZED: x
         /// </summary>
         internal override Expression VisitUnary(UnaryExpression u)
@@ -179,7 +180,11 @@ namespace Microsoft.OData.Client
                     // x is not a collection of entity types
                     if(!(ClientTypeUtil.TypeOrElementTypeIsEntity(visited.Operand.Type) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
                     {
-                        result = visited.Operand;
+                        // x is not an enum type
+                        if (!visited.Operand.Type.IsEnum)
+                        {
+                            result = visited.Operand;
+                        }
                     }
                 }
             }

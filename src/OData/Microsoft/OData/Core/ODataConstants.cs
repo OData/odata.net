@@ -76,6 +76,9 @@ namespace Microsoft.OData.Core
         /// <summary>Http Version in batching requests and response.</summary>
         internal const string HttpVersionInBatching = "HTTP/1.1";
 
+        /// <summary>Http Version in async responses.</summary>
+        internal const string HttpVersionInAsync = "HTTP/1.1";
+
         /// <summary>'charset' - HTTP parameter name.</summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Charset", Justification = "Member name chosen based on HTTP header name.")]
         internal const string Charset = "charset";

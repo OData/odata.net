@@ -43,6 +43,7 @@ namespace Microsoft.OData.Core
 
             this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
             this.EnableAtom = false;
+            this.EnableFullValidation = true;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageReaderSettings" /> class.</summary>
@@ -61,6 +62,7 @@ namespace Microsoft.OData.Core
             // NOTE: reader behavior is immutable; copy by reference is ok.
             this.readerBehavior = other.ReaderBehavior;
             this.EnableAtom = other.EnableAtom;
+            this.EnableFullValidation = other.EnableFullValidation;
         }
 
         /// <summary>
@@ -216,6 +218,12 @@ namespace Microsoft.OData.Core
             get;
             set;
         }
+
+        /// <summary>
+        /// If set to true, all the validation would be enabled. Else some validation will be skipped.
+        /// Default to true.
+        /// </summary>
+        internal bool EnableFullValidation { get; set; }
 
         /// <summary>
         /// false - metadata validation is strict, the input must exactly match against the model.

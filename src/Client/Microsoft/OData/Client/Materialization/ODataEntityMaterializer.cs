@@ -16,12 +16,13 @@ namespace Microsoft.OData.Client.Materialization
     using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Reflection;
     using Microsoft.OData.Core;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
     using DSClient = Microsoft.OData.Client;
-    
+
     /// <summary>
     /// Used to materialize entities from a <see cref="ODataEntry"/> objects.
     /// </summary>
@@ -476,7 +477,7 @@ namespace Microsoft.OData.Client.Materialization
                     {
                         materializer.EntityTrackingAdapter.MaterializationLog.SetLink(entry, property.PropertyName, value);
                     }
-                    
+
                     if (!property.IsEntityCollection)
                     {
                         // Collection properties cannot be just set like primitive or complex properties. For collectionValue we have a special initialization logic in the 
@@ -764,6 +765,12 @@ namespace Microsoft.OData.Client.Materialization
                             properties = complexValue.Properties;
                             links = ODataMaterializer.EmptyLinks;
                         }
+                        else if (odataProperty.Value is ODataEnumValue)
+                        {
+                            this.EnumValueMaterializationPolicy.MaterializeEnumTypeProperty(property.PropertyType, odataProperty);
+                            links = ODataMaterializer.EmptyLinks;
+                            properties = ODataMaterializer.EmptyProperties;
+                        }
                         else
                         {
                             if (odataProperty.Value == null && !ClientTypeUtil.CanAssignNull(property.NullablePropertyType))
@@ -959,11 +966,15 @@ namespace Microsoft.OData.Client.Materialization
             Debug.Assert(property != null, "property != null");
             Debug.Assert(plan != null || nextLink == null, "plan != null || nextLink == null");
 
+            object leftCollection = property.GetValue(entry.ResolvedObject);
+
             // Simple case: the list is of the target type, and the resolved entity
             // has null; we can simply assign the collection. No merge required.
+            // Another case: the collection is not null but of zero elements and has
+            // not been tracked already; we simply assign the collection too.
             if (entry.ShouldUpdateFromPayload &&
                 property.NullablePropertyType == list.GetType() &&
-                property.GetValue(entry.ResolvedObject) == null)
+                (leftCollection == null || this.NeedToAssignCollectionDirectly(leftCollection)))
             {
                 property.SetValue(entry.ResolvedObject, list, property.PropertyName, false /* allowAdd */);
                 this.EntryValueMaterializationPolicy.FoundNextLinkForCollection(list, nextLink, plan);
@@ -977,14 +988,42 @@ namespace Microsoft.OData.Client.Materialization
             }
 
             this.EntryValueMaterializationPolicy.ApplyItemsToCollection(
-                entry, 
-                property, 
-                list, 
-                nextLink, 
+                entry,
+                property,
+                list,
+                nextLink,
                 plan,
                 false);
         }
-     
+
+        /// <summary>
+        /// Returns if the left collection needs to be directly assigned from the right collection.
+        /// </summary>
+        /// <param name="collection">The given collection.</param>
+        /// <returns>If the left collection needs to be directly assigned from the right collection.</returns>
+        private bool NeedToAssignCollectionDirectly(object collection)
+        {
+            Type type = collection.GetType();
+            PropertyInfo countProp = type.GetProperty("Count", BindingFlags.Public | BindingFlags.Instance);
+            PropertyInfo isTrackingProp = type.GetProperty("IsTracking", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            if (countProp == null)
+            {
+                return false;
+            }
+
+            int count = (int)countProp.GetValue(collection, null);
+
+            if (isTrackingProp == null)
+            {
+                return false;
+            }
+
+            bool isTracking = (bool)isTrackingProp.GetValue(collection, null);
+
+            return count == 0 && !isTracking;
+        }
+
         #endregion Private methods.
-     }
+    }
 }

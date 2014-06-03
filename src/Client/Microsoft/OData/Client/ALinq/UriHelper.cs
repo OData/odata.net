@@ -147,6 +147,9 @@ namespace Microsoft.OData.Client
         /// <summary>cast</summary>
         internal const string CAST = "cast";
 
+        /// <summary>has</summary>
+        internal const string HAS = "has";
+
         /// <summary>Gets the type name to be used in the URI for the given <paramref name="type"/>.</summary>
         /// <param name="type">Type to get name for.</param>
         /// <param name="context">Data context used to generate type names for types.</param>
@@ -220,7 +223,7 @@ namespace Microsoft.OData.Client
                 stringBuilder.Append(FORWARDSLASH);
             }
 
-            string typeName = GetEntityTypeNameForUriAndValidateMaxProtocolVersion(type, dataServiceContext, ref version);
+            string typeName = GetTypeNameForUri(type, dataServiceContext);
             stringBuilder.Append(typeName);
         }
     }

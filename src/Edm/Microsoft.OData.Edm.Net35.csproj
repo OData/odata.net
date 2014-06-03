@@ -42,6 +42,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\CsdlLocation.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmParseException.cs" />
+    <Compile Include="Microsoft\OData\Edm\Csdl\EdmxReaderSettings.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmxTarget.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmValueParser.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmValueWriter.cs" />

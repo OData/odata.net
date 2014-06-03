@@ -39,7 +39,9 @@ namespace Microsoft.OData.Core
             ODataPayloadKind.Batch,
             ODataPayloadKind.Error,
             ODataPayloadKind.Parameter,
-            ODataPayloadKind.IndividualProperty
+            ODataPayloadKind.IndividualProperty,
+            ODataPayloadKind.Delta,
+            ODataPayloadKind.Asynchronous
         };
 
         /// <summary>UTF-8 encoding, without the BOM preamble.</summary>

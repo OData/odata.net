@@ -39,6 +39,11 @@ namespace Microsoft.OData.Edm.Vocabularis
         public static readonly IEdmValueTerm DescriptionTerm;
 
         /// <summary>
+        /// The description term.
+        /// </summary>
+        public static readonly IEdmValueTerm LongDescriptionTerm;
+
+        /// <summary>
         /// Parse Core Vocabulary Model from CoreVocabularies.xml
         /// </summary>
         static CoreVocabularyModel()
@@ -54,6 +59,7 @@ namespace Microsoft.OData.Edm.Vocabularis
 
             ConcurrencyControlTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.CoreOptimisticConcurrencyControl);
             DescriptionTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.CoreDescription);
+            LongDescriptionTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.CoreLongDescription);
         }
     }
 }

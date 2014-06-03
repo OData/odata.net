@@ -145,10 +145,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             IEdmNavigationProperty navigationProperty = this.ResolveNavigationPropertyPathForBinding(binding);
             
-            IEdmNavigationSource targetNavigationSource = this.Container.FindEntitySet(binding.Target);
+            IEdmNavigationSource targetNavigationSource = this.Container.FindEntitySetExtended(binding.Target);
             if (targetNavigationSource == null)
             {
-                targetNavigationSource = this.Container.FindSingleton(binding.Target);
+                targetNavigationSource = this.Container.FindSingletonExtended(binding.Target);
                 if (targetNavigationSource == null)
                 {
                     targetNavigationSource = new UnresolvedEntitySet(binding.Target, this.Container, binding.Location);

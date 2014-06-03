@@ -129,6 +129,7 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid = "EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid";
         internal const string EdmModel_Validator_Semantic_OperationImportSpecifiesEntitySetButNotEntityType = "EdmModel_Validator_Semantic_OperationImportSpecifiesEntitySetButNotEntityType";
         internal const string EdmModel_Validator_Semantic_OperationImportCannotImportBoundOperation = "EdmModel_Validator_Semantic_OperationImportCannotImportBoundOperation";
+        internal const string EdmModel_Validator_Semantic_FunctionImportWithParameterShouldNotBeIncludedInServiceDocument = "EdmModel_Validator_Semantic_FunctionImportWithParameterShouldNotBeIncludedInServiceDocument";
         internal const string EdmModel_Validator_Semantic_FunctionMustHaveReturnType = "EdmModel_Validator_Semantic_FunctionMustHaveReturnType";
         internal const string EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate = "EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate";
         internal const string EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName = "EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName";
@@ -149,6 +150,7 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_InvalidMemberNameMatchesTypeName = "EdmModel_Validator_Semantic_InvalidMemberNameMatchesTypeName";
         internal const string EdmModel_Validator_Semantic_PropertyNameAlreadyDefined = "EdmModel_Validator_Semantic_PropertyNameAlreadyDefined";
         internal const string EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind = "EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind";
+        internal const string EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen = "EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen";
         internal const string EdmModel_Validator_Semantic_KeyPropertyMustBelongToEntity = "EdmModel_Validator_Semantic_KeyPropertyMustBelongToEntity";
         internal const string EdmModel_Validator_Semantic_DependentPropertiesMustBelongToDependentEntity = "EdmModel_Validator_Semantic_DependentPropertiesMustBelongToDependentEntity";
         internal const string EdmModel_Validator_Semantic_DeclaringTypeMustBeCorrect = "EdmModel_Validator_Semantic_DeclaringTypeMustBeCorrect";
@@ -279,6 +281,7 @@ namespace Microsoft.OData.Edm {
         internal const string CsdlSemantics_DuplicateAlias = "CsdlSemantics_DuplicateAlias";
         internal const string EdmxParser_EdmxVersionMismatch = "EdmxParser_EdmxVersionMismatch";
         internal const string EdmxParser_BodyElement = "EdmxParser_BodyElement";
+        internal const string EdmxParser_InvalidReferenceIncorrectNumberOfIncludes = "EdmxParser_InvalidReferenceIncorrectNumberOfIncludes";
         internal const string EdmParseException_ErrorsEncounteredInEdmx = "EdmParseException_ErrorsEncounteredInEdmx";
         internal const string ValueParser_InvalidBoolean = "ValueParser_InvalidBoolean";
         internal const string ValueParser_InvalidInteger = "ValueParser_InvalidInteger";

@@ -271,6 +271,28 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
+        /// Creates an <see cref="ODataAsynchronousWriter" /> to write an async response.
+        /// </summary>
+        /// <returns>The created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal virtual ODataAsynchronousWriter CreateODataAsynchronousWriter()
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Asynchronous);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataAsynchronousWriter" /> to write an async response.
+        /// </summary>
+        /// <returns>A running task for the created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal virtual Task<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Asynchronous);
+        }
+#endif
+
+        /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a feed.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>

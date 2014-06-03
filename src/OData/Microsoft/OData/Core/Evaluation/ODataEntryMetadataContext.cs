@@ -510,7 +510,7 @@ namespace Microsoft.OData.Core.Evaluation
             }
 
             /// <summary>
-            /// Compute ETag from Annotation Core.OptimisticConcurrencyControl on EntitySet
+            /// Compute ETag from Annotation Org.OData.Core.V1.OptimisticConcurrencyControl on EntitySet
             /// </summary>
             /// <returns>Enumerable of IEdmStructuralProperty</returns>
             private IEnumerable<IEdmStructuralProperty> ComputeETagPropertiesFromAnnotation()

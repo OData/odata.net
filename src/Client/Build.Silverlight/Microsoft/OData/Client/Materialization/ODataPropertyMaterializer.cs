@@ -101,8 +101,7 @@ namespace Microsoft.OData.Client.Materialization
             }
             else if (expectedClientType.IsEnum())
             {
-                ODataEnumValue val = (ODataEnumValue)propertyValue;
-                this.currentValue = this.EnumValueMaterializationPolicy.MaterializeEnumTypeValue(underlyingExpectedType, val);
+                this.currentValue = this.EnumValueMaterializationPolicy.MaterializeEnumTypeProperty(underlyingExpectedType, property);
             }
             else
             {

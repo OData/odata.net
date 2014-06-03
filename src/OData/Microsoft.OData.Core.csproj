@@ -50,6 +50,9 @@
     <Compile Include="Microsoft\OData\Core\Evaluation\LiteralFormatter.cs" />
     <Compile Include="Microsoft\OData\Core\Evaluation\KeySerializer.cs" />
     <Compile Include="Microsoft\OData\Core\Evaluation\UrlConvention.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataAsynchronousReader.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataAsynchronousResponseMessage.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataAsynchronousWriter.cs" />
     <Compile Include="Microsoft\OData\Core\ODataDeltaSerializationInfo.cs" />
     <Compile Include="Microsoft\OData\Core\ODataDeltaFeedSerializationInfo.cs" />
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightDeltaReader.cs" />

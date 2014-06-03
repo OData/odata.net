@@ -1730,7 +1730,7 @@ namespace Microsoft.OData.Client
                         me = ResourceBinder.StripTo<MemberExpression>(e, out convertedType);
                         if (convertedType != null)
                         {
-                            propertyPath.Insert(0, UriHelper.GetEntityTypeNameForUriAndValidateMaxProtocolVersion(convertedType, context, ref uriVersion));
+                            propertyPath.Insert(0, UriHelper.GetTypeNameForUri(convertedType, context));
                         }
                     }
                     else

@@ -429,6 +429,13 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The function import '{0}' should not be included in service document because it has parameter."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_FunctionImportWithParameterShouldNotBeIncludedInServiceDocument(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_FunctionImportWithParameterShouldNotBeIncludedInServiceDocument,p0);
+        }
+
+        /// <summary>
         /// A string like "The function '{0}' must specify a return type."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_FunctionMustHaveReturnType(object p0) {
@@ -568,6 +575,13 @@ namespace Microsoft.OData.Edm {
             get {
                 return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind);
             }
+        }
+
+        /// <summary>
+        /// A string like "The base type of open type '{0}' is not open type."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen,p0);
         }
 
         /// <summary>
@@ -1556,6 +1570,15 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string EdmxParser_BodyElement(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmxParser_BodyElement,p0);
+        }
+
+        /// <summary>
+        /// A string like "edmx:Reference must contain at least one edmx:Includes or edmx:IncludeAnnotations."
+        /// </summary>
+        internal static string EdmxParser_InvalidReferenceIncorrectNumberOfIncludes {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmxParser_InvalidReferenceIncorrectNumberOfIncludes);
+            }
         }
 
         /// <summary>

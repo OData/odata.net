@@ -85,6 +85,7 @@ namespace Microsoft.OData.Core
             // Create the default writer behavior
             this.writerBehavior = ODataWriterBehavior.DefaultBehavior;
             this.EnableAtom = false;
+            this.EnableFullValidation = true;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageWriterSettings" /> class with specified settings.</summary>
@@ -111,6 +112,7 @@ namespace Microsoft.OData.Core
             // NOTE: writer behavior is immutable; copy by reference is ok.
             this.writerBehavior = other.writerBehavior;
             this.EnableAtom = other.EnableAtom;
+            this.EnableFullValidation = other.EnableFullValidation;
         }
 
         /// <summary>Gets or sets the OData protocol version to be used for writing payloads. </summary>
@@ -195,6 +197,12 @@ namespace Microsoft.OData.Core
             get;
             set;
         }
+
+        /// <summary>
+        /// If set to true, all the validation would be enabled. Else some validation will be skipped.
+        /// Default to true.
+        /// </summary>
+        internal bool EnableFullValidation { get; set; }
 
         /// <summary>
         /// If set to true, then the root element of each payload will be written in the default (non-prefix-qualified) namespace of the document. 

@@ -92,8 +92,7 @@ namespace Microsoft.OData.Core.UriParser
 
             if (fullUri.IsAbsoluteUri)
             {
-                // TODO: update localization string resource
-                throw new ODataException("fullUri must be a relative Uri if serviceRoot is not specified.");
+                throw new ODataException(Strings.UriParser_FullUriMustBeRelative);
             }
 
             this.configuration = new ODataUriParserConfiguration(model);
@@ -162,7 +161,11 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                this.Initialize();
+                if (this.ParameterAliasValueAccessor == null)
+                {
+                    this.Initialize();
+                }
+
                 return this.ParameterAliasValueAccessor.ParameterAliasValueNodesCached;
             }
         }

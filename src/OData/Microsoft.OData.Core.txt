@@ -18,12 +18,12 @@ ODataResponseMessage_StreamTaskIsNull=The IODataResponseMessageAsync.GetStreamAs
 ODataResponseMessage_MessageStreamIsNull=The IODataResponseMessage.GetStream or IODataResponseMessageAsync.GetStreamAsync method returned a null stream value. The message can never return a null stream.
 
 AsyncBufferedStream_WriterDisposedWithoutFlush=A writer or stream has been disposed with data still in the buffer. You must call Flush or FlushAsync before calling Dispose when some data has already been written.
-
+ODataFormat_AtomFormatObsoleted=ATOM support is obsolete.
 ODataOutputContext_UnsupportedPayloadKindForFormat=The format '{0}' does not support writing a payload of kind '{1}'.
 
 ODataInputContext_UnsupportedPayloadKindForFormat=The format '{0}' does not support reading a payload of kind '{1}'.
 
-ODataOutputContext_MetadataDocumentUriMissing=The ServiceRoot property in ODataMessageWriterSettings.ODataUri must be set when when writing a payload.
+ODataOutputContext_MetadataDocumentUriMissing=The ServiceRoot property in ODataMessageWriterSettings.ODataUri must be set when writing a payload.
 
 ODataJsonLightSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata=A relative URI value '{0}' was specified in the data to write, but the metadata document URI or the metadata for the item to be written was not specified for the writer. The metadata document URI and the metadata for the item to be written must be provided to the writer when using relative URI values.
 
@@ -89,6 +89,7 @@ ODataMessageWriter_ErrorPayloadInRequest=An error cannot be written to a request
 ODataMessageWriter_ServiceDocumentInRequest=A service document cannot be written to request payloads. Service documents are only supported in responses.
 ODataMessageWriter_MetadataDocumentInRequest=A metadata document cannot be written to request payloads. Metadata documents are only supported in responses.
 ODataMessageWriter_DeltaInRequest=Cannot write delta in request payload.
+ODataMessageWriter_AsyncInRequest=Cannot write async in request payload.
 ODataMessageWriter_CannotWriteNullInRawFormat=Cannot write the value 'null' in raw format.
 ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind=Cannot set message headers for the invalid payload kind '{0}'.
 ODataMessageWriter_IncompatiblePayloadKinds=The payload kind '{0}' used in the last call to ODataUtils.SetHeadersForPayload is incompatible with the payload being written, which is of kind '{1}'.
@@ -190,6 +191,24 @@ ODataBatchReaderStream_UnexpectedEndOfInput=Encountered an unexpected end of inp
 
 ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached=Too many white spaces after a boundary delimiter and before the terminating line feed. For security reasons, the total number of characters for a boundary including white spaces must not exceed {0}.
 
+ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse=When not writing an async response, you cannot create an async response message.
+ODataAsyncWriter_CannotCreateResponseMoreThanOnce=You cannot create an async response message more than once.
+ODataAsyncWriter_SyncCallOnAsyncWriter=A synchronous operation was called on an asynchronous async writer. Calls on an async writer instance must be either all synchronous or all asynchronous.
+ODataAsyncWriter_AsyncCallOnSyncWriter=An asynchronous operation was called on a synchronous async writer. Calls on an async writer instance must be either all synchronous or all asynchronous.
+ODataAsyncWriter_CannotWriteInStreamErrorForAsync=The WriteError and WriteErrorAsync methods on ODataMessageWriter cannot be called when an async message is being written by using ODataAsyncWriter. In OData, writing an in-stream error for an async payload is not supported.
+
+ODataAsyncReader_InvalidHeaderSpecified=The message header '{0}' is invalid. The header value must be of the format '<header name>: <header value>'.
+ODataAsyncReader_CannotCreateResponseWhenNotReadingResponse=When not reading an async response, you cannot create an async response message.
+ODataAsyncReader_InvalidResponseLine=The response line '{0}' is invalid. The response line at the start of the async reponse must be of the format 'HttpVersion StatusCode StatusCodeString'.
+ODataAsyncReader_InvalidHttpVersionSpecified=The HTTP version '{0}' used in an async response is not valid. The value must be '{1}'.
+ODataAsyncReader_NonIntegerHttpStatusCode=The HTTP status code '{0}' is invalid. An HTTP status code must be an integer value.
+ODataAsyncReader_DuplicateHeaderFound=The header '{0}' was specified multiple times. Each header must appear only once.
+ODataAsyncReader_MultiByteEncodingsNotSupported=Invalid multi-byte encoding '{0}' detected. Multi-byte encodings other than UTF-8 are only supported for async payloads. They are not supported in batch or change set parts.
+ODataAsyncReader_InvalidNewLineEncountered=Invalid new line '{0}' encountered. Should be '\r\n'.
+ODataAsyncReader_UnexpectedEndOfInput=Encountered an unexpected end of input while reading the async payload. Could be due to calling CreateResponseMessage() more than once.
+ODataAsyncReader_SyncCallOnAsyncReader=A synchronous operation was called on an asynchronous async reader. Calls on an async reader instance must be either all synchronous or all asynchronous.
+ODataAsyncReader_AsyncCallOnSyncReader=An asynchronous operation was called on a synchronous async reader. Calls on an async reader instance must be either all synchronous or all asynchronous.
+
 HttpUtils_MediaTypeUnspecified=The MIME type '{0}' is invalid or unspecified.
 HttpUtils_MediaTypeRequiresSlash=The MIME type '{0}' requires a '/' character between type and subtype, such as 'text/plain'.
 HttpUtils_MediaTypeRequiresSubType=The MIME type '{0}' requires a subtype definition.
@@ -283,6 +302,7 @@ ODataMessageReader_PayloadKindDetectionInServerMode=The ODataMessageReader is us
 ODataMessageReader_ParameterPayloadInResponse=A parameter payload cannot be read from a response payload. Parameter payloads are only supported in requests.
 ODataMessageReader_SingletonNavigationPropertyForEntityReferenceLinks=The navigation property '{0}' with singleton cardinality on type '{1}' was specified for reading a collection of entity reference links. A navigation property with collection cardinality has to be provided.
 
+ODataAsyncResponseMessage_MustNotModifyMessage=An attempt was made to modify the message. The message cannot be modified.
 ODataMessage_MustNotModifyMessage=An attempt was made to modify the message. The message cannot be modified.
 
 
@@ -813,7 +833,7 @@ UriSelectParser_InvalidCountOption=Count option must be a boolean value, it is s
 UriSelectParser_InvalidLevelsOption=Levels option must be a non-negative integer or 'max', it is set to '{0}' instead.
 UriSelectParser_SystemTokenInSelectExpand=Found system token '{0}' in select or expand clause '{1}'.
 UriParser_MissingExpandOption=Missing expand option on navigation property '{0}'. If a parenthesis expression follows an expanded navigation property, then at least one expand option must be provided.
-
+UriParser_FullUriMustBeRelative=Parameter 'fullUri' must be a relative Uri if serviceRoot is not specified.
 UriParser_NeedServiceRootForThisOverload=A service root URI must be provided to the ODataUriParser in order to use this method.
 UriParser_UriMustBeAbsolute=The URI '{0}' must be an absolute URI.
 UriParser_NegativeLimit=The limit must be greater than or equal to zero

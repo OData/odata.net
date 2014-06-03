@@ -20,7 +20,9 @@ namespace Microsoft.OData.Client
     using System.Reflection;
     using System.Text;
     using Microsoft.OData.Client.Metadata;
-
+    using Microsoft.OData.Core;
+    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.Edm;
 
     #endregion Namespaces
 
@@ -288,6 +290,17 @@ namespace Microsoft.OData.Client
 
                 this.builder.Append(UriHelper.RIGHTPAREN);
             }
+            else if (m.Method.Name == "HasFlag")
+            {
+                Debug.Assert(m.Method.Name == "HasFlag", "m.Method.Name == 'HasFlag'");
+                Debug.Assert(m.Object != null, "m.Object != null");
+                Debug.Assert(m.Arguments.Count == 1, "m.Arguments.Count == 1");
+                this.Visit(m.Object);
+                this.builder.Append(UriHelper.SPACE);
+                this.builder.Append(UriHelper.HAS);
+                this.builder.Append(UriHelper.SPACE);
+                this.Visit(m.Arguments[0]);
+            }
             else
             {
                 SequenceMethod sequenceMethod;
@@ -407,20 +420,37 @@ namespace Microsoft.OData.Client
             // This is exceedingly rare, and not a scenario where performance is meaningful, so the 
             // reduced complexity in all other call sites is worth the extra logic here.
             string result;
-            try
+            BinaryExpression b = this.parent as BinaryExpression;
+            MethodCallExpression m = this.parent as MethodCallExpression;
+            if ((b != null && HasEnumInBinaryExpression(b)) || (m != null && m.Method.Name == "HasFlag"))
             {
-                result = LiteralFormatter.ForConstants.Format(c.Value);
+                c = this.ConvertConstantExpressionForEnum(c);
+                ClientEdmModel model = this.context.Model;
+                IEdmType edmType = model.GetOrCreateEdmType(c.Type.IsEnum ? c.Type : c.Type.GetGenericArguments()[0]);
+                ClientTypeAnnotation typeAnnotation = model.GetClientTypeAnnotation(edmType);
+                string typeNameInEdm = this.context.ResolveNameFromTypeInternal(typeAnnotation.ElementType);
+                MemberInfo member = typeAnnotation.ElementType.GetMember(c.Value.ToString()).FirstOrDefault();
+                string memberValue = ClientTypeUtil.GetServerDefinedName(member);
+                ODataEnumValue enumValue = new ODataEnumValue(memberValue, typeNameInEdm ?? typeAnnotation.ElementTypeName);
+                result = ODataUriUtils.ConvertToUriLiteral(enumValue, CommonUtil.ConvertToODataVersion(this.uriVersion), null);
             }
-            catch (InvalidOperationException)
+            else
             {
-                if (this.cantTranslateExpression)
+                try
                 {
-                    // there's already a problem in the parents.
-                    // we should just return here, because caller somewhere up the stack will throw a better exception
-                    return c;
+                    result = LiteralFormatter.ForConstants.Format(c.Value);
                 }
+                catch (InvalidOperationException)
+                {
+                    if (this.cantTranslateExpression)
+                    {
+                        // there's already a problem in the parents.
+                        // we should just return here, because caller somewhere up the stack will throw a better exception
+                        return c;
+                    }
 
-                throw new NotSupportedException(Strings.ALinq_CouldNotConvert(c.Value));
+                    throw new NotSupportedException(Strings.ALinq_CouldNotConvert(c.Value));
+                }
             }
             
             Debug.Assert(result != null, "result != null");
@@ -452,18 +482,25 @@ namespace Microsoft.OData.Client
                 case ExpressionType.ConvertChecked:
                     if (u.Type != typeof(object))
                     {
-                        this.builder.Append(UriHelper.CAST);
-                        this.builder.Append(UriHelper.LEFTPAREN);
-                        if (!this.IsImplicitInputReference(u.Operand))
+                        if (IsEnumTypeExpression(u))
                         {
                             this.Visit(u.Operand);
-                            this.builder.Append(UriHelper.COMMA);
                         }
+                        else
+                        {
+                            this.builder.Append(UriHelper.CAST);
+                            this.builder.Append(UriHelper.LEFTPAREN);
+                            if (!this.IsImplicitInputReference(u.Operand))
+                            {
+                                this.Visit(u.Operand);
+                                this.builder.Append(UriHelper.COMMA);
+                            }
 
-                        this.builder.Append(UriHelper.QUOTE);
-                        this.builder.Append(UriHelper.GetTypeNameForUri(u.Type, this.context));
-                        this.builder.Append(UriHelper.QUOTE);
-                        this.builder.Append(UriHelper.RIGHTPAREN);
+                            this.builder.Append(UriHelper.QUOTE);
+                            this.builder.Append(UriHelper.GetTypeNameForUri(u.Type, this.context));
+                            this.builder.Append(UriHelper.QUOTE);
+                            this.builder.Append(UriHelper.RIGHTPAREN);
+                        }
                     }
                     else
                     {
@@ -760,6 +797,84 @@ namespace Microsoft.OData.Client
             }
 
             return (exp is InputReferenceExpression || exp is ParameterExpression);
+        }
+
+        /// <summary>
+        /// Check whether this BinaryExpression has enum type in it
+        /// </summary>
+        /// <param name="b">The BinaryExpression to check</param>
+        /// <returns>The checked result</returns>
+        private static bool HasEnumInBinaryExpression(BinaryExpression b)
+        {
+            return IsEnumTypeExpression(b.Left) || IsEnumTypeExpression(b.Right);
+        }
+
+        /// <summary>
+        /// Check whether the type of this Expresion is enum
+        /// </summary>
+        /// <param name="e">The BinaryExpression to check</param>
+        /// <returns>The checked result</returns>
+        private static bool IsEnumTypeExpression(Expression e)
+        {
+            if (e is UnaryExpression)
+            {
+                UnaryExpression u = e as UnaryExpression;
+                return u.Operand.Type.IsEnum || (u.Operand.Type.IsGenericType() && u.Operand.Type.GetGenericArguments()[0].IsEnum);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Get the expected enum type from UnaryExpression
+        /// </summary>
+        /// <param name="e">The Expression to get enum type from</param>
+        /// <returns>The extracted enum type</returns>
+        private Type GetEnumType(Expression e)
+        {
+            UnaryExpression u = e as UnaryExpression;
+            if (u != null)
+            {
+                return u.Operand.Type.IsEnum ? u.Operand.Type : u.Operand.Type.GetGenericArguments()[0];
+            }
+
+            Debug.Assert(e.Type.IsEnum || e.Type.GetGenericArguments()[0].IsEnum, "e.Type.IsEnum || e.Type.GetGenericArguments()[0].IsEnum");
+            return e.Type.IsEnum ? e.Type : e.Type.GetGenericArguments()[0];
+        }
+
+        /// <summary>
+        /// Convert a ConstantExpression into expected enum type
+        /// </summary>
+        /// <param name="constant">The ConstantExpression to convert</param>
+        /// <returns>The converted ConstantExpression</returns>
+        private ConstantExpression ConvertConstantExpressionForEnum(ConstantExpression constant)
+        {
+            Type enumType = null;
+            if (this.parent is BinaryExpression)
+            {
+                BinaryExpression b = this.parent as BinaryExpression;
+                if (constant == b.Left)
+                {
+                    Debug.Assert(b.Right is UnaryExpression, "another binary operand should be UnaryExpression");
+                    enumType = this.GetEnumType(b.Right);
+                }
+                else
+                {
+                    Debug.Assert(b.Left is UnaryExpression, "another binary operand should be UnaryExpression");
+                    enumType = this.GetEnumType(b.Left);
+                }
+            }
+            else
+            {
+                MethodCallExpression m = this.parent as MethodCallExpression;
+                if (m != null && m.Method.Name == "HasFlag")
+                {
+                    enumType = this.GetEnumType(m.Object);
+                }
+            }
+
+            Debug.Assert(enumType != null, "enumType != null");
+            return Expression.Constant(Enum.Parse(enumType, constant.Value.ToString(), false));
         }
     }
 }
