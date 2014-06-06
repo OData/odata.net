@@ -1,0 +1,477 @@
+;   OData .NET Libraries
+;   Copyright (c) Microsoft Corporation
+;   All rights reserved. 
+
+;   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+
+;   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+
+;   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+
+ALinq_UnsupportedExpression=The expression type {0} is not supported.
+
+InvalidEnumValue=The value for the given enum type '{0}' is not valid. Please specify a valid enum value.
+OpenNavigationPropertiesNotSupportedOnOpenTypes=Open navigation properties are not supported on OpenTypes. Property name: '{0}'.
+
+BaseServiceProvider_IEnumerableAlwaysMultiple=Type '{0}' has a method '{1}' which is a generic IEnumerable but is marked with a SingleResultAttribute. Only IQueryable methods support this attribute.
+BaseServiceProvider_OverloadingNotSupported=Overloading is not supported but type '{0}' has an overloaded method '{1}'.
+BaseServiceProvider_ParameterNotIn=Method '{0}' has a parameter '{1}' which is not an [in] parameter.
+BaseServiceProvider_ParameterTypeNotSupported=Method '{0}' has a parameter '{1}' of type '{2}' which is not supported for service operations. Only primitive types are supported as parameters.
+BaseServiceProvider_ServiceOperationMissingSingleEntitySet=Service operation '{0}' produces instances of type '{1}', but having a single entity set for that type is required.
+BaseServiceProvider_UnsupportedReturnType=Unable to load metadata for return type '{1}' of method '{0}'.
+BaseServiceProvider_UnknownResourceTypeInstance=The given resource type instance for the type '{0}' is not known to the metadata provider.
+
+BasicExpandProvider_ExpandedPropertiesNotInitialized=Description for expanded properties has not been initialized.
+BasicExpandProvider_ProjectedPropertiesNotInitialized=Description for projected properties has not been initialized.
+BasicExpandProvider_UnsupportedExpandBreadth=$expand does not support '{0}' properties expanded simultaneously on the same segment.
+BasicExpandProvider_SDP_UnsupportedOrderingExpressionBreadth=$expand does not support '{0}' ordering expressions simultaneously on the top level type. Ordering expressions include top level $orderby expressions and the key columns in the top level entity type.
+BasicExpandProvider_ExpandNotSupportedForOpenProperties=$expand does not support open properties.
+
+CallbackQueryOptionHandler_UnsupportedContentType=The requested media type '{0}' is not compatible with the $callback query option.
+CallbackQueryOptionHandler_GetRequestsOnly=$callback can only be specified on GET requests.
+
+DataServiceActionProviderWrapper_ServiceActionBindingParameterNull=The binding parameter for service action '{0}' returned by IDataServiceActionProvider.GetServiceActionsByBindingParameterType() is null. The GetServiceActionsByBindingParameterType method must return service actions that are bindable to the given resource type.
+DataServiceActionProviderWrapper_ResourceTypeMustBeAssignableToBindingParameterResourceType=The service action '{0}' returned by IDataServiceActionProvider.GetServiceActionsByBindingParameterType() has a binding parameter of type '{1}' that is not bindable to the resource type '{2}'. The GetServiceActionsByBindingParameterType method must return service actions that are bindable to the given resource type.
+DataServiceActionProviderWrapper_AdvertiseServiceActionCannotReturnNullActionToSerialize=The IDataServiceActionProvider.AdvertiseServiceAction() method must return a non-null value for the actionToSerialize parameter if it returns true.
+
+DataServiceProviderWrapper_ResourceContainerNotReadonly=The resource set '{0}' returned by the provider is not read-only. Please make sure that all the resource sets are set to read-only.
+DataServiceProviderWrapper_ResourceTypeNotReadonly=The resource type '{0}' returned by the provider is not read-only. Please make sure that all the types are set to read-only.
+DataServiceProviderWrapper_ServiceOperationNotReadonly=The service operation '{0}' returned by the provider is not read-only. Please make sure that all the service operations are set to read-only.
+DataServiceProviderWrapper_ContainerNamespaceMustNotBeNullOrEmpty=The value returned by IDataServiceMetadataProvider.ContainerNamespace must not be null or empty.
+DataServiceProviderWrapper_ContainerNameMustNotBeNullOrEmpty=The value returned by IDataServiceMetadataProvider.ContainerName must not be null or empty.
+DataServiceProviderWrapper_DataSourceTypeMustBeAssignableToContextType=IDataServiceQueryProvider.CurrentDataSource must return an object of type that is assignable to T in DataService<T>.
+DataServiceProviderWrapper_MultipleEntitySetsWithSameName=More than one entity set with the name '{0}' was found. Entity set names must be unique.
+DataServiceProviderWrapper_MultipleResourceTypesWithSameName=More than one resource type with the name '{0}' was found. Resource type names must be unique.
+DataServiceProviderWrapper_MultipleServiceOperationsWithSameName=More than one service operation with the name '{0}' was found. Service operation names must be unique.
+DataServiceProviderWrapper_CollectionOfComplexTypeWithDerivedTypes=Complex type '{0}' has derived types and is used as the item type in a collection property. Only collection properties containing complex types without derived types are supported.
+DataServiceProviderWrapper_InvalidQueryRootType=The IDataServiceQueryProvider.GetQueryRootForResourceSet({0}) method must return an IQueryable instance that can be converted to the type '{1}'.
+DataServiceProviderWrapper_AnnotationsBuilderCannotReturnNullModels=The collection returned by DataServiceConfiguration.AnnotationsBuilder must not contain null elements.
+DataServiceProviderWrapper_ActionHasNoBindableSet=The service action '{0}' has the binding parameter of type '{1}', but there is no visible resource set for that type. The service action should be made hidden or a resource set for type '{1}' should be made visible.
+DataServiceProviderWrapper_ActionHasNoVisibleSetReachableFromPathExpression=The service action '{0}' has the resource set path expression '{1}', but there is no visible resource set that can be reached from the binding parameter through the path expression. The service action should be made hidden or a resource set targeted by the path expression should be made visible.
+DataServiceActionProviderWrapper_DuplicateAction=A service action with the name '{0}' already exists. Please make sure that the list returned by IDataServiceActionProvider.GetServiceActionsByBindingParameterType() contains unique service action names.
+
+DataServiceProviderBehavior_ProviderBehaviorMustBeNonNull=The 'ProviderBehavior' property for IDataServiceProviderBehavior interface must not return a null value.
+
+ErrorHandler_ErrorWhileWritingError=An error occurred while trying to write an error payload.
+
+ETagAttribute_MustSpecifyAtleastOnePropertyName=ETag attribute must specify at least one property name.
+
+ExpandSegment_FilterShouldBeLambda=The filter for an expand segment should be a lambda type, but the specified filter is of type '{0}'.
+ExpandSegment_FilterBodyShouldReturnBool=The filter for an expand segment should return a boolean value, but the specified filter returns '{0}'.
+ExpandSegment_FilterBodyShouldTakeOneParameter=The filter for an expand segment should take a single parameter, but the specified filter takes '{0}'.
+
+HttpContextServiceHost_AmbiguousItemName=Query parameter item '{0}' expected, but both '{1}' and '{2}' are inexact matches for it.
+HttpContextServiceHost_WebOperationContextCurrentMissing=There is no System.ServiceModel.Web.WebOperationContext.Current instance.
+HttpContextServiceHost_IncomingTemplateMatchFragment=Fragment parts are not supported in template matches but the base URI '{0}' has one.
+HttpContextServiceHost_IncomingTemplateMatchQuery=Query parts are not supported in template matches but the base URI '{0}' has one.
+HttpContextServiceHost_MalformedHeaderValue=Malformed value in request header.
+HttpContextServiceHost_XMethodIncorrectCount=The X-HTTP-Method header should have a single value, but has '{0}' instead.
+HttpContextServiceHost_XMethodIncorrectValue=The X-HTTP-Method header should be 'PUT', 'PATCH' or 'DELETE', but is '{0}' instead.
+HttpContextServiceHost_XMethodNotUsingPost=The X-HTTP-Method header can only be used with POST requests.
+HttpContextServiceHost_QueryParameterMustBeSpecifiedOnce=Query parameter '{0}' is specified, but it should be specified exactly once.
+HttpContextServiceHost_UnknownQueryParameter=The query parameter '{0}' begins with a system-reserved '$' character but is not recognized.
+HttpContextServiceHost_IncomingMessagePropertyMustBeValidUriInstance=The incoming message property '{0}' on the current operation context must be a System.Uri object.
+
+HttpProcessUtility_ContentTypeMissing=Content-Type header value missing.
+HttpProcessUtility_MediaTypeMissingValue=Media type is missing a parameter value.
+HttpProcessUtility_MediaTypeRequiresSemicolonBeforeParameter=Media type requires a ';' character before a parameter definition.
+HttpProcessUtility_MediaTypeRequiresSlash=Media type requires a '/' character.
+HttpProcessUtility_MediaTypeRequiresSubType=Media type requires a subtype definition.
+HttpProcessUtility_MediaTypeUnspecified=Media type is unspecified.
+HttpProcessUtility_EncodingNotSupported=Character set '{0}' is not supported.
+HttpProcessUtility_EscapeCharWithoutQuotes=Value for MIME type parameter '{0}' is incorrect because it contained escape characters even though it was not quoted.
+HttpProcessUtility_EscapeCharAtEnd=Value for MIME type parameter '{0}' is incorrect because it terminated with escape character. Escape characters must always be followed by a character in a parameter value.
+HttpProcessUtility_ClosingQuoteNotFound=Value for MIME type parameter '{0}' is incorrect because the closing quote character could not be found while the parameter value started with a quote character.
+
+IgnorePropertiesAttribute_PropertyNameCannotBeNullOrEmpty=The property name specified in the IgnoreProperties attribute cannot be null or empty. Please specify a valid property name.
+IgnorePropertiesAttribute_InvalidPropertyName=The property '{0}' is not a valid property name for type '{1}'. Please specify a valid property name.
+
+PlainXml_IncorrectElementName=Expecting XML element '{0}', but found '{1}' instead.
+
+RequestQueryParser_DigitExpected=Digit expected.
+RequestQueryParser_DisallowMemberAccessForResourceSetReference=The '{0}' is not allowed. Member access or specifying a type identifier on a resource set reference is not allowed.
+RequestQueryParser_ExpressionTypeMismatch=Expression of type '{0}' expected.
+RequestQueryParser_IdentifierExpected=Identifier expected.
+RequestQueryParser_IncompatibleOperand=Operator '{0}' incompatible with operand type '{1}'.
+RequestQueryParser_IncompatibleOperands=Operator '{0}' incompatible with operand types '{1}' and '{2}'.
+RequestQueryParser_InvalidCharacter=Syntax error '{0}'.
+RequestQueryParser_NoApplicableFunction=No applicable function found for '{0}' with the specified arguments. The functions considered are: {1}.
+RequestQueryParser_NotDoesNotSupportType='not' operator does not support type '{0}'.
+RequestQueryParser_NullOperatorUnsupported=The operator '{0}' is not supported for the 'null' literal; only equality checks are supported.
+RequestQueryParser_OrderByDoesNotSupportType=Ordering does not support expressions of type '{0}'.
+RequestQueryParser_SyntaxError=Syntax error.
+RequestQueryParser_UnknownFunction=Unknown function '{0}'.
+RequestQueryParser_UnrecognizedLiteral=Unrecognized '{0}' literal '{1}'.
+RequestQueryParser_UnterminatedLiteral=Unterminated literal in '{0}'.
+RequestQueryParser_UnterminatedStringLiteral=Unterminated string literal in '{0}'.
+RequsetQueryParser_ExpectingLiteralInSkipToken=Skip token values are expected to be literals. Unrecognized literal '{0}' found.
+RequestQueryParser_AllWithoutAPredicateIsNotSupported=The method 'all' without a supplied predicate is not supported.
+RequestQueryParser_SpatialNotSupported=This data service endpoint does not support spatial literal values in the URI.
+RequestQueryParser_InvalidNumericString=Numeric string '{0}' is not a valid Int32/Int64/Double/Decimal.
+
+RequestQueryProcessor_IncorrectArgumentFormat=Incorrect format for {0} argument '{1}'.
+RequestQueryProcessor_QueryExpandOptionNotApplicable=Query option $expand cannot be applied to the requested resource.
+RequestQueryProcessor_QueryFilterOptionNotApplicable=Query option $filter cannot be applied to the requested resource.
+RequestQueryProcessor_FormatNotApplicable=Query option $format is not supported on a $batch request.
+RequestQueryProcessor_QueryNoOptionsApplicable=Query options $select, $expand, $filter, $orderby, $count, $skip, $skiptoken and $top are not supported by this request method or cannot be applied to the requested resource.
+RequestQueryProcessor_QuerySetOptionsNotApplicable=Query options $orderby, $count, $skip and $top cannot be applied to the requested resource.
+RequestQueryProcessor_QuerySelectOptionNotApplicable=Query option $select cannot be applied to the requested resource.
+RequestQueryProcessor_InvalidCountOptionError=Unknown $count option, only "true" and "false" are supported
+RequestQueryProcessor_RequestVerbCannotCountError=Segment /$count and query count $count=true(false)) only apply to an HTTP GET request.
+RequestQueryProcessor_QueryCountWithSegmentCount=Query $count cannot be applied to the resource segment $count
+RequestQueryProcessor_PrimitivePropertyUsedAsNavigationProperty=Property {1} on type {0} is of primitive type and cannot be used as a navigation property.
+RequestQueryProcessor_ComplexPropertyAsInnerSelectSegment=$select doesn't support projecting properties of complex type. Type {0}, property {1}.
+RequestQueryProcessor_CollectionPropertyAsInnerSelectSegment=The projection from property '{1}' of type '{0}' is not valid. The $select query option does not support projecting items from a collection property.
+RequestQueryProcessor_ProjectedPropertyWithoutMatchingExpand=Only properties specified in $expand can be traversed in $select query options. Property {0}.
+RequestQueryProcessor_SkipTokenSupportedOnPagedSets=A skip token can only be provided in a query request against an entity set when the entity set has a paging limit set.
+RequestQueryProcessor_SkipTokenNotAllowed=Skip tokens can only be provided for requests that return collections of entities.
+RequestQueryProcessor_NamedStreamMustBeLastSegmentInSelect=The named stream '{0}' must be the last segment in a $select path.
+RequestQueryProcessor_ServiceActionMustBeLastSegmentInSelect=The service action '{0}' must be the last segment in a $select path.
+RequestQueryProcessor_SelectAndExpandCannotBeSpecifiedTogether=Both the $select and $expand query options could not be specified for the '{0}' property because the type qualifiers do not match. The type qualifier specified in the $expand query option must be the same as the one specified in the $select query option.
+RequestQueryProcessor_CannotSpecifyOpenPropertyAndDeclaredPropertyAtTheSameTime=The property '{0}' on type '{1}' resolves to an open property, but the same property is already a declared property on type '{2}'. In a query URI, the same property cannot belong to two different types in the same type hierarchy. You must either remove one property from the query URI or use the same type identifier.
+RequestQueryProcessor_QueryParametersPathCannotEndInTypeIdentifier=The {0} query option is not valid because it contains a property path which ends with the type identifier '{1}'. Property paths in query options cannot end with a type identifier. Please make sure that property paths specified in query options end with a property name.
+
+RequestUriProcessor_AbsoluteRequestUriCannotBeNull=The AbsoluteRequestUri property of the data service host cannot be null.
+RequestUriProcessor_AbsoluteRequestUriMustBeAbsolute=The AbsoluteRequestUri property of the data service host must be an absolute URI.
+RequestUriProcessor_AbsoluteServiceUriCannotBeNull=The AbsoluteServiceUri property of the data service host cannot be null.
+RequestUriProcessor_AbsoluteServiceUriMustBeAbsolute=The AbsoluteServiceUri property of the data service host must be an absolute URI.
+RequestUriProcessor_Forbidden=Forbidden
+RequestUriProcessor_KeysMustBeNamed=Segments with multiple key values must specify them in 'name=value' form.
+RequestUriProcessor_MethodNotAllowed=Method Not Allowed
+RequestUriProcessor_PropertyNotFound=Type '{0}' does not have a property named '{1}'; there is no service action named '{1}' that is bindable to the type '{0}'; and there is no type with the name '{1}'.
+RequestUriProcessor_ResourceNotFound=Resource not found for the segment '{0}'.
+RequestUriProcessor_SyntaxError=Bad Request - Error in query syntax.
+RequestUriProcessor_EmptySegmentInRequestUrl=Empty segment encountered in request URL. Please make sure that a valid request URL is specified.
+RequestUriProcessor_ValueSegmentAfterScalarPropertySegment=The segment '{1}' in the request URI is not valid. Since the segment '{0}' refers to a primitive type property, the only supported value from the next segment is '$value'.
+RequestUriProcessor_IEnumerableServiceOperationsCannotBeFurtherComposed=Resource Not Found - '{0}' refers to a service operation which does not allow further composition.
+RequestUriProcessor_CannotQueryCollections=The request URI is not valid. Since the segment '{0}' refers to a collection, this must be the last segment in the request URI or it must be followed by an function or action that can be bound to it otherwise all intermediate segments must refer to a single resource.
+RequestUriProcessor_MustBeLeafSegment=The request URI is not valid. The segment '{0}' must be the last segment in the URI because it is one of the following: $batch, $value, $metadata, a collection property, a named media resource, an action, a noncomposable function, an action import, or a noncomposable function import.
+RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment=The request URI is not valid. The segment '{0}' must refer to a navigation property since the previous segment identifier is '{1}'.
+RequestUriProcessor_CannotSpecifyAfterPostLinkSegment=The request URI is not valid. The segment '{0}' is not valid. Since the uri contains the '{1}' segment, there must be only one segment specified after that.
+RequestUriProcessor_CountOnRoot=The request URI is not valid, the segment $count cannot be applied to the root of the service.
+RequestUriProcessor_CountNotSupported=The request URI is not valid, $count cannot be applied to the segment '{0}' since $count can only follow a resource segment.
+RequestUriProcessor_CannotQuerySingletons=The request URI is not valid, since the segment '{0}' refers to a singleton, and the segment '{1}' can only follow a resource collection.
+RequestUriProcessor_InvalidHttpMethodForNamedStream=The URI '{0}' refers to a named stream and is not valid for '{1}' operation.
+RequestUriProcessor_SegmentDoesNotSupportKeyPredicates=The request URI is not valid. The segment '{0}' cannot include key predicates, however it may end with empty parenthesis.
+RequestUriProcessor_InvalidTypeIdentifier_MustBeASubType=The type name '{0}' specified in the URI is not a valid type. Please make sure that the type name is valid and that it derives from the type '{1}'.
+RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType=The type '{0}' specified in the URI is neither a base type nor a sub-type of the previously-specified type '{1}'.
+RequestUriProcessor_TypeIdentifierCannotBeSpecifiedAfterTypeIdentifier=Type identifier '{0}' in the URI cannot be specified immediately after '{1}' type identifier. There must be a property name specified between 2 type identifiers.
+RequestUriProcessor_UnbindableOperationsMustBeCalledAtRootLevel=The operation '{0}' is not bindable and must be called at the root level.
+RequestUriProcessor_MissingBindingParameter=Service action '{0}' requires a binding parameter, but it was invoked unbound.
+RequestUriProcessor_BindingParameterNotAssignableFromPreviousSegment=The binding parameter for '{0}' is not assignable from the result of the uri segment '{1}'.
+RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset=Batched service action '{0}' cannot be invoked because it was bound to an entity created in the same changeset.
+RequestUriProcessor_ActionComposedWithWebInvokeServiceOperationNotAllowed=An action cannot be composed with a service operation that uses the WebInvokeAttribute.
+
+PathParser_EntityReferenceNotSupported=The request URI is not valid. $ref cannot be applied to the segment '{0}' since $ref can only follow a navigational property.
+PathParser_ServiceOperationsWithSameName=Multiple Service Operations with the name '{0}' were found. There can only be one Service Operation with a given name in a model.
+
+ResourceContainer_ContainerMustBeAssociatedWithEntityType=The ResourceTypeKind property of a ResourceType instance that is associated with a ResourceSet must have a value of 'EntityType'.
+ResourceSet_Sealed=The resource set '{0}' cannot be modified since it is already set to read-only.
+
+ResourceSetPathExpression_PathExpressionMustStartWithBindingParameterName=The path expression '{0}' is not a valid path expression. A valid path expression must start with the binding parameter name '{1}'.
+ResourceSetPathExpression_PropertyNotFound=The path expression '{0}' is not a valid expression because the segment '{1}' is not a type identifier or a property on the resource type '{2}'.
+ResourceSetPathExpression_PropertyMustBeEntityType=The path expression '{0}' is not a valid expression because the segment '{1}' is a property of type '{2}'. A valid path expression must only contain properties of entity type.
+ResourceSetPathExpression_PathCannotEndWithTypeIdentifier=The path expression '{0}' is not a valid expression because it ends with the type identifier '{1}'. A valid path expression must not end in a type identifier.
+ResourceSetPathExpression_EmptySegment=The path expression '{0}' is not a valid expression because it contains an empty segment or it ends with '/'.
+
+ResourceType_NoKeysInDerivedTypes=Key properties cannot be defined in derived types.
+ResourceType_KeyPropertiesOnlyOnEntityTypes=Key properties can only be added to ResourceType instances with a ResourceTypeKind equal to 'EntityType'.
+ResourceType_ETagPropertiesOnlyOnEntityTypes=ETag properties can only be added to ResourceType instances with a ResourceTypeKind equal to 'EntityType'.
+ResourceType_InvalidValueForResourceTypeKind=ResourceTypeKind.Primitive, ResourceTypeKind.Collection and ResourceTypeKind.EntityCollection are not valid values for the '{0}' parameter.
+ResourceType_TypeCannotBeValueType=The CLR type for the resource type cannot be a value type.
+ResourceType_Sealed=The resource type '{0}' cannot be modified since it is already set to read-only.
+ResourceType_MissingKeyPropertiesForEntity=The entity type '{0}' does not have any key properties. Please make sure that one or more key properties are defined for this entity type.
+ResourceType_NamedStreamsOnlyApplyToEntityType=Adding named streams to the type '{0}' is not allowed. Named streams can only be added to entity types.
+ResourceType_PropertyWithSameNameAlreadyExists=A property with same name '{0}' already exists in type '{1}'. Please make sure that there is no property with the same name defined in one of the base types.
+ResourceType_ComplexTypeCannotBeOpen=Complex types can not be marked as 'Open'. Error occurred for type '{0}'.
+ResourceType_CollectionItemCanBeOnlyPrimitiveOrComplex=Only collection properties that contain primitive types or complex types are supported.
+ResourceType_CollectionItemCanBeOnlyEntity=Only collections of an entity type are supported.
+ResourceType_InvalidResourceTypeKindInheritance=A resource type of kind '{0}' cannot derive from a base resource type of kind '{1}'. Inheritance is only supported when resource types are of the same kind.
+ResourceType_CollectionItemCannotBeStream=The ItemType of a collection resource type cannot be of type '{0}'.
+ResourceType_SpatialKeyOrETag=A spatial property '{0}' cannot be used as key or ETag for the entity type '{1}'.
+
+ResourceProperty_Sealed=The resource property '{0}' cannot be modified since it is already set to read-only.
+ResourceProperty_MimeTypeAttributeEmpty=MimeType for property '{0}' is not valid. Please make sure that the mime type is not empty.
+ResourceProperty_MimeTypeAttributeOnNonPrimitive=The MimeType attribute is specified for property '{0}', which is of kind '{1}'. A MimeType can only be specified on properties that are of kind ResourcePropertyKind.Primitive.
+ResourceProperty_MimeTypeNotValid=MIME type '{0}' for property '{1}' is not in 'type/subtype' format. Please specify a valid value for mime type.
+ResourceProperty_PropertyKindAndResourceTypeKindMismatch='{0}' parameter does not match with the type of the resource type in parameter '{1}'.
+ResourceProperty_KeyPropertiesCannotBeNullable=Key Properties cannot be of nullable type. Please make sure the type of this property is not of Nullable<> type.
+ResourceProperty_NamedStreamCannotReflect=The property 'CanReflectOnInstanceTypeProperty' on a NamedStream property is not settable.
+ResourceProperty_NamedStreamKindMustBeUsedAlone=Invalid ResourcePropertyKind, ResourcePropertyKind.Stream must not be combined with any other flag.
+
+Serializer_CannotConvertValue=The resource contains value '{0}' which cannot be serialized.
+Serializer_NullKeysAreNotSupported=The serialized resource has a null value in key member '{0}'. Null values are not supported in key members.
+Serializer_ResultsExceedMax=The response exceeds the maximum {0} results per collection.
+Serializer_UnsupportedTopLevelType=The top-level type '{0}' for this request is not supported for serialization.
+Serializer_ETagValueDoesNotMatch=The etag value in the request header does not match with the current etag value of the object.
+Serializer_NoETagPropertiesForType=If-Match or If-None-Match headers cannot be specified if the target type does not have etag properties defined.
+Serializer_CollectionCanNotBeNull=The collection property '{0}' has a null value. Collection properties that return a null value are not supported.
+Serializer_CollectionPropertyValueMustImplementIEnumerable=The collection type returned by the property '{0}' does not implement IEnumerable. Collection properties must be of a type that implements IEnumerable.
+Serializer_LoopsNotAllowedInComplexTypes=A circular loop was detected while serializing the property '{0}'. You must make sure that loops are not present in properties that return a collection property or complex type.
+
+ServiceOperation_MimeTypeNotValid=The MIME type '{0}' for service operation '{1}' is not in 'type/subtype' format.
+ServiceOperation_MimeTypeCannotBeEmpty=The MIME type specified for service operation '{0}' is not valid. The MimeType property cannot be set to null or empty.
+ServiceOperation_Sealed=The service operation '{0}' cannot be modified since it is already set to read-only.
+ServiceOperation_ResultTypeAndKindMustMatch=The '{1}' parameter must be null when the '{0}' parameter value is '{2}', however the '{1}' parameter cannot be null when the '{0}' parameter is of any value other than '{2}'. Please make sure that the '{0}' parameter value is set according to the '{1}' parameter value.
+ServiceOperation_ResultSetMustBeNullForGivenResultType='{0}' must be null when '{1}' is null or not an EntityType.
+ServiceOperation_ResultSetMustBeNullForGivenReturnType='{0}' must be null when '{1}' is null, not an entity type or not an entity collection type.
+ServiceOperation_ResultTypeAndResultSetMustMatch=When '{0}' is an entity type, '{1}' cannot be null and the resource type of '{1}' must be assignable from '{0}'.
+ServiceOperation_ReturnTypeAndResultSetMustMatch=When '{0}' is an entity type or an entity collection type, '{1}' and '{2}' cannot be both null and the resource type of the result set must be assignable from '{0}'.
+ServiceOperation_NotSupportedProtocolMethod=An invalid HTTP method '{0}' was specified for the service operation '{1}'. Only the HTTP 'POST' and 'GET' methods are supported for service operations.
+ServiceOperation_DuplicateParameterName=A parameter with the name '{0}' already exists. Please make sure that every parameter has a unique name.
+ServiceOperation_InvalidResultType=The resource type '{0}' is not a type that can be returned by a service operation. A service operation can only return values of an entity type, a complex type or any primitive type, other than the stream type.
+ServiceOperation_InvalidReturnType=The resource type '{0}' is not a type that can be returned by a function or action. A function or action can only return values of an entity type, an entity collection type, a complex type, a collection type or any primitive type, other than the stream type.
+ServiceOperation_ActionBindingMustBeEntityOrEntityCollection=An action's binding parameter must be of type Entity or EntityCollection.
+ServiceOperation_BindableOperationMustHaveAtLeastOneParameter=Bindable actions or functions must have at least one parameter, where the first parameter is the binding parameter.
+ServiceOperation_MustBeBindableToUsePathExpression=The operation must be bindable when '{0}' is not null.
+ServiceOperation_BindingParameterMustBeEntityToUsePathExpression=The binding parameter type must be an entity type or an entity collection type when '{0}' is not null.
+ServiceOperation_NonBindingParametersCannotBeEntityorEntityCollection=The '{0}' parameter is of resource type kind '{1}' and it is not the binding parameter. Parameter of type kind '{1}' is only supported for the binding parameter.
+Opereration_BoundOperationsMustNotSpecifyEntitySetOnlyEntitySetPath=The operation '{0}' is not supported because a bound operation cannot specify an entity set value and must specify and entity set path.
+
+ServiceOperationParameter_TypeNotSupported=The service operation parameter '{0}' of type '{1}' is not supported.
+
+SingleResourceExpected=A single resource was expected for the result, but multiple resources were found.
+
+Syndication_ErrorReadingEntry=Error reading syndication item: '{0}'.
+Syndication_InvalidOpenPropertyType=The open property '{0}' has an value which is not of valid type.. Please make sure that the property type is supported.
+Syndication_InvalidOpenPropertyName=One or more open properties of the given instance of type '{0}' has a null or empty name specified.
+
+ObjectContext_MissingExtendedAttributeType=The required extended attribute '{0}' is missing for resource type '{1}'.
+ObjectContext_ResourceTypeNameNotExist=A resource type named '{0}' does not exist in the metadata.
+ObjectContext_EntityTypeExpected=An entity resource type is expected, however the resource type '{0}' is of type kind '{1}'.
+ObjectContext_ComplexTypeExpected=A complex resource type is expected, however the resource type '{0}' is of type kind '{1}'.
+ObjectContext_UnknownResourceTypeForClrType=The clr type '{0}' is an unknown resource type to the metadata provider.
+ObjectContext_PropertyNotDefinedOnType=The resource type '{0}' does not define a property that is named '{1}'.
+ObjectContext_PublicPropertyNotDefinedOnType=The CLR type '{0}' does not define a public property named '{1}'. All properties declared on types in the object model must be public.
+ObjectContext_PropertyMustBeNavigationProperty=The property '{0}' must be a navigation property defined on the resource type '{1}'.
+ObjectContext_IfNoneMatchHeaderNotSupportedInUpdateAndDelete=If-None-Match HTTP header cannot be specified for update and delete operations.
+
+OperationWrapper_OperationResourceSetNotVisible=The operation '{0}' has the resource set '{1}' that is not visible. The operation '{0}' should be made hidden or the resource set '{1}' should be made visible.
+OperationWrapper_TargetSetFromPathExpressionNotNotVisible=The service action '{0}' has the resource set path expression '{1}'. However there is no visible target resource set when it is bind to the resource set '{2}'.
+OperationWrapper_PathExpressionRequiresBindingSet=The operation '{0}' contains a path expression and cannot be invoked as a top level operation.
+
+ServiceOperationProvider_TypeIsAbstract=Unable to create ServiceOperationProvider. Type '{0}' is abstract.
+
+DataService_BatchExceedMaxBatchCount=The batch request exceeds the maximum {0} operations per request.
+DataService_BatchExceedMaxChangeSetCount=The batch request operation exceeds the maximum {0} changes per change set.
+DataService_BatchResourceOnlySupportsPost=The /$batch resource only supports POST method requests.
+DataService_ChangeInterceptorIncorrectParameterCount=Method '{0}' on type '{1}' is marked as a change interceptor method but has {2} parameters. Two parameters are expected.
+DataService_ContextTypeIsAbstract=Unable to create data provider. Type '{0}' for data source in '{1}' is abstract.
+DataService_CreateDataSourceNull=The method CreateDataService has been overridden but it returned a null value; a valid instance is required.
+DataService_ExpandCountExceeded=The request includes {0} $expand segment(s), but the maximum allowed is {1}.
+DataService_QueryInterceptorIncorrectParameterCount=Method '{0}' on type '{1}' is marked as a query interceptor method but has {2} parameters. Query interceptors should take no parameters.
+DataService_AttributeEntitySetNotFound=Entity set '{0}' declared on attribute for method '{1}' of type '{2}' was not found.
+DataService_AuthorizationMethodNotVoid=Method '{0}' on type '{1}' us marked as an authorization method but has a return type of '{2}' when no return value is expected.
+DataService_AuthorizationMethodVoid=Method '{0}' on type '{1}' returns no value, but a '{2}' return type is required for a query interceptor method.
+DataService_AuthorizationParameterNotAssignable=Parameter '{0}' of method '{1}' on type '{2}' is of type '{3}' but a type assignable from '{4}' is required.
+DataService_AuthorizationParameterNotResourceAction=Parameter '{0}' of method '{1}' on type '{2}' is of type '{3}' but should be of type System.Data.Web.ResourceAction.
+DataService_AuthorizationReturnedNullQuery=Method '{0}' on type '{1}' returned a null expression.
+DataService_AuthorizationReturnTypeNotAssignable=Return type of method '{0}' on type '{1}' is of type '{2}' but a type assignable to '{3}' is required for a query interceptor.
+DataService_HostNotAttached=There is no host attached to this service. Call AttachHost to provide a valid host that can provide a request to process.
+DataService_NotImplementedException=Not Implemented
+DataService_ParameterIsOut=Type '{0}' has a method '{1}' with parameter '{2}' declared as an [Out] parameter. The parameter should be declared as [In] only.
+DataService_BothIfMatchAndIfNoneMatchHeaderSpecified=Both If-Match and If-None-Match HTTP headers cannot be specified at the same time. Please specify either one of the headers or none of them.
+DataService_ETagCannotBeSpecified=If-Match or If-None-Match HTTP headers cannot be specified since the URI '{0}' refers to a collection of resources or has a $count or $link segment or has a $expand as one of the query parameters.
+DataService_ETagSpecifiedForPost=If-Match or If-None-Match HTTP headers cannot be specified for POST operations.
+DataService_ETagSpecifiedForServiceAction=If-Match or If-None-Match HTTP headers cannot be specified for service actions.
+DataService_IfNoneMatchHeaderNotSupportedInDelete=If-None-Match HTTP header cannot be specified for DELETE operations.
+DataService_IfNoneMatchHeaderNotSupportedInPut=If-None-Match HTTP header cannot be specified for PUT operations.
+DataService_ETagNotSupportedInUnbind=If-Match or If-None-Match HTTP headers cannot be specified for DELETE operations to $link end points.
+DataService_CannotPerformOperationWithoutETag=Since entity type '{0}' has one or more etag properties, If-Match HTTP header must be specified for DELETE/PUT operations on this type.
+DataService_ContentIdMustBeAnInteger='{0}' is not a valid value for the 'Content-ID' header. In batch requests, the 'Content-ID' header must be an integer value.
+DataService_ContentIdMustBeUniqueInBatch='{0}' is not a unique 'Content-ID' in the given batch requests. In batch requests, every 'Content-ID' must be a unique value.
+DataService_OnlyGetOperationSupportedOnServiceUrl=The URL representing the root of the service only supports GET requests.
+DataService_VersionCannotBeParsed=Request version '{0}' specified for header '{1}' is not valid. Please specify a valid version value.
+;the second parameter is a comma separated list of versions
+DataService_InvalidRequestVersion=Request version '{0}' is not a valid request version. The only supported versions are {1}.
+DataService_DSVTooLow=The OData-Version '{0}' is too low for the request. The lowest supported version is '{1}.{2}'.
+DataService_MaxDSVTooLow=The OData-MaxVersion '{0}' is too low for the response. The lowest supported version is '{1}.{2}'.
+DataService_RequestVersionMustBeLessThanMPV=Request version '{0}' is too high for the server. Please specify a request version less than or equal to '{1}'.
+DataService_CannotUpdateKeyProperties=Since '{0}' is a key property, it cannot be updated.
+DataService_ETagValueNotValid=The etag value '{0}' specified in one of the request headers is not valid. Please make sure only one etag value is specified and is valid.
+DataService_SDP_PageSizeWithMaxResultsPerCollection=Specification of entity set page size is mutually exclusive with the specification of MaxResultsPerCollection property in configuration.
+DataService_SDP_PageSizeMustbeNonNegative=The given page size {0} for entity set '{1}' should have a non-negative value.
+DataService_SDP_SkipTokenNotMatchingOrdering=The number of keys '{0}' in skip token with value '{1}' did not match the number of ordering constraints '{2}' for the resource type.
+DataService_SDP_TopLevelPagedResultWithOldExpandProvider=The request could not be processed because the data service implements IExpandProvider, which does not support the paging of top-level results.
+DataService_RegisterKnownTypeNotAllowedForIDSP=Adding types through RegisterKnownType() is not supported for providers instantiated by the user.
+DataService_Projections_ProjectionsWithOldExpandProvider=The request could not be processed because the data service implements IExpandProvider, which does not support projection.
+DataService_IDataServiceQueryProviderNull=For custom providers, if GetService returns non-null for IDataServiceMetadataProvider, it must not return null for IDataServiceQueryProvider.
+DataService_CannotUpdateSetReferenceLinks=Update operations are not supported for '$ref' end points that refer to collection properties.
+DataService_DerivedExpansions_OldExpandProvider=The request could not be processed because the data service implements IExpandProvider, which does not support expansions on derived navigation properties.
+
+ResourceAssociationSetEnd_ResourcePropertyMustBeNavigationPropertyOnResourceType=The resourceProperty parameter must be a navigation property on the resource type specified by the resourceType parameter.
+ResourceAssociationSetEnd_ResourceTypeMustBeAssignableToResourceSet=The resourceType parameter must be a type that is assignable to the resource set specified by the resourceSet parameter.
+ResourceAssociationSetEnd_ResourceTypeMustBeTheDeclaringType=The resource type '{0}' specified for the ResourceAssociationSetEnd is not valid for resource property '{1}'. The resource type must be the declaring type of the property.
+ResourceAssociationSet_ResourcePropertyCannotBeBothNull=The ResourceProperty of the ResourceAssociationEnds cannot both be null.
+ResourceAssociationSet_BidirectionalAssociationMustReturnSameResourceAssociationSetFromBothEnd=When the ResourceAssociationSet is bidirectional, IDataServiceMetadataProvider.GetResourceAssociationSet() must return the same ResourceAssociationSet when call from both ends.
+ResourceAssociationSet_SelfReferencingAssociationCannotBeBiDirectional=The ends of a ResourceAssociationSet cannot both have the same ResourceType and ResourceProperty values. If this is a self-referencing association, the ResourceAssociationSet must be unidirectional with the ResourceProperty on one of the ends set to null.
+ResourceAssociationSet_MultipleAssociationSetsForTheSameAssociationTypeMustNotReferToSameEndSets=ResourceAssociationSets '{0}' and '{1}' have a ResourceAssociationSetEnd referring to the same EntitySet '{2}' through the same AssociationType. Make sure that if two or more AssociationSets refer to the same AssociationType, the ends must not refer to the same EntitySet. For CLR context, this could happen if multiple entity sets have entity types that have a common ancestor and the ancestor has a property of derived entity types.
+
+MetadataSerializer_NoResourceAssociationSetForNavigationProperty=No visible ResourceAssociationSet found for navigation property '{0}' on type '{1}'. There must be at least one ResourceAssociationSet for each navigation property.
+MetadataSerializer_AccessEnabledTypeNoLongerExists=Resource type '{0}' was registered by DataServiceConfiguration.EnableAccess(), however it no longer exists in the data service provider.
+MetadataSerializer_ModelValidationErrors=An IEdmModel instance was found that failed validation. The following errors were reported:\r\n{0}
+
+DataServiceHost_EmptyHttpMethod=There is no HTTP method specified by the host.
+DataServiceHost_RequestHeadersCannotBeNull=The RequestHeaders property of the data service host cannot be null.
+DataServiceHost_ResponseHeadersCannotBeNull=The ResponseHeaders property of the data service host cannot be null.
+DataServiceHost_FeatureRequiresIDataServiceHost2=The data service cannot access the requested information. To be able to access this information, the process that hosts the data service must implement the IDataServiceHost2 interface.
+
+DataService_InvalidStreamFromGetWriteStream=IDataServiceStreamProvider.GetWriteStream() must return a valid writable stream.
+DataService_InvalidStreamFromGetReadStream=IDataServiceStreamProvider.GetReadStream() must return a valid readable stream.
+DataServiceConfiguration_NoChangesAllowed=No changes are allowed to the configuration after '{0}' is invoked.
+DataServiceConfiguration_ResourceSetNameNotFound=The given name '{0}' was not found in the entity sets.
+DataServiceConfiguration_ResourceTypeNameNotFound=The given name '{0}' was not found in the entity types.
+DataServiceConfiguration_ServiceNameNotFound=The given name '{0}' was not found in the service operations.
+DataServiceConfiguration_NotComplexType=The given type '{0}' is not a complex type.
+DataServiceConfiguration_CountNotAccepted=The ability of the data service to return row count information is disabled. To enable this functionality, set the DataServiceConfiguration.AcceptCountRequests property to true.
+DataServiceConfiguration_ProjectionsNotAccepted=The ability to use the $select query option to define a projection in a data service query is disabled. To enable this functionality, set the DataServiceConfiguration. AcceptProjectionRequests property to true.
+DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion=The response requires that version {0} of the protocol be used, but the MaxProtocolVersion of the data service is set to {1}.
+
+DataServiceException_GeneralError=An error occurred while processing this request.
+DataServiceException_UnsupportedMediaType=Unsupported media type requested.
+
+DataServiceHost_MoreThanOneQueryParameterSpecifiedWithTheGivenName=More than one query parameter specified with the name '{0}' in request URI '{1}'.
+
+WebUtil_ArgumentNullOrEmpty=Value cannot be null or empty.
+
+BadRequest_InvalidUriForPostOperation=The URI '{0}' is not valid for POST operation. For POST operations, the URI must refer to a service operation or an entity set.
+BadRequest_InvalidUriForPutOperation=The URI '{0}' is not valid for PUT operation. The URI must point to a single resource for PUT operations.
+BadRequest_InvalidUriForPatchOperation=The URI '{0}' is not valid for PATCH operation. The URI must point to a single resource for PATCH operations. PATCH operation against a media resource is not supported.
+BadRequest_InvalidUriForDeleteOperation=The URI '{0}' is not valid for DELETE operation. The URI must refer to a single resource from an entity set or from a property referring to a set of resources.
+BadRequest_InvalidUriForMediaResource=The URI '{0}' is not valid. The segment before '$value' must be a Media Link Entry or a primitive property.
+BadRequest_NullRequestStream=Error in processing request - there is no request body available.
+BadRequest_KeyCountMismatch=The number of keys specified in the URI does not match number of key properties for the resource '{0}'.
+BadRequest_CannotNullifyValueTypeProperty=The request is not valid. To set a value to null, the URI must refer to a property whose type is not of value type.
+BadRequest_QueryOptionsShouldNotBeSpecifiedForDeletingSingleEntityReference=$id or any other query option must not be specified for DELETE operation on a single entity reference.
+BadRequest_IdMustBeSpecifiedForDeletingCollectionOfEntityReference=$id query option must be specified for DELETE operation on a collection of entity references.
+
+UpdatableWrapper_MissingIUpdatableForV1Provider=The data source must implement IUpdatable, IDataServiceUpdateProvider or IDataServiceUpdateProvider2 to support updates.
+UpdatableWrapper_MissingUpdateProviderInterface=The data source must implement IDataServiceUpdateProvider or IDataServiceUpdateProvider2 to support updates.
+UpdatableWrapper_MustImplementDataServiceUpdateProvider2ToSupportServiceActions=To support service actions, the data service must implement IServiceProvider.GetService() to return an implementation of IDataServiceUpdateProvider2 or the data source must implement IDataServiceUpdateProvider2.
+
+UrlConvention_BadRequestIfUnknown=The value '{0}' given in the '{1}' header was not recognized. Expected values are '{2}' and '{3}'.
+
+InvalidUri_OpenPropertiesCannotBeCollection=The property '{0}' referred in the request URI is a open property and refers to a collection of resources. Open properties are not allowed to contain collections.
+PropertyRequiresNonNegativeNumber=Property '{0}' requires a non-negative value.
+
+DataServiceStreamProviderWrapper_MustImplementIDataServiceStreamProviderToSupportStreaming=To support streaming, the data service must implement IServiceProvider.GetService() to return an implementation of IDataServiceStreamProvider or the data source must implement IDataServiceStreamProvider.
+DataServiceStreamProviderWrapper_MustImplementDataServiceStreamProvider2ToSupportNamedStreams=To support named streams, the data service must implement IServiceProvider.GetService() to return an implementation of IDataServiceStreamProvider2 or the data source must implement IDataServiceStreamProvider2.
+DataServiceStreamProviderWrapper_MustNotSetContentTypeAndEtag=The method '{0}' must not set the HTTP response headers 'Content-Type' and 'ETag'.
+DataServiceStreamProviderWrapper_GetStreamContentTypeReturnsEmptyOrNull=The method 'IDataServiceStreamProvider.GetStreamContentType' must not return a null or empty string.
+DataServiceStreamProviderWrapper_GetReadStreamUriMustReturnAbsoluteUriOrNull=The method 'IDataServiceStreamProvider.GetReadStreamUri' must return an absolute Uri or null.
+DataServiceStreamProviderWrapper_GetStreamETagReturnedInvalidETagFormat=The method 'IDataServiceStreamProvider.GetStreamETag' returned an entity tag with invalid format.
+DataServiceStreamProviderWrapper_ResolveTypeMustReturnValidResourceTypeName=The method 'IDataServiceStreamProvider.ResolveType' must return a valid resource type name.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Common Deserializers Error Messages
+BadRequest_DeepRecursion=Recursion reached allowed limit: '{0}'.
+BadRequest_DeepRecursion_General=Recursion reached allowed limit.
+BadRequest_RequestUriDoesNotHaveTheRightBaseUri=The URI '{0}' is not valid since it is not based on '{1}'.
+BadRequest_RequestUriCannotBeBasedOnBaseUri=Failed to create absolute URI. The URI '{0}' is not valid because it cannot be based on '{1}'. When the URI for an operation is relative, you must remove all preceding forward slashes.
+NoEmptyConstructorFoundForType=A constructor which accepts no parameters was not found for type '{0}'. Every entity type must have a constructor which accepts no parameters.
+CannotCreateInstancesOfAbstractType=The type '{0}' is an abstract type. For PUT, POST and DELETE operations, the type specified must be a concrete type with a constructor that accepts no parameters.
+BadRequest_InvalidPropertyNameSpecified=Could not find a property named '{0}' on type '{1}'.
+BadRequest_DereferencingNullPropertyValue=Error processing request stream. The value of the property '{0}' specified is null and hence you cannot dereference the property.
+BadRequest_CannotSetCollectionsToNull=Error processing request stream. The property '{0}' represents a collection of resources and hence cannot be set to null.
+BadRequest_ValuesCanBeReturnedForPrimitiveTypesOnly=$value must be only specified for primitive values. Please make sure that property is a primitive type property.
+BadRequest_InvalidUriSpecified=Error processing request stream. The URI specified is not valid.
+BadRequest_DeepUpdateNotSupported=Error processing request stream. Deep updates are not supported in PUT or PATCH operations.
+BadRequest_TypeInformationMustBeSpecifiedForInhertiance=Error processing request stream. Type information must be specified for types that take part in inheritance.
+BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation=Error processing request stream. In batch mode, a resource can be cross-referenced only for bind/unbind operations.
+BadRequest_CannotSetTopLevelResourceToNull=Error processing request stream. Since URI '{0}' points directly to a top level resource, it cannot be set to null.
+BadRequest_MissingUriForLinkOperation=Missing URI element. For link operations, URI element must be specified.
+BadRequest_ErrorInSettingPropertyValue=Error processing request stream. Error encountered in setting value for property '{0}'. Please verify that the value is correct.
+BadRequest_PropertyValueCannotBeSet=Error processing request stream. Property '{0}' is a read-only property and cannot be updated. Please make sure that this property is not present in the request payload.
+BadRequest_CannotUpdateRelatedEntitiesInPut=Error processing request stream. Binding to new entities is not supported in PUT operations.
+BadRequest_ExceedsMaxObjectCountOnInsert=The request exceeds the maximum {0} resources that can be referenced in a single POST request.
+BadRequest_CollectionOfCollectionNotSupported=Collection properties of a collection type are not supported.
+BadRequest_CollectionTypeExpected=The type '{0}' specified on collection property '{1}' is not a collection type. Only a collection type can be specified on a collection property.
+BadRequest_OpenCollectionProperty=An open collection property '{0}' was found. In OData, open collection properties are not supported.
+CollectionCanOnlyBeEnumeratedOnce=The value of a collection property can only be enumerated once.
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; JsonDeserializers Error Messages
+BadRequestStream_InvalidContent=Error processing request stream. JSON text specified is not valid.
+BadRequest_InvalidTypeName=Error processing request stream. The type name '{0}' is not valid.
+BadRequest_InvalidTypeSpecified=Error processing request stream. The type name '{0}' is not valid for the given URI it represents. The expected type must be '{1}' or one of its derived types.
+BadRequestStream_MissingArrayMemberSeperator=Error processing request stream. Missing ',' between array elements.
+BadRequestStream_InvalidKeyword=Error processing request stream. '{0}' is not a valid JSON literal. 'true', 'false' and 'null' are only valid JSON literals. Make sure they are all lower-case.
+BadRequestStream_MissingMemberName=Error processing request stream. In JSON, every object is made up of name/value pairs and the name must be specified.
+BadRequestStream_MissingMemberSeperator=Error processing request stream. In JSON, every object is made up of name/value pairs and every name/value pair must be separated by ','.
+BadRequestStream_MissingNameValueSeperator=Error processing request stream. Missing ':' after '{0}'.
+BadRequestStream_InvalidJsonNameSpecifiedOrExtraComma=Error processing request stream. Either an extra comma is specified at the end or name is an empty string.
+BadRequestStream_InvalidJsonUnrecognizedEscapeSequence=Error processing request stream. Unrecognized escape sequence found in JSON string.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; AtomDeserializers Error Messages
+BadRequest_CannotSpecifyValueOrChildElementsForNullElement=Error processing request stream. Element '{0}' cannot have child elements or a value specified if it has a null attribute with true value.
+BadRequest_LinkHrefMustReferToSingleResource=Error processing request stream. Since the property '{0}' refers to a reference property, the URI specified in the href attribute must refer to a single resource.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Metadata Error Messages
+ObjectContext_DifferentContainerRights=Entity set '{0}' has rights '{1}' applied to it, but entity set '{2}' has rights '{3}'. Entity sets of the same type must have the same rights.
+ObjectContext_HasStreamAttributeEmpty=HasStream attribute for entity type '{0}' cannot be empty.
+ObjectContext_NavigationPropertyUnbound=Navigation property '{0}' on type '{1}' cannot be used because the entity set '{2}' does not have an association set specified for it.
+ObjectContext_UnableToLoadMetadataForType=Unable to load metadata for type '{0}'. The mapped OSpace type was not found. Please make sure you register the mapped OSpace type.
+ObjectContext_UnsupportedStreamProperty=Unsupported value '{0}' for HasStream attribute on entity type '{1}'.
+ObjectContext_PrimitiveTypeNotSupported=The property '{0}' on type '{1}' is of type '{2}' which is not a supported primitive type.
+ReflectionProvider_MultipleEntitySetsForSameType=Property '{0}' and '{1}' are IQueryable of types '{2}' and '{3}' and type '{2}' is an ancestor for type '{3}'. Please make sure that there is only one IQueryable property for each type hierarchy.
+ReflectionProvider_InvalidProperty=The property '{0}' on type '{1}' is not a valid property. Make sure that the type of the property is a public type and a supported primitive type or a entity type with a valid key or a complex type.
+ReflectionProvider_EntityTypeHasKeyButNoEntitySet=Type '{0}' has a key defined through an explicit DataServiceKeyAttribute, but it is not exposed through a top-level IQueryable property on the data context.
+ReflectionProvider_InvalidEntitySetProperty=On data context type '{1}', there is a top IQueryable property '{0}' whose element type is not an entity type. Make sure that the IQueryable property is of entity type or specify the IgnoreProperties attribute on the data context type to ignore this property.
+ReflectionProvider_EntityPropertyWithNoEntitySet=Type '{0}' has property '{1}' of entity type. Either this property has no corresponding entity set in the data context or one of its inherited types has a corresponding entity set. Specify IgnoreProperties attribute on the entity type for this property or use a property type that has a corresponding entity set in the data context.
+ReflectionProvider_KeyPropertiesCannotBeIgnored=Key properties cannot be ignored using the IgnoreProperties attribute. For type '{0}', please make sure that there is a key property which is not ignored.
+ReflectionProvider_ETagPropertyNameNotValid=The property name'{0}' specified in the ETagAttribute on type '{1}' is not a valid property name. Please specify a valid property name.
+ReflectionProvider_HasStreamAttributeOnlyAppliesToEntityType=Cannot apply the HasStreamAttribute to type '{0}'. HasStreamAttribute is only applicable to entity types.
+ReflectionProvider_ComplexTypeWithNavigationProperty=The property '{0}' on a complex type '{1}' is not a valid property. Navigation properties are not supported on complex types.
+ReflectionProvider_CollectionOfCollectionProperty=The property '{0}' on a type '{1}' is not a valid property. A collection property that contains collection types is not supported.
+ReflectionProvider_CollectionOfUnsupportedTypeProperty=The property '{0}' on type '{1}' is a collection property with unsupported item type '{2}'. Only primitive types and complex types are valid item types for a collection property.
+ReflectionProvider_ResourceTypeHasNoPublicallyVisibleProperties=The CLR Type '{0}' has no public properties and is not a supported resource type.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; ObjectContextServiceProvider Error Messages
+TargetElementTypeOfTheUriSpecifiedDoesNotMatchWithTheExpectedType=The entity type '{0}' that the URI refers to does not match with the expected entity type '{1}'.
+
+ObjectContextServiceProvider_OSpaceTypeNotFound=A corresponding ObjectSpace type was not found for the type '{0}'. Please ensure that the ObjectContext or DbContext is valid.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; ReflectionServiceProvider Error Messages
+BadProvider_ResolveResourceReturnedNull=Internal Server Error. ResolveResource returned null value. Please contact the provider.
+BadProvider_CreateResourceReturnedNull=Internal Server Error. CreateResource returned null value. Please contact the provider.
+BadProvider_ResetResourceReturnedNull=Internal Server Error. ResetResource returned null value. Please contact the provider.
+BadProvider_InvalidTypeSpecified=Internal Server Error. The type '{0}' is not a complex type or an entity type.
+BadProvider_UnableToGetPropertyInfo=Internal Server Error. Unable to find property '{1}' on type '{0}'. Please make sure that the property name is correct.
+BadProvider_UnsupportedType=Internal Server Error. The type '{0}' is not supported.
+BadProvider_UnsupportedAncestorType=Internal Server Error. The type '{0}' derives from '{1}' which is an unsupported type.
+BadProvider_UnsupportedPropertyType=Internal Server Error. The property '{0}' is of type '{1}' which is an unsupported type.
+BadProvider_InconsistentEntityOrComplexTypeUsage=Internal Server Error. The type '{0}' has inconsistent metadata and runtime type info.
+BadProvider_UnknownResourceSet=The resource set '{0}' is not known to the provider.
+BadProvider_UnknownResourceType=The resource type '{0}' is not known to the provider.
+BadProvider_ResourceTypeMustBeDeclaringTypeForProperty=The resource type '{0}' must contain the resource property instance '{1}'.
+BadProvider_PropertyMustBeNavigationPropertyOnType=The resource property '{0}' must be a navigation property on the resource type '{1}'.
+
+AstoriaRequestMessage_CannotModifyRequestOrServiceUriAfterReadOnly=The request URI and service URI cannot be modified after the OnStartProcessingRequest method has returned.
+AstoriaRequestMessage_CannotChangeQueryString=The query string of the request URI cannot be modified in the OnStartProcessingRequest method.
+DataServiceOperationContext_CannotModifyServiceUriInsideBatch=The service URI cannot be modified when processing a request inside a $batch payload. The ProcessRequestArgs.IsBatchOperation property will be true when inside a $batch payload.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; IDSMP-to-EdmLib Bridge Error Messages
+MetadataProviderUtils_UnsupportedPrimitiveTypeKind=The primitive type kind '{0}' is not supported.
+MetadataProviderUtils_ConversionError=Found invalid value for facet '{0}'. Cannot convert a value of type '{1}' to the expected type '{2}'.
+MetadataProviderUtils_PropertiesMustNotContainReservedChars=The name '{0}' of a property is invalid; property names must not contain any of the reserved characters {1}.
+MetadataProviderEdmModel_UnsupportedSchemaTypeKind=An attempt was made to convert a type of kind '{0}' to a schema type. This is invalid since the type kind '{0}' is not valid for schema types.
+MetadataProviderEdmModel_UnsupportedResourceTypeKind=The resource type kind '{0}' is not supported.
+MetadataProviderEdmModel_UnsupportedCollectionItemType_PrimitiveOrComplex=The resource type kind '{0}' is not supported as the type kind of a collection item type. Only 'Primitive' and 'ComplexType' kinds are supported for collection item types.
+MetadataProviderEdmModel_UnsupportedCollectionItemType_EntityPrimitiveOrComplex=The resource type kind '{0}' is not supported as the type kind of a collection item type. Only 'Primitive', 'ComplexType' and 'EntityType' kinds are supported for collection item types.
+MetadataProviderEdmModel_UnsupportedResourcePropertyKind=The resource property kind '{0}' is not supported.
+
+; NOTE: this error message has been copied from ODL since it is used in EdmLibraryExtensions
+General_InternalError=An internal error '{0}' occurred.
+
+; NOTE: these error messages are copied from EdmLib because they appear in shared source files.
+ValueParser_InvalidDuration=The value '{0}' is not a valid duration value.
+
+; Note: The below list of error messages are common to the ODataLib, EdmLib, Spatial, Server and Client projects.
+PlatformHelper_DateTimeOffsetMustContainTimeZone=The time zone information is missing on the DateTimeOffset value '{0}'. A DateTimeOffset value must contain the time zone information.
+;END
