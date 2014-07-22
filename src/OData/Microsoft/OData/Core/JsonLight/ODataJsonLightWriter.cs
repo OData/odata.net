@@ -167,7 +167,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="entityType">The entity type of the entry.</param>
         protected override void ValidateEntryMediaResource(ODataEntry entry, IEdmEntityType entityType)
         {
-            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadataInJson && this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
+            if (!this.jsonLightOutputContext.MessageWriterSettings.EnableFullValidation || (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadataInJson && this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
             {
                 // entry.MediaResource is always null for NoMetadata mode. Skip the media resource validation.
             }
@@ -550,7 +550,8 @@ namespace Microsoft.OData.Core.JsonLight
                 this.jsonLightOutputContext.WritingResponse,
                 this.jsonLightOutputContext.MessageWriterSettings.WriterBehavior,
                 selectedProperties,
-                odataUri);
+                odataUri,
+                this.jsonLightOutputContext.MessageWriterSettings.EnableFullValidation);
         }
 
         /// <summary>
@@ -759,8 +760,9 @@ namespace Microsoft.OData.Core.JsonLight
             /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal JsonLightEntryScope(ODataEntry entry, ODataFeedAndEntrySerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, bool writingResponse, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(entry, serializationInfo, navigationSource, entityType, skipWriting, writingResponse, writerBehavior, selectedProperties, odataUri)
+            /// <param name="enableValidation">Enable validation or not.</param>
+            internal JsonLightEntryScope(ODataEntry entry, ODataFeedAndEntrySerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, bool writingResponse, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool enableValidation)
+                : base(entry, serializationInfo, navigationSource, entityType, skipWriting, writingResponse, writerBehavior, selectedProperties, odataUri, enableValidation)
             {
             }
 

@@ -124,6 +124,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="isTopLevelPropertyValue">true if we are reading a top-level property value; otherwise false.</param>
         /// <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
+        /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
         /// <returns>The value of the property read.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.PrimitiveValue   - the value of the property is a primitive value
@@ -145,7 +146,8 @@ namespace Microsoft.OData.Core.JsonLight
             bool validateNullValue,
             bool isTopLevelPropertyValue,
             bool insideComplexValue,
-            string propertyName)
+            string propertyName,
+            bool? isDynamicProperty = null)
         {
             this.AssertRecursionDepthIsZero();
             object nonEntityValue = this.ReadNonEntityValueImplementation(
@@ -156,7 +158,8 @@ namespace Microsoft.OData.Core.JsonLight
                 validateNullValue,
                 isTopLevelPropertyValue,
                 insideComplexValue,
-                propertyName);
+                propertyName,
+                isDynamicProperty);
             this.AssertRecursionDepthIsZero();
 
             return nonEntityValue;
@@ -578,6 +581,30 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// Reads a type definition value.
+        /// </summary>
+        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object 
+        ///     (or the second property if the first one was odata.type).</param>
+        /// <param name="expectedValueTypeReference">The expected type definition reference of the value, or null if none is available.</param>
+        /// <param name="validateNullValue">true to validate null values; otherwise false.</param>
+        /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
+        /// <returns>The value of the primitive value.</returns>
+        private object ReadTypeDefinitionValue(bool insideJsonObjectValue, IEdmTypeDefinitionReference expectedValueTypeReference, bool validateNullValue, string propertyName)
+        {
+            object result = this.ReadPrimitiveValue(insideJsonObjectValue, expectedValueTypeReference.AsPrimitive(), validateNullValue, propertyName);
+
+            // Try convert to the expected CLR types from their underlying CLR types.
+            try
+            {
+                return this.Model.GetPrimitiveValueConverter(expectedValueTypeReference).ConvertFromUnderlyingType(result);
+            }
+            catch (OverflowException)
+            {
+                throw new ODataException(string.Format(CultureInfo.InvariantCulture, "Value '{0}' was either too large or too small for a '{1}'.", result, expectedValueTypeReference.FullName()));
+            }
+        }
+
+        /// <summary>
         /// Reads a primitive value.
         /// </summary>
         /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object 
@@ -769,7 +796,8 @@ namespace Microsoft.OData.Core.JsonLight
                                         nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
                                         /*isTopLevelPropertyValue*/ false,
                                         /*insideComplexValue*/ false,
-                                        propertyName);
+                                        propertyName,
+                                        edmProperty == null);
 
                                     if (nullValueReadBehaviorKind != ODataNullValueBehaviorKind.IgnoreValue || propertyValue != null)
                                     {
@@ -811,6 +839,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="isTopLevelPropertyValue">true if we are reading a top-level property value; otherwise false.</param>
         /// <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
+        /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
         /// <returns>The value of the property read.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.PrimitiveValue   - the value of the property is a primitive value
@@ -833,7 +862,8 @@ namespace Microsoft.OData.Core.JsonLight
             bool validateNullValue,
             bool isTopLevelPropertyValue,
             bool insideComplexValue,
-            string propertyName)
+            string propertyName,
+            bool? isDynamicProperty = null)
         {
             Debug.Assert(
                 this.JsonReader.NodeType == JsonNodeType.PrimitiveValue || this.JsonReader.NodeType == JsonNodeType.StartObject ||
@@ -894,7 +924,7 @@ namespace Microsoft.OData.Core.JsonLight
             object result;
 
             // Try to read a null value
-            if (ODataJsonReaderCoreUtils.TryReadNullValue(this.JsonReader, this.JsonLightInputContext, targetTypeReference, validateNullValue, propertyName))
+            if (ODataJsonReaderCoreUtils.TryReadNullValue(this.JsonReader, this.JsonLightInputContext, targetTypeReference, validateNullValue, propertyName, isDynamicProperty))
             {
                 if (isTopLevelPropertyValue)
                 {
@@ -904,8 +934,12 @@ namespace Microsoft.OData.Core.JsonLight
                 }
                 else if (validateNullValue && (targetTypeReference != null) && (!targetTypeReference.IsNullable))
                 {
-                    // A null value was found for the property named '{0}', which has the expected type '{1}[Nullable=False]'. The expected type '{1}[Nullable=False]' does not allow null values.
-                    throw new ODataException(ODataErrorStrings.ReaderValidationUtils_NullNamedValueForNonNullableType(propertyName, targetTypeReference.ODataFullName()));
+                    // For dynamic collection property, we should allow null value to be assigned to it.
+                    if (targetTypeKind != EdmTypeKind.Collection || isDynamicProperty != true)
+                    {
+                        // A null value was found for the property named '{0}', which has the expected type '{1}[Nullable=False]'. The expected type '{1}[Nullable=False]' does not allow null values.
+                        throw new ODataException(ODataErrorStrings.ReaderValidationUtils_NullNamedValueForNonNullableType(propertyName, targetTypeReference.ODataFullName()));
+                    }
                 }
 
                 result = null;
@@ -989,6 +1023,14 @@ namespace Microsoft.OData.Core.JsonLight
                             collectionTypeReference,
                             payloadTypeName,
                             serializationTypeNameAnnotation);
+                        break;
+
+                    case EdmTypeKind.TypeDefinition:
+                        result = this.ReadTypeDefinitionValue(
+                            valueIsJsonObject,
+                            expectedTypeReference.AsTypeDefinition(),
+                            validateNullValue,
+                            propertyName);
                         break;
 
                     default:

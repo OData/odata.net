@@ -164,8 +164,9 @@ namespace Microsoft.OData.Core.Evaluation
         /// <param name="baseUri">The URI to append to.</param>
         /// <param name="operationName">The fully qualified name of the operation for which to get the target URI.</param>
         /// <param name="bindingParameterTypeName">The binding parameter type name to include in the target, or null/empty if there is none.</param>
+        /// <param name="parameterNames">The parameter names to include in the target, or null/empty if there is none.</param>
         /// <returns>The target URI for the operation.</returns>
-        internal virtual Uri BuildOperationTargetUri(Uri baseUri, string operationName, string bindingParameterTypeName)
+        internal virtual Uri BuildOperationTargetUri(Uri baseUri, string operationName, string bindingParameterTypeName, string parameterNames)
         {
 #if ASTORIA_CLIENT
             Util.CheckArgumentNullAndEmpty(operationName, "operationName");

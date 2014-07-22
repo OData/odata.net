@@ -115,7 +115,14 @@ namespace Microsoft.OData.Core
             ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
             if (primitiveValue != null)
             {
-                return EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType()).ODataFullName();
+                // primitiveValueTypeReference == null means: the EDM type of the primitive value cannot be determined.
+                // This could possibly be due to value being an unsigned int.
+                // In this case, simply return null because:
+                //   - If the property is regular property, the type is not needed since service model knows its exact type.
+                //   - If the property is dynamic property, ODL does not support dynamic property containing unsigned int value
+                //     since we don't know its underlying type as well as how to serialize it.
+                IEdmPrimitiveTypeReference primitiveValueTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType());
+                return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.ODataFullName();
             }
 
             ODataComplexValue complexValue = value as ODataComplexValue;
@@ -232,9 +239,17 @@ namespace Microsoft.OData.Core
             {
                 ValidationUtils.ValidateComplexTypeIsAssignable(typeReferenceFromMetadata.Definition as IEdmComplexType, typeReferenceFromValue.Definition as IEdmComplexType);
             }
+            else if (typeReferenceFromMetadata.IsCollection())
+            {
+                // Collection types must match exactly.
+                if (!(typeReferenceFromMetadata.Definition.IsElementTypeEquivalentTo(typeReferenceFromValue.Definition)))
+                {
+                    throw new ODataException(Strings.ValidationUtils_IncompatibleType(typeReferenceFromValue.ODataFullName(), typeReferenceFromMetadata.ODataFullName()));
+                }
+            }
             else
             {
-                // Collection types must match exactly
+                // For other types, compare their full type name.
                 if (typeReferenceFromMetadata.ODataFullName() != typeReferenceFromValue.ODataFullName())
                 {
                     throw new ODataException(Strings.ValidationUtils_IncompatibleType(typeReferenceFromValue.ODataFullName(), typeReferenceFromMetadata.ODataFullName()));

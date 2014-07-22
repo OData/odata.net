@@ -38,6 +38,9 @@ namespace Microsoft.OData.Edm
             {
                 return false;
             }
+
+            thisType = thisType.AsActualType();
+            otherType = otherType.AsActualType();
             
             if (thisType.TypeKind != otherType.TypeKind)
             {
@@ -81,6 +84,9 @@ namespace Microsoft.OData.Edm
             {
                 return false;
             }
+
+            thisType = thisType.AsActualTypeReference();
+            otherType = otherType.AsActualTypeReference();
 
             EdmTypeKind typeKind = thisType.TypeKind();
             if (typeKind != otherType.TypeKind())

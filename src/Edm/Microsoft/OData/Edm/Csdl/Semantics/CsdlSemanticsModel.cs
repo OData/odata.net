@@ -386,6 +386,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new CsdlSemanticsPathExpression((CsdlPathExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.PropertyPath:
                         return new CsdlSemanticsPropertyPathExpression((CsdlPropertyPathExpression)expression, bindingContext, schema);
+                    case EdmExpressionKind.NavigationPropertyPath:
+                        return new CsdlSemanticsNavigationPropertyPathExpression((CsdlNavigationPropertyPathExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.PropertyReference:
                         return new CsdlSemanticsPropertyReferenceExpression((CsdlPropertyReferenceExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.Record:

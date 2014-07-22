@@ -188,6 +188,9 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.PropertyPath:
                     this.ProcessPropertyPathExpression((IEdmPathExpression)expression);
                     break;
+                case EdmExpressionKind.NavigationPropertyPath:
+                    this.ProcessNavigationPropertyPathExpression((IEdmPathExpression)expression);
+                    break;
                 case EdmExpressionKind.PropertyReference:
                     this.ProcessPropertyReferenceExpression((IEdmPropertyReferenceExpression)expression);
                     break;
@@ -273,6 +276,9 @@ namespace Microsoft.OData.Edm
                 case EdmTypeKind.Primitive:
                     this.VisitPrimitiveTypeReference(reference.AsPrimitive());
                     break;
+                case EdmTypeKind.TypeDefinition:
+                    this.ProcessTypeDefinitionReference(reference.AsTypeDefinition());
+                    break;
                 case EdmTypeKind.None:
                     this.ProcessTypeReference(reference);
                     break;
@@ -350,6 +356,9 @@ namespace Microsoft.OData.Edm
                     break;
                 case EdmTypeKind.Enum:
                     this.ProcessEnumType((IEdmEnumType)definition);
+                    break;
+                case EdmTypeKind.TypeDefinition:
+                    this.ProcessTypeDefinition((IEdmTypeDefinition)definition);
                     break;
                 case EdmTypeKind.None:
                     this.VisitSchemaType(definition);
@@ -477,6 +486,11 @@ namespace Microsoft.OData.Edm
             this.ProcessTypeReference(reference);
         }
 
+        protected virtual void ProcessTypeDefinitionReference(IEdmTypeDefinitionReference reference)
+        {
+            this.ProcessTypeReference(reference);
+        }
+
         protected virtual void ProcessBinaryTypeReference(IEdmBinaryTypeReference reference)
         {
             this.ProcessPrimitiveTypeReference(reference);
@@ -565,6 +579,13 @@ namespace Microsoft.OData.Edm
             this.ProcessType(definition);
             this.ProcessSchemaType(definition);
             this.VisitEnumMembers(definition.Members);
+        }
+
+        protected virtual void ProcessTypeDefinition(IEdmTypeDefinition definition)
+        {
+            this.ProcessSchemaElement(definition);
+            this.ProcessType(definition);
+            this.ProcessSchemaType(definition);
         }
 
         protected virtual void ProcessEntityReferenceType(IEdmEntityReferenceType definition)
@@ -683,6 +704,11 @@ namespace Microsoft.OData.Edm
         }
 
         protected virtual void ProcessPropertyPathExpression(IEdmPathExpression expression)
+        {
+            this.ProcessExpression(expression);
+        }
+
+        protected virtual void ProcessNavigationPropertyPathExpression(IEdmPathExpression expression)
         {
             this.ProcessExpression(expression);
         }

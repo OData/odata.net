@@ -22,11 +22,7 @@ namespace Microsoft.OData.Client
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using System.Xml.Linq;
-#if !ASTORIA_LIGHT
     using System.Net;
-#else // Data.Services http stack
-    using Microsoft.OData.Service.Http;
-#endif
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Values;
@@ -763,6 +759,24 @@ namespace Microsoft.OData.Client
 
             ResourceSetExpression rse = new ResourceSetExpression(typeof(IOrderedQueryable<T>), null, Expression.Constant(entitySetName), typeof(T), null, CountOption.None, null, null, null, null);
             return new DataServiceQuery<T>.DataServiceOrderedQuery(rse, new DataServiceQueryProvider(this));
+        }
+
+        /// <summary>Creates a data service query for a function with return type in a specified generic type.</summary>
+        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents a data service query.</returns>
+        /// <param name="resourcePath">A string ends with function invocation that resolves to a URI.</param>
+        /// <param name="isComposable">Whether this function query is composable</param>
+        /// <typeparam name="T">The type returned by the query</typeparam>
+        /// <remarks>create a query based on (BaseUri + relativeUri)</remarks>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "required for this feature")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1057:StringUriOverloadsCallSystemUriOverloads", Justification = "required for this feature")]
+        public DataServiceQuery<T> CreateQuery<T>(string resourcePath, bool isComposable)
+        {
+            Util.CheckArgumentNullAndEmpty(resourcePath, "entitySetName");
+            ValidateEntitySetName(ref resourcePath);
+
+            ResourceSetExpression rse = new ResourceSetExpression(typeof(IOrderedQueryable<T>), null, Expression.Constant(resourcePath), typeof(T), null, CountOption.None, null, null, null, null);
+            var query = new DataServiceQuery<T>.DataServiceOrderedQuery(rse, new DataServiceQueryProvider(this), isComposable);
+            return query;
         }
 
         /// <summary>Creates a data service query for a function invocation that returns a specified generic type.</summary>
@@ -2484,14 +2498,14 @@ namespace Microsoft.OData.Client
             if (typeName != null && typeName.StartsWith(fullNamespace, StringComparison.Ordinal))
             {
                 int namespaceLength = fullNamespace != null ? fullNamespace.Length : 0;
-                Type type = this.GetType().Assembly.GetType(string.Concat(languageDependentNamespace, typeName.Substring(namespaceLength)), false);
-                string serverDefinedName = typeName.Substring(namespaceLength + 1);
+                Type type = this.GetType().GetAssembly().GetType(string.Concat(languageDependentNamespace, typeName.Substring(namespaceLength)), false);
                 if (type == null)
                 {
-                    return this.GetType().Assembly.GetTypes().ToList().Where(t =>
+                    return this.GetType().GetAssembly().GetTypes().ToList().Where(t =>
                     {
+                        string serverDefinedName = typeName.Substring(namespaceLength + 1);
                         OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)t.GetCustomAttributes(typeof(OriginalNameAttribute), true).SingleOrDefault();
-                        return originalNameAttribute != null && originalNameAttribute.OriginalName == serverDefinedName;
+                        return originalNameAttribute != null && originalNameAttribute.OriginalName == serverDefinedName && t.Namespace == languageDependentNamespace;
                     }).SingleOrDefault();
                 }
                 else

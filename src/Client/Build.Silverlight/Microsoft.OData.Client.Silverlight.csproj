@@ -118,7 +118,10 @@
     <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\SystemToken.cs" />
     <Compile Include="Microsoft\OData\Client\ALinq\UriParser\SyntacticAst\UnaryOperatorToken.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceActionQueryOfT.cs" />
     <Compile Include="Microsoft\OData\Client\ActionDescriptor.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceActionQuerySingleOfT.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceActionQuery.cs" />
     <Compile Include="Microsoft\OData\Client\ALinq\QueryableResourceExpression.cs" />
     <Compile Include="Microsoft\OData\Client\ALinq\ResourceSetExpression.cs" />
     <Compile Include="Microsoft\OData\Client\ALinq\SingletonResourceExpression.cs" />
@@ -142,6 +145,7 @@
     <Compile Include="Microsoft\OData\Client\ConventionalODataEntityMetadataBuilder.cs" />
     <Compile Include="Microsoft\OData\Client\DataServiceClientMessageWriterSettingsShim.cs" />
     <Compile Include="Microsoft\OData\Client\DataServiceClientMessageReaderSettingsShim.cs" />
+    <Compile Include="Microsoft\OData\Client\DataServiceQuerySingleOfT.cs" />
     <Compile Include="Microsoft\OData\Client\Materialization\EnumValueMaterializationPolicy.cs" />
     <Compile Include="Microsoft\OData\Client\Materialization\ODataLoadNavigationPropertyMaterializer.cs" />
     <Compile Include="Microsoft\OData\Client\DataServiceClientRequestMessageArgs.cs" />
@@ -160,6 +164,7 @@
     <Compile Include="Microsoft\OData\Client\Materialization\StructuralValueMaterializationPolicy.cs" />
     <Compile Include="Microsoft\OData\Client\MaterializedEntityArgs.cs" />
     <Compile Include="Microsoft\OData\Client\Serialization\DataServiceClientRequestMessage.cs" />
+    <Compile Include="Microsoft\OData\Client\Utility.cs" />
     <Compile Include="Microsoft\OData\Client\WritingEntityReferenceLinkArgs.cs" />
     <Compile Include="Microsoft\OData\Client\WritingEntryArgs.cs" />
     <Compile Include="Microsoft\OData\Client\WritingNavigationLinkArgs.cs" />
@@ -275,6 +280,7 @@
     <Compile Include="Microsoft\OData\Client\Binding\EntityChangedParams.cs" />
     <Compile Include="Microsoft\OData\Client\Binding\EntityCollectionChangedParams.cs" />
     <Compile Include="Microsoft\OData\Client\Binding\DataServiceCollectionOfT.cs" />
+    <Compile Include="Microsoft\OData\Client\Binding\LoadCompletedEventArgs.cs" />
     <Compile Include="Microsoft\OData\Client\Attribute\EntitySetAttribute.cs" />
     <Compile Include="Microsoft\OData\Client\Attribute\EntityTypeAttribute.cs" />
     <Compile Include="Microsoft\OData\Client\Attribute\KeyAttribute.cs" />
@@ -332,25 +338,6 @@
     <Compile Include="Microsoft\OData\Client\Metadata\ClientTypeUtil.cs" />
     <Compile Include="Microsoft\OData\Client\Metadata\ClientTypeCache.cs" />
     <Compile Include="Microsoft\OData\Client\PlatformHelper.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\CaseInsensitiveAscii.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\ClientHttpWebRequest.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\ClientHttpWebResponse.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\ClientWebHeaderCollection.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\HeaderInfo.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\HeaderInfoTable.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\HttpHeaderToName.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\HttpRequestHeader.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\HttpStatusCode.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\HttpWebRequest.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\HttpWebResponse.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\NameValueFromDictionary.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\ValidationHelper.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\WebException.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\WebHeaderCollection.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\WebHeaderCollectionType.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\WebRequest.cs" />
-    <Compile Include="Microsoft\OData\Client\Http\WebResponse.cs" />
-    <Compile Include="Microsoft\OData\Client\Client\Binding\LoadCompletedEventArgs.cs" />
     <Compile Include="Microsoft\OData\Client\Client\TaskUtils.cs" />
     <Compile Include="Microsoft.OData.Client.cs">
       <Visible>False</Visible>

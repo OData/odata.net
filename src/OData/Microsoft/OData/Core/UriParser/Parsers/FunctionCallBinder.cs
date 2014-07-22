@@ -483,7 +483,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                             result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, functionParameter.Type);
                         }
 
-                        LiteralToken newValueToken = new LiteralToken(result);
+                        LiteralToken newValueToken = new LiteralToken(result, valueToken.OriginalText);
                         FunctionParameterToken newFuncParaToken = new FunctionParameterToken(funcParaToken.ParameterName, newValueToken);
                         partiallyParsedParametersWithComplexOrCollection.Add(newFuncParaToken);
                         continue;

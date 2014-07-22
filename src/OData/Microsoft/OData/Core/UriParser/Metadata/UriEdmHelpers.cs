@@ -103,13 +103,25 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// <exception cref="ODataException">Throws if the two types are not related.</exception>
         public static void CheckRelatedTo(IEdmType parentType, IEdmType childType)
         {
-            IEdmStructuredType childStructuredType = childType as IEdmStructuredType;
-            if (!childStructuredType.IsOrInheritsFrom(parentType) && !parentType.IsOrInheritsFrom(childStructuredType))
+            if (!IsRelatedTo(parentType, childType))
             {
                 // If the parentType is an open property, parentType will be null and can't have an ODataFullName.
                 string parentTypeName = (parentType != null) ? parentType.ODataFullName() : "<null>";
-                throw new ODataException(OData.Core.Strings.MetadataBinder_HierarchyNotFollowed(childStructuredType.FullTypeName(), parentTypeName));
+                throw new ODataException(OData.Core.Strings.MetadataBinder_HierarchyNotFollowed(childType.FullTypeName(), parentTypeName));
             }
+        }
+
+        /// <summary>
+        /// Check whether the parent and child are properly related types
+        /// </summary>
+        /// <param name="parentType">the parent type</param>
+        /// <param name="childType">the child type</param>
+        /// <returns>Whether the two types are related.</returns>
+        /// <exception cref="ODataException">Throws if the two types are not related.</exception>
+        public static bool IsRelatedTo(IEdmType parentType, IEdmType childType)
+        {
+            IEdmStructuredType childStructuredType = childType as IEdmStructuredType;
+            return childStructuredType.IsOrInheritsFrom(parentType) || parentType.IsOrInheritsFrom(childStructuredType);
         }
 
         /// <summary>

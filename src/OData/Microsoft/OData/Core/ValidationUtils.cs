@@ -313,14 +313,20 @@ namespace Microsoft.OData.Core
         /// <param name="value">The value to check.</param>
         /// <param name="valuePrimitiveTypeReference">The primitive type reference for the value - some callers have this already, so we save the lookup here.</param>
         /// <param name="expectedTypeReference">The expected type for the value.</param>
+        /// <param name="bypassValidation">Bypass the validation if it is true.</param>
         /// <remarks>
         /// Some callers have the primitive type reference already resolved (from the value type)
         /// so this method is an optimized version to not lookup the primitive type reference again.
         /// </remarks>
-        internal static void ValidateIsExpectedPrimitiveType(object value, IEdmPrimitiveTypeReference valuePrimitiveTypeReference, IEdmTypeReference expectedTypeReference)
+        internal static void ValidateIsExpectedPrimitiveType(object value, IEdmPrimitiveTypeReference valuePrimitiveTypeReference, IEdmTypeReference expectedTypeReference, bool bypassValidation = false)
         {
             Debug.Assert(value != null, "value != null");
             Debug.Assert(expectedTypeReference != null, "expectedTypeReference != null");
+
+            if (bypassValidation)
+            {
+                return;
+            }
 
             if (valuePrimitiveTypeReference == null)
             {
@@ -328,7 +334,7 @@ namespace Microsoft.OData.Core
             }
 
             Debug.Assert(valuePrimitiveTypeReference.IsEquivalentTo(EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType())), "The value and valuePrimitiveTypeReference don't match.");
-            if (!expectedTypeReference.IsODataPrimitiveTypeKind())
+            if (!expectedTypeReference.IsODataPrimitiveTypeKind() && !expectedTypeReference.IsODataTypeDefinitionTypeKind())
             {
                 // non-primitive type found for primitive value.
                 throw new ODataException(Strings.ValidationUtils_NonPrimitiveTypeForPrimitiveValue(expectedTypeReference.ODataFullName()));
@@ -338,16 +344,16 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates that the expected primitive type matches the actual primitive type.
+        /// Validates that the expected primitive type or type definition matches the actual primitive type.
         /// </summary>
         /// <param name="expectedTypeReference">The expected type.</param>
         /// <param name="typeReferenceFromValue">The actual type.</param>
         internal static void ValidateMetadataPrimitiveType(IEdmTypeReference expectedTypeReference, IEdmTypeReference typeReferenceFromValue)
         {
-            Debug.Assert(expectedTypeReference != null && expectedTypeReference.IsODataPrimitiveTypeKind(), "expectedTypeReference must be a primitive type.");
+            Debug.Assert(expectedTypeReference != null && (expectedTypeReference.IsODataPrimitiveTypeKind() || expectedTypeReference.IsODataTypeDefinitionTypeKind()), "expectedTypeReference must be a primitive type or type definition.");
             Debug.Assert(typeReferenceFromValue != null && typeReferenceFromValue.IsODataPrimitiveTypeKind(), "typeReferenceFromValue must be a primitive type.");
 
-            IEdmPrimitiveType expectedType = (IEdmPrimitiveType)expectedTypeReference.Definition;
+            IEdmType expectedType = expectedTypeReference.Definition;
             IEdmPrimitiveType typeFromValue = (IEdmPrimitiveType)typeReferenceFromValue.Definition;
 
             // The two primitive types match if they have the same definition and either both or only the 
@@ -423,6 +429,12 @@ namespace Microsoft.OData.Core
                 if (typeName == null)
                 {
                     throw new ODataException(Strings.ValidationUtils_IncorrectTypeKindNoTypeName(actualTypeKind.ToString(), expectedTypeKind.ToString()));
+                }
+
+                if (actualTypeKind == EdmTypeKind.TypeDefinition && expectedTypeKind == EdmTypeKind.Primitive ||
+                    actualTypeKind == EdmTypeKind.Primitive && expectedTypeKind == EdmTypeKind.TypeDefinition)
+                {
+                    return;
                 }
 
                 throw new ODataException(Strings.ValidationUtils_IncorrectTypeKind(typeName, expectedTypeKind.ToString(), actualTypeKind.ToString()));

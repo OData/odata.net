@@ -16,11 +16,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Globalization;
-#if !ASTORIA_LIGHT
     using System.Net;
-#else // Data.Services http stack
-    using Microsoft.OData.Service.Http;
-#endif
 #if PORTABLELIB
     using System.Reflection;
     using System.Xml;
@@ -82,7 +78,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         static HttpWebRequestMessage()
         {
-            IsRunningOnSilverlight = typeof(System.Windows.Input.ICommand).Assembly.GetType("System.Net.Browser.WebRequestCreator", false) != null;
+            IsRunningOnSilverlight = typeof(System.Windows.Input.ICommand).GetAssembly().GetType("System.Net.Browser.WebRequestCreator", false) != null;
 
             PropertyInfo pi = typeof(HttpWebRequest).GetProperty("ContentLength");
             if (pi != null)

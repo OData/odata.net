@@ -1146,7 +1146,7 @@ namespace Microsoft.OData.Core
                 this.InterceptException(() =>
                 {
                     IEdmNavigationProperty navigationProperty =
-                        WriterValidationUtils.ValidateNavigationLink(currentNavigationLink, this.ParentEntryEntityType, contentPayloadKind);
+                        WriterValidationUtils.ValidateNavigationLink(currentNavigationLink, this.ParentEntryEntityType, contentPayloadKind, !this.outputContext.MessageWriterSettings.EnableFullValidation);
                     if (navigationProperty != null)
                     {
                         this.CurrentScope.EntityType = navigationProperty.ToEntityType();
@@ -1288,7 +1288,7 @@ namespace Microsoft.OData.Core
                     if (this.outputContext.WritingResponse)
                     {
                         IEdmEntityType currentEntityType = currentScope.EntityType;
-                        IEdmNavigationProperty navigationProperty = WriterValidationUtils.ValidateNavigationLink(navigationLink, currentEntityType, /*payloadKind*/null);
+                        IEdmNavigationProperty navigationProperty = WriterValidationUtils.ValidateNavigationLink(navigationLink, currentEntityType, /*payloadKind*/null, !this.outputContext.MessageWriterSettings.EnableFullValidation);
                         if (navigationProperty != null)
                         {
                             entityType = navigationProperty.ToEntityType();
@@ -1911,14 +1911,15 @@ namespace Microsoft.OData.Core
             /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal EntryScope(ODataEntry entry, ODataFeedAndEntrySerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, bool writingResponse, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            /// <param name="enableValidation">Enable validation or not.</param>
+            internal EntryScope(ODataEntry entry, ODataFeedAndEntrySerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, bool writingResponse, ODataWriterBehavior writerBehavior, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool enableValidation = true)
                 : base(WriterState.Entry, entry, navigationSource, entityType, skipWriting, selectedProperties, odataUri)
             {
                 Debug.Assert(writerBehavior != null, "writerBehavior != null");
 
                 if (entry != null)
                 {
-                    this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(writerBehavior.AllowDuplicatePropertyNames, writingResponse);
+                    this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(writerBehavior.AllowDuplicatePropertyNames, writingResponse, !enableValidation);
                     this.odataEntryTypeName = entry.TypeName;
                 }
 

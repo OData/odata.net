@@ -52,13 +52,13 @@ namespace Microsoft.OData.Client
                 // we can do this here.
                 DisableMessageStreamDisposal = !isBatchPartRequest
             };
-
+#if !WINRT
             if (enableAtom)
             {
                 // Enable ATOM for client
                 writerSettings.EnableAtomSupport();
             }
-
+#endif
             CommonUtil.SetDefaultMessageQuotas(writerSettings.MessageQuotas);
 
             // Enable the Astoria client behavior in ODataLib.

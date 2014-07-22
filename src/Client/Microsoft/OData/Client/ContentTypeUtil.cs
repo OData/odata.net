@@ -20,11 +20,7 @@ namespace Microsoft.OData.Service
     using System.Linq;
     using System.Text;
 #if ASTORIA_CLIENT
-#if ASTORIA_LIGHT
-    using Microsoft.OData.Service.Http;
-#else
     using System.Net;
-#endif
 #endif
     using Microsoft.OData.Core;
 

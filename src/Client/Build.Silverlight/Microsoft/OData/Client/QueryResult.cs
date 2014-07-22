@@ -17,6 +17,9 @@ namespace Microsoft.OData.Client
     using System.IO;
     using System.Linq;
     using System.Net;
+#if WINRT
+    using System.Threading.Tasks;
+#endif
     using Microsoft.OData.Core;
 
     /// <summary>
@@ -605,7 +608,11 @@ namespace Microsoft.OData.Client
                 int bufferLength = buffer.Length;
 
                 this.usingBuffer = true;
+#if WINRT
+                asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, buffer, bufferOffset, bufferLength, this.AsyncEndRead, asyncStateBag);
+#else
                 asyncResult = BaseAsyncResult.InvokeAsync(httpResponseStream.BeginRead, buffer, bufferOffset, bufferLength, this.AsyncEndRead, asyncStateBag);
+#endif
                 pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously);
                 this.SetCompletedSynchronously(asyncResult.CompletedSynchronously); // BeginRead
             }
@@ -614,14 +621,29 @@ namespace Microsoft.OData.Client
             Debug.Assert((!this.CompletedSynchronously && !pereq.RequestCompletedSynchronously) || this.IsCompletedInternally || pereq.RequestCompleted, "AsyncEndGetResponse !IsCompleted");
         }
 
+#if WINRT
+        /// <summary>Handle responseStream.BeginRead and complete the read operation.</summary>
+        /// <param name="task">Task that has completed.</param>
+        /// <param name="asyncState">State associated with the Task.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
+        private void AsyncEndRead(Task task, object asyncState)
+#else
         /// <summary>handle responseStream.BeginRead with responseStream.EndRead</summary>
         /// <param name="asyncResult">async result</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void AsyncEndRead(IAsyncResult asyncResult)
+#endif
         {
+#if WINRT
+            IAsyncResult asyncResult = (IAsyncResult)task;
+#endif
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
+#if WINRT
+            AsyncStateBag asyncStateBag = asyncState as AsyncStateBag;
+#else
             AsyncStateBag asyncStateBag = asyncResult.AsyncState as AsyncStateBag;
+#endif
             PerRequest pereq = asyncStateBag == null ? null : asyncStateBag.PerRequest;
 
             int count = 0;
@@ -636,7 +658,11 @@ namespace Microsoft.OData.Client
                 Stream outResponseStream = Util.NullCheck(this.outputResponseStream, InternalError.InvalidEndReadCopy);
 
                 byte[] buffer = Util.NullCheck(this.asyncStreamCopyBuffer, InternalError.InvalidEndReadBuffer);
+#if WINRT
+                count = ((Task<int>)task).Result;
+#else
                 count = httpResponseStream.EndRead(asyncResult);
+#endif
                 this.usingBuffer = false;
 
                 if (0 < count)

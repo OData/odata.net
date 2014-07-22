@@ -230,6 +230,7 @@ CsdlSemantics_DuplicateAlias=The schema '{0}' contains the alias '{1}' more than
 EdmxParser_EdmxVersionMismatch=The EDMX version specified in the 'Version' attribute does not match the version corresponding to the namespace of the 'Edmx' element.
 EdmxParser_BodyElement=Unexpected {0} element while parsing Edmx. Edmx is expected to have at most one of 'Runtime' or 'DataServices' elements.
 EdmxParser_InvalidReferenceIncorrectNumberOfIncludes=edmx:Reference must contain at least one edmx:Includes or edmx:IncludeAnnotations.
+EdmxParser_UnresolvedReferenceUriInEdmxReference=Unresolved Uri found in edmx:Reference, getReferencedModelReaderFunc should not return null when the URI is not a well-known schema.
 
 ;EdxmParseException
 EdmParseException_ErrorsEncounteredInEdmx=Encountered the following errors when parsing the EDMX document: \r\n{0}

@@ -84,6 +84,7 @@ namespace Microsoft.OData.Edm.Validation
                     return TryCastNullAsType((IEdmNullExpression)expression, type, out discoveredErrors);
                 case EdmExpressionKind.Path:
                 case EdmExpressionKind.PropertyPath:
+                case EdmExpressionKind.NavigationPropertyPath:
                     return TryCastPathAsType((IEdmPathExpression)expression, type, context, matchExactly, out discoveredErrors);
                 case EdmExpressionKind.OperationApplication:
                     IEdmApplyExpression applyExpression = (IEdmApplyExpression)expression;

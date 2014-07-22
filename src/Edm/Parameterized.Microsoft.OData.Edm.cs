@@ -1582,6 +1582,15 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "Unresolved Uri found in edmx:Reference, getReferencedModelReaderFunc should not return null when the URI is not a well-known schema."
+        /// </summary>
+        internal static string EdmxParser_UnresolvedReferenceUriInEdmxReference {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmxParser_UnresolvedReferenceUriInEdmxReference);
+            }
+        }
+
+        /// <summary>
         /// A string like "Encountered the following errors when parsing the EDMX document: \r\n{0}"
         /// </summary>
         internal static string EdmParseException_ErrorsEncounteredInEdmx(object p0) {

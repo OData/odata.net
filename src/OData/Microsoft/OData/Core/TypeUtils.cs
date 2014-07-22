@@ -8,7 +8,11 @@
 
 //   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
+#if ODATALIB_QUERY
+namespace Microsoft.OData.Query
+#else
 namespace Microsoft.OData.Core
+#endif
 {
     #region Namespaces
     using System;

@@ -1286,7 +1286,8 @@ namespace Microsoft.OData.Core.JsonLight
                 /*validateNullValue*/ true,
                 /*isTopLevelPropertyValue*/ false,
                 /*insideComplexValue*/ false,
-                propertyName);
+                propertyName,
+                true);
 
             ValidationUtils.ValidateOpenPropertyValue(propertyName, propertyValue);
             AddEntryProperty(entryState, propertyName, propertyValue);

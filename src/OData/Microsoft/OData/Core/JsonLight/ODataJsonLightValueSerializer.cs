@@ -12,13 +12,16 @@ namespace Microsoft.OData.Core.JsonLight
 {
     #region Namespaces
 
+    using System;
     using System.Collections;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-
+    using System.Globalization;
+    using System.Linq;
     using Microsoft.OData.Core.Json;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces
@@ -348,11 +351,14 @@ namespace Microsoft.OData.Core.JsonLight
         {
             Debug.Assert(value != null, "value != null");
 
+            // Try convert primitive values from their actual CLR types to their underlying CLR types.
+            value = this.Model.ConvertToUnderlyingTypeIfUIntValue(value, expectedTypeReference);
+
             IEdmPrimitiveTypeReference actualTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
 
             if (expectedTypeReference != null)
             {
-                ValidationUtils.ValidateIsExpectedPrimitiveType(value, actualTypeReference, expectedTypeReference);
+                ValidationUtils.ValidateIsExpectedPrimitiveType(value, actualTypeReference, expectedTypeReference, !this.JsonLightOutputContext.MessageWriterSettings.EnableFullValidation);
             }
 
             if (actualTypeReference != null && actualTypeReference.IsSpatial())

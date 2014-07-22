@@ -24,5 +24,10 @@ namespace Microsoft.OData.Edm
         /// Gets the AppliesTo of this term.
         /// </summary>
         string AppliesTo { get; }
+
+        /// <summary>
+        /// Gets the DefaultValue of this term.
+        /// </summary>
+        string DefaultValue { get; }
     }
 }

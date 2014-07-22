@@ -52,6 +52,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string NamespaceAliasAnnotation = "NamespaceAlias";
         internal const string UsedNamespacesAnnotation = "UsedNamespaces";
         internal const string ReferencesAnnotation = "References";
+        internal const string PrimitiveValueConverterMapAnnotation = "PrimitiveValueConverterMap";
 
         internal const string Attribute_Abstract = "Abstract";
         internal const string Attribute_Action = "Action";
@@ -83,6 +84,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Attribute_MaxLength = EdmConstants.FacetName_MaxLength;
         internal const string Attribute_Name = "Name";
         internal const string Attribute_Namespace = "Namespace";
+        internal const string Attribute_NavigationPropertyPath = "NavigationPropertyPath";
         internal const string Attribute_Nullable = EdmConstants.FacetName_Nullable;
         internal const string Attribute_OpenType = "OpenType";
         internal const string Attribute_Partner = "Partner";
@@ -138,6 +140,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Element_Member = "Member";
         internal const string Element_NavigationProperty = "NavigationProperty";
         internal const string Element_NavigationPropertyBinding = "NavigationPropertyBinding";
+        internal const string Element_NavigationPropertyPath = "NavigationPropertyPath";
         internal const string Element_Null = "Null";
         internal const string Element_OnDelete = "OnDelete";
         internal const string Element_Parameter = "Parameter";
@@ -158,6 +161,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Element_Summary = "Summary";
         internal const string Element_Duration = "Duration";
         internal const string Element_Term = "Term";
+        internal const string Element_TypeDefinition = "TypeDefinition";
         internal const string Element_TypeRef = "TypeRef";
 
         internal const string Value_Cascade = "Cascade";

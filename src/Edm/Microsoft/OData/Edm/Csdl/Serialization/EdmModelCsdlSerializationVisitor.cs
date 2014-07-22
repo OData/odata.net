@@ -224,6 +224,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.EndElement(element);
         }
 
+        protected override void ProcessTypeDefinition(IEdmTypeDefinition element)
+        {
+            this.BeginElement(element, this.schemaWriter.WriteTypeDefinitionElementHeader);
+            base.ProcessTypeDefinition(element);
+            this.EndElement(element);
+        }
+
         protected override void ProcessValueTerm(IEdmValueTerm term)
         {
             bool inlineType = term.Type != null && IsInlineType(term.Type);
@@ -373,6 +380,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.schemaWriter.WritePropertyPathExpressionElement(expression);
         }
 
+        protected override void ProcessNavigationPropertyPathExpression(IEdmPathExpression expression)
+        {
+            this.schemaWriter.WriteNavigationPropertyPathExpressionElement(expression);
+        }
+
         protected override void ProcessParameterReferenceExpression(IEdmParameterReferenceExpression expression)
         {
             this.schemaWriter.WriteParameterReferenceExpressionElement(expression);
@@ -515,6 +527,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmExpressionKind.IntegerConstant:
                 case EdmExpressionKind.Path:
                 case EdmExpressionKind.PropertyPath:
+                case EdmExpressionKind.NavigationPropertyPath:
                 case EdmExpressionKind.StringConstant:
                 case EdmExpressionKind.DurationConstant:
                     return true;

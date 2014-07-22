@@ -303,6 +303,19 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
         }
 
         /// <summary>
+        /// Converts <paramref name="edmValue"/> to a <see cref="System.Guid"/> value.
+        /// </summary>
+        /// <param name="edmValue">The EDM value to be converted.</param>
+        /// <returns>Converted Guid.</returns>
+        /// <exception cref="InvalidCastException">Exception is thrown if <paramref name="edmValue"/> is not <see cref="IEdmGuidValue"/>.</exception>
+        internal static Guid AsClrGuid(IEdmValue edmValue)
+        {
+            EdmUtil.CheckArgumentNull(edmValue, "edmValue");
+
+            return ((IEdmGuidValue)edmValue).Value;
+        }
+
+        /// <summary>
         /// Converts <paramref name="edmValue"/> to a <see cref="System.DateTimeOffset"/> value.
         /// </summary>
         /// <param name="edmValue">The EDM value to be converted.</param>
@@ -319,7 +332,7 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
 
         #region Private implementation
 
-        private static bool TryConvertAsPrimitiveType(TypeCode typeCode, IEdmValue edmValue, out object clrValue)
+        private static bool TryConvertAsNonGuidPrimitiveType(TypeCode typeCode, IEdmValue edmValue, out object clrValue)
         {
             switch (typeCode)
             {
@@ -444,7 +457,7 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
         private static string GetEdmValueInterfaceName(IEdmValue edmValue)
         {
             Debug.Assert(edmValue != null, "edmValue != null");
-            
+
             // We want search to be stable regardless of the order of elements coming from GetInterfaces() method,
             // so we sort first, then find the deepest derived interface descending from IEdmValue.
             Type interfaceType = typeof(IEdmValue);
@@ -474,6 +487,10 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
                     }
 
                     return this.AsClrValue(edmValue, clrType.GetGenericArguments().Single());
+                }
+                else if (clrType == typeof(Guid))
+                {
+                    return AsClrGuid(edmValue);
                 }
                 else if (clrType == typeof(DateTimeOffset))
                 {
@@ -516,7 +533,7 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
                 }
 
                 object clrValue;
-                if (!TryConvertAsPrimitiveType(PlatformHelper.GetTypeCode(clrType), edmValue, out clrValue))
+                if (!TryConvertAsNonGuidPrimitiveType(PlatformHelper.GetTypeCode(clrType), edmValue, out clrValue))
                 {
                     throw new InvalidCastException(Strings.EdmToClr_UnsupportedTypeCode(typeCode));
                 }
@@ -688,7 +705,7 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
         private bool TrySetCollectionProperty(PropertyInfo clrProperty, object clrObject, IEdmPropertyValue propertyValue)
         {
             Type clrPropertyType = clrProperty.PropertyType;
-            
+
             // Process the following cases:
             // class C1
             // {

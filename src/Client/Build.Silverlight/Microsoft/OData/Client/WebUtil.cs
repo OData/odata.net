@@ -36,7 +36,11 @@ namespace Microsoft.OData.Client
         private static bool? dataServiceCollectionAvailable = null;
 
         /// <summary>Method info for GetDefaultValue&lt;T&gt;.</summary>
+#if WINRT
+        private static MethodInfo getDefaultValueMethodInfo = typeof(WebUtil).GetMethodWithGenericArgs("GetDefaultValue", false /*isPublic*/, true /*isStatic*/, 1 /*genericArgCount*/);
+#else
         private static MethodInfo getDefaultValueMethodInfo = (MethodInfo)typeof(WebUtil).GetMember("GetDefaultValue", BindingFlags.NonPublic | BindingFlags.Static).Single(m => ((MethodInfo)m).GetGenericArguments().Count() == 1);
+#endif
 
         /// <summary>
         /// Returns true if DataServiceCollection&lt;&gt; type is available or false otherwise.
@@ -218,7 +222,8 @@ namespace Microsoft.OData.Client
         /// <param name="collectionItemType">The type of the collection item. Can not be null.</param>
         /// <param name="propertyValue">Collection instance to be validated.</param>
         /// <param name="propertyName">The name of the property being serialized (for exception messages). Can be null if the type is not a property.</param>
-        internal static void ValidateCollection(Type collectionItemType, object propertyValue, string propertyName)
+        /// <param name="isDynamicProperty">Whether this collection property is a dynamic property</param>
+        internal static void ValidateCollection(Type collectionItemType, object propertyValue, string propertyName, bool isDynamicProperty)
         {
             Debug.Assert(collectionItemType != null, "collectionItemType != null");
 
@@ -233,7 +238,10 @@ namespace Microsoft.OData.Client
             {
                 if (propertyName != null)
                 {
-                    throw Error.InvalidOperation(Strings.Collection_NullCollectionNotSupported(propertyName));
+                    if (!isDynamicProperty)
+                    {
+                        throw Error.InvalidOperation(Strings.Collection_NullCollectionNotSupported(propertyName));
+                    }
                 }
                 else
                 {

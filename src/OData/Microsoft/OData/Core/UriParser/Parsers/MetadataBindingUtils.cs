@@ -43,6 +43,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 if (source.TypeReference.IsEquivalentTo(targetTypeReference))
                 {
+                    // For source is type definition, if source's underlying type == target type.
+                    // We create a conversion node from source to its underlying type (target type)
+                    // so that the service can convert value of source clr type to underlying clr type.
+                    if (source.TypeReference.IsTypeDefinition())
+                    {
+                        return new ConvertNode(source, targetTypeReference);
+                    }
+
                     return source;
                 }
 

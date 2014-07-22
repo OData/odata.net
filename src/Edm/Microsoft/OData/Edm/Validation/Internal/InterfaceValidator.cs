@@ -641,6 +641,10 @@ namespace Microsoft.OData.Edm.Validation.Internal
                         typeKindError = CheckForInterfaceKindValueMismatchError<IEdmType, EdmTypeKind, IEdmEnumType>(type, type.TypeKind, "TypeKind");
                         break;
 
+                    case EdmTypeKind.TypeDefinition:
+                        typeKindError = CheckForInterfaceKindValueMismatchError<IEdmType, EdmTypeKind, IEdmTypeDefinition>(type, type.TypeKind, "TypeKind");
+                        break;
+
                     case EdmTypeKind.None:
                         break;
 
@@ -735,6 +739,25 @@ namespace Microsoft.OData.Edm.Validation.Internal
                 List<EdmError> errors = null;
 
                 ProcessEnumerable(type, type.Members, "Members", followup, ref errors);
+
+                if (type.UnderlyingType != null)
+                {
+                    references.Add(type.UnderlyingType);
+                }
+                else
+                {
+                    CollectErrors(CreatePropertyMustNotBeNullError(type, "UnderlyingType"), ref errors);
+                }
+
+                return errors;
+            }
+        }
+
+        private sealed class VisitorOfIEdmTypeDefinition : VisitorOfT<IEdmTypeDefinition>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmTypeDefinition type, List<object> followup, List<object> references)
+            {
+                List<EdmError> errors = null;
 
                 if (type.UnderlyingType != null)
                 {
@@ -1119,6 +1142,14 @@ namespace Microsoft.OData.Edm.Validation.Internal
             }
         }
 
+        private sealed class VisitorOfIEdmTypeDefinitionReference : VisitorOfT<IEdmTypeDefinitionReference>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmTypeDefinitionReference typeRef, List<object> followup, List<object> references)
+            {
+                return typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.TypeDefinition ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
+            }
+        }
+
         private sealed class VisitorOfIEdmPrimitiveTypeReference : VisitorOfT<IEdmPrimitiveTypeReference>
         {
             protected override IEnumerable<EdmError> VisitT(IEdmPrimitiveTypeReference typeRef, List<object> followup, List<object> references)
@@ -1259,6 +1290,7 @@ namespace Microsoft.OData.Edm.Validation.Internal
 
                         case EdmExpressionKind.Path:
                         case EdmExpressionKind.PropertyPath:
+                        case EdmExpressionKind.NavigationPropertyPath:
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmPathExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 

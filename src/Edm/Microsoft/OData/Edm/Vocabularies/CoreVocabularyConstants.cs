@@ -15,6 +15,9 @@ namespace Microsoft.OData.Edm.Vocabularis
     /// </summary>
     public static class CoreVocabularyConstants
     {
+        /// <summary>Org.OData.Core.V1.OptimisticConcurrency </summary>
+        public const string CoreOptimisticConcurrency = "Org.OData.Core.V1.OptimisticConcurrency";
+
         /// <summary>Org.OData.Core.V1.OptimisticConcurrencyControl </summary>
         public const string CoreOptimisticConcurrencyControl = "Org.OData.Core.V1.OptimisticConcurrencyControl";
 
@@ -23,5 +26,8 @@ namespace Microsoft.OData.Edm.Vocabularis
 
         /// <summary>Org.OData.Core.V1.LongDescription </summary>
         public const string CoreLongDescription = "Org.OData.Core.V1.LongDescription";
+
+        /// <summary>Org.OData.Core.V1.xml file suffix</summary>
+        internal const string CoreVocabularyUrlSuffix = "/Org.OData.Core.V1.xml";
     }
 }

@@ -11,10 +11,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Expressions;
 using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm.PrimitiveValueConverters;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
@@ -347,6 +349,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private IEnumerable<IEdmSchemaType> ComputeTypes()
         {
             List<IEdmSchemaType> types = new List<IEdmSchemaType>();
+
+            foreach (var typeDefinition in schema.TypeDefinitions)
+            {
+                this.AttachDefaultPrimitiveValueConverter(typeDefinition);
+                types.Add(new CsdlSemanticsTypeDefinitionDefinition(this, typeDefinition));
+            }
+
             foreach (var structuredType in this.schema.StructuredTypes)
             {
                 CsdlEntityType entity = structuredType as CsdlEntityType;
@@ -370,6 +379,43 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
 
             return types;
+        }
+
+        /// <summary>
+        /// Attach DefaultPrimitiveValueConverter to the model if the name and the underlying type of the given type definition
+        /// matches the default unsigned int type definitions defined in <see cref="PrimitiveValueConverterConstants"/>.
+        /// </summary>
+        /// <param name="typeDefinition">The type definition to be added to the schema.</param>
+        private void AttachDefaultPrimitiveValueConverter(CsdlTypeDefinition typeDefinition)
+        {
+            Debug.Assert(typeDefinition != null, "typeDefinition != null");
+
+            string defaultUnderlyingType;
+            switch (typeDefinition.Name)
+            {
+                case PrimitiveValueConverterConstants.UInt16TypeName:
+                    defaultUnderlyingType = PrimitiveValueConverterConstants.DefaultUInt16UnderlyingType;
+                    break;
+                case PrimitiveValueConverterConstants.UInt32TypeName:
+                    defaultUnderlyingType = PrimitiveValueConverterConstants.DefaultUInt32UnderlyingType;
+                    break;
+                case PrimitiveValueConverterConstants.UInt64TypeName:
+                    defaultUnderlyingType = PrimitiveValueConverterConstants.DefaultUInt64UnderlyingType;
+                    break;
+                default:
+                    // Not unsigned int type definition.
+                    return;
+            }
+
+            if (String.CompareOrdinal(defaultUnderlyingType, typeDefinition.UnderlyingTypeName) != 0)
+            {
+                // Not default underlying type for unsigned int.
+                return;
+            }
+
+            this.Model.SetPrimitiveValueConverter(
+                String.Format(CultureInfo.InvariantCulture, "{0}.{1}", this.Namespace, typeDefinition.Name),
+                DefaultPrimitiveValueConverter.Instance);
         }
 
         /// <summary>

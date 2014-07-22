@@ -470,11 +470,15 @@ namespace Microsoft.OData.Client
                             hasProperties);
                     }
                     else if ((enumTypeTmp = Nullable.GetUnderlyingType(type) ?? type) != null
-                        && enumTypeTmp.IsEnum)
+                        && enumTypeTmp.IsEnum())
                     {
                         Action<EdmEnumTypeWithDelayLoadedMembers> delayLoadEnumMembers = (enumType) =>
                         {
+#if WINRT
+                            foreach (FieldInfo tmp in enumTypeTmp.GetFields().Where(fieldInfo => fieldInfo.IsStatic))
+#else
                             foreach (FieldInfo tmp in enumTypeTmp.GetFields(BindingFlags.Static | BindingFlags.Public))
+#endif
                             {
                                 object memberValue = Enum.Parse(enumTypeTmp, tmp.Name, false);
                                 enumType.AddMember(new EdmEnumMember(enumType, tmp.Name, new EdmIntegerConstant((long)Convert.ChangeType(memberValue, typeof(long), CultureInfo.InvariantCulture.NumberFormat))));

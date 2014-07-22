@@ -286,28 +286,9 @@ ValueParser_InvalidDuration=The value '{0}' is not a valid duration value.
 ; Note: The below list of error messages are common to the ODataLib, EdmLib, Spatial, Server and Client projects.
 PlatformHelper_DateTimeOffsetMustContainTimeZone=The time zone information is missing on the DateTimeOffset value '{0}'. A DateTimeOffset value must contain the time zone information.
 ;END
-
-; NOTE: see AS/URT bug 15116
-; NOTE: don't use \", use ' instead
-; NOTE: don't use #, use ; instead for comments
-; NOTE: leave the [strings] alone
-
-; See ResourceManager documentation and the ResGen tool.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Error Messages
-
-; Silverlight HTTP errors
-HttpWeb_Internal=Internal error at '{0}'.
-HttpWeb_InternalArgument=Internal error at '{0}' for argument '{1}'.
-HttpWebRequest_Aborted=This web request was aborted.
-HttpWebRequest_XmlHttpCredentialsNotSupported=The DataServiceContext.Credentials property can only be set when you are using the Silverlight Client HTTP implementation. To use this implementation, set the DataServiceContext.HttpStack property to a value of ClientHttp.
-HttpWebRequest_XmlHttpNonDefaultCredentialsNotSupported=The DataServiceContext.UseDefaultCredentials property cannot be set to false when you are using the XMLHTTP implementation. To use non-default authentication credentials, you must set the DataServiceContext.HttpStack property to a value of ClientHttp to guarantee that the Silverlight Client HTTP implementation is used
+Silverlight_BrowserHttp_NotSupported=Silverlight Browser Http Stack is not supported on the Portable Library, only Client Http is supported.
 
 DataServiceCollection_DataServiceQueryCanNotBeEnumerated=Parameters of type DataServiceQuery<T> can not be used as the input enumerators for DataServiceCollection. Try using result of DataServiceQuery<T>.EndExecute instead.
 DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime=A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed.
 DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity=The LoadAsync method cannot be called when the DataServiceCollection is not a child collection of a related entity.
 DataServiceCollection_LoadAsyncRequiresDataServiceQuery=Only a typed DataServiceQuery object can be supplied when calling the LoadAsync method on DataServiceCollection.
-
-;END
-Silverlight_BrowserHttp_NotSupported=Silverlight Browser Http Stack is not supported on the Portable Library, only Client Http is supported.

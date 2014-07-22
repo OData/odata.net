@@ -158,6 +158,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 //// <PropertyPath/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_PropertyPath, OnPropertyPathExpression);
 
+            var navigationPropertyPathExpressionParser =
+                //// <NavigationPropertyPath/>
+                CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_NavigationPropertyPath, OnNavigationPropertyPathExpression);
+
             var functionReferenceExpressionParser =
                 //// <FunctionReference/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_FunctionReference, this.OnFunctionReferenceExpression);
@@ -244,6 +248,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 pathExpressionParser,
                 //// <PropertyPath/>
                 propertyPathExpressionParser,
+                //// <NavigationPropertyPath/>
+                navigationPropertyPathExpressionParser,
                 //// <If/>
                 ifExpressionParser,
                 //// <IsType/>
@@ -287,7 +293,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 //// <Annotation>
                 CsdlElement<CsdlAnnotation>(CsdlConstants.Element_Annotation, this.OnAnnotationElement);
 
-             AddChildParsers(annotationParser, expressionParsers);
+            AddChildParsers(annotationParser, expressionParsers);
             
             nominalTypePropertyElementParser.AddChildParser(annotationParser);
 
@@ -340,6 +346,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     //// <Annotation/>
                     annotationParser),
                 //// </EnumType>
+                
+                //// <TypeDefinition>
+                CsdlElement<CsdlTypeDefinition>(CsdlConstants.Element_TypeDefinition, this.OnTypeDefinitionElement,
+                    //// <Annotation/>
+                    annotationParser),
+                //// </TypeDefinition>
                 
                 //// <Action>
                 CsdlElement<CsdlAction>(CsdlConstants.Element_Action, this.OnActionElement,
@@ -489,6 +501,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     childValues.ValuesOfType<CsdlTerm>(),
                     childValues.ValuesOfType<CsdlEntityContainer>(),
                     childValues.ValuesOfType<CsdlAnnotations>(),
+                    childValues.ValuesOfType<CsdlTypeDefinition>(),
                     Documentation(childValues),
                     element.Location);
 
@@ -541,8 +554,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             CsdlTypeReference type = this.ParseTypeReference(typeName, childValues, element.Location, Optionality.Required);
             string name = Required(CsdlConstants.Attribute_Name);
             string appliesTo = Optional(CsdlConstants.Attribute_AppliesTo);
+            string defaultValue = Optional(CsdlConstants.Attribute_DefaultValue);
 
-            return new CsdlTerm(name, type, appliesTo, Documentation(childValues), element.Location);
+            return new CsdlTerm(name, type, appliesTo, defaultValue, Documentation(childValues), element.Location);
         }
 
         private CsdlAnnotations OnAnnotationsElement(XmlElementInfo element, XmlElementValueCollection childValues)
@@ -679,6 +693,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return new CsdlPropertyPathExpression(text != null ? text.TextValue : string.Empty, element.Location);
         }
 
+        private static CsdlNavigationPropertyPathExpression OnNavigationPropertyPathExpression(XmlElementInfo element, XmlElementValueCollection childValues)
+        {
+            XmlTextValue text = childValues.FirstText;
+            return new CsdlNavigationPropertyPathExpression(text != null ? text.TextValue : string.Empty, element.Location);
+        }
+
         private CsdlLabeledExpressionReferenceExpression OnLabeledElementReferenceExpression(XmlElementInfo element, XmlElementValueCollection childValues)
         {
             string name = Required(CsdlConstants.Attribute_Name);
@@ -761,6 +781,14 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return new CsdlIsTypeExpression(type, expressions.ElementAtOrDefault(0), element.Location);
         }
 
+        private CsdlTypeDefinition OnTypeDefinitionElement(XmlElementInfo element, XmlElementValueCollection childValues)
+        {
+            string name = Required(CsdlConstants.Attribute_Name);
+            string underlyingTypeName = RequiredType(CsdlConstants.Attribute_UnderlyingType);
+
+            return new CsdlTypeDefinition(name, underlyingTypeName, element.Location);
+        }
+
         private CsdlExpressionBase ParseAnnotationExpression(XmlElementInfo element, XmlElementValueCollection childValues)
         {
             CsdlExpressionBase expression = childValues.ValuesOfType<CsdlExpressionBase>().FirstOrDefault();
@@ -779,6 +807,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             if (propertyPathValue != null)
             {
                 return new CsdlPropertyPathExpression(propertyPathValue, element.Location);
+            }
+
+            string navigationPropertyPathValue = Optional(CsdlConstants.Attribute_NavigationPropertyPath);
+            if (navigationPropertyPathValue != null)
+            {
+                return new CsdlNavigationPropertyPathExpression(navigationPropertyPathValue, element.Location);
             }
 
             EdmValueKind kind;

@@ -15,6 +15,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.UriParser.Semantic;
@@ -261,7 +262,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 orderbyOption = orderByBinder.BindOrderBy(binder.BindingState, tokenIn.OrderByOptions);
             }
 
-            LevelsClause levelsOption = this.ParseLevels(tokenIn.LevelsOption, this.EdmType, currentNavProp);
+            LevelsClause levelsOption = this.ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
 
             SearchClause searchOption = null;
             if (tokenIn.SearchOption != null)
@@ -291,7 +292,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             IEdmType relatedType = property.ToEntityType();
 
-            if (sourceType != null && relatedType != null && !sourceType.IsAssignableFrom(relatedType))
+            if (sourceType != null && relatedType != null && !UriEdmHelpers.IsRelatedTo(sourceType, relatedType))
             {
                 throw new ODataException(ODataErrorStrings.ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType(property.Name, sourceType.ODataFullName(), relatedType.ODataFullName()));
             }

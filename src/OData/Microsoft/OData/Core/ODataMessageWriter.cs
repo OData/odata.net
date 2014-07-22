@@ -909,7 +909,7 @@ namespace Microsoft.OData.Core
         [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
         private void VerifyCanCreateODataCollectionWriter(IEdmTypeReference itemTypeReference)
         {
-            if (itemTypeReference != null && !(itemTypeReference.IsPrimitive() || itemTypeReference.IsComplex() || itemTypeReference.IsEnum()))
+            if (itemTypeReference != null && !(itemTypeReference.IsPrimitive() || itemTypeReference.IsComplex() || itemTypeReference.IsEnum() || itemTypeReference.IsTypeDefinition()))
             {
                 throw new ODataException(Strings.ODataMessageWriter_NonCollectionType(itemTypeReference.ODataFullName()));
             }

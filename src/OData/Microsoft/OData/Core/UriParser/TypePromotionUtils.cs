@@ -171,6 +171,17 @@ namespace Microsoft.OData.Core.UriParser
                 return string.Equals(left.FullName(), right.FullName(), StringComparison.Ordinal);
             }
 
+            // type definition support, treat type definitions as their underlying types.
+            if (left != null && left.IsTypeDefinition())
+            {
+                left = left.AsPrimitive();
+            }
+
+            if (right != null && right.IsTypeDefinition())
+            {
+                right = right.AsPrimitive();
+            }
+
             // Except for above, binary operators are only supported on primitive types
             if (left != null && !left.IsODataPrimitiveTypeKind() || right != null && !right.IsODataPrimitiveTypeKind())
             {

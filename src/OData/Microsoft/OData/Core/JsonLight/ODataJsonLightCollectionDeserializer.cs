@@ -182,8 +182,9 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(
                 expectedItemTypeReference == null ||
                 expectedItemTypeReference.IsODataPrimitiveTypeKind() ||
-                expectedItemTypeReference.IsODataComplexTypeKind(),
-                "If an expected type is specified, it must be a primitive or complex type.");
+                expectedItemTypeReference.IsODataComplexTypeKind() ||
+                expectedItemTypeReference.IsODataTypeDefinitionTypeKind(),
+                "If an expected type is specified, it must be a primitive, complex type or type definition.");
             this.JsonReader.AssertNotBuffering();
 
             object item = this.ReadNonEntityValue(

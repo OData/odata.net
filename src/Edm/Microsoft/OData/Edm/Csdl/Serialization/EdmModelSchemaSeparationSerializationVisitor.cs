@@ -145,6 +145,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.CheckSchemaElementReference(element.EnumDefinition());
         }
 
+        protected override void ProcessTypeDefinitionReference(IEdmTypeDefinitionReference element)
+        {
+            this.CheckSchemaElementReference(element.TypeDefinition());
+        }
+
         protected override void ProcessEntityType(IEdmEntityType element)
         {
             base.ProcessEntityType(element);
@@ -166,6 +171,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override void ProcessEnumType(IEdmEnumType element)
         {
             base.ProcessEnumType(element);
+            this.CheckSchemaElementReference(element.UnderlyingType);
+        }
+
+        protected override void ProcessTypeDefinition(IEdmTypeDefinition element)
+        {
+            base.ProcessTypeDefinition(element);
             this.CheckSchemaElementReference(element.UnderlyingType);
         }
 

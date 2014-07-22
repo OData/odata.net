@@ -19,6 +19,7 @@ using Microsoft.OData.Edm.Csdl.Parsing;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularis;
 
 namespace Microsoft.OData.Edm.Csdl
 {
@@ -353,11 +354,17 @@ namespace Microsoft.OData.Edm.Csdl
                     continue;
                 }
 
+                if (tmp.Uri != null
+                    && (tmp.Uri.EndsWith(CoreVocabularyConstants.CoreVocabularyUrlSuffix, StringComparison.Ordinal))
+                        || tmp.Uri.EndsWith(CapabilitiesVocabularyConstants.CapabilitiesVocabularyUrlSuffix, StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
                 XmlReader referencedXmlReader = this.getReferencedModelReaderFunc(new Uri(tmp.Uri, UriKind.RelativeOrAbsolute));
                 if (referencedXmlReader == null)
                 {
-                    // TODO: fix loc string
-                    this.RaiseError(EdmErrorCode.UnresolvedReferenceUriInEdmxReference, "Unresolved Uri found in edmx:Reference, getReferencedModelReaderFunc should not return null when the URI is not a well-known schema.");
+                    this.RaiseError(EdmErrorCode.UnresolvedReferenceUriInEdmxReference, Strings.EdmxParser_UnresolvedReferenceUriInEdmxReference);
                     continue;
                 }
 

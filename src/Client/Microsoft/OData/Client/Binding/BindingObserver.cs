@@ -143,7 +143,6 @@ namespace Microsoft.OData.Client
             this.Context.ChangesSaved -= this.OnChangesSaved;
         }
 
-#if ASTORIA_LIGHT || PORTABLELIB
         /// <summary>
         /// Looks up parent entity that references <param ref="collection" />.
         /// </summary>
@@ -160,7 +159,6 @@ namespace Microsoft.OData.Client
 
             return parentEntity != null;
         }
-#endif
 
         /// <summary>Handle changes to tracked entity.</summary>
         /// <param name="source">The entity that raised the event.</param>
@@ -411,7 +409,7 @@ namespace Microsoft.OData.Client
                     out collectionItemType);
 
             // For complex types need to bind to any newly added items or unbind from removed items 
-            if (!PrimitiveType.IsKnownNullableType(collectionItemType) && !collectionItemType.IsEnum)
+            if (!PrimitiveType.IsKnownNullableType(collectionItemType) && !collectionItemType.IsEnum())
             {
                 switch (e.Action)
                 {

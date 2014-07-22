@@ -14,6 +14,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     {
         private readonly UnresolvedValueTermTypeReference type = new UnresolvedValueTermTypeReference();
         private readonly string appliesTo = null;
+        private readonly string defaultValue = null;
 
         public UnresolvedValueTerm(string qualifiedName)
             : base(qualifiedName)
@@ -38,6 +39,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public string AppliesTo
         {
             get { return this.appliesTo; }
+        }
+
+        public string DefaultValue
+        {
+            get { return this.defaultValue; }
         }
 
         private class UnresolvedValueTermTypeReference : IEdmTypeReference

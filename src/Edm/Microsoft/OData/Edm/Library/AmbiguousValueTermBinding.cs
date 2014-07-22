@@ -25,6 +25,7 @@ namespace Microsoft.OData.Edm.Library
         private static readonly Func<AmbiguousValueTermBinding, IEdmTypeReference> ComputeTypeFunc = (me) => me.ComputeType();
 
         private readonly string appliesTo = null;
+        private readonly string defaultValue = null;
 
         public AmbiguousValueTermBinding(IEdmValueTerm first, IEdmValueTerm second)
             : base(first, second)
@@ -50,6 +51,11 @@ namespace Microsoft.OData.Edm.Library
         public string AppliesTo
         {
             get { return this.appliesTo; }
+        }
+
+        public string DefaultValue
+        {
+            get { return this.defaultValue; }
         }
 
         public EdmTermKind TermKind

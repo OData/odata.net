@@ -29,6 +29,11 @@ namespace Microsoft.OData.Edm.Vocabularis
         public static readonly IEdmModel Instance;
 
         /// <summary>
+        /// The concurrency term.
+        /// </summary>
+        public static readonly IEdmValueTerm ConcurrencyTerm;
+
+        /// <summary>
         /// The concurrency control term.
         /// </summary>
         public static readonly IEdmValueTerm ConcurrencyControlTerm;
@@ -57,6 +62,7 @@ namespace Microsoft.OData.Edm.Vocabularis
                 CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
             }
 
+            ConcurrencyTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.CoreOptimisticConcurrency);
             ConcurrencyControlTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.CoreOptimisticConcurrencyControl);
             DescriptionTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.CoreDescription);
             LongDescriptionTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.CoreLongDescription);

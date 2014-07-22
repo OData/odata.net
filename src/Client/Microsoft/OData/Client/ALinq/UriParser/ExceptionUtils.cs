@@ -10,6 +10,8 @@
 
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
+#elif ODATALIB_QUERY
+namespace Microsoft.OData.Query
 #else
 namespace Microsoft.OData.Core
 #endif

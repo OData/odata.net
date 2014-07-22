@@ -8,6 +8,10 @@
   <Term Name="LongDescription" Type="Edm.String" />
 
   <Term Name="OptimisticConcurrencyControl" Type="Core.OptimisticConcurrencyControlType" />
+  
+  <Term Name="OptimisticConcurrency" Type="Collection(Edm.PropertyPath)" AppliesTo="EntitySet">
+	<Annotation Term="Core.Description" String="Data modification requires the use of Etags. A non-empty collection contains the set of properties that are used to compute the ETag"/>
+  </Term>
 
   <!-- Metadata Extensions -->
 

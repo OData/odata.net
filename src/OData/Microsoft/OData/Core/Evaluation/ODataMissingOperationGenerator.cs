@@ -13,6 +13,8 @@ namespace Microsoft.OData.Core.Evaluation
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.JsonLight;
@@ -114,6 +116,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>
         /// Computes the operations that are missing from the payload but should be added by conventions onto the entry.
         /// </summary>
+        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Parameter type is needed to get binding type.")]
         private void ComputeMissingOperationsToEntry()
         {
             Debug.Assert(this.entryMetadataContext != null, "this.entryMetadataContext != null");
@@ -135,8 +138,14 @@ namespace Microsoft.OData.Core.Evaluation
                     }
 
                     string metadataReferencePropertyName = ODataConstants.ContextUriFragmentIndicator + ODataJsonLightUtils.GetMetadataReferenceName(this.metadataContext.Model, bindableOperation);
+                    
                     bool isAction;
                     ODataOperation operation = ODataJsonLightUtils.CreateODataOperation(this.metadataContext.MetadataDocumentUri, metadataReferencePropertyName, bindableOperation, out isAction);
+                    if (bindableOperation.Parameters.Any() && this.entryMetadataContext.ActualEntityTypeName != bindableOperation.Parameters.First().Type.ODataFullName())
+                    {
+                        operation.BindingParameterTypeName = bindableOperation.Parameters.First().Type.ODataFullName();
+                    }
+
                     operation.SetMetadataBuilder(this.entryMetadataContext.Entry.MetadataBuilder, this.metadataContext.MetadataDocumentUri);
                     if (isAction)
                     {

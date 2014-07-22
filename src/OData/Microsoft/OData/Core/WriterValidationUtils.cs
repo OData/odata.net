@@ -58,9 +58,15 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Validates a property name to ensure all required information is specified.
         /// </summary>
-        /// <param name="propertyName">The property name to validate..</param>
-        internal static void ValidatePropertyName(string propertyName)
+        /// <param name="propertyName">The property name to validate.</param>
+        /// <param name="bypassValidation">Bypass the validation if it is true.</param>
+        internal static void ValidatePropertyName(string propertyName, bool bypassValidation = false)
         {
+            if (bypassValidation)
+            {
+                return;
+            }
+
             // Properties must have a non-empty name
             if (string.IsNullOrEmpty(propertyName))
             {
@@ -268,10 +274,15 @@ namespace Microsoft.OData.Core
         /// <param name="edmProperty">Property metadata to validate against.</param>
         /// <param name="version">The version of the OData protocol used for checking.</param>
         /// <param name="writingResponse">true when writing a response; otherwise false.</param>
+        /// <param name="bypassValidation">Bypass the validation if it is true.</param>
         /// <remarks>This does NOT validate the value of the stream property, just the property itself.</remarks>
-        internal static void ValidateStreamReferenceProperty(ODataProperty streamProperty, IEdmProperty edmProperty, ODataVersion version, bool writingResponse)
+        internal static void ValidateStreamReferenceProperty(ODataProperty streamProperty, IEdmProperty edmProperty, ODataVersion version, bool writingResponse, bool bypassValidation = false)
         {
             Debug.Assert(streamProperty != null, "streamProperty != null");
+            if (bypassValidation)
+            {
+                return;
+            }
 
             ValidationUtils.ValidateStreamReferenceProperty(streamProperty, edmProperty);
 
@@ -314,12 +325,14 @@ namespace Microsoft.OData.Core
         /// <param name="navigationLink">The navigation link to validate.</param>
         /// <param name="declaringEntityType">The <see cref="IEdmEntityType"/> declaring the navigation property; or null if metadata is not available.</param>
         /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this navigation link or null for deferred links.</param>
+        /// <param name="bypassValidation">Bypass the validation if it is true.</param>
         /// <returns>The type of the navigation property for this navigation link; or null if no <paramref name="declaringEntityType"/> was specified.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Keeping the validation code for navigation link multiplicity in one place.")]
         internal static IEdmNavigationProperty ValidateNavigationLink(
             ODataNavigationLink navigationLink,
             IEdmEntityType declaringEntityType,
-            ODataPayloadKind? expandedPayloadKind)
+            ODataPayloadKind? expandedPayloadKind,
+            bool bypassValidation = false)
         {
             Debug.Assert(navigationLink != null, "navigationLink != null");
             Debug.Assert(
@@ -328,6 +341,11 @@ namespace Microsoft.OData.Core
                 expandedPayloadKind.Value == ODataPayloadKind.Entry ||
                 expandedPayloadKind.Value == ODataPayloadKind.Feed,
                 "If an expanded payload kind is specified it must be entry, feed or entity reference link.");
+
+            if (bypassValidation)
+            {
+                return declaringEntityType == null ? null : declaringEntityType.FindProperty(navigationLink.Name) as IEdmNavigationProperty;
+            }
 
             // Navigation link must have a non-empty name
             if (string.IsNullOrEmpty(navigationLink.Name))
@@ -435,11 +453,17 @@ namespace Microsoft.OData.Core
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
         /// <param name="model">The model to use to get the OData version.</param>
-        internal static void ValidateNullPropertyValue(IEdmTypeReference expectedPropertyTypeReference, string propertyName, ODataWriterBehavior writerBehavior, IEdmModel model)
+        /// <param name="bypassValidation">Bypass the validation if it is true.</param>
+        internal static void ValidateNullPropertyValue(IEdmTypeReference expectedPropertyTypeReference, string propertyName, ODataWriterBehavior writerBehavior, IEdmModel model, bool bypassValidation = false)
         {
             Debug.Assert(writerBehavior != null, "writerBehavior != null");
             Debug.Assert(model != null, "For null validation, model is required.");
 
+            if (bypassValidation)
+            {
+                return;
+            }
+            
             if (expectedPropertyTypeReference != null)
             {
                 if (expectedPropertyTypeReference.IsNonEntityCollectionType())

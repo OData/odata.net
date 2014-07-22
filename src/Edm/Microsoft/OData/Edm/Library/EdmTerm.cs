@@ -18,6 +18,7 @@ namespace Microsoft.OData.Edm.Library
         private readonly string namespaceName;
         private readonly IEdmTypeReference type;
         private readonly string appliesTo;
+        private readonly string defaultValue;
 
         /// <summary>
         /// Initializes a new instance of <see cref="EdmTerm"/> class.
@@ -63,6 +64,19 @@ namespace Microsoft.OData.Edm.Library
         /// <param name="type">Type of the term.</param>
         /// <param name="appliesTo">AppliesTo of the term.</param>
         public EdmTerm(string namespaceName, string name, IEdmTypeReference type, string appliesTo)
+            : this(namespaceName, name, type, appliesTo, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdmTerm"/> class.
+        /// </summary>
+        /// <param name="namespaceName">Namespace of the term.</param>
+        /// <param name="name">Name of the term.</param>
+        /// <param name="type">Type of the term.</param>
+        /// <param name="appliesTo">AppliesTo of the term.</param>
+        /// <param name="defaultValue">DefaultValue of the term.</param>
+        public EdmTerm(string namespaceName, string name, IEdmTypeReference type, string appliesTo, string defaultValue)
             : base(name)
         {
             EdmUtil.CheckArgumentNull(namespaceName, "namespaceName");
@@ -71,6 +85,7 @@ namespace Microsoft.OData.Edm.Library
             this.namespaceName = namespaceName;
             this.type = type;
             this.appliesTo = appliesTo;
+            this.defaultValue = defaultValue;
         }
 
         /// <summary>
@@ -103,6 +118,14 @@ namespace Microsoft.OData.Edm.Library
         public string AppliesTo
         {
             get { return this.appliesTo; }
+        }
+
+        /// <summary>
+        /// Gets the DefaultValue of this term.
+        /// </summary>
+        public string DefaultValue
+        {
+            get { return this.defaultValue; }
         }
 
         /// <summary>

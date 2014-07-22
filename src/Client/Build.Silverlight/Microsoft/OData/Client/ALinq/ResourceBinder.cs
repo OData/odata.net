@@ -910,7 +910,7 @@ namespace Microsoft.OData.Client
                     return true;
                 }
 
-                derivedType = derivedType.BaseType;
+                derivedType = derivedType.GetBaseType();
             }
 
             return false;
@@ -923,7 +923,7 @@ namespace Microsoft.OData.Client
             // TODO: We are going to allow either of DataServiceQuery or DataServiceOrderedQuery 
             // to be the type of ResourceExpression in the cast parameter. Although this might be considered 
             // overly relaxed we want to avoid causing breaking changes by just having the Ordered version
-            if (ue != null && ue.NodeType == ExpressionType.Convert && ue.Type.BaseType == typeof(DataServiceContext))
+            if (ue != null && ue.NodeType == ExpressionType.Convert && ue.Type.GetBaseType() == typeof(DataServiceContext))
             {
                 e = ue.Operand;
             }
@@ -1525,7 +1525,7 @@ namespace Microsoft.OData.Client
                         throw Error.MethodNotSupported(mce);
                     }
                 }
-                else if (mce.Method.DeclaringType != null && mce.Method.DeclaringType.BaseType == typeof(DataServiceContext))
+                else if (mce.Method.DeclaringType != null && mce.Method.DeclaringType.GetBaseType() == typeof(DataServiceContext))
                 {
                     return AnalyzeFunc(mce, false);
                 }
@@ -1825,7 +1825,11 @@ namespace Microsoft.OData.Client
                 // Call Order: Do not short circuit the get key properties call
                 // in V1 we will always call this for memberaccess expr, and thus always create a client type.
                 // There are certain types that we don't support and this could be throwing.
+#if WINRT
+                Type resourceType = pi.DeclaringType;
+#else
                 Type resourceType = pi.ReflectedType;
+#endif
                 if ((ClientTypeUtil.GetKeyPropertiesOnType(resourceType) ?? ClientTypeUtil.EmptyPropertyInfoArray).Contains(pi, PropertyInfoEqualityComparer.Instance) && boundTarget is InputReferenceExpression)
                 {
                     property = pi;
@@ -2873,8 +2877,11 @@ namespace Microsoft.OData.Client
                         {
                             foundInstance = unaryInstance.Operand;
                         }
-
+#if WINRT
+                        Type resourceType = propertyMember.Member.DeclaringType;
+#else
                         Type resourceType = propertyMember.Member.ReflectedType;
+#endif
                         if (foundInstance == le.Parameters[0] && ClientTypeUtil.TypeOrElementTypeIsEntity(resourceType))
                         {
                             Debug.Assert(propertyPath != null, "propertyPath != null");

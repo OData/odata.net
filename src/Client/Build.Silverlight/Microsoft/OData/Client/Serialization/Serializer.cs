@@ -31,7 +31,7 @@ namespace Microsoft.OData.Client
     /// Serializes the request data into the given format using the given message writer.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Class needs refactoring.")]
-    internal class Serializer
+    public class Serializer
     {
         /// <summary>where to pull the changes from</summary>
         private readonly RequestInfo requestInfo;
@@ -62,6 +62,65 @@ namespace Microsoft.OData.Client
             : this(requestInfo)
         {
             this.options = options;
+        }
+
+        /// <summary>
+        /// Gets the string of keys used in URI.
+        /// </summary>
+        /// <param name="context">Wrapping context instance.</param>
+        /// <param name="keys">The dictionary containing key pairs.</param>
+        /// <returns>The string of keys.</returns>
+        public static string GetKeyString(DataServiceContext context, Dictionary<string, object> keys)
+        {
+            var requestInfo = new RequestInfo(context);
+            var serializer = new Serializer(requestInfo);
+            if (keys.Count == 1)
+            {
+                return serializer.ConvertToEscapedUriValue(keys.First().Key, keys.First().Value);
+            }
+            else
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (var keyPair in keys)
+                {
+                    stringBuilder.Append(keyPair.Key);
+                    stringBuilder.Append(UriHelper.EQUALSSIGN);
+                    stringBuilder.Append(serializer.ConvertToEscapedUriValue(keyPair.Key, keyPair.Value));
+                    stringBuilder.Append(UriHelper.COMMA);
+                }
+
+                stringBuilder.Remove(stringBuilder.Length - 1, 1);
+                return stringBuilder.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets the string of parameters used in URI.
+        /// </summary>
+        /// <param name="context">Wrapping context instance.</param>
+        /// <param name="parameters">Parameters of function.</param>
+        /// <returns>The string of parameters.</returns>
+        public static string GetParameterString(DataServiceContext context, params OperationParameter[] parameters)
+        {
+            var requestInfo = new RequestInfo(context);
+            var serializer = new Serializer(requestInfo);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append(UriHelper.LEFTPAREN);
+            foreach (var key in parameters)
+            {
+                stringBuilder.Append(key.Name);
+                stringBuilder.Append(UriHelper.EQUALSSIGN);
+                stringBuilder.Append(serializer.ConvertToEscapedUriValue(key.Name, key.Value));
+                stringBuilder.Append(UriHelper.COMMA);
+            }
+
+            if (parameters.Any())
+            {
+                stringBuilder.Remove(stringBuilder.Length - 1, 1);
+            }
+
+            stringBuilder.Append(UriHelper.RIGHTPAREN);
+            return stringBuilder.ToString();
         }
 
         /// <summary>
@@ -548,15 +607,7 @@ namespace Microsoft.OData.Client
                             {
                                 ClientTypeAnnotation typeAnnotation = model.GetClientTypeAnnotation(edmType);
                                 string typeNameInEdm = this.requestInfo.GetServerTypeName(model.GetClientTypeAnnotation(edmType));
-                                MemberInfo member = typeAnnotation.ElementType.GetMember(value.ToString()).FirstOrDefault();
-                                if (member == null)
-                                {
-                                    throw new NotSupportedException(Strings.Serializer_InvalidEnumMemberValue(typeAnnotation.ElementType.Name, value.ToString()));
-                                }
-
-                                string memberValue = ClientTypeUtil.GetServerDefinedName(member);
-
-                                valueInODataFormat = new ODataEnumValue(memberValue, typeNameInEdm ?? typeAnnotation.ElementTypeName);
+                                valueInODataFormat = new ODataEnumValue(ClientTypeUtil.GetEnumValuesString(value.ToString(), typeAnnotation.ElementType), typeNameInEdm ?? typeAnnotation.ElementTypeName);
                                 needsSpecialEscaping = true;
                             }
 
@@ -605,7 +656,8 @@ namespace Microsoft.OData.Client
                                 itemTypeAnnotation.ElementType,
                                 null /*propertyName*/,
                                 value,
-                                null /*visitedComplexTypeObjects*/);
+                                null /*visitedComplexTypeObjects*/,
+                                false /*isDynamicProperty, whether it is a dynamic property doesn't matter here, but set it to false to keep the validation logic*/);
                             break;
 
                         default:

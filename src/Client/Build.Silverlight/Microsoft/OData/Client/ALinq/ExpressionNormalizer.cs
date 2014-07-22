@@ -181,7 +181,7 @@ namespace Microsoft.OData.Client
                     if(!(ClientTypeUtil.TypeOrElementTypeIsEntity(visited.Operand.Type) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
                     {
                         // x is not an enum type
-                        if (!visited.Operand.Type.IsEnum)
+                        if (!visited.Operand.Type.IsEnum())
                         {
                             result = visited.Operand;
                         }

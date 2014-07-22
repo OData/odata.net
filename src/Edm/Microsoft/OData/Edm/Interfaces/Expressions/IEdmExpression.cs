@@ -148,7 +148,12 @@ namespace Microsoft.OData.Edm.Expressions
         /// <summary>
         /// Represents an expression implementing <see cref="IEdmPathExpression"/>.
         /// </summary>
-        PropertyPath
+        PropertyPath,
+
+        /// <summary>
+        /// Represents an expression implementing <see cref="IEdmPathExpression"/>.
+        /// </summary>
+        NavigationPropertyPath
     }
 
     /// <summary>

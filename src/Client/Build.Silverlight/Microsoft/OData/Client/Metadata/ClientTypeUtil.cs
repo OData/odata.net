@@ -540,26 +540,27 @@ namespace Microsoft.OData.Client.Metadata
         /// <param name="t">Member to get clr name for.</param>
         /// <param name="serverDefinedName">name from server.</param>
         /// <returns>Client clr name.</returns>
-        internal static string GetClientMemberName(Type t, string serverDefinedName)
+        internal static string GetClientFieldName(Type t, string serverDefinedName)
         {
-            MemberInfo memberInfo = t.GetMember(serverDefinedName).SingleOrDefault();
-            if (memberInfo != null)
+            List<string> serverDefinedNames = serverDefinedName.Split(',').Select(name => name.Trim()).ToList();
+            List<string> clientMemberNames = new List<string>();
+            foreach (var serverSideName in serverDefinedNames)
             {
-                return serverDefinedName;
-            }
-
-            memberInfo = t.GetMembers().ToList().Where(
-                m =>
+                FieldInfo memberInfo = t.GetField(serverSideName) ?? t.GetFields().ToList().Where(m =>
                 {
                     OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)m.GetCustomAttributes(typeof(OriginalNameAttribute), true).SingleOrDefault();
-                    return originalNameAttribute != null && originalNameAttribute.OriginalName == serverDefinedName;
+                    return originalNameAttribute != null && originalNameAttribute.OriginalName == serverSideName;
                 }).SingleOrDefault();
-            if (memberInfo == null)
-            {
-                throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(t.ToString(), serverDefinedName));
+
+                if (memberInfo == null)
+                {
+                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(t.ToString(), serverSideName));
+                }
+
+                clientMemberNames.Add(memberInfo.Name);
             }
 
-            return memberInfo.Name;
+            return string.Join(",", clientMemberNames);
         }
 
         /// <summary>
@@ -593,6 +594,30 @@ namespace Microsoft.OData.Client.Metadata
             }
 
             return propertyInfo.Name;
+        }
+
+        /// <summary>
+        /// Get the enum string split by "," with their server side names
+        /// </summary>
+        /// <param name="enumString">enum string with names in client side</param>
+        /// <param name="enumType">the source enum type</param>
+        /// <returns>The enum string split by "," with their server side names</returns>
+        internal static string GetEnumValuesString(string enumString, Type enumType)
+        {
+            string[] enums = enumString.Split(',').Select(v => v.Trim()).ToArray();
+            List<string> memberValues = new List<string>();
+            foreach (var enumValue in enums)
+            {
+                MemberInfo member = enumType.GetField(enumValue);
+                if (member == null)
+                {
+                    throw new NotSupportedException(Strings.Serializer_InvalidEnumMemberValue(enumType.Name, enumValue));
+                }
+
+                memberValues.Add(ClientTypeUtil.GetServerDefinedName(member));
+            }
+
+            return string.Join(",", memberValues);
         }
 
         /// <summary>

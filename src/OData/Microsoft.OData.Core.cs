@@ -786,7 +786,6 @@ namespace Microsoft.OData.Core {
         internal const string RequestUriProcessor_InvalidValueForKeySegment = "RequestUriProcessor_InvalidValueForKeySegment";
         internal const string RequestUriProcessor_EmptySegmentInRequestUrl = "RequestUriProcessor_EmptySegmentInRequestUrl";
         internal const string RequestUriProcessor_SyntaxError = "RequestUriProcessor_SyntaxError";
-        internal const string RequestUriProcessor_CannotSpecifyAfterPostLinkSegment = "RequestUriProcessor_CannotSpecifyAfterPostLinkSegment";
         internal const string RequestUriProcessor_CountOnRoot = "RequestUriProcessor_CountOnRoot";
         internal const string RequestUriProcessor_MustBeLeafSegment = "RequestUriProcessor_MustBeLeafSegment";
         internal const string RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment = "RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment";
@@ -846,7 +845,11 @@ namespace Microsoft.OData.Core {
         ResourceManager resources;
 
         internal TextRes() {
+#if !WINRT        
             resources = new System.Resources.ResourceManager("Microsoft.OData.Core", this.GetType().Assembly);
+#else
+            resources = new System.Resources.ResourceManager("Microsoft.OData.Core", this.GetType().GetTypeInfo().Assembly);
+#endif
         }
         
         private static TextRes GetLoader() {

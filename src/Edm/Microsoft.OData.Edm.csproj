@@ -38,12 +38,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Microsoft\OData\Edm\PrimitiveValueConverters\PassThroughPrimitiveValueConverter.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\CsdlLocation.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmParseException.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmxReaderSettings.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmxTarget.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmValueParser.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\EdmValueWriter.cs" />
+    <Compile Include="Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlNavigationPropertyPathExpression.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlAbstractNavigationSource.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlAction.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlActionImport.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlSpatialTypeReference.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlEntitySetReferenceExpression.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlOperationReferenceExpression.cs" />
+    <Compile Include="Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlTypeDefinition.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Parsing\Ast\ICsdlTypeExpression.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedAction.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Semantics\BadElements\IUnresolvedElement.cs" />
@@ -81,6 +84,8 @@
     <Compile Include="Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedFunction.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedTypeTerm.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedVocabularyTerm.cs" />
+    <Compile Include="Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsNavigationPropertyPathExpression.cs" />
+    <Compile Include="Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTypeDefinitionDefinition.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsAction.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsActionImport.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsApplyExpression.cs" />
@@ -137,11 +142,14 @@
     <Compile Include="Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsEntityReferenceTypeExpression.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsOperationImport.cs" />
     <Compile Include="Microsoft\OData\Edm\Csdl\Serialization\EdmModelSchemaSeparationSerializationVisitor.cs" />
+    <Compile Include="Microsoft\OData\Edm\PrimitiveValueConverters\DefaultPrimitiveValueConverter.cs" />
     <Compile Include="Microsoft\OData\Edm\EdmLocation.cs" />
     <Compile Include="Microsoft\OData\Edm\EdmToClrConversion\TryCreateObjectInstance.cs" />
     <Compile Include="Microsoft\OData\Edm\EdmToClrConversion\EdmToClrConverter.cs" />
     <Compile Include="Microsoft\OData\Edm\Evaluation\EdmToClrEvaluator.cs" />
     <Compile Include="Microsoft\OData\Edm\ExtensionMethods\EdmElementComparer.cs" />
+    <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmTypeDefinitionReference.cs" />
+    <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmTypeDefinition.cs" />
     <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmActionImport.cs" />
     <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmContainedEntitySet.cs" />
     <Compile Include="Microsoft\OData\Edm\Interfaces\IEdmEntitySetBase.cs" />
@@ -160,7 +168,11 @@
     <Compile Include="Microsoft\OData\Edm\Interfaces\Values\IEdmDurationValue.cs" />
     <Compile Include="Microsoft\OData\Edm\Interfaces\Annotations\IEdmDirectValueAnnotationBinding.cs" />
     <Compile Include="Microsoft\OData\Edm\ExtensionMethods\EnumHelper.cs" />
+    <Compile Include="Microsoft\OData\Edm\PrimitiveValueConverters\IPrimitiveValueConverter.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\AmbiguousSingletonBinding.cs" />
+    <Compile Include="Microsoft\OData\Edm\Library\BadTypeDefinition.cs" />
+    <Compile Include="Microsoft\OData\Edm\Library\EdmTypeDefinition.cs" />
+    <Compile Include="Microsoft\OData\Edm\Library\EdmTypeDefinitionReference.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\EdmContainedEntitySet.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\EdmEntitySetBase.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\EdmInclude.cs" />
@@ -169,6 +181,7 @@
     <Compile Include="Microsoft\OData\Edm\Library\EdmReference.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\EdmSingleton.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\EdmUnknownEntitySet.cs" />
+    <Compile Include="Microsoft\OData\Edm\Library\Expressions\EdmNavigationPropertyPathExpression.cs" />
     <Compile Include="Microsoft\OData\Edm\Memoizer.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\EdmFunctionImport.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\EdmActionImport.cs" />
@@ -216,6 +229,9 @@
     <Compile Include="Microsoft\OData\Edm\Library\CyclicComplexType.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\CyclicEntityContainer.cs" />
     <Compile Include="Microsoft\OData\Edm\Library\CyclicEntityType.cs" />
+    <Compile Include="Microsoft\OData\Edm\PrimitiveValueConverters\PrimitiveValueConverterConstants.cs" />
+    <Compile Include="Microsoft\OData\Edm\Vocabularies\CapabilitiesVocabularyConstants.cs" />
+    <Compile Include="Microsoft\OData\Edm\Vocabularies\CapabilitiesVocabularyModel.cs" />
     <Compile Include="Microsoft\OData\Edm\Vocabularies\CoreVocabularyConstants.cs" />
     <Compile Include="Microsoft\OData\Edm\Vocabularies\CoreVocabularyModel.cs" />
     <Compile Include="Microsoft\OData\Edm\Validation\DuplicateOperationValidator.cs" />
@@ -493,6 +509,10 @@
     <Compile Include="Microsoft\OData\Edm\Validation\EdmErrorCode.cs" />
     <Compile Include="Microsoft\OData\Edm\Evaluation\EdmExpressionEvaluator.cs" />
     <Compile Include="Microsoft\OData\Edm\PlatformHelper.cs" />
+    <EmbeddedResource Include="Microsoft\OData\Edm\Vocabularies\CapabilitiesVocabularies.xml">
+      <LogicalName>CapabilitiesVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Microsoft\OData\Edm\Vocabularies\CoreVocabularies.xml">
       <LogicalName>CoreVocabularies.xml</LogicalName>
       <SubType>Designer</SubType>

@@ -119,7 +119,11 @@ namespace Microsoft.Spatial {
         ResourceManager resources;
 
         internal TextRes() {
+#if !WINRT        
             resources = new System.Resources.ResourceManager("Microsoft.Spatial", this.GetType().Assembly);
+#else
+            resources = new System.Resources.ResourceManager("Microsoft.Spatial", this.GetType().GetTypeInfo().Assembly);
+#endif
         }
         
         private static TextRes GetLoader() {

@@ -239,7 +239,7 @@ namespace Microsoft.OData.Client.Metadata
         /// <summary>Returns if this property is enum type.</summary>
         internal bool IsEnumType
         {
-            get { return this.PropertyType.IsEnum; }
+            get { return this.PropertyType.IsEnum(); }
         }
 
         /// <summary>Is this property a collection of primitive or enum or complex types?</summary>

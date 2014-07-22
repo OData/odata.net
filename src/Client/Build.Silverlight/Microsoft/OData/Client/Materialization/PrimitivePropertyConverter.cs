@@ -123,21 +123,18 @@ namespace Microsoft.OData.Client.Materialization
         private static object ConvertNonSpatialValue(object value, Type targetType)
         {
             Debug.Assert(value != null, "value != null");
-            TypeCode targetTypeCode = Type.GetTypeCode(targetType);
+            TypeCode targetTypeCode = PlatformHelper.GetTypeCode(targetType);
 
-            if (value is IConvertible)
+            // These types can be safely converted to directly, as there is no risk of precision being lost.
+            switch (targetTypeCode)
             {
-                // These types can be safely converted to directly, as there is no risk of precision being lost.
-                switch (targetTypeCode)
-                {
-                    case TypeCode.Boolean:
-                    case TypeCode.Byte:
-                    case TypeCode.SByte:
-                    case TypeCode.Int16:
-                    case TypeCode.Int32:
-                    case TypeCode.Int64:
-                        return Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
-                }
+                case TypeCode.Boolean:
+                case TypeCode.Byte:
+                case TypeCode.SByte:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                    return Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
             }
 
             string stringValue = ClientConvert.ToString(value);
@@ -199,7 +196,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 return this.ConvertSpatialValue<Geography, Geometry>(geographyValue);
             }
-            
+
             Debug.Assert(typeof(Geography).IsAssignableFrom(targetType), "Unrecognized spatial target type: " + targetType.FullName);
 
             // as above, if the hierarchy already matches, simply return it.
@@ -220,7 +217,9 @@ namespace Microsoft.OData.Client.Materialization
         /// <typeparam name="TOut">The target type of the conversion.</typeparam>
         /// <param name="valueToConvert">The value to convert.</param>
         /// <returns>The original or converted value.</returns>
-        private TOut ConvertSpatialValue<TIn, TOut>(TIn valueToConvert) where TIn : ISpatial where TOut : class, ISpatial
+        private TOut ConvertSpatialValue<TIn, TOut>(TIn valueToConvert)
+            where TIn : ISpatial
+            where TOut : class, ISpatial
         {
             // This is format specific because the interpretation of which value is longitude/latitude vs x/y is format specific.
 #pragma warning disable 618
@@ -231,7 +230,7 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     using (var writer = XmlWriter.Create(stream))
                     {
-                        this.lazyGmlFormatter.Value.Write(valueToConvert, writer);    
+                        this.lazyGmlFormatter.Value.Write(valueToConvert, writer);
                     }
 
                     stream.Position = 0;

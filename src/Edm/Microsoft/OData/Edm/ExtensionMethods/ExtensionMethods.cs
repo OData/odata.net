@@ -23,6 +23,7 @@ using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Annotations;
 using Microsoft.OData.Edm.Library.Expressions;
 using Microsoft.OData.Edm.Library.Values;
+using Microsoft.OData.Edm.PrimitiveValueConverters;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Values;
 using Microsoft.OData.Edm.Vocabularis;
@@ -37,6 +38,9 @@ namespace Microsoft.OData.Edm
     {
         private const int ContainerExtendsMaxDepth = 100;
         private const string CollectionTypeFormat = EdmConstants.Type_Collection + "({0})";
+
+        private static readonly IEnumerable<IEdmStructuralProperty> EmptyStructuralProperties = new Collection<IEdmStructuralProperty>();
+        private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = new Collection<IEdmNavigationProperty>();
 
         #region IEdmModel
 
@@ -1028,9 +1032,64 @@ namespace Microsoft.OData.Edm
             return foundOperationImports;
         }
 
+        /// <summary>
+        /// Get the primitive value converter for the given type definition in the model.
+        /// </summary>
+        /// <param name="model">The model involved.</param>
+        /// <param name="type">The reference to a type definition.</param>
+        /// <returns>The primitive value converter for the type definition.</returns>
+        public static IPrimitiveValueConverter GetPrimitiveValueConverter(this IEdmModel model, IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(model, "mode");
+
+            // If type definition is not provided, we pass through the primitive value directly.
+            if (type == null || !type.IsTypeDefinition())
+            {
+                return PassThroughPrimitiveValueConverter.Instance;
+            }
+
+            return model.GetPrimitiveValueConverter(type.FullName());
+        }
+
+        /// <summary>
+        /// Set the primitive value converter for the given type definition in the model.
+        /// </summary>
+        /// <param name="model">The model involved.</param>
+        /// <param name="typeDefinition">The reference to a type definition.</param>
+        /// <param name="converter">The primitive value converter for the type definition.</param>
+        public static void SetPrimitiveValueConverter(this IEdmModel model, IEdmTypeDefinitionReference typeDefinition, IPrimitiveValueConverter converter)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(typeDefinition, "typeDefinition");
+            EdmUtil.CheckArgumentNull(converter, "converter");
+
+            model.SetPrimitiveValueConverter(typeDefinition.FullName(), converter);
+        }
+
         #endregion
 
         #region EdmModel
+
+        /// <summary>
+        /// Set annotation Org.OData.Core.V1.OptimisticConcurrency to EntitySet
+        /// </summary>
+        /// <param name="model">The model to add annotation</param>
+        /// <param name="target">The target entitySet to set the inline annotation</param>
+        /// <param name="properties">The PropertyPath for annotation</param>
+        public static void SetOptimisticConcurrencyAnnotation(this EdmModel model, IEdmEntitySet target, IEnumerable<IEdmStructuralProperty> properties)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+            EdmUtil.CheckArgumentNull(properties, "properties");
+
+            IEdmCollectionExpression collectionExpression = new EdmCollectionExpression(properties.Select(p => new EdmPropertyPathExpression(p.Name)).ToArray());
+            IEdmValueTerm term = CoreVocabularyModel.ConcurrencyTerm;
+
+            Debug.Assert(term != null, "term!=null");
+            EdmAnnotation annotation = new EdmAnnotation(target, term, collectionExpression);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+        }
 
         /// <summary>
         /// Set annotation Org.OData.Core.V1.OptimisticConcurrencyControl to EntitySet
@@ -1038,6 +1097,7 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The model to add annotation</param>
         /// <param name="target">The target entitySet to set the inline annotation</param>
         /// <param name="properties">The PropertyPath for annotation</param>
+        [Obsolete("Org.OData.Core.V1.OptimisticConcurrencyControl is obsolete; use SetOptimisticConcurrencyAnnotation to set Org.OData.Core.V1.OptimisticConcurrency instead")]
         public static void SetOptimisticConcurrencyControlAnnotation(this EdmModel model, IEdmEntitySet target, IEnumerable<IEdmStructuralProperty> properties)
         {
             EdmUtil.CheckArgumentNull(model, "model");
@@ -1086,6 +1146,85 @@ namespace Microsoft.OData.Edm
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
         }
+
+        /// <summary>
+        /// Set Org.OData.Capabilities.V1.ChangeTracking to target.
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="target">The target entity container to set the inline annotation.</param>
+        /// <param name="isSupported">This entity set supports the odata.track-changes preference.</param>
+        public static void SetChangeTrackingAnnotation(this EdmModel model, IEdmEntityContainer target, bool isSupported)
+        {
+            model.SetChangeTrackingAnnotationImplementation(target, isSupported, null, null);
+        }
+
+        /// <summary>
+        /// Set Org.OData.Capabilities.V1.ChangeTracking to target.
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="target">The target entity set to set the inline annotation.</param>
+        /// <param name="isSupported">This entity set supports the odata.track-changes preference.</param>
+        /// <param name="filterableProperties">Change tracking supports filters on these properties.</param>
+        /// <param name="expandableProperties">Change tracking supports these properties expanded.</param>
+        public static void SetChangeTrackingAnnotation(this EdmModel model, IEdmEntitySet target, bool isSupported, IEnumerable<IEdmStructuralProperty> filterableProperties, IEnumerable<IEdmNavigationProperty> expandableProperties)
+        {
+            model.SetChangeTrackingAnnotationImplementation(target, isSupported, filterableProperties, expandableProperties);
+        }
+
+        /// <summary>
+        /// Get type reference to the default UInt16 type definition.
+        /// The default underlying type is <see cref="PrimitiveValueConverterConstants.DefaultUInt16UnderlyingType"/>.
+        /// If the user has already defined his own UInt16, this method will not define anything and simply returns the type reference.
+        /// </summary>
+        /// <param name="model">The model involved</param>
+        /// <param name="namespaceName">The name of the namespace where the type definition resides.</param>
+        /// <param name="isNullable">Indicate if the type definition reference is nullable.</param>
+        /// <returns>The nullable type reference to UInt16 type definition.</returns>
+        public static IEdmTypeDefinitionReference GetUInt16(this EdmModel model, string namespaceName, bool isNullable)
+        {
+            return model.GetUIntImplementation(
+                namespaceName,
+                PrimitiveValueConverterConstants.UInt16TypeName,
+                PrimitiveValueConverterConstants.DefaultUInt16UnderlyingType,
+                isNullable);
+        }
+
+        /// <summary>
+        /// Get type reference to the default UInt32 type definition.
+        /// The default underlying type is <see cref="PrimitiveValueConverterConstants.DefaultUInt32UnderlyingType"/>.
+        /// If the user has already defined his own UInt32, this method will not define anything and simply returns the type reference.
+        /// </summary>
+        /// <param name="model">The model involved</param>
+        /// <param name="namespaceName">The name of the namespace where the type definition resides.</param>
+        /// <param name="isNullable">Indicate if the type definition reference is nullable.</param>
+        /// <returns>The nullable type reference to UInt32 type definition.</returns>
+        public static IEdmTypeDefinitionReference GetUInt32(this EdmModel model, string namespaceName, bool isNullable)
+        {
+            return model.GetUIntImplementation(
+                namespaceName,
+                PrimitiveValueConverterConstants.UInt32TypeName,
+                PrimitiveValueConverterConstants.DefaultUInt32UnderlyingType,
+                isNullable);
+        }
+
+        /// <summary>
+        /// Get type reference to the default UInt64 type definition.
+        /// The default underlying type is <see cref="PrimitiveValueConverterConstants.DefaultUInt64UnderlyingType"/>.
+        /// If the user has already defined his own UInt64, this method will not define anything and simply returns the type reference.
+        /// </summary>
+        /// <param name="model">The model involved</param>
+        /// <param name="namespaceName">The name of the namespace where the type definition resides.</param>
+        /// <param name="isNullable">Indicate if the type definition reference is nullable.</param>
+        /// <returns>The nullable type reference to UInt64 type definition.</returns>
+        public static IEdmTypeDefinitionReference GetUInt64(this EdmModel model, string namespaceName, bool isNullable)
+        {
+            return model.GetUIntImplementation(
+                namespaceName,
+                PrimitiveValueConverterConstants.UInt64TypeName,
+                PrimitiveValueConverterConstants.DefaultUInt64UnderlyingType,
+                isNullable);
+        }
+
         #endregion
 
         #region IEdmElement
@@ -1654,6 +1793,21 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(type, "type");
             return (IEdmEnumType)type.Definition;
+        }
+
+        #endregion
+
+        #region IEdmTypeDefinitionReference
+
+        /// <summary>
+        /// Gets the definition of this type definition reference.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>The definition of this type definition reference.</returns>
+        public static IEdmTypeDefinition TypeDefinition(this IEdmTypeDefinitionReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return (IEdmTypeDefinition)type.Definition;
         }
 
         #endregion
@@ -2360,6 +2514,62 @@ namespace Microsoft.OData.Edm
             return FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindOperationImports(n), ContainerExtendsMaxDepth);
         }
 
+        /// <summary>
+        /// Get the primitive value converter for the given type definition in the model.
+        /// </summary>
+        /// <param name="model">The model involved.</param>
+        /// <param name="fullTypeName">The full type name of a type definition.</param>
+        /// <returns>The primitive value converter for the type definition.</returns>
+        internal static IPrimitiveValueConverter GetPrimitiveValueConverter(this IEdmModel model, string fullTypeName)
+        {
+            Debug.Assert(model != null, "model != null");
+            Debug.Assert(!string.IsNullOrEmpty(fullTypeName), "fullTypeName must be provided");
+
+            // If the model does not have primitive value converter map yet, use the pass-through implementation.
+            var mapForModel = model.GetAnnotationValue<IDictionary<string, IPrimitiveValueConverter>>(model, EdmConstants.InternalUri, CsdlConstants.PrimitiveValueConverterMapAnnotation);
+            if (mapForModel == null)
+            {
+                return PassThroughPrimitiveValueConverter.Instance;
+            }
+
+            // No converter provided for this type definition but already have some other type definitions.
+            // Use the pass-through converter because we don't want to have conflict with other type definitions.
+            IPrimitiveValueConverter converter;
+            if (!mapForModel.TryGetValue(fullTypeName, out converter))
+            {
+                return PassThroughPrimitiveValueConverter.Instance;
+            }
+
+            Debug.Assert(converter != null, "converter != null");
+
+            return converter;
+        }
+
+        /// <summary>
+        /// Set the primitive value converter for the given type definition in the model.
+        /// </summary>
+        /// <param name="model">The model involved.</param>
+        /// <param name="fullTypeName">The full type name of a type definition.</param>
+        /// <param name="converter">The primitive value converter for the type definition.</param>
+        internal static void SetPrimitiveValueConverter(this IEdmModel model, string fullTypeName, IPrimitiveValueConverter converter)
+        {
+            Debug.Assert(model != null, "model != null");
+            Debug.Assert(!string.IsNullOrEmpty(fullTypeName), "fullTypeName must be provided");
+            Debug.Assert(converter != null, "converter != null");
+
+            // Get or create map for the model.
+            var mapForModel = model.GetAnnotationValue<IDictionary<string, IPrimitiveValueConverter>>(model, EdmConstants.InternalUri, CsdlConstants.PrimitiveValueConverterMapAnnotation);
+            if (mapForModel == null)
+            {
+                mapForModel = new Dictionary<string, IPrimitiveValueConverter>(StringComparer.Ordinal);
+                model.SetAnnotationValue(model, EdmConstants.InternalUri, CsdlConstants.PrimitiveValueConverterMapAnnotation, mapForModel);
+            }
+
+            // Create mapping for the type definition.
+            Debug.Assert(mapForModel != null, "mapForModel != null");
+            mapForModel[fullTypeName] = converter;
+        }
+
         private static T FindAcrossModels<T, TInput>(this IEdmModel model, TInput qualifiedName, Func<IEdmModel, TInput, T> finder, Func<T, T, T> ambiguousCreator)
         {
             T candidate = finder(model, qualifiedName);
@@ -2510,6 +2720,62 @@ namespace Microsoft.OData.Edm
                     }
                 }
             }
+        }
+
+        private static void SetChangeTrackingAnnotationImplementation(this EdmModel model, IEdmVocabularyAnnotatable target, bool isSupported, IEnumerable<IEdmStructuralProperty> filterableProperties, IEnumerable<IEdmNavigationProperty> expandableProperties)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+
+            if (filterableProperties == null)
+            {
+                filterableProperties = EmptyStructuralProperties;
+            }
+
+            if (expandableProperties == null)
+            {
+                expandableProperties = EmptyNavigationProperties;
+            }
+
+            IList<IEdmPropertyConstructor> properties = new List<IEdmPropertyConstructor>
+            {
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.CapabilitiesChangeTrackingSupported, new EdmBooleanConstant(isSupported)),
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.CapabilitiesChangeTrackingFilterableProperties, new EdmCollectionExpression(filterableProperties.Select(p => new EdmPropertyPathExpression(p.Name)).ToArray())),
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.CapabilitiesChangeTrackingExpandableProperties, new EdmCollectionExpression(expandableProperties.Select(p => new EdmNavigationPropertyPathExpression(p.Name)).ToArray()))
+            };
+
+            IEdmRecordExpression record = new EdmRecordExpression(properties);
+            IEdmValueTerm term = CapabilitiesVocabularyModel.ChangeTrackingTerm;
+
+            Debug.Assert(term != null, "term!=null");
+            EdmAnnotation annotation = new EdmAnnotation(target, term, record);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+        }
+
+        private static IEdmTypeDefinitionReference GetUIntImplementation(this EdmModel model, string namespaceName, string name, string underlyingType, bool isNullable)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(namespaceName, "namespaceName");
+
+            Debug.Assert(!string.IsNullOrEmpty(name), "name must be provided");
+
+            string qualifiedName = String.Format(CultureInfo.InvariantCulture, "{0}.{1}", namespaceName, name);
+
+            // If the user has already defined his own UInt TypeDefinition, we don't define ours anymore.
+            var type = model.FindDeclaredType(qualifiedName) as IEdmTypeDefinition;
+            if (type == null)
+            {
+                type = new EdmTypeDefinition(namespaceName, name, EdmCoreModel.Instance.GetPrimitiveTypeKind(underlyingType));
+
+                model.AddElement(type);
+
+                model.SetPrimitiveValueConverter(qualifiedName, DefaultPrimitiveValueConverter.Instance);
+            }
+
+            var typeReference = new EdmTypeDefinitionReference(type, isNullable);
+
+            return typeReference;
         }
 
         internal static class TypeName<T>

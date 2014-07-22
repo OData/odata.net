@@ -310,12 +310,6 @@ namespace Microsoft.OData.Client
                 return false;
             }
 
-            if (clientProperty.DeclaringType.TypeKind != EdmTypeKind.Entity)
-            {
-                // since open complex types aren't supported yet, there is never a need to put the type names inside the complex type.
-                return false;
-            }
-
             var serverType = this.serviceModel.FindType(serverTypeName) as IEdmStructuredType;
             if (serverType == null)
             {

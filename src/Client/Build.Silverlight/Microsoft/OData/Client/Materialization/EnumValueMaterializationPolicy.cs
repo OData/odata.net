@@ -84,7 +84,7 @@ namespace Microsoft.OData.Client.Materialization
                 string enumValueStr = enumValue.Value.Trim();
                 if (!Enum.IsDefined(enumType, enumValueStr))
                 {
-                    tmpValue = Enum.Parse(enumType, ClientTypeUtil.GetClientMemberName(enumType, enumValueStr), false);
+                    tmpValue = Enum.Parse(enumType, ClientTypeUtil.GetClientFieldName(enumType, enumValueStr), false);
                 }
                 else
                 {
@@ -113,7 +113,7 @@ namespace Microsoft.OData.Client.Materialization
             enumValueStr = enumValueStr.Trim();
             if (!Enum.IsDefined(enumClrType, enumValueStr))
             {
-                materializedValue = Enum.Parse(enumClrType, ClientTypeUtil.GetClientMemberName(enumClrType, enumValueStr), false);
+                materializedValue = Enum.Parse(enumClrType, ClientTypeUtil.GetClientFieldName(enumClrType, enumValueStr), false);
             }
             else
             {

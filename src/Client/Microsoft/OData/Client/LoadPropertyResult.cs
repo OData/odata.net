@@ -18,11 +18,6 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-#if !ASTORIA_LIGHT
-
-#else // Data.Services http stack
-    using Microsoft.OData.Service.Http;
-#endif
     using Microsoft.OData.Client.Metadata;
 
     #endregion Namespaces

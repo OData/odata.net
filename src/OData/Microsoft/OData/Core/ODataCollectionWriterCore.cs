@@ -114,7 +114,8 @@ namespace Microsoft.OData.Core
                 {
                     this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(
                         this.outputContext.MessageWriterSettings.WriterBehavior.AllowDuplicatePropertyNames,
-                        this.outputContext.WritingResponse);
+                        this.outputContext.WritingResponse,
+                        !this.outputContext.MessageWriterSettings.EnableFullValidation);
                 }
 
                 return this.duplicatePropertyNamesChecker;

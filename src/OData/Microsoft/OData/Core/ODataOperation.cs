@@ -46,8 +46,8 @@ namespace Microsoft.OData.Core
         /// <summary>The cached full name of the operation to use.</summary>
         private string operationFullName;
 
-        /// <summary>The binding parameter type name for this operation.</summary>
-        private string bindingParameterTypeName;
+        /// <summary>The parameter names for this operation.</summary>
+        private string parameterNames;
 
         /// <summary>Gets or sets the URI to get metadata for the <see cref="T:Microsoft.OData.Core.ODataAction" />.</summary>
         /// <returns>The URI to get metadata for the <see cref="T:Microsoft.OData.Core.ODataAction" />.</returns>
@@ -79,7 +79,7 @@ namespace Microsoft.OData.Core
             {
                 return this.hasNonComputedTarget
                     ? this.target
-                    : (this.computedTarget ?? (this.metadataBuilder == null ? null : this.computedTarget = this.metadataBuilder.GetOperationTargetUri(this.operationFullName, this.bindingParameterTypeName)));
+                    : (this.computedTarget ?? (this.metadataBuilder == null ? null : this.computedTarget = this.metadataBuilder.GetOperationTargetUri(this.operationFullName, this.BindingParameterTypeName, this.parameterNames)));
             }
 
             set
@@ -88,6 +88,11 @@ namespace Microsoft.OData.Core
                 this.hasNonComputedTarget = true;
             }
         }
+
+        /// <summary>
+        /// The binding parameter type name for this operation.
+        /// </summary>
+        internal string BindingParameterTypeName { get; set; }
 
         /// <summary>
         /// Sets the metadata builder for this operation.
@@ -101,7 +106,7 @@ namespace Microsoft.OData.Core
 
             ODataJsonLightValidationUtils.ValidateOperation(metadataDocumentUri, this);
             this.metadataBuilder = builder;
-            this.operationFullName = ODataJsonLightUtils.GetFullyQualifiedOperationName(metadataDocumentUri, UriUtils.UriToString(this.Metadata), out this.bindingParameterTypeName);
+            this.operationFullName = ODataJsonLightUtils.GetFullyQualifiedOperationName(metadataDocumentUri, UriUtils.UriToString(this.Metadata), out this.parameterNames);
             this.computedTitle = null;
             this.computedTarget = null;
         }

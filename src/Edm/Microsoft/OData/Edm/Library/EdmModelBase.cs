@@ -42,10 +42,17 @@ namespace Microsoft.OData.Edm.Library
             EdmUtil.CheckArgumentNull(annotationsManager, "annotationsManager");
 
             this.referencedEdmModels = new List<IEdmModel>(referencedModels);
+
             this.referencedEdmModels.Add(EdmCoreModel.Instance);
+
             if (CoreVocabularyModel.Instance != null)
             {
                 this.referencedEdmModels.Add(CoreVocabularyModel.Instance);
+            }
+
+            if (CapabilitiesVocabularyModel.Instance != null)
+            {
+                this.referencedEdmModels.Add(CapabilitiesVocabularyModel.Instance);
             }
 
             this.annotationsManager = annotationsManager;

@@ -48,7 +48,12 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents a type implementing <see cref="IEdmEnumType"/>.
         /// </summary>
-        Enum
+        Enum,
+
+        /// <summary>
+        /// Represents a type implementing <see cref="IEdmTypeDefinition"/>.
+        /// </summary>
+        TypeDefinition,
     }
 
     /// <summary>

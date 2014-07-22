@@ -79,6 +79,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 this.WriteRequiredAttribute(CsdlConstants.Attribute_Type, term.Type, this.TypeReferenceAsXml);
             }
 
+            this.WriteOptionalAttribute(CsdlConstants.Attribute_DefaultValue, term.DefaultValue, EdmValueWriter.StringAsXml);
             this.WriteOptionalAttribute(CsdlConstants.Attribute_AppliesTo, term.AppliesTo, EdmValueWriter.StringAsXml);
         }
 
@@ -413,6 +414,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmExpressionKind.PropertyPath:
                     this.WriteRequiredAttribute(CsdlConstants.Attribute_PropertyPath, ((IEdmPathExpression)expression).Path, PathAsXml);
                     break;
+                case EdmExpressionKind.NavigationPropertyPath:
+                    this.WriteRequiredAttribute(CsdlConstants.Attribute_NavigationPropertyPath, ((IEdmPathExpression)expression).Path, PathAsXml);
+                    break;
                 case EdmExpressionKind.StringConstant:
                     this.WriteRequiredAttribute(CsdlConstants.Attribute_String, ((IEdmStringConstantExpression)expression).Value, EdmValueWriter.StringAsXml);
                     break;
@@ -555,6 +559,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteEndElement();
         }
 
+        internal void WriteNavigationPropertyPathExpressionElement(IEdmPathExpression expression)
+        {
+            this.xmlWriter.WriteStartElement(CsdlConstants.Element_NavigationPropertyPath);
+            this.xmlWriter.WriteString(PathAsXml(expression.Path));
+            this.WriteEndElement();
+        }
+
         internal void WriteIfExpressionElementHeader(IEdmIfExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_If);
@@ -621,6 +632,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_PropertyReference);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, expression.ReferencedProperty, PropertyAsXml);
+        }
+
+        internal void WriteTypeDefinitionElementHeader(IEdmTypeDefinition typeDefinition)
+        {
+            this.xmlWriter.WriteStartElement(CsdlConstants.Element_TypeDefinition);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, typeDefinition.Name, EdmValueWriter.StringAsXml);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_UnderlyingType, typeDefinition.UnderlyingType, this.TypeDefinitionAsXml);
         }
 
         internal void WriteEndElement()

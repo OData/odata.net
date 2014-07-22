@@ -16,11 +16,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Reflection;
     using System.Xml.Linq;
-#if !ASTORIA_LIGHT 
     using System.Net;
-#else // Data.Services http stack
-    using Microsoft.OData.Service.Http;
-#endif
     using Microsoft.OData.Core;
     using Microsoft.OData.Client.Metadata;
 
@@ -98,9 +94,17 @@ namespace Microsoft.OData.Client
             get
             {
                 Debug.Assert(this.Context.ResolveName != null, "this.context.ResolveName != null.");
+#if WINRT
+    // Func<>.Method property does not exist on Win8 and there is no other way to access any MethodInfo that is behind the Func,
+    // so we have no way to determine if the Func was supplied by the user or if it's the one provided by codegen.
+    // In this case we will always assume it's the one provided by codegen, which means we'll try to resolve the name using the entity descriptor
+    // first. This is likely to be correct in more cases than using the codegen resolver, so it is safer to make this assumption than the reverse.
+                return false;
+#else
                 MethodInfo resolveNameMethodInfo = this.Context.ResolveName.Method;
                 var codegenAttr = resolveNameMethodInfo.GetCustomAttributes(false).OfType<GeneratedCodeAttribute>().FirstOrDefault();
                 return codegenAttr == null || codegenAttr.Tool != Util.CodeGeneratorToolName;
+#endif
             }
         }
 

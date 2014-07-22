@@ -202,7 +202,7 @@ namespace Microsoft.OData.Core
         /// If set to true, all the validation would be enabled. Else some validation will be skipped.
         /// Default to true.
         /// </summary>
-        internal bool EnableFullValidation { get; set; }
+        public bool EnableFullValidation { get; set; }
 
         /// <summary>
         /// If set to true, then the root element of each payload will be written in the default (non-prefix-qualified) namespace of the document. 

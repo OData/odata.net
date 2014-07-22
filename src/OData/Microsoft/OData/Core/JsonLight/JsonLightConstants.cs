@@ -84,6 +84,12 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>The "," to use as the separator for the function parameters in the fragment of a context URI.</summary>
         internal const string FunctionParameterSeparator = ",";
 
+        /// <summary>The ',' to use as the separator for the function parameters.</summary>
+        internal const char FunctionParameterSeparatorChar = ',';
+
+        /// <summary> THe "=@" to use as the separator for the function parameter in target.</summary>
+        internal const string FunctionParameterAssignment = "=@";
+
         /// <summary> The kind name of the service document singleton element. </summary>
         internal const string ServiceDocumentSingletonKindName = "Singleton";
 

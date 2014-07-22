@@ -186,7 +186,7 @@ namespace Microsoft.OData.Client.Materialization
                     isElementNullable);
             }
             else if ((enumTypeTmp = Nullable.GetUnderlyingType(prop.NullablePropertyType) ?? prop.NullablePropertyType) != null
-                && enumTypeTmp.IsEnum)
+                && enumTypeTmp.IsEnum())
             {
                 ODataEnumValue enumValue = property.Value as ODataEnumValue;
                 object tmpValue = EnumValueMaterializationPolicy.MaterializeODataEnumValue(enumTypeTmp, enumValue);

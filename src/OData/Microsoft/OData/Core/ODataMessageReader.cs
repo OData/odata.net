@@ -769,7 +769,7 @@ namespace Microsoft.OData.Core
             ODataPayloadKind[] supportedPayloadKinds = this.VerifyCanReadValue(expectedTypeReference);
 
             return this.ReadFromInput(
-                (context) => context.ReadValue((IEdmPrimitiveTypeReference)expectedTypeReference),
+                (context) => context.ReadValue(expectedTypeReference.AsPrimitiveOrNull()),
                 supportedPayloadKinds);
         }
 
@@ -1152,7 +1152,7 @@ namespace Microsoft.OData.Core
 
             if (expectedTypeReference != null)
             {
-                if (!expectedTypeReference.IsODataPrimitiveTypeKind())
+                if (!expectedTypeReference.IsODataPrimitiveTypeKind() && !expectedTypeReference.IsODataTypeDefinitionTypeKind())
                 {
                     throw new ArgumentException(
                         Strings.ODataMessageReader_ExpectedValueTypeWrongKind(expectedTypeReference.TypeKind().ToString()),

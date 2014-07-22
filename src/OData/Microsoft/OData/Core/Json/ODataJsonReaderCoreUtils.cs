@@ -92,6 +92,7 @@ namespace Microsoft.OData.Core.Json
         /// <param name="expectedTypeReference">The expected type reference of the value.</param>
         /// <param name="validateNullValue">true to validate null values; otherwise false.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
+        /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
         /// <returns>true if a null value could be read from the JSON reader; otherwise false.</returns>
         /// <remarks>If the method detects a null value it will read it (position the reader after the null value); 
         /// otherwise the reader does not move.</remarks>
@@ -100,7 +101,8 @@ namespace Microsoft.OData.Core.Json
             ODataInputContext inputContext,
             IEdmTypeReference expectedTypeReference, 
             bool validateNullValue, 
-            string propertyName)
+            string propertyName,
+            bool? isDynamicProperty = null)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(inputContext != null, "inputContext != null");
@@ -117,7 +119,8 @@ namespace Microsoft.OData.Core.Json
                     inputContext.MessageReaderSettings,
                     validateNullValue,
                     inputContext.Version,
-                    propertyName);
+                    propertyName,
+                    isDynamicProperty);
 
                 return true;
             }

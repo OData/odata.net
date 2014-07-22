@@ -521,7 +521,8 @@ namespace Microsoft.OData.Core.Evaluation
                 if (entitySet != null)
                 {
                     IEdmVocabularyAnnotation annotation = model.FindDeclaredVocabularyAnnotations(entitySet)
-                        .SingleOrDefault(t => t.Term.FullName().Equals(CoreVocabularyConstants.CoreOptimisticConcurrencyControl, StringComparison.Ordinal));
+                        .SingleOrDefault(t => t.Term.FullName().Equals(CoreVocabularyConstants.CoreOptimisticConcurrencyControl, StringComparison.Ordinal) ||
+                                              t.Term.FullName().Equals(CoreVocabularyConstants.CoreOptimisticConcurrency, StringComparison.Ordinal));
                     if (annotation is IEdmValueAnnotation)
                     {
                         IEdmExpression collectionExpression = (annotation as IEdmValueAnnotation).Value;

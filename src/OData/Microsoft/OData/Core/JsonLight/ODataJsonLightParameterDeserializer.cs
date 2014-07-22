@@ -133,6 +133,20 @@ namespace Microsoft.OData.Core.JsonLight
                                         state = ODataParameterReaderState.Value;
                                         break;
 
+                                    case EdmTypeKind.TypeDefinition:
+                                        IEdmTypeDefinitionReference typeDefinitionReference = parameterTypeReference.AsTypeDefinition();
+                                        parameterValue = this.ReadNonEntityValue(
+                                            /*payloadTypeName*/ null,
+                                            typeDefinitionReference,
+                                            /*duplicatePropertyNamesChecker*/ null,
+                                            /*collectionValidator*/ null,
+                                            /*validateNullValue*/ true,
+                                            /*isTopLevelPropertyValue*/ false,
+                                            /*insideComplexValue*/ false,
+                                            parameterName);
+                                        state = ODataParameterReaderState.Value;
+                                        break;
+
                                     case EdmTypeKind.Complex:
                                         parameterValue = this.ReadNonEntityValue(
                                             /*payloadTypeName*/ null,

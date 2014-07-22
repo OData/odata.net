@@ -8,6 +8,7 @@
 
 //   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
+#if !WINRT
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client
 #else
@@ -51,3 +52,4 @@ namespace Microsoft.OData.Service
         }
     }
 }
+#endif

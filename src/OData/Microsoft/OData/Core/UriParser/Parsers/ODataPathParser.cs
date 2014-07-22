@@ -301,6 +301,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     return RequestTargetKind.Collection;
                 case EdmTypeKind.Enum:
                     return RequestTargetKind.Enum;
+                case EdmTypeKind.TypeDefinition:
+                    return RequestTargetKind.Primitive;
                 default:
                     Debug.Assert(type.TypeKind == EdmTypeKind.Primitive, "typeKind == ResourceTypeKind.Primitive");
                     return RequestTargetKind.Primitive;
@@ -477,13 +479,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
             }
 
-            if (previous.TargetKind == RequestTargetKind.Batch
-                || previous.TargetKind == RequestTargetKind.Metadata
-                || previous.TargetKind == RequestTargetKind.PrimitiveValue
-                || previous.TargetKind == RequestTargetKind.VoidOperation
-                || previous.TargetKind == RequestTargetKind.OpenPropertyValue
-                || previous.TargetKind == RequestTargetKind.MediaResource
-                || (previous.TargetKind == RequestTargetKind.Collection && (operationSegment == null && operationImportSegment == null)))
+            if (previous.TargetKind == RequestTargetKind.Batch                  /* $batch */
+                || previous.TargetKind == RequestTargetKind.Metadata            /* $metadata */
+                || previous.TargetKind == RequestTargetKind.PrimitiveValue      /* $value, see TryCreateValueSegment */
+                || previous.TargetKind == RequestTargetKind.OpenPropertyValue   /* $value, see TryCreateValueSegment */
+                || previous.TargetKind == RequestTargetKind.EnumValue           /* $value, see TryCreateValueSegment */
+                || previous.TargetKind == RequestTargetKind.MediaResource       /* $value or Media resource, see TryCreateValueSegment/CreateNamedStreamSegment */
+                || previous.TargetKind == RequestTargetKind.VoidOperation       /* service operation with void return type */)
             {
                 // Nothing can come after a $metadata, $value or $batch segment.
                 // Nothing can come after a service operation with void return type.
@@ -512,14 +514,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             ExceptionUtil.ThrowSyntaxErrorIfNotValid(parenthesisExpression == null);
 
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
-            if (previous.TargetKind != RequestTargetKind.Resource)
+            if ((previous.TargetKind != RequestTargetKind.Resource || previous.SingleResult) && previous.TargetKind != RequestTargetKind.Collection)
             {
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_CountNotSupported(previous.Identifier));
-            }
-
-            if (previous.SingleResult)
-            {
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_CannotQuerySingletons(previous.Identifier, UriQueryConstants.CountSegment));
+                throw ExceptionUtil.ResourceNotFoundError(
+                    "The request URI is not valid. $count cannot be applied to the segment '" + previous.Identifier +
+                    "' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
             }
 
             this.parsedSegments.Add(CountSegment.Instance);
@@ -1170,7 +1169,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         segment.TargetKind = RequestTargetKind.Enum;
                         break;
                     default:
-                        Debug.Assert(property.Type.IsPrimitive(), "must be primitive type property");
+                        Debug.Assert(property.Type.IsPrimitive() || property.Type.IsTypeDefinition(), "must be primitive type or type definition property");
                         segment.TargetKind = RequestTargetKind.Primitive;
                         break;
                 }

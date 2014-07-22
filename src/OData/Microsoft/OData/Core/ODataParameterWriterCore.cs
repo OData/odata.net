@@ -89,7 +89,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return this.duplicatePropertyNamesChecker ?? (this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, false /*isResponse*/));
+                return this.duplicatePropertyNamesChecker ?? (this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, false /*isResponse*/, !this.outputContext.MessageWriterSettings.EnableFullValidation));
             }
         }
 
@@ -379,7 +379,7 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             IEdmTypeReference parameterTypeReference = this.VerifyCanWriteParameterAndGetTypeReference(synchronousCall, parameterName);
-            if (parameterTypeReference != null && !parameterTypeReference.IsODataPrimitiveTypeKind() && !parameterTypeReference.IsODataComplexTypeKind() && !parameterTypeReference.IsODataEnumTypeKind())
+            if (parameterTypeReference != null && !parameterTypeReference.IsODataPrimitiveTypeKind() && !parameterTypeReference.IsODataComplexTypeKind() && !parameterTypeReference.IsODataEnumTypeKind() && !parameterTypeReference.IsODataTypeDefinitionTypeKind())
             {
                 throw new ODataException(Strings.ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind(parameterName, parameterTypeReference.TypeKind()));
             }

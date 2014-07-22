@@ -18,11 +18,7 @@ namespace Microsoft.OData.Client
     using System.IO;
     using System.Linq;
     using System.Text;
-#if !ASTORIA_LIGHT
     using System.Net;
-#else
-    using Microsoft.OData.Service.Http;
-#endif
     using Microsoft.OData.Core;
 
     /// <summary>

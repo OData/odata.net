@@ -19,6 +19,7 @@ namespace Microsoft.OData.Core
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Json;
     #endregion Namespaces
@@ -419,6 +420,8 @@ namespace Microsoft.OData.Core
             }
             else
             {
+                value = this.Model.ConvertToUnderlyingTypeIfUIntValue(value);
+
                 this.InitializeRawValueWriter();
                 this.rawValueWriter.Start();
                 this.rawValueWriter.WriteRawValue(value);

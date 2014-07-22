@@ -17,9 +17,7 @@ namespace Microsoft.OData.Client
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
-#if PORTABLELIB
     using System.Threading;
-#endif
     using Microsoft.OData.Client.Materialization;
 
     #endregion Namespaces
@@ -61,12 +59,10 @@ namespace Microsoft.OData.Client
         /// <summary>Entity set name tracked until tracking is enabled.</summary>
         private string entitySetName;
 
-#if ASTORIA_LIGHT || PORTABLELIB
         /// <summary>
         /// The async handle for the current LoadAsync Operation
         /// </summary>
         private IAsyncResult ongoingAsyncOperation;
-#endif
 
         #endregion Private fields
 
@@ -78,9 +74,24 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> class based on query execution.</summary>
+        /// <param name="item">A <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> or LINQ query that returns an object that are used to initialize the collection.</param>
+        public DataServiceCollection(DataServiceQuerySingle<T> item)
+            : this(null, item.Query, TrackingMode.AutoChangeTracking, null, null, null)
+        {
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> class based on query execution.</summary>
         /// <param name="items">A <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> or LINQ query that  returns an <see cref="T:System.Collections.Generic.IEnumerable`1" /> collection of objects that are used to initialize the collection.</param>
         public DataServiceCollection(IEnumerable<T> items)
             : this(null, items, TrackingMode.AutoChangeTracking, null, null, null)
+        {
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> class based on query execution and with the specified tracking mode.</summary>
+        /// <param name="trackingMode">A <see cref="T:Microsoft.OData.Client.TrackingMode" /> value that indicated whether or not changes made to items in the collection are automatically tracked.</param>
+        /// <param name="item">A <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> or LINQ query that returns an object that are used to initialize the collection.</param>
+        public DataServiceCollection(TrackingMode trackingMode, DataServiceQuerySingle<T> item)
+            : this(null, item.Query, trackingMode, null, null, null)
         {
         }
 
@@ -217,14 +228,12 @@ namespace Microsoft.OData.Client
         }
 
         #region Properties
-#if ASTORIA_LIGHT || PORTABLELIB
         /// <summary>A completion event for the <see cref="LoadAsync(System.Linq.IQueryable&lt;T&gt;)"/>, <see cref="LoadAsync()"/> 
         /// and <see cref="LoadNextPartialSetAsync"/> method.</summary>
         /// <remarks>This event is raised exactly once for each call to the <see cref="LoadAsync(System.Linq.IQueryable&lt;T&gt;)"/>, 
         /// <see cref="LoadAsync()"/> or <see cref="LoadNextPartialSetAsync"/> method. It is called both when the operation 
         /// succeeded and/or when it failed.</remarks>
         public event EventHandler<LoadCompletedEventArgs> LoadCompleted;
-#endif // ASTORIA_LIGHT || PORTABLELIB
 
         /// <summary>Gets a continuation object that is used to return the next set of paged results.</summary>
         /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that contains the URI to return the next set of paged results.</returns>
@@ -296,7 +305,6 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if ASTORIA_LIGHT || PORTABLELIB
         /// <summary>Asynchronously loads the collection by executing a <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" />.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
         /// <param name="query">The <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> that, when executed, returns the entities to load into the collection.</param>
         /// <exception cref="T:System.ArgumentException">When query is null or not a <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" />.</exception>
@@ -312,12 +320,12 @@ namespace Microsoft.OData.Client
             DataServiceQuery<T> dsq = query as DataServiceQuery<T>;
             if (dsq == null)
             {
-                throw new ArgumentException(Strings.DataServiceCollection_LoadAsyncRequiresDataServiceQuery, "query");
+                throw new ArgumentException("Only a typed DataServiceQuery object can be supplied when calling the LoadAsync method on DataServiceCollection.", "query");
             }
 
             if (this.ongoingAsyncOperation != null)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
+                throw new InvalidOperationException("A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed.");
             }
 
             if (this.trackingOnLoad)
@@ -359,7 +367,7 @@ namespace Microsoft.OData.Client
 
             if (this.ongoingAsyncOperation != null)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
+                throw new InvalidOperationException("A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed.");
             }
 
             DataServiceContext context = this.observer.Context;
@@ -395,12 +403,12 @@ namespace Microsoft.OData.Client
             string property;
             if (!this.observer.LookupParent(this, out parent, out property))
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity);
+                throw new InvalidOperationException("The LoadAsync method cannot be called when the DataServiceCollection is not a child collection of a related entity.");
             }
 
             if (this.ongoingAsyncOperation != null)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
+                throw new InvalidOperationException("A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed.");
             }
 
             this.BeginLoadAsyncOperation(
@@ -429,7 +437,7 @@ namespace Microsoft.OData.Client
 
             if (this.ongoingAsyncOperation != null)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
+                throw new InvalidOperationException("A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed.");
             }
 
             if (this.Continuation == null)
@@ -462,7 +470,6 @@ namespace Microsoft.OData.Client
                 this.observer.Context.CancelRequest(this.ongoingAsyncOperation);
             }
         }
-#endif
 
         /// <summary>Loads a single entity object into the collection.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
         /// <param name="item">Entity object to be added.</param>
@@ -740,7 +747,6 @@ namespace Microsoft.OData.Client
             this.rootCollection = true;
         }
 
-#if ASTORIA_LIGHT || PORTABLELIB
         /// <summary>Helper method to start a LoadAsync operation.</summary>
         /// <param name="beginCall">Function which calls the Begin method for the load. It should take <see cref="AsyncCallback"/>
         /// parameter which should be used as the callback for the Begin call. It should return <see cref="IAsyncResult"/>
@@ -772,7 +778,7 @@ namespace Microsoft.OData.Client
             try
             {
                 AsyncCallback endLoadAsyncOperation;
-#if PORTABLELIB
+
                 // If SynchronizationContext.Current is not null, use that to invoke the end call and event firing, otherwise
                 // just invoke those operations on the callback thread. If we can't automatically get the SynchronizationContext.Current,
                 // the user can still call SynchronizationContext.SetSynchronizationContext and set a specific context to use,
@@ -787,9 +793,7 @@ namespace Microsoft.OData.Client
                 {
                     endLoadAsyncOperation = (ar) => syncContext.Post((unused) => this.EndLoadAsyncOperation(endCall, ar), null);
                 }
-#else
-                endLoadAsyncOperation = (ar) => System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() => this.EndLoadAsyncOperation(endCall, ar));
-#endif
+
                 this.ongoingAsyncOperation = beginCall(endLoadAsyncOperation);
             }
             catch (Exception)
@@ -830,6 +834,5 @@ namespace Microsoft.OData.Client
                 }
             }
         }
-#endif
     }
 }

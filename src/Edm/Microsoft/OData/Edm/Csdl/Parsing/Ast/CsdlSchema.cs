@@ -24,6 +24,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         private readonly List<CsdlTerm> terms;
         private readonly List<CsdlEntityContainer> entityContainers;
         private readonly List<CsdlAnnotations> outOfLineAnnotations;
+        private readonly List<CsdlTypeDefinition> typeDefinitions;
 
         private readonly string alias;
         private readonly string namespaceName;
@@ -39,6 +40,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             IEnumerable<CsdlTerm> terms,
             IEnumerable<CsdlEntityContainer> entityContainers,
             IEnumerable<CsdlAnnotations> outOfLineAnnotations,
+            IEnumerable<CsdlTypeDefinition> typeDefinitions,
             CsdlDocumentation documentation,
             CsdlLocation location)
             : base(documentation, location)
@@ -52,6 +54,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             this.terms = new List<CsdlTerm>(terms);
             this.entityContainers = new List<CsdlEntityContainer>(entityContainers);
             this.outOfLineAnnotations = new List<CsdlAnnotations>(outOfLineAnnotations);
+            this.typeDefinitions = new List<CsdlTypeDefinition>(typeDefinitions);
         }
 
         public IEnumerable<CsdlStructuredType> StructuredTypes
@@ -82,6 +85,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         public IEnumerable<CsdlAnnotations> OutOfLineAnnotations
         {
             get { return this.outOfLineAnnotations; }
+        }
+
+        public IEnumerable<CsdlTypeDefinition> TypeDefinitions
+        {
+            get { return this.typeDefinitions; }
         }
 
         public string Alias

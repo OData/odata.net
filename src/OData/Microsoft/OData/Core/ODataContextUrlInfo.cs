@@ -285,7 +285,8 @@ namespace Microsoft.OData.Core
                 throw new ODataException(Strings.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataEntry);
             }
 
-            return EdmLibraryExtensions.GetPrimitiveTypeReference(primitive.Value.GetType()).ODataFullName();
+            IEdmPrimitiveTypeReference primitiveValueTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(primitive.Value.GetType());
+            return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.ODataFullName();
         }
 
         #region SelectAndExpand Convert

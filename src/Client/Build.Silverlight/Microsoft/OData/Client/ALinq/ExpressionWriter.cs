@@ -58,6 +58,11 @@ namespace Microsoft.OData.Client
         /// <summary>number of sub scopes (any/all calls) on stack</summary>
         private int scopeCount;
 
+        /// <summary>
+        /// currently writing functions in query options
+        /// </summary>
+        private bool writingFunctionsInQuery;
+
         #endregion Private fields
 
         /// <summary>
@@ -75,6 +80,7 @@ namespace Microsoft.OData.Client
             this.expressionStack.Push(null);
             this.uriVersion = Util.ODataVersion4;
             this.scopeCount = 0;
+            this.writingFunctionsInQuery = false;
         }
 
         /// <summary>
@@ -220,7 +226,7 @@ namespace Microsoft.OData.Client
             // This method intentionally does not write anything to the URI for implicit references to the input parameter ($it).
             // This is how 'Where(<input>.Id == 5)' becomes '$filter=Id eq 5'.
             Debug.Assert(ire != null, "ire != null");
-            if (this.parent == null || (!this.InSubScope && this.parent.NodeType != ExpressionType.MemberAccess && this.parent.NodeType != ExpressionType.TypeAs))
+            if (this.parent == null || (!this.InSubScope && this.parent.NodeType != ExpressionType.MemberAccess && this.parent.NodeType != ExpressionType.TypeAs && this.parent.NodeType != ExpressionType.Call))
             {
                 // Ideally we refer to the parent expression as the un-translatable one,
                 // because we cannot reference 'this' as a standalone expression; however
@@ -230,11 +236,11 @@ namespace Microsoft.OData.Client
             }
 
             // Write "$it" for input parameter reference inside any/all methods
-            if (this.InSubScope)
+            if (this.InSubScope || this.parent.NodeType == ExpressionType.Call)
             {
                 this.builder.Append(XmlConstants.ImplicitFilterParameter);
             }
-            
+
             return ire;
         }
 
@@ -346,9 +352,7 @@ namespace Microsoft.OData.Client
                         // e.g. ctx.CreateQuery<Movie>("Movies").Where(m=>m.Actors.OfType<MegaStar>().Any())
                         //      which translates to /Movies()?$filter=Actors/MegaStar/any()
                         MethodCallExpression mce = this.parent as MethodCallExpression;
-                        if (mce != null &&
-                            ReflectionUtil.TryIdentifySequenceMethod(mce.Method, out sequenceMethod) &&
-                            ReflectionUtil.IsAnyAllMethod(sequenceMethod))
+                        if (mce != null && ReflectionUtil.TryIdentifySequenceMethod(mce.Method, out sequenceMethod) && ReflectionUtil.IsAnyAllMethod(sequenceMethod))
                         {
                             Type filteredType = mce.Method.GetGenericArguments().SingleOrDefault();
                             if (ClientTypeUtil.TypeOrElementTypeIsEntity(filteredType))
@@ -362,6 +366,62 @@ namespace Microsoft.OData.Client
                             }
                         }
                     }
+                    else if (sequenceMethod == SequenceMethod.Count && this.parent != null)
+                    {
+                        if (m.Arguments.Any() && m.Arguments[0] != null)
+                        {
+                            this.Visit(m.Arguments[0]);
+                        }
+
+                        this.builder.Append(UriHelper.FORWARDSLASH).Append(UriHelper.DOLLARSIGN).Append(UriHelper.COUNT);
+                        return m;
+                    }
+                }
+                else
+                {
+                    if (m.Object != null)
+                    {
+                        this.Visit(m.Object);
+                    }
+
+                    if (m.Method.Name != "GetValue" && m.Method.Name != "GetValueAsync")
+                    {
+                        this.builder.Append(UriHelper.FORWARDSLASH);
+
+                        // writing functions in query options
+                        writingFunctionsInQuery = true;
+                        string declaringType = this.context.ResolveNameFromTypeInternal(m.Method.DeclaringType);
+                        if (string.IsNullOrEmpty(declaringType))
+                        {
+                            throw new NotSupportedException(Strings.ALinq_CantTranslateExpression(m.ToString()));
+                        }
+
+                        int index = declaringType.LastIndexOf('.');
+                        string fullNamespace = declaringType.Remove(index + 1);
+                        string serverMethodName = ClientTypeUtil.GetServerDefinedName(m.Method);
+                        this.builder.Append(fullNamespace + serverMethodName);
+                        this.builder.Append(UriHelper.LEFTPAREN);
+                        string[] argumentNames = m.Method.GetParameters().Select(p => p.Name).ToArray();
+                        for (int i = 0; i < m.Arguments.Count; ++i)
+                        {
+                            this.builder.Append(argumentNames[i]);
+                            this.builder.Append(UriHelper.EQUALSSIGN);
+                            this.scopeCount++;
+                            this.Visit(m.Arguments[i]);
+                            this.scopeCount--;
+                            this.builder.Append(UriHelper.COMMA);
+                        }
+
+                        if (m.Arguments.Any())
+                        {
+                            this.builder.Remove(this.builder.Length - 1, 1);
+                        }
+
+                        this.builder.Append(UriHelper.RIGHTPAREN);
+                        writingFunctionsInQuery = false;
+                    }
+
+                    return m;
                 }
 
                 this.cantTranslateExpression = true;
@@ -391,7 +451,14 @@ namespace Microsoft.OData.Client
                 return m;
             }
 
-            if (!this.IsImplicitInputReference(e))
+            // if this is a GetValueAsync().Result call in async scenario, don't write out /Result
+            MethodCallExpression methodCallExpression = m.Expression as MethodCallExpression;
+            if (methodCallExpression != null && methodCallExpression.Method.Name == "GetValueAsync" && m.Member.Name == "Result")
+            {
+                return m;
+            }
+
+            if (!this.IsImplicitInputReference(e) || writingFunctionsInQuery)
             {
                 this.builder.Append(UriHelper.FORWARDSLASH);
             }
@@ -426,10 +493,10 @@ namespace Microsoft.OData.Client
             {
                 c = this.ConvertConstantExpressionForEnum(c);
                 ClientEdmModel model = this.context.Model;
-                IEdmType edmType = model.GetOrCreateEdmType(c.Type.IsEnum ? c.Type : c.Type.GetGenericArguments()[0]);
+                IEdmType edmType = model.GetOrCreateEdmType(c.Type.IsEnum() ? c.Type : c.Type.GetGenericArguments()[0]);
                 ClientTypeAnnotation typeAnnotation = model.GetClientTypeAnnotation(edmType);
                 string typeNameInEdm = this.context.ResolveNameFromTypeInternal(typeAnnotation.ElementType);
-                MemberInfo member = typeAnnotation.ElementType.GetMember(c.Value.ToString()).FirstOrDefault();
+                MemberInfo member = typeAnnotation.ElementType.GetField(c.Value.ToString());
                 string memberValue = ClientTypeUtil.GetServerDefinedName(member);
                 ODataEnumValue enumValue = new ODataEnumValue(memberValue, typeNameInEdm ?? typeAnnotation.ElementTypeName);
                 result = ODataUriUtils.ConvertToUriLiteral(enumValue, CommonUtil.ConvertToODataVersion(this.uriVersion), null);
@@ -819,7 +886,7 @@ namespace Microsoft.OData.Client
             if (e is UnaryExpression)
             {
                 UnaryExpression u = e as UnaryExpression;
-                return u.Operand.Type.IsEnum || (u.Operand.Type.IsGenericType() && u.Operand.Type.GetGenericArguments()[0].IsEnum);
+                return u.Operand.Type.IsEnum() || (u.Operand.Type.IsGenericType() && u.Operand.Type.GetGenericArguments()[0].IsEnum());
             }
 
             return false;
@@ -835,11 +902,11 @@ namespace Microsoft.OData.Client
             UnaryExpression u = e as UnaryExpression;
             if (u != null)
             {
-                return u.Operand.Type.IsEnum ? u.Operand.Type : u.Operand.Type.GetGenericArguments()[0];
+                return u.Operand.Type.IsEnum() ? u.Operand.Type : u.Operand.Type.GetGenericArguments()[0];
             }
 
-            Debug.Assert(e.Type.IsEnum || e.Type.GetGenericArguments()[0].IsEnum, "e.Type.IsEnum || e.Type.GetGenericArguments()[0].IsEnum");
-            return e.Type.IsEnum ? e.Type : e.Type.GetGenericArguments()[0];
+            Debug.Assert(e.Type.IsEnum() || e.Type.GetGenericArguments()[0].IsEnum(), "e.Type.IsEnum || e.Type.GetGenericArguments()[0].IsEnum");
+            return e.Type.IsEnum() ? e.Type : e.Type.GetGenericArguments()[0];
         }
 
         /// <summary>

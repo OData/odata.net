@@ -19,10 +19,6 @@ namespace Microsoft.OData.Client
     using System.Reflection;
     using System.Threading.Tasks;
 
-#if ASTORIA_LIGHT && !PORTABLELIB
-    using Microsoft.OData.Service.Http;
-#endif
-
     /// <summary>
     /// query object
     /// </summary>
@@ -36,13 +32,22 @@ namespace Microsoft.OData.Client
         private static readonly MethodInfo expandMethodInfo = typeof(DataServiceQuery<TElement>).GetMethod("Expand", new Type[] { typeof(string) });
 
         /// <summary>Method info for the generic version of the Expand method</summary>
+#if WINRT
+        private static readonly MethodInfo expandGenericMethodInfo = typeof(DataServiceQuery<TElement>).GetMethodWithGenericArgs("Expand", true /*isPublic*/, false /*isStatic*/, 1 /*genericArgCount*/);
+#else
         private static readonly MethodInfo expandGenericMethodInfo = (MethodInfo)typeof(DataServiceQuery<TElement>).GetMember("Expand*").Single(m => ((MethodInfo)m).GetGenericArguments().Count() == 1);
+#endif
 
         /// <summary>Linq Expression</summary>
         private readonly Expression queryExpression;
 
         /// <summary>Linq Query Provider</summary>
         private readonly DataServiceQueryProvider queryProvider;
+
+        /// <summary>
+        /// The flag of whether this query is a function.
+        /// </summary>
+        private readonly bool isFunction;
 
         /// <summary>Uri, Projection, Version for translated query</summary>
         private QueryComponents queryComponents;
@@ -55,6 +60,18 @@ namespace Microsoft.OData.Client
         /// <param name="expression">expression for query</param>
         /// <param name="provider">query provider for query</param>
         public DataServiceQuery(Expression expression, DataServiceQueryProvider provider)
+            : this(expression, provider, true)
+        {
+            this.isFunction = false;
+        }
+
+        /// <summary>
+        /// query object of a function which returns a collection of items
+        /// </summary>
+        /// <param name="expression">expression for query</param>
+        /// <param name="provider">query provider for query</param>
+        /// <param name="isComposable">whether this query is composable</param>
+        public DataServiceQuery(Expression expression, DataServiceQueryProvider provider, bool isComposable)
         {
             Debug.Assert(null != provider.Context, "null context");
             Debug.Assert(expression != null, "null expression");
@@ -62,6 +79,8 @@ namespace Microsoft.OData.Client
 
             this.queryExpression = expression;
             this.queryProvider = provider;
+            this.IsComposable = isComposable;
+            this.isFunction = true;
         }
 
         #region IQueryable implementation
@@ -109,10 +128,55 @@ namespace Microsoft.OData.Client
             get { return this.queryProvider.Context; }
         }
 
+        /// <summary>
+        /// Whether this query is composable
+        /// </summary>
+        public bool IsComposable { get; private set; }
+
         /// <summary>The ProjectionPlan for the request (if precompiled in a previous page).</summary>
         internal override ProjectionPlan Plan
         {
             get { return null; }
+        }
+
+        /// <summary>
+        /// Gets a new URI string with keys.
+        /// </summary>
+        /// <param name="keyString">The string representing keys.</param>
+        /// <returns>The new URI string with keys.</returns>
+        public string GetKeyPath(string keyString)
+        {
+            string resourcePath = UriUtil.UriToString(this.RequestUri).Substring(UriUtil.UriToString(this.Context.BaseUri).Length);
+            if (this.Context.UrlConventions == DataServiceUrlConventions.KeyAsSegment)
+            {
+                return resourcePath + UriHelper.FORWARDSLASH + keyString;
+            }
+            else
+            {
+                return resourcePath + UriHelper.LEFTPAREN + keyString + UriHelper.RIGHTPAREN;
+            }
+        }
+
+        /// <summary>
+        /// Get a new URI string by adding <paramref name="nextSegment"/> to the original one.
+        /// </summary>
+        /// <param name="nextSegment">Name of the action.</param>
+        /// <returns>The new URI string.</returns>
+        public string AppendRequestUri(string nextSegment)
+        {
+            Uri requestUri = this.RequestUri;
+            return UriUtil.UriToString(requestUri).Replace(requestUri.AbsolutePath, requestUri.AbsolutePath + UriHelper.FORWARDSLASH + nextSegment);
+        }
+
+        /// <summary>
+        /// Get a new URI path string by adding <paramref name="nextSegment"/> to the original one.
+        /// </summary>
+        /// <param name="nextSegment">The next segment to add to path.</param>
+        /// <returns>The new URI path string.</returns>
+        public string GetPath(string nextSegment)
+        {
+            string resourcePath = UriUtil.UriToString(this.RequestUri).Substring(UriUtil.UriToString(this.Context.BaseUri).Length);
+            return resourcePath + UriHelper.FORWARDSLASH + nextSegment;
         }
 
         /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
@@ -121,7 +185,14 @@ namespace Microsoft.OData.Client
         /// <param name="state">User defined object used to transfer state between the start of the operation and the callback defined by <paramref name="callback" />.</param>
         public new IAsyncResult BeginExecute(AsyncCallback callback, object state)
         {
-            return base.BeginExecute(this, this.Context, callback, state, Util.ExecuteMethodName);
+            if (this.isFunction)
+            {
+                return this.Context.BeginExecute<TElement>(this.RequestUri, callback, state, XmlConstants.HttpMethodGet, false);
+            }
+            else
+            {
+                return base.BeginExecute(this, this.Context, callback, state, Util.ExecuteMethodName);
+            }
         }
 
         /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
@@ -137,7 +208,14 @@ namespace Microsoft.OData.Client
         /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
         public new IEnumerable<TElement> EndExecute(IAsyncResult asyncResult)
         {
-            return DataServiceRequest.EndExecute<TElement>(this, this.Context, Util.ExecuteMethodName, asyncResult);
+            if (this.isFunction)
+            {
+                return this.Context.EndExecute<TElement>(asyncResult);
+            }
+            else
+            {
+                return DataServiceRequest.EndExecute<TElement>(this, this.Context, Util.ExecuteMethodName, asyncResult);
+            }
         }
 
         /// <summary>
@@ -158,7 +236,14 @@ namespace Microsoft.OData.Client
         /// <exception cref="T:System.NotSupportedException">When during materialization an object is encountered in the input stream that cannot be deserialized to an instance of TElement.</exception>
         public new IEnumerable<TElement> Execute()
         {
-            return this.Execute<TElement>(this.Context, this.Translate());
+            if (this.isFunction)
+            {
+                return this.Context.Execute<TElement>(this.RequestUri, XmlConstants.HttpMethodGet, false);
+            }
+            else
+            {
+                return this.Execute<TElement>(this.Context, this.Translate());
+            }
         }
 
         /// <summary>
@@ -241,7 +326,7 @@ namespace Microsoft.OData.Client
             return this.Execute().GetEnumerator();
         }
 #else
-        IEnumerator<TElement> IEnumerable<TElement>.GetEnumerator()
+        public IEnumerator<TElement> GetEnumerator()
         {
             throw Error.NotSupported(Strings.DataServiceQuery_EnumerationNotSupported);
         }
@@ -395,6 +480,17 @@ namespace Microsoft.OData.Client
             /// <param name="provider">query provider for query</param>
             internal DataServiceOrderedQuery(Expression expression, DataServiceQueryProvider provider)
                 : base(expression, provider)
+            {
+            }
+
+            /// <summary>
+            /// constructor
+            /// </summary>
+            /// <param name="expression">expression for query</param>
+            /// <param name="provider">query provider for query</param>
+            /// <param name="isComposable">whether this query is composable</param>
+            internal DataServiceOrderedQuery(Expression expression, DataServiceQueryProvider provider, bool isComposable)
+                : base(expression, provider, isComposable)
             {
             }
         }

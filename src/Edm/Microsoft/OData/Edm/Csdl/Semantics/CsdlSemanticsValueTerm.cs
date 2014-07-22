@@ -64,6 +64,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.valueTerm.AppliesTo; }
         }
 
+        public string DefaultValue
+        {
+            get { return this.valueTerm.DefaultValue; }
+        }
+
         public override CsdlSemanticsModel Model
         {
             get { return this.Context.Model; }

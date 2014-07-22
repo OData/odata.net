@@ -172,7 +172,7 @@ namespace Microsoft.OData.Client
         }
     }
 
-#if !ASTORIA_LIGHT
+#if !PORTABLELIB
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>

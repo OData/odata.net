@@ -108,6 +108,31 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
+        /// Checks whether a type reference refers to an OData type definition.
+        /// </summary>
+        /// <param name="typeReference">The (non-null) <see cref="IEdmTypeReference"/> to check.</param>
+        /// <returns>true if the <paramref name="typeReference"/> is an OData type definition reference; otherwise false.</returns>
+        internal static bool IsODataTypeDefinitionTypeKind(this IEdmTypeReference typeReference)
+        {
+            ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
+            ExceptionUtils.CheckArgumentNotNull(typeReference.Definition, "typeReference.Definition");
+
+            return typeReference.Definition.IsODataTypeDefinitionTypeKind();
+        }
+
+        /// <summary>
+        /// Checks whether a type refers to an OData type definition.
+        /// </summary>
+        /// <param name="type">The (non-null) <see cref="IEdmType"/> to check.</param>
+        /// <returns>true if the <paramref name="type"/> is an OData type definition; otherwise false.</returns>
+        internal static bool IsODataTypeDefinitionTypeKind(this IEdmType type)
+        {
+            ExceptionUtils.CheckArgumentNotNull(type, "type");
+
+            return type.TypeKind == EdmTypeKind.TypeDefinition;
+        }
+
+        /// <summary>
         /// Checks whether a type reference refers to an OData entity type.
         /// </summary>
         /// <param name="typeReference">The (non-null) <see cref="IEdmTypeReference"/> to check.</param>
@@ -215,7 +240,7 @@ namespace Microsoft.OData.Core.Metadata
                 return null;
             }
 
-            return typeReference.TypeKind() == EdmTypeKind.Primitive ? typeReference.AsPrimitive() : null;
+            return typeReference.TypeKind() == EdmTypeKind.Primitive || typeReference.TypeKind() == EdmTypeKind.TypeDefinition ? typeReference.AsPrimitive() : null;
         }
 
         /// <summary>

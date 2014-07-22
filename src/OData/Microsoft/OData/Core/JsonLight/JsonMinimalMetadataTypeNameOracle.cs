@@ -73,7 +73,7 @@ namespace Microsoft.OData.Core.JsonLight
             if (typeReferenceFromValue != null)
             {
                 // Write type name when the type in the payload is more derived than the type from metadata.
-                if (typeReferenceFromMetadata != null && typeReferenceFromMetadata.ODataFullName() != typeReferenceFromValue.ODataFullName())
+                if (typeReferenceFromMetadata != null && typeReferenceFromMetadata.Definition.AsActualType().ODataFullName() != typeReferenceFromValue.ODataFullName())
                 {
                     return typeReferenceFromValue.ODataFullName();
                 }

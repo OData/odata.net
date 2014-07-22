@@ -16,6 +16,7 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
+    using Microsoft.OData.Core.JsonLight;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Values;
     using Microsoft.OData.Core.Metadata;
@@ -184,19 +185,28 @@ namespace Microsoft.OData.Core.Evaluation
         /// <param name="baseUri">The URI to append to.</param>
         /// <param name="operationName">The fully qualified name of the operation for which to get the target URI.</param>
         /// <param name="bindingParameterTypeName">The binding parameter type name to include in the target, or null/empty if there is none.</param>
+        /// <param name="parameterNames">The parameter names to include in the target, or null/empty if there is none.</param>
         /// <returns>The target URI for the operation.</returns>
-        internal override Uri BuildOperationTargetUri(Uri baseUri, string operationName, string bindingParameterTypeName)
+        internal override Uri BuildOperationTargetUri(Uri baseUri, string operationName, string bindingParameterTypeName, string parameterNames)
         {
             ValidateBaseUri(baseUri);
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(operationName, "operationName");
 
+            Uri targetUri = baseUri;
+
             if (!string.IsNullOrEmpty(bindingParameterTypeName))
             {
-                Uri withBindingParameter = AppendSegment(baseUri, bindingParameterTypeName, true /*escapeSegment*/);
-                return AppendSegment(withBindingParameter, operationName, true /*escapeSegment*/);
+                targetUri = AppendSegment(baseUri, bindingParameterTypeName, true /*escapeSegment*/);
             }
 
-            return AppendSegment(baseUri, operationName, true /*escapeSegment*/);
+            if (!string.IsNullOrEmpty(parameterNames))
+            {
+                operationName += JsonLightConstants.FunctionParameterStart;
+                operationName += string.Join(JsonLightConstants.FunctionParameterSeparator, parameterNames.Split(JsonLightConstants.FunctionParameterSeparatorChar).Select(p => p + JsonLightConstants.FunctionParameterAssignment + p).ToArray());
+                operationName += JsonLightConstants.FunctionParameterEnd;
+            }
+
+            return AppendSegment(targetUri, operationName, false /*escapeSegment*/);
         }
 
         /// <summary>

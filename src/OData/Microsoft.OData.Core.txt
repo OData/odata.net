@@ -874,9 +874,8 @@ RequestUriProcessor_InvalidValueForKeySegment=The KeySegment provided (Id = {0})
 ; Copied from the server, will be incrementally replaced.
 RequestUriProcessor_EmptySegmentInRequestUrl=Empty segment encountered in request URL. Please make sure that a valid request URL is specified.
 RequestUriProcessor_SyntaxError=Bad Request - Error in query syntax.
-RequestUriProcessor_CannotSpecifyAfterPostLinkSegment=The request URI is not valid. The segment '{0}' is not valid. Since the uri contains the '{1}' segment, there must be only one segment specified after that.
 RequestUriProcessor_CountOnRoot=The request URI is not valid, the segment $count cannot be applied to the root of the service.
-RequestUriProcessor_MustBeLeafSegment=The request URI is not valid. The segment '{0}' must be the last segment in the URI because it is one of the following: $batch, $value, $metadata, a collection property, a named media resource, an action, a noncomposable function, an action import, or a noncomposable function import.
+RequestUriProcessor_MustBeLeafSegment=The request URI is not valid. The segment '{0}' must be the last segment in the URI because it is one of the following: $ref, $batch, $count, $value, $metadata, a named media resource, an action, a noncomposable function, an action import, a noncomposable function import, an operation with void return type, or an operation import with void return type.
 RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment=The request URI is not valid. The segment '{0}' must refer to a navigation property since the previous segment identifier is '{1}'.
 RequestUriProcessor_MissingSegmentAfterLink=The request URI is not valid. There must a segment specified after the '{0}' segment and the segment must refer to a entity resource.
 RequestUriProcessor_CountNotSupported=The request URI is not valid, $count cannot be applied to the segment '{0}' since $count can only follow a resource segment.

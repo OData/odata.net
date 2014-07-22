@@ -385,7 +385,7 @@ namespace Microsoft.OData.Core.Evaluation
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
 
-            return hasNavigationLinkUrl ? navigationLinkUrl : this.uriBuilder.BuildNavigationLinkUri(this.GetEditLink(), navigationPropertyName);
+            return hasNavigationLinkUrl ? navigationLinkUrl : this.uriBuilder.BuildNavigationLinkUri(this.GetReadLink(), navigationPropertyName);
         }
 
         /// <summary>
@@ -403,19 +403,20 @@ namespace Microsoft.OData.Core.Evaluation
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
 
-            return hasAssociationLinkUrl ? associationLinkUrl : this.uriBuilder.BuildAssociationLinkUri(this.GetEditLink(), navigationPropertyName);
+            return hasAssociationLinkUrl ? associationLinkUrl : this.uriBuilder.BuildAssociationLinkUri(this.GetReadLink(), navigationPropertyName);
         }
 
         /// <summary>
         /// Get the operation target URI for the specified <paramref name="operationName"/>.
         /// </summary>
         /// <param name="operationName">The fully qualified name of the operation for which to get the target URI.</param>
-        /// <param name="bindingParameterTypeName">The binding parameter type name to include in the target, or null/empty if there is none.</param>
+        /// <param name="bindingParameterTypeName">The binding parameter type name.</param>
+        /// <param name="parameterNames">The parameter names to include in the target, or null/empty if there is none.</param>
         /// <returns>
         /// The target URI for the operation.
         /// null if it is not possible to determine the target URI for the specified operation.
         /// </returns>
-        internal override Uri GetOperationTargetUri(string operationName, string bindingParameterTypeName)
+        internal override Uri GetOperationTargetUri(string operationName, string bindingParameterTypeName, string parameterNames)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(operationName, "operationName");
 
@@ -428,10 +429,10 @@ namespace Microsoft.OData.Core.Evaluation
             else
             {
                 // Otherwise, use the computed URI which has no type segment
-                baseUri = this.ComputedId;
+                baseUri = this.GetId();
             }
 
-            return this.uriBuilder.BuildOperationTargetUri(baseUri, operationName, bindingParameterTypeName);
+            return this.uriBuilder.BuildOperationTargetUri(baseUri, operationName, bindingParameterTypeName, parameterNames);
         }
 
         /// <summary>

@@ -49,15 +49,15 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="metadataDocumentUri">The metadata document Uri.</param>
         /// <param name="metadataReferencePropertyName">The metadata reference property name.</param>
-        /// <param name="firstParameterTypeName">The first parameter name, if any are present in the given string.</param>
+        /// <param name="parameterNames">The parameter names, if any are present in the given string.</param>
         /// <returns>The fully qualified operation import name.</returns>
-        internal static string GetFullyQualifiedOperationName(Uri metadataDocumentUri, string metadataReferencePropertyName, out string firstParameterTypeName)
+        internal static string GetFullyQualifiedOperationName(Uri metadataDocumentUri, string metadataReferencePropertyName, out string parameterNames)
         {
             Debug.Assert(metadataDocumentUri != null, "metadataDocumentUri != null");
             Debug.Assert(!String.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
 
             string fullyQualifiedFunctionImportName = GetUriFragmentFromMetadataReferencePropertyName(metadataDocumentUri, metadataReferencePropertyName);
-            firstParameterTypeName = null;
+            parameterNames = null;
 
             int indexOfLeftParenthesis = fullyQualifiedFunctionImportName.IndexOf(JsonLightConstants.FunctionParameterStart);
             if (indexOfLeftParenthesis > -1)
@@ -65,8 +65,7 @@ namespace Microsoft.OData.Core.JsonLight
                 string parameters = fullyQualifiedFunctionImportName.Substring(indexOfLeftParenthesis + 1);
                 fullyQualifiedFunctionImportName = fullyQualifiedFunctionImportName.Substring(0, indexOfLeftParenthesis);
 
-                // The first parameter name is everything after the first paren up to the first comma or the end of the string, with all parentheses removed.
-                firstParameterTypeName = parameters.Split(ParameterSeparatorSplitCharacters).First().Trim(CharactersToTrimFromParameters);
+                parameterNames = parameters.Trim(CharactersToTrimFromParameters);
             }
 
             return fullyQualifiedFunctionImportName;
@@ -125,9 +124,13 @@ namespace Microsoft.OData.Core.JsonLight
 
             string metadataReferenceName = operation.FullName();
             bool hasOverload = model.FindDeclaredOperations(operation.FullName()).Take(2).Count() > 1;
+            
             if (hasOverload)
             {
-                metadataReferenceName = operation.FullNameWithParameters();
+                if (operation is IEdmFunction)
+                {
+                    metadataReferenceName = operation.FullNameWithNonBindingParameters();
+                }
             }
 
             return metadataReferenceName;
@@ -151,6 +154,12 @@ namespace Microsoft.OData.Core.JsonLight
             ODataOperation operation = isAction ? (ODataOperation)new ODataAction() : new ODataFunction();
 
             // Note that the property name can be '#name' which is not a valid Uri. We need to prepend the metadata document uri in that case.
+            int parameterStartIndex = 0;
+            if (isAction && (parameterStartIndex = metadataReferencePropertyName.IndexOf(JsonLightConstants.FunctionParameterStart)) > 0)
+            {
+                metadataReferencePropertyName = metadataReferencePropertyName.Substring(0, parameterStartIndex);
+            }
+
             operation.Metadata = GetAbsoluteUriFromMetadataReferencePropertyName(metadataDocumentUri, metadataReferencePropertyName);
             return operation;
         }

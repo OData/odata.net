@@ -354,6 +354,7 @@ namespace Microsoft.OData.Edm.Evaluation
                     return (IEdmNullExpression)expression;
                 case EdmExpressionKind.Path:
                 case EdmExpressionKind.PropertyPath:
+                case EdmExpressionKind.NavigationPropertyPath:
                     {
                         EdmUtil.CheckArgumentNull(context, "context");
 

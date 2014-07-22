@@ -5494,13 +5494,6 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "The request URI is not valid. The segment '{0}' is not valid. Since the uri contains the '{1}' segment, there must be only one segment specified after that."
-        /// </summary>
-        internal static string RequestUriProcessor_CannotSpecifyAfterPostLinkSegment(object p0, object p1) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.RequestUriProcessor_CannotSpecifyAfterPostLinkSegment,p0,p1);
-        }
-
-        /// <summary>
         /// A string like "The request URI is not valid, the segment $count cannot be applied to the root of the service."
         /// </summary>
         internal static string RequestUriProcessor_CountOnRoot {
@@ -5510,7 +5503,7 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "The request URI is not valid. The segment '{0}' must be the last segment in the URI because it is one of the following: $batch, $value, $metadata, a collection property, a named media resource, an action, a noncomposable function, an action import, or a noncomposable function import."
+        /// A string like "The request URI is not valid. The segment '{0}' must be the last segment in the URI because it is one of the following: $ref, $batch, $count, $value, $metadata, a named media resource, an action, a noncomposable function, an action import, a noncomposable function import, an operation with void return type, or an operation import with void return type."
         /// </summary>
         internal static string RequestUriProcessor_MustBeLeafSegment(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.RequestUriProcessor_MustBeLeafSegment,p0);

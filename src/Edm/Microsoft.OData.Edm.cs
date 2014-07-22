@@ -282,6 +282,7 @@ namespace Microsoft.OData.Edm {
         internal const string EdmxParser_EdmxVersionMismatch = "EdmxParser_EdmxVersionMismatch";
         internal const string EdmxParser_BodyElement = "EdmxParser_BodyElement";
         internal const string EdmxParser_InvalidReferenceIncorrectNumberOfIncludes = "EdmxParser_InvalidReferenceIncorrectNumberOfIncludes";
+        internal const string EdmxParser_UnresolvedReferenceUriInEdmxReference = "EdmxParser_UnresolvedReferenceUriInEdmxReference";
         internal const string EdmParseException_ErrorsEncounteredInEdmx = "EdmParseException_ErrorsEncounteredInEdmx";
         internal const string ValueParser_InvalidBoolean = "ValueParser_InvalidBoolean";
         internal const string ValueParser_InvalidInteger = "ValueParser_InvalidInteger";
@@ -341,7 +342,11 @@ namespace Microsoft.OData.Edm {
         ResourceManager resources;
 
         internal EntityRes() {
+#if !WINRT        
             resources = new System.Resources.ResourceManager("Microsoft.OData.Edm", this.GetType().Assembly);
+#else
+            resources = new System.Resources.ResourceManager("Microsoft.OData.Edm", this.GetType().GetTypeInfo().Assembly);
+#endif
         }
         
         private static EntityRes GetLoader() {

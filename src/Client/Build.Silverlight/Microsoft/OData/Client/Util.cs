@@ -350,7 +350,7 @@ namespace Microsoft.OData.Client
         /// <returns>true if its nullable false otherwise</returns>
         internal static bool IsNullableType(Type t)
         {
-            if (t.IsClass)
+            if (t.IsClass())
             {
                 return true;
             }

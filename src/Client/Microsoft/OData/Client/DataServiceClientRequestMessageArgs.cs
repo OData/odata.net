@@ -42,9 +42,8 @@ namespace Microsoft.OData.Client
             this.Method = method;
             this.RequestUri = requestUri;
             this.UsePostTunneling = usePostTunneling;
-#if PORTABLELIB || ASTORIA_LIGHT
             this.UseDefaultCredentials = useDefaultCredentials;
-#endif
+
             this.actualMethod = this.Method;
             if (this.UsePostTunneling && this.Headers.ContainsKey(XmlConstants.HttpXMethod))
             {
@@ -107,11 +106,10 @@ namespace Microsoft.OData.Client
         /// </summary>
         public HttpStack ClientHttpStack { get; private set; }
 #endif
-#if ASTORIA_LIGHT || PORTABLELIB
+
         /// <summary>
         /// Gets a System.Boolean value that controls whether default credentials are sent with requests.
         /// </summary>
         public bool UseDefaultCredentials { get; private set; }
-#endif
     }
 }

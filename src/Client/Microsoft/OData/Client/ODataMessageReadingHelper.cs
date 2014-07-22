@@ -41,13 +41,13 @@ namespace Microsoft.OData.Client
         internal ODataMessageReaderSettings CreateSettings()
         {
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
-
+#if !WINRT
             if (this.responseInfo.Context.EnableAtom)
             {
                 // Enable ATOM in client
                 settings.EnableAtomSupport();
             }
-
+#endif
             Func<IEdmType, string, IEdmType> resolveWireTypeName = this.responseInfo.TypeResolver.ResolveWireTypeName;
             if (this.responseInfo.Context.Format.ServiceModel != null)
             {

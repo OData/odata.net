@@ -13,6 +13,7 @@ namespace Microsoft.OData.Core.UriParser
     #region Namespaces
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
@@ -148,6 +149,9 @@ namespace Microsoft.OData.Core.UriParser
             {
                 return ODataUriConversionUtils.ConvertToUriEnumLiteral(enumValue, version);
             }
+
+            // Try to convert uints to their underlying type first according to the model.
+            value = model.ConvertToUnderlyingTypeIfUIntValue(value);
 
             return ODataUriConversionUtils.ConvertToUriPrimitiveLiteral(value, version);
         }

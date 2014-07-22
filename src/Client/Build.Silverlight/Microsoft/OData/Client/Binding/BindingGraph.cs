@@ -172,7 +172,7 @@ namespace Microsoft.OData.Client
                 }
                 
                 // If the collection contains complex objects, bind to all of the objects in the collection
-                if (!PrimitiveType.IsKnownNullableType(collectionItemType) && !collectionItemType.IsEnum)
+                if (!PrimitiveType.IsKnownNullableType(collectionItemType) && !collectionItemType.IsEnum())
                 {
                     // Fail if the collection contains a complex type that does not implement INotifyPropertyChanged.
                     if (!typeof(INotifyPropertyChanged).IsAssignableFrom(collectionItemType))

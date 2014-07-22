@@ -1004,9 +1004,9 @@ namespace Microsoft.OData.Client.Materialization
         private bool NeedToAssignCollectionDirectly(object collection)
         {
             Type type = collection.GetType();
-            PropertyInfo countProp = type.GetProperty("Count", BindingFlags.Public | BindingFlags.Instance);
-            PropertyInfo isTrackingProp = type.GetProperty("IsTracking", BindingFlags.NonPublic | BindingFlags.Instance);
-
+            PropertyInfo countProp = type.GetPublicProperties(true).SingleOrDefault(property => property.Name == "Count");
+            PropertyInfo isTrackingProp = type.GetNonPublicProperties(true, false /*declaredOnly*/).SingleOrDefault(property => property.Name == "IsTracking");
+            
             if (countProp == null)
             {
                 return false;

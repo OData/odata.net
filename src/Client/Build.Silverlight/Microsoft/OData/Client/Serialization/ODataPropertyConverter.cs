@@ -57,7 +57,7 @@ namespace Microsoft.OData.Client
             {
                 object propertyValue = property.GetValue(resource);
                 ODataValue odataValue;
-                if (this.TryConvertPropertyValue(property, propertyValue, null, out odataValue))
+                if (this.TryConvertPropertyValue(property, propertyValue, serverTypeName, null, out odataValue))
                 {
                     odataProperties.Add(
                         new ODataProperty
@@ -127,13 +127,15 @@ namespace Microsoft.OData.Client
                 odataComplexValue.TypeName = complexTypeAnnotation.ElementTypeName;
             }
 
+            string serverTypeName = this.requestInfo.GetServerTypeName(complexTypeAnnotation);
+
             // If this complex type is a collection item don't put type name on each item
             if (!isCollectionItem)
             {
-                odataComplexValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = this.requestInfo.GetServerTypeName(complexTypeAnnotation) });
+                odataComplexValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = serverTypeName });
             }
 
-            odataComplexValue.Properties = this.PopulateProperties(value, complexTypeAnnotation.PropertiesToSerialize(), visitedComplexTypeObjects);
+            odataComplexValue.Properties = this.PopulateProperties(value, serverTypeName, complexTypeAnnotation.PropertiesToSerialize(), visitedComplexTypeObjects);
 
             visitedComplexTypeObjects.Remove(value);
             return odataComplexValue;
@@ -148,7 +150,7 @@ namespace Microsoft.OData.Client
         /// <returns>An ODataEnumValue instance.</returns>
         internal ODataEnumValue CreateODataEnumValue(Type enumClrType, object value, bool isCollectionItem)
         {
-            Debug.Assert(enumClrType != null && enumClrType.IsEnum, "enumClrType != null && enumClrType.IsEnum");
+            Debug.Assert(enumClrType != null && enumClrType.IsEnum(), "enumClrType != null && enumClrType.IsEnum");
             Debug.Assert(value != null || !isCollectionItem, "Collection items must not be null");
 
             ClientEdmModel model = this.requestInfo.Model;
@@ -163,14 +165,7 @@ namespace Microsoft.OData.Client
                 return null;
             }
 
-            MemberInfo member = enumClrType.GetMember(value.ToString()).FirstOrDefault();
-            if (member == null)
-            {
-                throw new NotSupportedException(Strings.Serializer_InvalidEnumMemberValue(enumClrType.Name, value.ToString())); 
-            }
-
-            string memberValue = ClientTypeUtil.GetServerDefinedName(member);
-            return new ODataEnumValue(memberValue, enumTypeAnnotation.ElementTypeName);
+            return new ODataEnumValue(ClientTypeUtil.GetEnumValuesString(value.ToString(), enumClrType), enumTypeAnnotation.ElementTypeName);
         }
 
         /// <summary>
@@ -180,12 +175,13 @@ namespace Microsoft.OData.Client
         /// <param name="propertyName">If the value is a property, then it represents the name of the property. Can be null, for non-property.</param>
         /// <param name="value">The value.</param>
         /// <param name="visitedComplexTypeObjects">Set of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
+        /// <param name="isDynamicProperty">Whether this collection property is a dynamic property</param>
         /// <returns>An ODataCollectionValue representing the given value.</returns>
-        internal ODataCollectionValue CreateODataCollection(Type collectionItemType, string propertyName, object value, HashSet<object> visitedComplexTypeObjects)
+        internal ODataCollectionValue CreateODataCollection(Type collectionItemType, string propertyName, object value, HashSet<object> visitedComplexTypeObjects, bool isDynamicProperty)
         {
             Debug.Assert(collectionItemType != null, "collectionItemType != null");
 
-            WebUtil.ValidateCollection(collectionItemType, value, propertyName);
+            WebUtil.ValidateCollection(collectionItemType, value, propertyName, isDynamicProperty);
 
             PrimitiveType ptype;
             bool isCollectionOfPrimitiveTypes = PrimitiveType.TryGetPrimitiveType(collectionItemType, out ptype);
@@ -198,14 +194,17 @@ namespace Microsoft.OData.Client
             {
                 collectionItemTypeName = ClientConvert.GetEdmType(Nullable.GetUnderlyingType(collectionItemType) ?? collectionItemType);
 
-                collection.Items = Util.GetEnumerable(
-                    enumerablePropertyValue,
-                    (val) =>
-                    {
-                        WebUtil.ValidateCollectionItem(val);
-                        WebUtil.ValidatePrimitiveCollectionItem(val, propertyName, collectionItemType);
-                        return ConvertPrimitiveValueToRecognizedODataType(val, collectionItemType);
-                    });
+                if (enumerablePropertyValue != null)
+                {                    
+                    collection.Items = Util.GetEnumerable(
+                        enumerablePropertyValue,
+                        (val) =>
+                        {
+                            WebUtil.ValidateCollectionItem(val);
+                            WebUtil.ValidatePrimitiveCollectionItem(val, propertyName, collectionItemType);
+                            return ConvertPrimitiveValueToRecognizedODataType(val, collectionItemType);
+                        });
+                }
 
                 // TypeName for primitives should be the EDM name since that's what we will be able to look up in the model
                 collectionTypeName = collectionItemTypeName;
@@ -213,38 +212,35 @@ namespace Microsoft.OData.Client
             else
             {
                 Type collectionItemTypeTmp = Nullable.GetUnderlyingType(collectionItemType) ?? collectionItemType;
-                bool areEnumItems = collectionItemTypeTmp.IsEnum;
+                bool areEnumItems = collectionItemTypeTmp.IsEnum();
 
                 // Note that the collectionItemTypeName will be null if the context does not have the ResolveName func.
                 collectionItemTypeName = this.requestInfo.ResolveNameFromType(collectionItemType);
-                collection.Items = Util.GetEnumerable(
-                    enumerablePropertyValue,
-                    (val) =>
-                    {
-                        if (areEnumItems)
+                
+                if (enumerablePropertyValue != null)
+                {
+                    collection.Items = Util.GetEnumerable(
+                        enumerablePropertyValue,
+                        (val) =>
                         {
-                            if (val == null)
+                            if (areEnumItems)
                             {
-                                return new ODataEnumValue(null, collectionItemType.FullName) as ODataValue;
-                            }
+                                if (val == null)
+                                {
+                                    return new ODataEnumValue(null, collectionItemType.FullName) as ODataValue;
+                                }
 
-                            MemberInfo member = collectionItemTypeTmp.GetMember(val.ToString()).FirstOrDefault();
-                            if (member == null)
+                                return new ODataEnumValue(ClientTypeUtil.GetEnumValuesString(val.ToString(), collectionItemTypeTmp), collectionItemType.FullName) as ODataValue;
+                            }
+                            else
                             {
-                                throw new NotSupportedException(Strings.Serializer_InvalidEnumMemberValue(collectionItemType.Name, value.ToString())); 
+                                WebUtil.ValidateCollectionItem(val);
+                                WebUtil.ValidateComplexCollectionItem(val, propertyName, collectionItemType);
+                                return this.CreateODataComplexValue(collectionItemType, val, propertyName, true /*isCollectionItem*/, visitedComplexTypeObjects)
+                                     as ODataValue;
                             }
-
-                            string memberValue = ClientTypeUtil.GetServerDefinedName(member);
-                            return new ODataEnumValue(memberValue, collectionItemType.FullName) as ODataValue;
-                        }
-                        else
-                        {
-                            WebUtil.ValidateCollectionItem(val);
-                            WebUtil.ValidateComplexCollectionItem(val, propertyName, collectionItemType);
-                            return this.CreateODataComplexValue(collectionItemType, val, propertyName, true /*isCollectionItem*/, visitedComplexTypeObjects)
-                                 as ODataValue;
-                        }
-                    });
+                        });
+                }
 
                 // TypeName for complex types needs to be the client type name (not the one we resolved above) since it will be looked up in the client model
                 collectionTypeName = collectionItemType.FullName;
@@ -351,10 +347,11 @@ namespace Microsoft.OData.Client
         /// Creates a list of ODataProperty instances for the given set of properties.
         /// </summary>
         /// <param name="resource">Instance of the resource which is getting serialized.</param>
+        /// <param name="serverTypeName">The server type name of the entity whose properties are being populated.</param>
         /// <param name="properties">The properties to populate into instance of ODataProperty.</param>
         /// <param name="visitedComplexTypeObjects">Set of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
         /// <returns>Populated ODataProperty instances for the given properties.</returns>
-        private IEnumerable<ODataProperty> PopulateProperties(object resource, IEnumerable<ClientPropertyAnnotation> properties, HashSet<object> visitedComplexTypeObjects)
+        private IEnumerable<ODataProperty> PopulateProperties(object resource, string serverTypeName, IEnumerable<ClientPropertyAnnotation> properties, HashSet<object> visitedComplexTypeObjects)
         {
             Debug.Assert(properties != null, "properties != null");
             List<ODataProperty> odataProperties = new List<ODataProperty>();
@@ -362,7 +359,7 @@ namespace Microsoft.OData.Client
             {
                 object propertyValue = property.GetValue(resource);
                 ODataValue odataValue;
-                if (this.TryConvertPropertyValue(property, propertyValue, visitedComplexTypeObjects, out odataValue))
+                if (this.TryConvertPropertyValue(property, propertyValue, serverTypeName, visitedComplexTypeObjects, out odataValue))
                 {
                     odataProperties.Add(new ODataProperty
                         {
@@ -380,10 +377,11 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="property">The property being converted.</param>
         /// <param name="propertyValue">The property value to convert..</param>
+        /// <param name="serverTypeName">The server type name of the entity whose properties are being populated.</param>
         /// <param name="visitedComplexTypeObjects">Set of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
         /// <param name="odataValue">The odata value if one was created.</param>
         /// <returns>Whether or not the value was converted.</returns>
-        private bool TryConvertPropertyValue(ClientPropertyAnnotation property, object propertyValue, HashSet<object> visitedComplexTypeObjects, out ODataValue odataValue)
+        private bool TryConvertPropertyValue(ClientPropertyAnnotation property, object propertyValue, string serverTypeName, HashSet<object> visitedComplexTypeObjects, out ODataValue odataValue)
         {
             if (property.IsKnownType)
             {
@@ -400,13 +398,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    MemberInfo member = property.PropertyType.GetMember(propertyValue.ToString()).FirstOrDefault();
-                    if (member == null)
-                    {
-                        throw new NotSupportedException(Strings.Serializer_InvalidEnumMemberValue(property.PropertyType.Name, propertyValue.ToString()));
-                    }
-
-                    enumValue = ClientTypeUtil.GetServerDefinedName(member);
+                    enumValue = ClientTypeUtil.GetEnumValuesString(propertyValue.ToString(), property.PropertyType);
                 }
 
                 string typeNameInMetadata = this.requestInfo.ResolveNameFromType(property.PropertyType);
@@ -416,7 +408,7 @@ namespace Microsoft.OData.Client
 
             if (property.IsPrimitiveOrEnumOrComplexCollection)
             {
-                odataValue = this.CreateODataCollectionPropertyValue(property, propertyValue, visitedComplexTypeObjects);
+                odataValue = this.CreateODataCollectionPropertyValue(property, propertyValue, serverTypeName, visitedComplexTypeObjects);
                 return true;
             }
 
@@ -456,14 +448,16 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="property">Collection property details. Must not be null.</param>
         /// <param name="propertyValue">Collection instance.</param>
+        /// <param name="serverTypeName">The server type name of the entity whose properties are being populated.</param>
         /// <param name="visitedComplexTypeObjects">List of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
         /// <returns>An instance of ODataCollectionValue representing the value of the property.</returns>
-        private ODataCollectionValue CreateODataCollectionPropertyValue(ClientPropertyAnnotation property, object propertyValue, HashSet<object> visitedComplexTypeObjects)
+        private ODataCollectionValue CreateODataCollectionPropertyValue(ClientPropertyAnnotation property, object propertyValue, string serverTypeName, HashSet<object> visitedComplexTypeObjects)
         {
             Debug.Assert(property != null, "property != null");
             Debug.Assert(property.IsPrimitiveOrEnumOrComplexCollection, "This method is supposed to be used only for writing collections");
             Debug.Assert(property.PropertyName != null, "property.PropertyName != null");
-            return this.CreateODataCollection(property.PrimitiveOrComplexCollectionItemType, property.PropertyName, propertyValue, visitedComplexTypeObjects);
+            bool isDynamic = this.requestInfo.TypeResolver.ShouldWriteClientTypeForOpenServerProperty(property.EdmProperty, serverTypeName);
+            return this.CreateODataCollection(property.PrimitiveOrComplexCollectionItemType, property.PropertyName, propertyValue, visitedComplexTypeObjects, isDynamic);
         }
 
         /// <summary>
@@ -476,14 +470,6 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(property != null, "property != null");
             Debug.Assert(property.EdmProperty != null, "property.EdmProperty != null");
-#if DEBUG
-            if (odataValue is ODataCollectionValue)
-            {
-                Debug.Assert(
-                    !this.requestInfo.TypeResolver.ShouldWriteClientTypeForOpenServerProperty(property.EdmProperty, serverTypeName),
-                    "Open collection properties are not yet supported. This method will need to be updated when they are.");
-            }
-#endif
             var primitiveValue = odataValue as ODataPrimitiveValue;
             if (primitiveValue == null)
             {

@@ -396,7 +396,7 @@ namespace Microsoft.OData.Core.Metadata
 
             if (indexOfParameterStart > 0)
             {
-                return operations.Where(f => f.FullNameWithParameters().Equals(operationName, StringComparison.Ordinal));
+                return operations.Where(f => (f.IsFunction() && f.FullNameWithNonBindingParameters().Equals(operationName, StringComparison.Ordinal)) || f.IsAction());
             }
 
             return ValidateOperationGroupReturnsOnlyOnKind(operations, operationNameWithoutParameterTypes);
@@ -525,6 +525,18 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
+        /// Full name of the operation with non-binding parameters.
+        /// </summary>
+        /// <param name="operation">Operation in question.</param>
+        /// <returns>Full name of the operation with parameters.</returns>
+        internal static string FullNameWithNonBindingParameters(this IEdmOperation operation)
+        {
+            Debug.Assert(operation != null, "operation != null");
+            
+            return operation.FullName() + operation.NonBindingParameterNamesToString();
+        }
+
+        /// <summary>
         /// Name of the operation import with parameters.
         /// </summary>
         /// <param name="operationImport">Operation import in question.</param>
@@ -632,6 +644,9 @@ namespace Microsoft.OData.Core.Metadata
                 case TypeCode.Int16:
                 case TypeCode.Int32:
                 case TypeCode.Int64:
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
                 case TypeCode.SByte:
                 case TypeCode.String:
                 case TypeCode.Single:
@@ -695,6 +710,9 @@ namespace Microsoft.OData.Core.Metadata
         {
             Debug.Assert(baseType != null, "baseType != null");
             Debug.Assert(subtype != null, "subtype != null");
+
+            baseType = baseType.AsActualType();
+            subtype = subtype.AsActualType();
 
             EdmTypeKind baseTypeKind = baseType.TypeKind;
             EdmTypeKind subTypeKind = subtype.TypeKind;
@@ -929,6 +947,74 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
+        /// Returns the actual type of the given type.
+        /// If the given type is type definition, the actual type is its underlying type;
+        /// otherwise, return the given type itself.
+        /// </summary>
+        /// <param name="type">The given type.</param>
+        /// <returns>The actual type of the given type.</returns>
+        internal static IEdmType AsActualType(this IEdmType type)
+        {
+            Debug.Assert(type != null, "type != null");
+
+            return type.TypeKind == EdmTypeKind.TypeDefinition ? ((IEdmTypeDefinition)type).UnderlyingType : type;
+        }
+
+        /// <summary>
+        /// Compare if the two collection types are equal on the element type regardless of nullable, facets.
+        /// </summary>
+        /// <param name="type">The left operand.</param>
+        /// <param name="other">The right operand.</param>
+        /// <returns>If the two collection types are equal on the element type regardless of nullable, facets.</returns>
+        internal static bool IsElementTypeEquivalentTo(this IEdmType type, IEdmType other)
+        {
+            Debug.Assert(type != null, "type != null");
+            Debug.Assert(other != null, "other != null");
+
+            if (type.TypeKind != EdmTypeKind.Collection || other.TypeKind != EdmTypeKind.Collection)
+            {
+                return false;
+            }
+
+            return ((IEdmCollectionType)type).ElementType.Definition.IsEquivalentTo(((IEdmCollectionType)other).ElementType.Definition);
+        }
+
+        /// <summary>
+        /// Convert the value to underlying type according to model if the value is uint;
+        /// otherwise return the original value directly.
+        /// </summary>
+        /// <param name="model">The given model.</param>
+        /// <param name="value">The value to convert.</param>
+        /// <param name="expectedTypeReference">The expected type reference of the value (null by default).</param>
+        /// <returns>The converted value.</returns>
+        internal static object ConvertToUnderlyingTypeIfUIntValue(this IEdmModel model, object value, IEdmTypeReference expectedTypeReference = null)
+        {
+            if (model == null)
+            {
+                return value;
+            }
+
+            try
+            {
+                if (expectedTypeReference == null)
+                {
+                    expectedTypeReference = model.ResolveUIntTypeDefinition(value);
+                }
+
+                if (expectedTypeReference != null)
+                {
+                    return model.GetPrimitiveValueConverter(expectedTypeReference).ConvertToUnderlyingType(value);
+                }
+
+                return value;
+            }
+            catch (OverflowException)
+            {
+                throw new ODataException(string.Format(CultureInfo.InvariantCulture, "Value '{0}' was either too large or too small for a '{1}'.", value, expectedTypeReference.FullName()));
+            }
+        }
+
+        /// <summary>
         /// Resolves the name of a primitive type.
         /// </summary>
         /// <param name="typeName">The name of the type to resolve.</param>
@@ -972,7 +1058,7 @@ namespace Microsoft.OData.Core.Metadata
         {
             Debug.Assert(itemTypeReference != null, "itemTypeReference != null");
 
-            if (!itemTypeReference.IsODataPrimitiveTypeKind() && !itemTypeReference.IsODataComplexTypeKind() && !itemTypeReference.IsODataEnumTypeKind())
+            if (!itemTypeReference.IsODataPrimitiveTypeKind() && !itemTypeReference.IsODataComplexTypeKind() && !itemTypeReference.IsODataEnumTypeKind() && !itemTypeReference.IsODataTypeDefinitionTypeKind())
             {
                 throw new ODataException(ErrorStrings.EdmLibraryExtensions_CollectionItemCanBeOnlyPrimitiveEnumComplex);
             }
@@ -1852,6 +1938,8 @@ namespace Microsoft.OData.Core.Metadata
                     return new EdmCollectionTypeReference((IEdmCollectionType)type);
                 case EdmTypeKind.EntityReference:
                     return new EdmEntityReferenceTypeReference((IEdmEntityReferenceType)type, nullable);
+                case EdmTypeKind.TypeDefinition:
+                    return new EdmTypeDefinitionReference((IEdmTypeDefinition)type, nullable);
                 case EdmTypeKind.None:
                 default:
                     throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_ToTypeReference));
@@ -2075,6 +2163,17 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
+        /// Gets the non binding operation parameter names in string.
+        /// </summary>
+        /// <param name="operation">Operation in question.</param>
+        /// <returns>Comma separated operation parameter names enclosed in parantheses.</returns>
+        private static string NonBindingParameterNamesToString(this IEdmOperation operation)
+        {
+            IEnumerable<IEdmOperationParameter> nonBindingParameters = operation.IsBound ? operation.Parameters.Skip(1) : operation.Parameters;
+            return JsonLightConstants.FunctionParameterStart + string.Join(JsonLightConstants.FunctionParameterSeparator, nonBindingParameters.Select(p => p.Name).ToArray()) + JsonLightConstants.FunctionParameterEnd;
+        }
+
+        /// <summary>
         /// Returns Collection item type name or null if the provided type name is not a collection.
         /// </summary>
         /// <param name="typeName">Collection type name.</param>
@@ -2239,6 +2338,40 @@ namespace Microsoft.OData.Core.Metadata
                     return new EdmSpatialTypeReference(primitiveType, nullable);
                 default:
                     throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_PrimitiveTypeReference));
+            }
+        }
+
+        /// <summary>
+        /// Try to resolve the type definition from the model if value is unsigned int.
+        /// </summary>
+        /// <param name="model">The given model.</param>
+        /// <param name="value">The given value.</param>
+        /// <returns>The type reference to type definition corresponding to the value.</returns>
+        private static IEdmTypeDefinitionReference ResolveUIntTypeDefinition(this IEdmModel model, object value)
+        {
+            Debug.Assert(model != null, "model != null");
+
+            if (value == null)
+            {
+                // null is not unsigned int.
+                return null;
+            }
+
+            if (!(value is UInt16 || value is UInt32 || value is UInt64))
+            {
+                // Not unsigned ints.
+                return null;
+            }
+
+            try
+            {
+                IEdmTypeDefinition typeDefinition = model.SchemaElements.SingleOrDefault(e => string.CompareOrdinal(e.Name, value.GetType().Name) == 0) as IEdmTypeDefinition;
+                return typeDefinition == null ? null : new EdmTypeDefinitionReference(typeDefinition, true);
+            }
+            catch (InvalidOperationException)
+            {
+                // Multiple ambigurous type definitions found.
+                return null;
             }
         }
 

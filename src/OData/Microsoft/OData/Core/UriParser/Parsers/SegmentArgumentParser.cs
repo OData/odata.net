@@ -201,7 +201,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         return false;
                     }
 
-                    Debug.Assert(property.Type.IsPrimitive(), "Keys can only be primitive");
+                    Debug.Assert(property.Type.IsPrimitive() || property.Type.IsTypeDefinition(), "Keys can only be primitive or type definition");
                     object convertedValue;
                     bool result = TryConvertValue(property.Type.AsPrimitive(), valueText, out convertedValue);
                     if (!result)

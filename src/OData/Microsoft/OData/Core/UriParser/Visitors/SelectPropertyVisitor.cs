@@ -14,6 +14,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm;
@@ -133,6 +134,47 @@ namespace Microsoft.OData.Core.UriParser.Visitors
             if (lastSegment != null)
             {
                 pathSoFar.Add(lastSegment);
+
+                // try create a complex type property path.
+                while (true)
+                {
+                    // no need to go on if the current property is not of complex type.
+                    currentLevelType = lastSegment.EdmType as IEdmStructuredType;
+                    if (currentLevelType == null || currentLevelType.TypeKind != EdmTypeKind.Complex)
+                    {
+                        break;
+                    }
+
+                    NonSystemToken nextToken = tokenIn.NextToken as NonSystemToken;
+                    if (nextToken == null)
+                    {
+                        break;
+                    }
+
+                    // first try bind the segment as property.
+                    lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.model, currentLevelType);
+
+                    // then try bind the segment as type cast.
+                    if (lastSegment == null)
+                    {
+                        IEdmStructuredType typeFromNextToken = UriEdmHelpers.FindTypeFromModel(this.model, nextToken.Identifier) as IEdmStructuredType;
+
+                        if (typeFromNextToken.IsOrInheritsFrom(currentLevelType))
+                        {
+                            lastSegment = new TypeSegment(typeFromNextToken, /*entitySet*/null);
+                        }
+                    }
+
+                    // type cast failed too.
+                    if (lastSegment == null)
+                    {
+                        break;
+                    }
+
+                    // try move to and add next path segment.
+                    tokenIn = nextToken;
+                    pathSoFar.Add(lastSegment);
+                }
             }
 
             ODataSelectPath selectedPath = new ODataSelectPath(pathSoFar);
@@ -149,7 +191,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
             NavigationPropertySegment trailingNavPropSegment = selectionItem.SelectedPath.LastSegment as NavigationPropertySegment;
             if (trailingNavPropSegment != null)
             {
-                if (this.expandClauseToDecorate.SelectedItems.Any(x => x is PathSelectItem && 
+                if (this.expandClauseToDecorate.SelectedItems.Any(x => x is PathSelectItem &&
                     ((PathSelectItem)x).SelectedPath.Equals(selectedPath)))
                 {
                     return;

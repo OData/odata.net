@@ -33,6 +33,11 @@ namespace Microsoft.OData.Core.JsonLight
         private readonly ODataJsonLightValueSerializer jsonLightValueSerializer;
 
         /// <summary>
+        /// Whether to bypass validation.
+        /// </summary>
+        private bool bypassValidation;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightOutputContext">The output context to write to.</param>
@@ -41,6 +46,7 @@ namespace Microsoft.OData.Core.JsonLight
             : base(jsonLightOutputContext, initContextUriBuilder)
         {
             this.jsonLightValueSerializer = new ODataJsonLightValueSerializer(this, initContextUriBuilder);
+            this.bypassValidation = !jsonLightOutputContext.MessageWriterSettings.EnableFullValidation;
         }
 
         /// <summary>
@@ -169,18 +175,12 @@ namespace Microsoft.OData.Core.JsonLight
                 return;
             }
 
-            WriterValidationUtils.ValidatePropertyName(propertyName);
+            WriterValidationUtils.ValidatePropertyName(propertyName, bypassValidation);
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
-            IEdmProperty edmProperty = null;
-            IEdmTypeReference propertyTypeReference = null;
-            if (this.JsonLightOutputContext.MessageWriterSettings.EnableFullValidation)
-            {
-                edmProperty = WriterValidationUtils.ValidatePropertyDefined(propertyName, owningType);
-                propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
-            }
-            
+            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(propertyName, owningType);
+            IEdmTypeReference propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
+
             ODataValue value = property.ODataValue;
-            ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
 
             ODataStreamReferenceValue streamReferenceValue = value as ODataStreamReferenceValue;
             if (streamReferenceValue != null)
@@ -192,7 +192,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                 Debug.Assert(owningType == null || owningType.IsODataEntityTypeKind(), "The metadata should not allow named stream properties to be defined on a non-entity type.");
                 Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
-                WriterValidationUtils.ValidateStreamReferenceProperty(property, edmProperty, this.Version, this.WritingResponse);
+                WriterValidationUtils.ValidateStreamReferenceProperty(property, edmProperty, this.Version, this.WritingResponse, this.bypassValidation);
                 this.WriteStreamReferenceProperty(propertyName, streamReferenceValue);
                 return;
             }
@@ -201,7 +201,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (value is ODataNullValue || value == null)
             {
-                WriterValidationUtils.ValidateNullPropertyValue(propertyTypeReference, propertyName, this.MessageWriterSettings.WriterBehavior, this.Model);
+                WriterValidationUtils.ValidateNullPropertyValue(propertyTypeReference, propertyName, this.MessageWriterSettings.WriterBehavior, this.Model, this.bypassValidation);
 
                 if (isTopLevel)
                 {
@@ -240,7 +240,12 @@ namespace Microsoft.OData.Core.JsonLight
             ODataEnumValue enumValue = value as ODataEnumValue;
             if (enumValue != null)
             {
-                string typeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(enumValue, propertyTypeReference, typeFromValue, isOpenPropertyType);
+                // This is a work around, needTypeOnWire always = true for client side: 
+                // ClientEdmModel's reflection can't know a property is open type even if it is, so here 
+                // make client side always write 'odata.type' for enum.
+                bool needTypeOnWire = string.Equals(this.JsonLightOutputContext.Model.GetType().Name, "ClientEdmModel", StringComparison.OrdinalIgnoreCase);
+                string typeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(
+                    enumValue, propertyTypeReference, typeFromValue, needTypeOnWire ? true /* leverage this flag to write 'odata.type' */ : isOpenPropertyType);
                 this.WritePropertyTypeName(wirePropertyName, typeNameToWrite, isTopLevel);
                 this.JsonWriter.WriteName(wirePropertyName);
                 this.JsonLightValueSerializer.WriteEnumValue(enumValue, propertyTypeReference);
@@ -259,6 +264,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
             else
             {
+                ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
                 Debug.Assert(primitiveValue != null, "primitiveValue != null");
 
                 string typeNameToWrite = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(primitiveValue, propertyTypeReference, typeFromValue, isOpenPropertyType);

@@ -78,6 +78,17 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Returns true if this reference refers to a type definition.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a type definition.</returns>
+        public static bool IsTypeDefinition(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.TypeKind() == EdmTypeKind.TypeDefinition;
+        }
+
+        /// <summary>
         /// Returns true if this reference refers to a structured type.
         /// </summary>
         /// <param name="type">Type reference.</param>
@@ -523,6 +534,10 @@ namespace Microsoft.OData.Edm
                     }
                 }
             }
+            else if (typeDefinition.TypeKind == EdmTypeKind.TypeDefinition)
+            {
+                return new EdmPrimitiveTypeReference(typeDefinition.UnderlyingType(), type.IsNullable);
+            }
 
             string typeFullName = type.FullName();
             List<EdmError> errors = new List<EdmError>(type.Errors());
@@ -618,6 +633,33 @@ namespace Microsoft.OData.Edm
             string typeFullName = type.FullName();
             return new EdmEnumTypeReference(
                 new BadEnumType(typeFullName, ConversionError(type.Location(), typeFullName, EdmConstants.Type_Enum)),
+                type.IsNullable);
+        }
+
+
+        /// <summary>
+        /// If this reference is of a type definition, this will return a valid type definition reference to the type definition. Otherwise, it will return a bad type definition reference.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>A valid type definition reference if the definition of the reference is of a type definition. Otherwise a bad type definition reference.</returns>
+        public static IEdmTypeDefinitionReference AsTypeDefinition(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmTypeDefinitionReference reference = type as IEdmTypeDefinitionReference;
+            if (reference != null)
+            {
+                return reference;
+            }
+
+            IEdmType typeDefinition = type.Definition;
+            if (typeDefinition.TypeKind == EdmTypeKind.TypeDefinition)
+            {
+                return new EdmTypeDefinitionReference((IEdmTypeDefinition)typeDefinition, type.IsNullable);
+            }
+
+            string typeFullName = type.FullName();
+            return new EdmTypeDefinitionReference(
+                new BadTypeDefinition(typeFullName, ConversionError(type.Location(), typeFullName, EdmConstants.Type_TypeDefinition)),
                 type.IsNullable);
         }
 
@@ -940,6 +982,33 @@ namespace Microsoft.OData.Edm
                 default:
                     throw new InvalidOperationException(Edm.Strings.EdmPrimitive_UnexpectedKind);
             }
+        }
+
+        internal static IEdmPrimitiveType UnderlyingType(this IEdmType type)
+        {
+            if (type == null || type.TypeKind != EdmTypeKind.TypeDefinition)
+            {
+                return null;
+            }
+
+            return ((IEdmTypeDefinition)type).UnderlyingType;
+        }
+
+        internal static IEdmType AsActualType(this IEdmType type)
+        {
+            IEdmPrimitiveType underlyingType = type.UnderlyingType();
+
+            return underlyingType ?? type;
+        }
+
+        internal static IEdmTypeReference AsActualTypeReference(this IEdmTypeReference type)
+        {
+            if (type == null || type.TypeKind() != EdmTypeKind.TypeDefinition)
+            {
+                return type;
+            }
+
+            return type.AsPrimitive();
         }
 
         private static IEnumerable<EdmError> ConversionError(EdmLocation location, string typeName, string typeKindName)

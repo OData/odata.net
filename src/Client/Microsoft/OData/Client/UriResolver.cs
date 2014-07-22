@@ -12,9 +12,6 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Diagnostics;
-#if ASTORIA_LIGHT && !PORTABLELIB
-    using Microsoft.OData.Service.Http;
-#endif
 
     /// <summary>
     /// This immutable class is responsible for knowing how to correctly resolve base uri requests

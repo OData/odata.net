@@ -16,9 +16,6 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Net;
     using Microsoft.OData.Core;
-#if ASTORIA_LIGHT
-    using DataServicesHttp = Microsoft.OData.Service.Http;
-#endif
 
     /// <summary>
     /// Collection for header name/value pairs which is known to be case insensitive.

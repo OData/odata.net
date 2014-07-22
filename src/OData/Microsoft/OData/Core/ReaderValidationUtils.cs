@@ -94,13 +94,15 @@ namespace Microsoft.OData.Core
         /// <param name="validateNullValue">true to validate the the null value; false to only check whether the type is supported.</param>
         /// <param name="version">The version used to read the payload.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
+        /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
         internal static void ValidateNullValue(
             IEdmModel model,
             IEdmTypeReference expectedTypeReference,
             ODataMessageReaderSettings messageReaderSettings,
             bool validateNullValue,
             ODataVersion version,
-            string propertyName)
+            string propertyName,
+            bool? isDynamicProperty = null)
         {
             // For a null value if we have an expected type
             //   - we validate that the expected type is nullable if type conversion is enabled
@@ -113,7 +115,7 @@ namespace Microsoft.OData.Core
 
                 if (!messageReaderSettings.DisablePrimitiveTypeConversion || expectedTypeReference.TypeKind() != EdmTypeKind.Primitive)
                 {
-                    ValidateNullValueAllowed(expectedTypeReference, validateNullValue, model, propertyName);
+                    ValidateNullValueAllowed(expectedTypeReference, validateNullValue, model, propertyName, isDynamicProperty);
                 }
             }
         }
@@ -474,8 +476,8 @@ namespace Microsoft.OData.Core
             Debug.Assert(
                 payloadTypeKind == EdmTypeKind.Primitive || payloadTypeKind == EdmTypeKind.Complex ||
                 payloadTypeKind == EdmTypeKind.Entity || payloadTypeKind == EdmTypeKind.Collection ||
-                payloadTypeKind == EdmTypeKind.None,
-                "The payload type kind must be one of None, Primitive, Complex, Entity or Collection.");
+                payloadTypeKind == EdmTypeKind.None || payloadTypeKind == EdmTypeKind.TypeDefinition,
+                "The payload type kind must be one of None, Primitive, Complex, Entity, Collection or TypeDefinition.");
             Debug.Assert(
                 expectedTypeReference == null || expectedTypeReference.TypeKind() == EdmTypeKind.Primitive,
                 "This method only works for primitive expected type.");
@@ -530,7 +532,7 @@ namespace Microsoft.OData.Core
                 // Note that we compare the type definitions, since we want to ignore nullability (the payload type doesn't specify nullability).
                 if (!MetadataUtilsCommon.CanConvertPrimitiveTypeTo(
                     null /* sourceNodeOrNull */,
-                    (IEdmPrimitiveType)payloadType,
+                    (IEdmPrimitiveType)payloadType.AsActualType(),
                     (IEdmPrimitiveType)(expectedTypeReference.Definition)))
                 {
                     throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadTypeName, expectedTypeReference.ODataFullName()));
@@ -575,13 +577,14 @@ namespace Microsoft.OData.Core
             Debug.Assert(messageReaderSettings != null, "messageReaderSettings != null");
             Debug.Assert(
                 expectedTypeKind == EdmTypeKind.Enum || expectedTypeKind == EdmTypeKind.Complex || expectedTypeKind == EdmTypeKind.Entity ||
-                expectedTypeKind == EdmTypeKind.Collection,
-                "The expected type kind must be one of Enum, Complex, Entity or Collection.");
+                expectedTypeKind == EdmTypeKind.Collection || expectedTypeKind == EdmTypeKind.TypeDefinition,
+                "The expected type kind must be one of Enum, Complex, Entity, Collection or TypeDefinition.");
             Debug.Assert(
                 payloadTypeKind == EdmTypeKind.Complex || payloadTypeKind == EdmTypeKind.Entity ||
                 payloadTypeKind == EdmTypeKind.Collection || payloadTypeKind == EdmTypeKind.None ||
-                payloadTypeKind == EdmTypeKind.Primitive || payloadTypeKind == EdmTypeKind.Enum,
-                "The payload type kind must be one of None, Primitive, Enum, Complex, Entity or Collection.");
+                payloadTypeKind == EdmTypeKind.Primitive || payloadTypeKind == EdmTypeKind.Enum ||
+                payloadTypeKind == EdmTypeKind.TypeDefinition,
+                "The payload type kind must be one of None, Primitive, Enum, Complex, Entity, Collection or TypeDefinition.");
             Debug.Assert(
                 expectedTypeReference == null || expectedTypeReference.TypeKind() == expectedTypeKind,
                 "The expected type kind must match the expected type reference if that is available.");
@@ -900,6 +903,9 @@ namespace Microsoft.OData.Core
                 case EdmTypeKind.Enum: // enum: no validation
 
                     break;
+                case EdmTypeKind.TypeDefinition: // type definition: no validation
+
+                    break;
                 default:
                     throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ReaderValidationUtils_ResolveAndValidateTypeName_Strict_TypeKind));
             }
@@ -956,10 +962,17 @@ namespace Microsoft.OData.Core
                 case EdmTypeKind.Collection:
                     // The type must be exactly equal - note that we intentionally ignore nullability of the items here, since the payload type
                     // can't specify that.
-                    if (payloadType != null && string.CompareOrdinal(payloadType.ODataFullName(), expectedTypeReference.ODataFullName()) != 0)
+                    if (payloadType != null && !payloadType.IsElementTypeEquivalentTo(expectedTypeReference.Definition))
                     {
                         VerifyCollectionComplexItemType(expectedTypeReference, payloadType);
 
+                        throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadType.ODataFullName(), expectedTypeReference.ODataFullName()));
+                    }
+
+                    break;
+                case EdmTypeKind.TypeDefinition:
+                    if (payloadType != null && !expectedTypeReference.Definition.IsAssignableFrom(payloadType))
+                    {
                         throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadType.ODataFullName(), expectedTypeReference.ODataFullName()));
                     }
 
@@ -1205,7 +1218,8 @@ namespace Microsoft.OData.Core
         /// <param name="validateNullValue">true to validate the null value; otherwise false.</param>
         /// <param name="model">The model to use to get the OData-Version.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
-        private static void ValidateNullValueAllowed(IEdmTypeReference expectedValueTypeReference, bool validateNullValue, IEdmModel model, string propertyName)
+        /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
+        private static void ValidateNullValueAllowed(IEdmTypeReference expectedValueTypeReference, bool validateNullValue, IEdmModel model, string propertyName, bool? isDynamicProperty)
         {
             Debug.Assert(model != null, "For null validation, model is required.");
 
@@ -1213,10 +1227,11 @@ namespace Microsoft.OData.Core
             {
                 Debug.Assert(
                     expectedValueTypeReference.IsODataPrimitiveTypeKind() ||
+                    expectedValueTypeReference.IsODataTypeDefinitionTypeKind() ||
                     expectedValueTypeReference.IsODataEnumTypeKind() ||
                     expectedValueTypeReference.IsODataComplexTypeKind() ||
                     expectedValueTypeReference.IsNonEntityCollectionType(),
-                    "Only primitive, Enum, complex and collection types are supported by this method.");
+                    "Only primitive, type definition, Enum, complex and collection types are supported by this method.");
 
                 if (expectedValueTypeReference.IsODataPrimitiveTypeKind())
                 {
@@ -1234,7 +1249,10 @@ namespace Microsoft.OData.Core
                 }
                 else if (expectedValueTypeReference.IsNonEntityCollectionType())
                 {
-                    ThrowNullValueForNonNullableTypeException(expectedValueTypeReference, propertyName);
+                    if (isDynamicProperty != true)
+                    {
+                        ThrowNullValueForNonNullableTypeException(expectedValueTypeReference, propertyName);
+                    }
                 }
                 else if (expectedValueTypeReference.IsODataComplexTypeKind())
                 {
