@@ -449,6 +449,7 @@ namespace Microsoft.OData.Core {
         internal const string EdmLibraryExtensions_OperationGroupReturningActionsAndFunctionsModelInvalid = "EdmLibraryExtensions_OperationGroupReturningActionsAndFunctionsModelInvalid";
         internal const string EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid = "EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid";
         internal const string EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid = "EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid";
+        internal const string EdmLibraryExtensions_ValueOverflowForUnderlyingType = "EdmLibraryExtensions_ValueOverflowForUnderlyingType";
         internal const string ODataAtomEntryAndFeedDeserializer_ElementExpected = "ODataAtomEntryAndFeedDeserializer_ElementExpected";
         internal const string ODataAtomEntryAndFeedDeserializer_EntryElementWrongName = "ODataAtomEntryAndFeedDeserializer_EntryElementWrongName";
         internal const string ODataAtomEntryAndFeedDeserializer_ContentWithSourceLinkIsNotEmpty = "ODataAtomEntryAndFeedDeserializer_ContentWithSourceLinkIsNotEmpty";
@@ -559,6 +560,7 @@ namespace Microsoft.OData.Core {
         internal const string ODataJsonLightContextUriParser_NoModel = "ODataJsonLightContextUriParser_NoModel";
         internal const string ODataJsonLightContextUriParser_InvalidContextUrl = "ODataJsonLightContextUriParser_InvalidContextUrl";
         internal const string ODataJsonLightContextUriParser_LastSegmentIsKeySegment = "ODataJsonLightContextUriParser_LastSegmentIsKeySegment";
+        internal const string ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute = "ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute";
         internal const string ODataJsonLightEntryAndFeedDeserializer_EntryTypeAnnotationNotFirst = "ODataJsonLightEntryAndFeedDeserializer_EntryTypeAnnotationNotFirst";
         internal const string ODataJsonLightEntryAndFeedDeserializer_EntryInstanceAnnotationPrecededByProperty = "ODataJsonLightEntryAndFeedDeserializer_EntryInstanceAnnotationPrecededByProperty";
         internal const string ODataJsonLightEntryAndFeedDeserializer_CannotReadFeedContentStart = "ODataJsonLightEntryAndFeedDeserializer_CannotReadFeedContentStart";
@@ -791,7 +793,6 @@ namespace Microsoft.OData.Core {
         internal const string RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment = "RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment";
         internal const string RequestUriProcessor_MissingSegmentAfterLink = "RequestUriProcessor_MissingSegmentAfterLink";
         internal const string RequestUriProcessor_CountNotSupported = "RequestUriProcessor_CountNotSupported";
-        internal const string RequestUriProcessor_CannotQuerySingletons = "RequestUriProcessor_CannotQuerySingletons";
         internal const string RequestUriProcessor_CannotQueryCollections = "RequestUriProcessor_CannotQueryCollections";
         internal const string RequestUriProcessor_SegmentDoesNotSupportKeyPredicates = "RequestUriProcessor_SegmentDoesNotSupportKeyPredicates";
         internal const string RequestUriProcessor_ValueSegmentAfterScalarPropertySegment = "RequestUriProcessor_ValueSegmentAfterScalarPropertySegment";

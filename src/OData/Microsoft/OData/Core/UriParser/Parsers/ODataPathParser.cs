@@ -516,9 +516,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
             if ((previous.TargetKind != RequestTargetKind.Resource || previous.SingleResult) && previous.TargetKind != RequestTargetKind.Collection)
             {
-                throw ExceptionUtil.ResourceNotFoundError(
-                    "The request URI is not valid. $count cannot be applied to the segment '" + previous.Identifier +
-                    "' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.");
+                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_CountNotSupported(previous.Identifier));
             }
 
             this.parsedSegments.Add(CountSegment.Instance);

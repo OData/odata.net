@@ -639,6 +639,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_TypeDefinition);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, typeDefinition.Name, EdmValueWriter.StringAsXml);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_UnderlyingType, typeDefinition.UnderlyingType, this.TypeDefinitionAsXml);
+            this.WriteTypeDefinitionFacets(typeDefinition as IEdmTypeDefinitionWithFacets);
         }
 
         internal void WriteEndElement()
@@ -698,6 +699,68 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, binding.Target.Name, EdmValueWriter.StringAsXml);
 
             this.xmlWriter.WriteEndElement();
+        }
+
+        private void WriteTypeDefinitionFacets(IEdmTypeDefinitionWithFacets typeDefinition)
+        {
+            if (typeDefinition == null)
+            {
+                // Not a type definition with facets. No need to write facets.
+                return;
+            }
+
+            switch (typeDefinition.UnderlyingType.PrimitiveKind)
+            {
+                case EdmPrimitiveTypeKind.Binary:
+                    this.WriteOptionalAttribute(CsdlConstants.Attribute_MaxLength, typeDefinition.MaxLength, EdmValueWriter.IntAsXml);
+                    break;
+
+                case EdmPrimitiveTypeKind.String:
+                    this.WriteOptionalAttribute(CsdlConstants.Attribute_MaxLength, typeDefinition.MaxLength, EdmValueWriter.IntAsXml);
+                    this.WriteOptionalAttribute(CsdlConstants.Attribute_Unicode, typeDefinition.IsUnicode, EdmValueWriter.BooleanAsXml);
+                    break;
+
+                case EdmPrimitiveTypeKind.Stream:
+                    this.WriteOptionalAttribute(CsdlConstants.Attribute_MaxLength, typeDefinition.MaxLength, EdmValueWriter.IntAsXml);
+                    break;
+
+                case EdmPrimitiveTypeKind.DateTimeOffset:
+                case EdmPrimitiveTypeKind.Duration:
+                    this.WriteOptionalAttribute(CsdlConstants.Attribute_Precision, typeDefinition.Precision, EdmValueWriter.IntAsXml);
+                    break;
+
+                case EdmPrimitiveTypeKind.Decimal:
+                    this.WriteOptionalAttribute(CsdlConstants.Attribute_Precision, typeDefinition.Precision, EdmValueWriter.IntAsXml);
+
+                    if (typeDefinition.Scale != CsdlConstants.Default_Scale)
+                    {
+                        this.WriteOptionalAttribute(CsdlConstants.Attribute_Scale, typeDefinition.Scale, ScaleAsXml);
+                    }
+
+                    break;
+
+                case EdmPrimitiveTypeKind.Geography:
+                case EdmPrimitiveTypeKind.GeographyPoint:
+                case EdmPrimitiveTypeKind.GeographyLineString:
+                case EdmPrimitiveTypeKind.GeographyPolygon:
+                case EdmPrimitiveTypeKind.GeographyCollection:
+                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
+                case EdmPrimitiveTypeKind.GeographyMultiLineString:
+                case EdmPrimitiveTypeKind.GeographyMultiPoint:
+                    this.WriteOptionalAttribute(CsdlConstants.Attribute_Srid, typeDefinition.Srid, SridAsXml);
+                    break;
+
+                case EdmPrimitiveTypeKind.Geometry:
+                case EdmPrimitiveTypeKind.GeometryPoint:
+                case EdmPrimitiveTypeKind.GeometryLineString:
+                case EdmPrimitiveTypeKind.GeometryPolygon:
+                case EdmPrimitiveTypeKind.GeometryCollection:
+                case EdmPrimitiveTypeKind.GeometryMultiPolygon:
+                case EdmPrimitiveTypeKind.GeometryMultiLineString:
+                case EdmPrimitiveTypeKind.GeometryMultiPoint:
+                    this.WriteOptionalAttribute(CsdlConstants.Attribute_Srid, typeDefinition.Srid, SridAsXml);
+                    break;
+            }
         }
 
         private static string MultiplicityAsXml(EdmMultiplicity endKind)

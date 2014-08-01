@@ -147,6 +147,7 @@ namespace Microsoft.OData.Core.JsonLight
             // read all the properties until we hit a link
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
+                this.ReadPropertyCustomAnnotationValue = this.ReadCustomInstanceAnnotationValue;
                 this.ProcessProperty(
                     entryState.DuplicatePropertyNamesChecker,
                     this.ReadEntryPropertyAnnotationValue,
@@ -501,7 +502,7 @@ namespace Microsoft.OData.Core.JsonLight
                     Debug.Assert(
                         !this.MessageReaderSettings.ShouldSkipAnnotation(annotationName),
                         "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                    return this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, annotationName);
+                    return this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, annotationName, false);
             }
         }
 
@@ -592,40 +593,6 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Reads the value of the instance annotation.
-        /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker instance.</param>
-        /// <param name="name">The name of the instance annotation.</param>
-        /// <returns>Returns the value of the instance annotation.</returns>
-        internal object ReadCustomInstanceAnnotationValue(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, string name)
-        {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
-            Debug.Assert(!string.IsNullOrEmpty(name), "!string.IsNullOrEmpty(name)");
-
-            var propertyAnnotations = duplicatePropertyNamesChecker.GetODataPropertyAnnotations(name);
-            object propertyAnnotation;
-            string odataType = null;
-            if (propertyAnnotations != null && propertyAnnotations.TryGetValue(ODataAnnotationNames.ODataType, out propertyAnnotation))
-            {
-                odataType = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName((string)propertyAnnotation));
-            }
-
-            // If this term is defined in the model, look up its type. If the term is not in the model, this will be null.
-            IEdmTypeReference expectedTypeFromTerm = MetadataUtils.LookupTypeOfValueTerm(name, this.Model);
-
-            object customInstanceAnnotationValue = this.ReadNonEntityValue(
-                odataType,
-                expectedTypeFromTerm,
-                null, /*duplicatePropertyNamesChecker*/
-                null, /*collectionValidator*/
-                false, /*validateNullValue*/
-                false, /*isTopLevelPropertyValue*/
-                false, /*insideComplexValue*/
-                name);
-            return customInstanceAnnotationValue;
-        }
-
-        /// <summary>
         /// Reads the value of a feed annotation (count or next link).
         /// </summary>
         /// <param name="annotationName">The name of the annotation found.</param>
@@ -660,7 +627,7 @@ namespace Microsoft.OData.Core.JsonLight
                     Debug.Assert(
                         !this.MessageReaderSettings.ShouldSkipAnnotation(annotationName),
                         "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                    object instanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, annotationName);
+                    object instanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, annotationName, false);
                     feed.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotationName, instanceAnnotationValue.ToODataValue()));
                     break;
             }
@@ -1060,6 +1027,19 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             ODataProperty property = new ODataProperty { Name = propertyName, Value = propertyValue };
+            var propertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName);
+            if (propertyAnnotations != null)
+            {
+                foreach (var annotation in propertyAnnotations)
+                {
+                    if (annotation.Value != null)
+                    {
+                        // annotation.Value == null indicates that this annotation should be skipped.
+                        property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
+                    }
+                }
+            }
+
             entryState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
 
             ODataEntry entry = entryState.Entry;

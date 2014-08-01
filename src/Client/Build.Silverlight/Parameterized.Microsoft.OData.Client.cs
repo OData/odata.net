@@ -1558,6 +1558,33 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed."
+        /// </summary>
+        internal static string DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime {
+            get {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The LoadAsync method cannot be called when the DataServiceCollection is not a child collection of a related entity."
+        /// </summary>
+        internal static string DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity {
+            get {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Only a typed DataServiceQuery object can be supplied when calling the LoadAsync method on DataServiceCollection."
+        /// </summary>
+        internal static string DataServiceCollection_LoadAsyncRequiresDataServiceQuery {
+            get {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceCollection_LoadAsyncRequiresDataServiceQuery);
+            }
+        }
+
+        /// <summary>
         /// A string like "The DataServiceCollection to be tracked must contain entity typed elements with at least one key property. The element type '{0}' does not have any key property."
         /// </summary>
         internal static string DataBinding_DataServiceCollectionArgumentMustHaveEntityType(object p0) {
@@ -1945,43 +1972,11 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "Internal error at '{0}'."
+        /// A string like "Silverlight Browser Http Stack is not supported on the Portable Library, only Client Http is supported."
         /// </summary>
-        internal static string HttpWeb_Internal(object p0) {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.HttpWeb_Internal,p0);
-        }
-
-        /// <summary>
-        /// A string like "Internal error at '{0}' for argument '{1}'."
-        /// </summary>
-        internal static string HttpWeb_InternalArgument(object p0, object p1) {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.HttpWeb_InternalArgument,p0,p1);
-        }
-
-        /// <summary>
-        /// A string like "This web request was aborted."
-        /// </summary>
-        internal static string HttpWebRequest_Aborted {
+        internal static string Silverlight_BrowserHttp_NotSupported {
             get {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.HttpWebRequest_Aborted);
-            }
-        }
-
-        /// <summary>
-        /// A string like "The DataServiceContext.Credentials property can only be set when you are using the Silverlight Client HTTP implementation. To use this implementation, set the DataServiceContext.HttpStack property to a value of ClientHttp."
-        /// </summary>
-        internal static string HttpWebRequest_XmlHttpCredentialsNotSupported {
-            get {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.HttpWebRequest_XmlHttpCredentialsNotSupported);
-            }
-        }
-
-        /// <summary>
-        /// A string like "The DataServiceContext.UseDefaultCredentials property cannot be set to false when you are using the XMLHTTP implementation. To use non-default authentication credentials, you must set the DataServiceContext.HttpStack property to a value of ClientHttp to guarantee that the Silverlight Client HTTP implementation is used"
-        /// </summary>
-        internal static string HttpWebRequest_XmlHttpNonDefaultCredentialsNotSupported {
-            get {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.HttpWebRequest_XmlHttpNonDefaultCredentialsNotSupported);
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Silverlight_BrowserHttp_NotSupported);
             }
         }
 
@@ -1991,42 +1986,6 @@ namespace Microsoft.OData.Client {
         internal static string DataServiceCollection_DataServiceQueryCanNotBeEnumerated {
             get {
                 return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceCollection_DataServiceQueryCanNotBeEnumerated);
-            }
-        }
-
-        /// <summary>
-        /// A string like "A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed."
-        /// </summary>
-        internal static string DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime {
-            get {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
-            }
-        }
-
-        /// <summary>
-        /// A string like "The LoadAsync method cannot be called when the DataServiceCollection is not a child collection of a related entity."
-        /// </summary>
-        internal static string DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity {
-            get {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity);
-            }
-        }
-
-        /// <summary>
-        /// A string like "Only a typed DataServiceQuery object can be supplied when calling the LoadAsync method on DataServiceCollection."
-        /// </summary>
-        internal static string DataServiceCollection_LoadAsyncRequiresDataServiceQuery {
-            get {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceCollection_LoadAsyncRequiresDataServiceQuery);
-            }
-        }
-
-        /// <summary>
-        /// A string like "Silverlight Browser Http Stack is not supported on the Portable Library, only Client Http is supported."
-        /// </summary>
-        internal static string Silverlight_BrowserHttp_NotSupported {
-            get {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Silverlight_BrowserHttp_NotSupported);
             }
         }
 

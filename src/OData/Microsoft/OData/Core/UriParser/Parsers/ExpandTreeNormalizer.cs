@@ -218,7 +218,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Git rid of duplicate selected item in SelectToken
+        /// Get rid of duplicate selected item in SelectToken
         /// </summary>
         /// <param name="selectToken">Select token to be dealt with</param>
         /// <returns>A new select term containing each of the </returns>

@@ -330,7 +330,7 @@ namespace Microsoft.OData.Client
         /// This is the Win8 version of the InvokeAsync overload below. See comments on that method for more details.
         /// </summary>
         /// <remarks>
-        /// Beta bits of the Win8 Metro profile always return false for IAsyncResult.CompletedSynchronously, but that
+        /// Beta bits of the Win8 profile always return false for IAsyncResult.CompletedSynchronously, but that
         /// is not guaranteed, so keeping the existing pattern here that we use on other platforms.
         /// </remarks>
         /// <param name="task">

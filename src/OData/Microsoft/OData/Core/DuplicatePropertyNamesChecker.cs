@@ -353,25 +353,26 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="propertyName">The name of the property to add annotation to. string.empty means the annotation is for the current scope.</param>
         /// <param name="annotationName">The name of the annotation to add.</param>
-        internal void AddCustomPropertyAnnotation(string propertyName, string annotationName)
+        /// <param name="annotationValue">The valud of the annotation to add.</param>
+        internal void AddCustomPropertyAnnotation(string propertyName, string annotationName, object annotationValue = null)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             Debug.Assert(!JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName), "annotationName must not be an OData annotation.");
 
             DuplicationRecord duplicationRecord = this.GetDuplicationRecordToAddPropertyAnnotation(propertyName, annotationName);
-            HashSet<string> customAnnotations = duplicationRecord.PropertyCustomAnnotations;
+            Dictionary<string, object> customAnnotations = duplicationRecord.PropertyCustomAnnotations;
             if (customAnnotations == null)
             {
-                customAnnotations = new HashSet<string>(StringComparer.Ordinal);
+                customAnnotations = new Dictionary<string, object>(StringComparer.Ordinal);
                 duplicationRecord.PropertyCustomAnnotations = customAnnotations;
             }
-            else if (customAnnotations.Contains(annotationName))
+            else if (customAnnotations.ContainsKey(annotationName))
             {
                 throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed(annotationName, propertyName));
             }
 
-            customAnnotations.Add(annotationName);
+            customAnnotations.Add(annotationName, annotationValue);
         }
 
         /// <summary>
@@ -395,6 +396,29 @@ namespace Microsoft.OData.Core
             //      the ParseProperty method and thus detect duplicates before we get here.
             ThrowIfPropertyIsProcessed(propertyName, duplicationRecord);
             return duplicationRecord.PropertyODataAnnotations;
+        }
+
+        /// <summary>
+        /// Returns custom instance annotations for the specified property with name <paramref name="propertyName"/>.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to return the annotations for.</param>
+        /// <returns>Enumeration of pairs of custom instance annotation name and and the annotation value, or null if there are no OData annotations for the property.</returns>
+        internal Dictionary<string, object> GetCustomPropertyAnnotations(string propertyName)
+        {
+            Debug.Assert(propertyName != null, "propertyName != null");
+
+            DuplicationRecord duplicationRecord;
+            if (!this.TryGetDuplicationRecord(propertyName, out duplicationRecord))
+            {
+                return null;
+            }
+
+            // TODO: Refactor the duplicate property names checker and use different implementations for JSON Light
+            //      and the other formats (most of the logic is not needed for JSON Light).
+            //      Once we create a JSON Light specific duplicate property names checker, we will check for duplicates in
+            //      the ParseProperty method and thus detect duplicates before we get here.
+            ThrowIfPropertyIsProcessed(propertyName, duplicationRecord);
+            return duplicationRecord.PropertyCustomAnnotations;
         }
 
         /// <summary>
@@ -618,12 +642,13 @@ namespace Microsoft.OData.Core
             public Dictionary<string, object> PropertyODataAnnotations { get; set; }
 
             /// <summary>
-            /// Hashset of custom annotations for the property for which the duplication record is stored.
+            /// Dictionary of custom annotations for the property for which the duplication record is stored.
             /// </summary>
             /// <remarks>
-            /// This is just a hashset for now since we don't read custom annotations, we just need to check for duplicates.
+            /// The key of the dictionary is the fully qualified annotation name ,
+            /// the value is the parsed value of the annotation (this is annotation specific).
             /// </remarks>
-            public HashSet<string> PropertyCustomAnnotations { get; set; }
+            public Dictionary<string, object> PropertyCustomAnnotations { get; set; }
         }
     }
 }

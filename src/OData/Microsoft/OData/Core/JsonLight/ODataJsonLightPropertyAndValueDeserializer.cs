@@ -13,6 +13,7 @@ namespace Microsoft.OData.Core.JsonLight
     #region Namespaces
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -163,6 +164,41 @@ namespace Microsoft.OData.Core.JsonLight
             this.AssertRecursionDepthIsZero();
 
             return nonEntityValue;
+        }
+
+        /// <summary>
+        /// Reads the value of the instance annotation.
+        /// </summary>
+        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker instance.</param>
+        /// <param name="name">The name of the instance annotation.</param>
+        /// <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
+        /// <returns>Returns the value of the instance annotation.</returns>
+        internal object ReadCustomInstanceAnnotationValue(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, string name, bool insideComplexValue)
+        {
+            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(!string.IsNullOrEmpty(name), "!string.IsNullOrEmpty(name)");
+
+            var propertyAnnotations = duplicatePropertyNamesChecker.GetODataPropertyAnnotations(name);
+            object propertyAnnotation;
+            string odataType = null;
+            if (propertyAnnotations != null && propertyAnnotations.TryGetValue(ODataAnnotationNames.ODataType, out propertyAnnotation))
+            {
+                odataType = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName((string)propertyAnnotation));
+            }
+
+            // If this term is defined in the model, look up its type. If the term is not in the model, this will be null.
+            IEdmTypeReference expectedTypeFromTerm = MetadataUtils.LookupTypeOfValueTerm(name, this.Model);
+
+            object customInstanceAnnotationValue = this.ReadNonEntityValueImplementation(
+                odataType,
+                expectedTypeFromTerm,
+                null, /*duplicatePropertyNamesChecker*/
+                null, /*collectionValidator*/
+                false, /*validateNullValue*/
+                false, /*isTopLevelPropertyValue*/
+                insideComplexValue, /*insideComplexValue*/
+                name);
+            return customInstanceAnnotationValue;
         }
 
         /// <summary>
@@ -325,6 +361,7 @@ namespace Microsoft.OData.Core.JsonLight
             expectedPropertyTypeReference = this.UpdateExpectedTypeBasedOnContextUri(expectedPropertyTypeReference);
 
             object propertyValue = missingPropertyValue;
+            var customInstanceAnnotations = new Collection<ODataInstanceAnnotation>();
 
             // Check for the special top-level null marker
             if (this.IsTopLevelNullValue())
@@ -410,7 +447,12 @@ namespace Microsoft.OData.Core.JsonLight
 
                                         break;
                                     case PropertyParsingResult.CustomInstanceAnnotation:
-                                        this.JsonReader.SkipValue();
+                                        ODataAnnotationNames.ValidateIsCustomAnnotationName(propertyName);
+                                        Debug.Assert(
+                                            !this.MessageReaderSettings.ShouldSkipAnnotation(propertyName),
+                                            "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
+                                        var customInstanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, propertyName, false);
+                                        customInstanceAnnotations.Add(new ODataInstanceAnnotation(propertyName, customInstanceAnnotationValue.ToODataValue()));
                                         break;
 
                                     case PropertyParsingResult.PropertyWithoutValue:
@@ -460,7 +502,8 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 // The property name is not on the context URI or the payload, we report null.
                 Name = null,
-                Value = propertyValue
+                Value = propertyValue,
+                InstanceAnnotations = customInstanceAnnotations
             };
 
             // Read over the end object - note that this might be the last node in the input (in case there's no response wrapper)
@@ -600,7 +643,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
             catch (OverflowException)
             {
-                throw new ODataException(string.Format(CultureInfo.InvariantCulture, "Value '{0}' was either too large or too small for a '{1}'.", result, expectedValueTypeReference.FullName()));
+                throw new ODataException(ODataErrorStrings.EdmLibraryExtensions_ValueOverflowForUnderlyingType(result, expectedValueTypeReference.FullName()));
             }
         }
 
@@ -737,9 +780,11 @@ namespace Microsoft.OData.Core.JsonLight
                 complexValue.SetAnnotation(new ODataTypeAnnotation(complexValueTypeReference));
             }
 
+            bool foundProperty = false;
             List<ODataProperty> properties = new List<ODataProperty>();
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
+                this.ReadPropertyCustomAnnotationValue = this.ReadCustomInstanceAnnotationValue;
                 this.ProcessProperty(
                     duplicatePropertyNamesChecker,
                     this.ReadTypePropertyAnnotationValue,
@@ -758,13 +803,25 @@ namespace Microsoft.OData.Core.JsonLight
                                 }
 
                             case PropertyParsingResult.CustomInstanceAnnotation:
-                                this.JsonReader.SkipValue();
+                                if (foundProperty)
+                                {
+                                    throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
+                                }
+
+                                ODataAnnotationNames.ValidateIsCustomAnnotationName(propertyName);
+                                Debug.Assert(
+                                    !this.MessageReaderSettings.ShouldSkipAnnotation(propertyName),
+                                    "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
+                                var customInstanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, propertyName, true);
+                                complexValue.InstanceAnnotations.Add(new ODataInstanceAnnotation(propertyName, customInstanceAnnotationValue.ToODataValue()));
                                 break;
 
                             case PropertyParsingResult.PropertyWithoutValue:
                                 throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_ComplexValuePropertyAnnotationWithoutProperty(propertyName));
 
                             case PropertyParsingResult.PropertyWithValue:
+                                foundProperty = true;
+
                                 // Any other property is data
                                 ODataProperty property = new ODataProperty();
                                 property.Name = propertyName;
@@ -803,6 +860,19 @@ namespace Microsoft.OData.Core.JsonLight
                                     {
                                         duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
                                         property.Value = propertyValue;
+                                        var propertyAnnotations = duplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName);
+                                        if (propertyAnnotations != null)
+                                        {
+                                            foreach (var annotation in propertyAnnotations)
+                                            {
+                                                if (annotation.Value != null)
+                                                {
+                                                    // annotation.Value == null indicates that this annotation should be skipped.
+                                                    property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
+                                                }
+                                            }
+                                        }
+
                                         properties.Add(property);
                                     }
                                 }

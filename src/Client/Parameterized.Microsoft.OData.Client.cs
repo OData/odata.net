@@ -1558,6 +1558,33 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed."
+        /// </summary>
+        internal static string DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime {
+            get {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The LoadAsync method cannot be called when the DataServiceCollection is not a child collection of a related entity."
+        /// </summary>
+        internal static string DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity {
+            get {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Only a typed DataServiceQuery object can be supplied when calling the LoadAsync method on DataServiceCollection."
+        /// </summary>
+        internal static string DataServiceCollection_LoadAsyncRequiresDataServiceQuery {
+            get {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceCollection_LoadAsyncRequiresDataServiceQuery);
+            }
+        }
+
+        /// <summary>
         /// A string like "The DataServiceCollection to be tracked must contain entity typed elements with at least one key property. The element type '{0}' does not have any key property."
         /// </summary>
         internal static string DataBinding_DataServiceCollectionArgumentMustHaveEntityType(object p0) {

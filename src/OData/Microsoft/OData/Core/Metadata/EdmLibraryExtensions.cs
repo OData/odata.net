@@ -1010,8 +1010,60 @@ namespace Microsoft.OData.Core.Metadata
             }
             catch (OverflowException)
             {
-                throw new ODataException(string.Format(CultureInfo.InvariantCulture, "Value '{0}' was either too large or too small for a '{1}'.", value, expectedTypeReference.FullName()));
+                throw new ODataException(ErrorStrings.EdmLibraryExtensions_ValueOverflowForUnderlyingType(value, expectedTypeReference.FullName()));
             }
+        }
+
+        /// <summary>
+        /// Convert the value to underlying type according to model if the value is uint;
+        /// otherwise return the original value directly.
+        /// </summary>
+        /// <param name="model">The given model.</param>
+        /// <param name="value">The value to convert.</param>
+        /// <param name="expectedTypeReference">The expected type reference of the value (null by default).</param>
+        /// <returns>The converted value.</returns>
+        internal static ODataPrimitiveValue ConvertToUnderlyingTypeIfUIntValue(this IEdmModel model, ODataPrimitiveValue value, IEdmTypeReference expectedTypeReference = null)
+        {
+            object newValue = model.ConvertToUnderlyingTypeIfUIntValue(value.Value, expectedTypeReference);
+
+            if (newValue == value.Value)
+            {
+                // Still the original object. Return it directly.
+                return value;
+            }
+
+            // Return the converted value.
+            return new ODataPrimitiveValue(newValue);
+        }
+
+        /// <summary>
+        /// Try to resolve the type definition from the model if value is unsigned int.
+        /// </summary>
+        /// <param name="model">The given model.</param>
+        /// <param name="value">The given value.</param>
+        /// <returns>The type reference to type definition corresponding to the value.</returns>
+        internal static IEdmTypeDefinitionReference ResolveUIntTypeDefinition(this IEdmModel model, object value)
+        {
+            if (model == null)
+            {
+                // type cannot be determined without model.
+                return null;
+            }
+
+            if (value == null)
+            {
+                // null is not unsigned int.
+                return null;
+            }
+
+            if (!(value is UInt16 || value is UInt32 || value is UInt64))
+            {
+                // Not unsigned ints.
+                return null;
+            }
+
+            IEdmTypeDefinition typeDefinition = model.SchemaElements.SingleOrDefault(e => string.CompareOrdinal(e.Name, value.GetType().Name) == 0) as IEdmTypeDefinition;
+            return typeDefinition == null ? null : new EdmTypeDefinitionReference(typeDefinition, true);
         }
 
         /// <summary>
@@ -2338,40 +2390,6 @@ namespace Microsoft.OData.Core.Metadata
                     return new EdmSpatialTypeReference(primitiveType, nullable);
                 default:
                     throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_PrimitiveTypeReference));
-            }
-        }
-
-        /// <summary>
-        /// Try to resolve the type definition from the model if value is unsigned int.
-        /// </summary>
-        /// <param name="model">The given model.</param>
-        /// <param name="value">The given value.</param>
-        /// <returns>The type reference to type definition corresponding to the value.</returns>
-        private static IEdmTypeDefinitionReference ResolveUIntTypeDefinition(this IEdmModel model, object value)
-        {
-            Debug.Assert(model != null, "model != null");
-
-            if (value == null)
-            {
-                // null is not unsigned int.
-                return null;
-            }
-
-            if (!(value is UInt16 || value is UInt32 || value is UInt64))
-            {
-                // Not unsigned ints.
-                return null;
-            }
-
-            try
-            {
-                IEdmTypeDefinition typeDefinition = model.SchemaElements.SingleOrDefault(e => string.CompareOrdinal(e.Name, value.GetType().Name) == 0) as IEdmTypeDefinition;
-                return typeDefinition == null ? null : new EdmTypeDefinitionReference(typeDefinition, true);
-            }
-            catch (InvalidOperationException)
-            {
-                // Multiple ambigurous type definitions found.
-                return null;
             }
         }
 

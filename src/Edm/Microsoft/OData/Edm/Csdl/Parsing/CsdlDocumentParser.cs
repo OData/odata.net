@@ -15,6 +15,7 @@ using System.Linq;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Csdl.Parsing.Common;
+using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Values;
 
@@ -786,7 +787,15 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             string name = Required(CsdlConstants.Attribute_Name);
             string underlyingTypeName = RequiredType(CsdlConstants.Attribute_UnderlyingType);
 
-            return new CsdlTypeDefinition(name, underlyingTypeName, element.Location);
+            int? maxLength;
+            bool? isUnicode;
+            int? precision;
+            int? scale;
+            int? srid;
+
+            this.ParseTypeDefinitionFacets(underlyingTypeName, out maxLength, out isUnicode, out precision, out scale, out srid);
+
+            return new CsdlTypeDefinition(name, underlyingTypeName, maxLength, isUnicode, precision, scale, srid, element.Location);
         }
 
         private CsdlExpressionBase ParseAnnotationExpression(XmlElementInfo element, XmlElementValueCollection childValues)
@@ -1291,6 +1300,63 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         private void ParseSpatialFacets(out int? srid, int defaultSrid)
         {
             srid = OptionalSrid(CsdlConstants.Attribute_Srid, defaultSrid);
+        }
+
+        private void ParseTypeDefinitionFacets(string underlyingTypeName, out int? maxLength, out bool? isUnicode, out int? precision, out int? scale, out int? srid)
+        {
+            maxLength = null;
+            isUnicode = null;
+            precision = null;
+            scale = null;
+            srid = null;
+
+            switch (EdmCoreModel.Instance.GetPrimitiveTypeKind(underlyingTypeName))
+            {
+                case EdmPrimitiveTypeKind.Binary:
+                    maxLength = this.OptionalMaxLength(CsdlConstants.Attribute_MaxLength);
+                    break;
+
+                case EdmPrimitiveTypeKind.String:
+                    maxLength = this.OptionalMaxLength(CsdlConstants.Attribute_MaxLength);
+                    isUnicode = this.OptionalBoolean(CsdlConstants.Attribute_Unicode);
+                    break;
+
+                case EdmPrimitiveTypeKind.Stream:
+                    maxLength = this.OptionalMaxLength(CsdlConstants.Attribute_MaxLength);
+                    break;
+
+                case EdmPrimitiveTypeKind.DateTimeOffset:
+                case EdmPrimitiveTypeKind.Duration:
+                    precision = this.OptionalInteger(CsdlConstants.Attribute_Precision);
+                    break;
+
+                case EdmPrimitiveTypeKind.Decimal:
+                    precision = this.OptionalInteger(CsdlConstants.Attribute_Precision);
+                    scale = this.OptionalScale(CsdlConstants.Attribute_Scale);
+                    break;
+
+                case EdmPrimitiveTypeKind.Geography:
+                case EdmPrimitiveTypeKind.GeographyPoint:
+                case EdmPrimitiveTypeKind.GeographyLineString:
+                case EdmPrimitiveTypeKind.GeographyPolygon:
+                case EdmPrimitiveTypeKind.GeographyCollection:
+                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
+                case EdmPrimitiveTypeKind.GeographyMultiLineString:
+                case EdmPrimitiveTypeKind.GeographyMultiPoint:
+                    srid = this.OptionalSrid(CsdlConstants.Attribute_Srid, CsdlConstants.Default_SpatialGeographySrid);
+                    break;
+
+                case EdmPrimitiveTypeKind.Geometry:
+                case EdmPrimitiveTypeKind.GeometryPoint:
+                case EdmPrimitiveTypeKind.GeometryLineString:
+                case EdmPrimitiveTypeKind.GeometryPolygon:
+                case EdmPrimitiveTypeKind.GeometryCollection:
+                case EdmPrimitiveTypeKind.GeometryMultiPolygon:
+                case EdmPrimitiveTypeKind.GeometryMultiLineString:
+                case EdmPrimitiveTypeKind.GeometryMultiPoint:
+                    srid = this.OptionalSrid(CsdlConstants.Attribute_Srid, CsdlConstants.Default_SpatialGeometrySrid);
+                    break;
+            }
         }
 
         private enum Optionality

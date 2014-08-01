@@ -216,6 +216,9 @@ DataServiceCollection_CannotStopTrackingChildCollection=The tracking of DataServ
 DataServiceCollection_OperationForTrackedOnly=This operation is only supported on collections that are being tracked.
 DataServiceCollection_CannotDetermineContextFromItems=The DataServiceContext to which the DataServiceCollection instance belongs could not be determined. The DataServiceContext must either be supplied in the DataServiceCollection constructor or be used to create the DataServiceQuery or QueryOperationResponse object that is the source of the items in the DataServiceCollection.
 DataServiceCollection_InsertIntoTrackedButNotLoadedCollection=An item could not be added to the collection. When items in a DataServiceCollection are tracked by the DataServiceContext, new items cannot be added before items have been loaded into the collection.
+DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime=A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed.
+DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity=The LoadAsync method cannot be called when the DataServiceCollection is not a child collection of a related entity.
+DataServiceCollection_LoadAsyncRequiresDataServiceQuery=Only a typed DataServiceQuery object can be supplied when calling the LoadAsync method on DataServiceCollection.
 
 DataBinding_DataServiceCollectionArgumentMustHaveEntityType=The DataServiceCollection to be tracked must contain entity typed elements with at least one key property. The element type '{0}' does not have any key property.
 DataBinding_CollectionPropertySetterValueHasObserver=Setting an instance of DataServiceCollection to an entity property is disallowed if the instance is already being tracked. Error occurred on property '{0}' for entity type '{1}'.
@@ -289,6 +292,3 @@ PlatformHelper_DateTimeOffsetMustContainTimeZone=The time zone information is mi
 Silverlight_BrowserHttp_NotSupported=Silverlight Browser Http Stack is not supported on the Portable Library, only Client Http is supported.
 
 DataServiceCollection_DataServiceQueryCanNotBeEnumerated=Parameters of type DataServiceQuery<T> can not be used as the input enumerators for DataServiceCollection. Try using result of DataServiceQuery<T>.EndExecute instead.
-DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime=A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed.
-DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity=The LoadAsync method cannot be called when the DataServiceCollection is not a child collection of a related entity.
-DataServiceCollection_LoadAsyncRequiresDataServiceQuery=Only a typed DataServiceQuery object can be supplied when calling the LoadAsync method on DataServiceCollection.

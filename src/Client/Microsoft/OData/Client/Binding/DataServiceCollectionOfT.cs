@@ -320,12 +320,12 @@ namespace Microsoft.OData.Client
             DataServiceQuery<T> dsq = query as DataServiceQuery<T>;
             if (dsq == null)
             {
-                throw new ArgumentException("Only a typed DataServiceQuery object can be supplied when calling the LoadAsync method on DataServiceCollection.", "query");
+                throw new ArgumentException(Strings.DataServiceCollection_LoadAsyncRequiresDataServiceQuery, "query");
             }
 
             if (this.ongoingAsyncOperation != null)
             {
-                throw new InvalidOperationException("A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed.");
+                throw new InvalidOperationException(Strings.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
             }
 
             if (this.trackingOnLoad)
@@ -367,7 +367,7 @@ namespace Microsoft.OData.Client
 
             if (this.ongoingAsyncOperation != null)
             {
-                throw new InvalidOperationException("A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed.");
+                throw new InvalidOperationException(Strings.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
             }
 
             DataServiceContext context = this.observer.Context;
@@ -403,12 +403,12 @@ namespace Microsoft.OData.Client
             string property;
             if (!this.observer.LookupParent(this, out parent, out property))
             {
-                throw new InvalidOperationException("The LoadAsync method cannot be called when the DataServiceCollection is not a child collection of a related entity.");
+                throw new InvalidOperationException(Strings.DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity);
             }
 
             if (this.ongoingAsyncOperation != null)
             {
-                throw new InvalidOperationException("A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed.");
+                throw new InvalidOperationException(Strings.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
             }
 
             this.BeginLoadAsyncOperation(
@@ -437,7 +437,7 @@ namespace Microsoft.OData.Client
 
             if (this.ongoingAsyncOperation != null)
             {
-                throw new InvalidOperationException("A previous LoadAsync operation has not yet completed. You cannot call the LoadAsync method on the DataServiceCollection again until the previous operation has completed.");
+                throw new InvalidOperationException(Strings.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
             }
 
             if (this.Continuation == null)

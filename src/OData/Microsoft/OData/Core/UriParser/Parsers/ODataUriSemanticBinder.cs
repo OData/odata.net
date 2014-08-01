@@ -108,7 +108,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             bindingState.RangeVariables.Pop();
             bindingState.ImplicitRangeVariable = null;
 
-            return new ODataUri(parameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, skip, top, count);
+            return new ODataUri(parameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, null, skip, top, count);
         }
 
         /// <summary>

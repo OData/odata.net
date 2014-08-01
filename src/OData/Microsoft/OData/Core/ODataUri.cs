@@ -50,6 +50,7 @@ namespace Microsoft.OData.Core
         /// <param name="selectAndExpand">Any $select or $expand option for this uri. Can be null.</param>
         /// <param name="filter">Any $filter option for this uri. Can be null.</param>
         /// <param name="orderby">Any $orderby option for this uri. Can be null</param>
+        /// <param name="search">Any $search option for this uri. Can be null</param>
         /// <param name="skip">Any $skip option for this uri. Can be null.</param>
         /// <param name="top">Any $top option for this uri. Can be null.</param>
         /// <param name="queryCount">Any query $count option for this uri. Can be null.</param>
@@ -60,6 +61,7 @@ namespace Microsoft.OData.Core
             SelectExpandClause selectAndExpand,
             FilterClause filter,
             OrderByClause orderby,
+            SearchClause search,
             long? skip,
             long? top,
             bool? queryCount)
@@ -70,6 +72,7 @@ namespace Microsoft.OData.Core
             this.SelectAndExpand = selectAndExpand;
             this.Filter = filter;
             this.OrderBy = orderby;
+            this.Search = search;
             this.Skip = skip;
             this.Top = top;
             this.QueryCount = queryCount;
@@ -110,6 +113,22 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// Get the parameter alias nodes info.
+        /// </summary>
+        public IDictionary<string, SingleValueNode> ParameterAliasNodes
+        {
+            get
+            {
+                if (this.ParameterAliasValueAccessor == null)
+                {
+                    return null;
+                }
+
+                return this.ParameterAliasValueAccessor.ParameterAliasValueNodesCached;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the top level path for this uri.
         /// </summary>
         public ODataPath Path { get; set; }
@@ -133,6 +152,11 @@ namespace Microsoft.OData.Core
         /// Gets or sets any $orderby option for this uri.
         /// </summary>
         public OrderByClause OrderBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets any $search option for this uri.
+        /// </summary>
+        public SearchClause Search { get; set; }
 
         /// <summary>
         /// Gets or sets any $skip option for this uri.
@@ -176,9 +200,10 @@ namespace Microsoft.OData.Core
                 SelectAndExpand = SelectAndExpand,
                 Filter = Filter,
                 OrderBy = OrderBy,
+                Search = Search,
                 Skip = Skip,
                 Top = Top,
-                QueryCount = QueryCount
+                QueryCount = QueryCount            
             };
         }
     }

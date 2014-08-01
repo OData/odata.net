@@ -16,16 +16,51 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     internal class CsdlTypeDefinition : CsdlNamedElement
     {
         private readonly string underlyingTypeName;
+        private readonly int? maxLength;
+        private readonly bool? isUnicode;
+        private readonly int? precision;
+        private readonly int? scale;
+        private readonly int? srid;
 
-        public CsdlTypeDefinition(string name, string underlyingTypeName, CsdlLocation location)
+        public CsdlTypeDefinition(string name, string underlyingTypeName, int? maxLength, bool? isUnicode, int? precision, int? scale, int? srid, CsdlLocation location)
             : base(name, /*documentation*/null, location)
         {
             this.underlyingTypeName = underlyingTypeName;
+            this.maxLength = maxLength;
+            this.isUnicode = isUnicode;
+            this.precision = precision;
+            this.scale = scale;
+            this.srid = srid;
         }
 
         public string UnderlyingTypeName
         {
             get { return this.underlyingTypeName; }
+        }
+
+        public int? MaxLength
+        {
+            get { return this.maxLength; }
+        }
+
+        public bool? IsUnicode
+        {
+            get { return this.isUnicode; }
+        }
+
+        public int? Precision
+        {
+            get { return this.precision; }
+        }
+
+        public int? Scale
+        {
+            get { return this.scale; }
+        }
+
+        public int? Srid
+        {
+            get { return this.srid; }
         }
     }
 }

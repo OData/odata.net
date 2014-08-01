@@ -63,7 +63,8 @@ namespace Microsoft.OData.Core
         /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
         /// <param name="tracker">The tracker to track if instance annotations are written.</param>
         /// <param name="ignoreFilter">Whether to ingore the filter in settings.</param>
-        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, InstanceAnnotationWriteTracker tracker, bool ignoreFilter = false)
+        /// <param name="propertyName">The name of the property this instance annotation applies to</param>
+        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, InstanceAnnotationWriteTracker tracker, bool ignoreFilter = false, string propertyName = null)
         {
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             Debug.Assert(tracker != null, "tracker should not be null if we called this");
@@ -78,7 +79,7 @@ namespace Microsoft.OData.Core
 
                 if (!tracker.IsAnnotationWritten(annotation.Name))
                 {
-                    this.WriteInstanceAnnotation(annotation, ignoreFilter);
+                    this.WriteInstanceAnnotation(annotation, ignoreFilter, propertyName);
                     tracker.MarkAnnotationWritten(annotation.Name);
                 }
             }
@@ -88,10 +89,11 @@ namespace Microsoft.OData.Core
         /// Writes all the instance annotations specified in <paramref name="instanceAnnotations"/>.
         /// </summary>
         /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
-        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations)
+        /// <param name="propertyName">The name of the property this instance annotation applies to</param>
+        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, string propertyName = null)
         {
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
-            this.WriteInstanceAnnotations(instanceAnnotations, new InstanceAnnotationWriteTracker());
+            this.WriteInstanceAnnotations(instanceAnnotations, new InstanceAnnotationWriteTracker(), false, propertyName);
         }
 
         /// <summary>
@@ -109,7 +111,8 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="instanceAnnotation">The instance annotation to write.</param>
         /// <param name="ignoreFilter">Whether to ingore the filter in settings.</param>
-        internal void WriteInstanceAnnotation(ODataInstanceAnnotation instanceAnnotation, bool ignoreFilter = false)
+        /// <param name="propertyName">The name of the property this instance annotation applies to</param>
+        internal void WriteInstanceAnnotation(ODataInstanceAnnotation instanceAnnotation, bool ignoreFilter = false, string propertyName = null)
         {
             string name = instanceAnnotation.Name;
             ODataValue value = instanceAnnotation.Value;
@@ -133,7 +136,7 @@ namespace Microsoft.OData.Core
                     throw new ODataException(ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(instanceAnnotation.Name, expectedType.ODataFullName()));
                 }
 
-                this.JsonWriter.WriteInstanceAnnotationName(name);
+                this.WriteInstanceAnnotationName(propertyName, name);
                 this.valueSerializer.WriteNullValue();
                 return;
             }
@@ -146,7 +149,7 @@ namespace Microsoft.OData.Core
             ODataComplexValue complexValue = value as ODataComplexValue;
             if (complexValue != null)
             {
-                this.JsonWriter.WriteInstanceAnnotationName(name);
+                this.WriteInstanceAnnotationName(propertyName, name);
                 this.valueSerializer.WriteComplexValue(complexValue, expectedType, false /*isTopLevel*/, treatLikeOpenProperty, this.valueSerializer.CreateDuplicatePropertyNamesChecker());
                 return;
             }
@@ -161,7 +164,7 @@ namespace Microsoft.OData.Core
                     ODataJsonLightWriterUtils.WriteODataTypePropertyAnnotation(this.JsonWriter, name, collectionTypeNameToWrite);
                 }
 
-                this.JsonWriter.WriteInstanceAnnotationName(name);
+                this.WriteInstanceAnnotationName(propertyName, name);
                 this.valueSerializer.WriteCollectionValue(collectionValue, expectedType, false /*isTopLevelProperty*/, false /*isInUri*/, treatLikeOpenProperty);
                 return;
             }
@@ -175,8 +178,25 @@ namespace Microsoft.OData.Core
                 ODataJsonLightWriterUtils.WriteODataTypePropertyAnnotation(this.JsonWriter, name, primitiveTypeNameToWrite);
             }
 
-            this.JsonWriter.WriteInstanceAnnotationName(name);
+            this.WriteInstanceAnnotationName(propertyName, name);
             this.valueSerializer.WritePrimitiveValue(primitiveValue.Value, expectedType);
+        }
+
+        /// <summary>
+        /// Write the name of the instance annotation
+        /// </summary>
+        /// <param name="propertyName">The name of the property this instance annotation applied to</param>
+        /// <param name="annotationName">The name of the instance annotation</param>
+        private void WriteInstanceAnnotationName(string propertyName, string annotationName)
+        {
+            if (propertyName != null)
+            {
+                this.JsonWriter.WritePropertyAnnotationName(propertyName, annotationName);
+            }
+            else
+            {
+                this.JsonWriter.WriteInstanceAnnotationName(annotationName);
+            }
         }
     }
 }

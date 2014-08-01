@@ -76,7 +76,7 @@ namespace Microsoft.OData.Core.JsonLight
                     this.JsonWriter.StartObjectScope();
                     ODataPayloadKind kind = this.JsonLightOutputContext.MessageWriterSettings.IsIndividualProperty ? ODataPayloadKind.IndividualProperty : ODataPayloadKind.Property;
 
-                    ODataContextUrlInfo contextInfo = ODataContextUrlInfo.Create(property.ODataValue, this.JsonLightOutputContext.MessageWriterSettings.ODataUri);
+                    ODataContextUrlInfo contextInfo = ODataContextUrlInfo.Create(property.ODataValue, this.JsonLightOutputContext.MessageWriterSettings.ODataUri, this.Model);
                     this.WriteContextUriProperty(kind, () => contextInfo);
 
                     // Note we do not allow named stream properties to be written as top level property.
@@ -177,6 +177,16 @@ namespace Microsoft.OData.Core.JsonLight
 
             WriterValidationUtils.ValidatePropertyName(propertyName, bypassValidation);
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
+
+            if (isTopLevel)
+            {
+                this.InstanceAnnotationWriter.WriteInstanceAnnotations(property.InstanceAnnotations);
+            }
+            else
+            {
+                this.InstanceAnnotationWriter.WriteInstanceAnnotations(property.InstanceAnnotations, propertyName);
+            }
+
             IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(propertyName, owningType);
             IEdmTypeReference propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
 

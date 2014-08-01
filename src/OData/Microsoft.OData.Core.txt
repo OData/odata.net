@@ -456,6 +456,7 @@ EdmLibraryExtensions_CollectionItemCanBeOnlyPrimitiveEnumComplex=Only collection
 EdmLibraryExtensions_OperationGroupReturningActionsAndFunctionsModelInvalid=When resolving operations '{0}' the group returned has both actions and functions with an invalid IEdmModel.
 EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid=Invalid implementation of an IEdmModel, an operation '{0}' was found using the IEdmModel method 'FindDeclaredBoundOperations' should never return non-bound operations.
 EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid=Invalid implementation of an IEdmModel, an operation '{0}' was found using the IEdmModel method 'FindDeclaredBoundOperations' should never return bound operations without any parameters.
+EdmLibraryExtensions_ValueOverflowForUnderlyingType=Value '{0}' was either too large or too small for a '{1}'.
 
 ODataAtomEntryAndFeedDeserializer_ElementExpected=A node of type '{0}' was found where a node of type 'Element' was expected. An entry must be represented as an XML element.
 ODataAtomEntryAndFeedDeserializer_EntryElementWrongName=An element with name '{0}' in namespace '{1}' was found; however, an entry was expected. An entry must be represented as an {{http://www.w3.org/2005/Atom}}:entry element.
@@ -594,6 +595,7 @@ ODataJsonLightContextUriParser_InvalidPayloadKindWithSelectQueryOption=A '$selec
 ODataJsonLightContextUriParser_NoModel=No model was specified for the ODataMessageReader. A message reader requires a model for JSON Light payload to be specified in the ODataMessageReader constructor.
 ODataJsonLightContextUriParser_InvalidContextUrl=The context URL '{0}' is invalid.
 ODataJsonLightContextUriParser_LastSegmentIsKeySegment=Last segment in context URL '{0}' should not be KeySegment.
+ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute=The top level context URL '{0}' should be an absolute Uri.
 
 ODataJsonLightEntryAndFeedDeserializer_EntryTypeAnnotationNotFirst=The 'odata.type' instance annotation in an entry object is preceded by an invalid property. In OData, the 'odata.type' instance annotation must be either the first property in the JSON object or the second if the 'odata.context' instance annotation is present.
 ODataJsonLightEntryAndFeedDeserializer_EntryInstanceAnnotationPrecededByProperty=The '{0}' instance annotation in an entry object is preceded by a property or property annotation. In OData, the '{0}' instance annotation must be before any property or property annotation in an entry object.
@@ -803,7 +805,7 @@ SelectExpandPathBinder_FollowNonTypeSegment=Trying to follow type segments on a 
 SelectPropertyVisitor_SystemTokenInSelect=Found a system token, '{0}', while parsing a select clause.
 SelectPropertyVisitor_DisparateTypeSegmentsInSelectExpand=Any selection that is expanded must have the same type qualifier on both selection and expansion.
 
-SelectBinder_MultiLevelPathInSelect=Found a path with multiple navigation properties in a select clause. Please reword your query such that each level of select or expand only contains either TypeSegments or Properties.
+SelectBinder_MultiLevelPathInSelect=Found a path with multiple navigation properties or a bad complex property path in a select clause. Please reword your query such that each level of select or expand only contains either TypeSegments or Properties.
 
 ExpandItemBinder_TraversingANonNormalizedTree=Trying to traverse a non-normalized expand tree.
 ExpandItemBinder_CannotFindType=The type '{0}' is not defined in the model.
@@ -878,8 +880,7 @@ RequestUriProcessor_CountOnRoot=The request URI is not valid, the segment $count
 RequestUriProcessor_MustBeLeafSegment=The request URI is not valid. The segment '{0}' must be the last segment in the URI because it is one of the following: $ref, $batch, $count, $value, $metadata, a named media resource, an action, a noncomposable function, an action import, a noncomposable function import, an operation with void return type, or an operation import with void return type.
 RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment=The request URI is not valid. The segment '{0}' must refer to a navigation property since the previous segment identifier is '{1}'.
 RequestUriProcessor_MissingSegmentAfterLink=The request URI is not valid. There must a segment specified after the '{0}' segment and the segment must refer to a entity resource.
-RequestUriProcessor_CountNotSupported=The request URI is not valid, $count cannot be applied to the segment '{0}' since $count can only follow a resource segment.
-RequestUriProcessor_CannotQuerySingletons=The request URI is not valid, since the segment '{0}' refers to a singleton, and the segment '{1}' can only follow a resource collection.
+RequestUriProcessor_CountNotSupported=The request URI is not valid. $count cannot be applied to the segment '{0}' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type.
 RequestUriProcessor_CannotQueryCollections=The request URI is not valid. Since the segment '{0}' refers to a collection, this must be the last segment in the request URI or it must be followed by an function or action that can be bound to it otherwise all intermediate segments must refer to a single resource.
 RequestUriProcessor_SegmentDoesNotSupportKeyPredicates=The request URI is not valid. The segment '{0}' cannot include key predicates, however it may end with empty parenthesis.
 RequestUriProcessor_ValueSegmentAfterScalarPropertySegment=The segment '{1}' in the request URI is not valid. The segment '{0}' refers to a primitive property, function, or service operation, so the only supported value from the next segment is '$value'.

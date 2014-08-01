@@ -105,12 +105,13 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="value">The ODataValue to be used.</param>
         /// <param name="odataUri">The odata uri info for current query.</param>
+        /// <param name="model">The model used to handle unsigned int conversions.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
-        internal static ODataContextUrlInfo Create(ODataValue value, ODataUri odataUri = null)
+        internal static ODataContextUrlInfo Create(ODataValue value, ODataUri odataUri = null, IEdmModel model = null)
         {
             return new ODataContextUrlInfo()
             {
-                TypeName = GetTypeNameForValue(value),
+                TypeName = GetTypeNameForValue(value, model),
                 odataUri = odataUri
             };
         }
@@ -240,8 +241,9 @@ namespace Microsoft.OData.Core
         /// Gets the type name based on the given odata value.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <param name="model">The model used to handle unsigned int conversions.</param>
         /// <returns>The type name for the context URI.</returns>
-        private static string GetTypeNameForValue(ODataValue value)
+        private static string GetTypeNameForValue(ODataValue value, IEdmModel model)
         {
             if (value == null)
             {
@@ -283,6 +285,13 @@ namespace Microsoft.OData.Core
             {
                 Debug.Assert(value is ODataStreamReferenceValue, "value is ODataStreamReferenceValue");
                 throw new ODataException(Strings.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataEntry);
+            }
+
+            // Try convert to underlying type if the primitive value is unsigned int.
+            IEdmTypeDefinitionReference typeDefinitionReference = model.ResolveUIntTypeDefinition(primitive.Value);
+            if (typeDefinitionReference != null)
+            {
+                return typeDefinitionReference.ODataFullName();
             }
 
             IEdmPrimitiveTypeReference primitiveValueTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(primitive.Value.GetType());

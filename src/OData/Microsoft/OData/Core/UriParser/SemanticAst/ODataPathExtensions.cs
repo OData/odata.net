@@ -154,6 +154,24 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
+        /// Get the string representation of <see cref="ODataPath"/>.
+        /// </summary>
+        /// <param name="path">Path to perform the computation on.</param>
+        /// <param name="isKeyAsSegment">Mark whether key is segment</param>
+        /// <returns>The string representation of the path.</returns>
+        public static string ToResourcePathString(this ODataPath path, bool isKeyAsSegment)
+        {
+            if (isKeyAsSegment == false)
+            {
+                return string.Concat(path.WalkWith(PathSegmentToResourcePathTranslator.DefaultInstance)).TrimStart('/');
+            }
+            else
+            {
+                return string.Concat(path.WalkWith(PathSegmentToResourcePathTranslator.KeyAsSegmentInstance)).TrimStart('/');
+            }
+        }
+
+        /// <summary>
         /// Translate an ODataExpandPath into an ODataSelectPath
         /// Depending on the constructor of ODataSelectPath to validate that we aren't adding any
         /// segments that are illegal for a select.

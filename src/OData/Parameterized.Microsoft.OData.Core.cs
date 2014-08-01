@@ -2963,6 +2963,13 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "Value '{0}' was either too large or too small for a '{1}'."
+        /// </summary>
+        internal static string EdmLibraryExtensions_ValueOverflowForUnderlyingType(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.EdmLibraryExtensions_ValueOverflowForUnderlyingType,p0,p1);
+        }
+
+        /// <summary>
         /// A string like "A node of type '{0}' was found where a node of type 'Element' was expected. An entry must be represented as an XML element."
         /// </summary>
         internal static string ODataAtomEntryAndFeedDeserializer_ElementExpected(object p0) {
@@ -3790,6 +3797,13 @@ namespace Microsoft.OData.Core {
         /// </summary>
         internal static string ODataJsonLightContextUriParser_LastSegmentIsKeySegment(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightContextUriParser_LastSegmentIsKeySegment,p0);
+        }
+
+        /// <summary>
+        /// A string like "The top level context URL '{0}' should be an absolute Uri."
+        /// </summary>
+        internal static string ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute,p0);
         }
 
         /// <summary>
@@ -5038,7 +5052,7 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "Found a path with multiple navigation properties in a select clause. Please reword your query such that each level of select or expand only contains either TypeSegments or Properties."
+        /// A string like "Found a path with multiple navigation properties or a bad complex property path in a select clause. Please reword your query such that each level of select or expand only contains either TypeSegments or Properties."
         /// </summary>
         internal static string SelectBinder_MultiLevelPathInSelect {
             get {
@@ -5524,17 +5538,10 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "The request URI is not valid, $count cannot be applied to the segment '{0}' since $count can only follow a resource segment."
+        /// A string like "The request URI is not valid. $count cannot be applied to the segment '{0}' since $count can only follow an entity set, a collection navigation property, a structural property of collection type, an operation returning collection type or an operation import returning collection type."
         /// </summary>
         internal static string RequestUriProcessor_CountNotSupported(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.RequestUriProcessor_CountNotSupported,p0);
-        }
-
-        /// <summary>
-        /// A string like "The request URI is not valid, since the segment '{0}' refers to a singleton, and the segment '{1}' can only follow a resource collection."
-        /// </summary>
-        internal static string RequestUriProcessor_CannotQuerySingletons(object p0, object p1) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.RequestUriProcessor_CannotQuerySingletons,p0,p1);
         }
 
         /// <summary>

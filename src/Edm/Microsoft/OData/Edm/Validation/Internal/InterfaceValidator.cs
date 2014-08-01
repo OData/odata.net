@@ -772,6 +772,25 @@ namespace Microsoft.OData.Edm.Validation.Internal
             }
         }
 
+        private sealed class VisitorOfIEdmTypeDefinitionWithFacets : VisitorOfT<IEdmTypeDefinitionWithFacets>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmTypeDefinitionWithFacets type, List<object> followup, List<object> references)
+            {
+                List<EdmError> errors = null;
+
+                if (type.UnderlyingType != null)
+                {
+                    references.Add(type.UnderlyingType);
+                }
+                else
+                {
+                    CollectErrors(CreatePropertyMustNotBeNullError(type, "UnderlyingType"), ref errors);
+                }
+
+                return errors;
+            }
+        }
+
         private sealed class VisitorOfIEdmTerm : VisitorOfT<IEdmTerm>
         {
             protected override IEnumerable<EdmError> VisitT(IEdmTerm term, List<object> followup, List<object> references)

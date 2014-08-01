@@ -85,7 +85,13 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             // Create an absolute URI from the payload string
-            Uri contextUri = new Uri(contextUriFromPayload, UriKind.Absolute);
+            // TODO: Support relative context uri and resolving other relative uris
+            Uri contextUri;
+            if (!Uri.TryCreate(contextUriFromPayload, UriKind.Absolute, out contextUri))
+            {
+                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute(contextUriFromPayload));
+            }
+
             ODataJsonLightContextUriParser parser = new ODataJsonLightContextUriParser(model, contextUri);
 
             parser.TokenizeContextUri();
@@ -305,7 +311,7 @@ namespace Microsoft.OData.Core.JsonLight
                         // Property: {schema.type} or Collection({schema.type}) where schema.type is primitive or complex.
                         detectedPayloadKind = this.ResolveType(fragment, readerBehavior, version);
                         Debug.Assert(
-                            this.parseResult.EdmType.TypeKind == EdmTypeKind.Primitive || this.parseResult.EdmType.TypeKind == EdmTypeKind.Enum || this.parseResult.EdmType.TypeKind == EdmTypeKind.Complex || this.parseResult.EdmType.TypeKind == EdmTypeKind.Collection || this.parseResult.EdmType.TypeKind == EdmTypeKind.Entity,
+                            this.parseResult.EdmType.TypeKind == EdmTypeKind.Primitive || this.parseResult.EdmType.TypeKind == EdmTypeKind.Enum || this.parseResult.EdmType.TypeKind == EdmTypeKind.TypeDefinition || this.parseResult.EdmType.TypeKind == EdmTypeKind.Complex || this.parseResult.EdmType.TypeKind == EdmTypeKind.Collection || this.parseResult.EdmType.TypeKind == EdmTypeKind.Entity,
                             "The first context URI segment must be a set or a non-entity type.");
                     }
                 }
@@ -403,7 +409,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             EdmTypeKind typeKind;
             IEdmType resolvedType = MetadataUtils.ResolveTypeNameForRead(this.model, /*expectedType*/ null, typeNameToResolve, readerBehavior, version, out typeKind);
-            if (resolvedType == null || resolvedType.TypeKind != EdmTypeKind.Primitive && resolvedType.TypeKind != EdmTypeKind.Enum && resolvedType.TypeKind != EdmTypeKind.Complex && resolvedType.TypeKind != EdmTypeKind.Entity)
+            if (resolvedType == null || resolvedType.TypeKind != EdmTypeKind.Primitive && resolvedType.TypeKind != EdmTypeKind.Enum && resolvedType.TypeKind != EdmTypeKind.Complex && resolvedType.TypeKind != EdmTypeKind.Entity && resolvedType.TypeKind != EdmTypeKind.TypeDefinition)
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName(UriUtils.UriToString(this.parseResult.ContextUri), typeName));
             }

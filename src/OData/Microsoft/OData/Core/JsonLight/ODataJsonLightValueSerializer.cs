@@ -181,6 +181,9 @@ namespace Microsoft.OData.Core.JsonLight
                 ODataJsonLightWriterUtils.WriteODataTypeInstanceAnnotation(this.JsonWriter, typeName);
             }
 
+            // Write custom instance annotations
+            this.InstanceAnnotationWriter.WriteInstanceAnnotations(complexValue.InstanceAnnotations);
+
             // Write the properties of the complex value as usual. Note we do not allow complex types to contain named stream properties.
             this.PropertySerializer.WriteProperties(
                 complexValueTypeReference == null ? null : complexValueTypeReference.ComplexDefinition(),

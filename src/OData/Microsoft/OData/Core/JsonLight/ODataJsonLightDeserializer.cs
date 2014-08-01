@@ -176,6 +176,15 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// Function called to read property custom annotation value.
+        /// </summary>
+        protected Func<DuplicatePropertyNamesChecker, string, bool, object> ReadPropertyCustomAnnotationValue
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets the metadata document Uri from the contextUriParseResult.
         /// </summary>
         private Uri MetadataDocumentUri
@@ -768,9 +777,17 @@ namespace Microsoft.OData.Core.JsonLight
             }
             else
             {
-                // All other property annotations are ignored.
-                duplicatePropertyNamesChecker.AddCustomPropertyAnnotation(annotatedPropertyName, annotationName);
-                this.JsonReader.SkipValue();
+                if (this.ShouldSkipCustomInstanceAnnotation(annotationName) || (this is ODataJsonLightErrorDeserializer && this.MessageReaderSettings.ShouldIncludeAnnotation == null))
+                {
+                    // Make sure there's no duplicated instance annotation name even though we are skipping over it.
+                    duplicatePropertyNamesChecker.AddCustomPropertyAnnotation(annotatedPropertyName, annotationName);
+                    this.JsonReader.SkipValue();
+                }
+                else
+                {
+                    Debug.Assert(ReadPropertyCustomAnnotationValue != null, "readPropertyCustomAnnotationValue != null");
+                    duplicatePropertyNamesChecker.AddCustomPropertyAnnotation(annotatedPropertyName, annotationName, ReadPropertyCustomAnnotationValue(duplicatePropertyNamesChecker, annotationName, true));
+                }
             }
         }
 

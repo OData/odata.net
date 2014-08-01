@@ -18,6 +18,7 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Core.JsonLight;
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
@@ -72,6 +73,9 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>The missing operation generator for the current entry.</summary>
         private ODataMissingOperationGenerator missingOperationGenerator;
 
+        /// <summary>The computed key property name and value pairs of the entry.</summary>
+        private ICollection<KeyValuePair<string, object>> computedKeyProperties;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -113,6 +117,29 @@ namespace Microsoft.OData.Core.Evaluation
         private ODataMissingOperationGenerator MissingOperationGenerator
         {
             get { return this.missingOperationGenerator ?? (this.missingOperationGenerator = new ODataMissingOperationGenerator(this.entryMetadataContext, this.metadataContext)); }
+        }
+
+        /// <summary>
+        /// The computed key property name and value pairs of the entry.
+        /// If a value is unsigned integer, it will be automatically converted to its underlying type.
+        /// </summary>
+        private ICollection<KeyValuePair<string, object>> ComputedKeyProperties
+        {
+            get
+            {
+                if (computedKeyProperties == null)
+                {
+                    computedKeyProperties = new List<KeyValuePair<string, object>>();
+
+                    foreach (var originalKeyProperty in this.entryMetadataContext.KeyProperties)
+                    {
+                        object newValue = this.metadataContext.Model.ConvertToUnderlyingTypeIfUIntValue(originalKeyProperty.Value);
+                        computedKeyProperties.Add(new KeyValuePair<string, object>(originalKeyProperty.Key, newValue));
+                    }
+                }
+
+                return computedKeyProperties;
+            }
         }
 
         /// <summary>
@@ -520,7 +547,7 @@ namespace Microsoft.OData.Core.Evaluation
         {
             Uri uri = this.uriBuilder.BuildBaseUri();
             uri = this.uriBuilder.BuildEntitySetUri(uri, this.entryMetadataContext.TypeContext.NavigationSourceName);
-            uri = this.uriBuilder.BuildEntityInstanceUri(uri, this.entryMetadataContext.KeyProperties, this.entryMetadataContext.ActualEntityTypeName);
+            uri = this.uriBuilder.BuildEntityInstanceUri(uri, this.ComputedKeyProperties, this.entryMetadataContext.ActualEntityTypeName);
             return uri;
         }
 
@@ -570,7 +597,7 @@ namespace Microsoft.OData.Core.Evaluation
             {
                 uri = this.uriBuilder.BuildEntityInstanceUri(
                     uri,
-                    this.entryMetadataContext.KeyProperties,
+                    this.ComputedKeyProperties,
                     this.entryMetadataContext.ActualEntityTypeName);
             }
 

@@ -20,7 +20,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for CsdlTypeDefinition.
     /// </summary>
-    internal class CsdlSemanticsTypeDefinitionDefinition : CsdlSemanticsTypeDefinition, IEdmTypeDefinition
+    internal class CsdlSemanticsTypeDefinitionDefinition : CsdlSemanticsTypeDefinition, IEdmTypeDefinitionWithFacets
     {
         private readonly CsdlSemanticsSchema context;
         private readonly CsdlTypeDefinition typeDefinition;
@@ -38,6 +38,31 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         IEdmPrimitiveType IEdmTypeDefinition.UnderlyingType
         {
             get { return this.underlyingTypeCache.GetValue(this, ComputeUnderlyingTypeFunc, null); }
+        }
+
+        int? IEdmTypeDefinitionWithFacets.MaxLength
+        {
+            get { return this.typeDefinition.MaxLength; }
+        }
+
+        bool? IEdmTypeDefinitionWithFacets.IsUnicode
+        {
+            get { return this.typeDefinition.IsUnicode; }
+        }
+
+        int? IEdmTypeDefinitionWithFacets.Precision
+        {
+            get { return this.typeDefinition.Precision; }
+        }
+
+        int? IEdmTypeDefinitionWithFacets.Scale
+        {
+            get { return this.typeDefinition.Scale; }
+        }
+
+        int? IEdmTypeDefinitionWithFacets.Srid
+        {
+            get { return this.typeDefinition.Srid; }
         }
 
         EdmSchemaElementKind IEdmSchemaElement.SchemaElementKind

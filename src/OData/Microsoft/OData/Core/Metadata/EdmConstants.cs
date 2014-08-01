@@ -8,11 +8,7 @@
 
 //   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
 
-#if ODATALIB_QUERY
-namespace Microsoft.OData.Query.Metadata
-#else
 namespace Microsoft.OData.Core.Metadata
-#endif
 {
     /// <summary>
     /// Constant values used in the EDM.

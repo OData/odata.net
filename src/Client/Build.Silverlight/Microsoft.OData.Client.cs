@@ -217,6 +217,9 @@ namespace Microsoft.OData.Client {
         internal const string DataServiceCollection_OperationForTrackedOnly = "DataServiceCollection_OperationForTrackedOnly";
         internal const string DataServiceCollection_CannotDetermineContextFromItems = "DataServiceCollection_CannotDetermineContextFromItems";
         internal const string DataServiceCollection_InsertIntoTrackedButNotLoadedCollection = "DataServiceCollection_InsertIntoTrackedButNotLoadedCollection";
+        internal const string DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime = "DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime";
+        internal const string DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity = "DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity";
+        internal const string DataServiceCollection_LoadAsyncRequiresDataServiceQuery = "DataServiceCollection_LoadAsyncRequiresDataServiceQuery";
         internal const string DataBinding_DataServiceCollectionArgumentMustHaveEntityType = "DataBinding_DataServiceCollectionArgumentMustHaveEntityType";
         internal const string DataBinding_CollectionPropertySetterValueHasObserver = "DataBinding_CollectionPropertySetterValueHasObserver";
         internal const string DataBinding_DataServiceCollectionChangedUnknownActionCollection = "DataBinding_DataServiceCollectionChangedUnknownActionCollection";
@@ -270,22 +273,18 @@ namespace Microsoft.OData.Client {
         internal const string EdmValueUtils_CannotConvertTypeToClrValue = "EdmValueUtils_CannotConvertTypeToClrValue";
         internal const string ValueParser_InvalidDuration = "ValueParser_InvalidDuration";
         internal const string PlatformHelper_DateTimeOffsetMustContainTimeZone = "PlatformHelper_DateTimeOffsetMustContainTimeZone";
-        internal const string HttpWeb_Internal = "HttpWeb_Internal";
-        internal const string HttpWeb_InternalArgument = "HttpWeb_InternalArgument";
-        internal const string HttpWebRequest_Aborted = "HttpWebRequest_Aborted";
-        internal const string HttpWebRequest_XmlHttpCredentialsNotSupported = "HttpWebRequest_XmlHttpCredentialsNotSupported";
-        internal const string HttpWebRequest_XmlHttpNonDefaultCredentialsNotSupported = "HttpWebRequest_XmlHttpNonDefaultCredentialsNotSupported";
-        internal const string DataServiceCollection_DataServiceQueryCanNotBeEnumerated = "DataServiceCollection_DataServiceQueryCanNotBeEnumerated";
-        internal const string DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime = "DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime";
-        internal const string DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity = "DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity";
-        internal const string DataServiceCollection_LoadAsyncRequiresDataServiceQuery = "DataServiceCollection_LoadAsyncRequiresDataServiceQuery";
         internal const string Silverlight_BrowserHttp_NotSupported = "Silverlight_BrowserHttp_NotSupported";
+        internal const string DataServiceCollection_DataServiceQueryCanNotBeEnumerated = "DataServiceCollection_DataServiceQueryCanNotBeEnumerated";
 
         static TextRes loader = null;
         ResourceManager resources;
 
         internal TextRes() {
+#if !WINRT        
             resources = new System.Resources.ResourceManager("Microsoft.OData.Client", this.GetType().Assembly);
+#else
+            resources = new System.Resources.ResourceManager("Microsoft.OData.Client", this.GetType().GetTypeInfo().Assembly);
+#endif
         }
         
         private static TextRes GetLoader() {
