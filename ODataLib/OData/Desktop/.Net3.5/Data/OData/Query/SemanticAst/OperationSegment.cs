@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -94,7 +95,7 @@ namespace Microsoft.Data.OData.Query.SemanticAst
             ExceptionUtils.CheckArgumentCollectionNotNullOrEmpty(this.operations, "operations");
 
             // Determine the return type of the operation. This is only possible if all the candidate operations agree on the return type.
-            // TODO Because we work on types and not type references, if there are nullability differences we'd ignore them...
+            // TODO: Because we work on types and not type references, if there are nullability differences we'd ignore them...
             IEdmType typeSoFar = this.operations.First().ReturnType != null
                                      ? this.operations.First().ReturnType.Definition
                                      : null;

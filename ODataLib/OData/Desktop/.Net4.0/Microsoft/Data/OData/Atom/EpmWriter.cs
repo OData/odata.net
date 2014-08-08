@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -75,7 +76,7 @@ namespace Microsoft.Data.OData.Atom
             Debug.Assert(epmInfo.PropertyValuePath.Length > 0, "The PropertyValuePath must not be empty for an entry property.");
             Debug.Assert(entityType != null, "entityType != null");
 
-            // TODO - It might be possible to avoid the "value" type checks below if we do property value validation based on the type
+            // TODO: It might be possible to avoid the "value" type checks below if we do property value validation based on the type
             return this.ReadPropertyValue(
                 epmInfo,
                 epmValueCache.EntryProperties,

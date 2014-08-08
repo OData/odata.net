@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -81,8 +82,15 @@ namespace Microsoft.Data.OData.Query
             PropertyInfo propertyInfo;
             if (!this.propertyInfosDeclaredOnThisType.TryGetValue(property, out propertyInfo))
             {
+#if WINRT
+                propertyInfo = structuredType.GetInstanceType(model).GetProperty(
+                    property.Name,
+                    isPublic: true,
+                    isStatic: false);
+#else
                 BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
                 propertyInfo = structuredType.GetInstanceType(model).GetProperty(property.Name, bindingFlags);
+#endif
                 if (propertyInfo == null)
                 {
                     throw new ODataException(ODataErrorStrings.PropertyInfoTypeAnnotation_CannotFindProperty(structuredType.ODataFullName(), structuredType.GetInstanceType(model), property.Name));

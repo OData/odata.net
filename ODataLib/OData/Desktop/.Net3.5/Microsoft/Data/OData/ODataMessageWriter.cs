@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -803,6 +804,8 @@ namespace Microsoft.Data.OData
                     Debug.Assert(this.format == ODataFormat.Batch, "$batch should only support batch format since it's format independent.");
                     Debug.Assert(this.mediaType.FullTypeName == MimeConstants.MimeMultipartMixed, "$batch content type is currently only supported to be multipart/mixed.");
 
+                    //// TODO: What about the encoding - should we verify that it's 7bit US-ASCII only?
+
                     this.batchBoundary = ODataBatchWriterUtils.CreateBatchBoundary(this.writingResponse);
 
                     // Set the content type header here since all headers have to be set before getting the stream
@@ -1051,6 +1054,8 @@ namespace Microsoft.Data.OData
         {
             if (value == null)
             {
+                // TODO: OIPI doc seems to indicate in Section 2.2.6.4.1 that 'null' is permissible but the product does not support it.
+                // We also throw in this case.
                 throw new ODataException(Strings.ODataMessageWriter_CannotWriteNullInRawFormat);
             }
 

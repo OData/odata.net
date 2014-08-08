@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -120,7 +121,7 @@ namespace Microsoft.Data.OData.Query.SemanticAst
         /// <summary>
         /// Gets the <see cref="Selection"/> object that describes what properties and functions should be selected from the associated <see cref="IEdmEntityType"/>.
         /// 
-        /// TODO Note that this is a legacy internal concept. 
+        /// TODO: Note that this is a legacy internal concept. 
         /// At the last minute we changed the public API but chose not to change how the implementation work to manage risk.
         /// We should clean this up and remove this property.
         /// </summary>
@@ -137,7 +138,7 @@ namespace Microsoft.Data.OData.Query.SemanticAst
         /// <summary>
         /// Mapping that contains the set of navigation properties for the associated entity that should be expanded, and respective details about the expansions. 
         /// 
-        /// TODO Note that this is a legacy internal concept. 
+        /// TODO: Note that this is a legacy internal concept. 
         /// At the last minute we changed the public API but chose not to change how the implementation work to manage risk.
         /// We should clean this up and remove this property.
         /// </summary>

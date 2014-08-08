@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -59,7 +60,7 @@ namespace Microsoft.Data.OData.Query
             //   so for example /Customers('abc/pqr') is treated as two segments, which is wrong.
             string[] segments = escapedRelativePathUri.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            // TODO lookup astoria max segments...
+            // TODO: lookup astoria max segments...
             if (segments.Length >= this.maxSegments)
             {
                 throw new ODataException(Strings.UriQueryPathParser_TooManySegments);
@@ -89,7 +90,7 @@ namespace Microsoft.Data.OData.Query
                 int numberOfSegmentsToSkip = 0;
 
                 // Skip over the base URI segments
-#if SILVERLIGHT || PORTABLELIB
+#if (SILVERLIGHT || PORTABLELIB) && !WINRT
                 numberOfSegmentsToSkip = serviceBaseUri.AbsolutePath.Split('/').Length;
                 string[] uriSegments = uri.AbsolutePath.Split('/');
 #else

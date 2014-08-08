@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -174,6 +175,10 @@ namespace Microsoft.Data.OData.Atom
             IEdmProperty propertyMetadata = segmentStructuralTypeReference.FindProperty(propertyName);
             Debug.Assert(propertyMetadata != null || segmentStructuralTypeReference.IsOpen(), "We should have verified that if the property is not declared the type must be open.");
 
+            // TODO: Server seems to have a bug where if there's an EPM for an open property where the EPM uses complex types (the source path is deeper than 1)
+            // then it will actually materialize the property as entry level string property, with the value of the deep property value. If there are multiple deep
+            // EPM for the same top-level open property it seems to set the entry level property multiple times with the values as they come from payload.
+            // Client on the other hand doesn't have open properties, and always has a type, so no problem there.
             if (propertyMetadata == null && propertyValuePathIndex != epmInfo.PropertyValuePath.Length - 1)
             {
                 throw new ODataException(ODataErrorStrings.EpmReader_OpenComplexOrCollectionEpmProperty(epmInfo.Attribute.SourcePath));

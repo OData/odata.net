@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssemblyName>Microsoft.Data.EntityFrameworkProvider</AssemblyName>
+    <OutputType>Library</OutputType>
+    <SecurityMigration>false</SecurityMigration>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>Microsoft</RootNamespace>
+    <ProjectGuid>{40B23863-C27F-40E0-9D31-B9502DC4492E}</ProjectGuid>
+    <EnableLocalization>false</EnableLocalization>
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <DefineConstants>$(DefineConstants);EF6Provider;EFRTM;ASTORIA_SERVER</DefineConstants>
+    <VersionMajor>1</VersionMajor>
+    <VersionMinor>0</VersionMinor>
+    <ODataVersionHardcodedBuildNumber>0</ODataVersionHardcodedBuildNumber>
+    <VersionPrereleaseExtension>alpha1</VersionPrereleaseExtension>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <ProjectReference Include="..\..\ODataLib\EdmLib\Desktop\.Net4.0\Microsoft.Data.Edm.csproj">
+      <Project>{A934C8C2-9252-453C-9360-54381E4D276A}</Project>
+      <Name>Microsoft.Data.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ODataLib\Spatial\Desktop\.Net4.0\System.Spatial.csproj">
+      <Project>{D8E09813-D0EA-40eb-8A96-EB30DAC029E2}</Project>
+      <Name>System.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ODataLib\OData\Desktop\.Net4.0\Microsoft.Data.OData.csproj">
+      <Project>{34B74905-DF66-4BF7-958B-62C50ED1203C}</Project>
+      <Name>Microsoft.Data.OData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Client\System.Data.Services.Client.csproj">
+      <Project>{B2667D84-F31E-482D-A604-1323905D582F}</Project>
+      <Name>System.Data.Services.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Service\System.Data.Services.csproj">
+      <Project>{eed3355c-18ae-4cca-95bc-14c997e26c95}</Project>
+      <Name>System.Data.Services</Name>
+    </ProjectReference>
+    <Reference Include="EntityFramework">
+      <HintPath>packages\EntityFramework.6.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>packages\EntityFramework.6.0.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ReferenceEqualityComparer.cs" />
+    <Compile Include="MetadataCache.cs" />
+    <Compile Include="ProviderMetadataCacheItem.cs" />
+    <Compile Include="ErrorHandler.cs" />
+    <Compile Include="BaseServiceProvider.cs" />
+    <Compile Include="DbContextHelper.cs" />
+    <Compile Include="IProviderMember.cs" />
+    <Compile Include="IProviderMetadata.cs" />
+    <Compile Include="IProviderType.cs" />
+    <Compile Include="ObjectContextMember.cs" />
+    <Compile Include="ObjectContextMetadata.cs" />
+    <Compile Include="ObjectContextServiceProvider.cs" />
+    <Compile Include="ObjectContextType.cs" />
+    <Compile Include="PrimitiveResourceTypeMap.cs" />
+    <Compile Include="XmlConstants.cs" />
+    <Compile Include="EntityFrameworkDataServiceProvider.cs" />
+    <Compile Include="EntityFrameworkDataService.cs" />
+    <Compile Include="WebUtil.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="System.Data.Services.cs">
+      <Visible>False</Visible>
+    </Compile>
+    <Compile Include="Parameterized.System.Data.Services.cs">
+      <Visible>False</Visible>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -100,7 +101,7 @@ namespace Microsoft.Data.OData.Query
                         {
                             ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(context);
 
-                            // TODO The way JSON array literals look in the URI is different that response payload with an array in it.
+                            // TODO: The way JSON array literals look in the URI is different that response payload with an array in it.
                             // The fact that we have to manually setup the underlying reader shows this different in the protocol.
                             // There is a discussion on if we should change this or not.
                             deserializer.JsonReader.Read(); // Move to first thing

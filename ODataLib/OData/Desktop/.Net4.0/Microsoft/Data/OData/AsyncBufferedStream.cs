@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -222,7 +223,11 @@ namespace Microsoft.Data.OData
         /// Asynchronous flush operation. This will flush all buffered bytes to the underlying stream through asynchronous writes.
         /// </summary>
         /// <returns>The task representing the asynchronous flush operation.</returns>
+#if WINRT
+        internal new Task FlushAsync()
+#else
         internal Task FlushAsync()
+#endif
         {
             DebugUtils.CheckNoExternalCallers();
             return this.FlushAsyncInternal();   
@@ -386,10 +391,15 @@ namespace Microsoft.Data.OData
             public Task WriteToStreamAsync(Stream stream)
             {
                 Debug.Assert(stream != null, "stream != null");
+#if WINRT
+                return stream.WriteAsync(this.buffer, 0, this.storedCount);
+
+#else
                 return Task.Factory.FromAsync(
                     (callback, state) => stream.BeginWrite(this.buffer, 0, this.storedCount, callback, state),
                     stream.EndWrite,
                     null);
+#endif
             }
 #endif
         }

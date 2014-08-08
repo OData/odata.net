@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -105,8 +106,8 @@ namespace Microsoft.Data.OData.Evaluation
 
             StringBuilder builder = new StringBuilder(UriUtilsCommon.UriToString(baseUri));
 
-            // TODO TASK 904843: What should be done about escaping the values.
-            // TODO TASK 904842: What should happen if the URL does end with a slash?
+            // TODO: What should be done about escaping the values.
+            // TODO: What should happen if the URL does end with a slash?
             this.AppendKeyExpression(builder, keyProperties, entityTypeName);
             return new Uri(builder.ToString(), UriKind.Absolute);
         }

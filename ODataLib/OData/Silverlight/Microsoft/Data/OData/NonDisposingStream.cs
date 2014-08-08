@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -18,6 +19,11 @@ namespace Microsoft.Data.OData
     using System;
     using System.Diagnostics;
     using System.IO;
+
+#if WINRT
+    using System.Threading;
+    using System.Threading.Tasks;
+#endif
     #endregion Namespaces
 
     /// <summary>
@@ -103,6 +109,18 @@ namespace Microsoft.Data.OData
             return this.innerStream.Read(buffer, offset, count);
         }
 
+#if WINRT
+        /// <inheritdoc />
+        public async override Task<int> ReadAsync(
+            byte[] buffer,
+            int offset,
+            int count,
+            CancellationToken cancellationToken)
+        {
+            int bytesRead = await this.innerStream.ReadAsync(buffer, offset, count, cancellationToken);
+            return bytesRead;
+        }
+#else
         /// <summary>
         /// Begins a read operation from the stream.
         /// </summary>
@@ -126,6 +144,7 @@ namespace Microsoft.Data.OData
         {
             return this.innerStream.EndRead(asyncResult);
         }
+#endif
 
         /// <summary>
         /// Seeks the stream.
@@ -158,6 +177,13 @@ namespace Microsoft.Data.OData
             this.innerStream.Write(buffer, offset, count);
         }
 
+#if WINRT
+        /// <inheritdoc />
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            return this.innerStream.WriteAsync(buffer, offset, count, cancellationToken);
+        }
+#else
         /// <summary>
         /// Begins an asynchronous write operation to the stream.
         /// </summary>
@@ -180,5 +206,6 @@ namespace Microsoft.Data.OData
         {
             this.innerStream.EndWrite(asyncResult);
         }
+#endif
     }
 }

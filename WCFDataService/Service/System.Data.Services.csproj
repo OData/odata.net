@@ -1,0 +1,340 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <AssemblyName>System.Data.Services</AssemblyName>
+    <RootNamespace>System.Data.Services</RootNamespace>
+    <DefineConstants>$(DefineConstants);ASTORIA_SERVER;ASTORIA_OPEN_OBJECT;EFRTM</DefineConstants>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <OutputType>Library</OutputType>
+    <ProjectGuid>{EED3355C-18AE-4CCA-95BC-14C997E26C95}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Data.Entity" />
+    <ProjectReference Include="..\..\ODataLib\EdmLib\Desktop\.Net4.0\Microsoft.Data.Edm.csproj">
+      <Project>{A934C8C2-9252-453C-9360-54381E4D276A}</Project>
+      <Name>Microsoft.Data.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ODataLib\Spatial\Desktop\.Net4.0\System.Spatial.csproj">
+      <Project>{D8E09813-D0EA-40eb-8A96-EB30DAC029E2}</Project>
+      <Name>System.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ODataLib\OData\Desktop\.Net4.0\Microsoft.Data.OData.csproj">
+      <Project>{34B74905-DF66-4BF7-958B-62C50ED1203C}</Project>
+      <Name>Microsoft.Data.OData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Client\System.Data.Services.Client.csproj">
+      <Project>{B2667D84-F31E-482D-A604-1323905D582F}</Project>
+      <Name>System.Data.Services.Client</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="System.Data.Services.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="System\Data\Services\Parsing\ExpressionLexerUtils.cs" />
+    <Compile Include="System\Data\Services\Serializers\JsonSharedUtils.cs" />
+    <Compile Include="System\Data\Services\ODataValueUtils.cs" />
+    <Compile Include="System\Data\Services\SimpleLazy.cs" />
+    <Compile Include="System\Data\Services\Client\ALinq\ExpressionVisitor.cs" />
+    <Compile Include="System\Data\Services\Client\ALinq\ParameterReplacerVisitor.cs" />
+    <Compile Include="System\Data\Services\ReferenceEqualityComparer.cs" />
+    <Compile Include="System\Data\Services\UriUtil.cs" />
+    <Compile Include="System\Data\Services\Client\Common.cs" />
+    <Compile Include="System\Data\Services\AtomConstants.cs" />
+    <Compile Include="System\Data\Services\DebugUtils.cs" />
+    <Compile Include="System\Data\Services\ErrorUtils.cs" />
+    <Compile Include="System\Data\Services\EdmLibraryExtensions.cs" />
+    <Compile Include="System\Data\Services\InternalErrorCodesCommon.cs" />
+    <Compile Include="System\Data\Services\DataServiceStaticConfiguration.cs" />
+    <Compile Include="System\Data\Services\ODataPathToSegmentInfoConverter.cs" />
+    <Compile Include="System\Data\Services\OpenTypeMethodCallDetector.cs" />
+    <Compile Include="System\Data\Services\Parsing\SkipTokenExpressionBuilder.cs" />
+    <Compile Include="System\Data\Services\Parsing\TokenToQueryNodeTranslator.cs" />
+    <Compile Include="System\Data\Services\Parsing\NodeToExpressionTranslator.cs" />
+    <Compile Include="System\Data\Services\Parsing\FunctionExpressionBinder.cs" />
+    <Compile Include="System\Data\Services\LinqExtensions.cs" />
+    <Compile Include="System\Data\Services\Parsing\ExpressionGenerator.cs" />
+    <Compile Include="System\Data\Services\Parsing\RequestExpressionParser.cs" />
+    <Compile Include="System\Data\Services\Providers\DataServiceProviderArgs.cs" />
+    <Compile Include="System\Data\Services\Providers\DataServiceProviderBehavior.cs" />
+    <Compile Include="System\Data\Services\Providers\EdmComplexTypeWithDelayLoadedProperties.cs" />
+    <Compile Include="System\Data\Services\Providers\EdmEntityTypeWithDelayLoadedProperties.cs" />
+    <Compile Include="System\Data\Services\Providers\EntityFrameworkDataServiceProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\IResourcePropertyBasedEdmProperty.cs" />
+    <Compile Include="System\Data\Services\Providers\IResourceSetBasedEdmEntitySet.cs" />
+    <Compile Include="System\Data\Services\Providers\IResourceTypeBasedEdmType.cs" />
+    <Compile Include="System\Data\Services\Providers\MetadataProviderEdmCollectionType.cs" />
+    <Compile Include="System\Data\Services\Providers\MetadataProviderEdmModelMode.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServiceActionResolver.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServiceEntityFrameworkProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServiceInternalProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServiceProviderBehavior.cs" />
+    <Compile Include="System\Data\Services\Providers\MetadataProviderEdmStructuralProperty.cs" />
+    <Compile Include="System\Data\Services\Providers\OperationCache.cs" />
+    <Compile Include="System\Data\Services\Providers\ReflectionDataServiceProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\SelectedOperationsCache.cs" />
+    <Compile Include="System\Data\Services\Providers\ServiceOperationProvider.cs" />
+    <Compile Include="System\Data\Services\Serializers\OperationLinkBuilder.cs" />
+    <Compile Include="System\Data\Services\VocabularyAnnotationCache.cs" />
+    <Compile Include="System\Data\Services\CallbackQueryOptionHandler.cs" />
+    <Compile Include="System\Data\Services\ClientPreference.cs" />
+    <Compile Include="System\Data\Services\CommonUtil.cs" />
+    <Compile Include="System\Data\Services\Configuration\DataServicesConfigurationConstants.cs" />
+    <Compile Include="System\Data\Services\Configuration\DataServicesFeaturesSection.cs" />
+    <Compile Include="System\Data\Services\Configuration\DataServicesReplaceFeature.cs" />
+    <Compile Include="System\Data\Services\Configuration\DataServicesSectionGroup.cs" />
+    <Compile Include="System\Data\Services\AcceptableContentTypeSelector.cs" />
+    <Compile Include="System\Data\Services\DataServiceODataWriter.cs" />
+    <Compile Include="System\Data\Services\DataServiceODataWriterEntryArgs.cs" />
+    <Compile Include="System\Data\Services\DataServiceODataWriterFeedArgs.cs" />
+    <Compile Include="System\Data\Services\DataServiceODataWriterNavigationLinkArgs.cs" />
+    <Compile Include="System\Data\Services\Parsing\LiteralParser.cs" />
+    <Compile Include="System\Data\Services\Parsing\WellKnownTextParser.cs" />
+    <Compile Include="System\Data\Services\PartiallyWrittenStreamMessage.cs" />
+    <Compile Include="System\Data\Services\MessageWriterBuilder.cs" />
+    <Compile Include="System\Data\Services\ODataFormatWithParameters.cs" />
+    <Compile Include="System\Data\Services\ODataMessageExtensionMethods.cs" />
+    <Compile Include="System\Data\Services\HttpVerbs.cs" />
+    <Compile Include="System\Data\Services\Parsing\LiteralFormatter.cs" />
+    <Compile Include="System\Data\Services\Parsing\UnicodeCategoryEqualityComparer.cs" />
+    <Compile Include="System\Data\Services\Providers\MetadataProviderEdmEntitySet.cs" />
+    <Compile Include="System\Data\Services\Providers\MetadataProviderEdmSilentNavigationProperty.cs" />
+    <Compile Include="System\Data\Services\Providers\OperationParameterBindingKind.cs" />
+    <Compile Include="System\Data\Services\QueryResultInfo.cs" />
+    <Compile Include="System\Data\Services\ResponseContentTypeNegotiator.cs" />
+    <Compile Include="System\Data\Services\ExpandAndSelectParseResult.cs" />
+    <Compile Include="System\Data\Services\Serializers\EntityToSerialize.cs" />
+    <Compile Include="System\Data\Services\Serializers\KeySerializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\LazySerializedEntityKey.cs" />
+    <Compile Include="System\Data\Services\Serializers\PayloadMetadataParameterInterpreter.cs" />
+    <Compile Include="System\Data\Services\Serializers\OperationSerializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\PayloadMetadataPropertyManager.cs" />
+    <Compile Include="System\Data\Services\Serializers\PayloadMetadataKind.cs" />
+    <Compile Include="System\Data\Services\RequestQueryCountOption.cs" />
+    <Compile Include="System\Data\Services\Serializers\SerializedEntityKey.cs" />
+    <Compile Include="System\Data\Services\UrlConvention.cs" />
+    <Compile Include="System\Data\Services\ServiceActionRights.cs" />
+    <Compile Include="System\Data\Services\DataServiceOperationContext.cs" />
+    <Compile Include="System\Data\Services\BatchServiceHost.cs" />
+    <Compile Include="System\Data\Services\ChangeInterceptorAttribute.cs" />
+    <Compile Include="System\Data\Services\DataService.cs" />
+    <Compile Include="System\Data\Services\DataServiceBehavior.cs" />
+    <Compile Include="System\Data\Services\DataServiceConfiguration.cs" />
+    <Compile Include="System\Data\Services\DataServiceException.cs" />
+    <Compile Include="System\Data\Services\DataServiceHost.cs" />
+    <Compile Include="System\Data\Services\DataServiceHostFactory.cs" />
+    <Compile Include="System\Data\Services\DataServiceProcessingPipelineEventArgs.cs" />
+    <Compile Include="System\Data\Services\DataServiceProcessingPipeline.cs" />
+    <Compile Include="System\Data\Services\DelegateBodyWriter.cs" />
+    <Compile Include="System\Data\Services\Epm\EpmAttributeNameBuilder.cs" />
+    <Compile Include="System\Data\Services\Epm\EpmHelper.cs" />
+    <Compile Include="System\Data\Services\Epm\EpmSourcePathSegment.cs" />
+    <Compile Include="System\Data\Services\Epm\EpmSourceTree.cs" />
+    <Compile Include="System\Data\Services\Epm\EpmTargetPathSegment.cs" />
+    <Compile Include="System\Data\Services\Epm\EpmTargetTree.cs" />
+    <Compile Include="System\Data\Services\Epm\EpmTranslate.cs" />
+    <Compile Include="System\Data\Services\ETagAttribute.cs" />
+    <Compile Include="System\Data\Services\Error.cs" />
+    <Compile Include="System\Data\Services\ErrorHandler.cs" />
+    <Compile Include="System\Data\Services\ExpandSegment.cs" />
+    <Compile Include="System\Data\Services\ExpandSegmentCollection.cs" />
+    <Compile Include="System\Data\Services\HandleExceptionArgs.cs" />
+    <Compile Include="System\Data\Services\HttpContextServiceHost.cs" />
+    <Compile Include="System\Data\Services\ContentTypeUtil.cs" />
+    <Compile Include="System\Data\Services\IDataService.cs" />
+    <Compile Include="System\Data\Services\IDataServiceConfiguration.cs" />
+    <Compile Include="System\Data\Services\IDataServiceHost.cs" />
+    <Compile Include="System\Data\Services\IExpandProvider.cs" />
+    <Compile Include="System\Data\Services\IExpandedResult.cs" />
+    <Compile Include="System\Data\Services\Internal\ProjectedWrapper.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="System\Data\Services\Internal\PropertyAccessVisitor.cs" />
+    <Compile Include="System\Data\Services\IRequestHandler.cs" />
+    <Compile Include="System\Data\Services\IProjectedResult.cs" />
+    <Compile Include="System\Data\Services\IUpdatable.cs" />
+    <Compile Include="System\Data\Services\IgnorePropertiesAttribute.cs" />
+    <Compile Include="System\Data\Services\Int32EqualityComparer.cs" />
+    <Compile Include="System\Data\Services\Internal\ExpandedWrapper.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="System\Data\Services\SkipTokenAndETagParser.cs" />
+    <Compile Include="System\Data\Services\MimeTypeAttribute.cs" />
+    <Compile Include="System\Data\Services\Internal\NeedSkipTokenVisitor.cs" />
+    <Compile Include="System\Data\Services\AstoriaRequestMessage.cs" />
+    <Compile Include="System\Data\Services\OpenTypes\OpenTypeMethods.cs" />
+    <Compile Include="System\Data\Services\Parsing\ExpressionUtils.cs" />
+    <Compile Include="System\Data\Services\ProcessRequestArgs.cs" />
+    <Compile Include="System\Data\Services\Providers\ServiceActionParameter.cs" />
+    <Compile Include="System\Data\Services\Providers\OperationParameter.cs" />
+    <Compile Include="System\Data\Services\Providers\ServiceOperation.cs" />
+    <Compile Include="System\Data\Services\Providers\DataServiceActionProviderWrapper.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServiceInvokable.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServiceActionProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServiceUpdateProvider2.cs" />
+    <Compile Include="System\Data\Services\Providers\DataServiceExecutionProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\MetadataProviderState.cs" />
+    <Compile Include="System\Data\Services\Providers\DataServiceExecutionProviderMethods.cs" />
+    <Compile Include="System\Data\Services\Providers\ExpressionEvaluator.cs" />
+    <Compile Include="System\Data\Services\Providers\DataServiceExecutionProviderWrapper.cs" />
+    <Compile Include="System\Data\Services\Providers\MetadataProviderEdmNavigationProperty.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServiceExecutionProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\MetadataProviderEdmComplexType.cs" />
+    <Compile Include="System\Data\Services\Providers\MetadataProviderEdmEntityType.cs" />
+    <Compile Include="System\Data\Services\Providers\MetadataProviderEdmFunctionImport.cs" />
+    <Compile Include="System\Data\Services\Providers\MetadataProviderEdmEntityContainer.cs" />
+    <Compile Include="System\Data\Services\Providers\MetadataProviderUtils.cs" />
+    <Compile Include="System\Data\Services\Providers\CollectionResourceType.cs" />
+    <Compile Include="System\Data\Services\Providers\DataServicePagingProviderWrapper.cs" />
+    <Compile Include="System\Data\Services\Providers\DbContextHelper.cs" />
+    <Compile Include="System\Data\Services\Providers\DataServiceStreamProviderWrapper.cs" />
+    <Compile Include="System\Data\Services\Providers\ExpandedProjectionNode.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServiceMetadataProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServicePagingProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServiceQueryProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServiceStreamProvider2.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServiceUpdateProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\IProjectionProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\IProviderType.cs" />
+    <Compile Include="System\Data\Services\Providers\IProviderMember.cs" />
+    <Compile Include="System\Data\Services\Providers\IProviderMetadata.cs" />
+    <Compile Include="System\Data\Services\Providers\ProjectionNode.cs" />
+    <Compile Include="System\Data\Services\Providers\ResourceAssociationType.cs" />
+    <Compile Include="System\Data\Services\Providers\DataServiceProviderMethods.cs" />
+    <Compile Include="System\Data\Services\Providers\DataServiceProviderWrapper.cs" />
+    <Compile Include="System\Data\Services\Providers\EdmUtil.cs" />
+    <Compile Include="System\Data\Services\Providers\EntityPropertyMappingInfo.cs" />
+    <Compile Include="System\Data\Services\Providers\OrderingExpression.cs" />
+    <Compile Include="System\Data\Services\Providers\OrderingInfo.cs" />
+    <Compile Include="System\Data\Services\Providers\IDataServiceStreamProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\ResourceAssociationSetEnd.cs" />
+    <Compile Include="System\Data\Services\Providers\ResourceAssociationSet.cs" />
+    <Compile Include="System\Data\Services\Providers\ResourceAssociationTypeEnd.cs" />
+    <Compile Include="System\Data\Services\Providers\ResourceSet.cs" />
+    <Compile Include="System\Data\Services\Providers\ResourceSetWrapper.cs" />
+    <Compile Include="System\Data\Services\Providers\RootProjectionNode.cs" />
+    <Compile Include="System\Data\Services\Providers\OperationWrapper.cs" />
+    <Compile Include="System\Data\Services\QueryInterceptorAttribute.cs" />
+    <Compile Include="System\Data\Services\RequestDescription.cs" />
+    <Compile Include="System\Data\Services\RequestQueryProcessor.cs" />
+    <Compile Include="System\Data\Services\RequestTargetKind.cs" />
+    <Compile Include="System\Data\Services\RequestTargetSource.cs" />
+    <Compile Include="System\Data\Services\RequestUriProcessor.cs" />
+    <Compile Include="System\Data\Services\ResourceActions.cs" />
+    <Compile Include="System\Data\Services\EntitySetRights.cs" />
+    <Compile Include="System\Data\Services\ResponseBodyWriter.cs" />
+    <Compile Include="System\Data\Services\SegmentInfo.cs" />
+    <Compile Include="System\Data\Services\Serializers\EntityDeserializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\ParameterDeserializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\DataStringEscapeBuilder.cs" />
+    <Compile Include="System\Data\Services\Serializers\EntityReferenceLinkDeserializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\MediaResourceDeserializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\CollectionPropertyValueEnumerable.cs" />
+    <Compile Include="System\Data\Services\Serializers\ODataMessageReaderDeserializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\PropertyDeserializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\RawValueDeserializer.cs" />
+    <Compile Include="System\Data\Services\ServiceOperationRights.cs" />
+    <Compile Include="System\Data\Services\SingleResultAttribute.cs" />
+    <Compile Include="System\Data\Services\UpdatableWrapper.cs" />
+    <Compile Include="System\Data\Services\UpdateTracker.cs" />
+    <Compile Include="System\Data\Services\VersionUtil.cs" />
+    <Compile Include="System\Data\Services\WebUtil.cs" />
+    <Compile Include="System\Data\Services\XmlConstants.cs" />
+    <Compile Include="System\Data\Services\Caching\MetadataCache.cs" />
+    <Compile Include="System\Data\Services\Caching\ProviderMetadataCacheItem.cs" />
+    <Compile Include="System\Data\Services\Caching\DataServiceCacheItem.cs" />
+    <Compile Include="System\Data\Services\Parsing\ExpressionConstants.cs" />
+    <Compile Include="System\Data\Services\Parsing\ExpressionLexer.cs" />
+    <Compile Include="System\Data\Services\Parsing\FunctionDescription.cs" />
+    <Compile Include="System\Data\Services\Parsing\OperationSignatures.cs" />
+    <Compile Include="System\Data\Services\Parsing\RequestQueryParser.cs" />
+    <Compile Include="System\Data\Services\Parsing\ExpressionToken.cs" />
+    <Compile Include="System\Data\Services\Parsing\ExpressionTokenKind.cs" />
+    <Compile Include="System\Data\Services\Parsing\WebConvert.cs" />
+    <Compile Include="System\Data\Services\Providers\BaseServiceProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\BasicExpandProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\ObjectContextServiceProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\ObjectContextType.cs" />
+    <Compile Include="System\Data\Services\Providers\ObjectContextMember.cs" />
+    <Compile Include="System\Data\Services\Providers\ObjectContextMetadata.cs" />
+    <Compile Include="System\Data\Services\Providers\ReflectionServiceProvider.cs" />
+    <Compile Include="System\Data\Services\Providers\ResourceProperty.cs" />
+    <Compile Include="System\Data\Services\Providers\ResourcePropertyKind.cs" />
+    <Compile Include="System\Data\Services\Providers\ResourceType.cs" />
+    <Compile Include="System\Data\Services\Providers\ResourceTypeKeyKind.cs" />
+    <Compile Include="System\Data\Services\Providers\ResourceTypeKind.cs" />
+    <Compile Include="System\Data\Services\Providers\Operation.cs" />
+    <Compile Include="System\Data\Services\Providers\ServiceOperationParameter.cs" />
+    <Compile Include="System\Data\Services\Providers\ServiceOperationResultKind.cs" />
+    <Compile Include="System\Data\Services\Serializers\BinarySerializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\Deserializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\MetadataSerializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\NonEntitySerializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\Serializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\ServiceDocumentSerializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\EntitySerializer.cs" />
+    <Compile Include="System\Data\Services\Serializers\TextSerializer.cs" />
+    <Compile Include="System\Data\Services\Providers\PrimitiveResourceTypeMap.cs" />
+    <Compile Include="System\Data\Services\Providers\MetadataProviderEdmModel.cs" />
+    <Compile Include="System\Data\Services\AstoriaResponseMessage.cs" />
+    <Compile Include="System\Data\Services\Providers\EntityCollectionResourceType.cs" />
+    <Compile Include="System\Data\Services\Providers\OperationKind.cs" />
+    <Compile Include="System\Data\Services\Providers\ResourceSetPathExpression.cs" />
+    <Compile Include="System\Data\Services\Providers\ServiceAction.cs" />
+    <Compile Include="System\Data\Services\ObjectContextSpatialUtil.cs" />
+    <Compile Include="System\Data\Services\Providers\ResourceReferentialConstraint.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="System\Data\Services\XmlUtil.cs" />
+    <Compile Include="System.Data.Services.cs">
+      <Visible>False</Visible>
+    </Compile>
+    <Compile Include="Parameterized.System.Data.Services.cs">
+      <Visible>False</Visible>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="System.Data.Services.resources">
+      <Visible>False</Visible>
+      <LogicalName>System.Data.Services.resources</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild">
+    <GenerateResource Sources="System.Data.Services.txt" OutputResources="System.Data.Services.resources" />
+  </Target>
+</Project>

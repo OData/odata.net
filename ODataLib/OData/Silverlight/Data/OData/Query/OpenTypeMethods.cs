@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -732,7 +733,7 @@ namespace Microsoft.Data.OData.Query
         private static Expression ExpressionAsObject(Expression expression)
         {
             Debug.Assert(expression != null, "expression != null");
-            return expression.Type.IsValueType ? Expression.Convert(expression, typeof(object)) : expression;
+            return expression.Type.IsValueType() ? Expression.Convert(expression, typeof(object)) : expression;
         }
 
         #endregion

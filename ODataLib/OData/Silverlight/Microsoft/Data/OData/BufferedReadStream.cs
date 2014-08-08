@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -283,6 +284,35 @@ namespace Microsoft.Data.OData
                     currentBuffer = this.AddNewBuffer();
                 }
 
+#if WINRT
+                yield return inputStream.ReadAsync(currentBuffer.Buffer, currentBuffer.OffsetToWriteTo, currentBuffer.FreeBytes)
+                    .ContinueWith(t =>
+                    {
+                        try
+                        {
+                            int bytesRead = t.Result;
+                            if (bytesRead == 0)
+                            {
+                                this.inputStream = null;
+                            }
+                            else
+                            {
+                                currentBuffer.MarkBytesAsWritten(bytesRead);
+                            }
+                        }
+                        catch (Exception exception)
+                        {
+                            if (!ExceptionUtils.IsCatchableExceptionType(exception))
+                            {
+                                throw;
+                            }
+
+                            this.inputStream = null;
+                            throw;
+                        }
+                    });
+
+#else
                 yield return Task.Factory.FromAsync(
                     (asyncCallback, asyncState) => this.inputStream.BeginRead(
                         currentBuffer.Buffer,
@@ -316,6 +346,7 @@ namespace Microsoft.Data.OData
                         }
                     },
                     null);
+#endif
             }
         }
 

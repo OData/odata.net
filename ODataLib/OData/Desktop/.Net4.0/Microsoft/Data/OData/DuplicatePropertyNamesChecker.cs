@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -377,7 +378,7 @@ namespace Microsoft.Data.OData
                 return null;
             }
 
-            // TODO TASK 901253: Refactor the duplicate property names checker and use different implementations for JSON Light
+            // TODO: Refactor the duplicate property names checker and use different implementations for JSON Light
             //      and the other formats (most of the logic is not needed for JSON Light).
             //      Once we create a JSON Light specific duplicate property names checker, we will check for duplicates in
             //      the ParseProperty method and thus detect duplicates before we get here.

@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -74,7 +75,7 @@ namespace Microsoft.Data.OData.Atom
             Debug.Assert(DateTimeOffset.TryParse(updatedTime, out tempDateTimeOffset), "DateTimeOffset.TryParse(updatedTime, out tempDateTimeOffset)");
 #endif
 
-            // TODO, ckerer: implement the rule around authors (an entry has to have an author directly or in the <entry:source> unless the feed has an author).
+            // TODO: implement the rule around authors (an entry has to have an author directly or in the <entry:source> unless the feed has an author).
             //               currently we make all entries have an author.
             AtomEntryMetadata mergedEntryMetadata = ODataAtomWriterMetadataEpmMergeUtils.MergeCustomAndEpmEntryMetadata(entryMetadata, epmEntryMetadata, this.MessageWriterSettings.WriterBehavior);
             if (mergedEntryMetadata == null)

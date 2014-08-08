@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -38,7 +39,7 @@ namespace Microsoft.Data.OData.Query
     {        
         /// <summary>
         /// Method to bind the value of a key.
-        /// TODO Make it of return type SingleValueQueryNode.
+        /// TODO: Make it of return type SingleValueQueryNode.
         /// </summary>
         private readonly MetadataBinder.QueryTokenVisitor bind;
 

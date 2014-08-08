@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -44,7 +45,7 @@ namespace Microsoft.Data.OData.Query
                 case EdmExpressionKind.EntitySetReference:
                     return ((IEdmEntitySetReferenceExpression)expression).ReferencedEntitySet;
                 default:
-                    // TODO we should support all the other options
+                    // TODO: we should support all the other options
                     throw new NotSupportedException(
                         ODataErrorStrings.Nodes_NonStaticEntitySetExpressionsAreNotSupportedInThisRelease);
             }

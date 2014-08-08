@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -724,7 +725,7 @@ namespace Microsoft.Data.OData
                 return this.CurrentScope.EntityType;
             }
 
-            // TODO TASK 884340 Clean up handling of expected types/sets during writing
+            // TODO: Clean up handling of expected types/sets during writing
             return (IEdmEntityType)TypeNameOracle.ResolveAndValidateTypeName(this.outputContext.Model, entry.TypeName, EdmTypeKind.Entity);
         }
 

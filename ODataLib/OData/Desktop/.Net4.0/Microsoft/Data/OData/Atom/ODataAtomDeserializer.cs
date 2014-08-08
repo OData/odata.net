@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -71,6 +72,8 @@ namespace Microsoft.Data.OData.Atom
             DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
 
+            // TODO: When we implement the XmlReader extensibility this code will have to change since we should not
+            // read over top-level nodes before and after the top-level element.
             this.XmlReader.ReadPayloadStart();
 
             this.XmlReader.AssertNotBuffering();
@@ -84,6 +87,8 @@ namespace Microsoft.Data.OData.Atom
             DebugUtils.CheckNoExternalCallers();
             this.XmlReader.AssertNotBuffering();
 
+            // TODO: When we implement the XmlReader extensibility this code will have to change since we should not
+            // read over top-level nodes before and after the top-level element.
             this.XmlReader.ReadPayloadEnd();
 
             this.XmlReader.AssertNotBuffering();

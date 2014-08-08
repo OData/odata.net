@@ -1,4 +1,5 @@
-//   Copyright 2011 Microsoft Corporation
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -22,7 +23,7 @@ namespace Microsoft.Data.OData.Query
 
     /// <summary>
     /// Implementation of IFunctionCallParser that allows functions calls and parses arguments with a provided method.
-    /// TODO This inmplementaiton is incomplete.
+    /// TODO: This implementation is incomplete.
     /// </summary>
     internal sealed class FunctionCallParser : IFunctionCallParser
     {

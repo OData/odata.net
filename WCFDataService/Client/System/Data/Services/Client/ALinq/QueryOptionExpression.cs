@@ -1,0 +1,73 @@
+//   OData .NET Libraries ver. 5.6.2
+//   Copyright (c) Microsoft Corporation. All rights reserved.
+//
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+
+namespace System.Data.Services.Client
+{
+    using System;
+    using System.Diagnostics;
+    using System.Linq.Expressions;
+
+    /// <summary>
+    /// An resource specific expression representing a query option.
+    /// </summary>
+    internal abstract class QueryOptionExpression : Expression
+    {
+#if WINDOWS_PHONE_MANGO
+        /// <summary>
+        /// Creates a QueryOptionExpression expression
+        /// </summary>
+        /// <param name="nodeType">the node type of this expression</param>
+        /// <param name="type">the return type of the expression</param>
+        internal QueryOptionExpression(ExpressionType nodeType, Type type)
+            : base(nodeType, type)
+        {
+        }
+#else
+        /// <summary>The CLR type this node will evaluate into.</summary>
+        private Type type;
+
+        /// <summary>
+        /// Creates a QueryOptionExpression expression
+        /// </summary>
+        /// <param name="type">the return type of the expression</param>
+        internal QueryOptionExpression(Type type)
+        {
+            Debug.Assert(type != null, "type != null");
+            this.type = type;
+        }
+
+        /// <summary>
+        /// The <see cref="Type"/> of the value represented by this <see cref="Expression"/>.
+        /// </summary>
+        public override Type Type
+        {
+            get { return this.type; }
+        }
+#endif
+        /// <summary>
+        /// Composes the <paramref name="previous"/> expression with this one when it's specified multiple times.
+        /// </summary>
+        /// <param name="previous"><see cref="QueryOptionExpression"/> to compose.</param>
+        /// <returns>
+        /// The expression that results from composing the <paramref name="previous"/> expression with this one.
+        /// </returns>
+        internal virtual QueryOptionExpression ComposeMultipleSpecification(QueryOptionExpression previous)
+        {
+            Debug.Assert(previous != null, "other != null");
+            Debug.Assert(previous.GetType() == this.GetType(), "other.GetType == this.GetType() -- otherwise it's not the same specification");
+            return this;
+        }
+    }
+}
