@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +19,6 @@ using System.Linq;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Csdl.Parsing.Common;
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Values;
 
@@ -787,15 +790,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             string name = Required(CsdlConstants.Attribute_Name);
             string underlyingTypeName = RequiredType(CsdlConstants.Attribute_UnderlyingType);
 
-            int? maxLength;
-            bool? isUnicode;
-            int? precision;
-            int? scale;
-            int? srid;
-
-            this.ParseTypeDefinitionFacets(underlyingTypeName, out maxLength, out isUnicode, out precision, out scale, out srid);
-
-            return new CsdlTypeDefinition(name, underlyingTypeName, maxLength, isUnicode, precision, scale, srid, element.Location);
+            return new CsdlTypeDefinition(name, underlyingTypeName, element.Location);
         }
 
         private CsdlExpressionBase ParseAnnotationExpression(XmlElementInfo element, XmlElementValueCollection childValues)
@@ -1300,63 +1295,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         private void ParseSpatialFacets(out int? srid, int defaultSrid)
         {
             srid = OptionalSrid(CsdlConstants.Attribute_Srid, defaultSrid);
-        }
-
-        private void ParseTypeDefinitionFacets(string underlyingTypeName, out int? maxLength, out bool? isUnicode, out int? precision, out int? scale, out int? srid)
-        {
-            maxLength = null;
-            isUnicode = null;
-            precision = null;
-            scale = null;
-            srid = null;
-
-            switch (EdmCoreModel.Instance.GetPrimitiveTypeKind(underlyingTypeName))
-            {
-                case EdmPrimitiveTypeKind.Binary:
-                    maxLength = this.OptionalMaxLength(CsdlConstants.Attribute_MaxLength);
-                    break;
-
-                case EdmPrimitiveTypeKind.String:
-                    maxLength = this.OptionalMaxLength(CsdlConstants.Attribute_MaxLength);
-                    isUnicode = this.OptionalBoolean(CsdlConstants.Attribute_Unicode);
-                    break;
-
-                case EdmPrimitiveTypeKind.Stream:
-                    maxLength = this.OptionalMaxLength(CsdlConstants.Attribute_MaxLength);
-                    break;
-
-                case EdmPrimitiveTypeKind.DateTimeOffset:
-                case EdmPrimitiveTypeKind.Duration:
-                    precision = this.OptionalInteger(CsdlConstants.Attribute_Precision);
-                    break;
-
-                case EdmPrimitiveTypeKind.Decimal:
-                    precision = this.OptionalInteger(CsdlConstants.Attribute_Precision);
-                    scale = this.OptionalScale(CsdlConstants.Attribute_Scale);
-                    break;
-
-                case EdmPrimitiveTypeKind.Geography:
-                case EdmPrimitiveTypeKind.GeographyPoint:
-                case EdmPrimitiveTypeKind.GeographyLineString:
-                case EdmPrimitiveTypeKind.GeographyPolygon:
-                case EdmPrimitiveTypeKind.GeographyCollection:
-                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
-                case EdmPrimitiveTypeKind.GeographyMultiLineString:
-                case EdmPrimitiveTypeKind.GeographyMultiPoint:
-                    srid = this.OptionalSrid(CsdlConstants.Attribute_Srid, CsdlConstants.Default_SpatialGeographySrid);
-                    break;
-
-                case EdmPrimitiveTypeKind.Geometry:
-                case EdmPrimitiveTypeKind.GeometryPoint:
-                case EdmPrimitiveTypeKind.GeometryLineString:
-                case EdmPrimitiveTypeKind.GeometryPolygon:
-                case EdmPrimitiveTypeKind.GeometryCollection:
-                case EdmPrimitiveTypeKind.GeometryMultiPolygon:
-                case EdmPrimitiveTypeKind.GeometryMultiLineString:
-                case EdmPrimitiveTypeKind.GeometryMultiPoint:
-                    srid = this.OptionalSrid(CsdlConstants.Attribute_Srid, CsdlConstants.Default_SpatialGeometrySrid);
-                    break;
-            }
         }
 
         private enum Optionality

@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser
 {
@@ -50,7 +54,7 @@ namespace Microsoft.OData.Core.UriParser
             Uri upperCurrent = CreateBaseComparableUri(baseUri);
             Uri upperUri = CreateBaseComparableUri(uri);
 
-            return IsBaseOf(upperCurrent, upperUri);
+            return upperCurrent.IsBaseOf(upperUri);
         }
 
         /// <summary>
@@ -128,28 +132,6 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             return queryOptions;
-        }
-
-        /// <summary>
-        /// is this selection item a structural or navigation property selection item.
-        /// </summary>
-        /// <param name="selectItem">the selection item to check</param>
-        /// <returns>true if this selection item is a structural property selection item.</returns>
-        internal static bool IsStructuralOrNavigationPropertySelectionItem(SelectItem selectItem)
-        {
-            PathSelectItem pathSelectItem = selectItem as PathSelectItem;
-            return pathSelectItem != null && (pathSelectItem.SelectedPath.LastSegment is NavigationPropertySegment || pathSelectItem.SelectedPath.LastSegment is PropertySegment);
-        }
-
-        /// <summary>
-        /// is this selection item a structural selection item.
-        /// </summary>
-        /// <param name="selectItem">the selection item to check</param>
-        /// <returns>true if this selection item is a structural property selection item.</returns>
-        internal static bool IsStructuralSelectionItem(SelectItem selectItem)
-        {
-            PathSelectItem pathSelectItem = selectItem as PathSelectItem;
-            return pathSelectItem != null && (pathSelectItem.SelectedPath.LastSegment is PropertySegment);
         }
 
         /// <summary>
@@ -245,17 +227,6 @@ namespace Microsoft.OData.Core.UriParser
             builder.Port = 80;
             builder.Scheme = "http";
             return builder.Uri;
-        }
-
-        /// <summary>
-        /// Check whether the <paramref name="baseUri"/> Uri is the base of the <paramref name="uri"/> Uri.
-        /// </summary>
-        /// <param name="baseUri">The candidate base Uri.</param>
-        /// <param name="uri">The Uri to check.</param>
-        /// <returns>True if the <paramref name="baseUri"/> is the base of the <paramref name="uri"/> Uri.</returns>
-        private static bool IsBaseOf(Uri baseUri, Uri uri)
-        {
-            return baseUri.IsBaseOf(uri);
         }
     }
 }

@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 using System;
 using System.Collections;
@@ -756,25 +760,6 @@ namespace Microsoft.OData.Edm.Validation.Internal
         private sealed class VisitorOfIEdmTypeDefinition : VisitorOfT<IEdmTypeDefinition>
         {
             protected override IEnumerable<EdmError> VisitT(IEdmTypeDefinition type, List<object> followup, List<object> references)
-            {
-                List<EdmError> errors = null;
-
-                if (type.UnderlyingType != null)
-                {
-                    references.Add(type.UnderlyingType);
-                }
-                else
-                {
-                    CollectErrors(CreatePropertyMustNotBeNullError(type, "UnderlyingType"), ref errors);
-                }
-
-                return errors;
-            }
-        }
-
-        private sealed class VisitorOfIEdmTypeDefinitionWithFacets : VisitorOfT<IEdmTypeDefinitionWithFacets>
-        {
-            protected override IEnumerable<EdmError> VisitT(IEdmTypeDefinitionWithFacets type, List<object> followup, List<object> references)
             {
                 List<EdmError> errors = null;
 

@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Edm {
     using System;
@@ -1675,6 +1679,13 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The value '{0}' is not a valid date value."
+        /// </summary>
+        internal static string ValueParser_InvalidDate(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.ValueParser_InvalidDate,p0);
+        }
+
+        /// <summary>
         /// A string like "The value '{0}' is not a valid duration value."
         /// </summary>
         internal static string ValueParser_InvalidDuration(object p0) {
@@ -1686,6 +1697,13 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string ValueParser_InvalidBinary(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.ValueParser_InvalidBinary,p0);
+        }
+
+        /// <summary>
+        /// A string like "The value '{0}' is not a valid TimeOfDay value."
+        /// </summary>
+        internal static string ValueParser_InvalidTimeOfDay(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.ValueParser_InvalidTimeOfDay,p0);
         }
 
         /// <summary>
@@ -1972,6 +1990,20 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string PlatformHelper_DateTimeOffsetMustContainTimeZone(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.PlatformHelper_DateTimeOffsetMustContainTimeZone,p0);
+        }
+
+        /// <summary>
+        /// A string like "The Year '{0}', Month '{1}' and Day '{2}' parameters describe an un-representable Date."
+        /// </summary>
+        internal static string Date_InvalidDateParameters(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Date_InvalidDateParameters,p0,p1,p2);
+        }
+
+        /// <summary>
+        /// A string like "The Hour '{0}', Minute '{1}', Second '{2}' and FractionalSeconds '{3}' parameters describe an un-representable TimeOfDay."
+        /// </summary>
+        internal static string TimeOfDay_InvalidTimeOfDayParameters(object p0, object p1, object p2, object p3) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.TimeOfDay_InvalidTimeOfDayParameters,p0,p1,p2,p3);
         }
 
     }

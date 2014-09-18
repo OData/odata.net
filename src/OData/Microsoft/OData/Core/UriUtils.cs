@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core
 {
@@ -23,11 +27,6 @@ namespace Microsoft.OData.Core
     /// </summary>
     internal static class UriUtils
     {
-        /// <summary>
-        /// An absolute Uri to use as the base Uri for escaping a Uri fragment.
-        /// </summary>
-        private static Uri ExampleMetadataAbsoluteUri = new Uri("http://www.example.com/$metadata", UriKind.Absolute);
-
         /// <summary>
         /// Returns an absolute URI constructed from the specified base URI and a relative URI
         /// </summary>
@@ -95,15 +94,11 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="fragmentString">The metadata reference property name in question.</param>
         /// <returns>The Uri escaped metadata reference property name.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Method explicitly escapes the fragment string.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values passed to this method are to appear in Uri fragments.")]
         internal static string EnsureEscapedFragment(string fragmentString)
         {
             Debug.Assert(fragmentString[0] == ODataConstants.ContextUriFragmentIndicator, "fragmentString[0] == " + ODataConstants.ContextUriFragmentIndicator);
-
-            // Note if fragmentString contains characters that need escaping, the Uri constructor will escape it.
-            // Uri.AbsoluteUri and Uri.Fragment will return the escaped characters and Uri.OriginalString
-            // will contain the unescaped characters in the fragment.
-            return (new Uri(ExampleMetadataAbsoluteUri, fragmentString)).Fragment;
+            return ODataConstants.ContextUriFragmentIndicator + Uri.EscapeDataString(fragmentString.Substring(1));
         }
 
         /// <summary>

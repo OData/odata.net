@@ -1,17 +1,22 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser.Semantic
 {
     #region Namespaces
 
+    using System;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Core.UriParser.Visitors;
@@ -56,6 +61,19 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <exception cref="System.ArgumentNullException">Throws if the left or right inputs are null.</exception>
         /// <exception cref="ODataException">Throws if the two operands don't have the same type.</exception>
         public BinaryOperatorNode(BinaryOperatorKind operatorKind, SingleValueNode left, SingleValueNode right)
+            : this(operatorKind, left, right, /*typeReference*/ null)
+        {
+        }
+
+        /// <summary>
+        /// Create a BinaryOperatorNode
+        /// </summary>
+        /// <param name="operatorKind">The binary operator type.</param>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <param name="typeReference">The result typeReference.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the left or right inputs are null.</exception>
+        internal BinaryOperatorNode(BinaryOperatorKind operatorKind, SingleValueNode left, SingleValueNode right, IEdmTypeReference typeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(left, "left");
             ExceptionUtils.CheckArgumentNotNull(right, "right");
@@ -63,26 +81,22 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             this.left = left;
             this.right = right;
 
-            // set the TypeReerence based on the Operands.
-            if (this.Left == null || this.Right == null || this.Left.TypeReference == null || this.Right.TypeReference == null)
+            // set the TypeReference if explictly given, otherwise based on the Operands.
+            if (typeReference != null)
+            {
+                this.typeReference = typeReference;
+            }
+            else if (this.Left == null || this.Right == null || this.Left.TypeReference == null || this.Right.TypeReference == null)
             {
                 this.typeReference = null;
             }
             else
             {
-                // Ensure that both operands have the same type
-                if (!this.Left.TypeReference.Definition.IsEquivalentTo(this.Right.TypeReference.Definition))
-                {
-                    throw new ODataException(
-                        ODataErrorStrings.BinaryOperatorQueryNode_OperandsMustHaveSameTypes(
-                            this.Left.TypeReference.ODataFullName(), this.Right.TypeReference.ODataFullName()));
-                }
-
                 // Get a primitive type reference; this must not fail since we checked that the type is of kind 'primitive'.
-                IEdmPrimitiveTypeReference primitiveOperatorTypeReference =
-                    this.Left.TypeReference.AsPrimitive();
+                IEdmPrimitiveTypeReference leftType = this.Left.TypeReference.AsPrimitive();
+                IEdmPrimitiveTypeReference rightType = this.Right.TypeReference.AsPrimitive();
 
-                this.typeReference = QueryNodeUtils.GetBinaryOperatorResultType(primitiveOperatorTypeReference, this.OperatorKind);
+                this.typeReference = QueryNodeUtils.GetBinaryOperatorResultType(leftType, rightType, this.OperatorKind);
             }
         }
 

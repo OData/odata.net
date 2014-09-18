@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 #if !INTERNAL_DROP
 namespace Microsoft.OData.Core.Metadata
@@ -156,8 +160,9 @@ namespace Microsoft.OData.Core.Metadata
         /// </summary>
         /// <param name="functionImports">The operation imports.</param>
         /// <param name="parameterNames">The parameter names.</param>
+        /// <param name="caseInsensitive">Whether to support case insensitive.</param>
         /// <returns>Return the operation imports that match the parameter names.</returns>
-        internal static IEnumerable<IEdmFunctionImport> FilterFunctionsByParameterNames(this IEnumerable<IEdmFunctionImport> functionImports, IEnumerable<string> parameterNames)
+        internal static IEnumerable<IEdmFunctionImport> FilterFunctionsByParameterNames(this IEnumerable<IEdmFunctionImport> functionImports, IEnumerable<string> parameterNames, bool caseInsensitive)
         {
             Debug.Assert(functionImports != null, "functionImports");
             Debug.Assert(parameterNames != null, "parameterNames");
@@ -183,7 +188,7 @@ namespace Microsoft.OData.Core.Metadata
                 }
 
                 // if any parameter was missing, don't consider it a match.
-                if (operationImportParameters.Any(p => parameterNameList.All(k => k != p.Name)))
+                if (operationImportParameters.Any(p => parameterNameList.All(k => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
                 {
                     continue;
                 }
@@ -235,7 +240,7 @@ namespace Microsoft.OData.Core.Metadata
                     IEdmCollectionType operationBindingCollectionType = operationBindingType as IEdmCollectionType;
                     operationBindingStructuralType = operationBindingCollectionType.ElementType.Definition as IEdmStructuredType;
                 }
-                
+
                 if (operationBindingStructuralType == null || !nonCollectionBindingType.IsOrInheritsFrom(operationBindingStructuralType))
                 {
                     continue;
@@ -274,10 +279,11 @@ namespace Microsoft.OData.Core.Metadata
         /// </remarks>
         /// <param name="functions">The list of functions to search.</param>
         /// <param name="parameters">The list of non-binding parameter names to match.</param>
+        /// <param name="caseInsensitive">Whether case insensitive.</param>
         /// <returns>All operation imports matches the parameter names exactly or an empty enumerable.</returns>
-        internal static IEnumerable<IEdmFunction> FilterFunctionsByParameterNames(this IEnumerable<IEdmFunction> functions, IEnumerable<string> parameters)
+        internal static IEnumerable<IEdmFunction> FilterFunctionsByParameterNames(this IEnumerable<IEdmFunction> functions, IEnumerable<string> parameters, bool caseInsensitive = false)
         {
-            return functions.Cast<IEdmOperation>().FilterOperationsByParameterNames(parameters).Cast<IEdmFunction>();
+            return functions.Cast<IEdmOperation>().FilterOperationsByParameterNames(parameters, caseInsensitive).Cast<IEdmFunction>();
         }
 
         /// <summary>
@@ -285,8 +291,9 @@ namespace Microsoft.OData.Core.Metadata
         /// </summary>
         /// <param name="operations">The operations.</param>
         /// <param name="parameters">The parameters.</param>
+        /// <param name="caseInsensitive">Whether case insensitive.</param>
         /// <returns>Operations filtered by parameter.</returns>
-        internal static IEnumerable<IEdmOperation> FilterOperationsByParameterNames(this IEnumerable<IEdmOperation> operations, IEnumerable<string> parameters)
+        internal static IEnumerable<IEdmOperation> FilterOperationsByParameterNames(this IEnumerable<IEdmOperation> operations, IEnumerable<string> parameters, bool caseInsensitive)
         {
             Debug.Assert(operations != null, "operations");
             Debug.Assert(parameters != null, "parameters");
@@ -312,7 +319,7 @@ namespace Microsoft.OData.Core.Metadata
                 }
 
                 // if any parameter was missing, don't consider it a match.
-                if (functionImportParameters.Any(p => parametersList.All(k => k != p.Name)))
+                if (functionImportParameters.Any(p => parametersList.All(k => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
                 {
                     continue;
                 }
@@ -532,7 +539,7 @@ namespace Microsoft.OData.Core.Metadata
         internal static string FullNameWithNonBindingParameters(this IEdmOperation operation)
         {
             Debug.Assert(operation != null, "operation != null");
-            
+
             return operation.FullName() + operation.NonBindingParameterNamesToString();
         }
 
@@ -1758,58 +1765,6 @@ namespace Microsoft.OData.Core.Metadata
             Debug.Assert(primitiveType.TypeKind == EdmTypeKind.Primitive, "Expected primitive type kind.");
             return primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.Stream;
         }
-
-#if !ODATALIB_QUERY || DEBUG
-        /// <summary>
-        /// Checks whether the specified <paramref name="property"/> is defined for the type <paramref name="type"/>.
-        /// </summary>
-        /// <param name="type">The type to check the properties on.</param>
-        /// <param name="property">The property to check for.</param>
-        /// <returns>true if the <paramref name="property"/> is defined for the <paramref name="type"/>; otherwise false.</returns>
-        internal static bool ContainsProperty(this IEdmType type, IEdmProperty property)
-        {
-            Debug.Assert(type != null, "type != null");
-            Debug.Assert(property != null, "property != null");
-
-            IEdmComplexType complexType = type as IEdmComplexType;
-            if (complexType != null)
-            {
-                // NOTE: using Any() instead of Contains() since Contains() does not exist on all platforms
-                return complexType.Properties().Any(p => p == property);
-            }
-
-            IEdmEntityType entityType = type as IEdmEntityType;
-            if (entityType != null)
-            {
-                // NOTE: using Any() instead of Contains() since Contains() does not exist on all platforms
-                return entityType.Properties().Any(p => p == property) ||
-                       entityType.NavigationProperties().Any(p => p == property);
-            }
-
-            // we only support complex and entity types with properties so far
-            return false;
-        }
-
-        /// <summary>
-        /// Checks whether the specified <paramref name="property"/> is defined for the type <paramref name="typeReference"/>.
-        /// </summary>
-        /// <param name="typeReference">The type to check the properties on.</param>
-        /// <param name="property">The property to check for.</param>
-        /// <returns>true if the <paramref name="property"/> is defined for the <paramref name="typeReference"/>; otherwise false.</returns>
-        internal static bool ContainsProperty(this IEdmTypeReference typeReference, IEdmProperty property)
-        {
-            Debug.Assert(typeReference != null, "typeReference != null");
-            Debug.Assert(property != null, "property != null");
-
-            IEdmStructuredTypeReference structuredTypeReference = typeReference.AsStructuredOrNull();
-            if (structuredTypeReference == null)
-            {
-                return false;
-            }
-
-            return ContainsProperty(structuredTypeReference.Definition, property);
-        }
-#endif
 #endif
         #endregion
 
@@ -2198,7 +2153,7 @@ namespace Microsoft.OData.Core.Metadata
                 yield return operation;
             }
         }
-        
+
         /// <summary>
         /// Gets the operation parameter types in string.
         /// </summary>

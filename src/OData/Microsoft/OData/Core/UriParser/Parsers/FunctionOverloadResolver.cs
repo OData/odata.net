@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
@@ -14,8 +18,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Edm;
+    using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>
@@ -31,9 +36,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="parameterNames">the names of the parameters to search for.</param>
         /// <param name="model">the model to use to look up the operation import</param>
         /// <param name="matchingOperationImport">The single matching function found.</param>
+        /// <param name="resolver">Resolver to be used.</param>
         /// <returns>True if a function was matched, false otherwise. Will throw if the model has illegal operation imports.</returns>
         [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
-        internal static bool ResolveOperationImportFromList(string identifier, IList<string> parameterNames, IEdmModel model, out IEdmOperationImport matchingOperationImport)
+        internal static bool ResolveOperationImportFromList(string identifier, IList<string> parameterNames, IEdmModel model, out IEdmOperationImport matchingOperationImport, ODataUriResolver resolver)
         {
             IList<IEdmOperationImport> candidateMatchingOperationImports = null;
             IList<IEdmActionImport> foundActionImportsWhenLookingForFunctions = new List<IEdmActionImport>();
@@ -43,11 +49,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 if (parameterNames.Count > 0)
                 {
                     // In this case we have to return a function so filter out actions because the number of parameters > 0.
-                    candidateMatchingOperationImports = model.FindDeclaredOperationImports(identifier).RemoveActionImports(out foundActionImportsWhenLookingForFunctions).FilterFunctionsByParameterNames(parameterNames).Cast<IEdmOperationImport>().ToList();
+                    candidateMatchingOperationImports = resolver.ResolveOperationImports(model, identifier).RemoveActionImports(out foundActionImportsWhenLookingForFunctions).FilterFunctionsByParameterNames(parameterNames, resolver.EnableCaseInsensitive).Cast<IEdmOperationImport>().ToList();
                 }
                 else
                 {
-                    candidateMatchingOperationImports = model.FindDeclaredOperationImports(identifier).ToList();
+                    candidateMatchingOperationImports = resolver.ResolveOperationImports(model, identifier).ToList();
                 }
             }
             catch (Exception exc)
@@ -119,12 +125,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="bindingType">the type of the previous segment</param>
         /// <param name="model">the model to use to look up the operation import</param>
         /// <param name="matchingOperation">The single matching function found.</param>
+        /// <param name="resolver">Resolver to be used.</param>
         /// <returns>True if a function was matched, false otherwise. Will throw if the model has illegal operation imports.</returns>
         [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
-        internal static bool ResolveOperationFromList(string identifier, IEnumerable<string> parameterNames, IEdmType bindingType, IEdmModel model, out IEdmOperation matchingOperation)
+        internal static bool ResolveOperationFromList(string identifier, IEnumerable<string> parameterNames, IEdmType bindingType, IEdmModel model, out IEdmOperation matchingOperation, ODataUriResolver resolver)
         {
             // TODO: 1631831 - update code that is duplicate between operation and operation import, add more tests.
-
             // If the previous segment is an open type, the service action name is required to be fully qualified or else we always treat it as an open property name.
             if (bindingType != null)
             {
@@ -144,7 +150,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 if (bindingType != null)
                 {
-                    candidateMatchingOperations = model.FindBoundOperations(identifier, bindingType).ToList();
+                    candidateMatchingOperations = resolver.ResolveBoundOperations(model, identifier, bindingType).ToList();
                 }
                 else
                 {
@@ -173,7 +179,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             if (parameterNamesCount > 0)
             {
                 // can only be a function as only functions have parameters on the uri.
-                candidateMatchingOperations = candidateMatchingOperations.RemoveActions(out foundActionsWhenLookingForFunctions).FilterFunctionsByParameterNames(parameterNames).Cast<IEdmOperation>().ToList();
+                candidateMatchingOperations = candidateMatchingOperations.RemoveActions(out foundActionsWhenLookingForFunctions).FilterFunctionsByParameterNames(parameterNames, resolver.EnableCaseInsensitive).Cast<IEdmOperation>().ToList();
             }
             else if (bindingType != null)
             {

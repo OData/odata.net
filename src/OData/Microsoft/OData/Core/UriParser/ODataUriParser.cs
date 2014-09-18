@@ -1,23 +1,26 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>
@@ -39,6 +42,9 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>Query option list</summary>
         private readonly List<CustomQueryOptionToken> queryOptions;
+
+        /// <summary>Store query option dictionary.</summary>
+        private IDictionary<string, string> queryOptionDic;
 
         /// <summary>Parser for query option.</summary>
         private ODataQueryOptionParser queryOptionParser;
@@ -155,6 +161,16 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
+        /// Gets or sets the <see cref="ODataUriResolver"/> for <see cref="ODataUriParser"/>, this resolver is used for
+        /// handling different kinds of <see cref="ODataUriParserContext"/>.
+        /// </summary>
+        public ODataUriResolver Resolver
+        {
+            get { return this.configuration.Resolver; }
+            set { this.configuration.Resolver = value; }
+        }
+
+        /// <summary>
         /// Get the parameter alias nodes info.
         /// </summary>
         public IDictionary<string, SingleValueNode> ParameterAliasNodes
@@ -232,9 +248,10 @@ namespace Microsoft.OData.Core.UriParser
                 return this.entityIdSegment;
             }
 
-            string idQuery = queryOptions.GetQueryOptionValue(UriQueryConstants.IdQueryOption);
+            InitQueryOptionDic();
+            string idQuery;
 
-            if (idQuery == null)
+            if (!queryOptionDic.TryGetValue(UriQueryConstants.IdQueryOption, out idQuery))
             {
                 return null;
             }
@@ -304,9 +321,26 @@ namespace Microsoft.OData.Core.UriParser
         /// See <see cref="ODataUri"/>.
         /// </summary>
         /// <returns>An <see cref="ODataUri"/> representing the full uri.</returns>
-        internal ODataUri ParseUri()
+        public ODataUri ParseUri()
         {
-            return this.ParseUriImplementation();
+            ExceptionUtils.CheckArgumentNotNull(this.configuration.Model, "model");
+            ExceptionUtils.CheckArgumentNotNull(this.fullUri, "fullUri");
+
+            ODataPath path = this.ParsePath();
+            SelectExpandClause selectExpand = this.ParseSelectAndExpand();
+            FilterClause filter = this.ParseFilter();
+            OrderByClause orderBy = this.ParseOrderBy();
+            SearchClause search = this.ParseSearch();
+            long? top = this.ParseTop();
+            long? skip = this.ParseSkip();
+            bool? count = this.ParseCount();
+
+            // TODO:  check it shouldn't be empty
+            List<QueryNode> boundQueryOptions = new List<QueryNode>();
+
+            ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, search, skip, top, count);
+            odataUri.ServiceRoot = this.serviceRoot;
+            return odataUri;
         }
 
         /// <summary>
@@ -370,12 +404,7 @@ namespace Microsoft.OData.Core.UriParser
                 }
             }
 
-            IDictionary<string, string> queryOptionDic = queryOptions == null ?
-                                                            new Dictionary<string, string>(StringComparer.Ordinal) :
-                                                            queryOptions.Where(_ => !string.IsNullOrEmpty(_.Name))
-                                                                .ToDictionary(
-                                                                    customQueryOptionToken => customQueryOptionToken.Name,
-                                                                    customQueryOptionToken => queryOptions.GetQueryOptionValue(customQueryOptionToken.Name));
+            InitQueryOptionDic();
 
             this.queryOptionParser = new ODataQueryOptionParser(this.Model, this.targetEdmType, this.targetNavigationSource, queryOptionDic)
                                         {
@@ -384,21 +413,35 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Parses the full Uri.
+        /// Resolve query options to dictionary.
         /// </summary>
-        /// <returns>An ODataUri representing the full uri</returns>
-        private ODataUri ParseUriImplementation()
+        private void InitQueryOptionDic()
         {
-            ExceptionUtils.CheckArgumentNotNull(this.configuration.Model, "model");
-            ExceptionUtils.CheckArgumentNotNull(this.ServiceRoot, "serviceRoot");
-            ExceptionUtils.CheckArgumentNotNull(this.fullUri, "fullUri");
+            if (queryOptionDic != null)
+            {
+                return;
+            }
 
-            SyntacticTree syntax = SyntacticTree.ParseUri(this.fullUri, this.ServiceRoot, this.Settings.FilterLimit);
-            ExceptionUtils.CheckArgumentNotNull(syntax, "syntax");
-            BindingState state = new BindingState(this.configuration);
-            MetadataBinder binder = new MetadataBinder(state);
-            ODataUriSemanticBinder uriBinder = new ODataUriSemanticBinder(state, binder.Bind);
-            return uriBinder.BindTree(syntax);
+            queryOptionDic = new Dictionary<string, string>(StringComparer.Ordinal);
+
+            if (queryOptions != null)
+            {
+                foreach (var queryOption in queryOptions)
+                {
+                    if (queryOption.Name == null)
+                    {
+                        continue;
+                    }
+
+                    if (queryOptionDic.ContainsKey(queryOption.Name))
+                    {
+                        throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(queryOption.Name));
+                    }
+
+                    string key = this.configuration.EnableCaseInsensitiveBuiltinIdentifier ? queryOption.Name.ToLowerInvariant() : queryOption.Name;
+                    queryOptionDic.Add(key, queryOption.Value);
+                }
+            }
         }
     }
 }

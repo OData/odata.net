@@ -1,39 +1,36 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Edm.Library
 {
-    using System;
-
     /// <summary>
     /// Represents the definition of an Edm type definition.
     /// </summary>
-    public class EdmTypeDefinition : EdmType, IEdmTypeDefinitionWithFacets
+    public class EdmTypeDefinition : EdmType, IEdmTypeDefinition
     {
         private readonly IEdmPrimitiveType underlyingType;
-        private readonly int? maxLength;
-        private readonly bool? isUnicode;
-        private readonly int? precision;
-        private readonly int? scale;
-        private readonly int? srid;
         private readonly string namespaceName;
         private readonly string name;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EdmTypeDefinition"/> class.
+        /// Initializes a new instance of the <see cref="EdmTypeDefinition"/> class with <see cref="EdmPrimitiveTypeKind.Int32"/> underlying type.
         /// </summary>
         /// <param name="namespaceName">Namespace this type definition belongs to.</param>
         /// <param name="name">Name of this type definition.</param>
         /// <param name="underlyingType">The underlying type of this type definition.</param>
         public EdmTypeDefinition(string namespaceName, string name, EdmPrimitiveTypeKind underlyingType)
-            : this(namespaceName, name, underlyingType, null, null, null, null, null)
+            : this(namespaceName, name, EdmCoreModel.Instance.GetPrimitiveType(underlyingType))
         {
         }
 
@@ -44,38 +41,6 @@ namespace Microsoft.OData.Edm.Library
         /// <param name="name">Name of this type definition.</param>
         /// <param name="underlyingType">The underlying type of this type definition.</param>
         public EdmTypeDefinition(string namespaceName, string name, IEdmPrimitiveType underlyingType)
-            : this(namespaceName, name, underlyingType, null, null, null, null, null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EdmTypeDefinition"/> class.
-        /// </summary>
-        /// <param name="namespaceName">Namespace this type definition belongs to.</param>
-        /// <param name="name">Name of this type definition.</param>
-        /// <param name="underlyingType">The underlying type of this type definition.</param>
-        /// <param name="maxLength">Maximum length of a value of this type.</param>
-        /// <param name="isUnicode">Denotes if string is encoded using Unicode.</param>
-        /// <param name="precision">Precision of values with this type.</param>
-        /// <param name="scale">Scale of values with this type.</param>
-        /// <param name="srid">Spatial Reference Identifier for the spatial type being created.</param>
-        public EdmTypeDefinition(string namespaceName, string name, EdmPrimitiveTypeKind underlyingType, int? maxLength, bool? isUnicode, int? precision, int? scale, int? srid)
-            : this(namespaceName, name, EdmCoreModel.Instance.GetPrimitiveType(underlyingType), maxLength, isUnicode, precision, scale, srid)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EdmTypeDefinition"/> class.
-        /// </summary>
-        /// <param name="namespaceName">Namespace this type definition belongs to.</param>
-        /// <param name="name">Name of this type definition.</param>
-        /// <param name="underlyingType">The underlying type of this type definition.</param>
-        /// <param name="maxLength">Maximum length of a value of this type.</param>
-        /// <param name="isUnicode">Denotes if string is encoded using Unicode.</param>
-        /// <param name="precision">Precision of values with this type.</param>
-        /// <param name="scale">Scale of values with this type.</param>
-        /// <param name="srid">Spatial Reference Identifier for the spatial type being created.</param>
-        public EdmTypeDefinition(string namespaceName, string name, IEdmPrimitiveType underlyingType, int? maxLength, bool? isUnicode, int? precision, int? scale, int? srid)
         {
             EdmUtil.CheckArgumentNull(underlyingType, "underlyingType");
             EdmUtil.CheckArgumentNull(namespaceName, "namespaceName");
@@ -84,12 +49,6 @@ namespace Microsoft.OData.Edm.Library
             this.underlyingType = underlyingType;
             this.name = name;
             this.namespaceName = namespaceName;
-
-            this.maxLength = maxLength;
-            this.isUnicode = isUnicode;
-            this.precision = precision;
-            this.scale = scale;
-            this.srid = srid;
         }
 
         /// <summary>
@@ -130,46 +89,6 @@ namespace Microsoft.OData.Edm.Library
         public IEdmPrimitiveType UnderlyingType
         {
             get { return this.underlyingType; }
-        }
-
-        /// <summary>
-        /// Gets the maximum length of the underlying type.
-        /// </summary>
-        public int? MaxLength
-        {
-            get { return this.maxLength; }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the underlying string type supports unicode encoding.
-        /// </summary>
-        public bool? IsUnicode
-        {
-            get { return this.isUnicode; }
-        }
-
-        /// <summary>
-        /// Gets the precision of the underlying type.
-        /// </summary>
-        public int? Precision
-        {
-            get { return this.precision; }
-        }
-
-        /// <summary>
-        /// Gets the scale of the underlying decimal type.
-        /// </summary>
-        public int? Scale
-        {
-            get { return this.scale; }
-        }
-
-        /// <summary>
-        /// Gets the Spatial Reference Identifier of the underlying spatial type.
-        /// </summary>
-        public int? Srid
-        {
-            get { return srid; }
         }
     }
 }

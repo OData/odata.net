@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 using System;
 using System.Collections.Generic;
@@ -639,7 +643,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_TypeDefinition);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, typeDefinition.Name, EdmValueWriter.StringAsXml);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_UnderlyingType, typeDefinition.UnderlyingType, this.TypeDefinitionAsXml);
-            this.WriteTypeDefinitionFacets(typeDefinition as IEdmTypeDefinitionWithFacets);
         }
 
         internal void WriteEndElement()
@@ -699,68 +702,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, binding.Target.Name, EdmValueWriter.StringAsXml);
 
             this.xmlWriter.WriteEndElement();
-        }
-
-        private void WriteTypeDefinitionFacets(IEdmTypeDefinitionWithFacets typeDefinition)
-        {
-            if (typeDefinition == null)
-            {
-                // Not a type definition with facets. No need to write facets.
-                return;
-            }
-
-            switch (typeDefinition.UnderlyingType.PrimitiveKind)
-            {
-                case EdmPrimitiveTypeKind.Binary:
-                    this.WriteOptionalAttribute(CsdlConstants.Attribute_MaxLength, typeDefinition.MaxLength, EdmValueWriter.IntAsXml);
-                    break;
-
-                case EdmPrimitiveTypeKind.String:
-                    this.WriteOptionalAttribute(CsdlConstants.Attribute_MaxLength, typeDefinition.MaxLength, EdmValueWriter.IntAsXml);
-                    this.WriteOptionalAttribute(CsdlConstants.Attribute_Unicode, typeDefinition.IsUnicode, EdmValueWriter.BooleanAsXml);
-                    break;
-
-                case EdmPrimitiveTypeKind.Stream:
-                    this.WriteOptionalAttribute(CsdlConstants.Attribute_MaxLength, typeDefinition.MaxLength, EdmValueWriter.IntAsXml);
-                    break;
-
-                case EdmPrimitiveTypeKind.DateTimeOffset:
-                case EdmPrimitiveTypeKind.Duration:
-                    this.WriteOptionalAttribute(CsdlConstants.Attribute_Precision, typeDefinition.Precision, EdmValueWriter.IntAsXml);
-                    break;
-
-                case EdmPrimitiveTypeKind.Decimal:
-                    this.WriteOptionalAttribute(CsdlConstants.Attribute_Precision, typeDefinition.Precision, EdmValueWriter.IntAsXml);
-
-                    if (typeDefinition.Scale != CsdlConstants.Default_Scale)
-                    {
-                        this.WriteOptionalAttribute(CsdlConstants.Attribute_Scale, typeDefinition.Scale, ScaleAsXml);
-                    }
-
-                    break;
-
-                case EdmPrimitiveTypeKind.Geography:
-                case EdmPrimitiveTypeKind.GeographyPoint:
-                case EdmPrimitiveTypeKind.GeographyLineString:
-                case EdmPrimitiveTypeKind.GeographyPolygon:
-                case EdmPrimitiveTypeKind.GeographyCollection:
-                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
-                case EdmPrimitiveTypeKind.GeographyMultiLineString:
-                case EdmPrimitiveTypeKind.GeographyMultiPoint:
-                    this.WriteOptionalAttribute(CsdlConstants.Attribute_Srid, typeDefinition.Srid, SridAsXml);
-                    break;
-
-                case EdmPrimitiveTypeKind.Geometry:
-                case EdmPrimitiveTypeKind.GeometryPoint:
-                case EdmPrimitiveTypeKind.GeometryLineString:
-                case EdmPrimitiveTypeKind.GeometryPolygon:
-                case EdmPrimitiveTypeKind.GeometryCollection:
-                case EdmPrimitiveTypeKind.GeometryMultiPolygon:
-                case EdmPrimitiveTypeKind.GeometryMultiLineString:
-                case EdmPrimitiveTypeKind.GeometryMultiPoint:
-                    this.WriteOptionalAttribute(CsdlConstants.Attribute_Srid, typeDefinition.Srid, SridAsXml);
-                    break;
-            }
         }
 
         private static string MultiplicityAsXml(EdmMultiplicity endKind)

@@ -1,15 +1,20 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
+    using System;
     using System.Collections.Generic;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
@@ -34,12 +39,19 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private ExpressionLexer lexer;
 
         /// <summary>
+        /// Whether to allow case insensitive for builtin identifier.
+        /// </summary>
+        private bool enableCaseInsensitiveBuiltinIdentifier;
+
+        /// <summary>
         /// Creates an instance of this class to parse options.
         /// </summary>
         /// <param name="maxRecursionDepth">Max recursion depth left.</param>
-        internal ExpandOptionParser(int maxRecursionDepth)
+        /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
+        internal ExpandOptionParser(int maxRecursionDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
         {
             this.maxRecursionDepth = maxRecursionDepth;
+            this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
         }
 
         /// <summary>
@@ -93,7 +105,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 // Look for all the supported query options
                 while (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
                 {
-                    switch (this.lexer.CurrentToken.Text)
+                    string text = this.enableCaseInsensitiveBuiltinIdentifier
+                        ? this.lexer.CurrentToken.Text.ToLowerInvariant()
+                        : this.lexer.CurrentToken.Text;
+                    switch (text)
                     {
                         case ExpressionConstants.QueryOptionFilter:
                             {
@@ -101,7 +116,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 this.lexer.NextToken();
                                 string filterText = this.ReadQueryOption();
 
-                                UriQueryExpressionParser filterParser = new UriQueryExpressionParser(this.MaxFilterDepth);
+                                UriQueryExpressionParser filterParser = new UriQueryExpressionParser(this.MaxFilterDepth, enableCaseInsensitiveBuiltinIdentifier);
                                 filterOption = filterParser.ParseFilter(filterText);
                                 break;
                             }
@@ -112,7 +127,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 this.lexer.NextToken();
                                 string orderByText = this.ReadQueryOption();
 
-                                UriQueryExpressionParser orderbyParser = new UriQueryExpressionParser(this.MaxOrderByDepth);
+                                UriQueryExpressionParser orderbyParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
                                 orderByOptions = orderbyParser.ParseOrderBy(orderByText);
                                 break;
                             }
@@ -186,7 +201,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 string levelsText = this.ReadQueryOption();
                                 long level;
 
-                                if (string.CompareOrdinal(ExpressionConstants.KeywordMax, levelsText) == 0)
+                                if (string.Equals(
+                                    ExpressionConstants.KeywordMax,
+                                    levelsText,
+                                    this.enableCaseInsensitiveBuiltinIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                                 {
                                     levelsOption = long.MinValue;
                                 }
@@ -220,7 +238,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 this.lexer.NextToken();
                                 string selectText = this.ReadQueryOption();
 
-                                SelectExpandParser innerSelectParser = new SelectExpandParser(selectText, this.maxRecursionDepth);
+                                SelectExpandParser innerSelectParser = new SelectExpandParser(selectText, this.maxRecursionDepth, enableCaseInsensitiveBuiltinIdentifier);
                                 selectOption = innerSelectParser.ParseSelect();
                                 break;
                             }
@@ -231,7 +249,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 this.lexer.NextToken();
                                 string expandText = this.ReadQueryOption();
 
-                                SelectExpandParser innerExpandParser = new SelectExpandParser(expandText, this.maxRecursionDepth - 1);
+                                SelectExpandParser innerExpandParser = new SelectExpandParser(expandText, this.maxRecursionDepth - 1, enableCaseInsensitiveBuiltinIdentifier);
                                 expandOption = innerExpandParser.ParseExpand();
                                 break;
                             }

@@ -1,18 +1,23 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser
 {
     using System;
-    using Microsoft.OData.Edm;
+    using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Internal class for storing all the configuration information about the URI parser. Allows us to flow these values around without passing an actual parser.
@@ -27,6 +32,9 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>The conventions to use when parsing URLs.</summary>
         private ODataUrlConventions urlConventions = ODataUrlConventions.Default;
 
+        /// <summary>The resolver to use when parsing URLs.</summary>
+        private ODataUriResolver uriResolver = new ODataUriResolver();
+
         /// <summary>
         /// Initializes a new instance of <see cref="ODataUriParserConfiguration"/>.
         /// </summary>
@@ -37,8 +45,10 @@ namespace Microsoft.OData.Core.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            this.model = model;            
+            this.model = model;
             this.Settings = new ODataUriParserSettings();
+            this.EnableUriTemplateParsing = false;
+            this.EnableCaseInsensitiveBuiltinIdentifier = false;
         }
 
         /// <summary>
@@ -79,6 +89,22 @@ namespace Microsoft.OData.Core.UriParser
         public Func<string, BatchReferenceSegment> BatchReferenceCallback { get; set; }
 
         /// <summary>
+        /// Whether to allow case insensitive for builtin identifier.
+        /// </summary>
+        internal bool EnableCaseInsensitiveBuiltinIdentifier
+        {
+            get
+            {
+                return Resolver.EnableCaseInsensitive;
+            }
+
+            set
+            {
+                Resolver.EnableCaseInsensitive = value;
+            }
+        }
+
+        /// <summary>
         /// Whether Uri template parsing is enabled. See <see cref="UriTemplateExpression"/> class for detail.
         /// </summary>
         internal bool EnableUriTemplateParsing { get; set; }
@@ -87,5 +113,22 @@ namespace Microsoft.OData.Core.UriParser
         /// Gets or sets the parameter aliases info for MetadataBinder to resolve parameter alias' metadata type.
         /// </summary>
         internal ParameterAliasValueAccessor ParameterAliasValueAccessor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="ODataUriResolver"/>.
+        /// </summary>
+        internal ODataUriResolver Resolver
+        {
+            get
+            {
+                return this.uriResolver;
+            }
+
+            set
+            {
+                ExceptionUtils.CheckArgumentNotNull(value, "Resolver");
+                this.uriResolver = value;
+            }
+        }
     }
 }

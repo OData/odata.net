@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser
 {
@@ -65,6 +69,16 @@ namespace Microsoft.OData.Core.UriParser
             new FunctionSignature(EdmCoreModel.Instance.GetDecimal(true), EdmCoreModel.Instance.GetDecimal(true)),
         };
 
+        /// <summary>
+        /// Signature for add
+        /// </summary>
+        private static readonly FunctionSignature[] AdditionSignatures = arithmeticSignatures.Concat(GetAdditionTermporalSignatures()).ToArray();
+
+        /// <summary>
+        /// Signature for sub
+        /// </summary>
+        private static readonly FunctionSignature[] SubtractionSignatures = arithmeticSignatures.Concat(GetSubtractionTermporalSignatures()).ToArray();
+
         /// <summary>Function signatures for relational operators (eq, ne, lt, le, gt, ge).</summary>
         private static readonly FunctionSignature[] relationalSignatures = new FunctionSignature[]
         {
@@ -104,6 +118,8 @@ namespace Microsoft.OData.Core.UriParser
             new FunctionSignature(EdmCoreModel.Instance.GetDouble(true)),
             new FunctionSignature(EdmCoreModel.Instance.GetDecimal(false)),
             new FunctionSignature(EdmCoreModel.Instance.GetDecimal(true)),
+            new FunctionSignature(EdmCoreModel.Instance.GetDuration(false)),
+            new FunctionSignature(EdmCoreModel.Instance.GetDuration(true)),
         };
 
         /// <summary>Numeric type kinds.</summary>
@@ -430,6 +446,34 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
+        /// function signatures for temporal
+        /// </summary>
+        /// <returns>temporal function signatures for temporal for add</returns>
+        private static IEnumerable<FunctionSignature> GetAdditionTermporalSignatures()
+        {
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(false), EdmCoreModel.Instance.GetDuration(false));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(true), EdmCoreModel.Instance.GetDuration(true));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDateTimeOffset(false));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDateTimeOffset(true));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDuration(false));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDuration(true));
+        }
+
+        /// <summary>
+        /// function signatures for temporal
+        /// </summary>
+        /// <returns>temporal function signatures for temporal for sub</returns>
+        private static IEnumerable<FunctionSignature> GetSubtractionTermporalSignatures()
+        {
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(false), EdmCoreModel.Instance.GetDuration(false));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(true), EdmCoreModel.Instance.GetDuration(true));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDuration(false));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDuration(true));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(false), EdmCoreModel.Instance.GetDateTimeOffset(false));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(true), EdmCoreModel.Instance.GetDateTimeOffset(true));
+        }
+
+        /// <summary>
         /// Gets the correct set of function signatures for type promotion for a given binary operator.
         /// </summary>
         /// <param name="operatorKind">The operator kind to get the signatures for.</param>
@@ -450,8 +494,12 @@ namespace Microsoft.OData.Core.UriParser
                 case BinaryOperatorKind.LessThanOrEqual:
                     return relationalSignatures;
 
-                case BinaryOperatorKind.Add:                // fall through
-                case BinaryOperatorKind.Subtract:           // fall through
+                case BinaryOperatorKind.Add:
+                    return AdditionSignatures;
+
+                case BinaryOperatorKind.Subtract:
+                    return SubtractionSignatures;
+
                 case BinaryOperatorKind.Multiply:           // fall through
                 case BinaryOperatorKind.Divide:             // fall through
                 case BinaryOperatorKind.Modulo:             // fall through

@@ -1,16 +1,20 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Client
 {
-#region Namespaces
+    #region Namespaces
 
     using System;
     using System.Collections.Generic;
@@ -19,7 +23,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Threading;
     using Microsoft.OData.Client.Metadata;
-#endregion
+    #endregion
 
     /// <summary>Type of property stored in BindingPropertyInfo.</summary>
     internal enum BindingPropertyKind
@@ -152,7 +156,7 @@ namespace Microsoft.OData.Client
                     // entity type paramenter T, and is assignable to DataServiceCollection<T>
                     Type[] parms = type.GetGenericArguments();
 
-                    if (parms != null && parms.Length == 1 && IsEntityType(parms[0], model))
+                    if (parms != null && parms.Length == 1 && ClientTypeUtil.TypeOrElementTypeIsEntity(parms[0]))
                     {
                         // if ObservableCollection is not available dataServiceCollection will be null
                         Type dataServiceCollection = WebUtil.GetDataServiceCollectionOfT(parms);
@@ -315,7 +319,7 @@ namespace Microsoft.OData.Client
             // There must be exactly one (unambiguous) EntitySetAttribute attribute.
             bindingEntityInfo.EntitySet = entitySetAttribute != null ? entitySetAttribute.EntitySet : null;
             bindingEntityInfo.ClientType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityType));
-            
+
             foreach (ClientPropertyAnnotation p in bindingEntityInfo.ClientType.Properties())
             {
                 BindingPropertyInfo bpi = null;

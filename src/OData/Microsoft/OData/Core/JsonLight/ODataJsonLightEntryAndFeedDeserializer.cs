@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.JsonLight
 {
@@ -323,7 +327,13 @@ namespace Microsoft.OData.Core.JsonLight
                                     break;
 
                                 case PropertyParsingResult.MetadataReferenceProperty:
-                                    throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                    if (!(feed is ODataFeed))
+                                    {
+                                        throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                    }
+
+                                    this.ReadMetadataReferencePropertyValue((ODataFeed)feed, propertyName);
+                                    break;
 
                                 default:
                                     throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonLightEntryAndFeedDeserializer_ReadTopLevelFeedAnnotations));
@@ -502,7 +512,7 @@ namespace Microsoft.OData.Core.JsonLight
                     Debug.Assert(
                         !this.MessageReaderSettings.ShouldSkipAnnotation(annotationName),
                         "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                    return this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, annotationName, false);
+                    return this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, annotationName);
             }
         }
 
@@ -627,7 +637,7 @@ namespace Microsoft.OData.Core.JsonLight
                     Debug.Assert(
                         !this.MessageReaderSettings.ShouldSkipAnnotation(annotationName),
                         "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                    object instanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, annotationName, false);
+                    object instanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, annotationName);
                     feed.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotationName, instanceAnnotationValue.ToODataValue()));
                     break;
             }
@@ -1113,7 +1123,7 @@ namespace Microsoft.OData.Core.JsonLight
             ODataEntry entry = entryState.Entry;
             Debug.Assert(entry != null, "entry != null");
 
-            ODataEntityMetadataBuilder builder = this.MetadataContext.GetEntityMetadataBuilderForReader(entryState);
+            ODataEntityMetadataBuilder builder = this.MetadataContext.GetEntityMetadataBuilderForReader(entryState, this.JsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
             mediaResource.SetMetadataBuilder(builder, /*propertyName*/ null);
             entry.MediaResource = mediaResource;
         }
@@ -1465,7 +1475,7 @@ namespace Microsoft.OData.Core.JsonLight
                 }
             }
 
-            ODataEntityMetadataBuilder builder = this.MetadataContext.GetEntityMetadataBuilderForReader(entryState);
+            ODataEntityMetadataBuilder builder = this.MetadataContext.GetEntityMetadataBuilderForReader(entryState, this.JsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
 
             // Note that we set the metadata builder even when streamProperty is null, which is the case when the stream property is undeclared.
             // For undeclared stream properties, we will apply conventional metadata evaluation just as declared stream properties.
@@ -1568,13 +1578,94 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// Reads one operation for the feed being read.
+        /// </summary>
+        /// <param name="feed">The feed to read.</param>
+        /// <param name="metadataReferencePropertyName">The name of the metadata reference property being read.</param>
+        /// <param name="insideArray">true if the operation value is inside an array, i.e. multiple targets for the operation; false otherwise.</param>
+        private void ReadSingleOperationValue(ODataFeed feed, string metadataReferencePropertyName, bool insideArray)
+        {
+            Debug.Assert(feed != null, "feed != null");
+            Debug.Assert(!string.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
+            Debug.Assert(ODataJsonLightUtils.IsMetadataReferenceProperty(metadataReferencePropertyName), "ODataJsonLightReaderUtils.IsMetadataReferenceProperty(metadataReferencePropertyName)");
+
+            if (this.JsonReader.NodeType != JsonNodeType.StartObject)
+            {
+                throw new ODataException(ODataErrorStrings.ODataJsonOperationsDeserializerUtils_OperationsPropertyMustHaveObjectValue(metadataReferencePropertyName, this.JsonReader.NodeType));
+            }
+
+            // read over the start-object node of the metadata object for the operations
+            this.JsonReader.ReadStartObject();
+
+            var operation = this.CreateODataOperationAndAddToFeed(feed, metadataReferencePropertyName);
+
+            // Ignore the unrecognized operation.
+            if (operation == null)
+            {
+                while (this.JsonReader.NodeType == JsonNodeType.Property)
+                {
+                    this.JsonReader.ReadPropertyName();
+                    this.JsonReader.SkipValue();
+                }
+
+                this.JsonReader.ReadEndObject();
+                return;
+            }
+
+            Debug.Assert(operation.Metadata != null, "operation.Metadata != null");
+
+            while (this.JsonReader.NodeType == JsonNodeType.Property)
+            {
+                string operationPropertyName = ODataAnnotationNames.RemoveAnnotationPrefix(this.JsonReader.ReadPropertyName());
+                switch (operationPropertyName)
+                {
+                    case JsonConstants.ODataOperationTitleName:
+                        if (operation.Title != null)
+                        {
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_MultipleOptionalPropertiesInOperation(operationPropertyName, metadataReferencePropertyName));
+                        }
+
+                        string titleString = this.JsonReader.ReadStringValue(JsonConstants.ODataOperationTitleName);
+                        ODataJsonLightValidationUtils.ValidateOperationPropertyValueIsNotNull(titleString, operationPropertyName, metadataReferencePropertyName);
+                        operation.Title = titleString;
+                        break;
+
+                    case JsonConstants.ODataOperationTargetName:
+                        if (operation.Target != null)
+                        {
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_MultipleOptionalPropertiesInOperation(operationPropertyName, metadataReferencePropertyName));
+                        }
+
+                        string targetString = this.JsonReader.ReadStringValue(JsonConstants.ODataOperationTargetName);
+                        ODataJsonLightValidationUtils.ValidateOperationPropertyValueIsNotNull(targetString, operationPropertyName, metadataReferencePropertyName);
+                        operation.Target = this.ProcessUriFromPayload(targetString);
+                        break;
+
+                    default:
+                        // skip over all unknown properties and read the next property or 
+                        // the end of the metadata for the current propertyName
+                        this.JsonReader.SkipValue();
+                        break;
+                }
+            }
+
+            if (operation.Target == null && insideArray)
+            {
+                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_OperationMissingTargetProperty(metadataReferencePropertyName));
+            }
+
+            // read the end-object node of the target / title pair
+            this.JsonReader.ReadEndObject();
+        }
+
+        /// <summary>
         /// Sets the metadata builder for the operation.
         /// </summary>
         /// <param name="entryState">The state of the reader for entry to read.</param>
         /// <param name="operation">The operation to set the metadata builder on.</param>
         private void SetMetadataBuilder(IODataJsonLightReaderEntryState entryState, ODataOperation operation)
         {
-            ODataEntityMetadataBuilder builder = this.MetadataContext.GetEntityMetadataBuilderForReader(entryState);
+            ODataEntityMetadataBuilder builder = this.MetadataContext.GetEntityMetadataBuilderForReader(entryState, this.JsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
             operation.SetMetadataBuilder(builder, this.ContextUriParseResult.MetadataDocumentUri);
         }
 
@@ -1606,6 +1697,39 @@ namespace Microsoft.OData.Core.JsonLight
             else
             {
                 readerContext.AddFunctionToEntry((ODataFunction)operation);
+            }
+
+            return operation;
+        }
+
+        /// <summary>
+        /// Creates a new instance of ODataAction or ODataFunction for the <paramref name="metadataReferencePropertyName"/>.
+        /// </summary>
+        /// <param name="feed">The feed to add the action or function .</param>
+        /// <param name="metadataReferencePropertyName">The name of the metadata reference property being read.</param>
+        /// <returns>A new instance of ODataAction or ODataFunction for the <paramref name="metadataReferencePropertyName"/>.</returns>
+        private ODataOperation CreateODataOperationAndAddToFeed(ODataFeed feed, string metadataReferencePropertyName)
+        {
+            string fullyQualifiedOperationName = ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(this.ContextUriParseResult.MetadataDocumentUri, metadataReferencePropertyName);
+            IEdmOperation firstActionOrFunction = this.JsonLightInputContext.Model.ResolveOperations(fullyQualifiedOperationName).FirstOrDefault();
+
+            bool isAction;
+
+            if (firstActionOrFunction == null)
+            {
+                // Ignore the unknown function/action.
+                return null;
+            }
+
+            var operation = ODataJsonLightUtils.CreateODataOperation(this.ContextUriParseResult.MetadataDocumentUri, metadataReferencePropertyName, firstActionOrFunction, out isAction);
+
+            if (isAction)
+            {
+                feed.AddAction((ODataAction)operation);
+            }
+            else
+            {
+                feed.AddFunction((ODataFunction)operation);
             }
 
             return operation;
@@ -1654,6 +1778,45 @@ namespace Microsoft.OData.Core.JsonLight
             if (insideArray)
             {
                 readerContext.JsonReader.ReadEndArray();
+            }
+
+            this.JsonReader.AssertNotBuffering();
+            this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+        }
+
+        /// <summary>
+        /// Read the metadata reference property value for the feed being read.
+        /// </summary>
+        /// <param name="feed">The feed to read.</param>
+        /// <param name="metadataReferencePropertyName">The name of the metadata reference property being read.</param>
+        private void ReadMetadataReferencePropertyValue(ODataFeed feed, string metadataReferencePropertyName)
+        {
+            Debug.Assert(feed != null, "feed != null");
+            Debug.Assert(!string.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
+            Debug.Assert(metadataReferencePropertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator) > -1, "metadataReferencePropertyName.IndexOf(JsonLightConstants.ContextUriFragmentIndicator) > -1");
+            this.JsonReader.AssertNotBuffering();
+
+            this.ValidateCanReadMetadataReferenceProperty();
+
+            // Validate that the property name is a valid absolute URI or a valid URI fragment.
+            ODataJsonLightValidationUtils.ValidateMetadataReferencePropertyName(this.ContextUriParseResult.MetadataDocumentUri, metadataReferencePropertyName);
+
+            bool insideArray = false;
+            if (this.JsonReader.NodeType == JsonNodeType.StartArray)
+            {
+                this.JsonReader.ReadStartArray();
+                insideArray = true;
+            }
+
+            do
+            {
+                this.ReadSingleOperationValue(feed, metadataReferencePropertyName, insideArray);
+            }
+            while (insideArray && this.JsonReader.NodeType != JsonNodeType.EndArray);
+
+            if (insideArray)
+            {
+                this.JsonReader.ReadEndArray();
             }
 
             this.JsonReader.AssertNotBuffering();

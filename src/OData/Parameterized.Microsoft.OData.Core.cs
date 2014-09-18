@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core {
     using System;
@@ -4512,29 +4516,6 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "Setting a metadata annotation on a primitive type is not supported."
-        /// </summary>
-        internal static string ODataQueryUtils_CannotSetMetadataAnnotationOnPrimitiveType {
-            get {
-                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataQueryUtils_CannotSetMetadataAnnotationOnPrimitiveType);
-            }
-        }
-
-        /// <summary>
-        /// A string like "An entity set with name '{0}' could not be found in the provided model."
-        /// </summary>
-        internal static string ODataQueryUtils_DidNotFindEntitySet(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataQueryUtils_DidNotFindEntitySet,p0);
-        }
-
-        /// <summary>
-        /// A string like "Both operands of a binary operators must have the same type. Found different operand types '{0}' and '{1}'."
-        /// </summary>
-        internal static string BinaryOperatorQueryNode_OperandsMustHaveSameTypes(object p0, object p1) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.BinaryOperatorQueryNode_OperandsMustHaveSameTypes,p0,p1);
-        }
-
-        /// <summary>
         /// A string like "The specified URI '{0}' must be absolute."
         /// </summary>
         internal static string SyntacticTree_UriMustBeAbsolute(object p0) {
@@ -5313,6 +5294,20 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "The handler property for context '{0}' should not return null."
+        /// </summary>
+        internal static string UriParser_ContextHandlerCanNotBeNull(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriParser_ContextHandlerCanNotBeNull,p0);
+        }
+
+        /// <summary>
+        /// A string like "More than one property match the name '{0}' were found in type '{1}'."
+        /// </summary>
+        internal static string UriParserMetadata_MultiplePropertiesFound(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriParserMetadata_MultiplePropertiesFound,p0,p1);
+        }
+
+        /// <summary>
         /// A string like "The request URI is not valid. $ref cannot be applied to the segment '{0}' since $ref can only follow an entity segment or entity collection segment."
         /// </summary>
         internal static string PathParser_EntityReferenceNotSupported(object p0) {
@@ -5333,6 +5328,13 @@ namespace Microsoft.OData.Core {
         /// </summary>
         internal static string PathParser_TypeMustBeRelatedToSet(object p0, object p1, object p2) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.PathParser_TypeMustBeRelatedToSet,p0,p1,p2);
+        }
+
+        /// <summary>
+        /// A string like "Type cast segment '{0}' after a collection which is not of entity type is not allowed."
+        /// </summary>
+        internal static string PathParser_TypeCastOnlyAllowedAfterEntityCollection(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.PathParser_TypeCastOnlyAllowedAfterEntityCollection,p0);
         }
 
         /// <summary>

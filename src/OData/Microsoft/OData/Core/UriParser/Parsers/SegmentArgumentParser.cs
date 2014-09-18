@@ -1,20 +1,27 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
 
@@ -180,74 +187,71 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>Tries to convert values to the keys of the specified type.</summary>
-        /// <param name="keyProperties">The key properties to use for the conversion.</param>
+        /// <param name="targetEntityType">The specified type.</param>
         /// <param name="keyPairs">The converted key-value pairs.</param>
+        /// <param name="resolver">The resolver to use.</param>
         /// <returns>true if all values were converted; false otherwise.</returns>
-        internal bool TryConvertValues(IList<IEdmStructuralProperty> keyProperties, out IEnumerable<KeyValuePair<string, object>> keyPairs)
+        internal bool TryConvertValues(IEdmEntityType targetEntityType, out IEnumerable<KeyValuePair<string, object>> keyPairs, ODataUriResolver resolver)
         {
             Debug.Assert(!this.IsEmpty, "!this.IsEmpty -- caller should check");
-            Debug.Assert(keyProperties.Count == this.ValueCount, "type.KeyProperties.Count == this.ValueCount -- will change with containment");
+            IList<IEdmStructuralProperty> keyProperties = targetEntityType.Key().ToList();
+            Debug.Assert(keyProperties.Count == this.ValueCount || resolver.GetType() != typeof(ODataUriResolver), "type.KeyProperties.Count == this.ValueCount -- will change with containment");
 
             if (this.NamedValues != null)
             {
-                var convertedPairs = new Dictionary<string, object>(StringComparer.Ordinal);
-                keyPairs = convertedPairs;
-
-                foreach (IEdmStructuralProperty property in keyProperties)
-                {
-                    string valueText;
-                    if (!this.NamedValues.TryGetValue(property.Name, out valueText))
-                    {
-                        return false;
-                    }
-
-                    Debug.Assert(property.Type.IsPrimitive() || property.Type.IsTypeDefinition(), "Keys can only be primitive or type definition");
-                    object convertedValue;
-                    bool result = TryConvertValue(property.Type.AsPrimitive(), valueText, out convertedValue);
-                    if (!result)
-                    {
-                        return false;
-                    }
-
-                    convertedPairs[property.Name] = convertedValue;
-                }
+                keyPairs = resolver.ResolveKeys(targetEntityType, this.NamedValues, this.ConvertValueWrapper);
             }
             else
             {
                 Debug.Assert(this.positionalValues != null, "positionalValues != null -- otherwise this is Empty");
-                Debug.Assert(this.PositionalValues.Count == keyProperties.Count, "Count of positional values does not match.");
-
-                var keyPairList = new List<KeyValuePair<string, object>>(this.positionalValues.Count);
-                keyPairs = keyPairList;
-
-                for (int i = 0; i < keyProperties.Count; i++)
-                {
-                    string valueText = (string)this.positionalValues[i];
-                    IEdmProperty keyProperty = keyProperties[i];
-                    object convertedValue;
-                    bool result = TryConvertValue(keyProperty.Type.AsPrimitive(), valueText, out convertedValue);
-                    if (!result)
-                    {
-                        return false;
-                    }
-
-                    keyPairList.Add(new KeyValuePair<string, object>(keyProperty.Name, convertedValue));
-                }
+                Debug.Assert(this.PositionalValues.Count == keyProperties.Count || resolver.GetType() != typeof(ODataUriResolver), "Count of positional values does not match.");
+                keyPairs = resolver.ResolveKeys(targetEntityType, this.PositionalValues, this.ConvertValueWrapper);
             }
 
             return true;
         }
 
         /// <summary>
+        /// Wrapper for TryConvertValue
+        /// </summary>
+        /// <param name="typeReference">the type to convert to (primitive or enum type)</param>
+        /// <param name="valueText">the value to convert</param>
+        /// <returns>Converted value, null if fails.</returns>
+        private object ConvertValueWrapper(IEdmTypeReference typeReference, string valueText)
+        {
+            object value;
+            if (!this.TryConvertValue(typeReference, valueText, out value))
+            {
+                return null;
+            }
+
+            return value;
+        }
+
+        /// <summary>
         /// Try to convert a value into an EDM primitive type, if template parsing enabled, the <paramref name="valueText"/> matching
         /// template would be converted into corresponding UriTemplateExpression.
         /// </summary>
-        /// <param name="primitiveType">the type to convert to</param>
+        /// <param name="typeReference">the type to convert to (primitive or enum type)</param>
         /// <param name="valueText">the value to convert</param>
         /// <param name="convertedValue">The converted value, if conversion succeeded.</param>
         /// <returns>true if the conversion was successful.</returns>
-        private bool TryConvertValue(IEdmPrimitiveTypeReference primitiveType, string valueText, out object convertedValue)
+        private bool TryConvertValue(IEdmTypeReference typeReference, string valueText, out object convertedValue)
         {
+            if (typeReference.IsEnum())
+            {
+                QueryNode enumNode = null;
+                if (EnumBinder.TryBindIdentifier(valueText, typeReference.AsEnum(), null, out enumNode))
+                {
+                    convertedValue = enumNode;
+                    return true;
+                }
+
+                convertedValue = null;
+                return false;
+            }
+
+            IEdmPrimitiveTypeReference primitiveType = typeReference.AsPrimitive();
             UriTemplateExpression expression;
             if (this.enableUriTemplateParsing && UriTemplateParser.TryParseLiteral(valueText, primitiveType, out expression))
             {
@@ -282,96 +286,82 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             Dictionary<string, string> namedValues = null;
             List<string> positionalValues = null;
-            ExpressionLexer lexer = new ExpressionLexer(text, true, false);
-            ExpressionToken currentToken = lexer.CurrentToken;
-            if (currentToken.Kind == ExpressionTokenKind.End)
+
+            // parse keys just like function parameters
+            ExpressionLexer lexer = new ExpressionLexer("(" + text + ")", true, false);
+            UriQueryExpressionParser exprParser = new UriQueryExpressionParser(ODataUriParserSettings.DefaultFilterLimit /* default limit for parsing key value */, lexer);
+            var tmp = (new FunctionCallParser(lexer, exprParser)).ParseArgumentListOrEntityKeyList();
+            if (lexer.CurrentToken.Kind != ExpressionTokenKind.End)
+            {
+                instance = null;
+                return false;
+            }
+
+            if (tmp.Length == 0)
             {
                 instance = Empty;
                 return true;
             }
 
-            instance = null;
-            do
+            string valueText = null;
+            foreach (FunctionParameterToken t in tmp)
             {
-                if (currentToken.Kind == ExpressionTokenKind.Identifier && allowNamedValues)
+                valueText = null;
+                LiteralToken literalToken = t.ValueToken as LiteralToken;
+                if (literalToken != null)
                 {
-                    // Name-value pair.
-                    if (positionalValues != null)
+                    valueText = literalToken.OriginalText;
+
+                    // disallow "{...}" if enableUriTemplateParsing is false (which could have been seen as valid function parameter, e.g. array notation)
+                    if (UriTemplateParser.IsValidTemplateLiteral(valueText) && !enableUriTemplateParsing)
                     {
-                        // We cannot mix named and non-named values.
+                        instance = null;
                         return false;
                     }
-
-                    string identifier = lexer.CurrentToken.GetIdentifier();
-                    lexer.NextToken();
-                    if (lexer.CurrentToken.Kind != ExpressionTokenKind.Equal)
-                    {
-                        return false;
-                    }
-
-                    lexer.NextToken();
-                    if (!IsKeyValueToken(lexer.CurrentToken, enableUriTemplateParsing))
-                    {
-                        return false;
-                    }
-
-                    string namedValue = lexer.CurrentToken.Text;
-                    CreateIfNull(ref namedValues);
-                    if (namedValues.ContainsKey(identifier))
-                    {
-                        // Duplicate name.
-                        return false;
-                    }
-
-                    namedValues.Add(identifier, namedValue);
-                }
-                else if ((IsKeyValueToken(currentToken, enableUriTemplateParsing) || (allowNull && currentToken.Kind == ExpressionTokenKind.NullLiteral)))
-                {
-                    // Positional value.
-                    if (namedValues != null)
-                    {
-                        // We cannot mix named and non-named values.
-                        return false;
-                    }
-
-                    CreateIfNull(ref positionalValues);
-                    positionalValues.Add(lexer.CurrentToken.Text);
                 }
                 else
                 {
-                    return false;
-                }
-
-                // Read the next token. We should be at the end, or find
-                // we have a comma followed by something.
-                lexer.NextToken();
-                currentToken = lexer.CurrentToken;
-                if (currentToken.Kind == ExpressionTokenKind.Comma)
-                {
-                    lexer.NextToken();
-                    currentToken = lexer.CurrentToken;
-                    if (currentToken.Kind == ExpressionTokenKind.End)
+                    DottedIdentifierToken dottedIdentifierToken = t.ValueToken as DottedIdentifierToken; // for enum
+                    if (dottedIdentifierToken != null)
                     {
-                        // Trailing comma.
-                        return false;
+                        valueText = dottedIdentifierToken.Identifier;
                     }
                 }
+
+                if (valueText != null)
+                {
+                    if (t.ParameterName == null)
+                    {
+                        if (namedValues != null)
+                        {
+                            instance = null; // We cannot mix named and non-named values.
+                            return false;
+                        }
+
+                        CreateIfNull(ref positionalValues);
+                        positionalValues.Add(valueText);
+                    }
+                    else
+                    {
+                        if (positionalValues != null)
+                        {
+                            instance = null; // We cannot mix named and non-named values.
+                            return false;
+                        }
+
+                        CreateIfNull(ref namedValues);
+                        namedValues.Add(t.ParameterName, valueText);
+                    }
+                }
+                else
+                {
+                    instance = null;
+                    return false;
+                }
             }
-            while (currentToken.Kind != ExpressionTokenKind.End);
 
             instance = new SegmentArgumentParser(namedValues, positionalValues, false, enableUriTemplateParsing);
             return true;
-        }
-
-        /// <summary>
-        /// Whether given token is valid for keyPropertyValue, allow Uri template {key} if template parsing is enabled
-        /// </summary>
-        /// <param name="token">The literal token to be evaluated.</param>
-        /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
-        /// <returns>Whether token is valid for keyPropertyValue.</returns>
-        private static bool IsKeyValueToken(ExpressionToken token, bool enableUriTemplateParsing)
-        {
-            return token.IsKeyValueToken || (enableUriTemplateParsing && UriTemplateParser.IsValidTemplateLiteral(token.Text));
         }
 
         /// <summary>Creates a new instance if the specified value is null.</summary>

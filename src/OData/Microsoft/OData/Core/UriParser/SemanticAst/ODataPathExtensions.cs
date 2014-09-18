@@ -1,16 +1,23 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser.Semantic
 {
     using System.Collections.Generic;
+    using System.Linq;
+    using Microsoft.OData.Core.Evaluation;
+    using Microsoft.OData.Core.UriBuilder;
     using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Metadata;
@@ -145,30 +152,25 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 
         /// <summary>
         /// Get the string representation of <see cref="ODataPath"/>.
+        /// mainly translate Context Url path.
         /// </summary>
         /// <param name="path">Path to perform the computation on.</param>
-        /// <returns>The string representation of the path.</returns>
-        public static string ToResourcePathString(this ODataPath path)
+        /// <returns>The string representation of the Context Url path.</returns>
+        public static string ToContextUrlPathString(this ODataPath path)
         {
-            return string.Concat(path.WalkWith(PathSegmentToResourcePathTranslator.DefaultInstance)).TrimStart('/');
+            return string.Concat(path.WalkWith(PathSegmentToContextUrlPathTranslator.DefaultInstance).ToArray()).TrimStart('/');
         }
 
         /// <summary>
         /// Get the string representation of <see cref="ODataPath"/>.
+        /// mainly translate Query Url path.
         /// </summary>
         /// <param name="path">Path to perform the computation on.</param>
-        /// <param name="isKeyAsSegment">Mark whether key is segment</param>
-        /// <returns>The string representation of the path.</returns>
-        public static string ToResourcePathString(this ODataPath path, bool isKeyAsSegment)
-        {
-            if (isKeyAsSegment == false)
-            {
-                return string.Concat(path.WalkWith(PathSegmentToResourcePathTranslator.DefaultInstance)).TrimStart('/');
-            }
-            else
-            {
-                return string.Concat(path.WalkWith(PathSegmentToResourcePathTranslator.KeyAsSegmentInstance)).TrimStart('/');
-            }
+        /// <param name="urlConventions">Mark whether key is segment</param>
+        /// <returns>The string representation of the Query Url path.</returns>
+        public static string ToResourcePathString(this ODataPath path, ODataUrlConventions urlConventions)
+        {       
+             return string.Concat(path.WalkWith(new PathSegmentToResourcePathTranslator(urlConventions.UrlConvention)).ToArray()).TrimStart('/');
         }
 
         /// <summary>

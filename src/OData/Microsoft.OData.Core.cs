@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core {
     using System;
@@ -658,9 +662,6 @@ namespace Microsoft.OData.Core {
         internal const string AnnotationFilterPattern_InvalidPatternEmptySegment = "AnnotationFilterPattern_InvalidPatternEmptySegment";
         internal const string AnnotationFilterPattern_InvalidPatternWildCardInSegment = "AnnotationFilterPattern_InvalidPatternWildCardInSegment";
         internal const string AnnotationFilterPattern_InvalidPatternWildCardMustBeInLastSegment = "AnnotationFilterPattern_InvalidPatternWildCardMustBeInLastSegment";
-        internal const string ODataQueryUtils_CannotSetMetadataAnnotationOnPrimitiveType = "ODataQueryUtils_CannotSetMetadataAnnotationOnPrimitiveType";
-        internal const string ODataQueryUtils_DidNotFindEntitySet = "ODataQueryUtils_DidNotFindEntitySet";
-        internal const string BinaryOperatorQueryNode_OperandsMustHaveSameTypes = "BinaryOperatorQueryNode_OperandsMustHaveSameTypes";
         internal const string SyntacticTree_UriMustBeAbsolute = "SyntacticTree_UriMustBeAbsolute";
         internal const string SyntacticTree_MaxDepthInvalid = "SyntacticTree_MaxDepthInvalid";
         internal const string SyntacticTree_InvalidSkipQueryOptionValue = "SyntacticTree_InvalidSkipQueryOptionValue";
@@ -763,9 +764,12 @@ namespace Microsoft.OData.Core {
         internal const string UriParser_ExpandCountExceeded = "UriParser_ExpandCountExceeded";
         internal const string UriParser_ExpandDepthExceeded = "UriParser_ExpandDepthExceeded";
         internal const string UriParser_TypeInvalidForSelectExpand = "UriParser_TypeInvalidForSelectExpand";
+        internal const string UriParser_ContextHandlerCanNotBeNull = "UriParser_ContextHandlerCanNotBeNull";
+        internal const string UriParserMetadata_MultiplePropertiesFound = "UriParserMetadata_MultiplePropertiesFound";
         internal const string PathParser_EntityReferenceNotSupported = "PathParser_EntityReferenceNotSupported";
         internal const string PathParser_CannotUseValueOnCollection = "PathParser_CannotUseValueOnCollection";
         internal const string PathParser_TypeMustBeRelatedToSet = "PathParser_TypeMustBeRelatedToSet";
+        internal const string PathParser_TypeCastOnlyAllowedAfterEntityCollection = "PathParser_TypeCastOnlyAllowedAfterEntityCollection";
         internal const string ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink = "ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink";
         internal const string ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty = "ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty";
         internal const string ODataExpandPath_InvalidExpandPathSegment = "ODataExpandPath_InvalidExpandPathSegment";

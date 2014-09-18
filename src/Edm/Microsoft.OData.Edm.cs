@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Edm {
     using System;
@@ -295,8 +299,10 @@ namespace Microsoft.OData.Edm {
         internal const string ValueParser_InvalidDecimal = "ValueParser_InvalidDecimal";
         internal const string ValueParser_InvalidDateTimeOffset = "ValueParser_InvalidDateTimeOffset";
         internal const string ValueParser_InvalidDateTime = "ValueParser_InvalidDateTime";
+        internal const string ValueParser_InvalidDate = "ValueParser_InvalidDate";
         internal const string ValueParser_InvalidDuration = "ValueParser_InvalidDuration";
         internal const string ValueParser_InvalidBinary = "ValueParser_InvalidBinary";
+        internal const string ValueParser_InvalidTimeOfDay = "ValueParser_InvalidTimeOfDay";
         internal const string UnknownEnumVal_Multiplicity = "UnknownEnumVal_Multiplicity";
         internal const string UnknownEnumVal_SchemaElementKind = "UnknownEnumVal_SchemaElementKind";
         internal const string UnknownEnumVal_TypeKind = "UnknownEnumVal_TypeKind";
@@ -337,6 +343,8 @@ namespace Microsoft.OData.Edm {
         internal const string EdmUtil_NullValueForMimeTypeAnnotation = "EdmUtil_NullValueForMimeTypeAnnotation";
         internal const string EdmUtil_InvalidAnnotationValue = "EdmUtil_InvalidAnnotationValue";
         internal const string PlatformHelper_DateTimeOffsetMustContainTimeZone = "PlatformHelper_DateTimeOffsetMustContainTimeZone";
+        internal const string Date_InvalidDateParameters = "Date_InvalidDateParameters";
+        internal const string TimeOfDay_InvalidTimeOfDayParameters = "TimeOfDay_InvalidTimeOfDayParameters";
 
         static EntityRes loader = null;
         ResourceManager resources;

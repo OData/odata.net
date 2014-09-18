@@ -1,12 +1,16 @@
 ;   OData .NET Libraries
-;   Copyright (c) Microsoft Corporation
-;   All rights reserved. 
-
-;   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
-
-;   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-;   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+;   Copyright (c) Microsoft Corporation. All rights reserved.  
+;   Licensed under the Apache License, Version 2.0 (the "License");
+;   you may not use this file except in compliance with the License.
+;   You may obtain a copy of the License at
+;   
+;       http://www.apache.org/licenses/LICENSE-2.0
+;   
+;   Unless required by applicable law or agreed to in writing, software
+;   distributed under the License is distributed on an "AS IS" BASIS,
+;   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;   See the License for the specific language governing permissions and
+;   limitations under the License.
 
 ExceptionUtils_ArgumentStringEmpty=Value cannot be empty.
 
@@ -715,12 +719,6 @@ AnnotationFilterPattern_InvalidPatternWildCardMustBeInLastSegment=The pattern '{
 
 
 ; URI PARSER
-
-ODataQueryUtils_CannotSetMetadataAnnotationOnPrimitiveType=Setting a metadata annotation on a primitive type is not supported.
-ODataQueryUtils_DidNotFindEntitySet=An entity set with name '{0}' could not be found in the provided model.
-
-BinaryOperatorQueryNode_OperandsMustHaveSameTypes=Both operands of a binary operators must have the same type. Found different operand types '{0}' and '{1}'.
-
 SyntacticTree_UriMustBeAbsolute=The specified URI '{0}' must be absolute.
 SyntacticTree_MaxDepthInvalid=The maximum depth setting must be a number greater than zero.
 SyntacticTree_InvalidSkipQueryOptionValue=Invalid value '{0}' for $skip query option found. The $skip query option requires a non-negative integer value.
@@ -842,9 +840,13 @@ UriParser_NegativeLimit=The limit must be greater than or equal to zero
 UriParser_ExpandCountExceeded=The result of parsing $expand contained at least {0} items, but the maximum allowed is {1}.
 UriParser_ExpandDepthExceeded=The result of parsing $expand was at least {0} items deep, but the maximum allowed is {1}.
 UriParser_TypeInvalidForSelectExpand=The type '{0}' is not valid for $select or $expand, only structured types are allowed.
+UriParser_ContextHandlerCanNotBeNull=The handler property for context '{0}' should not return null.
+UriParserMetadata_MultiplePropertiesFound=More than one property match the name '{0}' were found in type '{1}'.
+
 PathParser_EntityReferenceNotSupported=The request URI is not valid. $ref cannot be applied to the segment '{0}' since $ref can only follow an entity segment or entity collection segment.
 PathParser_CannotUseValueOnCollection=$value cannot be applied to a collection.
 PathParser_TypeMustBeRelatedToSet=The type '{0}' does not inherit from and is not a base type of '{1}'. The type of '{2}' must be related to the Type of the EntitySet.
+PathParser_TypeCastOnlyAllowedAfterEntityCollection=Type cast segment '{0}' after a collection which is not of entity type is not allowed.
 
 ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink=A feed may contain a next page link, a delta link or neither, but must not contain both.
 

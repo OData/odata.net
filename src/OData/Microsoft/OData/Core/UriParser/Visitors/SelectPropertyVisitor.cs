@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser.Visitors
 {
@@ -48,18 +52,25 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         private readonly IEdmStructuredType edmType;
 
         /// <summary>
+        /// Resolver for uri parser.
+        /// </summary>
+        private readonly ODataUriResolver resolver;
+
+        /// <summary>
         /// Build a property visitor to visit the select tree and decorate a SelectExpandClause
         /// </summary>
         /// <param name="model">The model used for binding.</param>
         /// <param name="edmType">The entity type that the $select is being applied to.</param>
         /// <param name="maxDepth">the maximum recursive depth.</param>
         /// <param name="expandClauseToDecorate">The already built expand clause to decorate</param>
-        public SelectPropertyVisitor(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate)
+        /// <param name="resolver">Resolver for uri parser.</param>
+        public SelectPropertyVisitor(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver)
         {
             this.model = model;
             this.edmType = edmType;
             this.maxDepth = maxDepth;
             this.expandClauseToDecorate = expandClauseToDecorate;
+            this.resolver = resolver ?? ODataUriResolver.Default;
         }
 
         /// <summary>
@@ -118,7 +129,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
             if (tokenIn.IsNamespaceOrContainerQualified())
             {
                 PathSegmentToken firstNonTypeToken;
-                pathSoFar.AddRange(SelectExpandPathBinder.FollowTypeSegments(tokenIn, this.model, this.maxDepth, ref currentLevelType, out firstNonTypeToken));
+                pathSoFar.AddRange(SelectExpandPathBinder.FollowTypeSegments(tokenIn, this.model, this.maxDepth, this.resolver, ref currentLevelType, out firstNonTypeToken));
                 Debug.Assert(firstNonTypeToken != null, "Did not get last token.");
                 tokenIn = firstNonTypeToken as NonSystemToken;
                 if (tokenIn == null)
@@ -128,7 +139,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
             }
 
             // next, create a segment for the first non-type segment in the path.
-            ODataPathSegment lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(tokenIn, this.model, currentLevelType);
+            ODataPathSegment lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(tokenIn, this.model, currentLevelType, resolver);
 
             // next, create an ODataPath and add the segments to it.
             if (lastSegment != null)
@@ -152,12 +163,12 @@ namespace Microsoft.OData.Core.UriParser.Visitors
                     }
 
                     // first try bind the segment as property.
-                    lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.model, currentLevelType);
+                    lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.model, currentLevelType, resolver);
 
                     // then try bind the segment as type cast.
                     if (lastSegment == null)
                     {
-                        IEdmStructuredType typeFromNextToken = UriEdmHelpers.FindTypeFromModel(this.model, nextToken.Identifier) as IEdmStructuredType;
+                        IEdmStructuredType typeFromNextToken = UriEdmHelpers.FindTypeFromModel(this.model, nextToken.Identifier, this.resolver) as IEdmStructuredType;
 
                         if (typeFromNextToken.IsOrInheritsFrom(currentLevelType))
                         {

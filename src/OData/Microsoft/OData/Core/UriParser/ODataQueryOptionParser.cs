@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser
 {
@@ -15,6 +19,7 @@ namespace Microsoft.OData.Core.UriParser
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
@@ -86,6 +91,16 @@ namespace Microsoft.OData.Core.UriParser
         public IDictionary<string, SingleValueNode> ParameterAliasNodes
         {
             get { return this.Configuration.ParameterAliasValueAccessor.ParameterAliasValueNodesCached; }
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="ODataUriResolver"/> for <see cref="ODataUriParser"/>, this resolver is used for
+        /// handling different kinds of <see cref="ODataUriParserContext"/>.
+        /// </summary>
+        public ODataUriResolver Resolver
+        {
+            get { return this.Configuration.Resolver; }
+            set { this.Configuration.Resolver = value; }
         }
 
         /// <summary>The parser's configuration. </summary>
@@ -243,7 +258,7 @@ namespace Microsoft.OData.Core.UriParser
             ExceptionUtils.CheckArgumentNotNull(filter, "filter");
 
             // Get the syntactic representation of the filter expression
-            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit);
+            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveBuiltinIdentifier);
             QueryToken filterToken = expressionParser.ParseFilter(filter);
 
             // Bind it to metadata
@@ -301,7 +316,7 @@ namespace Microsoft.OData.Core.UriParser
             ExceptionUtils.CheckArgumentNotNull(orderBy, "orderBy");
 
             // Get the syntactic representation of the orderby expression
-            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.OrderByLimit);
+            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.OrderByLimit, configuration.EnableCaseInsensitiveBuiltinIdentifier);
             var orderByQueryTokens = expressionParser.ParseOrderBy(orderBy);
 
             // Bind it to metadata

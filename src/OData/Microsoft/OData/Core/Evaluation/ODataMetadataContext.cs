@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.Evaluation
 {
@@ -47,8 +51,10 @@ namespace Microsoft.OData.Core.Evaluation
         /// Gets an entity metadata builder for the given entry.
         /// </summary>
         /// <param name="entryState">Entry state to use as reference for information needed by the builder.</param>
+        /// <param name="useKeyAsSegment">true if keys should go in seperate segments in auto-generated URIs, false if they should go in parentheses.
+        /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
         /// <returns>An entity metadata builder.</returns>
-        ODataEntityMetadataBuilder GetEntityMetadataBuilderForReader(IODataJsonLightReaderEntryState entryState);
+        ODataEntityMetadataBuilder GetEntityMetadataBuilderForReader(IODataJsonLightReaderEntryState entryState, bool? useKeyAsSegment);
 
         /// <summary>
         /// Gets the list of operations that are bindable to a type.
@@ -236,8 +242,10 @@ namespace Microsoft.OData.Core.Evaluation
         /// Gets an entity metadata builder for the given entry.
         /// </summary>
         /// <param name="entryState">Entry state to use as reference for information needed by the builder.</param>
+        /// <param name="useKeyAsSegment">true if keys should go in seperate segments in auto-generated URIs, false if they should go in parentheses.
+        /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
         /// <returns>An entity metadata builder.</returns>
-        public ODataEntityMetadataBuilder GetEntityMetadataBuilderForReader(IODataJsonLightReaderEntryState entryState)
+        public ODataEntityMetadataBuilder GetEntityMetadataBuilderForReader(IODataJsonLightReaderEntryState entryState, bool? useKeyAsSegment)
         {
             Debug.Assert(entryState != null, "entry != null");
 
@@ -256,7 +264,7 @@ namespace Microsoft.OData.Core.Evaluation
                     IODataFeedAndEntryTypeContext typeContext = ODataFeedAndEntryTypeContext.Create(/*serializationInfo*/ null, navigationSource, navigationSourceElementType, entryState.EntityType, this.model, /*throwIfMissingTypeInfo*/ true);
                     IODataEntryMetadataContext entryMetadataContext = ODataEntryMetadataContext.Create(entry, typeContext, /*serializationInfo*/null, (IEdmEntityType)entry.GetEdmType().Definition, this, entryState.SelectedProperties);
 
-                    UrlConvention urlConvention = UrlConvention.ForUserSettingAndTypeContext(/*keyAsSegment*/ null, typeContext);
+                    UrlConvention urlConvention = UrlConvention.ForUserSettingAndTypeContext(useKeyAsSegment, typeContext);
                     ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri, urlConvention);
 
                     entryState.MetadataBuilder = new ODataConventionalEntityMetadataBuilder(entryMetadataContext, this, uriBuilder);

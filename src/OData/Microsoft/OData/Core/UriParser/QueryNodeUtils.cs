@@ -1,16 +1,22 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
+    using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
@@ -18,7 +24,6 @@ namespace Microsoft.OData.Core.UriParser
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Semantic;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
-
     #endregion Namespaces
 
     /// <summary>
@@ -27,53 +32,58 @@ namespace Microsoft.OData.Core.UriParser
     internal static class QueryNodeUtils
     {
         /// <summary>
-        /// Checks whether a query node is a collection query node representing a collection of entities.
+        /// Pre-look map for BinaryOperator kind resolver
         /// </summary>
-        /// <param name="query">The <see cref="QueryNode"/> to check.</param>
-        /// <returns>The converted <see cref="CollectionNode"/> or null if <paramref name="query"/> is not an entity collection node.</returns>
-        internal static EntityCollectionNode AsEntityCollectionNode(this QueryNode query)
-        {
-            Debug.Assert(query != null, "query != null");
-
-            EntityCollectionNode collectionNode = query as EntityCollectionNode;
-            if (collectionNode != null &&
-                collectionNode.ItemType != null &&
-                collectionNode.ItemType.IsODataEntityTypeKind())
-            {
-                return collectionNode;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Checks whether a query node is a collection query node representing a collection.
-        /// </summary>
-        /// <param name="query">The <see cref="QueryNode"/> to check.</param>
-        /// <returns>The converted <see cref="CollectionNode"/> or null if <paramref name="query"/> is not a collection node.</returns>
-        internal static CollectionNode AsCollectionNode(this QueryNode query)
-        {
-            Debug.Assert(query != null, "query != null");
-
-            CollectionNode collectionNode = query as CollectionNode;
-            if (collectionNode != null &&
-                collectionNode.ItemType != null)
-            {
-                return collectionNode;
-            }
-
-            return null;
-        }
+        private static Dictionary<Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>, EdmPrimitiveTypeKind> additionalMap =
+            new Dictionary<Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>, EdmPrimitiveTypeKind>(EqualityComparer<Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>>.Default)
+                {
+                    {
+                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
+                            BinaryOperatorKind.Add,
+                            EdmPrimitiveTypeKind.DateTimeOffset,
+                            EdmPrimitiveTypeKind.Duration),
+                        EdmPrimitiveTypeKind.DateTimeOffset
+                    },
+                    {
+                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
+                            BinaryOperatorKind.Add,
+                            EdmPrimitiveTypeKind.Duration,
+                            EdmPrimitiveTypeKind.DateTimeOffset),
+                        EdmPrimitiveTypeKind.DateTimeOffset
+                    },
+                    {
+                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
+                            BinaryOperatorKind.Subtract,
+                            EdmPrimitiveTypeKind.DateTimeOffset,
+                            EdmPrimitiveTypeKind.Duration),
+                        EdmPrimitiveTypeKind.DateTimeOffset
+                    },
+                     {
+                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
+                            BinaryOperatorKind.Subtract,
+                            EdmPrimitiveTypeKind.DateTimeOffset,
+                            EdmPrimitiveTypeKind.DateTimeOffset),
+                        EdmPrimitiveTypeKind.Duration
+                    },
+                };
 
         /// <summary>
         /// Compute the result type of a binary operator based on the type of its operands and the operator kind.
         /// </summary>
-        /// <param name="typeReference">The type reference of the operators.</param>
+        /// <param name="left">The type reference on the left hand.</param>
+        /// <param name="right">The type reference on the right hand.</param>
         /// <param name="operatorKind">The kind of operator.</param>
         /// <returns>The result type reference of the binary operator.</returns>
-        internal static IEdmPrimitiveTypeReference GetBinaryOperatorResultType(IEdmPrimitiveTypeReference typeReference, BinaryOperatorKind operatorKind)
+        internal static IEdmPrimitiveTypeReference GetBinaryOperatorResultType(IEdmPrimitiveTypeReference left, IEdmPrimitiveTypeReference right, BinaryOperatorKind operatorKind)
         {
-            Debug.Assert(typeReference != null, "type != null");
+            Debug.Assert(left != null, "type != null");
+            Debug.Assert(right != null, "type != null");
+
+            EdmPrimitiveTypeKind kind;
+            if (additionalMap.TryGetValue(new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(operatorKind, left.PrimitiveKind(), right.PrimitiveKind()), out kind))
+            {
+                return EdmCoreModel.Instance.GetPrimitive(kind, left.IsNullable);
+            }
 
             switch (operatorKind)
             {
@@ -86,18 +96,57 @@ namespace Microsoft.OData.Core.UriParser
                 case BinaryOperatorKind.LessThan:           // fall through
                 case BinaryOperatorKind.LessThanOrEqual:
                 case BinaryOperatorKind.Has:
-                    return EdmCoreModel.Instance.GetBoolean(typeReference.IsNullable);
+                    return EdmCoreModel.Instance.GetBoolean(left.IsNullable);
 
                 case BinaryOperatorKind.Add:        // fall through
                 case BinaryOperatorKind.Subtract:   // fall through
                 case BinaryOperatorKind.Multiply:   // fall through
                 case BinaryOperatorKind.Divide:     // fall through
                 case BinaryOperatorKind.Modulo:
-                    return typeReference;
+                    return left;
 
                 default:
                     throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.QueryNodeUtils_BinaryOperatorResultType_UnreachableCodepath));
             }
         }
+
+#if ORCAS
+        /// <summary>
+        /// The tuple for .NET35
+        /// </summary>
+        /// <typeparam name="T1">First component type.</typeparam>
+        /// <typeparam name="T2">Second component type.</typeparam>
+        /// <typeparam name="T3">Third component type.</typeparam>
+        private class Tuple<T1, T2, T3>
+        {
+            /// <summary>
+            ///  Initializes a new instance of this class.
+            /// </summary>
+            /// <param name="first">The value of the tuple's first component.</param>
+            /// <param name="second">The value of the tuple's second component.</param>
+            /// <param name="third">The value of the tuple's third component.</param>
+            internal Tuple(T1 first, T2 second, T3 third)
+            {
+                First = first;
+                Second = second;
+                Third = third;
+            }
+
+            /// <summary>
+            /// The value of the tuple's first component.
+            /// </summary>
+            public T1 First { get; private set; }
+
+            /// <summary>
+            /// The value of the tuple's second component.
+            /// </summary>
+            public T2 Second { get; private set; }
+
+            /// <summary>
+            /// The value of the tuple's third component.
+            /// </summary>
+            public T3 Third { get; private set; }
+        }
+#endif
     }
 }

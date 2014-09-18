@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
@@ -582,62 +586,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             return s;
-        }
-
-        /// <summary>
-        /// Returns the 4 bits that correspond to the specified character.
-        /// </summary>
-        /// <param name="c">Character in the 0-F range to be converted.</param>
-        /// <returns>The 4 bits that correspond to the specified character.</returns>
-        /// <exception cref="FormatException">Thrown when 'c' is not in the '0'-'9','a'-'f' range.</exception>
-        /// <remarks>This is a copy of WebConvert.HexCharToNibble.</remarks>
-        private static byte HexCharToNibble(char c)
-        {
-            Debug.Assert(IsCharHexDigit(c), string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} is not a hex digit.", c));
-
-            switch (c)
-            {
-                case '0':
-                    return 0;
-                case '1':
-                    return 1;
-                case '2':
-                    return 2;
-                case '3':
-                    return 3;
-                case '4':
-                    return 4;
-                case '5':
-                    return 5;
-                case '6':
-                    return 6;
-                case '7':
-                    return 7;
-                case '8':
-                    return 8;
-                case '9':
-                    return 9;
-                case 'a':
-                case 'A':
-                    return 10;
-                case 'b':
-                case 'B':
-                    return 11;
-                case 'c':
-                case 'C':
-                    return 12;
-                case 'd':
-                case 'D':
-                    return 13;
-                case 'e':
-                case 'E':
-                    return 14;
-                case 'f':
-                case 'F':
-                    return 15;
-                default:
-                    throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.UriPrimitiveTypeParser_HexCharToNibble));
-            }
         }
     }
 }

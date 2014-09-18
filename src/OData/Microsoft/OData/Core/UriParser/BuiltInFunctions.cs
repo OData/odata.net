@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser
 {
@@ -279,7 +283,7 @@ namespace Microsoft.OData.Core.UriParser
             signature = new FunctionSignatureWithReturnType(
                 EdmCoreModel.Instance.GetInt32(false),
                 EdmCoreModel.Instance.GetString(true));
-            functions.Add("length", new FunctionSignatureWithReturnType[] { signature });  
+            functions.Add("length", new FunctionSignatureWithReturnType[] { signature });
         }
 
         /// <summary>
@@ -290,6 +294,9 @@ namespace Microsoft.OData.Core.UriParser
         {
             FunctionSignatureWithReturnType[] withoutTimeSpan = CreateDateTimeFunctionSignatureArray();
             FunctionSignatureWithReturnType[] withTimeSpan = withoutTimeSpan.Concat(CreateDurationFunctionSignatures()).ToArray();
+            FunctionSignatureWithReturnType[] voidReturnDateTimeOffset = CreateVoidReturnDateTimeOffset();
+            FunctionSignatureWithReturnType[] dateTimeOffsetReturnDecimal = CreateDateTimeOffsetReturnDecimal();
+            FunctionSignatureWithReturnType[] durationReturnDecimal = CreateDurationReturnDecimal();
 
             // int year(DateTimeOffset)
             // int year(DateTimeOffset?)
@@ -305,14 +312,14 @@ namespace Microsoft.OData.Core.UriParser
 
             // int hour(DateTimeOffset)
             // int hour(DateTimeOffset?)
-            // int second(TimeSpan)
-            // int second(TimeSpan?)
+            // int hour(TimeSpan)
+            // int hour(TimeSpan?)
             functions.Add("hour", withTimeSpan);
 
             // int minute(DateTimeOffset)
             // int minute(DateTimeOffset?)
-            // int second(TimeSpan)
-            // int second(TimeSpan?)
+            // int minute(TimeSpan)
+            // int minute(TimeSpan?)
             functions.Add("minute", withTimeSpan);
 
             // int second(DateTimeOffset)
@@ -320,8 +327,27 @@ namespace Microsoft.OData.Core.UriParser
             // int second(TimeSpan)
             // int second(TimeSpan?)
             functions.Add("second", withTimeSpan);
+
+            // Use protocol signature
+            // Edm.Decimal fractionalseconds(Edm.DateTimeOffset)
+            functions.Add("fractionalseconds", dateTimeOffsetReturnDecimal);
+
+            // Edm.Int32 totaloffsetminutes(Edm.DateTimeOffset)
+            functions.Add("totaloffsetminutes", withoutTimeSpan);
+
+            // Edm.DateTimeOffset now()
+            functions.Add("now", voidReturnDateTimeOffset);
+
+            // Edm.DateTimeOffset maxdatetime()
+            functions.Add("maxdatetime", voidReturnDateTimeOffset);
+            
+            // Edm.DateTimeOffset mindatetime()
+            functions.Add("mindatetime", voidReturnDateTimeOffset);
+
+            // Edm.Decimal totalseconds(Edm.Duration)
+            functions.Add("totalseconds", durationReturnDecimal);
         }
-        
+
         /// <summary>
         /// Builds an array of signatures for date time functions.
         /// </summary>
@@ -352,6 +378,53 @@ namespace Microsoft.OData.Core.UriParser
             yield return new FunctionSignatureWithReturnType(
                 EdmCoreModel.Instance.GetInt32(false),
                 EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, true));
+        }
+
+        /// <summary>
+        /// Builds the set of signatures for 'DateTimeOffset function()'.
+        /// </summary>
+        /// <returns>The set of signatures for 'DateTimeOffset function()'.</returns>
+        private static FunctionSignatureWithReturnType[] CreateVoidReturnDateTimeOffset()
+        {
+            return new[]
+            {
+                new FunctionSignatureWithReturnType(
+                    EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false)),
+            };
+        }
+
+        /// <summary>
+        /// Builds the set of signatures for 'Decimal function(DateTimeOffset)'.
+        /// </summary>
+        /// <returns>The set of signatures for 'Decimal function(DateTimeOffset)'.</returns>
+        private static FunctionSignatureWithReturnType[] CreateDateTimeOffsetReturnDecimal()
+        {
+            return new[]
+            {
+                new FunctionSignatureWithReturnType(
+                    EdmCoreModel.Instance.GetDecimal(false),
+                    EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false)),
+                new FunctionSignatureWithReturnType(
+                    EdmCoreModel.Instance.GetDecimal(false),
+                    EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, true)),
+            };
+        }
+
+        /// <summary>
+        /// Builds the set of signatures for 'Decimal function(Duration)'.
+        /// </summary>
+        /// <returns>The set of signatures for 'Decimal function(Duration)'.</returns>
+        private static FunctionSignatureWithReturnType[] CreateDurationReturnDecimal()
+        {
+            return new[]
+            {
+                new FunctionSignatureWithReturnType(
+                    EdmCoreModel.Instance.GetDecimal(false),
+                    EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, false)),
+                new FunctionSignatureWithReturnType(
+                    EdmCoreModel.Instance.GetDecimal(false),
+                    EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, true)),
+            };
         }
 
         /// <summary>

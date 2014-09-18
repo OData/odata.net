@@ -1,12 +1,16 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
@@ -52,14 +56,21 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private ExpressionLexer lexer;
 
         /// <summary>
+        /// Whether to allow case insensitive for builtin identifier.
+        /// </summary>
+        private bool enableCaseInsensitiveBuiltinIdentifier = false;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
-        internal UriQueryExpressionParser(int maxDepth)
+        /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
+        internal UriQueryExpressionParser(int maxDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
         {
             Debug.Assert(maxDepth >= 0, "maxDepth >= 0");
 
             this.maxDepth = maxDepth;
+            this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
         }
 
         /// <summary>
@@ -360,34 +371,40 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             this.RecurseEnter();
             QueryToken left = this.ParseAdditive();
-            while (this.lexer.CurrentToken.IsComparisonOperator)
+            while (true)
             {
                 BinaryOperatorKind binaryOperatorKind;
-                switch (this.lexer.CurrentToken.Text)
+                if (this.TokenIdentifierIs(ExpressionConstants.KeywordEqual))
                 {
-                    case ExpressionConstants.KeywordEqual:
-                        binaryOperatorKind = BinaryOperatorKind.Equal;
-                        break;
-                    case ExpressionConstants.KeywordNotEqual:
-                        binaryOperatorKind = BinaryOperatorKind.NotEqual;
-                        break;
-                    case ExpressionConstants.KeywordGreaterThan:
-                        binaryOperatorKind = BinaryOperatorKind.GreaterThan;
-                        break;
-                    case ExpressionConstants.KeywordGreaterThanOrEqual:
-                        binaryOperatorKind = BinaryOperatorKind.GreaterThanOrEqual;
-                        break;
-                    case ExpressionConstants.KeywordLessThan:
-                        binaryOperatorKind = BinaryOperatorKind.LessThan;
-                        break;
-                    case ExpressionConstants.KeywordLessThanOrEqual:
-                        binaryOperatorKind = BinaryOperatorKind.LessThanOrEqual;
-                        break;
-                    case ExpressionConstants.KeywordHas:
-                        binaryOperatorKind = BinaryOperatorKind.Has;
-                        break;
-                    default:
-                        throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.UriQueryExpressionParser_ParseComparison));
+                    binaryOperatorKind = BinaryOperatorKind.Equal;
+                }
+                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordNotEqual))
+                {
+                    binaryOperatorKind = BinaryOperatorKind.NotEqual;
+                }
+                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordGreaterThan))
+                {
+                    binaryOperatorKind = BinaryOperatorKind.GreaterThan;
+                }
+                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordGreaterThanOrEqual))
+                {
+                    binaryOperatorKind = BinaryOperatorKind.GreaterThanOrEqual;
+                }
+                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordLessThan))
+                {
+                    binaryOperatorKind = BinaryOperatorKind.LessThan;
+                }
+                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordLessThanOrEqual))
+                {
+                    binaryOperatorKind = BinaryOperatorKind.LessThanOrEqual;
+                }
+                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordHas))
+                {
+                    binaryOperatorKind = BinaryOperatorKind.Has;
+                }
+                else
+                {
+                    break;
                 }
 
                 this.lexer.NextToken();
@@ -407,17 +424,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             this.RecurseEnter();
             QueryToken left = this.ParseMultiplicative();
-            while (this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.KeywordAdd) ||
-                this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.KeywordSub))
+            while (this.TokenIdentifierIs(ExpressionConstants.KeywordAdd) ||
+                this.TokenIdentifierIs(ExpressionConstants.KeywordSub))
             {
                 BinaryOperatorKind binaryOperatorKind;
-                if (this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.KeywordAdd))
+                if (this.TokenIdentifierIs(ExpressionConstants.KeywordAdd))
                 {
                     binaryOperatorKind = BinaryOperatorKind.Add;
                 }
                 else
                 {
-                    Debug.Assert(this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.KeywordSub), "Was a new binary operator added?");
+                    Debug.Assert(this.TokenIdentifierIs(ExpressionConstants.KeywordSub), "Was a new binary operator added?");
                     binaryOperatorKind = BinaryOperatorKind.Subtract;
                 }
 
@@ -438,22 +455,22 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             this.RecurseEnter();
             QueryToken left = this.ParseUnary();
-            while (this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.KeywordMultiply) ||
-                this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.KeywordDivide) ||
-                this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.KeywordModulo))
+            while (this.TokenIdentifierIs(ExpressionConstants.KeywordMultiply) ||
+                this.TokenIdentifierIs(ExpressionConstants.KeywordDivide) ||
+                this.TokenIdentifierIs(ExpressionConstants.KeywordModulo))
             {
                 BinaryOperatorKind binaryOperatorKind;
-                if (this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.KeywordMultiply))
+                if (this.TokenIdentifierIs(ExpressionConstants.KeywordMultiply))
                 {
                     binaryOperatorKind = BinaryOperatorKind.Multiply;
                 }
-                else if (this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.KeywordDivide))
+                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordDivide))
                 {
                     binaryOperatorKind = BinaryOperatorKind.Divide;
                 }
                 else
                 {
-                    Debug.Assert(this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.KeywordModulo), "Was a new binary operator added?");
+                    Debug.Assert(this.TokenIdentifierIs(ExpressionConstants.KeywordModulo), "Was a new binary operator added?");
                     binaryOperatorKind = BinaryOperatorKind.Modulo;
                 }
 
@@ -473,7 +490,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private QueryToken ParseUnary()
         {
             this.RecurseEnter();
-            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Minus || this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.KeywordNot))
+            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Minus || this.TokenIdentifierIs(ExpressionConstants.KeywordNot))
             {
                 ExpressionToken operatorToken = this.lexer.CurrentToken;
                 this.lexer.NextToken();
@@ -495,7 +512,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
                 else
                 {
-                    Debug.Assert(operatorToken.IdentifierIs(ExpressionConstants.KeywordNot), "Was a new unary operator added?");
+                    Debug.Assert(operatorToken.IdentifierIs(ExpressionConstants.KeywordNot, enableCaseInsensitiveBuiltinIdentifier), "Was a new unary operator added?");
                     unaryOperatorKind = UnaryOperatorKind.Not;
                 }
 
@@ -529,11 +546,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Slash)
                 {
                     this.lexer.NextToken();
-                    if (this.lexer.CurrentToken.Text == "any")
+                    if (this.TokenIdentifierIs(ExpressionConstants.KeywordAny))
                     {
                         expr = this.ParseAny(expr);
                     }
-                    else if (this.lexer.CurrentToken.Text == "all")
+                    else if (this.TokenIdentifierIs(ExpressionConstants.KeywordAll))
                     {
                         expr = this.ParseAll(expr);
                     }
@@ -727,7 +744,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if the current token is an identifier with the specified text.</returns>
         private bool TokenIdentifierIs(string id)
         {
-            return this.lexer.CurrentToken.IdentifierIs(id);
+            return this.lexer.CurrentToken.IdentifierIs(id, enableCaseInsensitiveBuiltinIdentifier);
         }
 
         /// <summary>

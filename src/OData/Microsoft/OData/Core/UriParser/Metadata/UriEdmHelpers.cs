@@ -1,25 +1,26 @@
 //   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation
-//   All rights reserved. 
+//   Copyright (c) Microsoft Corporation. All rights reserved.  
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
 
-//   Licensed under the Apache License, Version 2.0 (the ""License""); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+//       http://www.apache.org/licenses/LICENSE-2.0
 
-//   THIS CODE IS PROVIDED ON AN  *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
-
-//   See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
 
 namespace Microsoft.OData.Core.UriParser.Metadata
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
 
     /// <summary>
     /// Class to provide methods that wrap EdmLib calls that are normally not allows in ODataLib, but
@@ -34,31 +35,17 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// </summary>
         /// <param name="model">The model to search.</param>
         /// <param name="qualifiedName">The qualified name of the type to find within the model.</param>
+        /// <param name="resolver">Resolver for this func.</param>
         /// <returns>The requested type, or null if no such type exists.</returns>
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri Parser does not need to go through the ODL behavior knob.")]
-        public static IEdmSchemaType FindTypeFromModel(IEdmModel model, string qualifiedName)
+        public static IEdmSchemaType FindTypeFromModel(IEdmModel model, string qualifiedName, ODataUriResolver resolver)
         {
-            return model.FindType(qualifiedName);
-        }
+            if (resolver == null)
+            {
+                resolver = ODataUriResolver.Default;
+            }
 
-        /// <summary>
-        /// Wraps call to FindTypeFromModel for a Collection type.
-        /// </summary>
-        /// <param name="model">the model to search</param>
-        /// <param name="qualifiedName">the name to find within the model</param>
-        /// <returns>a type reference to the collection type, or null if no such type exists.</returns>
-        public static IEdmTypeReference FindCollectionTypeFromModel(IEdmModel model, string qualifiedName)
-        {
-            if (qualifiedName.StartsWith("Collection", StringComparison.Ordinal))
-            {
-                string[] tokenizedString = qualifiedName.Split('(');
-                string baseElementType = tokenizedString[1].Split(')')[0];
-                return EdmCoreModel.GetCollection(FindTypeFromModel(model, baseElementType).ToTypeReference());
-            }
-            else
-            {
-                return null;
-            }
+            return resolver.ResolveType(model, qualifiedName);
         }
 
         /// <summary>
@@ -69,30 +56,8 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// <returns>a type reference to the enum type, or null if no such type exists.</returns>
         public static IEdmEnumType FindEnumTypeFromModel(IEdmModel model, string qualifiedName)
         {
-            IEdmEnumType enumType = FindTypeFromModel(model, qualifiedName) as IEdmEnumType;
+            IEdmEnumType enumType = FindTypeFromModel(model, qualifiedName, ODataUriResolver.Default) as IEdmEnumType;
             return enumType;
-        }
-
-        /// <summary>
-        /// Wraps a call to IEdmOperationImport.ReturnType.
-        /// </summary>
-        /// <param name="serviceOperation">The operation import containing the return type.</param>
-        /// <returns>Gets the return type of this function.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri Parser does not need to go through the ODL behavior knob.")]
-        public static IEdmTypeReference GetOperationImportReturnType(IEdmOperationImport serviceOperation)
-        {
-            return serviceOperation.Operation.ReturnType;
-        }
-
-        /// <summary>
-        /// Wraps a call to IEdmOperationParameter.Type.
-        /// </summary>
-        /// <param name="serviceOperationParameter">The IEdmFunctionParameter containing the typ[e.</param>
-        /// <returns>The type of this function parameter.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri Parser does not need to go through the ODL behavior knob.")]
-        public static IEdmTypeReference GetOperationParameterType(IEdmOperationParameter serviceOperationParameter)
-        {
-            return serviceOperationParameter.Type;
         }
 
         /// <summary>
@@ -112,16 +77,14 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         }
 
         /// <summary>
-        /// Check whether the parent and child are properly related types
+        /// Check whether the two are properly related types
         /// </summary>
-        /// <param name="parentType">the parent type</param>
-        /// <param name="childType">the child type</param>
+        /// <param name="first">the first type</param>
+        /// <param name="second">the second type</param>
         /// <returns>Whether the two types are related.</returns>
-        /// <exception cref="ODataException">Throws if the two types are not related.</exception>
-        public static bool IsRelatedTo(IEdmType parentType, IEdmType childType)
+        public static bool IsRelatedTo(IEdmType first, IEdmType second)
         {
-            IEdmStructuredType childStructuredType = childType as IEdmStructuredType;
-            return childStructuredType.IsOrInheritsFrom(parentType) || parentType.IsOrInheritsFrom(childStructuredType);
+            return second.IsOrInheritsFrom(first) || first.IsOrInheritsFrom(second);
         }
 
         /// <summary>
@@ -201,28 +164,6 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         public static bool IsBindingTypeValid(IEdmType bindingType)
         {
             return bindingType == null || bindingType.IsEntityOrEntityCollectionType() || bindingType.IsODataComplexTypeKind();
-        }
-
-        /// <summary>
-        /// Parse string or integer to enum value
-        /// </summary>
-        /// <param name="enumType">edm enum type</param>
-        /// <param name="value">input string value</param>
-        /// <param name="enumValue">output edm enum value</param>
-        /// <returns>true if parse succeeds, false if fails</returns>
-        public static bool TryParseEnum(this IEdmEnumType enumType, string value, out ODataEnumValue enumValue)
-        {
-            long parsedValue;
-            bool success = enumType.TryParseEnum(value, true, out parsedValue);
-            enumValue = null;
-            if (success)
-            {
-                // ODataEnumValue.Value will always be numeric string like '3', '10' instead of 'Red', 'Solid,Yellow', etc.
-                // so user code can easily Enum.Parse() them into CLR value.
-                enumValue = new ODataEnumValue(parsedValue.ToString(CultureInfo.InvariantCulture), enumType.ODataFullName());
-            }
-
-            return success;
         }
     }
 }
