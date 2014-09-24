@@ -1,7 +1,7 @@
 #How to contribute?
 There are many ways for you to contribute to OData.NET. The easiest way is to participate in discussion of features and issues. You can also contribute by sending pull requests of features or bug fixes to us. Contribution to the documentations at our [Wiki](https://github.com/OData/odata.net/wiki) is also highly welcomed. 
 ##Discussion
-You can participate into discussions and ask questions about ODataCpp at our [Github issues](https://github.com/OData/odata.net/issues). 
+You can participate into discussions and ask questions about OData.NET at our [Github issues](https://github.com/OData/odata.net/issues). 
 ###Bug reports
 When reporting a bug at the issue tracker, please use the following template:
 ```
@@ -29,7 +29,7 @@ You will need to complete a Contributor License Agreement (CLA). Briefly, this a
 Please submit a Contributor License Agreement (CLA) before submitting a pull request. Download the agreement ([Microsoft Contribution License Agreement.pdf](https://github.com/odata/odatacpp/wiki/files/Microsoft Contribution License Agreement.pdf)), sign, scan, and email it back to [cla@microsoft.com](mailto:cla@microsoft.com). Be sure to include your Github user name along with the agreement. Only after we have received the signed CLA, we'll review the pull request that you send. You only need to do this once for contributing to any Microsoft open source projects. 
 
 ###Create a new issue on the issue tracker and link the pull request to it
-You should have an issue created on the [issue tracker](https://github.com/OData/odata.net/issues) before you work on the pull request. After the ODataCpp team has reviewed this issue and change its label to "accepting pull request", you can issue a pull request to us in which the link to the related issue is included.
+You should have an issue created on the [issue tracker](https://github.com/OData/odata.net/issues) before you work on the pull request. After the OData.NET team has reviewed this issue and change its label to "accepting pull request", you can issue a pull request to us in which the link to the related issue is included.
 ###Requirement of pull requests
 Your pull request should:
 
