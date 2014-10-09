@@ -15,13 +15,13 @@ The project currently has three branches: master, ODATAV3, and WCFDSV4.
 ### Master branch
 The master branch includes the .NET libraries for OData V4 only that are now most actively iterated and maintained by the OData team. It has the following libraries: 
 
- - [ODataLib](http://www.nuget.org/packages/Microsoft.OData.Core/) (namespace `Microsoft.OData.Core`):
-The ODataLib contains classes to serialize, deserialize and validate OData JSON payloads. 
- - [EdmLib](http://www.nuget.org/packages/Microsoft.OData.Edm/) (namespace `Microsoft.OData.Edm`):
+ - [ODataLib](http://www.nuget.org/packages/Microsoft.OData.Core/) (namespace `Microsoft.OData.Core`):<br />
+ The ODataLib contains classes to serialize, deserialize and validate OData JSON payloads. 
+ - [EdmLib](http://www.nuget.org/packages/Microsoft.OData.Edm/) (namespace `Microsoft.OData.Edm`):<br />
  The EdmLib contains classes to represent, construct, parse, serialize and validate entity data models.
- - [OData Client for .NET](http://www.nuget.org/packages/Microsoft.OData.Client/) (namespace `Microsoft.OData.Client`):
+ - [OData Client for .NET](http://www.nuget.org/packages/Microsoft.OData.Client/) (namespace `Microsoft.OData.Client`):<br />
  The client library is built on top of ODataLib and EdmLib that has LINQ-enabled client APIs for issuing OData queries and consuming OData JSON payloads.
- - [Microsoft.Spatial](http://www.nuget.org/packages/Microsoft.Spatial/) (namespace `Microsoft.OData.Client`):
+ - [Microsoft.Spatial](http://www.nuget.org/packages/Microsoft.Spatial/) (namespace `Microsoft.OData.Client`):<br />
  The spatial library contains classes and methods that facilitate geography and geometry spatial operations.
 
 For these libraries, we accept bug reports, feature requirements and pull requests. The corresponding fixes and implementations will be included into every new release.
@@ -36,9 +36,9 @@ The ODATAV3 branch includes the .NET libraries for OData V1-3 only. It has the s
  - [EdmLib for OData v1-3](http://www.nuget.org/packages/Microsoft.Data.Edm/) (namespace `Microsoft.Data.Edm`):
  - [WCF Data Services Client for OData v1-3](http://www.nuget.org/packages/Microsoft.Data.Services.Client/) (namespace `Microsoft.Data.Services.Client`):
  - [System.Spatial for OData v1-3](http://www.nuget.org/packages/System.Spatial/) (namespace `System.Spatial`):
- - [WCF Data Services Server for OData v1-3](http://www.nuget.org/packages/Microsoft.Data.Services/) (namespace `Microsoft.Data.Services`):
+ - [WCF Data Services Server for OData v1-3](http://www.nuget.org/packages/Microsoft.Data.Services/) (namespace `Microsoft.Data.Services`):<br />
  Fully-featured server API for responding to OData queries and consuming/producing OData payloads.
- - [WCF Data Services EntityFramework Provider](http://www.nuget.org/packages/Microsoft.OData.EntityFrameworkProvider/) (namespace `Microsoft.OData.EntityFrameworkProvider`):
+ - [WCF Data Services EntityFramework Provider](http://www.nuget.org/packages/Microsoft.OData.EntityFrameworkProvider/) (namespace `Microsoft.OData.EntityFrameworkProvider`):<br />
  Server API for responding to OData queries and consuming/producing OData payloads based on entity framework version 6.0 or higher Supports OData v3.
 
 These libraries are in maintenance mode. Only security bugs will be accepted. The release will be irregular depends on the bugs fixed.
