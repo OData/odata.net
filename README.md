@@ -60,9 +60,9 @@ This section is being worked on.
 Please refer to the [CONTRIBUTION.md](https://github.com/OData/odata.net/blob/master/CONTRIBUTION.md).
 
 ### Support
- - Team blog
+ - Team blog<br />
  Please visit http://blogs.msdn.com/b/odatateam/.
- - Feedback
+ - Feedback<br />
  Please send mails to [odatafeedback@microsoft.com](mailto:odatafeedback@microsoft.com).
- - Questions
+ - Questions<br />
  Ask questions on [Stack Overflow](http://stackoverflow.com/questions/ask?tags=odata).
