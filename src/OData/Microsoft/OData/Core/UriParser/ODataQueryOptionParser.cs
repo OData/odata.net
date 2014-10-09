@@ -12,6 +12,8 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
+using Microsoft.OData.Core.Aggregation;
+
 namespace Microsoft.OData.Core.UriParser
 {
     #region namespaces
@@ -52,6 +54,11 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>Search clause.</summary>
         private SearchClause searchClause;
+
+        /// <summary>
+        /// Apply clause for aggregate queries 
+        /// </summary>
+        private ApplyClause applyClause;
         #endregion private fields
 
         #region constructor
@@ -131,6 +138,31 @@ namespace Microsoft.OData.Core.UriParser
 
             this.filterClause = ParseFilterImplementation(filterQuery, this.Configuration, this.targetEdmType, this.targetNavigationSource);
             return this.filterClause;
+        }
+
+        /// <summary>
+        /// Parses a apply clause on the given full Uri, binding
+        /// the text into semantic nodes using the constructed mode.
+        /// </summary>
+        /// <returns>A <see cref="ApplyClause"/> representing the aggregation query.</returns>
+        public ApplyClause ParseApply()
+        {
+            if (this.applyClause != null)
+            {
+                return this.applyClause;
+            }
+
+            string applyQuery;
+
+            if (!queryOptions.TryGetValue(UriQueryConstants.ApplyQueryOption, out applyQuery)
+                || string.IsNullOrEmpty(applyQuery)
+                || this.targetEdmType == null)
+            {
+                return null;
+            }
+
+            this.applyClause = ApplyParser.ParseApplyImplementation(applyQuery, this.Configuration, this.targetEdmType, this.targetNavigationSource);
+            return this.applyClause;
         }
 
         /// <summary>
@@ -251,7 +283,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="elementType">Type that the filter clause refers to.</param>
         /// <param name="navigationSource">Navigation source that the elements being filtered are from.</param>
         /// <returns>A <see cref="FilterClause"/> representing the metadata bound filter expression.</returns>
-        private static FilterClause ParseFilterImplementation(string filter, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
+        internal static FilterClause ParseFilterImplementation(string filter, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             ExceptionUtils.CheckArgumentNotNull(elementType, "elementType");
@@ -268,6 +300,36 @@ namespace Microsoft.OData.Core.UriParser
             MetadataBinder binder = new MetadataBinder(state);
             FilterBinder filterBinder = new FilterBinder(binder.Bind, state);
             FilterClause boundNode = filterBinder.BindFilter(filterToken);
+
+            return boundNode;
+        }
+
+        /// <summary>
+        /// Parses a <paramref name="query"/> clause on the given <paramref name="elementType"/>, binding
+        /// the text into semantic nodes using the provided model.
+        /// </summary>
+        /// <param name="query">String representation of the filter expression.</param>
+        /// <param name="configuration">The configuration used for binding.</param>
+        /// <param name="elementType">Type that the filter clause refers to.</param>
+        /// <param name="navigationSource">Navigation source that the elements being filtered are from.</param>
+        /// <returns>A <see cref="FilterClause"/> representing the metadata bound filter expression.</returns>
+        internal static ExpressionClause ParseExpressionImplementation(string query, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
+        {
+            ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
+            ExceptionUtils.CheckArgumentNotNull(elementType, "elementType");
+            ExceptionUtils.CheckArgumentNotNull(query, "query");
+
+            // Get the syntactic representation of the filter expression
+            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit);
+            QueryToken expressionToken = expressionParser.ParseFilter(query);
+
+            // Bind it to metadata
+            BindingState state = new BindingState(configuration);
+            state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(elementType.ToTypeReference(), navigationSource);
+            state.RangeVariables.Push(state.ImplicitRangeVariable);
+            MetadataBinder binder = new MetadataBinder(state);
+            FilterBinder filterBinder = new FilterBinder(binder.Bind, state);
+            ExpressionClause boundNode = filterBinder.BindProperyExpression(expressionToken);
 
             return boundNode;
         }

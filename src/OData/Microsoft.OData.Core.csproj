@@ -45,6 +45,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aggregation\AggregationTransformationBase.cs" />
+    <Compile Include="Aggregation\AggregationTransientEntityAnnotation.cs" />
+    <Compile Include="Aggregation\ApplyAggregateClause.cs" />
+    <Compile Include="Aggregation\ApplyClause.cs" />
+    <Compile Include="Aggregation\ApplyFilterClause.cs" />
+    <Compile Include="Aggregation\ApplyGroupbyClause.cs" />
+    <Compile Include="Aggregation\ApplyParser.cs" />
+    <Compile Include="Aggregation\AssemblyInfo.cs" />
+    <Compile Include="Aggregation\ExpressionClause.cs" />
+    <Compile Include="Aggregation\Extensions.cs" />
     <Compile Include="Microsoft\OData\Core\AnnotationFilter.cs" />
     <Compile Include="Microsoft\OData\Core\AnnotationFilterPattern.cs" />
     <Compile Include="Microsoft\OData\Core\AsyncBufferedStream.cs" />
