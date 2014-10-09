@@ -44,14 +44,14 @@ namespace Microsoft.OData.Client.Metadata
             /// <summary>If this is not a key </summary>
             NotKey = 0,
 			
-			/// <summary> If the key property name was equal to Id</summary>
-			LowerId = 1,
+	    /// <summary> If the key property name was equal to Id</summary>
+	    LowerId = 1,
 
             /// <summary> If the key property name was equal to ID </summary>
             Id = 2,
 			
-			/// <summary> If the key property name was equal to TypeName+Id </summary>
-			LowerTypeNameId = 3,
+	    /// <summary> If the key property name was equal to TypeName+Id </summary>
+	    LowerTypeNameId = 3,
 
             /// <summary> If the key property name was equal to TypeName+ID </summary>
             TypeNameId = 4,
@@ -661,17 +661,17 @@ namespace Microsoft.OData.Client.Metadata
                     keyKind = KeyKind.Id;
                 }
             }
-			else if (propertyName.EndsWith("Id", StringComparison.Ordinal))
+	    else if (propertyName.EndsWith("Id", StringComparison.Ordinal))
             {
                 string declaringTypeName = propertyInfo.DeclaringType.Name;
                 if ((propertyName.Length == (declaringTypeName.Length + 2)) && propertyName.StartsWith(declaringTypeName, StringComparison.Ordinal))
                 {
-                    // matched "DeclaringType.Name+ID" pattern
+                    // matched "DeclaringType.Name+Id" pattern
                     keyKind = KeyKind.LowerTypeNameId;
                 }
                 else if (2 == propertyName.Length)
                 {
-                    // matched "ID" pattern
+                    // matched "Id" pattern
                     keyKind = KeyKind.LowerId;
                 }
             }
