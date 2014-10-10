@@ -426,6 +426,39 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Query dictionary for certain key, and update it if not exist
+        /// </summary>
+        /// <typeparam name="TKey">Key type for dictionary</typeparam>
+        /// <typeparam name="TValue">Value type for dictionary</typeparam>
+        /// <param name="dictionary">The dictionary to look up</param>
+        /// <param name="key">The key property</param>
+        /// <param name="computeValue">The function to compute value if key not exist in dictionary</param>
+        /// <returns>The value for the key</returns>
+        internal static TValue DictionaryGetOrUpdate<TKey, TValue>(
+            IDictionary<TKey, TValue> dictionary,
+            TKey key,
+            Func<TKey, TValue> computeValue)
+        {
+            CheckArgumentNull(dictionary, "dictionary");
+            CheckArgumentNull(computeValue, "computeValue");
+
+            TValue val;
+            if (!dictionary.TryGetValue(key, out val))
+            {
+                lock (dictionary)
+                {
+                    if (!dictionary.TryGetValue(key, out val))
+                    {
+                        val = computeValue(key);
+                        dictionary.Add(key, val);
+                    }
+                }
+            }
+
+            return val;
+        }
+
+        /// <summary>
         /// Checks whether the <paramref name="annotatable"/> has a value annotation.
         /// </summary>
         /// <param name="model">The <see cref="IEdmModel"/> containing the annotation.</param>

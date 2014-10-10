@@ -334,7 +334,7 @@ namespace Microsoft.OData.Edm.Validation
         /// Open types are supported only in version 1.2 and after version 2.0. Only entity types can be open.
         /// </summary>
         OpenTypeNotSupported = 117,
-        
+
         /// <summary> 
         /// Same role referred in the ToRole and FromRole of a referential constraint 
         /// </summary>
@@ -715,7 +715,7 @@ namespace Microsoft.OData.Edm.Validation
         /// Underlying type of the enumeration type is bad because the enumeration type is bad.
         /// </summary>
         UnderlyingTypeIsBadBecauseEnumTypeIsBad = 261,
-        
+
         /// <summary>
         /// Complex types must contain at least one property.
         /// </summary>
@@ -785,7 +785,7 @@ namespace Microsoft.OData.Edm.Validation
         /// Operation entity set path resolves to a collection entity type when an entity type is expected
         /// </summary>
         OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType = 254,
-        
+
         /// <summary>
         /// Operation entity set path resolves to an entity type when a collection of entity type is expected.
         /// </summary>
@@ -850,7 +850,7 @@ namespace Microsoft.OData.Edm.Validation
         /// Binary value is invalid.
         /// </summary>
         InvalidBinary = 283,
-        
+
         /// <summary>
         /// Floating point value is invalid.
         /// </summary>
@@ -1026,7 +1026,7 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// Function application has wrong number of arguments for the function being applied.
         /// </summary>
-        IncorrectNumberOfArguments = 320, 
+        IncorrectNumberOfArguments = 320,
 
         /// <summary>
         /// Is it invalid to have duplicate alias in a single schema model.
@@ -1177,7 +1177,7 @@ namespace Microsoft.OData.Edm.Validation
         /// The primitive type is invalid.
         /// </summary>
         InvalidPrimitiveValue = 350,
-        
+
         /// <summary>
         /// An Enum type must have an underlying type of integer.
         /// </summary>
@@ -1227,7 +1227,7 @@ namespace Microsoft.OData.Edm.Validation
         /// Enum type could not be resolved.
         /// </summary>
         BadUnresolvedEnumType = 360,
-        
+
         /// <summary>
         /// Could not find a target with this name.
         /// </summary>
@@ -1297,5 +1297,15 @@ namespace Microsoft.OData.Edm.Validation
         /// Unresolved Uri found in edmx:Reference, getReferencedModelReaderFunc should not return null when the URI is not a well-known schema.
         /// </summary>
         UnresolvedReferenceUriInEdmxReference = 374,
+
+        /// <summary>
+        /// Date value is invalid.
+        /// </summary>
+        InvalidDate = 375,
+
+        /// <summary>
+        /// TimeOfDay value is invalid.
+        /// </summary>
+        InvalidTimeOfDay = 376,
     }
 }

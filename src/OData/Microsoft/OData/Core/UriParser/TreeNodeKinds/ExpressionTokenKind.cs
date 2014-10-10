@@ -85,7 +85,7 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
 
         /// <summary>Comma.</summary>
         Comma = 22,
-        
+
         /// <summary>Colon.</summary>
         Colon = 23,
 
@@ -93,7 +93,7 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         Minus = 24,
 
         /// <summary>Slash.</summary>
-       Slash = 25,
+        Slash = 25,
 
         /// <summary>Question.</summary>
         Question = 26,
@@ -115,5 +115,11 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
 
         /// <summary>Quoted</summary>
         QuotedLiteral = 32,
+
+        /// <summary>Date literal.</summary>
+        DateLiteral = 33,
+
+        /// <summary>TimeOfDay literal.</summary>
+        TimeOfDayLiteral = 34,
     }
 }

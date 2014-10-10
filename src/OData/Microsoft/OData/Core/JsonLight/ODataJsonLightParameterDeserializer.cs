@@ -164,12 +164,10 @@ namespace Microsoft.OData.Core.JsonLight
                                         state = ODataParameterReaderState.Value;
                                         break;
 
-#if SUPPORT_ENTITY_PARAMETER
                                     case EdmTypeKind.Entity:
                                         parameterValue = null;
                                         state = ODataParameterReaderState.Entry;
                                         break;
-#endif
 
                                     case EdmTypeKind.Collection:
                                         parameterValue = null;
@@ -186,11 +184,7 @@ namespace Microsoft.OData.Core.JsonLight
                                         }
                                         else if (((IEdmCollectionType)parameterTypeReference.Definition).ElementType.TypeKind() == EdmTypeKind.Entity)
                                         {
-#if SUPPORT_ENTITY_PARAMETER
-                                        state = ODataParameterReaderState.Feed;
-#else
-                                            throw new ODataException(ODataErrorStrings.ODataJsonLightParameterDeserializer_UnsupportedParameterTypeKind(parameterName, "Entity Collection"));
-#endif
+                                            state = ODataParameterReaderState.Feed;
                                         }
                                         else
                                         {
@@ -206,7 +200,7 @@ namespace Microsoft.OData.Core.JsonLight
                                 parameterRead = true;
                                 this.parameterReader.EnterScope(state, parameterName, parameterValue);
                                 Debug.Assert(
-                                    state == ODataParameterReaderState.Collection || this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
+                                    state == ODataParameterReaderState.Collection || state == ODataParameterReaderState.Entry || state == ODataParameterReaderState.Feed || this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
                                     "Expected any node for a collection; 'Property' or 'EndObject' if it is a primitive or complex value.");
                                 break;
 

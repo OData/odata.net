@@ -26,20 +26,6 @@ namespace Microsoft.OData.Core
         /// and the Value property of the <see cref="ODataParameterReader"/> returns the value read (e.g. a primitive value, an ODataComplexValue or null).</remarks>
         Value,
 
-#if SUPPORT_ENTITY_PARAMETER
-        /// <summary>The reader is reading an entry parameter.</summary>
-        /// <remarks>In this state the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
-        /// and the Value property of the <see cref="ODataParameterReader"/> returns null. The CreateEntryReader() method on the <see cref="ODataParameterReader"/>
-        /// must be called to get the reader to read the entry value.</remarks>
-        Entry,
-
-        /// <summary>The reader is reading a feed parameter.</summary>
-        /// <remarks>In this state the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
-        /// and the Value property of the <see cref="ODataParameterReader"/> returns null. The CreateFeedReader() method on the <see cref="ODataParameterReader"/>
-        /// must be called to get the reader to read the feed value.</remarks>
-        Feed,
-#endif
-
         /// <summary>The reader is reading a collection parameter.</summary>
         /// <remarks>In this state the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. The CreateCollectionReader() method on the <see cref="ODataParameterReader"/>
@@ -53,5 +39,17 @@ namespace Microsoft.OData.Core
         /// <summary>The reader has completed; nothing can be read anymore.</summary>
         /// <remarks>In this state the Name and Value properties of the <see cref="ODataParameterReader"/> return null.</remarks>
         Completed,
+
+        /// <summary>The reader is reading an entry parameter.</summary>
+        /// <remarks>In this state the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
+        /// and the Value property of the <see cref="ODataParameterReader"/> returns null. The CreateEntryReader() method on the <see cref="ODataParameterReader"/>
+        /// must be called to get the reader to read the entry value.</remarks>
+        Entry,
+
+        /// <summary>The reader is reading a feed parameter.</summary>
+        /// <remarks>In this state the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
+        /// and the Value property of the <see cref="ODataParameterReader"/> returns null. The CreateFeedReader() method on the <see cref="ODataParameterReader"/>
+        /// must be called to get the reader to read the feed value.</remarks>
+        Feed,
     }
 }

@@ -71,20 +71,36 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         return new ConstantNode(constantNode.Value, ODataUriUtils.ConvertToUriLiteral(constantNode.Value, ODataVersion.V4), targetTypeReference);
                     }
 
-                    object primitiveValue;
-                    if (MetadataUtilsCommon.TryGetConstantNodePrimitiveLDMF(source, out primitiveValue) && (primitiveValue != null))
+                    object originalPrimitiveValue;
+                    if (MetadataUtilsCommon.TryGetConstantNodePrimitiveDate(source, out originalPrimitiveValue) && (originalPrimitiveValue != null))
+                    {
+                        // DateTimeOffset -> Date when (target is Date) and (originalValue match Date format) and (ConstantNode)
+                        object targetPrimitiveValue = ODataUriConversionUtils.CoerceTemporalType(originalPrimitiveValue, targetTypeReference.AsPrimitive().Definition as IEdmPrimitiveType);
+
+                        if (targetPrimitiveValue != null)
+                        {
+                            if (string.IsNullOrEmpty(constantNode.LiteralText))
+                            {
+                                return new ConstantNode(targetPrimitiveValue);
+                            }
+
+                            return new ConstantNode(targetPrimitiveValue, constantNode.LiteralText, targetTypeReference);
+                        }
+                    }
+
+                    if (MetadataUtilsCommon.TryGetConstantNodePrimitiveLDMF(source, out originalPrimitiveValue) && (originalPrimitiveValue != null))
                     {
                         // L F D M types : directly create a ConvertNode.
                         // 1. NodeToExpressionTranslator.cs won't allow implicitly converting single/double to decimal, which should be done here at Node tree level.
                         // 2. And prevent losing precision in float -> double, e.g. (double)1.234f => 1.2339999675750732d not 1.234d
-                        object primitiveValue2 = ODataUriConversionUtils.CoerceNumericType(primitiveValue, targetTypeReference.AsPrimitive().Definition as IEdmPrimitiveType);
+                        object targetPrimitiveValue = ODataUriConversionUtils.CoerceNumericType(originalPrimitiveValue, targetTypeReference.AsPrimitive().Definition as IEdmPrimitiveType);
 
                         if (string.IsNullOrEmpty(constantNode.LiteralText))
                         {
-                            return new ConstantNode(primitiveValue2);
+                            return new ConstantNode(targetPrimitiveValue);
                         }
 
-                        return new ConstantNode(primitiveValue2, constantNode.LiteralText);
+                        return new ConstantNode(targetPrimitiveValue, constantNode.LiteralText);
                     }
                     else
                     {

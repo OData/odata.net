@@ -289,8 +289,8 @@ namespace Microsoft.OData.Edm.Validation
                         if (duplicate)
                         {
                             context.AddError(
-                                item.Location(), 
-                                EdmErrorCode.DuplicateEntityContainerMemberName, 
+                                item.Location(),
+                                EdmErrorCode.DuplicateEntityContainerMemberName,
                                 Strings.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName(item.Name));
                         }
                     }
@@ -308,7 +308,7 @@ namespace Microsoft.OData.Edm.Validation
                 (context, navigationSource) =>
                 {
                     IEdmEntityType entityType = navigationSource.EntityType();
-                    
+
                     if (entityType == null)
                     {
                         return;
@@ -696,10 +696,10 @@ namespace Microsoft.OData.Edm.Validation
                {
                    if (!enumType.UnderlyingType.PrimitiveKind.IsIntegral() && !context.IsBad(enumType.UnderlyingType))
                    {
-                        context.AddError(
-                            enumType.Location(),
-                            EdmErrorCode.EnumMustHaveIntegerUnderlyingType,
-                            Strings.EdmModel_Validator_Semantic_EnumMustHaveIntegralUnderlyingType(enumType.FullName()));
+                       context.AddError(
+                           enumType.Location(),
+                           EdmErrorCode.EnumMustHaveIntegerUnderlyingType,
+                           Strings.EdmModel_Validator_Semantic_EnumMustHaveIntegralUnderlyingType(enumType.FullName()));
                    }
                });
 
@@ -789,7 +789,7 @@ namespace Microsoft.OData.Edm.Validation
                     {
                         foreach (IEdmStructuralProperty key in entityType.Key())
                         {
-                            if (!key.Type.IsPrimitive() && !context.IsBad(key))
+                            if (!key.Type.IsPrimitive() && !key.Type.IsEnum() && !context.IsBad(key))
                             {
                                 context.AddError(
                                 key.Location(),
@@ -885,15 +885,15 @@ namespace Microsoft.OData.Edm.Validation
         public static readonly ValidationRule<IEdmType> TypeMustNotHaveKindOfNone =
             new ValidationRule<IEdmType>(
                 (context, type) =>
+                {
+                    if (type.TypeKind == EdmTypeKind.None && !context.IsBad(type))
                     {
-                        if (type.TypeKind == EdmTypeKind.None && !context.IsBad(type))
-                        {
-                            context.AddError(
-                            type.Location(),
-                            EdmErrorCode.TypeMustNotHaveKindOfNone,
-                            Strings.EdmModel_Validator_Semantic_TypeMustNotHaveKindOfNone);
-                        }
-                    });
+                        context.AddError(
+                        type.Location(),
+                        EdmErrorCode.TypeMustNotHaveKindOfNone,
+                        Strings.EdmModel_Validator_Semantic_TypeMustNotHaveKindOfNone);
+                    }
+                });
         #endregion
 
         #region IEdmPrimitiveType
@@ -1428,7 +1428,7 @@ namespace Microsoft.OData.Edm.Validation
                             IEdmEntitySet entitySet;
                             IEdmOperationParameter parameter;
                             IEnumerable<IEdmNavigationProperty> path;
-                            
+
                             if (!operationImport.TryGetStaticEntitySet(out entitySet))
                             {
                                 context.AddError(
@@ -1446,8 +1446,8 @@ namespace Microsoft.OData.Edm.Validation
                                     if (foundEntitySet == null)
                                     {
                                         context.AddError(
-                                            operationImport.Location(), 
-                                            EdmErrorCode.OperationImportEntitySetExpressionIsInvalid, 
+                                            operationImport.Location(),
+                                            EdmErrorCode.OperationImportEntitySetExpressionIsInvalid,
                                             Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(operationImport.Name));
                                     }
                                 }
@@ -1567,7 +1567,7 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         #endregion
-        
+
         #region IEdmOperation
 
         /// <summary>
@@ -1633,7 +1633,7 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// Validates that if a operationImport is bindable, it must have parameters.
         /// </summary>
-        public static readonly ValidationRule<IEdmOperation> OperationEntitySetPathMustBeValid = 
+        public static readonly ValidationRule<IEdmOperation> OperationEntitySetPathMustBeValid =
             new ValidationRule<IEdmOperation>((context, operation) =>
             {
                 IEdmOperationParameter bindingParameter = null;
@@ -1648,7 +1648,7 @@ namespace Microsoft.OData.Edm.Validation
                     context.AddError(error);
                 }
             });
-            
+
         /// <summary>
         /// Validates that the return type is consistent with the entityset path if it exists.
         /// </summary>
@@ -1895,7 +1895,7 @@ namespace Microsoft.OData.Edm.Validation
                            }
 
                            duplicateOperationValidator.ValidateNotDuplicate(operation, false /*skipError*/);
-                          
+
                            if (!duplicate)
                            {
                                duplicate = model.OperationOrNameExistsInReferencedModel(operation, fullName);
@@ -1980,8 +1980,8 @@ namespace Microsoft.OData.Edm.Validation
                                 if (!function.ReturnType.IsEquivalentTo(expectedReturnType))
                                 {
                                     context.AddError(
-                                        function.Location(), 
-                                        EdmErrorCode.BoundFunctionOverloadsMustHaveSameReturnType, 
+                                        function.Location(),
+                                        EdmErrorCode.BoundFunctionOverloadsMustHaveSameReturnType,
                                         Strings.EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType(function.Name, expectedReturnType.FullName()));
                                 }
                             }
@@ -2048,46 +2048,46 @@ namespace Microsoft.OData.Edm.Validation
         public static readonly ValidationRule<IEdmDirectValueAnnotation> ImmediateValueAnnotationElementAnnotationHasNameAndNamespace =
             new ValidationRule<IEdmDirectValueAnnotation>(
                 (context, annotation) =>
+                {
+                    IEdmStringValue stringValue = annotation.Value as IEdmStringValue;
+                    if (stringValue != null)
                     {
-                        IEdmStringValue stringValue = annotation.Value as IEdmStringValue;
-                        if (stringValue != null)
+                        if (stringValue.IsSerializedAsElement(context.Model))
                         {
-                            if (stringValue.IsSerializedAsElement(context.Model))
+                            EdmError error;
+                            if (!ValidationHelper.ValidateValueCanBeWrittenAsXmlElementAnnotation(stringValue, annotation.NamespaceUri, annotation.Name, out error))
                             {
-                                EdmError error;
-                                if (!ValidationHelper.ValidateValueCanBeWrittenAsXmlElementAnnotation(stringValue, annotation.NamespaceUri, annotation.Name, out error))
-                                {
-                                    context.AddError(error);
-                                }
+                                context.AddError(error);
                             }
                         }
-                    });
-        
+                    }
+                });
+
         /// <summary>
         /// Validates that the name of a direct value annotation can safely be serialized as XML.
         /// </summary>
         public static readonly ValidationRule<IEdmDirectValueAnnotation> DirectValueAnnotationHasXmlSerializableName =
             new ValidationRule<IEdmDirectValueAnnotation>(
                 (context, annotation) =>
-                    {
-                        string name = annotation.Name;
+                {
+                    string name = annotation.Name;
 
-                        // We check for null, whitespace, and length in separate IEdmNamedElement validation rules.
-                        if (!EdmUtil.IsNullOrWhiteSpaceInternal(name) && name.Length <= CsdlConstants.Max_NameLength && name.Length > 0)
+                    // We check for null, whitespace, and length in separate IEdmNamedElement validation rules.
+                    if (!EdmUtil.IsNullOrWhiteSpaceInternal(name) && name.Length <= CsdlConstants.Max_NameLength && name.Length > 0)
+                    {
+                        try
                         {
-                            try
-                            {
-                                // Note: this check can be done without the try/catch block, but we need XmlConvert.IsStartNCNameChar and XmlConvert.IsNCNameChar, which are not available in 3.5.
-                                XmlConvert.VerifyNCName(annotation.Name);
-                            }
-                            catch (XmlException)
-                            {
-                                IEdmValue value = annotation.Value as IEdmValue;
-                                EdmLocation errorLocation = value == null ? null : value.Location();
-                                context.AddError(new EdmError(errorLocation, EdmErrorCode.InvalidName, Edm.Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed(annotation.Name)));
-                            }
+                            // Note: this check can be done without the try/catch block, but we need XmlConvert.IsStartNCNameChar and XmlConvert.IsNCNameChar, which are not available in 3.5.
+                            XmlConvert.VerifyNCName(annotation.Name);
                         }
-                    });
+                        catch (XmlException)
+                        {
+                            IEdmValue value = annotation.Value as IEdmValue;
+                            EdmLocation errorLocation = value == null ? null : value.Location();
+                            context.AddError(new EdmError(errorLocation, EdmErrorCode.InvalidName, Edm.Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed(annotation.Name)));
+                        }
+                    }
+                });
 
         #endregion
 
@@ -2360,7 +2360,7 @@ namespace Microsoft.OData.Edm.Validation
                     if (expression.DeclaredType != null && !context.IsBad(expression) && !context.IsBad(expression.DeclaredType))
                     {
                         IEnumerable<EdmError> discoveredErrors;
-                        ExpressionTypeChecker.TryCastRecordAsType(expression, expression.DeclaredType,  null, false, out discoveredErrors);
+                        ExpressionTypeChecker.TryCastRecordAsType(expression, expression.DeclaredType, null, false, out discoveredErrors);
                         foreach (EdmError error in discoveredErrors)
                         {
                             context.AddError(error);
@@ -2483,7 +2483,7 @@ namespace Microsoft.OData.Edm.Validation
             public int GetHashCode(IEdmTypeReference obj)
             {
                 string fullName = obj.FullName();
-                
+
                 // Currently when operations have Row types this occurs, simply returning 0 instead to force equals comparision.
                 // Code may be able to be removed when RowType is removed.
                 if (fullName == null)

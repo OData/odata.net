@@ -339,6 +339,18 @@ namespace Microsoft.OData.Core.JsonLight
                 return EdmValueParser.ParseDuration(stringValue);
             }
 
+            // Date
+            if (targetType == typeof(Date))
+            {
+                return PlatformHelper.ConvertStringToDate(stringValue);
+            }
+
+            // Time
+            if (targetType == typeof(TimeOfDay))
+            {
+                return PlatformHelper.ConvertStringToTimeOfDay(stringValue);
+            }
+
             // DateTimeOffset needs to be read using the XML rules (as per the JSON Light spec).
             if (targetType == typeof(DateTimeOffset))
             {

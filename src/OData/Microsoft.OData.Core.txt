@@ -785,7 +785,7 @@ MetadataBinder_QueryOptionNotApplicable=The '{0}' option cannot be applied to th
 FunctionCallBinder_CannotFindASuitableOverload=Cannot find a suitable overload for function '{0}' that takes '{1}' arguments.
 FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent=Found a built-in function '{0}' with a parent token. Built-in functions cannot have parent tokens. 
 FunctionCallBinder_CallingFunctionOnOpenProperty=Found a function '{0}' on an open property. Functions on open properties are not supported.
-FunctionCallParser_DuplicateParameterName=Parameter names must be unique. There is most likely an error in the model.
+FunctionCallParser_DuplicateParameterOrEntityKeyName=Parameter or entity key names must be unique. There is most likely an error in the model.
 
 ODataUriParser_InvalidCount='{0}' is not a valid count option.
 
@@ -841,7 +841,11 @@ UriParser_ExpandCountExceeded=The result of parsing $expand contained at least {
 UriParser_ExpandDepthExceeded=The result of parsing $expand was at least {0} items deep, but the maximum allowed is {1}.
 UriParser_TypeInvalidForSelectExpand=The type '{0}' is not valid for $select or $expand, only structured types are allowed.
 UriParser_ContextHandlerCanNotBeNull=The handler property for context '{0}' should not return null.
-UriParserMetadata_MultiplePropertiesFound=More than one property match the name '{0}' were found in type '{1}'.
+UriParserMetadata_MultipleMatchingPropertiesFound=More than one properties match the name '{0}' were found in type '{1}'.
+UriParserMetadata_MultipleMatchingNavigationSourcesFound=More than one navigation sources match the name '{0}' were found in model.
+UriParserMetadata_MultipleMatchingTypesFound=More than one types match the name '{0}' were found in model.
+UriParserMetadata_MultipleMatchingKeysFound=More than one keys match the name '{0}' were found.
+UriParserMetadata_MultipleMatchingParametersFound=More than one parameters match the name '{0}' were found.
 
 PathParser_EntityReferenceNotSupported=The request URI is not valid. $ref cannot be applied to the segment '{0}' since $ref can only follow an entity segment or entity collection segment.
 PathParser_CannotUseValueOnCollection=$value cannot be applied to a collection.

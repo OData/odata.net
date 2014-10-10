@@ -15,6 +15,7 @@
 namespace Microsoft.OData.Core.Json
 {
     using System;
+    using Microsoft.OData.Edm.Library;
 
     /// <summary>
     /// Interface for a class that can write arbitrary JSON.
@@ -51,16 +52,6 @@ namespace Microsoft.OData.Core.Json
         /// End the current array scope.
         /// </summary>
         void EndArrayScope();
-
-        /// <summary>
-        /// Write the "d" wrapper text.
-        /// </summary>
-        void WriteDataWrapper();
-
-        /// <summary>
-        /// Write the "results" header for the data array.
-        /// </summary>
-        void WriteDataArrayName();
 
         /// <summary>
         /// Write the name for the object property.
@@ -159,19 +150,20 @@ namespace Microsoft.OData.Core.Json
         void WriteValue(byte[] value);
 
         /// <summary>
+        /// Write a Date value
+        /// </summary>
+        /// <param name="value">Date value to be written.</param>
+        void WriteValue(Date value);
+
+        /// <summary>
+        /// Write a TimeOfDay value
+        /// </summary>
+        /// <param name="value">TimeOfDay value to be written.</param>
+        void WriteValue(TimeOfDay value);
+
+        /// <summary>
         /// Clears all buffers for the current writer.
         /// </summary>
         void Flush();
-
-        /// <summary>
-        /// Writes a separator of a value if it's needed for the next value to be written.
-        /// </summary>
-        void WriteValueSeparator();
-
-        /// <summary>
-        /// Start the scope given the scope type.
-        /// </summary>
-        /// <param name="type">The scope type to start.</param>
-        void StartScope(JsonWriter.ScopeType type);
     }
 }

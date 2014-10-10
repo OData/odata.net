@@ -48,6 +48,10 @@ namespace Microsoft.OData.Edm
 #endif
     using System.Xml;
 
+#if !SPATIAL
+    using Microsoft.OData.Edm.Library;
+#endif
+
 #if WINRT
 
     #region Missing enums
@@ -119,6 +123,17 @@ namespace Microsoft.OData.Edm
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static readonly Type[] EmptyTypes = new Type[0];
+
+        /// <summary>
+        /// This pattern eliminates all invalid dates, the supported format should be "YYYY-MM-DD"
+        /// </summary>
+        internal static readonly Regex DateValidator = CreateCompiled(@"^(\d{4})-(0?[1-9]|1[012])-(0?[1-9]|[12]\d|3[0|1])$", RegexOptions.Singleline);
+
+        /// <summary>
+        /// This pattern eliminates all invalid timeOfDay, the supported format should be "hh:mm:ss.fffffff"
+        /// </summary>
+        internal static readonly Regex TimeOfDayValidator = CreateCompiled(@"^(0?\d|1\d|2[0-3]):(0?\d|[1-5]\d)(:(0?\d|[1-5]\d)(\.\d{1,7})?)?$", RegexOptions.Singleline);
+
 
 #if PORTABLELIB
         /// <summary>
@@ -349,6 +364,38 @@ namespace Microsoft.OData.Edm
 #endif
         }
 
+#if !SPATIAL
+        /// <summary>
+        /// Converts a string to a Date.
+        /// </summary>
+        /// <param name="text">String to be converted.</param>
+        /// <returns>Date value</returns>
+        internal static Date ConvertStringToDate(string text)
+        {
+            if (text == null || !DateValidator.IsMatch(text))
+            {
+                throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.Date.", text));
+            }
+
+            return Date.Parse(text, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Converts a string to a TimeOfDay.
+        /// </summary>
+        /// <param name="text">String to be converted.</param>
+        /// <returns>TimeOfDay value</returns>
+        internal static TimeOfDay ConvertStringToTimeOfDay(string text)
+        {
+            if (text == null || !TimeOfDayValidator.IsMatch(text))
+            {
+                throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.TimeOfDay.", text));
+            }
+
+            return TimeOfDay.Parse(text, CultureInfo.InvariantCulture);
+        }
+#endif
+
         /// <summary>
         /// Converts a string to a DateTimeOffset.
         /// </summary>
@@ -405,12 +452,12 @@ namespace Microsoft.OData.Edm
             int indexOfColonBeforeSeconds = indexOfT + ColonBeforeSecondsOffset;
 
             // check if the string is in the format of yyyy-mm-ddThh:mm or in the format of yyyy-mm-ddThh:mm[- or +]hh:mm 
-            if (indexOfT > 0 && 
+            if (indexOfT > 0 &&
                 (text.Length == indexOfColonBeforeSeconds || text.Length > indexOfColonBeforeSeconds && text[indexOfColonBeforeSeconds] != ':'))
             {
                 text = text.Insert(indexOfColonBeforeSeconds, ":00");
             }
-            
+
             return text;
         }
 
@@ -702,7 +749,7 @@ namespace Microsoft.OData.Edm
             // PortableLib: The BindingFlags enum and all related reflection method overloads have been removed from . Instead of trying to provide
             // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
             // still allow for the same functionality as needed by the calling code.
-           
+
 #if PORTABLELIB
             BindingFlags bindingFlags = isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
             bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;

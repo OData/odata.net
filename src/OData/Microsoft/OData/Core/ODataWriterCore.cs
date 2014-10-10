@@ -40,6 +40,9 @@ namespace Microsoft.OData.Core
         /// <summary>True if the writer was created for writing a feed; false when it was created for writing an entry.</summary>
         private readonly bool writingFeed;
 
+        /// <summary>If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</summary>
+        private readonly IODataReaderWriterListener listener;
+
         /// <summary>Stack of writer scopes to keep track of the current context of the writer.</summary>
         private readonly ScopeStack scopes = new ScopeStack();
 
@@ -59,11 +62,13 @@ namespace Microsoft.OData.Core
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <param name="writingFeed">True if the writer is created for writing a feed; false when it is created for writing an entry.</param>
+        /// <param name="listener">If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</param>
         protected ODataWriterCore(
             ODataOutputContext outputContext,
             IEdmNavigationSource navigationSource,
             IEdmEntityType entityType,
-            bool writingFeed)
+            bool writingFeed,
+            IODataReaderWriterListener listener = null)
         {
             Debug.Assert(outputContext != null, "outputContext != null");
 
@@ -88,6 +93,8 @@ namespace Microsoft.OData.Core
             {
                 odataUri.Path = odataUri.Path.TrimEndingKeySegment();
             }
+
+            this.listener = listener;
 
             this.scopes.Push(new Scope(WriterState.Start, /*item*/null, navigationSource, entityType, /*skipWriting*/false, outputContext.MessageWriterSettings.SelectedProperties, odataUri));
         }
@@ -1246,6 +1253,26 @@ namespace Microsoft.OData.Core
             this.currentEntryDepth--;
         }
 
+
+        /// <summary>
+        /// Notifies the implementer of the <see cref="IODataReaderWriterListener"/> interface of relevant state changes in the writer.
+        /// </summary>
+        /// <param name="newState">The new writer state.</param>
+        private void NotifyListener(WriterState newState)
+        {
+            if (this.listener != null)
+            {
+                if (IsErrorState(newState))
+                {
+                    this.listener.OnException();
+                }
+                else if (newState == WriterState.Completed)
+                {
+                    this.listener.OnCompleted();
+                }
+            }
+        }
+
         /// <summary>
         /// Enter a new writer scope; verifies that the transition from the current state into new state is valid
         /// and attaches the item to the new scope.
@@ -1360,6 +1387,8 @@ namespace Microsoft.OData.Core
             }
 
             this.PushScope(newState, item, navigationSource, entityType, skipWriting, selectedProperties, odataUri);
+
+            this.NotifyListener(newState);
         }
 
         /// <summary>
@@ -1380,6 +1409,7 @@ namespace Microsoft.OData.Core
                 Debug.Assert(startScope.State == WriterState.Start, "startScope.State == WriterState.Start");
                 this.PushScope(WriterState.Completed, /*item*/null, startScope.NavigationSource, startScope.EntityType, /*skipWriting*/false, startScope.SelectedProperties, startScope.ODataUri);
                 this.InterceptException(this.EndPayload);
+                this.NotifyListener(WriterState.Completed);
             }
         }
 

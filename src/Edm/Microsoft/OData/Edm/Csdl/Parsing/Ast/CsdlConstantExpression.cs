@@ -55,6 +55,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
                         return Expressions.EdmExpressionKind.StringConstant;
                     case EdmValueKind.Duration:
                         return Expressions.EdmExpressionKind.DurationConstant;
+                    case EdmValueKind.Date:
+                        return Expressions.EdmExpressionKind.DateConstant;
+                    case EdmValueKind.TimeOfDay:
+                        return Expressions.EdmExpressionKind.TimeOfDayConstant;
                     case EdmValueKind.Null:
                         return Expressions.EdmExpressionKind.Null;
                     default:

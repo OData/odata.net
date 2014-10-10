@@ -141,6 +141,9 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.Collection:
                     this.ProcessCollectionExpression((IEdmCollectionExpression)expression);
                     break;
+                case EdmExpressionKind.DateConstant:
+                    this.ProcessDateConstantExpression((IEdmDateConstantExpression)expression);
+                    break;
                 case EdmExpressionKind.DateTimeOffsetConstant:
                     this.ProcessDateTimeOffsetConstantExpression((IEdmDateTimeOffsetConstantExpression)expression);
                     break;
@@ -152,6 +155,9 @@ namespace Microsoft.OData.Edm
                     break;
                 case EdmExpressionKind.EnumMemberReference:
                     this.ProcessEnumMemberReferenceExpression((IEdmEnumMemberReferenceExpression)expression);
+                    break;
+                case EdmExpressionKind.EnumMember:
+                    this.ProcessEnumMemberExpression((IEdmEnumMemberExpression)expression);
                     break;
                 case EdmExpressionKind.FloatingConstant:
                     this.ProcessFloatingConstantExpression((IEdmFloatingConstantExpression)expression);
@@ -203,6 +209,9 @@ namespace Microsoft.OData.Edm
                     break;
                 case EdmExpressionKind.StringConstant:
                     this.ProcessStringConstantExpression((IEdmStringConstantExpression)expression);
+                    break;
+                case EdmExpressionKind.TimeOfDayConstant:
+                    this.ProcessTimeOfDayConstantExpression((IEdmTimeOfDayConstantExpression)expression);
                     break;
                 case EdmExpressionKind.DurationConstant:
                     this.ProcessDurationConstantExpression((IEdmDurationConstantExpression)expression);
@@ -306,6 +315,7 @@ namespace Microsoft.OData.Edm
                     break;
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Duration:
+                case EdmPrimitiveTypeKind.TimeOfDay:
                     this.ProcessTemporalTypeReference(reference.AsTemporal());
                     break;
                 case EdmPrimitiveTypeKind.Geography:
@@ -336,6 +346,7 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.SByte:
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Stream:
+                case EdmPrimitiveTypeKind.Date:
                 case EdmPrimitiveTypeKind.None:
                     this.ProcessPrimitiveTypeReference(reference);
                     break;
@@ -780,12 +791,27 @@ namespace Microsoft.OData.Edm
             this.ProcessExpression(expression);
         }
 
+        protected virtual void ProcessEnumMemberExpression(IEdmEnumMemberExpression expression)
+        {
+            this.ProcessExpression(expression);
+        }
+
         protected virtual void ProcessEntitySetReferenceExpression(IEdmEntitySetReferenceExpression expression)
         {
             this.ProcessExpression(expression);
         }
 
         protected virtual void ProcessDecimalConstantExpression(IEdmDecimalConstantExpression expression)
+        {
+            this.ProcessExpression(expression);
+        }
+
+        protected virtual void ProcessDateConstantExpression(IEdmDateConstantExpression expression)
+        {
+            this.ProcessExpression(expression);
+        }
+
+        protected virtual void ProcessTimeOfDayConstantExpression(IEdmTimeOfDayConstantExpression expression)
         {
             this.ProcessExpression(expression);
         }
@@ -885,7 +911,7 @@ namespace Microsoft.OData.Edm
             {
                 this.VisitTypeReference(operation.ReturnType);
             }
-            
+
             // Do not visit vocabularyAnnotatable because functions and operation imports are always going to be either a schema element or a container element and will be visited through those paths.
             this.VisitOperationParameters(operation.Parameters);
         }

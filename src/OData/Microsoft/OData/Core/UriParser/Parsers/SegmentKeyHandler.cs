@@ -121,15 +121,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return false;
             }
 
-            // If the resource type has more than 1 key property, then do not treat the segment as a key.
-            var keyProperties = targetEntityType.Key().ToList();
-            if (keyProperties.Count > 1)
-            {
-                return false;
-            }
-
-            // At this point it must be treated as a key, so fail if it is malformed.
-            Debug.Assert(keyProperties.Count == 1, "keyProperties.Count == 1");
+            // Previously KeyAsSegment only allows single key, but we can also leverage related key finder to auto fill
+            // missed key value from referential constraint information, which would be done in CreateKeySegment.
+            // CreateKeySegment method will check whether key properties are missing after taking in related key values.
             keySegment = CreateKeySegment(previous, previousKeySegment, SegmentArgumentParser.FromSegment(segmentText, enableUriTemplateParsing), resolver);
 
             return true;

@@ -61,7 +61,9 @@ namespace Microsoft.OData.Edm.Library
             var primitiveGuid = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Guid", EdmPrimitiveTypeKind.Guid);
 
             var primitiveTime = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Duration", EdmPrimitiveTypeKind.Duration);
+            var primitiveTimeOfDay = new EdmValidCoreModelPrimitiveType(EdmNamespace, "TimeOfDay", EdmPrimitiveTypeKind.TimeOfDay);
             var primitiveDateTimeOffset = new EdmValidCoreModelPrimitiveType(EdmNamespace, "DateTimeOffset", EdmPrimitiveTypeKind.DateTimeOffset);
+            var primitiveDate = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Date", EdmPrimitiveTypeKind.Date);
 
             var primitiveDecimal = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Decimal", EdmPrimitiveTypeKind.Decimal);
 
@@ -91,6 +93,7 @@ namespace Microsoft.OData.Edm.Library
                 primitiveBinary,
                 primitiveBoolean,
                 primitiveByte,
+                primitiveDate,
                 primitiveDateTimeOffset,
                 primitiveDecimal,
                 primitiveDouble,
@@ -103,6 +106,7 @@ namespace Microsoft.OData.Edm.Library
                 primitiveStream,
                 primitiveString,
                 primitiveTime,
+                primitiveTimeOfDay,
                 primitiveGeography,
                 primitiveGeographyPoint,
                 primitiveGeographyLineString,
@@ -373,6 +377,16 @@ namespace Microsoft.OData.Edm.Library
         }
 
         /// <summary>
+        /// Get a reference to the Date primitive type definition.
+        /// </summary>
+        /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
+        /// <returns>A new primitive type reference</returns>
+        public IEdmPrimitiveTypeReference GetDate(bool isNullable)
+        {
+            return new EdmPrimitiveTypeReference(this.GetCoreModelPrimitiveType(EdmPrimitiveTypeKind.Date), isNullable);
+        }
+
+        /// <summary>
         /// Gets a reference to a datetime with offset primitive type definition.
         /// </summary>
         /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
@@ -390,6 +404,16 @@ namespace Microsoft.OData.Edm.Library
         public IEdmTemporalTypeReference GetDuration(bool isNullable)
         {
             return new EdmTemporalTypeReference(this.GetCoreModelPrimitiveType(EdmPrimitiveTypeKind.Duration), isNullable);
+        }
+
+        /// <summary>
+        /// Gets a reference to a TimeOfDay primitive type definition
+        /// </summary>
+        /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
+        /// <returns>A new TimeOfDay type reference.</returns>
+        public IEdmTemporalTypeReference GetTimeOfDay(bool isNullable)
+        {
+            return new EdmTemporalTypeReference(this.GetCoreModelPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), isNullable);
         }
 
         /// <summary>
@@ -465,6 +489,7 @@ namespace Microsoft.OData.Edm.Library
             {
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Duration:
+                case EdmPrimitiveTypeKind.TimeOfDay:
                     return new EdmTemporalTypeReference(this.GetCoreModelPrimitiveType(kind), isNullable, precision);
                 default:
                     throw new InvalidOperationException(Edm.Strings.EdmPrimitive_UnexpectedKind);
@@ -483,6 +508,7 @@ namespace Microsoft.OData.Edm.Library
             {
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Duration:
+                case EdmPrimitiveTypeKind.TimeOfDay:
                     return new EdmTemporalTypeReference(this.GetCoreModelPrimitiveType(kind), isNullable);
                 default:
                     throw new InvalidOperationException(Edm.Strings.EdmPrimitive_UnexpectedKind);

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Xml;
 using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
@@ -427,6 +428,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmExpressionKind.DurationConstant:
                     this.WriteRequiredAttribute(CsdlConstants.Attribute_Duration, ((IEdmDurationConstantExpression)expression).Value, EdmValueWriter.DurationAsXml);
                     break;
+                case EdmExpressionKind.DateConstant:
+                    this.WriteRequiredAttribute(CsdlConstants.Attribute_Date, ((IEdmDateConstantExpression)expression).Value, EdmValueWriter.DateAsXml);
+                    break;
+                case EdmExpressionKind.TimeOfDayConstant:
+                    this.WriteRequiredAttribute(CsdlConstants.Attribute_TimeOfDay, ((IEdmTimeOfDayConstantExpression)expression).Value, EdmValueWriter.TimeOfDayAsXml);
+                    break;
                 default:
                     Debug.Assert(false, "Attempted to inline an expression that was not one of the expected inlineable types.");
                     break;
@@ -495,6 +502,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal void WriteNullConstantExpressionElement(IEdmNullExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Null);
+            this.WriteEndElement();
+        }
+
+        internal void WriteDateConstantExpressionElement(IEdmDateConstantExpression expression)
+        {
+            this.xmlWriter.WriteStartElement(CsdlConstants.Element_Date);
+            this.xmlWriter.WriteString(EdmValueWriter.DateAsXml(expression.Value));
             this.WriteEndElement();
         }
 
@@ -586,6 +600,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, labeledElement.Name, EdmValueWriter.StringAsXml);
         }
 
+        internal void WriteTimeOfDayConstantExpressionElement(IEdmTimeOfDayConstantExpression expression)
+        {
+            this.xmlWriter.WriteStartElement(CsdlConstants.Element_TimeOfDay);
+            this.xmlWriter.WriteString(EdmValueWriter.TimeOfDayAsXml(expression.Value));
+            this.WriteEndElement();
+        }
+
         internal void WriteIsTypeExpressionElementHeader(IEdmIsTypeExpression expression, bool inlineType)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_IsType);
@@ -625,10 +646,17 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteEndElement();
         }
 
+        internal void WriteEnumMemberExpressionElement(IEdmEnumMemberExpression expression)
+        {
+            this.xmlWriter.WriteStartElement(CsdlConstants.Element_EnumMember);
+            this.xmlWriter.WriteString(EnumMemberAsXml(expression.EnumMembers));
+            this.WriteEndElement();
+        }
+
         internal void WriteEnumMemberReferenceExpressionElement(IEdmEnumMemberReferenceExpression expression)
         {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_EnumMemberReference);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, expression.ReferencedEnumMember, EnumMemberAsXml);
+            this.xmlWriter.WriteStartElement(CsdlConstants.Element_EnumMember);
+            this.xmlWriter.WriteString(EnumMemberAsXml(expression.ReferencedEnumMember));
             this.WriteEndElement();
         }
 
@@ -745,6 +773,18 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         private static string EnumMemberAsXml(IEdmEnumMember member)
         {
             return member.DeclaringType.FullName() + "/" + member.Name;
+        }
+
+        private static string EnumMemberAsXml(IEnumerable<IEdmEnumMember> members)
+        {
+            string enumTypeName = members.First().DeclaringType.FullName();
+            List<string> memberList = new List<string>();
+            foreach (var member in members)
+            {
+                memberList.Add(enumTypeName + "/" + member.Name);
+            }
+
+            return string.Join(" ", memberList.ToArray());
         }
 
         private static string EntitySetAsXml(IEdmEntitySet set)

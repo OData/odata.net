@@ -34,13 +34,16 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Xml;
 #if ODATALIB
     using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
 #else
     using System.Xml.Linq;
     using Microsoft.OData.Core;
+    using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
     using ExpressionConstants = XmlConstants;
 #endif
+
 
     /// <summary>
     /// Component for formatting literals for use in URIs, ETags, and skip-tokens.
@@ -221,9 +224,19 @@ namespace Microsoft.OData.Core.Evaluation
                 return ConvertByteArrayToKeyString(array);
             }
 
+            if (value is Date)
+            {
+                return value.ToString();
+            }
+
             if (value is DateTimeOffset)
             {
                 return XmlConvert.ToString((DateTimeOffset)value);
+            }
+
+            if (value is TimeOfDay)
+            {
+                return value.ToString();
             }
 
             if (value is TimeSpan)

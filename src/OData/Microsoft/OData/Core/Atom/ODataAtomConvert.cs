@@ -19,6 +19,8 @@ namespace Microsoft.OData.Core.Atom
     using System.Globalization;
     using System.Xml;
     using Microsoft.OData.Core;
+    using Microsoft.OData.Edm.Library;
+
     #endregion Namespaces
 
     /// <summary>
@@ -173,6 +175,26 @@ namespace Microsoft.OData.Core.Atom
         internal static string ToString(this Guid guid)
         {
             return XmlConvert.ToString(guid);
+        }
+
+        /// <summary>
+        /// Converts the given Date value to the string appropriate for Atom format.
+        /// </summary>
+        /// <param name="date">The Date value to convert.</param>
+        /// <returns>The string version of the Date in Atom format.</returns>
+        internal static string ToString(Date date)
+        {
+            return date.ToString();
+        }
+
+        /// <summary>
+        /// Converts the given TimeOfDay value to the string appropriate for Atom format.
+        /// </summary>
+        /// <param name="time">The TimeOfDay value to convert.</param>
+        /// <returns>The string version of the TimeOfDay in Atom format</returns>
+        internal static string ToString(TimeOfDay time)
+        {
+            return time.ToString();
         }
     }
 }

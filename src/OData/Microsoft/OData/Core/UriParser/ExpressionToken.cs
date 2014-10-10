@@ -51,6 +51,7 @@ namespace Microsoft.OData.Core.UriParser
                 return
                     this.Kind == ExpressionTokenKind.BinaryLiteral ||
                     this.Kind == ExpressionTokenKind.BooleanLiteral ||
+                    this.Kind == ExpressionTokenKind.DateLiteral ||
                     this.Kind == ExpressionTokenKind.DateTimeLiteral ||
                     this.Kind == ExpressionTokenKind.DateTimeOffsetLiteral ||
                     this.Kind == ExpressionTokenKind.DurationLiteral ||
@@ -59,6 +60,7 @@ namespace Microsoft.OData.Core.UriParser
                     this.Kind == ExpressionTokenKind.GeographyLiteral ||
                     this.Kind == ExpressionTokenKind.GeometryLiteral ||
                     this.Kind == ExpressionTokenKind.QuotedLiteral ||
+                    this.Kind == ExpressionTokenKind.TimeOfDayLiteral ||
                     ExpressionLexerUtils.IsNumeric(this.Kind);
             }
         }

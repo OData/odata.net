@@ -152,7 +152,6 @@ namespace Microsoft.OData.Core.JsonLight
         }
 #endif
 
-#if SUPPORT_ENTITY_PARAMETER
         /// <summary>
         /// Creates an <see cref="ODataReader"/> to read the entry value of type <paramref name="expectedEntityType"/>.
         /// </summary>
@@ -193,11 +192,10 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="expectedEntityType">Expected feed element type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the feed value of type <paramref name="expectedEntityType"/>.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<ODataReader> CreateFeedReaderAsync(IEdmEntityType expectedEntityType)
+        protected override Task<ODataReader> CreateFeedReaderAsync(IEdmEntityType expectedEntityType)
         {
-            return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateFeedReaderSynchronously(expectedEntityType);
+            return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateFeedReaderSynchronously(expectedEntityType));
         }
-#endif
 #endif
 
         /// <summary>
@@ -277,7 +275,6 @@ namespace Microsoft.OData.Core.JsonLight
             return this.jsonLightParameterDeserializer.ReadNextParameter(this.duplicatePropertyNamesChecker);
         }
 
-#if SUPPORT_ENTITY_PARAMETER
         /// <summary>
         /// Creates an <see cref="ODataReader"/> to read the entry value of type <paramref name="expectedEntityType"/>.
         /// </summary>
@@ -286,7 +283,7 @@ namespace Microsoft.OData.Core.JsonLight
         private ODataReader CreateEntryReaderSynchronously(IEdmEntityType expectedEntityType)
         {
             Debug.Assert(expectedEntityType != null, "expectedEntityType != null");
-            return new ODataJsonLightReader(this.jsonLightInputContext, expectedEntityType, false /*readingFeed*/, this /*IODataReaderListener*/);
+            return new ODataJsonLightReader(this.jsonLightInputContext, null, expectedEntityType, false /*readingFeed*/, true /*readingParameter*/, this /*IODataReaderListener*/);
         }
 
         /// <summary>
@@ -297,9 +294,8 @@ namespace Microsoft.OData.Core.JsonLight
         private ODataReader CreateFeedReaderSynchronously(IEdmEntityType expectedEntityType)
         {
             Debug.Assert(expectedEntityType != null, "expectedEntityType != null");
-            return new ODataJsonLightReader(this.jsonLightInputContext, expectedEntityType, true /*readingFeed*/, this /*IODataReaderListener*/);
+            return new ODataJsonLightReader(this.jsonLightInputContext, null, expectedEntityType, true /*readingFeed*/, true /*readingParameter*/, this /*IODataReaderListener*/);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataCollectionReader"/> to read the collection with type <paramref name="expectedItemTypeReference"/>.

@@ -22,6 +22,7 @@ namespace Microsoft.OData.Core.UriParser
     using System.Xml;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.Edm.Library;
 
     #endregion Namespaces
 
@@ -179,6 +180,48 @@ namespace Microsoft.OData.Core.UriParser
             try
             {
                 targetValue = PlatformHelper.ConvertStringToDateTimeOffset(text);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Converts a string to a Date value.
+        /// </summary>
+        /// <param name="text">String text to convert.</param>
+        /// <param name="targetValue">After invocation, converted value.</param>
+        /// <returns>true if the value was converted; false otherwise.</returns>
+        internal static bool TryUriStringToDate(string text, out Date targetValue)
+        {
+            targetValue = default(Date);
+
+            try
+            {
+                targetValue = PlatformHelper.ConvertStringToDate(text);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Converts a string to a TimeOfDay value.
+        /// </summary>
+        /// <param name="text">String text to convert.</param>
+        /// <param name="targetValue">After invocation, converted value.</param>
+        /// <returns>true if the value was converted; false otherwise.</returns>
+        internal static bool TryUriStringToTimeOfDay(string text, out TimeOfDay targetValue)
+        {
+            targetValue = default(TimeOfDay);
+
+            try
+            {
+                targetValue = PlatformHelper.ConvertStringToTimeOfDay(text);
                 return true;
             }
             catch (FormatException)

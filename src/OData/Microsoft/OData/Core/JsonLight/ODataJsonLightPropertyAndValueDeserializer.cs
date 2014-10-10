@@ -783,7 +783,6 @@ namespace Microsoft.OData.Core.JsonLight
                 complexValue.SetAnnotation(new ODataTypeAnnotation(complexValueTypeReference));
             }
 
-            bool foundProperty = false;
             List<ODataProperty> properties = new List<ODataProperty>();
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
@@ -806,11 +805,6 @@ namespace Microsoft.OData.Core.JsonLight
                                 }
 
                             case PropertyParsingResult.CustomInstanceAnnotation:
-                                if (foundProperty)
-                                {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
-                                }
-
                                 ODataAnnotationNames.ValidateIsCustomAnnotationName(propertyName);
                                 Debug.Assert(
                                     !this.MessageReaderSettings.ShouldSkipAnnotation(propertyName),
@@ -823,8 +817,6 @@ namespace Microsoft.OData.Core.JsonLight
                                 throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_ComplexValuePropertyAnnotationWithoutProperty(propertyName));
 
                             case PropertyParsingResult.PropertyWithValue:
-                                foundProperty = true;
-
                                 // Any other property is data
                                 ODataProperty property = new ODataProperty();
                                 property.Name = propertyName;

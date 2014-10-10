@@ -154,7 +154,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
                 else
                 {
-                    candidateMatchingOperations = model.FindOperations(identifier).ToList();
+                    candidateMatchingOperations = resolver.ResolveUnboundOperations(model, identifier).ToList();
                 }
             }
             catch (Exception exc)

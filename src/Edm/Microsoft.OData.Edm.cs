@@ -343,8 +343,15 @@ namespace Microsoft.OData.Edm {
         internal const string EdmUtil_NullValueForMimeTypeAnnotation = "EdmUtil_NullValueForMimeTypeAnnotation";
         internal const string EdmUtil_InvalidAnnotationValue = "EdmUtil_InvalidAnnotationValue";
         internal const string PlatformHelper_DateTimeOffsetMustContainTimeZone = "PlatformHelper_DateTimeOffsetMustContainTimeZone";
+        internal const string Date_InvalidAddedOrSubtractedResults = "Date_InvalidAddedOrSubtractedResults";
         internal const string Date_InvalidDateParameters = "Date_InvalidDateParameters";
+        internal const string Date_InvalidParsingString = "Date_InvalidParsingString";
+        internal const string Date_InvalidCompareToTarget = "Date_InvalidCompareToTarget";
         internal const string TimeOfDay_InvalidTimeOfDayParameters = "TimeOfDay_InvalidTimeOfDayParameters";
+        internal const string TimeOfDay_TicksOutOfRange = "TimeOfDay_TicksOutOfRange";
+        internal const string TimeOfDay_ConvertErrorFromTimeSpan = "TimeOfDay_ConvertErrorFromTimeSpan";
+        internal const string TimeOfDay_InvalidParsingString = "TimeOfDay_InvalidParsingString";
+        internal const string TimeOfDay_InvalidCompareToTarget = "TimeOfDay_InvalidCompareToTarget";
 
         static EntityRes loader = null;
         ResourceManager resources;

@@ -27,9 +27,13 @@ namespace Microsoft.OData.Edm.Csdl
 #endif
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using System.Text.RegularExpressions;
     using System.Xml;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
 
     /// <summary>
     /// Contains xml parsing methods for Edm.
@@ -40,6 +44,18 @@ namespace Microsoft.OData.Edm.Csdl
         /// This pattern eliminates all durations with year or month fields, leaving only those with day, hour, minutes, and/or seconds fields
         /// </summary>
         internal static readonly Regex DayTimeDurationValidator = PlatformHelper.CreateCompiled("^[^YM]*[DT].*$", RegexOptions.Singleline);
+
+        /// <summary>
+        /// The hash set of primitive type kinds that corresponds to an integer.
+        /// </summary>
+        internal static readonly HashSet<EdmPrimitiveTypeKind> IntegerTypeKind = new HashSet<EdmPrimitiveTypeKind>(EqualityComparer<EdmPrimitiveTypeKind>.Default)
+        {
+            EdmPrimitiveTypeKind.Byte,
+            EdmPrimitiveTypeKind.SByte,
+            EdmPrimitiveTypeKind.Int16,
+            EdmPrimitiveTypeKind.Int32,
+            EdmPrimitiveTypeKind.Int64
+        };
 
         /// <summary>
         /// Converts a string to a TimeSpan.
@@ -161,7 +177,7 @@ namespace Microsoft.OData.Edm.Csdl
         {
             try
             {
-                result = EdmValueParser.ParseDuration(value);
+                result = ParseDuration(value);
                 return true;
             }
             catch (FormatException)
@@ -319,6 +335,96 @@ namespace Microsoft.OData.Edm.Csdl
                 result = null;
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Attempts to parse a Date value from the specified text.
+        /// </summary>
+        /// <param name="value">Input string</param>
+        /// <param name="result">The Date resulting from parsing the string value</param>
+        /// <returns>true if the value was parsed successfully, false otherwise</returns>
+        internal static bool TryParseDate(string value, out Date? result)
+        {
+            try
+            {
+                result = PlatformHelper.ConvertStringToDate(value);
+                return true;
+            }
+            catch (FormatException)
+            {
+                result = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Attempts to parse a TimeOfDay value from the specified text.
+        /// </summary>
+        /// <param name="value">Input string</param>
+        /// <param name="result">The TimeOfDay resulting from parsing the string value</param>
+        /// <returns>true if the value was parsed successfully, false otherwise</returns>
+        internal static bool TryParseTimeOfDay(string value, out TimeOfDay? result)
+        {
+            try
+            {
+                result = PlatformHelper.ConvertStringToTimeOfDay(value);
+                return true;
+            }
+            catch (FormatException)
+            {
+                result = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Try parse enum members specified in a string value from declared schema types
+        /// </summary>
+        /// <param name="value">Enum value string</param>
+        /// <param name="schemaTypes">Declared schema types</param>
+        /// <param name="result">Parsed enum members</param>
+        /// <returns>True for successfully parsed, false for failed</returns>
+        internal static bool TryParseEnumMember(string value, IEnumerable<IEdmSchemaType> schemaTypes, out IEnumerable<IEdmEnumMember> result)
+        {
+            result = null;
+            var enumValues = value.Split(' ').Where(v => !String.IsNullOrEmpty(v));
+            if (!enumValues.Any())
+            {
+                return false;
+            }
+
+            string enumTypeName = enumValues.First().Split('/').FirstOrDefault();
+            IEdmEnumType enumType = schemaTypes.Where(t => t.FullName() == enumTypeName).SingleOrDefault() as IEdmEnumType;
+            if (enumType == null || (enumValues.Count() > 1 && (!enumType.IsFlags || !IntegerTypeKind.Contains(enumType.UnderlyingType.PrimitiveKind))))
+            {
+                return false;
+            }
+
+            List<IEdmEnumMember> enumMembers = new List<IEdmEnumMember>();
+            foreach (var enumValue in enumValues)
+            {
+                string[] path = enumValue.Split('/');
+                if (path.Count() != 2)
+                {
+                    return false;
+                }
+
+                if (path[0] != enumTypeName)
+                {
+                    return false;
+                }
+
+                IEdmEnumMember member = enumType.Members.Where(m => m.Name == path[1]).SingleOrDefault();
+                if (member == null)
+                {
+                    return false;
+                }
+
+                enumMembers.Add(member);
+            }
+
+            result = enumMembers;
+            return true;
         }
 
         /// <summary>

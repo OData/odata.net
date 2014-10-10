@@ -68,6 +68,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Attribute_Collation = "Collation";
         internal const string Attribute_ConcurrencyMode = "ConcurrencyMode";
         internal const string Attribute_ContainsTarget = "ContainsTarget";
+        internal const string Attribute_Date = "Date";
         internal const string Attribute_DateTimeOffset = "DateTimeOffset";
         internal const string Attribute_Decimal = "Decimal";
         internal const string Attribute_DefaultValue = "DefaultValue";
@@ -76,6 +77,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Attribute_EntityType = "EntityType";
         internal const string Attribute_EntitySet = "EntitySet";
         internal const string Attribute_EntitySetPath = "EntitySetPath";
+        internal const string Attribute_EnumMember = "EnumMember";
         internal const string Attribute_Float = "Float";
         internal const string Attribute_Function = "Function";
         internal const string Attribute_Guid = "Guid";
@@ -104,6 +106,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Attribute_Target = "Target";
         internal const string Attribute_Term = "Term";
         internal const string Attribute_Duration = "Duration";
+        internal const string Attribute_TimeOfDay = "TimeOfDay";
         internal const string Attribute_Type = "Type";
         internal const string Attribute_UnderlyingType = "UnderlyingType";
         internal const string Attribute_Unicode = "Unicode";
@@ -120,6 +123,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Element_Collection = "Collection";
         internal const string Element_CollectionType = "CollectionType";
         internal const string Element_ComplexType = "ComplexType";
+        internal const string Element_Date = "Date";
         internal const string Element_DateTimeOffset = "DateTimeOffset";
         internal const string Element_Decimal = "Decimal";
         internal const string Element_Documentation = "Documentation";
@@ -127,7 +131,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Element_EntitySet = "EntitySet";
         internal const string Element_EntitySetReference = "EntitySetReference";
         internal const string Element_EntityType = "EntityType";
-        internal const string Element_EnumMemberReference = "EnumMemberReference";
+        internal const string Element_EnumMember = "EnumMember";
         internal const string Element_EnumType = "EnumType";
         internal const string Element_Float = "Float";
         internal const string Element_Guid = "Guid";
@@ -165,6 +169,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Element_Summary = "Summary";
         internal const string Element_Duration = "Duration";
         internal const string Element_Term = "Term";
+        internal const string Element_TimeOfDay = "TimeOfDay";
         internal const string Element_TypeDefinition = "TypeDefinition";
         internal const string Element_TypeRef = "TypeRef";
 

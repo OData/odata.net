@@ -109,28 +109,16 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
             else
             {
-                IEdmContainedEntitySet result;
-                if (this.containedNavigationPropertyCache.TryGetValue(property, out result))
-                {
-                    return result;
-                }
-                else
-                {
-                    result = new EdmContainedEntitySet(this, property);
-                    this.containedNavigationPropertyCache.Add(property, result);
-                }
-
-                return result;
+                return EdmUtil.DictionaryGetOrUpdate(
+                    this.containedNavigationPropertyCache,
+                    property,
+                    navProperty => new EdmContainedEntitySet(this, navProperty));
             }
 
-            IEdmUnknownEntitySet unknownEntitySet;
-            if (!this.unknownNavigationPropertyCache.TryGetValue(property, out unknownEntitySet))
-            {
-                unknownEntitySet = new EdmUnknownEntitySet(this, property);
-                this.unknownNavigationPropertyCache.Add(property, unknownEntitySet);
-            }
-
-            return unknownEntitySet;
+            return EdmUtil.DictionaryGetOrUpdate(
+                    this.unknownNavigationPropertyCache,
+                    property,
+                    navProperty => new EdmUnknownEntitySet(this, navProperty));
         }
 
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()

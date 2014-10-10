@@ -212,6 +212,19 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
+        /// Checks whether a type reference refers to a OData collection value type of entity elements.
+        /// </summary>
+        /// <param name="typeReference">The (non-null) <see cref="IEdmType"/> to check.</param>
+        /// <returns>true if the <paramref name="typeReference"/> is an entity OData collection value type; otherwise false.</returns>
+        internal static bool IsEntityCollectionType(this IEdmTypeReference typeReference)
+        {
+            ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
+            ExceptionUtils.CheckArgumentNotNull(typeReference.Definition, "typeReference.Definition");
+
+            return typeReference.Definition.IsEntityCollectionType();
+        }
+
+        /// <summary>
         /// Checks whether a type refers to a OData collection value type of non-entity elements.
         /// </summary>
         /// <param name="type">The (non-null) <see cref="IEdmType"/> to check.</param>
@@ -224,6 +237,27 @@ namespace Microsoft.OData.Core.Metadata
 
             // Return false if this is not a collection type, or if it's a collection of entity types (i.e., a navigation property)
             if (collectionType == null || (collectionType.ElementType != null && collectionType.ElementType.TypeKind() == EdmTypeKind.Entity))
+            {
+                return false;
+            }
+
+            Debug.Assert(collectionType.TypeKind == EdmTypeKind.Collection, "Expected collection type kind.");
+            return true;
+        }
+
+        /// <summary>
+        /// Checks whether a type refers to a OData collection value type of entity elements.
+        /// </summary>
+        /// <param name="type">The (non-null) <see cref="IEdmType"/> to check.</param>
+        /// <returns>true if the <paramref name="type"/> is an entity OData collection value type; otherwise false.</returns>
+        internal static bool IsEntityCollectionType(this IEdmType type)
+        {
+            Debug.Assert(type != null, "type != null");
+
+            IEdmCollectionType collectionType = type as IEdmCollectionType;
+
+            // Return false if this is not a collection type, or if it's a collection of entity types (i.e., a navigation property)
+            if (collectionType == null || (collectionType.ElementType != null && collectionType.ElementType.TypeKind() != EdmTypeKind.Entity))
             {
                 return false;
             }
@@ -389,8 +423,55 @@ namespace Microsoft.OData.Core.Metadata
                     }
 
                     break;
+                case EdmPrimitiveTypeKind.DateTimeOffset:
+                    switch (targetPrimitiveKind)
+                    {
+                        case EdmPrimitiveTypeKind.DateTimeOffset:
+                            return true;
+                        case EdmPrimitiveTypeKind.Date:
+                            object tmp;
+                            return TryGetConstantNodePrimitiveDate(sourceNodeOrNull, out tmp);
+                    }
+
+                    break;
+
                 default:
                     return sourcePrimitiveKind == targetPrimitiveKind || targetPrimitiveType.IsAssignableFrom(sourcePrimitiveType);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Try getting the constant DateTimeOffset node value
+        /// </summary>
+        /// <param name="sourceNodeOrNull">The Node</param>
+        /// <param name="primitiveValue">The out parameter if succeeds</param>
+        /// <returns>true if the constant node is for date type</returns>
+        internal static bool TryGetConstantNodePrimitiveDate(SingleValueNode sourceNodeOrNull, out object primitiveValue)
+        {
+            primitiveValue = null;
+            if ((sourceNodeOrNull != null) && (sourceNodeOrNull is ConstantNode))
+            {
+                ConstantNode tmp = (ConstantNode)sourceNodeOrNull;
+                IEdmPrimitiveType primitiveType = tmp.TypeReference.AsPrimitiveOrNull().Definition as IEdmPrimitiveType;
+                if (primitiveType != null)
+                {
+                    switch (primitiveType.PrimitiveKind)
+                    {
+                        case EdmPrimitiveTypeKind.DateTimeOffset:
+                            Date result;
+                            if (UriParser.UriUtils.TryUriStringToDate(tmp.LiteralText, out result))
+                            {
+                                primitiveValue = tmp.LiteralText;
+                                return true;
+                            }
+
+                            break;
+                        default:
+                            return false;
+                    }
+                }
             }
 
             return false;

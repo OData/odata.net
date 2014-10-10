@@ -41,7 +41,6 @@ namespace Microsoft.OData.Core
         /// <param name="entityType">The entity type of the entity value if not the base type of the entity set (optional).</param>
         public ODataTypeAnnotation(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            ExceptionUtils.CheckArgumentNotNull(navigationSource, "navigation source");
             ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
             this.navigationSource = navigationSource;
             this.type = entityType.ToTypeReference(/*isNullable*/ true);

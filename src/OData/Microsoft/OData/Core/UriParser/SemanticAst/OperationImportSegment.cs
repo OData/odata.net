@@ -72,6 +72,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             ExceptionUtils.CheckArgumentNotNull(operationImport, "operationImport");
             this.operationImports = new ReadOnlyCollection<IEdmOperationImport>(new[] { operationImport });
+            this.Identifier = operationImport.Name;
             this.entitySet = entitySet;
             this.computedReturnEdmType = operationImport.Operation.ReturnType != null ? operationImport.Operation.ReturnType.Definition : null;
             this.EnsureTypeAndSetAreCompatable();
@@ -93,6 +94,8 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 
             // check for empty after we copy locally, so that we don't do multiple enumeration of input
             ExceptionUtils.CheckArgumentCollectionNotNullOrEmpty(this.operationImports, "operations");
+
+            this.Identifier = this.operationImports.First().Name;
 
             // Determine the return type of the operation. This is only possible if all the candidate operations agree on the return type.
             // TODO: Because we work on types and not type references, if there are nullability differences we'd ignore them...

@@ -88,6 +88,16 @@ namespace Microsoft.OData.Edm.Values
         /// Represents a value implementing <see cref="IEdmDurationValue"/>. 
         /// </summary>
         Duration,
+
+        /// <summary>
+        /// Represents a value implementing <see cref="IEdmDateValue"/>. 
+        /// </summary>
+        Date,
+
+        /// <summary>
+        /// Represents a value implementing <see cref="IEdmTimeOfDayValue"/>. 
+        /// </summary>
+        TimeOfDay,
     }
 
     /// <summary>

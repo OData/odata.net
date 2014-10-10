@@ -174,7 +174,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 if (argList.Select(t => t.ParameterName).Distinct().Count() != argList.Count)
                 {
-                    throw new ODataException(ODataErrorStrings.FunctionCallParser_DuplicateParameterName);
+                    throw new ODataException(ODataErrorStrings.FunctionCallParser_DuplicateParameterOrEntityKeyName);
                 }
 
                 return true;

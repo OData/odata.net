@@ -25,6 +25,7 @@ namespace Microsoft.OData.Core.Json
     using System.Globalization;
     using System.IO;
     using System.Xml;
+    using Microsoft.OData.Edm.Library;
     #endregion Namespaces
 
     /// <summary>
@@ -263,6 +264,30 @@ namespace Microsoft.OData.Core.Json
             Debug.Assert(writer != null, "writer != null");
 
             WriteQuoted(writer, EdmValueWriter.DurationAsXml(value));
+        }
+
+        /// <summary>
+        /// Write a TimeOfDay value
+        /// </summary>
+        /// <param name="writer">The text writer to write the output to.</param>
+        /// <param name="value">TimeOfDay value to be written.</param>
+        internal static void WriteValue(TextWriter writer, TimeOfDay value)
+        {
+            Debug.Assert(writer != null, "writer != null");
+
+            WriteQuoted(writer, value.ToString());
+        }
+
+        /// <summary>
+        /// Write a Date value
+        /// </summary>
+        /// <param name="writer">The text writer to write the output to.</param>
+        /// <param name="value">Date value to be written.</param>
+        internal static void WriteValue(TextWriter writer, Date value)
+        {
+            Debug.Assert(writer != null, "writer != null");
+
+            WriteQuoted(writer, value.ToString());
         }
 
         /// <summary>

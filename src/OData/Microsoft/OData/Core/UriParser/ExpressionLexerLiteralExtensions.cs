@@ -54,6 +54,8 @@ namespace Microsoft.OData.Core.UriParser
                 case ExpressionTokenKind.NullLiteral:
                 case ExpressionTokenKind.SingleLiteral:
                 case ExpressionTokenKind.StringLiteral:
+                case ExpressionTokenKind.TimeOfDayLiteral:
+                case ExpressionTokenKind.DateLiteral:
                 case ExpressionTokenKind.DateTimeOffsetLiteral:
                 case ExpressionTokenKind.DurationLiteral:
                 case ExpressionTokenKind.GeographyLiteral:
@@ -124,7 +126,7 @@ namespace Microsoft.OData.Core.UriParser
                         expressionLexer.ExpressionText,
                         reason);
                 }
-                
+
                 throw new ODataException(message);
             }
 
@@ -164,6 +166,8 @@ namespace Microsoft.OData.Core.UriParser
                     return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetGuid(false));
                 case ExpressionTokenKind.BinaryLiteral:
                     return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetBinary(true));
+                case ExpressionTokenKind.DateLiteral:
+                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetDate(false));
                 case ExpressionTokenKind.DateTimeOffsetLiteral:
                     return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetDateTimeOffset(false));
                 case ExpressionTokenKind.DurationLiteral:
@@ -174,6 +178,8 @@ namespace Microsoft.OData.Core.UriParser
                     return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geometry, false));
                 case ExpressionTokenKind.QuotedLiteral:
                     return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetString(true));
+                case ExpressionTokenKind.TimeOfDayLiteral:
+                    return ParseTypedLiteral(expressionLexer, EdmCoreModel.Instance.GetTimeOfDay(false));
             }
 
             return null;

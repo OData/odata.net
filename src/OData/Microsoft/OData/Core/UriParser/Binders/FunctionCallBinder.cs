@@ -351,7 +351,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             // TODO:  $filter $orderby parameter expression which contains complex or collection should NOT be supported in this way
             //     but should be parsed into token tree, and binded to node tree: parsedParameters.Select(p => this.bindMethod(p));
-            ICollection<FunctionParameterToken> parsedParameters = HandleComplexOrCollectionParameterValueIfExists(state.Configuration.Model, function, syntacticArguments);
+            ICollection<FunctionParameterToken> parsedParameters = HandleComplexOrCollectionParameterValueIfExists(state.Configuration.Model, function, syntacticArguments, state.Configuration.Resolver.EnableCaseInsensitive);
 
             IEnumerable<QueryNode> boundArguments = parsedParameters.Select(p => this.bindMethod(p));
             boundArguments = boundArguments.ToList(); // force enumerable to run : will immediately evaluate all this.bindMethod(p).
@@ -399,7 +399,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         internal static List<OperationSegmentParameter> BindSegmentParameters(ODataUriParserConfiguration configuration, IEdmOperation functionOrOpertion, ICollection<FunctionParameterToken> segmentParameterTokens)
         {
             // TODO: HandleComplexOrCollectionParameterValueIfExists  is temp work around for single copmlex or colleciton type, it can't handle nested complex or collection value.
-            ICollection<FunctionParameterToken> parametersParsed = FunctionCallBinder.HandleComplexOrCollectionParameterValueIfExists(configuration.Model, functionOrOpertion, segmentParameterTokens, configuration.EnableUriTemplateParsing);
+            ICollection<FunctionParameterToken> parametersParsed = FunctionCallBinder.HandleComplexOrCollectionParameterValueIfExists(configuration.Model, functionOrOpertion, segmentParameterTokens, configuration.Resolver.EnableCaseInsensitive, configuration.EnableUriTemplateParsing);
 
             // Bind it to metadata
             BindingState state = new BindingState(configuration);
@@ -454,17 +454,30 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         ///     but should be parsed into token tree, and binded to node tree: parsedParameters.Select(p => this.bindMethod(p));
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <param name="functionOrOpertion">IEdmFunction or IEdmOperation</param>
+        /// <param name="operation">IEdmFunction or IEdmOperation</param>
         /// <param name="parameterTokens">The tokens to bind.</param>
+        /// <param name="enableCaseInsensitive">Whether to enable case-insensitive when resolving parameter name.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>The FunctionParameterTokens with complex or collection values converted from string like "{...}", or "[..,..,..]".</returns>
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
              Justification = "Parameter type is needed to convert from uri literal.")]
-        private static ICollection<FunctionParameterToken> HandleComplexOrCollectionParameterValueIfExists(IEdmModel model, IEdmOperation functionOrOpertion, ICollection<FunctionParameterToken> parameterTokens, bool enableUriTemplateParsing = false)
+        private static ICollection<FunctionParameterToken> HandleComplexOrCollectionParameterValueIfExists(IEdmModel model, IEdmOperation operation, ICollection<FunctionParameterToken> parameterTokens, bool enableCaseInsensitive, bool enableUriTemplateParsing = false)
         {
             ICollection<FunctionParameterToken> partiallyParsedParametersWithComplexOrCollection = new Collection<FunctionParameterToken>();
-            foreach (FunctionParameterToken funcParaToken in parameterTokens)
+            foreach (FunctionParameterToken paraToken in parameterTokens)
             {
+                FunctionParameterToken funcParaToken;
+
+                if (enableCaseInsensitive && operation.FindParameter(paraToken.ParameterName) == null)
+                {
+                    IEdmOperationParameter functionParameter = ODataUriResolver.ResolveOpearationParameterNameCaseInsensitive(operation, paraToken.ParameterName);
+                    funcParaToken = new FunctionParameterToken(functionParameter.Name, paraToken.ValueToken);
+                }
+                else
+                {
+                    funcParaToken = paraToken;
+                }
+
                 LiteralToken valueToken = funcParaToken.ValueToken as LiteralToken;
                 string valueStr = null;
                 if (valueToken != null && (valueStr = valueToken.Value as string) != null)
@@ -472,10 +485,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     var lexer = new ExpressionLexer(valueStr, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
                     if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression)
                     {
-                        var functionParameter = functionOrOpertion.FindParameter(funcParaToken.ParameterName);
+                        var functionParameter = operation.FindParameter(funcParaToken.ParameterName);
                         if (functionParameter == null)
                         {
-                            throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(funcParaToken.ParameterName, functionOrOpertion.Name));
+                            throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(funcParaToken.ParameterName, operation.Name));
                         }
 
                         object result;

@@ -372,7 +372,11 @@ namespace Microsoft.OData.Core.UriParser
                 return;
             }
 
-            this.ParameterAliasValueAccessor = new ParameterAliasValueAccessor(queryOptions.GetParameterAliases());
+            // When parse path failed first time, the alias node would be not null, but already removed from query options, so do not set it in this case.
+            if (this.ParameterAliasValueAccessor == null)
+            {
+                this.ParameterAliasValueAccessor = new ParameterAliasValueAccessor(queryOptions.GetParameterAliases());
+            }
 
             this.odataPath = this.ParsePathImplementation();
             ODataPathSegment lastSegment = this.odataPath.LastSegment;

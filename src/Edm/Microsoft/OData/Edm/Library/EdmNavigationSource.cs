@@ -91,24 +91,16 @@ namespace Microsoft.OData.Edm.Library
             }
             else
             {
-                IEdmContainedEntitySet containedEntitySet;
-                if (!this.containedNavigationPropertyCache.TryGetValue(property, out containedEntitySet))
-                {
-                    containedEntitySet = new EdmContainedEntitySet(this, property);
-                    this.containedNavigationPropertyCache.Add(property, containedEntitySet);
-                }
-
-                return containedEntitySet;
+                return EdmUtil.DictionaryGetOrUpdate(
+                    this.containedNavigationPropertyCache,
+                    property,
+                    navProperty => new EdmContainedEntitySet(this, navProperty));
             }
 
-            IEdmUnknownEntitySet unknownEntitySet;
-            if (!this.unknownNavigationPropertyCache.TryGetValue(property, out unknownEntitySet))
-            {
-                unknownEntitySet = new EdmUnknownEntitySet(this, property);
-                this.unknownNavigationPropertyCache.Add(property, unknownEntitySet);
-            }
-
-            return unknownEntitySet;
+            return EdmUtil.DictionaryGetOrUpdate(
+                this.unknownNavigationPropertyCache,
+                property,
+                navProperty => new EdmUnknownEntitySet(this, navProperty));
         }
 
         private IEnumerable<IEdmNavigationPropertyBinding> ComputeNavigationTargets()

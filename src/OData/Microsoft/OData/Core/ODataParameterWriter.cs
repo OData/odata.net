@@ -63,6 +63,30 @@ namespace Microsoft.OData.Core
         public abstract Task<ODataCollectionWriter> CreateCollectionWriterAsync(string parameterName);
 #endif
 
+        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write an entry. </summary>
+        /// <param name="parameterName">The name of the parameter to write.</param>
+        /// <returns>The created writer.</returns>
+        public abstract ODataWriter CreateEntryWriter(string parameterName);
+
+#if ODATALIB_ASYNC
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write an entry.</summary>
+        /// <param name="parameterName">The name of the parameter to write.</param>
+        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataWriter" />.</returns>
+        public abstract Task<ODataWriter> CreateEntryWriterAsync(string parameterName);
+#endif
+
+        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a feed. </summary>
+        /// <param name="parameterName">The name of the parameter to write.</param>
+        /// <returns>The created writer.</returns>
+        public abstract ODataWriter CreateFeedWriter(string parameterName);
+
+#if ODATALIB_ASYNC
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write a feed.</summary>
+        /// <param name="parameterName">The name of the parameter to write.</param>
+        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataWriter" />.</returns>
+        public abstract Task<ODataWriter> CreateFeedWriterAsync(string parameterName);
+#endif
+
         /// <summary>Finish writing a parameter payload.</summary>
         public abstract void WriteEnd();
 

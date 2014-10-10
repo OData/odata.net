@@ -720,7 +720,7 @@ namespace Microsoft.OData.Core {
         internal const string FunctionCallBinder_CannotFindASuitableOverload = "FunctionCallBinder_CannotFindASuitableOverload";
         internal const string FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent = "FunctionCallBinder_BuiltInFunctionMustHaveHaveNullParent";
         internal const string FunctionCallBinder_CallingFunctionOnOpenProperty = "FunctionCallBinder_CallingFunctionOnOpenProperty";
-        internal const string FunctionCallParser_DuplicateParameterName = "FunctionCallParser_DuplicateParameterName";
+        internal const string FunctionCallParser_DuplicateParameterOrEntityKeyName = "FunctionCallParser_DuplicateParameterOrEntityKeyName";
         internal const string ODataUriParser_InvalidCount = "ODataUriParser_InvalidCount";
         internal const string CastBinder_ChildTypeIsNotEntity = "CastBinder_ChildTypeIsNotEntity";
         internal const string CastBinder_EnumOnlyCastToOrFromString = "CastBinder_EnumOnlyCastToOrFromString";
@@ -765,7 +765,11 @@ namespace Microsoft.OData.Core {
         internal const string UriParser_ExpandDepthExceeded = "UriParser_ExpandDepthExceeded";
         internal const string UriParser_TypeInvalidForSelectExpand = "UriParser_TypeInvalidForSelectExpand";
         internal const string UriParser_ContextHandlerCanNotBeNull = "UriParser_ContextHandlerCanNotBeNull";
-        internal const string UriParserMetadata_MultiplePropertiesFound = "UriParserMetadata_MultiplePropertiesFound";
+        internal const string UriParserMetadata_MultipleMatchingPropertiesFound = "UriParserMetadata_MultipleMatchingPropertiesFound";
+        internal const string UriParserMetadata_MultipleMatchingNavigationSourcesFound = "UriParserMetadata_MultipleMatchingNavigationSourcesFound";
+        internal const string UriParserMetadata_MultipleMatchingTypesFound = "UriParserMetadata_MultipleMatchingTypesFound";
+        internal const string UriParserMetadata_MultipleMatchingKeysFound = "UriParserMetadata_MultipleMatchingKeysFound";
+        internal const string UriParserMetadata_MultipleMatchingParametersFound = "UriParserMetadata_MultipleMatchingParametersFound";
         internal const string PathParser_EntityReferenceNotSupported = "PathParser_EntityReferenceNotSupported";
         internal const string PathParser_CannotUseValueOnCollection = "PathParser_CannotUseValueOnCollection";
         internal const string PathParser_TypeMustBeRelatedToSet = "PathParser_TypeMustBeRelatedToSet";

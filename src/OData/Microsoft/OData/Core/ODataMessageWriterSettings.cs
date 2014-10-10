@@ -360,7 +360,8 @@ namespace Microsoft.OData.Core
         /// <remarks>Calling this method replaces any previously set content-type settings.</remarks>
         public void SetContentType(string acceptableMediaTypes, string acceptableCharSets)
         {
-            this.acceptMediaTypes = acceptableMediaTypes;
+            // Should accept json as application/json
+            this.acceptMediaTypes = string.Equals(acceptableMediaTypes, MimeConstants.MimeJsonSubType, StringComparison.OrdinalIgnoreCase) ? MimeConstants.MimeApplicationJson : acceptableMediaTypes;
             this.acceptCharSets = acceptableCharSets;
             this.format = null;
             this.useFormat = false;

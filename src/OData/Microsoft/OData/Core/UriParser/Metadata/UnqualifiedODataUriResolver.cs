@@ -24,6 +24,27 @@ namespace Microsoft.OData.Core.UriParser.Metadata
     /// </summary>
     public class UnqualifiedODataUriResolver : ODataUriResolver
     {
+         /// <summary>
+        /// Resolve unbound operations based on name.
+        /// </summary>
+        /// <param name="model">The model to be used.</param>
+        /// <param name="identifier">The operation name.</param>
+        /// <returns>Resolved operation list.</returns>
+        public override IEnumerable<IEdmOperation> ResolveUnboundOperations(IEdmModel model, string identifier)
+        {
+            if (identifier.Contains("."))
+            {
+                return base.ResolveUnboundOperations(model, identifier);
+            }
+
+            return model.SchemaElements.OfType<IEdmOperation>()
+                    .Where(operation => string.Equals(
+                            identifier,
+                            operation.Name,
+                            this.EnableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal)
+                    && !operation.IsBound);
+        }
+
         /// <summary>
         /// Resolve bound operations based on name.
         /// </summary>

@@ -4950,11 +4950,11 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "Parameter names must be unique. There is most likely an error in the model."
+        /// A string like "Parameter or entity key names must be unique. There is most likely an error in the model."
         /// </summary>
-        internal static string FunctionCallParser_DuplicateParameterName {
+        internal static string FunctionCallParser_DuplicateParameterOrEntityKeyName {
             get {
-                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.FunctionCallParser_DuplicateParameterName);
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.FunctionCallParser_DuplicateParameterOrEntityKeyName);
             }
         }
 
@@ -5301,10 +5301,38 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "More than one property match the name '{0}' were found in type '{1}'."
+        /// A string like "More than one properties match the name '{0}' were found in type '{1}'."
         /// </summary>
-        internal static string UriParserMetadata_MultiplePropertiesFound(object p0, object p1) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriParserMetadata_MultiplePropertiesFound,p0,p1);
+        internal static string UriParserMetadata_MultipleMatchingPropertiesFound(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriParserMetadata_MultipleMatchingPropertiesFound,p0,p1);
+        }
+
+        /// <summary>
+        /// A string like "More than one navigation sources match the name '{0}' were found in model."
+        /// </summary>
+        internal static string UriParserMetadata_MultipleMatchingNavigationSourcesFound(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriParserMetadata_MultipleMatchingNavigationSourcesFound,p0);
+        }
+
+        /// <summary>
+        /// A string like "More than one types match the name '{0}' were found in model."
+        /// </summary>
+        internal static string UriParserMetadata_MultipleMatchingTypesFound(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriParserMetadata_MultipleMatchingTypesFound,p0);
+        }
+
+        /// <summary>
+        /// A string like "More than one keys match the name '{0}' were found."
+        /// </summary>
+        internal static string UriParserMetadata_MultipleMatchingKeysFound(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriParserMetadata_MultipleMatchingKeysFound,p0);
+        }
+
+        /// <summary>
+        /// A string like "More than one parameters match the name '{0}' were found."
+        /// </summary>
+        internal static string UriParserMetadata_MultipleMatchingParametersFound(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriParserMetadata_MultipleMatchingParametersFound,p0);
         }
 
         /// <summary>

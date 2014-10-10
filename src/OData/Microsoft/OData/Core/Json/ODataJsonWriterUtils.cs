@@ -50,28 +50,6 @@ namespace Microsoft.OData.Core.Json
         }
 
         /// <summary>
-        /// Writes the __metadata property with the specified type name.
-        /// </summary>
-        /// <param name="jsonWriter">The JSON writer to write to.</param>
-        /// <param name="typeName">The type name to write.</param>
-        internal static void WriteMetadataWithTypeName(IJsonWriter jsonWriter, string typeName)
-        {
-            Debug.Assert(jsonWriter != null, "jsonWriter != null");
-            Debug.Assert(typeName != null, "typeName != null");
-
-            // Write the __metadata object
-            jsonWriter.WriteName(JsonConstants.ODataMetadataName);
-            jsonWriter.StartObjectScope();
-
-            // "type": "typename"
-            jsonWriter.WriteName(JsonConstants.ODataMetadataTypeName);
-            jsonWriter.WriteValue(typeName);
-
-            // End the __metadata
-            jsonWriter.EndObjectScope();
-        }
-
-        /// <summary>
         /// Will write the function's name and start the JSONP scope if we are writing a response and the 
         /// JSONP function name is not null or empty.
         /// </summary>

@@ -26,6 +26,7 @@ namespace Microsoft.OData.Core.UriParser
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Library.Values;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
     using ODataPlatformHelper = Microsoft.OData.Core.PlatformHelper;
@@ -391,6 +392,40 @@ namespace Microsoft.OData.Core.UriParser
                     {
                         case EdmPrimitiveTypeKind.Decimal:
                             return primitiveValue;
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Coerces the given <paramref name="primitiveValue"/> to the appropriate CLR type based on <paramref name="targetEdmType"/>. 
+        /// </summary>
+        /// <param name="primitiveValue">Primitive value to coerce.</param>
+        /// <param name="targetEdmType">Edm primitive type to check against.</param>
+        /// <returns><paramref name="primitiveValue"/> as the corresponding CLR type indicated by <paramref name="targetEdmType"/>, or null if unable to coerce.</returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Centralized method for coercing temporal types in easiest to understand.")]
+        internal static object CoerceTemporalType(object primitiveValue, IEdmPrimitiveType targetEdmType)
+        {
+            // This is implemented to match TypePromotionUtils and MetadataUtilsCommon.CanConvertPrimitiveTypeTo()
+            ExceptionUtils.CheckArgumentNotNull(primitiveValue, "primitiveValue");
+            ExceptionUtils.CheckArgumentNotNull(targetEdmType, "targetEdmType");
+
+            Type fromType = primitiveValue.GetType();
+            TypeCode fromTypeCode = ODataPlatformHelper.GetTypeCode(fromType);
+            EdmPrimitiveTypeKind targetPrimitiveKind = targetEdmType.PrimitiveKind;
+
+            switch (fromTypeCode)
+            {
+                case TypeCode.String:
+                    switch (targetPrimitiveKind)
+                    {
+                        case EdmPrimitiveTypeKind.Date:
+                            return PlatformHelper.ConvertStringToDate((string)primitiveValue);
                     }
 
                     break;

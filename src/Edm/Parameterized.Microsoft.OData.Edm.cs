@@ -1993,6 +1993,15 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The added or subtracted value results in an un-representable Date."
+        /// </summary>
+        internal static string Date_InvalidAddedOrSubtractedResults {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Date_InvalidAddedOrSubtractedResults);
+            }
+        }
+
+        /// <summary>
         /// A string like "The Year '{0}', Month '{1}' and Day '{2}' parameters describe an un-representable Date."
         /// </summary>
         internal static string Date_InvalidDateParameters(object p0, object p1, object p2) {
@@ -2000,10 +2009,52 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The Hour '{0}', Minute '{1}', Second '{2}' and FractionalSeconds '{3}' parameters describe an un-representable TimeOfDay."
+        /// A string like "String '{0}' was not recognized as a valid Date."
+        /// </summary>
+        internal static string Date_InvalidParsingString(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Date_InvalidParsingString,p0);
+        }
+
+        /// <summary>
+        /// A string like "Target object '{0}' is not an instance with type of Date."
+        /// </summary>
+        internal static string Date_InvalidCompareToTarget(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Date_InvalidCompareToTarget,p0);
+        }
+
+        /// <summary>
+        /// A string like "The Hour '{0}', Minute '{1}', Second '{2}' and Millisecond '{3}' parameters describe an un-representable TimeOfDay."
         /// </summary>
         internal static string TimeOfDay_InvalidTimeOfDayParameters(object p0, object p1, object p2, object p3) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.TimeOfDay_InvalidTimeOfDayParameters,p0,p1,p2,p3);
+        }
+
+        /// <summary>
+        /// A string like "The ticks value '{0}' is out of representable TimeOfDay range."
+        /// </summary>
+        internal static string TimeOfDay_TicksOutOfRange(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.TimeOfDay_TicksOutOfRange,p0);
+        }
+
+        /// <summary>
+        /// A string like "The TimeSpan value '{0}' is out of representable TimeOfDay range."
+        /// </summary>
+        internal static string TimeOfDay_ConvertErrorFromTimeSpan(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.TimeOfDay_ConvertErrorFromTimeSpan,p0);
+        }
+
+        /// <summary>
+        /// A string like "String '{0}' was not recognized as a valid TimeOfDay."
+        /// </summary>
+        internal static string TimeOfDay_InvalidParsingString(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.TimeOfDay_InvalidParsingString,p0);
+        }
+
+        /// <summary>
+        /// A string like "Target object '{0}' is not an instance with type of TimeOfDay."
+        /// </summary>
+        internal static string TimeOfDay_InvalidCompareToTarget(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.TimeOfDay_InvalidCompareToTarget,p0);
         }
 
     }

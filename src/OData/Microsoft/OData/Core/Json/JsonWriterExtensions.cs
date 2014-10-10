@@ -20,6 +20,7 @@ namespace Microsoft.OData.Core.Json
     using System.Collections.Generic;
     using System.Collections;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Edm.Library;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
     using ODataPlatformHelper = Microsoft.OData.Core.PlatformHelper;
     #endregion Namespaces
@@ -130,6 +131,18 @@ namespace Microsoft.OData.Core.Json
                         if (value is TimeSpan)
                         {
                             jsonWriter.WriteValue((TimeSpan)value);
+                            break;
+                        }
+
+                        if (value is Date)
+                        {
+                            jsonWriter.WriteValue((Date)value);
+                            break;
+                        }
+
+                        if (value is TimeOfDay)
+                        {
+                            jsonWriter.WriteValue((TimeOfDay)value);
                             break;
                         }
                     }

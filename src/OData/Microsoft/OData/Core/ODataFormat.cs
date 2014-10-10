@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core
 #endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Atom;
-    using Microsoft.OData.Core.JsonLight;
+    using Microsoft.OData.Core.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core
         private static ODataAtomFormat atomFormat = new ODataAtomFormat();
 
         /// <summary>The JSON Light format instance.</summary>
-        private static ODataJsonLightFormat jsonLightFormat = new ODataJsonLightFormat();
+        private static ODataJsonFormat JsonFormat = new ODataJsonFormat();
 
         /// <summary>The RAW format instance.</summary>
         private static ODataRawValueFormat rawValueFormat = new ODataRawValueFormat();
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return jsonLightFormat;
+                return JsonFormat;
             }
         }
 

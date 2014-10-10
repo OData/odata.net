@@ -351,6 +351,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             return null;
         }
 
+        protected string RequiredEnumMemberPath(XmlTextValue text)
+        {
+            string enumMemberPath = text != null ? text.TextValue : string.Empty;
+            return this.ValidateEnumMembersPath(enumMemberPath);
+        }
+
         protected string OptionalType(string attributeName)
         {
             XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
@@ -393,6 +399,36 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             }
 
             return null;
+        }
+
+        protected string ValidateEnumMembersPath(string path)
+        {
+            if (string.IsNullOrEmpty(path.Trim()))
+            {
+                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEnumMemberPath, Edm.Strings.CsdlParser_InvalidEnumMemberPath(path));
+            }
+
+            string[] enumValues = path.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+            string enumType = null;
+            foreach (var enumValue in enumValues)
+            {
+                string[] segments = enumValue.Split('/');
+                if (!(segments.Count() == 2 &&
+                    EdmUtil.IsValidDottedName(segments[0]) &&
+                    EdmUtil.IsValidUndottedName(segments[1])))
+                {
+                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEnumMemberPath, Edm.Strings.CsdlParser_InvalidEnumMemberPath(path));
+                }
+
+                if (enumType != null && segments[0] != enumType)
+                {
+                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEnumMemberPath, Edm.Strings.CsdlParser_InvalidEnumMemberPath(path));
+                }
+
+                enumType = segments[0];
+            }
+
+            return string.Join(" ", enumValues);
         }
 
         private string ValidateTypeName(string name)

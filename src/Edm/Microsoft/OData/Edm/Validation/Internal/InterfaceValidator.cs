@@ -1260,6 +1260,10 @@ namespace Microsoft.OData.Edm.Validation.Internal
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmBooleanConstantExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
+                        case EdmExpressionKind.DateConstant:
+                            expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmDateConstantExpression>(expression, expression.ExpressionKind, "ExpressionKind");
+                            break;
+
                         case EdmExpressionKind.DateTimeOffsetConstant:
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmDateTimeOffsetConstantExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
@@ -1278,6 +1282,10 @@ namespace Microsoft.OData.Edm.Validation.Internal
 
                         case EdmExpressionKind.GuidConstant:
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmGuidConstantExpression>(expression, expression.ExpressionKind, "ExpressionKind");
+                            break;
+
+                        case EdmExpressionKind.TimeOfDayConstant:
+                            expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmTimeOfDayConstantExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
                         case EdmExpressionKind.Null:
@@ -1320,6 +1328,10 @@ namespace Microsoft.OData.Edm.Validation.Internal
 
                         case EdmExpressionKind.EnumMemberReference:
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmEnumMemberReferenceExpression>(expression, expression.ExpressionKind, "ExpressionKind");
+                            break;
+
+                        case EdmExpressionKind.EnumMember:
+                            expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmEnumMemberExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
                         case EdmExpressionKind.If:
@@ -1566,6 +1578,18 @@ namespace Microsoft.OData.Edm.Validation.Internal
             }
         }
 
+        private sealed class VistorOfIEdmEnumMemberExpression : VisitorOfT<IEdmEnumMemberExpression>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmEnumMemberExpression expression, List<object> followup, List<object> references)
+            {
+                List<EdmError> errors = null;
+
+                ProcessEnumerable(expression, expression.EnumMembers, "EnumMembers", followup, ref errors);
+                
+                return errors;
+            }
+        }
+
         private sealed class VistorOfIEdmIfExpression : VisitorOfT<IEdmIfExpression>
         {
             protected override IEnumerable<EdmError> VisitT(IEdmIfExpression expression, List<object> followup, List<object> references)
@@ -1765,6 +1789,14 @@ namespace Microsoft.OData.Edm.Validation.Internal
 
                     case EdmValueKind.Duration:
                         CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmValue, EdmValueKind, IEdmDurationValue>(value, value.ValueKind, "ValueKind"), ref errors);
+                        break;
+
+                    case EdmValueKind.Date:
+                        CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmValue, EdmValueKind, IEdmDateValue>(value, value.ValueKind, "ValueKind"), ref errors);
+                        break;
+
+                    case EdmValueKind.TimeOfDay:
+                        CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmValue, EdmValueKind, IEdmTimeOfDayValue>(value, value.ValueKind, "ValueKind"), ref errors);
                         break;
 
                     case EdmValueKind.None:

@@ -25,6 +25,7 @@ namespace Microsoft.OData.Core.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using Microsoft.OData.Edm.Library;
     #endregion Namespaces
 
     /// <summary>
@@ -165,22 +166,6 @@ namespace Microsoft.OData.Core.Json
             Debug.Assert(scope.Type == ScopeType.Array, "Ending scope does not match.");
 
             this.writer.Write(scope.EndString);
-        }
-
-        /// <summary>
-        /// Write the "d" wrapper text.
-        /// </summary>
-        public void WriteDataWrapper()
-        {
-            this.writer.Write(JsonConstants.ODataDataWrapper);
-        }
-
-        /// <summary>
-        /// Write the "results" header for the data array.
-        /// </summary>
-        public void WriteDataArrayName()
-        {
-            this.WriteName(JsonConstants.ODataResultsName);
         }
 
         /// <summary>
@@ -333,6 +318,26 @@ namespace Microsoft.OData.Core.Json
         }
 
         /// <summary>
+        /// Write a Date value
+        /// </summary>
+        /// <param name="value">Date value to be written.</param>
+        public void WriteValue(TimeOfDay value)
+        {
+            this.WriteValueSeparator();
+            JsonValueUtils.WriteValue(this.writer, value);
+        }
+
+        /// <summary>
+        /// Write a Date value
+        /// </summary>
+        /// <param name="value">Date value to be written.</param>
+        public void WriteValue(Date value)
+        {
+            this.WriteValueSeparator();
+            JsonValueUtils.WriteValue(this.writer, value);
+        }
+
+        /// <summary>
         /// Write a byte value.
         /// </summary>
         /// <param name="value">Byte value to be written.</param>
@@ -383,7 +388,7 @@ namespace Microsoft.OData.Core.Json
         /// <summary>
         /// Writes a separator of a value if it's needed for the next value to be written.
         /// </summary>
-        public void WriteValueSeparator()
+        private void WriteValueSeparator()
         {
             if (this.scopes.Count == 0)
             {
@@ -406,7 +411,7 @@ namespace Microsoft.OData.Core.Json
         /// Start the scope given the scope type.
         /// </summary>
         /// <param name="type">The scope type to start.</param>
-        public void StartScope(ScopeType type)
+        private void StartScope(ScopeType type)
         {
             if (this.scopes.Count != 0 && this.scopes.Peek().Type != ScopeType.Padding)
             {

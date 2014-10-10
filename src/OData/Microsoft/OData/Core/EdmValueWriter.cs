@@ -30,6 +30,7 @@ namespace Microsoft.OData.Edm.Csdl
     using System.Diagnostics;
     using System.Globalization;
     using System.Xml;
+    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Values;
 
     /// <summary>
@@ -68,8 +69,12 @@ namespace Microsoft.OData.Edm.Csdl
                     return StringAsXml(((IEdmStringValue)v).Value);
                 case EdmValueKind.DateTimeOffset:
                     return DateTimeOffsetAsXml(((IEdmDateTimeOffsetValue)v).Value);
+                case EdmValueKind.Date:
+                    return DateAsXml(((IEdmDateValue)v).Value);
                 case EdmValueKind.Duration:
                     return DurationAsXml(((IEdmDurationValue)v).Value);
+                case EdmValueKind.TimeOfDay:
+                    return TimeOfDayAsXml(((IEdmTimeOfDayValue)v).Value);
                 default:
                     throw new NotSupportedException(Edm.Strings.ValueWriter_NonSerializableValue(v.ValueKind));
             }
@@ -193,6 +198,28 @@ namespace Microsoft.OData.Edm.Csdl
         {
             var value = XmlConvert.ToString(d);
             Debug.Assert(EdmValueParser.DayTimeDurationValidator.IsMatch(value), "Edm.Duration values should not have year or month part");
+            return value;
+        }
+
+        /// <summary>
+        /// Converts the Date to a String.
+        /// </summary>
+        /// <param name="d">The <see cref="Microsoft.OData.Edm.Library.Date"/> to be converted</param>
+        /// <returns>A System.String representation of the supplied <see cref="Microsoft.OData.Edm.Library.Date"/>.</returns>
+        internal static string DateAsXml(Date d)
+        {
+            var value = d.ToString();
+            return value;
+        }
+
+        /// <summary>
+        /// Converts the TimeOfDay to a String.
+        /// </summary>
+        /// <param name="time">The <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/> to be converted</param>
+        /// <returns>A System.String representation of the supplied <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/>.</returns>
+        internal static string TimeOfDayAsXml(TimeOfDay time)
+        {
+            var value = time.ToString();
             return value;
         }
 

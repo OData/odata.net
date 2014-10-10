@@ -203,7 +203,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
 
             this.ProcessReferentialConstraint(element.ReferentialConstraint);
-            
+
             this.EndElement(element);
             this.navigationProperties.Add(element);
         }
@@ -264,7 +264,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             bool inlineType = IsInlineType(element.Type);
             this.BeginElement(
-                element, 
+                element,
                 (IEdmOperationParameter t) => { this.schemaWriter.WriteOperationParameterElementHeader(t, inlineType); },
                 e => { this.ProcessFacets(e.Type, inlineType); });
             if (!inlineType)
@@ -454,8 +454,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.schemaWriter.WriteGuidConstantExpressionElement(expression);
         }
 
+        protected override void ProcessEnumMemberExpression(IEdmEnumMemberExpression expression)
+        {
+            this.schemaWriter.WriteEnumMemberExpressionElement(expression);
+        }
+
         protected override void ProcessEnumMemberReferenceExpression(IEdmEnumMemberReferenceExpression expression)
         {
+            // This will also write <EnumMember>enumValue</EnumMember> according to V4 spec
             this.schemaWriter.WriteEnumMemberReferenceExpressionElement(expression);
         }
 
@@ -469,6 +475,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.schemaWriter.WriteDecimalConstantExpressionElement(expression);
         }
 
+        protected override void ProcessDateConstantExpression(IEdmDateConstantExpression expression)
+        {
+            this.schemaWriter.WriteDateConstantExpressionElement(expression);
+        }
+
         protected override void ProcessDateTimeOffsetConstantExpression(IEdmDateTimeOffsetConstantExpression expression)
         {
             this.schemaWriter.WriteDateTimeOffsetConstantExpressionElement(expression);
@@ -477,6 +488,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override void ProcessDurationConstantExpression(IEdmDurationConstantExpression expression)
         {
             this.schemaWriter.WriteDurationConstantExpressionElement(expression);
+        }
+
+        protected override void ProcessTimeOfDayConstantExpression(IEdmTimeOfDayConstantExpression expression)
+        {
+            this.schemaWriter.WriteTimeOfDayConstantExpressionElement(expression);
         }
 
         protected override void ProcessBooleanConstantExpression(IEdmBooleanConstantExpression expression)
@@ -524,8 +540,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             {
                 case EdmExpressionKind.BinaryConstant:
                 case EdmExpressionKind.BooleanConstant:
+                case EdmExpressionKind.DateConstant:
                 case EdmExpressionKind.DateTimeOffsetConstant:
                 case EdmExpressionKind.DecimalConstant:
+                case EdmExpressionKind.DurationConstant:
                 case EdmExpressionKind.FloatingConstant:
                 case EdmExpressionKind.GuidConstant:
                 case EdmExpressionKind.IntegerConstant:
@@ -533,7 +551,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmExpressionKind.PropertyPath:
                 case EdmExpressionKind.NavigationPropertyPath:
                 case EdmExpressionKind.StringConstant:
-                case EdmExpressionKind.DurationConstant:
+                case EdmExpressionKind.TimeOfDayConstant:
                     return true;
             }
 

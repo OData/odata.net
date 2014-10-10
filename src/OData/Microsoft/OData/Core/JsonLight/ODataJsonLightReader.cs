@@ -43,6 +43,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>The scope associated with the top level of this payload.</summary>
         private readonly JsonLightTopLevelScope topLevelScope;
 
+        /// <summary>true if the reader was created for reading parameter; false otherwise.</summary>
+        private readonly bool readingParameter;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -50,13 +53,15 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read (in case of entry reader) or entries in the feed to be read (in case of feed reader).</param>
         /// <param name="readingFeed">true if the reader is created for reading a feed; false when it is created for reading an entry.</param>
+        /// <param name="readingParameter">true if the reader is created for reading a parameter; false otherwise.</param>
         /// <param name="listener">If not null, the Json reader will notify the implementer of the interface of relevant state changes in the Json reader.</param>
         internal ODataJsonLightReader(
             ODataJsonLightInputContext jsonLightInputContext,
             IEdmNavigationSource navigationSource,
             IEdmEntityType expectedEntityType,
             bool readingFeed,
-            IODataReaderWriterListener listener)
+            bool readingParameter = false,
+            IODataReaderWriterListener listener = null)
             : base(jsonLightInputContext, readingFeed, listener)
         {
             Debug.Assert(jsonLightInputContext != null, "jsonLightInputContext != null");
@@ -66,6 +71,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             this.jsonLightInputContext = jsonLightInputContext;
             this.jsonLightEntryAndFeedDeserializer = new ODataJsonLightEntryAndFeedDeserializer(jsonLightInputContext);
+            this.readingParameter = readingParameter;
             this.topLevelScope = new JsonLightTopLevelScope(navigationSource, expectedEntityType);
             this.EnterScope(this.topLevelScope);
         }
@@ -548,6 +554,13 @@ namespace Microsoft.OData.Core.JsonLight
 
             this.PopScope(ODataReaderState.FeedEnd);
 
+            if (this.readingParameter && isTopLevelFeed)
+            {
+                // replace the 'Start' scope with the 'Completed' scope
+                this.ReplaceScope(ODataReaderState.Completed);
+                return false;
+            }
+
             if (isTopLevelFeed)
             {
                 Debug.Assert(this.State == ODataReaderState.Start, "this.State == ODataReaderState.Start");
@@ -1012,7 +1025,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             // Resolve the type name
             Debug.Assert(
-                this.CurrentNavigationSource != null,
+                this.CurrentNavigationSource != null || this.readingParameter,
                 "We must always have an expected navigation source for each entry (since we can't deduce that from the type name).");
             this.ApplyEntityTypeNameFromPayload(this.CurrentEntry.TypeName);
 
@@ -1160,9 +1173,9 @@ namespace Microsoft.OData.Core.JsonLight
                 navigationLink.MetadataBuilder = entityMetadataBuilder;
             }
 
-            Debug.Assert(this.CurrentNavigationSource != null, "Json requires an navigation source.");
+            Debug.Assert(this.CurrentNavigationSource != null || this.readingParameter, "Json requires an navigation source when not reading parameter.");
 
-            IEdmNavigationSource navigationSource = navigationProperty == null ? null : this.CurrentNavigationSource.FindNavigationTarget(navigationProperty);
+            IEdmNavigationSource navigationSource = this.CurrentNavigationSource == null || navigationProperty == null ? null : this.CurrentNavigationSource.FindNavigationTarget(navigationProperty);
             ODataUri odataUri = null;
             if (navigationLinkInfo.NavigationLink.ContextUrl != null)
             {

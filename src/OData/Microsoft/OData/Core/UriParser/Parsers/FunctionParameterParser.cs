@@ -61,7 +61,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // check duplicate names
             if (splitParameters.Select(t => t.ParameterName).Distinct().Count() != splitParameters.Count)
             {
-                throw new ODataException(ODataErrorStrings.FunctionCallParser_DuplicateParameterName);
+                throw new ODataException(ODataErrorStrings.FunctionCallParser_DuplicateParameterOrEntityKeyName);
             }
 
             return ret;

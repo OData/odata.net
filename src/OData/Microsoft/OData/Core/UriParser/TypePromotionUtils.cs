@@ -92,17 +92,20 @@ namespace Microsoft.OData.Core.UriParser
             new FunctionSignature(EdmCoreModel.Instance.GetDouble(true), EdmCoreModel.Instance.GetDouble(true)),
             new FunctionSignature(EdmCoreModel.Instance.GetDecimal(false), EdmCoreModel.Instance.GetDecimal(false)),
             new FunctionSignature(EdmCoreModel.Instance.GetDecimal(true), EdmCoreModel.Instance.GetDecimal(true)),
-
             new FunctionSignature(EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true)),
             new FunctionSignature(EdmCoreModel.Instance.GetBinary(true), EdmCoreModel.Instance.GetBinary(true)),
             new FunctionSignature(EdmCoreModel.Instance.GetBoolean(false), EdmCoreModel.Instance.GetBoolean(false)),
             new FunctionSignature(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetBoolean(true)),
             new FunctionSignature(EdmCoreModel.Instance.GetGuid(false), EdmCoreModel.Instance.GetGuid(false)),
             new FunctionSignature(EdmCoreModel.Instance.GetGuid(true), EdmCoreModel.Instance.GetGuid(true)),
+            new FunctionSignature(EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDate(false)),
+            new FunctionSignature(EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDate(true)),
             new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false)),
             new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, true), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, true)),
             new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, false)),
             new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, true), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, true)),
+            new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false)),
+            new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, true), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, true)),
         };
 
         /// <summary>Function signatures for the 'negate' operator.</summary>
@@ -457,6 +460,10 @@ namespace Microsoft.OData.Core.UriParser
             yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDateTimeOffset(true));
             yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDuration(false));
             yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDuration(true));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDuration(false));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDuration(true));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDate(false));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDate(true));
         }
 
         /// <summary>
@@ -471,6 +478,10 @@ namespace Microsoft.OData.Core.UriParser
             yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDuration(true));
             yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(false), EdmCoreModel.Instance.GetDateTimeOffset(false));
             yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(true), EdmCoreModel.Instance.GetDateTimeOffset(true));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDuration(false));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDuration(true));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDate(false));
+            yield return new FunctionSignature(EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDate(true));
         }
 
         /// <summary>
@@ -806,6 +817,17 @@ namespace Microsoft.OData.Core.UriParser
                 return 1;
             }
 
+            // If both DateTimeOffset and Date are possible, then DateTimeOffset is perfered, as to keep previous behaviour.
+            if (IsDateTimeOffset(targetA) && IsDate(targetB))
+            {
+                return 1;
+            }
+
+            if (IsDateTimeOffset(targetB) && IsDate(targetA))
+            {
+                return -1;
+            }
+
             return 0;
         }
 
@@ -894,6 +916,34 @@ namespace Microsoft.OData.Core.UriParser
         private static bool IsUnsignedIntegralType(IEdmTypeReference typeReference)
         {
             return GetNumericTypeKind(typeReference) == NumericTypeKind.UnsignedIntegral;
+        }
+
+        /// <summary>Checks if the specified type is a Date or nullable Date type.</summary>
+        /// <param name="typeReference">Type to check.</param>
+        /// <returns>true if <paramref name="typeReference"/> is either Date or nullable Date type; false otherwise.</returns>
+        private static bool IsDate(IEdmTypeReference typeReference)
+        {
+            IEdmPrimitiveTypeReference primitiveTypeReference = typeReference.AsPrimitiveOrNull();
+            if (primitiveTypeReference != null)
+            {
+                return primitiveTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.Date;
+            }
+
+            return false;
+        }
+
+        /// <summary>Checks if the specified type is a DateTimeOffset or nullable DateTimeOffset type.</summary>
+        /// <param name="typeReference">Type to check.</param>
+        /// <returns>true if <paramref name="typeReference"/> is either DateTimeOffset or nullable DateTimeOffset type; false otherwise.</returns>
+        private static bool IsDateTimeOffset(IEdmTypeReference typeReference)
+        {
+            IEdmPrimitiveTypeReference primitiveTypeReference = typeReference.AsPrimitiveOrNull();
+            if (primitiveTypeReference != null)
+            {
+                return primitiveTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.DateTimeOffset;
+            }
+
+            return false;
         }
 
         /// <summary>Checks if the specified type is a decimal or nullable decimal type.</summary>

@@ -89,11 +89,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             var documentationParser =
                 //// <Documentation>
                 CsdlElement<CsdlDocumentation>(CsdlConstants.Element_Documentation, this.OnDocumentationElement,
-                    //// <Summary/>
+                //// <Summary/>
                    Element(CsdlConstants.Element_Summary, (element, children) => children.FirstText.Value),
-                    //// <LongDescription/>
+                //// <LongDescription/>
                    Element(CsdlConstants.Element_LongDescription, (element, children) => children.FirstText.TextValue));
-                //// </Documentation>
+            //// </Documentation>
 
             // There is recursion in the grammar between CollectionType, ReturnType, and Property within RowType.
             // This requires breaking up the parser construction into pieces and then weaving them together with AddChildParser.
@@ -104,11 +104,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             var collectionTypeParser =
                 //// <CollectionType>
                 CsdlElement<CsdlTypeReference>(CsdlConstants.Element_CollectionType, this.OnCollectionTypeElement, documentationParser,
-                    //// <TypeRef/>
+                //// <TypeRef/>
                     CsdlElement<CsdlTypeReference>(CsdlConstants.Element_TypeRef, this.OnTypeRefElement, documentationParser),
-                    //// <ReferenceType/>
+                //// <ReferenceType/>
                     referenceTypeParser);
-                //// </CollectionType>
+            //// </CollectionType>
 
             var nominalTypePropertyElementParser =
                 //// <Property/>
@@ -146,6 +146,14 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 //// <Duration/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_Duration, OnDurationConstantExpression);
 
+            var dateConstantExpressionParser =
+                //// <Date/>
+                CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_Date, OnDateConstantExpression);
+
+            var timeOfDayConstantExpressionParser =
+                //// <TimeOfDay/>
+                CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_TimeOfDay, OnTimeOfDayConstantExpression);
+
             var dateTimeOffsetConstantExpressionParser =
                 //// <DateTimeOffset/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_DateTimeOffset, OnDateTimeOffsetConstantExpression);
@@ -178,14 +186,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 //// <EntitySetReference/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_EntitySetReference, this.OnEntitySetReferenceExpression);
 
-            var enumMemberReferenceExpressionParser =
-                //// <EnumMemberReference/>
-                CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_EnumMemberReference, this.OnEnumMemberReferenceExpression);
+            var enumMemberExpressionParser =
+                //// <EnumMember/>
+                CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_EnumMember, this.OnEnumMemberExpression);
 
             var propertyReferenceExpressionParser =
-            //// <PropertyReference>
+                //// <PropertyReference>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_PropertyReference, this.OnPropertyReferenceExpression);
-
 
             var ifExpressionParser =
                 //// <If>
@@ -198,7 +205,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             var isTypeExpressionParser =
                 //// <IsType>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_IsType, this.OnIsTypeExpression);
-                
+
             var propertyValueParser =
                 //// <PropertyValue>
                 CsdlElement<CsdlPropertyValue>(CsdlConstants.Element_PropertyValue, this.OnPropertyValueElement);
@@ -206,9 +213,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             var recordExpressionParser =
                 //// <Record>
                 CsdlElement<CsdlRecordExpression>(CsdlConstants.Element_Record, this.OnRecordElement,
-                    //// <PropertyValue />
+                //// <PropertyValue />
                     propertyValueParser);
-                //// </Record>
+            //// </Record>
 
             var labeledElementParser =
                 //// <LabeledElement>
@@ -242,10 +249,14 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 decimalConstantExpressionParser,
                 //// <Bool/>
                 boolConstantExpressionParser,
+                //// <Date/>
+                dateConstantExpressionParser,
                 //// <DateTimeOffset/>
                 dateTimeOffsetConstantExpressionParser,
                 //// <Duration/>
                 durationConstantExpressionParser,
+                //// <TimeOfDay/>
+                timeOfDayConstantExpressionParser,
                 //// <Null/>
                 nullConstantExpressionParser,
                 //// <Path/>
@@ -276,8 +287,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 functionReferenceExpressionParser,
                 //// <EntitySetReference/>
                 entitySetReferenceExpressionParser,
-                //// <EnumConstantReference/>
-                enumMemberReferenceExpressionParser,
+                //// <EnumConstant/>
+                enumMemberExpressionParser,
                 //// <ParameterReference/>
                 parameterReferenceExpressionParser,
                 //// </Apply>
@@ -292,175 +303,175 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             AddChildParsers(collectionExpressionParser, expressionParsers);
             AddChildParsers(labeledElementParser, expressionParsers);
             AddChildParsers(applyExpressionParser, expressionParsers);
-            
+
             var annotationParser =
                 //// <Annotation>
                 CsdlElement<CsdlAnnotation>(CsdlConstants.Element_Annotation, this.OnAnnotationElement);
 
             AddChildParsers(annotationParser, expressionParsers);
-            
+
             nominalTypePropertyElementParser.AddChildParser(annotationParser);
 
             collectionTypeParser.AddChildParser(collectionTypeParser);
-            
+
             var rootElementParser =
-            //// <Schema>
+                //// <Schema>
             CsdlElement<CsdlSchema>(CsdlConstants.Element_Schema, this.OnSchemaElement,
                 documentationParser,
                 //// <ComplexType>
                 CsdlElement<CsdlComplexType>(CsdlConstants.Element_ComplexType, this.OnComplexTypeElement,
                     documentationParser,
-                    //// <Property />
+                //// <Property />
                     nominalTypePropertyElementParser,
-                    //// <Annotation/>
+                //// <Annotation/>
                     annotationParser),
                 //// </ComplexType>
-              
+
                 //// <EntityType>
                 CsdlElement<CsdlEntityType>(CsdlConstants.Element_EntityType, this.OnEntityTypeElement,
                     documentationParser,
-                    //// <Key>
+                //// <Key>
                     CsdlElement<CsdlKey>(CsdlConstants.Element_Key, OnEntityKeyElement,
-                        //// <PropertyRef/>
+                //// <PropertyRef/>
                         CsdlElement<CsdlPropertyReference>(CsdlConstants.Element_PropertyRef, this.OnPropertyRefElement)),
-                    //// </Key>
-                    
+                //// </Key>
+
                     //// <Property />
                     nominalTypePropertyElementParser,
 
                     //// <NavigationProperty>
                     CsdlElement<CsdlNamedElement>(CsdlConstants.Element_NavigationProperty, this.OnNavigationPropertyElement, documentationParser,
-                        //// <ReferentialConstraint/>
+                //// <ReferentialConstraint/>
                         CsdlElement<CsdlReferentialConstraint>(CsdlConstants.Element_ReferentialConstraint, this.OnReferentialConstraintElement, documentationParser),
-                        //// <OnDelete/>
+                //// <OnDelete/>
                         CsdlElement<CsdlOnDelete>(CsdlConstants.Element_OnDelete, this.OnDeleteActionElement, documentationParser),
-                        //// <Annotation/>
+                //// <Annotation/>
                         annotationParser),
-                    //// </NavigationProperty>
+                //// </NavigationProperty>
 
                     //// <Annotation/>
                     annotationParser),
                 //// </EntityType>
-                
+
                 //// <EnumType>
                 CsdlElement<CsdlEnumType>(CsdlConstants.Element_EnumType, this.OnEnumTypeElement,
                     documentationParser,
-                    //// <Member>
+                //// <Member>
                     CsdlElement<CsdlEnumMember>(CsdlConstants.Element_Member, this.OnEnumMemberElement, documentationParser),
-                    //// <Annotation/>
+                //// <Annotation/>
                     annotationParser),
                 //// </EnumType>
-                
+
                 //// <TypeDefinition>
                 CsdlElement<CsdlTypeDefinition>(CsdlConstants.Element_TypeDefinition, this.OnTypeDefinitionElement,
-                    //// <Annotation/>
+                //// <Annotation/>
                     annotationParser),
                 //// </TypeDefinition>
-                
+
                 //// <Action>
                 CsdlElement<CsdlAction>(CsdlConstants.Element_Action, this.OnActionElement,
                     documentationParser,
-                    //// <Parameter>
+                //// <Parameter>
                     CsdlElement<CsdlOperationParameter>(CsdlConstants.Element_Parameter, this.OnParameterElement,
                         documentationParser,
-                        //// <TypeRef/>
+                //// <TypeRef/>
                         CsdlElement<CsdlTypeReference>(CsdlConstants.Element_TypeRef, this.OnTypeRefElement, documentationParser),
-                        //// <CollectionType/>
+                //// <CollectionType/>
                         collectionTypeParser,
-                        //// <ReferenceType/>
+                //// <ReferenceType/>
                         referenceTypeParser,
-                        //// <Annotation/>
+                //// <Annotation/>
                         annotationParser),
-                    //// </Parameter)
-              
+                //// </Parameter)
+
                     //// <ReturnType>
                         CsdlElement<CsdlOperationReturnType>(CsdlConstants.Element_ReturnType, this.OnReturnTypeElement,
                             documentationParser,
-                            //// <TypeRef/>
+                //// <TypeRef/>
                             CsdlElement<CsdlTypeReference>(CsdlConstants.Element_TypeRef, this.OnTypeRefElement, documentationParser),
-                            //// <CollectionType/>
+                //// <CollectionType/>
                             collectionTypeParser,
-                            //// <ReferenceType/>
+                //// <ReferenceType/>
                             referenceTypeParser),
-                    //// </ReturnType>
+                //// </ReturnType>
 
                     //// <Annotation/>
                         annotationParser),
-                    //// <Action>
-                  
+                //// <Action>
+
                 CsdlElement<CsdlOperation>(CsdlConstants.Element_Function, this.OnFunctionElement,
                     documentationParser,
-                    //// <Parameter>
+                //// <Parameter>
                     CsdlElement<CsdlOperationParameter>(CsdlConstants.Element_Parameter, this.OnParameterElement,
                         documentationParser,
-                        //// <TypeRef/>
+                //// <TypeRef/>
                         CsdlElement<CsdlTypeReference>(CsdlConstants.Element_TypeRef, this.OnTypeRefElement, documentationParser),
-                        //// <CollectionType/>
+                //// <CollectionType/>
                         collectionTypeParser,
-                        //// <ReferenceType/>
+                //// <ReferenceType/>
                         referenceTypeParser,
-                        //// <Annotation/>
+                //// <Annotation/>
                         annotationParser),
-                    //// </Parameter
-                    
+                //// </Parameter
+
                     //// <ReturnType>
                     CsdlElement<CsdlOperationReturnType>(CsdlConstants.Element_ReturnType, this.OnReturnTypeElement,
                         documentationParser,
-                        //// <TypeRef/>
+                //// <TypeRef/>
                         CsdlElement<CsdlTypeReference>(CsdlConstants.Element_TypeRef, this.OnTypeRefElement, documentationParser),
-                        //// <CollectionType/>
+                //// <CollectionType/>
                         collectionTypeParser,
-                        //// <ReferenceType/>
+                //// <ReferenceType/>
                         referenceTypeParser),
-                    //// </ReturnType>
+                //// </ReturnType>
 
                     //// <Annotation/>
                     annotationParser),
                 //// </Function>
-                
+
                 //// <Term>
                 CsdlElement<CsdlTerm>(CsdlConstants.Element_Term, this.OnTermElement,
-                    //// <TypeRef/>
+                //// <TypeRef/>
                     CsdlElement<CsdlTypeReference>(CsdlConstants.Element_TypeRef, this.OnTypeRefElement, documentationParser),
-                    //// <CollectionType/>
+                //// <CollectionType/>
                     collectionTypeParser,
-                    //// <ReferenceType/>
+                //// <ReferenceType/>
                     referenceTypeParser,
-                    //// <Annotation/>
+                //// <Annotation/>
                     annotationParser),
                 //// </Term>
 
                 //// <Annotations>
                 CsdlElement<CsdlAnnotations>(CsdlConstants.Element_Annotations, this.OnAnnotationsElement,
-                    //// <Annotation/>
+                //// <Annotation/>
                     annotationParser),
                 //// </Annotations>
 
                 //// <EntityContainer>
                 CsdlElement<CsdlEntityContainer>(CsdlConstants.Element_EntityContainer, this.OnEntityContainerElement,
                     documentationParser,
-                    //// <EntitySet>
+                //// <EntitySet>
                     CsdlElement<CsdlEntitySet>(CsdlConstants.Element_EntitySet, this.OnEntitySetElement, documentationParser,
-                        //// <NavigationPropertyBinding/>
+                //// <NavigationPropertyBinding/>
                         CsdlElement<CsdlNavigationPropertyBinding>(CsdlConstants.Element_NavigationPropertyBinding, this.OnNavigationPropertyBindingElement),
-                        //// <Annotation/>
+                //// <Annotation/>
                         annotationParser),
-                    //// </EntitySet>
+                //// </EntitySet>
 
                     //// <Singleton>
                     CsdlElement<CsdlSingleton>(CsdlConstants.Element_Singleton, this.OnSingletonElement, documentationParser,
-                        //// <NavigationPropertyBinding/>
+                //// <NavigationPropertyBinding/>
                         CsdlElement<CsdlNavigationPropertyBinding>(CsdlConstants.Element_NavigationPropertyBinding, this.OnNavigationPropertyBindingElement),
-                        //// <Annotation/>
+                //// <Annotation/>
                         annotationParser),
-                    //// </Singleton>
+                //// </Singleton>
 
                     //// <Action Import
                     CsdlElement<CsdlActionImport>(CsdlConstants.Element_ActionImport, this.OnActionImportElement,
                         documentationParser,
-                        //// <Annotation/>
+                //// <Annotation/>
                         annotationParser),
-                    ////</Actionmport
+                ////</Actionmport
 
                     //// <Function Import
                     CsdlElement<CsdlOperationImport>(CsdlConstants.Element_FunctionImport, this.OnFunctionImportElement,
@@ -468,17 +479,17 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                         //// <Parameter />
                         CsdlElement<CsdlOperationParameter>(CsdlConstants.Element_Parameter, this.OnFunctionImportParameterElement, documentationParser,
-                            //// <Annotation/>
+                //// <Annotation/>
                             annotationParser),
-                        ////</Parameter>
+                ////</Parameter>
 
                         //// <Annotation/>
                         annotationParser),
-                    ////</FunctionImport
-                    
+                ////</FunctionImport
+
                     //// <Annotation/>
                     annotationParser));
-                ////</EntityContainer>
+            ////</EntityContainer>
             //// </Schema>
 
             return rootElementParser;
@@ -675,9 +686,19 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return ConstantExpression(EdmValueKind.Duration, childValues, element.Location);
         }
 
+        private static CsdlConstantExpression OnDateConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
+        {
+            return ConstantExpression(EdmValueKind.Date, childValues, element.Location);
+        }
+
         private static CsdlConstantExpression OnDateTimeOffsetConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
         {
             return ConstantExpression(EdmValueKind.DateTimeOffset, childValues, element.Location);
+        }
+
+        private static CsdlConstantExpression OnTimeOfDayConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
+        {
+            return ConstantExpression(EdmValueKind.TimeOfDay, childValues, element.Location);
         }
 
         private static CsdlConstantExpression OnNullConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
@@ -715,10 +736,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return new CsdlEntitySetReferenceExpression(entitySetPath, element.Location);
         }
 
-        private CsdlEnumMemberReferenceExpression OnEnumMemberReferenceExpression(XmlElementInfo element, XmlElementValueCollection childValues)
+        private CsdlEnumMemberExpression OnEnumMemberExpression(XmlElementInfo element, XmlElementValueCollection childValues)
         {
-            string memberPath = RequiredEnumMemberPath(CsdlConstants.Attribute_Name);
-            return new CsdlEnumMemberReferenceExpression(memberPath, element.Location);
+            string enumMemberPath = this.RequiredEnumMemberPath(childValues.FirstText);
+            return new CsdlEnumMemberExpression(enumMemberPath, element.Location);
         }
 
         private CsdlPropertyReferenceExpression OnPropertyReferenceExpression(XmlElementInfo element, XmlElementValueCollection childValues)
@@ -819,6 +840,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 return new CsdlNavigationPropertyPathExpression(navigationPropertyPathValue, element.Location);
             }
 
+            string enumMemberValue = Optional(CsdlConstants.Attribute_EnumMember);
+            if (enumMemberValue != null)
+            {
+                return new CsdlEnumMemberExpression(this.ValidateEnumMembersPath(enumMemberValue), element.Location);
+            }
+
             EdmValueKind kind;
 
             string value = Optional(CsdlConstants.Attribute_String);
@@ -884,8 +911,24 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                                             }
                                             else
                                             {
-                                                //// Annotation expressions are always optional.
-                                                return null;
+                                                value = Optional(CsdlConstants.Attribute_Date);
+                                                if (value != null)
+                                                {
+                                                    kind = EdmValueKind.Date;
+                                                }
+                                                else
+                                                {
+                                                    value = Optional(CsdlConstants.Attribute_TimeOfDay);
+                                                    if (value != null)
+                                                    {
+                                                        kind = EdmValueKind.TimeOfDay;
+                                                    }
+                                                    else
+                                                    {
+                                                        //// Annotation expressions are always optional.
+                                                        return null;
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -915,6 +958,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 case EdmPrimitiveTypeKind.SByte:
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Stream:
+                case EdmPrimitiveTypeKind.Date:
                     return new CsdlPrimitiveTypeReference(kind, typeName, isNullable, parentLocation);
 
                 case EdmPrimitiveTypeKind.Binary:
@@ -928,6 +972,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Duration:
+                case EdmPrimitiveTypeKind.TimeOfDay:
                     {
                         int? precision;
                         this.ParseTemporalFacets(out precision);
@@ -1058,7 +1103,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             return new CsdlNavigationProperty(name, typeName, isNullable, partner, containsTarget ?? false, onDelete, referentialConstraints, Documentation(childValues), element.Location);
         }
-    
+
         private static CsdlKey OnEntityKeyElement(XmlElementInfo element, XmlElementValueCollection childValues)
         {
             return new CsdlKey(new List<CsdlPropertyReference>(childValues.ValuesOfType<CsdlPropertyReference>()), element.Location);
@@ -1106,9 +1151,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             string name = Required(CsdlConstants.Attribute_Name);
             bool isBound = OptionalBoolean(CsdlConstants.Attribute_IsBound) ?? CsdlConstants.Default_IsBound;
             string entitySetPath = Optional(CsdlConstants.Attribute_EntitySetPath);
-            
+
             IEnumerable<CsdlOperationParameter> parameters = childValues.ValuesOfType<CsdlOperationParameter>();
-            
+
             CsdlOperationReturnType returnTypeElement = childValues.ValuesOfType<CsdlOperationReturnType>().FirstOrDefault();
             CsdlTypeReference returnType = returnTypeElement == null ? null : returnTypeElement.ReturnType;
 
@@ -1123,7 +1168,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             bool isBound = OptionalBoolean(CsdlConstants.Attribute_IsBound) ?? CsdlConstants.Default_IsBound;
             string entitySetPath = Optional(CsdlConstants.Attribute_EntitySetPath);
             bool isComposable = OptionalBoolean(CsdlConstants.Attribute_IsComposable) ?? CsdlConstants.Default_IsComposable;
-            
+
             IEnumerable<CsdlOperationParameter> parameters = childValues.ValuesOfType<CsdlOperationParameter>();
 
             CsdlOperationReturnType returnTypeElement = childValues.ValuesOfType<CsdlOperationReturnType>().FirstOrDefault();
@@ -1212,7 +1257,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             if (entityContainerCount++ > 0)
             {
-                this.ReportError(this.currentElement.Location, EdmErrorCode.MetadataDocumentCannotHaveMoreThanOneEntityContainer, Edm.Strings.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer);                
+                this.ReportError(this.currentElement.Location, EdmErrorCode.MetadataDocumentCannotHaveMoreThanOneEntityContainer, Edm.Strings.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer);
             }
 
             return new CsdlEntityContainer(

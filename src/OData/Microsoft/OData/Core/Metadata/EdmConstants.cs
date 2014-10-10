@@ -33,6 +33,9 @@ namespace Microsoft.OData.Core.Metadata
         /// <summary>edm byte primitive type name</summary>
         internal const string EdmByteTypeName = "Edm.Byte";
 
+        /// <summary>edm date primitive type name</summary>
+        internal const string EdmDateTypeName = "Edm.Date";
+
         /// <summary>Represents a Time instance as an interval measured in milliseconds from an instance of DateTime.</summary>
         internal const string EdmDateTimeOffsetTypeName = "Edm.DateTimeOffset";
 
@@ -68,6 +71,9 @@ namespace Microsoft.OData.Core.Metadata
 
         /// <summary>edm stream primitive type name</summary>
         internal const string EdmStreamTypeName = "Edm.Stream";
+
+        /// <summary>edm timeOfDay primitive type name</summary>
+        internal const string EdmTimeOfDayTypeName = "Edm.TimeOfDay";
 
         /// <summary>edm geography primitive type name</summary>
         internal const string EdmGeographyTypeName = "Edm.Geography";
@@ -117,105 +123,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <summary>Represents a geometry MultiPoint type.</summary>
         internal const string EdmGeometryMultiPointTypeName = "Edm.GeometryMultiPoint";
         #endregion Edm Primitive Type Names
-
-        #region Primitive Type Names -----------------------------------------------------------------------------/
-
-        /// <summary>binary primitive type name</summary>
-        internal const string BinaryTypeName = "Binary";
-
-        /// <summary>boolean primitive type name</summary>
-        internal const string BooleanTypeName = "Boolean";
-
-        /// <summary>byte primitive type name</summary>
-        internal const string ByteTypeName = "Byte";
-
-        /// <summary>datetime primitive type name</summary>
-        internal const string DateTimeTypeName = "DateTime";
-
-        /// <summary>Represents a Time instance as an interval measured in milliseconds from an instance of DateTime.</summary>
-        internal const string DateTimeOffsetTypeName = "DateTimeOffset";
-
-        /// <summary>decimal primitive type name</summary>
-        internal const string DecimalTypeName = "Decimal";
-
-        /// <summary>double primitive type name</summary>
-        internal const string DoubleTypeName = "Double";
-
-        /// <summary>guid primitive type name</summary>
-        internal const string GuidTypeName = "Guid";
-
-        /// <summary>single primitive type name</summary>
-        internal const string SingleTypeName = "Single";
-
-        /// <summary>sbyte primitive type name</summary>
-        internal const string SByteTypeName = "SByte";
-
-        /// <summary>int16 primitive type name</summary>
-        internal const string Int16TypeName = "Int16";
-
-        /// <summary>int32 primitive type name</summary>
-        internal const string Int32TypeName = "Int32";
-
-        /// <summary>int64 primitive type name</summary>
-        internal const string Int64TypeName = "Int64";
-
-        /// <summary>string primitive type name</summary>
-        internal const string StringTypeName = "String";
-
-        /// <summary>Represents an interval measured in milliseconds.</summary>
-        internal const string DurationTypeName = "Duration";
-
-        /// <summary>stream primitive type name</summary>
-        internal const string StreamTypeName = "Stream";
-
-        /// <summary>geography primitive type name</summary>
-        internal const string GeographyTypeName = "Geography";
-
-        /// <summary>Represents a geography Point type.</summary>
-        internal const string PointTypeName = "GeographyPoint";
-
-        /// <summary>Represents a geography LineString type.</summary>
-        internal const string LineStringTypeName = "GeographyLineString";
-
-        /// <summary>Represents a geography Polygon type.</summary>
-        internal const string PolygonTypeName = "GeographyPolygon";
-
-        /// <summary>Represents a geography GeomCollection type.</summary>
-        internal const string GeographyCollectionTypeName = "GeographyCollection";
-
-        /// <summary>Represents a geography MultiPolygon type.</summary>
-        internal const string MultiPolygonTypeName = "GeographyMultiPolygon";
-
-        /// <summary>Represents a geography MultiLineString type.</summary>
-        internal const string MultiLineStringTypeName = "GeographyMultiLineString";
-
-        /// <summary>Represents a geography MultiPoint type.</summary>
-        internal const string MultiPointTypeName = "GeographyMultiPoint";
-
-        /// <summary>Represents an arbitrary Geometry type.</summary>
-        internal const string GeometryTypeName = "Geometry";
-
-        /// <summary>Represents a geometry Point type.</summary>
-        internal const string GeometryPointTypeName = "GeometryPoint";
-
-        /// <summary>Represents a geometry LineString type.</summary>
-        internal const string GeometryLineStringTypeName = "GeometryLineString";
-
-        /// <summary>Represents a geometry Polygon type.</summary>
-        internal const string GeometryPolygonTypeName = "GeometryPolygon";
-
-        /// <summary>Represents a geometry GeomCollection type.</summary>
-        internal const string GeometryCollectionTypeName = "GeometryCollection";
-
-        /// <summary>Represents a geometry MultiPolygon type.</summary>
-        internal const string GeometryMultiPolygonTypeName = "GeometryMultiPolygon";
-
-        /// <summary>Represents a geometry MultiLineString type.</summary>
-        internal const string GeometryMultiLineStringTypeName = "GeometryMultiLineString";
-
-        /// <summary>Represents a geometry MultiPoint type.</summary>
-        internal const string GeometryMultiPointTypeName = "GeometryMultiPoint";
-        #endregion Primitive Type Names
 
         #region CSDL serialization constants
 

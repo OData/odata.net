@@ -137,6 +137,10 @@ namespace Microsoft.OData.Core.Metadata
             PrimitiveTypeReferenceMap.Add(typeof(Single?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Single), true));
             PrimitiveTypeReferenceMap.Add(typeof(Guid?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Guid), true));
             PrimitiveTypeReferenceMap.Add(typeof(TimeSpan?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Duration), true));
+            PrimitiveTypeReferenceMap.Add(typeof(Date), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), false));
+            PrimitiveTypeReferenceMap.Add(typeof(Date?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), true));
+            PrimitiveTypeReferenceMap.Add(typeof(TimeOfDay), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), false));
+            PrimitiveTypeReferenceMap.Add(typeof(TimeOfDay?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), true));
         }
 
         #region Internal methods
@@ -2057,6 +2061,8 @@ namespace Microsoft.OData.Core.Metadata
                     return isNullable ? typeof(Boolean?) : typeof(Boolean);
                 case EdmPrimitiveTypeKind.Byte:
                     return isNullable ? typeof(Byte?) : typeof(Byte);
+                case EdmPrimitiveTypeKind.Date:
+                    return isNullable ? typeof(Date?) : typeof(Date);
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                     return isNullable ? typeof(DateTimeOffset?) : typeof(DateTimeOffset);
                 case EdmPrimitiveTypeKind.Decimal:
@@ -2113,6 +2119,8 @@ namespace Microsoft.OData.Core.Metadata
                     return typeof(String);
                 case EdmPrimitiveTypeKind.Duration:
                     return isNullable ? typeof(TimeSpan?) : typeof(TimeSpan);
+                case EdmPrimitiveTypeKind.TimeOfDay:
+                    return isNullable ? typeof(TimeOfDay?) : typeof(TimeOfDay);
                 default:
                     return null;
             }
@@ -2316,6 +2324,7 @@ namespace Microsoft.OData.Core.Metadata
                 case EdmPrimitiveTypeKind.SByte:
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Stream:
+                case EdmPrimitiveTypeKind.Date:
                     return new EdmPrimitiveTypeReference(primitiveType, nullable);
                 case EdmPrimitiveTypeKind.Binary:
                     return new EdmBinaryTypeReference(primitiveType, nullable);
@@ -2325,6 +2334,7 @@ namespace Microsoft.OData.Core.Metadata
                     return new EdmDecimalTypeReference(primitiveType, nullable);
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Duration:
+                case EdmPrimitiveTypeKind.TimeOfDay:
                     return new EdmTemporalTypeReference(primitiveType, nullable);
                 case EdmPrimitiveTypeKind.Geography:
                 case EdmPrimitiveTypeKind.GeographyPoint:

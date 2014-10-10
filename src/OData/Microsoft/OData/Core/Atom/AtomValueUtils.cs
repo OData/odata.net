@@ -21,6 +21,7 @@ namespace Microsoft.OData.Core
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Edm.Library;
     #endregion Namespaces
 
     /// <summary>
@@ -204,6 +205,20 @@ namespace Microsoft.OData.Core
                         break;
                     }
 
+                    if (value is Date)
+                    {
+                        // Edm.Date
+                        result = ODataAtomConvert.ToString((Date)value);
+                        break;
+                    }
+
+                    if (value is TimeOfDay)
+                    {
+                        // Edm.TimeOfDay
+                        result = ODataAtomConvert.ToString((TimeOfDay)value);
+                        break;
+                    }
+
                     return false;
             }
 
@@ -258,6 +273,10 @@ namespace Microsoft.OData.Core
                         return text;
                     case EdmPrimitiveTypeKind.Duration:
                         return EdmValueParser.ParseDuration(text);
+                    case EdmPrimitiveTypeKind.Date:
+                        return PlatformHelper.ConvertStringToDate(text);
+                    case EdmPrimitiveTypeKind.TimeOfDay:
+                        return PlatformHelper.ConvertStringToTimeOfDay(text);
                     case EdmPrimitiveTypeKind.Stream:
                     case EdmPrimitiveTypeKind.None:
                     case EdmPrimitiveTypeKind.Geography:

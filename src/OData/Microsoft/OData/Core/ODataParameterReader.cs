@@ -49,7 +49,6 @@ namespace Microsoft.OData.Core
             get;
         }
 
-#if SUPPORT_ENTITY_PARAMETER
         /// <summary>
         /// This method creates an <see cref="ODataReader"/> to read the entry value when the state is ODataParameterReaderState.Entry.
         /// </summary>
@@ -69,7 +68,6 @@ namespace Microsoft.OData.Core
         /// </remarks>
         /// <returns>Returns an <see cref="ODataReader"/> to read the feed value when the state is ODataParameterReaderState.Feed.</returns>
         public abstract ODataReader CreateFeedReader();
-#endif
 
         /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataCollectionReader" /> to read the collection value when the state is ODataParameterReaderState.Collection. </summary>
         /// <returns>An <see cref="T:Microsoft.OData.Core.ODataCollectionReader" /> to read the collection value when the state is ODataParameterReaderState.Collection.</returns>

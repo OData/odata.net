@@ -42,7 +42,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// <remarks>
         /// All extensions should look at this property and keep case sensitive behaviour consistent.
         /// </remarks>
-        public bool EnableCaseInsensitive { get; set; }
+        public virtual bool EnableCaseInsensitive { get; set; }
 
         /// <summary>
         /// Promote the left and right operand types
@@ -80,8 +80,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
                 }
                 else if (result.Count > 1)
                 {
-                    // TODO: fix loc strings.
-                    throw new ODataException("More than one navigation sources match the name '" + identifier + "' were found in model.");
+                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingNavigationSourcesFound(identifier));
                 }
             }
 
@@ -108,7 +107,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
                 }
                 else if (result.Count > 1)
                 {
-                    throw new ODataException(Strings.UriParserMetadata_MultiplePropertiesFound(propertyName, type.ODataFullName()));
+                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingPropertiesFound(propertyName, type.ODataFullName()));
                 }
             }
 
@@ -136,8 +135,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
                 }
                 else if (result.Count > 1)
                 {
-                    // TODO: fix loc strings.
-                    throw new ODataException("More than one type match the name '" + typeName + "' were found in model.");
+                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingTypesFound(typeName));
                 }
             }
 
@@ -159,12 +157,33 @@ namespace Microsoft.OData.Core.UriParser.Metadata
                     .Where(operation => string.Equals(
                             identifier,
                             operation.FullName(),
-                            this.EnableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal)
+                            StringComparison.OrdinalIgnoreCase)
                     && operation.IsBound && operation.Parameters.Any()
                     && operation.HasEquivalentBindingType(bindingType));
             }
 
             return model.FindBoundOperations(identifier, bindingType);
+        }
+
+        /// <summary>
+        /// Resolve unbound operations based on name.
+        /// </summary>
+        /// <param name="model">The model to be used.</param>
+        /// <param name="identifier">The operation name.</param>
+        /// <returns>Resolved operation list.</returns>
+        public virtual IEnumerable<IEdmOperation> ResolveUnboundOperations(IEdmModel model, string identifier)
+        {
+            if (EnableCaseInsensitive)
+            {
+                return model.SchemaElements.OfType<IEdmOperation>()
+                    .Where(operation => string.Equals(
+                            identifier,
+                            operation.FullName(),
+                            StringComparison.OrdinalIgnoreCase)
+                    && !operation.IsBound);
+            }
+
+            return model.FindOperations(identifier);
         }
 
         /// <summary>
@@ -198,16 +217,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
                 IEdmOperationParameter functionParameter = null;
                 if (EnableCaseInsensitive)
                 {
-                    var list = operation.Parameters.Where(parameter => string.Equals(item.Key, parameter.Name, StringComparison.OrdinalIgnoreCase)).ToList();
-                    if (list.Count == 1)
-                    {
-                        functionParameter = list.Single();
-                    }
-                    else if (list.Count > 1)
-                    {
-                        // TODO: fix loc strings.
-                        throw new ODataException("More than one parameter match the name '" + item.Key + "' were found.");
-                    }
+                    functionParameter = ResolveOpearationParameterNameCaseInsensitive(operation, item.Key);
                 }
                 else
                 {
@@ -275,8 +285,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
                     var list = namedValues.Keys.Where(key => string.Equals(property.Name, key, StringComparison.OrdinalIgnoreCase)).ToList();
                     if (list.Count > 1)
                     {
-                        // TODO: fix loc strings.
-                        throw new ODataException("More than one key match the name '" + property.Name + "' were found.");
+                        throw new ODataException(Strings.UriParserMetadata_MultipleMatchingKeysFound(property.Name));
                     }
                     else if (list.Count == 0)
                     {
@@ -301,6 +310,29 @@ namespace Microsoft.OData.Core.UriParser.Metadata
             }
 
             return convertedPairs;
+        }
+
+        /// <summary>
+        /// Resolve an operatin parameter's name with case insensitive enabled
+        /// </summary>
+        /// <param name="operation">The operation.</param>
+        /// <param name="identifier">Name for the parameter.</param>
+        /// <returns>The resolved operation parameter.</returns>
+        internal static IEdmOperationParameter ResolveOpearationParameterNameCaseInsensitive(IEdmOperation operation, string identifier)
+        {
+            var list = operation.Parameters.Where(parameter => string.Equals(identifier, parameter.Name, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            if (list.Count > 1)
+            {
+                throw new ODataException(Strings.UriParserMetadata_MultipleMatchingParametersFound(identifier));
+            }
+            
+            if (list.Count == 1)
+            {
+                return list.Single();
+            }
+
+            return null;
         }
     }
 }

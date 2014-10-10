@@ -157,7 +157,22 @@ namespace Microsoft.OData.Edm.Expressions
         /// <summary>
         /// Represents an expression implementing <see cref="IEdmPathExpression"/>.
         /// </summary>
-        NavigationPropertyPath
+        NavigationPropertyPath,
+
+        /// <summary>
+        /// Represents an expression implementing <see cref="IEdmDateConstantExpression"/>.
+        /// </summary>
+        DateConstant,
+
+        /// <summary>
+        /// Represents an expression implementing <see cref="IEdmTimeOfDayConstantExpression"/>.
+        /// </summary>
+        TimeOfDayConstant,
+
+        /// <summary>
+        /// Represents an expression implementing <see cref="IEdmEnumMemberExpression"/>.
+        /// </summary>
+        EnumMember
     }
 
     /// <summary>

@@ -42,7 +42,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             return TryCast(expression, type, null, false, out discoveredErrors);
         }
-        
+
         /// <summary>
         /// Determines if the type of an expression is compatible with the provided type
         /// </summary>
@@ -77,6 +77,8 @@ namespace Microsoft.OData.Edm.Validation
                 case EdmExpressionKind.FloatingConstant:
                 case EdmExpressionKind.GuidConstant:
                 case EdmExpressionKind.DurationConstant:
+                case EdmExpressionKind.DateConstant:
+                case EdmExpressionKind.TimeOfDayConstant:
                     IEdmPrimitiveValue primitiveValue = (IEdmPrimitiveValue)expression;
                     if (primitiveValue.Type != null)
                     {
@@ -164,6 +166,10 @@ namespace Microsoft.OData.Edm.Validation
                     return TryCastStringConstantAsType((IEdmStringConstantExpression)expression, type, out discoveredErrors);
                 case EdmValueKind.Duration:
                     return TryCastDurationConstantAsType((IEdmDurationConstantExpression)expression, type, out discoveredErrors);
+                case EdmValueKind.Date:
+                    return TryCastDateConstantAsType((IEdmDateConstantExpression)expression, type, out discoveredErrors);
+                case EdmValueKind.TimeOfDay:
+                    return TryCastTimeOfDayConstantAsType((IEdmTimeOfDayConstantExpression)expression, type, out discoveredErrors);
                 default:
                     discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                     return false;
@@ -367,6 +373,30 @@ namespace Microsoft.OData.Edm.Validation
         private static bool TryCastDurationConstantAsType(IEdmDurationConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsDuration())
+            {
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                return false;
+            }
+
+            discoveredErrors = Enumerable.Empty<EdmError>();
+            return true;
+        }
+
+        private static bool TryCastDateConstantAsType(IEdmDateConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        {
+            if (!type.IsDate())
+            {
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                return false;
+            }
+
+            discoveredErrors = Enumerable.Empty<EdmError>();
+            return true;
+        }
+
+        private static bool TryCastTimeOfDayConstantAsType(IEdmTimeOfDayConstantExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
+        {
+            if (!type.IsTimeOfDay())
             {
                 discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                 return false;

@@ -182,6 +182,7 @@ namespace Microsoft.OData.Edm
             {
                 case EdmPrimitiveTypeKind.Duration:
                 case EdmPrimitiveTypeKind.DateTimeOffset:
+                case EdmPrimitiveTypeKind.TimeOfDay:
                     return true;
             }
 
@@ -200,6 +201,17 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Returns true if this reference refers to a Date type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a Date type.</returns>
+        public static bool IsDate(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.PrimitiveKind() == EdmPrimitiveTypeKind.Date;
+        }
+
+        /// <summary>
         /// Returns true if this reference refers to a DateTimeOffset type.
         /// </summary>
         /// <param name="type">Type reference.</param>
@@ -209,7 +221,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(type, "type");
             return type.PrimitiveKind() == EdmPrimitiveTypeKind.DateTimeOffset;
         }
-        
+
         /// <summary>
         /// Returns true if this reference refers to a decimal type.
         /// </summary>
@@ -248,6 +260,17 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(type, "type");
             return type.PrimitiveKind() == EdmPrimitiveTypeKind.Single;
+        }
+
+        /// <summary>
+        /// Returns true if this reference refers to a TimeOfDay type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a TimeOfDay type.</returns>
+        public static bool IsTimeOfDay(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.PrimitiveKind() == EdmPrimitiveTypeKind.TimeOfDay;
         }
 
         /// <summary>
@@ -498,6 +521,7 @@ namespace Microsoft.OData.Edm
                     {
                         case EdmPrimitiveTypeKind.Boolean:
                         case EdmPrimitiveTypeKind.Byte:
+                        case EdmPrimitiveTypeKind.Date:
                         case EdmPrimitiveTypeKind.Double:
                         case EdmPrimitiveTypeKind.Guid:
                         case EdmPrimitiveTypeKind.Int16:
@@ -515,6 +539,7 @@ namespace Microsoft.OData.Edm
                             return type.AsString();
                         case EdmPrimitiveTypeKind.Duration:
                         case EdmPrimitiveTypeKind.DateTimeOffset:
+                        case EdmPrimitiveTypeKind.TimeOfDay:
                             return type.AsTemporal();
                         case EdmPrimitiveTypeKind.Geography:
                         case EdmPrimitiveTypeKind.GeographyPoint:
@@ -581,7 +606,7 @@ namespace Microsoft.OData.Edm
 
             return new EdmCollectionTypeReference(new BadCollectionType(errors));
         }
-        
+
         /// <summary>
         /// If this reference is of a structured type, this will return a valid structured type reference to the type definition. Otherwise, it will return a bad structured type reference.
         /// </summary>
@@ -633,7 +658,7 @@ namespace Microsoft.OData.Edm
             {
                 return new EdmEnumTypeReference((IEdmEnumType)typeDefinition, type.IsNullable);
             }
-            
+
             string typeFullName = type.FullName();
             return new EdmEnumTypeReference(
                 new BadEnumType(typeFullName, ConversionError(type.Location(), typeFullName, EdmConstants.Type_Enum)),
@@ -709,7 +734,7 @@ namespace Microsoft.OData.Edm
             if (reference != null)
             {
                 return reference;
-            }   
+            }
 
             IEdmType typeDefinition = type.Definition;
             if (typeDefinition.TypeKind == EdmTypeKind.EntityReference)
@@ -865,7 +890,7 @@ namespace Microsoft.OData.Edm
             {
                 return binaryType;
             }
-            
+
             string typeFullName = type.FullName();
             List<EdmError> errors = new List<EdmError>(type.Errors());
             if (errors.Count == 0)
@@ -948,6 +973,7 @@ namespace Microsoft.OData.Edm
             {
                 case EdmPrimitiveTypeKind.Boolean:
                 case EdmPrimitiveTypeKind.Byte:
+                case EdmPrimitiveTypeKind.Date:
                 case EdmPrimitiveTypeKind.Double:
                 case EdmPrimitiveTypeKind.Guid:
                 case EdmPrimitiveTypeKind.Int16:
@@ -965,6 +991,7 @@ namespace Microsoft.OData.Edm
                     return new EdmDecimalTypeReference(type, isNullable);
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                 case EdmPrimitiveTypeKind.Duration:
+                case EdmPrimitiveTypeKind.TimeOfDay:
                     return new EdmTemporalTypeReference(type, isNullable);
                 case EdmPrimitiveTypeKind.Geography:
                 case EdmPrimitiveTypeKind.GeographyPoint:

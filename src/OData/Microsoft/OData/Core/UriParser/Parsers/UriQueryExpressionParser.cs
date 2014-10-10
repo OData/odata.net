@@ -113,6 +113,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 case ExpressionTokenKind.BooleanLiteral:
                     return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetBoolean(false), Microsoft.OData.Core.Metadata.EdmConstants.EdmBooleanTypeName);
+                case ExpressionTokenKind.DateLiteral:
+                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetDate(false), Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTypeName);
                 case ExpressionTokenKind.DateTimeOffsetLiteral:
                     return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTimeOffsetTypeName);
                 case ExpressionTokenKind.DurationLiteral:
@@ -149,6 +151,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         return result;
                     }
 
+                case ExpressionTokenKind.TimeOfDayLiteral:
+                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false), Microsoft.OData.Core.Metadata.EdmConstants.EdmTimeOfDayTypeName);
                 default:
                     return null;
             }

@@ -43,27 +43,30 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         {
             typeReference = null;
 
-            if ((leftNode.TypeReference.IsEnum()) && (rightNode.TypeReference.IsString()) && rightNode is ConstantNode)
+            if (leftNode.TypeReference != null && rightNode.TypeReference != null)
             {
-                string text = ((ConstantNode)rightNode).Value as string;
-                ODataEnumValue val;
-                IEdmTypeReference typeRef = leftNode.TypeReference;
+                if ((leftNode.TypeReference.IsEnum()) && (rightNode.TypeReference.IsString()) && rightNode is ConstantNode)
+                {
+                    string text = ((ConstantNode)rightNode).Value as string;
+                    ODataEnumValue val;
+                    IEdmTypeReference typeRef = leftNode.TypeReference;
 
-                if (TryParseEnum(typeRef.Definition as IEdmEnumType, text, out val))
-                {
-                    rightNode = new ConstantNode(val, text, typeRef);
-                    return;
+                    if (TryParseEnum(typeRef.Definition as IEdmEnumType, text, out val))
+                    {
+                        rightNode = new ConstantNode(val, text, typeRef);
+                        return;
+                    }
                 }
-            }
-            else if ((rightNode.TypeReference.IsEnum()) && (leftNode.TypeReference.IsString()) && leftNode is ConstantNode)
-            {
-                string text = ((ConstantNode)leftNode).Value as string;
-                ODataEnumValue val;
-                IEdmTypeReference typeRef = rightNode.TypeReference;
-                if (TryParseEnum(typeRef.Definition as IEdmEnumType, text, out val))
+                else if ((rightNode.TypeReference.IsEnum()) && (leftNode.TypeReference.IsString()) && leftNode is ConstantNode)
                 {
-                    leftNode = new ConstantNode(val, text, typeRef);
-                    return;
+                    string text = ((ConstantNode)leftNode).Value as string;
+                    ODataEnumValue val;
+                    IEdmTypeReference typeRef = rightNode.TypeReference;
+                    if (TryParseEnum(typeRef.Definition as IEdmEnumType, text, out val))
+                    {
+                        leftNode = new ConstantNode(val, text, typeRef);
+                        return;
+                    }
                 }
             }
 
@@ -86,16 +89,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
                 IEdmOperationParameter functionParameter = null;
                 if (EnableCaseInsensitive)
                 {
-                    var list = operation.Parameters.Where(parameter => string.Equals(item.Key, parameter.Name, StringComparison.OrdinalIgnoreCase)).ToList();
-                    if (list.Count == 1)
-                    {
-                        functionParameter = list.Single();
-                    }
-                    else if (list.Count > 1)
-                    {
-                        // TODO: fix loc strings.
-                        throw new ODataException("More than one parameter match the name '" + item.Key + "' were found.");
-                    }
+                    functionParameter = ODataUriResolver.ResolveOpearationParameterNameCaseInsensitive(operation, item.Key);
                 }
                 else
                 {

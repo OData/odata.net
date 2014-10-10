@@ -177,7 +177,17 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents a geometry MultiPoint type.
         /// </summary>
-        GeometryMultiPoint
+        GeometryMultiPoint,
+
+        /// <summary>
+        /// Represents a Date type
+        /// </summary>
+        Date,
+
+        /// <summary>
+        /// Represents a TimeOfDay type
+        /// </summary>
+        TimeOfDay,
     }
 
     /// <summary>

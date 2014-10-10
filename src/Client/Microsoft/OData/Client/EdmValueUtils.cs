@@ -140,6 +140,12 @@ namespace Microsoft.OData.Core.Evaluation
 
                 case EdmValueKind.Integer:
                     return ConvertIntegerValue((IEdmIntegerValue)edmValue, primitiveKind);
+
+                case EdmValueKind.Date:
+                    return ((IEdmDateValue)edmValue).Value;
+
+                case EdmValueKind.TimeOfDay:
+                    return ((IEdmTimeOfDayValue)edmValue).Value;
             }
 
             throw new ODataException(ErrorStrings.EdmValueUtils_CannotConvertTypeToClrValue(edmValue.ValueKind));
@@ -215,7 +221,7 @@ namespace Microsoft.OData.Core.Evaluation
             double doubleValue = floatingValue.Value;
 
             if (primitiveKind == EdmPrimitiveTypeKind.Single)
-            {    
+            {
                 return Convert.ToSingle(doubleValue);
             }
 
@@ -269,6 +275,12 @@ namespace Microsoft.OData.Core.Evaluation
                 return new EdmBinaryConstant(binaryType, bytes);
             }
 
+            if (primitiveValue is Date)
+            {
+                IEdmPrimitiveTypeReference dateType = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Date);
+                return new EdmDateConstant(dateType, (Date)primitiveValue);
+            }
+
             if (primitiveValue is DateTimeOffset)
             {
                 IEdmTemporalTypeReference dateTimeOffsetType = (IEdmTemporalTypeReference)EnsurePrimitiveType(type, EdmPrimitiveTypeKind.DateTimeOffset);
@@ -279,6 +291,12 @@ namespace Microsoft.OData.Core.Evaluation
             {
                 type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Guid);
                 return new EdmGuidConstant(type, (Guid)primitiveValue);
+            }
+
+            if (primitiveValue is TimeOfDay)
+            {
+                IEdmTemporalTypeReference timeOfDayType = (IEdmTemporalTypeReference)EnsurePrimitiveType(type, EdmPrimitiveTypeKind.TimeOfDay);
+                return new EdmTimeOfDayConstant(timeOfDayType, (TimeOfDay)primitiveValue);
             }
 
             if (primitiveValue is TimeSpan)

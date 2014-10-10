@@ -159,5 +159,27 @@ namespace Microsoft.OData.Core.JsonLight
             this.jsonLightOutputContext.JsonWriter.WriteName(parameterName);
             return new ODataJsonLightCollectionWriter(this.jsonLightOutputContext, expectedItemType, /*listener*/this);
         }
+
+        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write an entry.</summary>
+        /// <param name="parameterName">The name of the parameter to write.</param>
+        /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
+        /// <returns>The newly created <see cref="ODataWriter"/>.</returns>
+        protected override ODataWriter CreateFormatEntryWriter(string parameterName, IEdmTypeReference expectedItemType)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
+            this.jsonLightOutputContext.JsonWriter.WriteName(parameterName);
+            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingFeed*/false, /*writingParameter*/true, /*listener*/this);
+        }
+
+        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write a feed.</summary>
+        /// <param name="parameterName">The name of the parameter to write.</param>
+        /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
+        /// <returns>The newly created <see cref="ODataWriter"/>.</returns>
+        protected override ODataWriter CreateFormatFeedWriter(string parameterName, IEdmTypeReference expectedItemType)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
+            this.jsonLightOutputContext.JsonWriter.WriteName(parameterName);
+            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingFeed*/true, /*writingParameter*/true, /*listener*/this);
+        }
     }
 }

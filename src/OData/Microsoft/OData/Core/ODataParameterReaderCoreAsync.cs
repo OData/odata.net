@@ -55,7 +55,6 @@ namespace Microsoft.OData.Core
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected abstract Task<bool> ReadNextParameterImplementationAsync();
 
-#if SUPPORT_ENTITY_PARAMETER
         /// <summary>
         /// Creates an <see cref="ODataReader"/> to read the entry value of type <paramref name="expectedEntityType"/>.
         /// </summary>
@@ -71,7 +70,6 @@ namespace Microsoft.OData.Core
         /// <returns>An <see cref="ODataReader"/> to read the feed value of type <paramref name="expectedEntityType"/>.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected abstract Task<ODataReader> CreateFeedReaderAsync(IEdmEntityType expectedEntityType);
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataCollectionReader"/> to read the collection with type <paramref name="expectedItemTypeReference"/>.
@@ -99,10 +97,8 @@ namespace Microsoft.OData.Core
                             {
                                 Debug.Assert(
                                     this.State == ODataParameterReaderState.Value ||
-#if SUPPORT_ENTITY_PARAMETER
                                     this.State == ODataParameterReaderState.Entry ||
                                     this.State == ODataParameterReaderState.Feed ||
-#endif
                                     this.State == ODataParameterReaderState.Collection ||
                                     this.State == ODataParameterReaderState.Completed,
                                     "ReadAtStartImplementationAsync should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Entry, ODataParameterReaderState.Feed, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
@@ -113,10 +109,8 @@ namespace Microsoft.OData.Core
 #endif
 
                 case ODataParameterReaderState.Value:   // fall through
-#if SUPPORT_ENTITY_PARAMETER
                 case ODataParameterReaderState.Entry:
                 case ODataParameterReaderState.Feed:
-#endif
                 case ODataParameterReaderState.Collection:
                     this.OnParameterCompleted();
 #if DEBUG
@@ -125,10 +119,8 @@ namespace Microsoft.OData.Core
                             {
                                 Debug.Assert(
                                     this.State == ODataParameterReaderState.Value ||
-#if SUPPORT_ENTITY_PARAMETER
                                     this.State == ODataParameterReaderState.Entry ||
                                     this.State == ODataParameterReaderState.Feed ||
-#endif
                                     this.State == ODataParameterReaderState.Collection ||
                                     this.State == ODataParameterReaderState.Completed,
                                     "ReadNextParameterImplementationAsync should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Entry, ODataParameterReaderState.Feed, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);

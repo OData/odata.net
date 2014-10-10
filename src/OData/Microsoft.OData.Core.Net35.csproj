@@ -178,7 +178,6 @@
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightEntryAndFeedDeserializer.cs" />
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightEntryAndFeedSerializer.cs" />
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightErrorDeserializer.cs" />
-    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightFormat.cs" />
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightInputContext.cs" />
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightOutputContext.cs" />
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightParameterDeserializer.cs" />
@@ -201,6 +200,7 @@
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightWriterUtils.cs" />
     <Compile Include="Microsoft\OData\Core\JsonLight\ReorderingJsonReader.cs" />
     <Compile Include="Microsoft\OData\Core\Json\BufferingJsonReader.cs" />
+    <Compile Include="Microsoft\OData\Core\Json\ODataJsonFormat.cs" />
     <Compile Include="Microsoft\OData\Core\Json\GeoJsonWriterAdapter.cs" />
     <Compile Include="Microsoft\OData\Core\Json\IJsonWriter.cs" />
     <Compile Include="Microsoft\OData\Core\Json\IODataJsonOperationsDeserializerContext.cs" />

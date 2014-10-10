@@ -109,6 +109,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 targetValue = guidValue;
                 return result;
             }
+            else if (targetTypeKind == EdmPrimitiveTypeKind.Date)
+            {
+                Date dateValue;
+                bool result = UriUtils.TryUriStringToDate(text, out dateValue);
+                targetValue = dateValue;
+                return result;
+            }
             else if (targetTypeKind == EdmPrimitiveTypeKind.DateTimeOffset)
             {
                 DateTimeOffset dateTimeOffsetValue;
@@ -135,6 +142,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 Geometry geometryValue;
                 bool result = TryUriStringToGeometry(text, out geometryValue, out reason);
                 targetValue = geometryValue;
+                return result;
+            }
+            else if (targetTypeKind == EdmPrimitiveTypeKind.TimeOfDay)
+            {
+                TimeOfDay timeOfDayValue;
+                bool result = UriUtils.TryUriStringToTimeOfDay(text, out timeOfDayValue);
+                targetValue = timeOfDayValue;
                 return result;
             }
 
@@ -351,7 +365,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 targetValue = null;
                 return false;
             }
-            
+
             return true;
         }
 

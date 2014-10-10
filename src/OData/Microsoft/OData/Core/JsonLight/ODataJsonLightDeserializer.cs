@@ -28,9 +28,6 @@ namespace Microsoft.OData.Core.JsonLight
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.Evaluation;
     using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using UriUtils = Microsoft.OData.Core.UriUtils;
     #endregion Namespaces
 

@@ -15,13 +15,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Expressions;
+using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Values;
-using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Values;
 
 namespace Microsoft.OData.Edm.Evaluation
 {
+    using System.Globalization;
+
     /// <summary>
     /// Expression evaluator.
     /// </summary>
@@ -128,6 +131,8 @@ namespace Microsoft.OData.Edm.Evaluation
                     break;
                 case EdmValueKind.Boolean:
                     return targetType.IsBoolean();
+                case EdmValueKind.Date:
+                    return targetType.IsDate();
                 case EdmValueKind.DateTimeOffset:
                     return targetType.IsDateTimeOffset();
                 case EdmValueKind.Decimal:
@@ -146,6 +151,8 @@ namespace Microsoft.OData.Edm.Evaluation
                     }
 
                     break;
+                case EdmValueKind.TimeOfDay:
+                    return targetType.IsTimeOfDay();
                 case EdmValueKind.Floating:
                     return targetType.IsDouble() || (targetType.IsSingle() && FitsInSingle(((IEdmFloatingValue)operand).Value));
                 case EdmValueKind.Integer:
@@ -354,6 +361,10 @@ namespace Microsoft.OData.Edm.Evaluation
                     return (IEdmGuidConstantExpression)expression;
                 case EdmExpressionKind.DurationConstant:
                     return (IEdmDurationConstantExpression)expression;
+                case EdmExpressionKind.DateConstant:
+                    return (IEdmDateConstantExpression)expression;
+                case EdmExpressionKind.TimeOfDayConstant:
+                    return (IEdmTimeOfDayConstantExpression)expression;
                 case EdmExpressionKind.Null:
                     return (IEdmNullExpression)expression;
                 case EdmExpressionKind.Path:
@@ -493,12 +504,43 @@ namespace Microsoft.OData.Edm.Evaluation
                 case EdmExpressionKind.Labeled:
                     return this.MapLabeledExpressionToDelayedValue(expression, new DelayedExpressionContext(this, context), context).Value;
 
+                case EdmExpressionKind.EnumMember:
+                    IEdmEnumMemberExpression enumMemberExpression = (IEdmEnumMemberExpression)expression;
+                    var enumMembers = enumMemberExpression.EnumMembers.ToList();
+                    IEdmEnumType enumType = enumMembers.First().DeclaringType;
+                    IEdmEnumTypeReference enumTypeReference = new EdmEnumTypeReference(enumType, false);
+                    if (enumMembers.Count() == 1)
+                    {
+                        return new EdmEnumValue(enumTypeReference, enumMemberExpression.EnumMembers.Single());
+                    }
+                    else
+                    {
+                        if (!enumType.IsFlags || !EdmValueParser.IntegerTypeKind.Contains(enumType.UnderlyingType.PrimitiveKind))
+                        {
+                            throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Type {0} cannot be assigned with multi-values.", enumType.FullName()));
+                        }
+
+                        long result = 0;
+                        foreach (var enumMember in enumMembers)
+                        {
+                            long value = (enumMember.Value as EdmIntegerConstant).Value;
+                            result |= value;
+                        }
+
+                        return new EdmEnumValue(enumTypeReference, new EdmIntegerConstant(result));
+                    }
+
+                case EdmExpressionKind.EnumMemberReference:
+                    IEdmEnumMemberReferenceExpression enumMemberReferenceExpression = (IEdmEnumMemberReferenceExpression)expression;
+                    var referencedEnumMember = enumMemberReferenceExpression.ReferencedEnumMember;
+                    IEdmEnumTypeReference referencedEnumTypeReference = new EdmEnumTypeReference(referencedEnumMember.DeclaringType, false);
+                    return new EdmEnumValue(referencedEnumTypeReference, enumMemberReferenceExpression.ReferencedEnumMember);
+
                 case EdmExpressionKind.ParameterReference:
                 case EdmExpressionKind.OperationReference:
                 case EdmExpressionKind.PropertyReference:
                 case EdmExpressionKind.ValueTermReference:
                 case EdmExpressionKind.EntitySetReference:
-                case EdmExpressionKind.EnumMemberReference:
                     throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_UnrecognizedExpressionKind(((int)expression.ExpressionKind).ToString(System.Globalization.CultureInfo.InvariantCulture)));
                 default:
                     throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_UnrecognizedExpressionKind(((int)expression.ExpressionKind).ToString(System.Globalization.CultureInfo.InvariantCulture)));

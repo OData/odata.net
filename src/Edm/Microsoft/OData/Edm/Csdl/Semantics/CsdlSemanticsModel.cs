@@ -362,8 +362,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new CsdlSemanticsDecimalConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.EntitySetReference:
                         return new CsdlSemanticsEntitySetReferenceExpression((CsdlEntitySetReferenceExpression)expression, bindingContext, schema);
+                    case EdmExpressionKind.EnumMember:
                     case EdmExpressionKind.EnumMemberReference:
-                        return new CsdlSemanticsEnumMemberReferenceExpression((CsdlEnumMemberReferenceExpression)expression, bindingContext, schema);
+                        return new CsdlSemanticsEnumMemberExpression((CsdlEnumMemberExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.FloatingConstant:
                         return new CsdlSemanticsFloatingConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.Null:
@@ -400,6 +401,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new CsdlSemanticsStringConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.DurationConstant:
                         return new CsdlSemanticsDurationConstantExpression((CsdlConstantExpression)expression, schema);
+                    case EdmExpressionKind.DateConstant:
+                        return new CsdlSemanticsDateConstantExpression((CsdlConstantExpression)expression, schema);
+                    case EdmExpressionKind.TimeOfDayConstant:
+                        return new CsdlSemanticsTimeOfDayConstantExpression((CsdlConstantExpression)expression, schema);
                 }
             }
 
@@ -418,6 +423,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     {
                         case EdmPrimitiveTypeKind.Boolean:
                         case EdmPrimitiveTypeKind.Byte:
+                        case EdmPrimitiveTypeKind.Date:
                         case EdmPrimitiveTypeKind.Double:
                         case EdmPrimitiveTypeKind.Guid:
                         case EdmPrimitiveTypeKind.Int16:
@@ -433,6 +439,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
                         case EdmPrimitiveTypeKind.DateTimeOffset:
                         case EdmPrimitiveTypeKind.Duration:
+                        case EdmPrimitiveTypeKind.TimeOfDay:
                             return new CsdlSemanticsTemporalTypeReference(schema, (CsdlTemporalTypeReference)primitiveReference);
 
                         case EdmPrimitiveTypeKind.Decimal:
@@ -552,7 +559,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                             }
 
                             // TODO: REF referenced derived types
-                            derivedTypes.Add(structuredType); 
+                            derivedTypes.Add(structuredType);
                         }
                     }
                 }

@@ -44,6 +44,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         private readonly ODataJsonLightEntryAndFeedSerializer jsonLightEntryAndFeedSerializer;
 
+        /// <summary>True if the writer was created for writing a parameter; false otherwise.</summary>
+        private readonly bool writingParameter;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -51,17 +54,23 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <param name="writingFeed">true if the writer is created for writing a feed; false when it is created for writing an entry.</param>
+        /// <param name="writingParameter">true if the writer is created for writing a parameter; false otherwise.</param>
+        /// <param name="listener">If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</param>
         internal ODataJsonLightWriter(
             ODataJsonLightOutputContext jsonLightOutputContext,
             IEdmNavigationSource navigationSource,
             IEdmEntityType entityType,
-            bool writingFeed)
-            : base(jsonLightOutputContext, navigationSource, entityType, writingFeed)
+            bool writingFeed,
+            bool writingParameter = false,
+            IODataReaderWriterListener listener = null)
+            : base(jsonLightOutputContext, navigationSource, entityType, writingFeed, listener)
         {
             Debug.Assert(jsonLightOutputContext != null, "jsonLightOutputContext != null");
 
             this.jsonLightOutputContext = jsonLightOutputContext;
             this.jsonLightEntryAndFeedSerializer = new ODataJsonLightEntryAndFeedSerializer(this.jsonLightOutputContext);
+
+            this.writingParameter = writingParameter;
         }
 
         /// <summary>
@@ -278,7 +287,12 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(feed != null, "feed != null");
 
             IJsonWriter jsonWriter = this.jsonLightOutputContext.JsonWriter;
-            if (this.ParentNavigationLink == null)
+            if (this.ParentNavigationLink == null && this.writingParameter)
+            {
+                // Start array which will hold the entries in the feed.
+                jsonWriter.StartArrayScope();
+            }
+            else if (this.ParentNavigationLink == null)
             {
                 // Top-level feed.
                 // "{"
@@ -378,8 +392,12 @@ namespace Microsoft.OData.Core.JsonLight
         {
             Debug.Assert(feed != null, "feed != null");
 
-            bool isTopLevel = this.ParentNavigationLink == null;
-            if (isTopLevel)
+            if (this.ParentNavigationLink == null && this.writingParameter)
+            {
+                // End the array which holds the entries in the feed.
+                this.jsonLightOutputContext.JsonWriter.EndArrayScope();
+            }
+            else if (this.ParentNavigationLink == null)
             {
                 // End the array which holds the entries in the feed.
                 this.jsonLightOutputContext.JsonWriter.EndArrayScope();

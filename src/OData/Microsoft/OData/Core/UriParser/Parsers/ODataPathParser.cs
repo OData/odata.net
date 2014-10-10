@@ -876,10 +876,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             // TODO: change constructor to take single import
-            ODataPathSegment segment = new OperationImportSegment(new[] { singleImport }, targetset, resolvedParameters)
-            {
-                Identifier = identifier
-            };
+            ODataPathSegment segment = new OperationImportSegment(new[] { singleImport }, targetset, resolvedParameters);
 
             DetermineEntitySetForSegment(identifier, returnType, segment, targetset, singleImport.Operation);
 

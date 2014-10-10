@@ -23,6 +23,7 @@ namespace Microsoft.OData.Core.UriParser
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData.Edm.Library;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces
@@ -833,7 +834,7 @@ namespace Microsoft.OData.Core.UriParser
                     this.NextChar();
                 }
 
-                // DateTimeOffset and Guids will have '-' in them
+                // DateTimeOffset, Date and Guids will have '-' in them
                 if (this.ch == '-')
                 {
                     if (this.TryParseDateTimeoffset(tokenPos))
@@ -843,6 +844,15 @@ namespace Microsoft.OData.Core.UriParser
                     else if (this.TryParseGuid(tokenPos))
                     {
                         return ExpressionTokenKind.GuidLiteral;
+                    }
+                }
+
+                // TimeOfDay will have ":" in them
+                if (this.ch == ':')
+                {
+                    if (this.TryParseTimeOfDay(tokenPos))
+                    {
+                        return ExpressionTokenKind.TimeOfDayLiteral;
                     }
                 }
 
@@ -955,6 +965,31 @@ namespace Microsoft.OData.Core.UriParser
 
             DateTimeOffset tmpdatetimeOffsetValue;
             if (UriUtils.TryUriStringToDateTimeOffset(datetimeOffsetStr, out tmpdatetimeOffsetValue))
+            {
+                return true;
+            }
+            else
+            {
+                this.textPos = initialIndex;
+                this.ch = this.Text[initialIndex];
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tries to parse TimeOfDay from current text
+        /// If it's not TimeOfDay, then this.textPos and this.ch are reset
+        /// </summary>
+        /// <param name="tokenPos">Start index</param>
+        /// <returns>True if the substring that starts from tokenPos is a TimeOfDay, false otherwise</returns>
+        private bool TryParseTimeOfDay(int tokenPos)
+        {
+            int initialIndex = this.textPos;
+
+            string timeOfDayStr = ParseLiteral(tokenPos);
+
+            TimeOfDay tmpTimeOfDayValue;
+            if (UriUtils.TryUriStringToTimeOfDay(timeOfDayStr, out tmpTimeOfDayValue))
             {
                 return true;
             }
@@ -1100,7 +1135,7 @@ namespace Microsoft.OData.Core.UriParser
             }
         }
 
-       
+
 
         /// <summary>Parses an identifier by advancing the current character.</summary>
         private void ParseIdentifier()

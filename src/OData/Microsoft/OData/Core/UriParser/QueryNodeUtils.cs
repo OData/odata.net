@@ -65,6 +65,34 @@ namespace Microsoft.OData.Core.UriParser
                             EdmPrimitiveTypeKind.DateTimeOffset),
                         EdmPrimitiveTypeKind.Duration
                     },
+                    {
+                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
+                            BinaryOperatorKind.Add,
+                            EdmPrimitiveTypeKind.Date,
+                            EdmPrimitiveTypeKind.Duration),
+                        EdmPrimitiveTypeKind.DateTimeOffset
+                    },
+                    {
+                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
+                            BinaryOperatorKind.Add,
+                            EdmPrimitiveTypeKind.Duration,
+                            EdmPrimitiveTypeKind.Date),
+                        EdmPrimitiveTypeKind.DateTimeOffset
+                    },
+                    {
+                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
+                            BinaryOperatorKind.Subtract,
+                            EdmPrimitiveTypeKind.Date,
+                            EdmPrimitiveTypeKind.Duration),
+                        EdmPrimitiveTypeKind.DateTimeOffset
+                    },
+                     {
+                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
+                            BinaryOperatorKind.Subtract,
+                            EdmPrimitiveTypeKind.Date,
+                            EdmPrimitiveTypeKind.Date),
+                        EdmPrimitiveTypeKind.Duration
+                    },
                 };
 
         /// <summary>
