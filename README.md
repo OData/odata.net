@@ -21,7 +21,7 @@ The master branch includes the .NET libraries for OData V4 only that are now mos
  The EdmLib contains classes to represent, construct, parse, serialize and validate entity data models.
  - [OData Client for .NET](http://www.nuget.org/packages/Microsoft.OData.Client/) (namespace `Microsoft.OData.Client`):<br />
  The client library is built on top of ODataLib and EdmLib that has LINQ-enabled client APIs for issuing OData queries and consuming OData JSON payloads.
- - [Microsoft.Spatial](http://www.nuget.org/packages/Microsoft.Spatial/) (namespace `Microsoft.OData.Client`):<br />
+ - [Microsoft.Spatial](http://www.nuget.org/packages/Microsoft.Spatial/) (namespace `Microsoft.Spatial`):<br />
  The spatial library contains classes and methods that facilitate geography and geometry spatial operations.
 
 For these libraries, we accept bug reports, feature requirements and pull requests. The corresponding fixes and implementations will be included into every new release.
