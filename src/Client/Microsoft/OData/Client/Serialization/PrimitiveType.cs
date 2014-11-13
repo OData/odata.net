@@ -1,16 +1,23 @@
-//   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation. All rights reserved.  
-//   Licensed under the Apache License, Version 2.0 (the "License");
-//   you may not use this file except in compliance with the License.
-//   You may obtain a copy of the License at
+//   OData .NET Libraries ver. 6.8.1
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+//   MIT License
+//   Permission is hereby granted, free of charge, to any person obtaining a copy of
+//   this software and associated documentation files (the "Software"), to deal in
+//   the Software without restriction, including without limitation the rights to use,
+//   copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+//   Software, and to permit persons to whom the Software is furnished to do so,
+//   subject to the following conditions:
 
-//       http://www.apache.org/licenses/LICENSE-2.0
+//   The above copyright notice and this permission notice shall be included in all
+//   copies or substantial portions of the Software.
 
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
+//   THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+//   FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+//   COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+//   IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+//   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace Microsoft.OData.Client
 {
@@ -21,7 +28,7 @@ namespace Microsoft.OData.Client
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
- 
+
     /// <summary>
     /// Represent a Primitive Type on the client
     /// </summary>
@@ -72,7 +79,7 @@ namespace Microsoft.OData.Client
         /// Cache containing known non-primitive types. Any access to this hashset requires locking.
         /// </summary>
         private static readonly HashSet<Type> knownNonPrimitiveTypes;
-        
+
         /// <summary>
         /// Static Constructor
         /// </summary>
@@ -152,10 +159,10 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Gets the types EDM primitive type kind
         /// </summary>
-        internal EdmPrimitiveTypeKind PrimitiveKind 
+        internal EdmPrimitiveTypeKind PrimitiveKind
         {
-            get; 
-            private set; 
+            get;
+            private set;
         }
 
         /// <summary>
@@ -199,7 +206,7 @@ namespace Microsoft.OData.Client
                     // derived from.
                     possibleMatches = clrMapping.Where(m => !m.Key.IsPrimitive() && !m.Key.IsSealed()).Concat(derivedPrimitiveTypeMapping).ToArray();
                 }
-            
+
                 var bestMatch = new KeyValuePair<Type, PrimitiveType>(typeof(object), null);
                 foreach (var possibleMatch in possibleMatches)
                 {
@@ -375,6 +382,8 @@ namespace Microsoft.OData.Client
             RegisterKnownType(typeof(GeometryMultiLineString), XmlConstants.EdmGeometryMultiLineStringTypeName, EdmPrimitiveTypeKind.GeometryMultiLineString, new GeometryTypeConverter(), true);
             RegisterKnownType(typeof(GeometryMultiPolygon), XmlConstants.EdmGeometryMultiPolygonTypeName, EdmPrimitiveTypeKind.GeometryMultiPolygon, new GeometryTypeConverter(), true);
             RegisterKnownType(typeof(DataServiceStreamLink), XmlConstants.EdmStreamTypeName, EdmPrimitiveTypeKind.Stream, new NamedStreamTypeConverter(), false);
+            RegisterKnownType(typeof(Date), XmlConstants.EdmDateTypeName, EdmPrimitiveTypeKind.Date, new DateTypeConverter(), true);
+            RegisterKnownType(typeof(TimeOfDay), XmlConstants.EdmTimeOfDayTypeName, EdmPrimitiveTypeKind.TimeOfDay, new TimeOfDayConvert(), true);
 
             // Following are known types are mapped to existing Edm type
             RegisterKnownType(typeof(Char), XmlConstants.EdmStringTypeName, EdmPrimitiveTypeKind.String, new CharTypeConverter(), false);
@@ -388,7 +397,7 @@ namespace Microsoft.OData.Client
             RegisterKnownType(typeof(UInt16), null, EdmPrimitiveTypeKind.String, new UInt16TypeConverter(), false);
             RegisterKnownType(typeof(UInt32), null, EdmPrimitiveTypeKind.String, new UInt32TypeConverter(), false);
             RegisterKnownType(typeof(UInt64), null, EdmPrimitiveTypeKind.String, new UInt64TypeConverter(), false);
-      
+
 #if !ASTORIA_LIGHT && !PORTABLELIB
             // There is no static dependency on System.Data.Linq so we use a substitute type for the Binary type
             RegisterKnownType(typeof(BinaryTypeSub), XmlConstants.EdmBinaryTypeName, EdmPrimitiveTypeKind.Binary, new BinaryTypeConverter(), false);

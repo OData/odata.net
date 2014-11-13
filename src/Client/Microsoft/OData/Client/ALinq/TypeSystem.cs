@@ -1,16 +1,23 @@
-//   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation. All rights reserved.  
-//   Licensed under the Apache License, Version 2.0 (the "License");
-//   you may not use this file except in compliance with the License.
-//   You may obtain a copy of the License at
+//   OData .NET Libraries ver. 6.8.1
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+//   MIT License
+//   Permission is hereby granted, free of charge, to any person obtaining a copy of
+//   this software and associated documentation files (the "Software"), to deal in
+//   the Software without restriction, including without limitation the rights to use,
+//   copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+//   Software, and to permit persons to whom the Software is furnished to do so,
+//   subject to the following conditions:
 
-//       http://www.apache.org/licenses/LICENSE-2.0
+//   The above copyright notice and this permission notice shall be included in all
+//   copies or substantial portions of the Software.
 
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
+//   THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+//   FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+//   COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+//   IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+//   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace Microsoft.OData.Client
 {
@@ -18,6 +25,7 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
+    using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
 
     /// <summary>Utility functions for processing Expression trees</summary>
@@ -62,12 +70,12 @@ namespace Microsoft.OData.Client
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "Cleaner code")]
         static TypeSystem()
-        {  
+        {
 #if !PORTABLELIB
 #if !ASTORIA_LIGHT
-            const int ExpectedCount = 29;
+            const int ExpectedCount = 35;
 #else
-            const int ExpectedCount = 27;
+            const int ExpectedCount = 33;
 #endif
 #endif
             // string functions
@@ -85,7 +93,17 @@ namespace Microsoft.OData.Client
             expressionMethodMap.Add(typeof(string).GetMethod("Concat", new Type[] { typeof(string), typeof(string) }), @"concat");
             expressionMethodMap.Add(typeof(string).GetProperty("Length", typeof(int)).GetGetMethod(), @"length");
 
-            // datetimeoffset methods
+            // date methods
+            expressionMethodMap.Add(typeof(Date).GetProperty("Day", typeof(int)).GetGetMethod(), @"day");
+            expressionMethodMap.Add(typeof(Date).GetProperty("Month", typeof(int)).GetGetMethod(), @"month");
+            expressionMethodMap.Add(typeof(Date).GetProperty("Year", typeof(int)).GetGetMethod(), @"year");
+
+            // timeOfDay methods
+            expressionMethodMap.Add(typeof(TimeOfDay).GetProperty("Hours", typeof(int)).GetGetMethod(), @"hour");
+            expressionMethodMap.Add(typeof(TimeOfDay).GetProperty("Minutes", typeof(int)).GetGetMethod(), @"minute");
+            expressionMethodMap.Add(typeof(TimeOfDay).GetProperty("Seconds", typeof(int)).GetGetMethod(), @"second");
+
+            // datetimeoffset methods (date? time?)
             expressionMethodMap.Add(typeof(DateTimeOffset).GetProperty("Day", typeof(int)).GetGetMethod(), @"day");
             expressionMethodMap.Add(typeof(DateTimeOffset).GetProperty("Hour", typeof(int)).GetGetMethod(), @"hour");
             expressionMethodMap.Add(typeof(DateTimeOffset).GetProperty("Month", typeof(int)).GetGetMethod(), @"month");
@@ -123,7 +141,7 @@ namespace Microsoft.OData.Client
             expressionMethodMap.Add(typeof(GeographyOperationsExtensions).GetMethod("Distance", new Type[] { typeof(GeographyPoint), typeof(GeographyPoint) }, true /*isPublic*/, true /*isStatic*/), @"geo.distance");
             expressionMethodMap.Add(typeof(GeometryOperationsExtensions).GetMethod("Distance", new Type[] { typeof(GeometryPoint), typeof(GeometryPoint) }, true /*isPublic*/, true /*isStatic*/), @"geo.distance");
 
-// Portable Lib can be 35 or 33 depending on if its running on Silverlight or not, disabling in this case           
+            // Portable Lib can be 35 or 33 depending on if its running on Silverlight or not, disabling in this case           
 #if !PORTABLELIB
             Debug.Assert(expressionMethodMap.Count == ExpectedCount, "expressionMethodMap.Count == ExpectedCount");
 #endif
@@ -147,7 +165,7 @@ namespace Microsoft.OData.Client
 
             propertiesAsMethodsMap = new Dictionary<PropertyInfo, MethodInfo>(EqualityComparer<PropertyInfo>.Default);
             propertiesAsMethodsMap.Add(
-                typeof(string).GetProperty("Length", typeof(int)), 
+                typeof(string).GetProperty("Length", typeof(int)),
                 typeof(string).GetProperty("Length", typeof(int)).GetGetMethod());
             propertiesAsMethodsMap.Add(
                 typeof(DateTimeOffset).GetProperty("Day", typeof(int)),
@@ -177,7 +195,27 @@ namespace Microsoft.OData.Client
                 typeof(TimeSpan).GetProperty("Seconds", typeof(int)),
                 typeof(TimeSpan).GetProperty("Seconds", typeof(int)).GetGetMethod());
 
-            Debug.Assert(propertiesAsMethodsMap.Count == 10, "propertiesAsMethodsMap.Count == 10");
+            propertiesAsMethodsMap.Add(
+                typeof(TimeOfDay).GetProperty("Hours", typeof(int)),
+                typeof(TimeOfDay).GetProperty("Hours", typeof(int)).GetGetMethod());
+            propertiesAsMethodsMap.Add(
+                typeof(TimeOfDay).GetProperty("Minutes", typeof(int)),
+                typeof(TimeOfDay).GetProperty("Minutes", typeof(int)).GetGetMethod());
+            propertiesAsMethodsMap.Add(
+                typeof(TimeOfDay).GetProperty("Seconds", typeof(int)),
+                typeof(TimeOfDay).GetProperty("Seconds", typeof(int)).GetGetMethod());
+
+            propertiesAsMethodsMap.Add(
+                typeof(Date).GetProperty("Year", typeof(int)),
+                typeof(Date).GetProperty("Year", typeof(int)).GetGetMethod());
+            propertiesAsMethodsMap.Add(
+                typeof(Date).GetProperty("Month", typeof(int)),
+                typeof(Date).GetProperty("Month", typeof(int)).GetGetMethod());
+            propertiesAsMethodsMap.Add(
+                typeof(Date).GetProperty("Day", typeof(int)),
+                typeof(Date).GetProperty("Day", typeof(int)).GetGetMethod());
+
+            Debug.Assert(propertiesAsMethodsMap.Count == 16, "propertiesAsMethodsMap.Count == 16");
         }
 
         /// <summary>
@@ -212,7 +250,7 @@ namespace Microsoft.OData.Client
         internal static Type GetElementType(Type seqType)
         {
             Type ienum = FindIEnumerable(seqType);
-            if (ienum == null) 
+            if (ienum == null)
             {
                 return seqType;
             }

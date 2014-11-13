@@ -1,16 +1,23 @@
-//   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation. All rights reserved.  
-//   Licensed under the Apache License, Version 2.0 (the "License");
-//   you may not use this file except in compliance with the License.
-//   You may obtain a copy of the License at
+//   OData .NET Libraries ver. 6.8.1
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+//   MIT License
+//   Permission is hereby granted, free of charge, to any person obtaining a copy of
+//   this software and associated documentation files (the "Software"), to deal in
+//   the Software without restriction, including without limitation the rights to use,
+//   copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+//   Software, and to permit persons to whom the Software is furnished to do so,
+//   subject to the following conditions:
 
-//       http://www.apache.org/licenses/LICENSE-2.0
+//   The above copyright notice and this permission notice shall be included in all
+//   copies or substantial portions of the Software.
 
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
+//   THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+//   FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+//   COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+//   IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+//   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ASTORIA_CLIENT
 namespace Microsoft.OData.Client
@@ -322,7 +329,7 @@ namespace Microsoft.OData.Service
 
         /// <summary>Implicit parameter "it" used for Queryable.Where lambda.</summary>
         internal const string ImplicitFilterParameter = "$it";
-        
+
         #endregion URI constants.
 
         #region WCF constants.
@@ -493,7 +500,7 @@ namespace Microsoft.OData.Service
 
         /// <summary> Atom attribute which indicates the etag value for the declaring entry element.</summary>
         internal const string AtomETagAttributeName = "etag";
-        
+
         /// <summary>'Inline' - wrapping element for inlined entry/feed content.</summary>
         internal const string AtomInlineElementName = "inline";
 
@@ -512,7 +519,7 @@ namespace Microsoft.OData.Service
 
         /// <summary>XML element name for an error.</summary>
         internal const string XmlErrorElementName = "error";
-        
+
         /// <summary>XML element name for an error code.</summary>
         internal const string XmlErrorCodeElementName = "code";
 
@@ -527,10 +534,10 @@ namespace Microsoft.OData.Service
 
         /// <summary>XML element name for an exception stack trace.</summary>
         internal const string XmlErrorStackTraceElementName = "stacktrace";
-        
+
         /// <summary>XML element name for an error message.</summary>
         internal const string XmlErrorMessageElementName = "message";
-        
+
         /// <summary>'false' literal, as used in XML.</summary>
         internal const string XmlFalseLiteral = "false";
 
@@ -748,7 +755,7 @@ namespace Microsoft.OData.Service
 
         /// <summary>maps to m:action|m:function\@title</summary>
         internal const string ActionTitleAttributeName = "title";
-        
+
         /// <summary> BaseType attribute Name in csdl.</summary>
         internal const string BaseType = "BaseType";
 
@@ -900,6 +907,9 @@ namespace Microsoft.OData.Service
         /// <summary>edm decimal primitive type name</summary>
         internal const string EdmDecimalTypeName = "Edm.Decimal";
 
+        /// <summary>edm date primitive type name</summary>
+        internal const string EdmDateTypeName = "Edm.Date";
+
         /// <summary>edm double primitive type name</summary>
         internal const string EdmDoubleTypeName = "Edm.Double";
 
@@ -926,6 +936,9 @@ namespace Microsoft.OData.Service
 
         /// <summary>edm stream primitive type name</summary>
         internal const string EdmStreamTypeName = "Edm.Stream";
+
+        /// <summary>edm timeofday primitive type name</summary>
+        internal const string EdmTimeOfDayTypeName = "Edm.TimeOfDay";
 
         /// <summary>edm string indicating that the value may be collection.</summary>
         internal const string CollectionTypeQualifier = "Collection";
@@ -1062,7 +1075,7 @@ namespace Microsoft.OData.Service
         /// GeoRss representation of a line
         /// </summary>
         internal const string GeoRssLine = "line";
-        
+
         /// <summary>
         /// Gml representation of a point
         /// </summary>
@@ -1077,7 +1090,7 @@ namespace Microsoft.OData.Service
         /// Gml representation of a linestring
         /// </summary>
         internal const string GmlLineString = "LineString";
-                
+
         #endregion
     }
 }

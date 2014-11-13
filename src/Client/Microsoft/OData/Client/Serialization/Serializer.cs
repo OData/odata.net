@@ -1,16 +1,23 @@
-//   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation. All rights reserved.  
-//   Licensed under the Apache License, Version 2.0 (the "License");
-//   you may not use this file except in compliance with the License.
-//   You may obtain a copy of the License at
+//   OData .NET Libraries ver. 6.8.1
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+//   MIT License
+//   Permission is hereby granted, free of charge, to any person obtaining a copy of
+//   this software and associated documentation files (the "Software"), to deal in
+//   the Software without restriction, including without limitation the rights to use,
+//   copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+//   Software, and to permit persons to whom the Software is furnished to do so,
+//   subject to the following conditions:
 
-//       http://www.apache.org/licenses/LICENSE-2.0
+//   The above copyright notice and this permission notice shall be included in all
+//   copies or substantial portions of the Software.
 
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
+//   THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+//   FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+//   COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+//   IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+//   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace Microsoft.OData.Client
 {
@@ -197,10 +204,10 @@ namespace Microsoft.OData.Client
 
             using (ODataMessageWriter messageWriter = Serializer.CreateMessageWriter(requestMessage, this.requestInfo, true /*isParameterPayload*/))
             {
-                ODataParameterWriter parameterWriter = messageWriter.CreateODataParameterWriter((IEdmOperation)null);
+                ODataParameterWriter parameterWriter = messageWriter.CreateODataParameterWriter(null);
                 parameterWriter.WriteStart();
 
-                foreach (OperationParameter operationParameter in operationParameters)
+                foreach (BodyOperationParameter operationParameter in operationParameters)
                 {
                     if (operationParameter.Value == null)
                     {
@@ -216,68 +223,19 @@ namespace Microsoft.OData.Client
                         {
                             case EdmTypeKind.Collection:
                                 {
-                                    // TODO: just call ODataPropertyConverter.CreateODataCollection()
-                                    IEnumerator enumerator = ((ICollection)operationParameter.Value).GetEnumerator();
-                                    ODataCollectionWriter collectionWriter = parameterWriter.CreateCollectionWriter(operationParameter.Name);
-                                    ODataCollectionStart odataCollectionStart = new ODataCollectionStart();
-                                    collectionWriter.WriteStart(odataCollectionStart);
+                                    this.WriteCollectionValueInBodyOperationParameter(parameterWriter, operationParameter, (IEdmCollectionType)edmType);
+                                    break;
+                                }
 
-                                    while (enumerator.MoveNext())
-                                    {
-                                        Object collectionItem = enumerator.Current;
-                                        if (collectionItem == null)
-                                        {
-                                            throw new NotSupportedException(Strings.Serializer_NullCollectionParamterItemValue(operationParameter.Name));
-                                        }
+                            case EdmTypeKind.Entity:
+                                {
+                                    Debug.Assert(model.GetClientTypeAnnotation(edmType).ElementType != null, "model.GetClientTypeAnnotation(edmType).ElementType != null");
+                                    ODataEntry entry = this.propertyConverter.CreateODataEntry(model.GetClientTypeAnnotation(edmType).ElementType, operationParameter.Value);
 
-                                        IEdmType edmItemType = model.GetOrCreateEdmType(collectionItem.GetType());
-                                        Debug.Assert(edmItemType != null, "edmItemType != null");
-
-                                        switch (edmItemType.TypeKind)
-                                        {
-                                            case EdmTypeKind.Complex:
-                                                {
-                                                    Debug.Assert(model.GetClientTypeAnnotation(edmItemType).ElementType != null, "edmItemType.GetClientTypeAnnotation().ElementType != null");
-                                                    ODataComplexValue complexValue = this.propertyConverter.CreateODataComplexValue(
-                                                        model.GetClientTypeAnnotation(edmItemType).ElementType,
-                                                        collectionItem,
-                                                        null /*propertyName*/,
-                                                        false /*isCollectionItem*/,
-                                                        null /*visitedComplexTypeObjects*/);
-
-                                                    Debug.Assert(complexValue != null, "complexValue != null");
-                                                    collectionWriter.WriteItem(complexValue);
-                                                    break;
-                                                }
-
-                                            case EdmTypeKind.Primitive:
-                                                {
-                                                    object primitiveItemValue = ODataPropertyConverter.ConvertPrimitiveValueToRecognizedODataType(collectionItem, collectionItem.GetType());
-                                                    collectionWriter.WriteItem(primitiveItemValue);
-                                                    break;
-                                                }
-
-                                            case EdmTypeKind.Enum:
-                                                {
-                                                    ODataEnumValue enumTmp = this.propertyConverter.CreateODataEnumValue(
-                                                        model.GetClientTypeAnnotation(edmItemType).ElementType,
-                                                        collectionItem,
-                                                        false);
-                                                    collectionWriter.WriteItem(enumTmp);
-                                                    break;
-                                                }
-
-                                            default:
-
-                                                // EdmTypeKind.Entity
-                                                // EdmTypeKind.Row
-                                                // EdmTypeKind.EntityReference
-                                                throw new NotSupportedException(Strings.Serializer_InvalidCollectionParamterItemType(operationParameter.Name, edmItemType.TypeKind));
-                                        }
-                                    }
-
-                                    collectionWriter.WriteEnd();
-                                    collectionWriter.Flush();
+                                    Debug.Assert(entry != null, "entry != null");
+                                    var entryWriter = parameterWriter.CreateEntryWriter(operationParameter.Name);
+                                    entryWriter.WriteStart(entry);
+                                    entryWriter.WriteEnd();
                                     break;
                                 }
 
@@ -310,7 +268,6 @@ namespace Microsoft.OData.Client
 
                                 break;
                             default:
-                                // EdmTypeKind.Entity
                                 // EdmTypeKind.Row
                                 // EdmTypeKind.EntityReference
                                 throw new NotSupportedException(Strings.Serializer_InvalidParameterType(operationParameter.Name, edmType.TypeKind));
@@ -566,6 +523,108 @@ namespace Microsoft.OData.Client
             uriBuilder.Query = queryBuilder.ToString();
 
             return uriBuilder.Uri;
+        }
+
+        /// <summary>
+        /// Writes collection value in body operation parameter.
+        /// </summary>
+        /// <param name="parameterWriter">The odata parameter writer.</param>
+        /// <param name="operationParameter">The operation parameter.</param>
+        /// <param name="edmCollectionType">The edm collection type.</param>
+        private void WriteCollectionValueInBodyOperationParameter(ODataParameterWriter parameterWriter, BodyOperationParameter operationParameter, IEdmCollectionType edmCollectionType)
+        {
+            ClientEdmModel model = this.requestInfo.Model;
+
+            if (edmCollectionType.ElementType.TypeKind() == EdmTypeKind.Entity)
+            {
+                ODataWriter feedWriter = parameterWriter.CreateFeedWriter(operationParameter.Name);
+                feedWriter.WriteStart(new ODataFeed());
+
+                IEnumerator enumerator = ((ICollection)operationParameter.Value).GetEnumerator();
+
+                while (enumerator.MoveNext())
+                {
+                    Object collectionItem = enumerator.Current;
+                    if (collectionItem == null)
+                    {
+                        throw new NotSupportedException(Strings.Serializer_NullCollectionParamterItemValue(operationParameter.Name));
+                    }
+
+                    IEdmType edmItemType = model.GetOrCreateEdmType(collectionItem.GetType());
+                    Debug.Assert(edmItemType != null, "edmItemType != null");
+
+                    if (edmItemType.TypeKind != EdmTypeKind.Entity)
+                    {
+                        throw new NotSupportedException(Strings.Serializer_InvalidCollectionParamterItemType(operationParameter.Name, edmItemType.TypeKind));
+                    }
+
+                    Debug.Assert(model.GetClientTypeAnnotation(edmItemType).ElementType != null, "edmItemType.GetClientTypeAnnotation().ElementType != null");
+                    ODataEntry entry = this.propertyConverter.CreateODataEntry(model.GetClientTypeAnnotation(edmItemType).ElementType, collectionItem);
+                    Debug.Assert(entry != null, "entry != null");
+                    feedWriter.WriteStart(entry);
+                    feedWriter.WriteEnd();
+                }
+
+                feedWriter.WriteEnd();
+                feedWriter.Flush();
+            }
+            else
+            {
+                ODataCollectionWriter collectionWriter = parameterWriter.CreateCollectionWriter(operationParameter.Name);
+                ODataCollectionStart odataCollectionStart = new ODataCollectionStart();
+                collectionWriter.WriteStart(odataCollectionStart);
+
+                IEnumerator enumerator = ((ICollection)operationParameter.Value).GetEnumerator();
+
+                while (enumerator.MoveNext())
+                {
+                    Object collectionItem = enumerator.Current;
+                    if (collectionItem == null)
+                    {
+                        collectionWriter.WriteItem(null);
+                        continue;
+                    }
+
+                    IEdmType edmItemType = model.GetOrCreateEdmType(collectionItem.GetType());
+                    Debug.Assert(edmItemType != null, "edmItemType != null");
+
+                    switch (edmItemType.TypeKind)
+                    {
+                        case EdmTypeKind.Complex:
+                            {
+                                Debug.Assert(model.GetClientTypeAnnotation(edmItemType).ElementType != null, "edmItemType.GetClientTypeAnnotation().ElementType != null");
+                                ODataComplexValue complexValue = this.propertyConverter.CreateODataComplexValue(model.GetClientTypeAnnotation(edmItemType).ElementType, collectionItem, null /*propertyName*/, false /*isCollectionItem*/, null /*visitedComplexTypeObjects*/);
+
+                                Debug.Assert(complexValue != null, "complexValue != null");
+                                collectionWriter.WriteItem(complexValue);
+                                break;
+                            }
+
+                        case EdmTypeKind.Primitive:
+                            {
+                                object primitiveItemValue = ODataPropertyConverter.ConvertPrimitiveValueToRecognizedODataType(collectionItem, collectionItem.GetType());
+                                collectionWriter.WriteItem(primitiveItemValue);
+                                break;
+                            }
+
+                        case EdmTypeKind.Enum:
+                            {
+                                ODataEnumValue enumTmp = this.propertyConverter.CreateODataEnumValue(model.GetClientTypeAnnotation(edmItemType).ElementType, collectionItem, false);
+                                collectionWriter.WriteItem(enumTmp);
+                                break;
+                            }
+
+                        default:
+                            // EdmTypeKind.Entity
+                            // EdmTypeKind.Row
+                            // EdmTypeKind.EntityReference
+                            throw new NotSupportedException(Strings.Serializer_InvalidCollectionParamterItemType(operationParameter.Name, edmItemType.TypeKind));
+                    }
+                }
+
+                collectionWriter.WriteEnd();
+                collectionWriter.Flush();
+            }
         }
 
         /// <summary>

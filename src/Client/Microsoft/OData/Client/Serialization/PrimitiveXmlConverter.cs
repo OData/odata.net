@@ -1,16 +1,23 @@
-//   OData .NET Libraries
-//   Copyright (c) Microsoft Corporation. All rights reserved.  
-//   Licensed under the Apache License, Version 2.0 (the "License");
-//   you may not use this file except in compliance with the License.
-//   You may obtain a copy of the License at
+//   OData .NET Libraries ver. 6.8.1
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+//   MIT License
+//   Permission is hereby granted, free of charge, to any person obtaining a copy of
+//   this software and associated documentation files (the "Software"), to deal in
+//   the Software without restriction, including without limitation the rights to use,
+//   copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+//   Software, and to permit persons to whom the Software is furnished to do so,
+//   subject to the following conditions:
 
-//       http://www.apache.org/licenses/LICENSE-2.0
+//   The above copyright notice and this permission notice shall be included in all
+//   copies or substantial portions of the Software.
 
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
+//   THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+//   FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+//   COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+//   IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+//   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /*  DESIGN NOTES (pqian):
  *  a note on the primitive type parser/materializer on the client side
@@ -34,6 +41,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Reflection;
     using System.Xml;
+    using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
 
     /// <summary>
@@ -123,7 +131,7 @@ namespace Microsoft.OData.Client
             return XmlConvert.ToString((Boolean)instance);
         }
     }
-    
+
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -193,7 +201,7 @@ namespace Microsoft.OData.Client
             get;
             set;
         }
-        
+
         /// <summary>
         /// Create an instance of primitive type from a string representation
         /// </summary>
@@ -256,7 +264,7 @@ namespace Microsoft.OData.Client
             return XmlConvert.ToString((Decimal)instance);
         }
     }
-    
+
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -412,7 +420,7 @@ namespace Microsoft.OData.Client
             return XmlConvert.ToString((Single)instance);
         }
     }
-    
+
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -438,7 +446,7 @@ namespace Microsoft.OData.Client
             return (String)instance;
         }
     }
-    
+
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -464,7 +472,7 @@ namespace Microsoft.OData.Client
             return XmlConvert.ToString((SByte)instance);
         }
     }
-    
+
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -516,7 +524,7 @@ namespace Microsoft.OData.Client
             return new String((char[])instance);
         }
     }
-    
+
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -568,7 +576,7 @@ namespace Microsoft.OData.Client
             return UriUtil.UriToString((Uri)instance);
         }
     }
-    
+
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -594,7 +602,7 @@ namespace Microsoft.OData.Client
             return instance.ToString();
         }
     }
-    
+
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -620,7 +628,7 @@ namespace Microsoft.OData.Client
             return instance.ToString();
         }
     }
-    
+
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -646,7 +654,7 @@ namespace Microsoft.OData.Client
             return XmlConvert.ToString((DateTimeOffset)instance);
         }
     }
-    
+
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -672,7 +680,7 @@ namespace Microsoft.OData.Client
             return EdmValueWriter.DurationAsXml((TimeSpan)instance);
         }
     }
-    
+
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -698,7 +706,7 @@ namespace Microsoft.OData.Client
             return XmlConvert.ToString((UInt16)instance);
         }
     }
-    
+
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -724,7 +732,7 @@ namespace Microsoft.OData.Client
             return XmlConvert.ToString((UInt32)instance);
         }
     }
-    
+
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -804,7 +812,7 @@ namespace Microsoft.OData.Client
     /// </summary>
     internal sealed class NamedStreamTypeConverter : PrimitiveTypeConverter
     {
-         /// <summary>
+        /// <summary>
         /// Create an instance of primitive type from a string representation
         /// </summary>
         /// <param name="text">The string representation</param>
@@ -822,6 +830,58 @@ namespace Microsoft.OData.Client
         internal override String ToString(object instance)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// Convert between primitive types Edm.Date and string
+    /// </summary>
+    internal sealed class DateTypeConverter : PrimitiveTypeConverter
+    {
+        /// <summary>
+        /// Create an instance of primitive type from a string representation
+        /// </summary>
+        /// <param name="text">The string representation</param>
+        /// <returns>An instance of primitive type</returns>
+        internal override object Parse(string text)
+        {
+            return PlatformHelper.ConvertStringToDate(text);
+        }
+
+        /// <summary>
+        /// Convert an instance of primitive type to string
+        /// </summary>
+        /// <param name="instance">The instance</param>
+        /// <returns>The string representation of the instance</returns>
+        internal override string ToString(object instance)
+        {
+            return ((Date)instance).ToString();
+        }
+    }
+
+    /// <summary>
+    /// Convert between primitive types Edm.TimeOfDay and string
+    /// </summary>
+    internal sealed class TimeOfDayConvert : PrimitiveTypeConverter
+    {
+        /// <summary>
+        /// Create an instance of primitive type from a string representation
+        /// </summary>
+        /// <param name="text">The string representation</param>
+        /// <returns>An instance of primitive type</returns>
+        internal override object Parse(string text)
+        {
+            return PlatformHelper.ConvertStringToTimeOfDay(text);
+        }
+
+        /// <summary>
+        /// Convert an instance of primitive type to string
+        /// </summary>
+        /// <param name="instance">The instance</param>
+        /// <returns>The string representation of the instance</returns>
+        internal override string ToString(object instance)
+        {
+            return ((TimeOfDay)instance).ToString();
         }
     }
 }
