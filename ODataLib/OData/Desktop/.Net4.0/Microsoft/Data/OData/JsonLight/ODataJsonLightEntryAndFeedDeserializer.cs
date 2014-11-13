@@ -1,17 +1,23 @@
-//   OData .NET Libraries ver. 5.6.2
-//   Copyright (c) Microsoft Corporation. All rights reserved.
-//
-//   Licensed under the Apache License, Version 2.0 (the "License");
-//   you may not use this file except in compliance with the License.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
+//   OData .NET Libraries ver. 5.6.3
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+//   MIT License
+//   Permission is hereby granted, free of charge, to any person obtaining a copy of
+//   this software and associated documentation files (the "Software"), to deal in
+//   the Software without restriction, including without limitation the rights to use,
+//   copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+//   Software, and to permit persons to whom the Software is furnished to do so,
+//   subject to the following conditions:
+
+//   The above copyright notice and this permission notice shall be included in all
+//   copies or substantial portions of the Software.
+
+//   THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+//   FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+//   COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+//   IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+//   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace Microsoft.Data.OData.JsonLight
 {
@@ -117,7 +123,7 @@ namespace Microsoft.Data.OData.JsonLight
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
             // If the current node is the odata.type property - read it.
-            if (this.JsonReader.NodeType == JsonNodeType.Property && 
+            if (this.JsonReader.NodeType == JsonNodeType.Property &&
                 string.CompareOrdinal(ODataAnnotationNames.ODataType, this.JsonReader.GetPropertyName()) == 0)
             {
                 // The type name might have already been set through an annotation group, so fail to signal potential ambiguity.
@@ -459,7 +465,7 @@ namespace Microsoft.Data.OData.JsonLight
                     throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyAnnotationName));
             }
         }
-        
+
         /// <summary>
         /// Reads an annotation group if one exists, and updates the given entry with the annotations from the annotation group.
         /// </summary>
@@ -655,7 +661,7 @@ namespace Microsoft.Data.OData.JsonLight
             IEdmTypeReference expectedTypeFromTerm = MetadataUtils.LookupTypeOfValueTerm(name, this.Model);
 
             object customInstanceAnnotationValue = this.ReadNonEntityValue(
-                odataType, 
+                odataType,
                 expectedTypeFromTerm,
                 null, /*duplicatePropertyNamesChecker*/
                 null, /*collectionValidator*/
@@ -1285,8 +1291,8 @@ namespace Microsoft.Data.OData.JsonLight
                 : this.Model.NullValueReadBehaviorKind(edmProperty);
             object propertyValue = this.ReadNonEntityValue(
                 propertyTypeName,
-                edmProperty.Type, 
-                /*duplicatePropertyNamesChecker*/ null, 
+                edmProperty.Type,
+                /*duplicatePropertyNamesChecker*/ null,
                 /*collectionValidator*/ null,
                 nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
                 /*isTopLevelPropertyValue*/ false,
@@ -1331,8 +1337,8 @@ namespace Microsoft.Data.OData.JsonLight
 
             object propertyValue = this.ReadNonEntityValue(
                 propertyTypeName,
-                /*expectedValueTypeReference*/ null, 
-                /*duplicatePropertyNamesChecker*/ null, 
+                /*expectedValueTypeReference*/ null,
+                /*duplicatePropertyNamesChecker*/ null,
                 /*collectionValidator*/ null,
                 /*validateNullValue*/ true,
                 /*isTopLevelPropertyValue*/ false,
@@ -1395,7 +1401,7 @@ namespace Microsoft.Data.OData.JsonLight
             // Link properties are stream properties and deferred links.
             Dictionary<string, object> odataPropertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName);
             if (odataPropertyAnnotations != null)
-            {   
+            {
                 object propertyAnnotationValue;
 
                 // If the property has 'odata.navigationLink' or 'odata.associationLink' annotation, read it as a navigation property
@@ -1431,7 +1437,7 @@ namespace Microsoft.Data.OData.JsonLight
 
                     return navigationLinkInfo;
                 }
-                
+
                 // If the property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaETag' annotation, read it as a stream property
                 if (odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaEditLink, out propertyAnnotationValue) ||
                     odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaReadLink, out propertyAnnotationValue) ||
@@ -1479,8 +1485,21 @@ namespace Microsoft.Data.OData.JsonLight
             // We ignore the type name since we might not have the full model and thus might not be able to resolve it correctly.
             ValidateDataPropertyTypeNameAnnotation(entryState.DuplicatePropertyNamesChecker, propertyName);
 
-            // Ignore the property value
-            this.JsonReader.SkipValue();
+
+            if (this.MessageReaderSettings.IgnoreUndeclaredValueProperties
+                && (this.JsonReader.NodeType != JsonNodeType.StartObject)
+                && (this.JsonReader.NodeType != JsonNodeType.StartArray))
+            {
+                // for undeclared value (not supports complex or collection value)
+                // Open property - read it as such.
+                this.ReadOpenProperty(entryState, propertyName, propertyWithValue);
+            }
+            else
+            {
+                // Ignore the property value
+                this.JsonReader.SkipValue();
+            }
+
             return null;
         }
 
@@ -1734,7 +1753,7 @@ namespace Microsoft.Data.OData.JsonLight
 
             // Validate that the property name is a valid absolute URI or a valid URI fragment.
             ODataJsonLightValidationUtils.ValidateMetadataReferencePropertyName(this.MetadataUriParseResult.MetadataDocumentUri, metadataReferencePropertyName);
-            
+
             IODataJsonOperationsDeserializerContext readerContext = new OperationsDeserializerContext(entryState.Entry, this);
 
             bool insideArray = false;
@@ -1835,9 +1854,9 @@ namespace Microsoft.Data.OData.JsonLight
             /// The JSON reader to read the operations value from.
             /// </summary>
             public JsonReader JsonReader
-            { 
+            {
                 get
-                { 
+                {
                     return this.jsonLightEntryAndFeedDeserializer.JsonReader;
                 }
             }

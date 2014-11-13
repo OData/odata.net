@@ -1,17 +1,23 @@
-//   OData .NET Libraries ver. 5.6.2
-//   Copyright (c) Microsoft Corporation. All rights reserved.
-//
-//   Licensed under the Apache License, Version 2.0 (the "License");
-//   you may not use this file except in compliance with the License.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
+//   OData .NET Libraries ver. 5.6.3
+//   Copyright (c) Microsoft Corporation
+//   All rights reserved. 
+//   MIT License
+//   Permission is hereby granted, free of charge, to any person obtaining a copy of
+//   this software and associated documentation files (the "Software"), to deal in
+//   the Software without restriction, including without limitation the rights to use,
+//   copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+//   Software, and to permit persons to whom the Software is furnished to do so,
+//   subject to the following conditions:
+
+//   The above copyright notice and this permission notice shall be included in all
+//   copies or substantial portions of the Software.
+
+//   THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+//   FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+//   COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+//   IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+//   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace Microsoft.Data.OData.Atom
 {
@@ -100,7 +106,7 @@ namespace Microsoft.Data.OData.Atom
                 /*nullValueReadBehaviorKind*/ ODataNullValueBehaviorKind.Default,
                 /* epmPresent */false);
             this.AssertRecursionDepthIsZero();
-        
+
             Debug.Assert(property != null, "If we don't ignore null values the property must not be null.");
 
             this.ReadPayloadEnd();
@@ -130,7 +136,7 @@ namespace Microsoft.Data.OData.Atom
             bool epmPresent)
         {
             DebugUtils.CheckNoExternalCallers();
-            
+
             this.AssertRecursionDepthIsZero();
             object nonEntityValue = this.ReadNonEntityValueImplementation(
                 expectedValueTypeReference,
@@ -395,7 +401,7 @@ namespace Microsoft.Data.OData.Atom
                     case EdmTypeKind.Collection:
                         IEdmCollectionTypeReference collectionTypeReference = ValidationUtils.ValidateCollectionType(targetTypeReference);
                         result = this.ReadCollectionValue(
-                            collectionTypeReference, 
+                            collectionTypeReference,
                             payloadTypeName,
                             serializationTypeNameAnnotation);
                         break;
@@ -478,34 +484,35 @@ namespace Microsoft.Data.OData.Atom
                                     isOpen = edmProperty == null;
                                 }
 
+                                ODataProperty property = null;
                                 if (ignoreProperty)
                                 {
-                                    this.XmlReader.Skip();
+                                    property = this.ReadUndeclarePropertyOrSkip();
                                 }
                                 else
                                 {
-                                    ODataNullValueBehaviorKind nullValueReadBehaviorKind = this.ReadingResponse || edmProperty == null 
-                                        ? ODataNullValueBehaviorKind.Default 
+                                    ODataNullValueBehaviorKind nullValueReadBehaviorKind = this.ReadingResponse || edmProperty == null
+                                        ? ODataNullValueBehaviorKind.Default
                                         : this.Model.NullValueReadBehaviorKind(edmProperty);
-                                    ODataProperty property = this.ReadProperty(
+                                    property = this.ReadProperty(
                                         edmProperty == null ? null : edmProperty.Name,
-                                        edmProperty == null ? null : edmProperty.Type, 
-                                        nullValueReadBehaviorKind, 
+                                        edmProperty == null ? null : edmProperty.Type,
+                                        nullValueReadBehaviorKind,
                                         epmPresent);
                                     Debug.Assert(
                                         property != null || nullValueReadBehaviorKind == ODataNullValueBehaviorKind.IgnoreValue,
                                         "If we don't ignore null values the property must not be null.");
+                                }
 
-                                    if (property != null)
+                                if (property != null)
+                                {
+                                    if (isOpen)
                                     {
-                                        if (isOpen)
-                                        {
-                                            ValidationUtils.ValidateOpenPropertyValue(property.Name, property.Value);
-                                        }
-
-                                        duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
-                                        properties.AddToSourceList(property);
+                                        ValidationUtils.ValidateOpenPropertyValue(property.Name, property.Value);
                                     }
+
+                                    duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
+                                    properties.AddToSourceList(property);
                                 }
                             }
                             else
@@ -530,6 +537,64 @@ namespace Microsoft.Data.OData.Atom
         }
 
         /// <summary>
+        /// Reads undeclared property in an element (primitive type value, or null value of complex type)
+        /// </summary>
+        /// <returns>The result ODataProperty.</returns>
+        private ODataProperty ReadUndeclarePropertyOrSkip()
+        {
+            ODataProperty property = new ODataProperty();
+            string propertyName = this.XmlReader.LocalName;
+            ValidationUtils.ValidatePropertyName(propertyName);
+            property.Name = propertyName;
+
+            // Read the attributes looking for m:type and m:null
+            string payloadTypeName;
+            bool isNull;
+            this.ReadNonEntityValueAttributes(out payloadTypeName, out isNull);
+            if ((string.IsNullOrEmpty(payloadTypeName) || payloadTypeName.StartsWith("Edm.", System.StringComparison.Ordinal)))
+            {
+                IEdmPrimitiveTypeReference targetTypeReference = null;
+                if (string.IsNullOrEmpty(payloadTypeName))
+                {
+                    targetTypeReference = EdmCoreModel.Instance.GetString(true);
+                }
+                else
+                {
+                    EdmTypeKind payloadTypeKind;
+                    IEdmType payloadType =
+                        MetadataUtils.ResolveTypeNameForRead(
+                            this.Model,
+                            null,
+                            payloadTypeName, // expectedType
+                            this.MessageReaderSettings.ReaderBehavior,
+                            this.Version,
+                            out payloadTypeKind);
+                    targetTypeReference = payloadType.ToTypeReference().AsPrimitive();
+                }
+
+                if (isNull)
+                {
+                    property.Value = this.ReadNullValue(targetTypeReference, /*validateNullValue*/ false, propertyName);
+                }
+                else
+                {
+                    property.Value = this.ReadPrimitiveValue(targetTypeReference);
+                }
+
+                // Read past the end tag of the property or the start tag if the element is empty.
+                this.XmlReader.Read();
+                this.XmlReader.AssertNotBuffering();
+
+                return property;
+            }
+            else
+            {
+                this.XmlReader.Skip();
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Reads a property.
         /// </summary>
         /// <param name="expectedPropertyName">The expected property name to be read from the payload (or null if no expected property name was specified).</param>
@@ -543,9 +608,9 @@ namespace Microsoft.Data.OData.Atom
         /// Post-Condition:  Any                 - The node after the property.
         /// </remarks>
         private ODataProperty ReadProperty(
-            string expectedPropertyName, 
-            IEdmTypeReference expectedPropertyTypeReference, 
-            ODataNullValueBehaviorKind nullValueReadBehaviorKind, 
+            string expectedPropertyName,
+            IEdmTypeReference expectedPropertyTypeReference,
+            ODataNullValueBehaviorKind nullValueReadBehaviorKind,
             bool epmPresent)
         {
             Debug.Assert(
@@ -563,10 +628,10 @@ namespace Microsoft.Data.OData.Atom
             property.Name = propertyName;
 
             object propertyValue = this.ReadNonEntityValueImplementation(
-                expectedPropertyTypeReference, 
-                /*duplicatePropertyNamesChecker*/ null, 
+                expectedPropertyTypeReference,
+                /*duplicatePropertyNamesChecker*/ null,
                 /*collectionValidator*/ null,
-                nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default, 
+                nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
                 epmPresent,
                 propertyName);
 
@@ -630,10 +695,10 @@ namespace Microsoft.Data.OData.Atom
         /// Note that this method will not read null values, those should be handled by the caller already.
         /// </remarks>
         private ODataComplexValue ReadComplexValue(
-            IEdmComplexTypeReference complexTypeReference, 
-            string payloadTypeName, 
+            IEdmComplexTypeReference complexTypeReference,
+            string payloadTypeName,
             SerializationTypeNameAnnotation serializationTypeNameAnnotation,
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, 
+            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
             bool epmPresent)
         {
             this.AssertXmlCondition(XmlNodeType.Element, XmlNodeType.Attribute);
@@ -691,7 +756,7 @@ namespace Microsoft.Data.OData.Atom
         /// Note that this method will not read null values, those should be handled by the caller already.
         /// </remarks>
         private ODataCollectionValue ReadCollectionValue(
-            IEdmCollectionTypeReference collectionTypeReference, 
+            IEdmCollectionTypeReference collectionTypeReference,
             string payloadTypeName,
             SerializationTypeNameAnnotation serializationTypeNameAnnotation)
         {
@@ -748,8 +813,8 @@ namespace Microsoft.Data.OData.Atom
 
                                 // We don't support EPM for collections so it is fine to say that EPM is not present
                                 object itemValue = this.ReadNonEntityValueImplementation(
-                                    itemTypeReference, 
-                                    duplicatePropertyNamesChecker, 
+                                    itemTypeReference,
+                                    duplicatePropertyNamesChecker,
                                     collectionValidator,
                                     /*validateNullValue*/ true,
                                     /*epmPresent*/ false,
