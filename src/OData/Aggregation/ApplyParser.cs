@@ -254,10 +254,19 @@ namespace Microsoft.OData.Core.Aggregation
             else
             {
                 selectQuery = query.Substring(0, p).Trim().Trim(',').TrimOne('(', ')');
-                aggregateClause = ParseAggregate(apply, query.Substring(p),oDataUriParserConfiguration, edmType, edmNavigationSource);
+                aggregateClause = ParseAggregate(apply, query.Substring(p), oDataUriParserConfiguration, edmType, edmNavigationSource);
             }
 
             var selectedStatements = selectQuery.Split(',');
+            var withIndex = selectQuery.IndexOf("with");
+            if (withIndex > 0)
+            {
+                selectedStatements = selectQuery.Substring(0, withIndex).Split(',');
+                var withStatement = selectQuery.Substring(withIndex, selectQuery.Length - withIndex);
+                selectedStatements[selectedStatements.Count() - 1] =
+                    selectedStatements[selectedStatements.Count() - 1] + withStatement;
+            }
+
             string aggregationMethod, alias;
             List<ExpressionClause> aggregatablePropertyExpressions = null;
             try
@@ -274,8 +283,8 @@ namespace Microsoft.OData.Core.Aggregation
                 //parsing of some expressions (like property on enum such as DateTimeOffset/Minute) are not supported so ODataQueryOptionParser.ParseExpressionImplementation will fail
                 aggregatablePropertyExpressions = null;
             }
-            
-            
+
+
             return new ApplyGroupbyClause()
             {
                 SelectedStatements = selectedStatements,
