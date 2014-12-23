@@ -1,13 +1,13 @@
 ---
 layout: page
-title: Tags
-permalink: /tags/
+title: Samples
+permalink: /samples/
 ---
 
-{% for tag in site.tags %} 
-  <h2>{{ tag[0] | join: "/" }}</h2>
+{% for category in site.categories %} 
+  <h2>{{ category[0] | join: "/" }}</h2>
   <ul>
-  	{% for posts in tag %}
+  	{% for posts in category %}
       {% for post in posts %}
       {% if post.url %} 
         <li><a href="{{ post.url }}">{{ post.title }}</a></li>

@@ -3,7 +3,6 @@ layout: post
 title: "[Code Generated Proxy] Basic CRUD Operations"
 description: ""
 category: Client
-tags: [CRUD, Beginner]
 ---
 
 # Request an entity set
