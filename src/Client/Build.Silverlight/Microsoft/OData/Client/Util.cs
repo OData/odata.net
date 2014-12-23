@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -21,17 +21,13 @@
 
 namespace Microsoft.OData.Client
 {
-    #region Namespaces
-
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq.Expressions;
+    using System.Linq;
     using System.Reflection;
     using System.Xml;
-
-    #endregion Namespaces
 
     /// <summary>
     /// static utility function
@@ -623,6 +619,17 @@ namespace Microsoft.OData.Client
                     Debug.Assert(protocolVersion == ODataProtocolVersion.V4, "Did you add a new version?");
                     return ODataVersion4;
             }
+        }
+
+        /// <summary>
+        /// Serialize the operation parameters and put them in a dictionary.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>A dictionary where the key is the parameter name, and the value is the serialized parameter value.</returns>
+        internal static Dictionary<string, string> SerializeOperationParameters(this DataServiceContext context, UriOperationParameter[] parameters)
+        {
+            return parameters.ToDictionary(parameter => parameter.Name, parameter => Serializer.GetParameterValue(context, parameter));
         }
 
         /// <summary>

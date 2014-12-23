@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -406,7 +406,7 @@ namespace Microsoft.OData.Client
         internal void FireSendingRequest(SendingRequestEventArgs eventArgs)
         {
 #if DEBUG
-            Version requestVersion = this.GetRequestVersion(eventArgs.RequestHeaders);
+            Version requestVersion = GetRequestVersion(eventArgs.RequestHeaders);
             Debug.Assert(this.UserModifiedRequestInBuildingRequest || requestVersion == null || requestVersion <= this.MaxProtocolVersionAsVersion, "requestVersion must not be greater than the maxProtocolVersion");
             Debug.Assert(this.UserModifiedRequestInBuildingRequest || eventArgs.RequestHeaders[XmlConstants.HttpODataMaxVersion] == this.MaxProtocolVersionAsVersion.ToString() + Util.VersionSuffix, "requestMDSV must be set to the maxProtocolVersion");
 #endif
@@ -507,9 +507,9 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <returns>The request DSV header value for this request as Version instance.</returns>
 #if !ASTORIA_LIGHT
-        private Version GetRequestVersion(WebHeaderCollection headers)
+        private static Version GetRequestVersion(WebHeaderCollection headers)
 #else
-        private Version GetRequestVersion(System.Net.WebHeaderCollection headers)
+        private static Version GetRequestVersion(System.Net.WebHeaderCollection headers)
 #endif
         {
             string requestDSVHeaderValue = headers[XmlConstants.HttpODataVersion];

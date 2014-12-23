@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -129,7 +129,7 @@ namespace Microsoft.OData.Core.UriParser
 
             string filterQuery;
 
-            if (!queryOptions.TryGetValue(UriQueryConstants.FilterQueryOption, out filterQuery)
+            if (!this.TryGetQueryOption(UriQueryConstants.FilterQueryOption, out filterQuery)
                 || string.IsNullOrEmpty(filterQuery)
                 || this.targetEdmType == null)
             {
@@ -154,8 +154,8 @@ namespace Microsoft.OData.Core.UriParser
             string selectQuery, expandQuery;
 
             // Intended to use bitwise AND & instead of logic AND && here, prevent short-circuiting.
-            if ((!queryOptions.TryGetValue(UriQueryConstants.SelectQueryOption, out selectQuery) || selectQuery == null)
-                & (!queryOptions.TryGetValue(UriQueryConstants.ExpandQueryOption, out expandQuery) || expandQuery == null)
+            if ((!this.TryGetQueryOption(UriQueryConstants.SelectQueryOption, out selectQuery) || selectQuery == null)
+                & (!this.TryGetQueryOption(UriQueryConstants.ExpandQueryOption, out expandQuery) || expandQuery == null)
                 || this.targetEdmType == null)
             {
                 return null;
@@ -184,7 +184,7 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             string orderByQuery;
-            if (!queryOptions.TryGetValue(UriQueryConstants.OrderByQueryOption, out orderByQuery)
+            if (!this.TryGetQueryOption(UriQueryConstants.OrderByQueryOption, out orderByQuery)
                 || string.IsNullOrEmpty(orderByQuery)
                 || this.targetEdmType == null)
             {
@@ -202,7 +202,7 @@ namespace Microsoft.OData.Core.UriParser
         public long? ParseTop()
         {
             string topQuery;
-            return this.queryOptions.TryGetValue(UriQueryConstants.TopQueryOption, out topQuery) ? ParseTop(topQuery) : null;
+            return this.TryGetQueryOption(UriQueryConstants.TopQueryOption, out topQuery) ? ParseTop(topQuery) : null;
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Microsoft.OData.Core.UriParser
         public long? ParseSkip()
         {
             string skipQuery;
-            return this.queryOptions.TryGetValue(UriQueryConstants.SkipQueryOption, out skipQuery) ? ParseSkip(skipQuery) : null;
+            return this.TryGetQueryOption(UriQueryConstants.SkipQueryOption, out skipQuery) ? ParseSkip(skipQuery) : null;
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace Microsoft.OData.Core.UriParser
         public bool? ParseCount()
         {
             string countQuery;
-            return this.queryOptions.TryGetValue(UriQueryConstants.CountQueryOption, out countQuery) ? ParseCount(countQuery) : null;
+            return this.TryGetQueryOption(UriQueryConstants.CountQueryOption, out countQuery) ? ParseCount(countQuery) : null;
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             string searchQuery;
-            if (!queryOptions.TryGetValue(UriQueryConstants.SearchQueryOption, out searchQuery)
+            if (!this.TryGetQueryOption(UriQueryConstants.SearchQueryOption, out searchQuery)
                 || searchQuery == null)
             {
                 return null;
@@ -428,6 +428,37 @@ namespace Microsoft.OData.Core.UriParser
             SearchBinder searchBinder = new SearchBinder(binder.Bind);
 
             return searchBinder.BindSearch(queryToken);
+        }
+
+        /// <summary>
+        /// Get query options according to case insensitive.
+        /// </summary>
+        /// <param name="queryOptionName">The query option's name.</param>
+        /// <param name="value">The value for that query option.</param>
+        /// <returns>Whether value successfully retrived.</returns>
+        private bool TryGetQueryOption(string queryOptionName, out string value)
+        {
+            if (!this.Resolver.EnableCaseInsensitive)
+            {
+                return this.queryOptions.TryGetValue(queryOptionName, out value);
+            }
+
+            value = null;
+            var list = this.queryOptions
+                .Where(pair => string.Equals(queryOptionName, pair.Key, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (list.Count == 0)
+            {
+                return false;
+            }
+            else if (list.Count == 1)
+            {
+                value = list.First().Value;
+                return true;
+            }
+
+            throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(queryOptionName));
         }
         #endregion private methods
     }

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -54,7 +54,6 @@ namespace Microsoft.OData.Core
         /// <param name="messageStream">The stream to read data from.</param>
         /// <param name="encoding">The encoding to use to read the input.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="version">The OData protocol version to be used for reading the payload.</param>
         /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
         /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
         /// <param name="model">The model to use.</param>
@@ -65,12 +64,11 @@ namespace Microsoft.OData.Core
             Stream messageStream,
             Encoding encoding,
             ODataMessageReaderSettings messageReaderSettings,
-            ODataVersion version,
             bool readingResponse,
             bool synchronous,
             IEdmModel model,
             IODataUrlResolver urlResolver)
-            : base(format, messageReaderSettings, version, readingResponse, synchronous, model, urlResolver)
+            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
         {
             Debug.Assert(messageStream != null, "stream != null");
 
@@ -114,22 +112,28 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Disposes the input context.
+        /// Perform the actual cleanup work.
         /// </summary>
-        protected override void DisposeImplementation()
+        /// <param name="disposing">If 'true' this method is called from user code; if 'false' it is called by the runtime.</param>
+        protected override void Dispose(bool disposing)
         {
-            try
+            if (disposing)
             {
-                if (this.baseXmlReader != null)
+                try
                 {
-                    ((IDisposable)this.baseXmlReader).Dispose();
+                    if (this.baseXmlReader != null)
+                    {
+                        ((IDisposable)this.baseXmlReader).Dispose();
+                    }
+                }
+                finally
+                {
+                    this.baseXmlReader = null;
+                    this.xmlReader = null;
                 }
             }
-            finally
-            {
-                this.baseXmlReader = null;
-                this.xmlReader = null;
-            }
+
+            base.Dispose(disposing);
         }
 
         /// <summary>

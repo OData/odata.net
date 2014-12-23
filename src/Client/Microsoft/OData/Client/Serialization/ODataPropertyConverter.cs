@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -26,7 +26,6 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Reflection;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.Json;
     using Microsoft.OData.Core.Metadata;
@@ -139,13 +138,8 @@ namespace Microsoft.OData.Client
             }
 
             string serverTypeName = this.requestInfo.GetServerTypeName(complexTypeAnnotation);
-
-            // If this complex type is a collection item don't put type name on each item
-            if (!isCollectionItem)
-            {
-                odataComplexValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = serverTypeName });
-            }
-
+            odataComplexValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = serverTypeName });
+        
             odataComplexValue.Properties = this.PopulateProperties(value, serverTypeName, complexTypeAnnotation.PropertiesToSerialize(), visitedComplexTypeObjects);
 
             visitedComplexTypeObjects.Remove(value);
@@ -179,6 +173,27 @@ namespace Microsoft.OData.Client
             odataEntityValue.Properties = this.PopulateProperties(value, serverTypeName, entityTypeAnnotation.PropertiesToSerialize(), null);
 
             return odataEntityValue;
+        }
+
+        /// <summary>
+        /// Creates and returns an ODataEntry from the given value.
+        /// </summary>
+        /// <param name="entityType">The value type.</param>
+        /// <param name="value">The entry value.</param>
+        /// <returns>An ODataEntry representing the given value.</returns>
+        internal IEnumerable<ODataEntry> CreateODataEntries(Type entityType, object value)
+        {
+            Debug.Assert(entityType != null, "entityType != null");
+            Debug.Assert(value != null, "value != null");
+
+            var list = value as IEnumerable;
+            var entries = new List<ODataEntry>();
+            if (list != null)
+            {
+                entries.AddRange(from object o in list select this.CreateODataEntry(entityType, o));
+            }
+
+            return entries;
         }
 
         /// <summary>
@@ -216,8 +231,9 @@ namespace Microsoft.OData.Client
         /// <param name="value">The value.</param>
         /// <param name="visitedComplexTypeObjects">Set of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
         /// <param name="isDynamicProperty">Whether this collection property is a dynamic property</param>
+        /// <param name="setTypeAnnotation">If true, set the type annotation on ODataValue.</param>
         /// <returns>An ODataCollectionValue representing the given value.</returns>
-        internal ODataCollectionValue CreateODataCollection(Type collectionItemType, string propertyName, object value, HashSet<object> visitedComplexTypeObjects, bool isDynamicProperty)
+        internal ODataCollectionValue CreateODataCollection(Type collectionItemType, string propertyName, object value, HashSet<object> visitedComplexTypeObjects, bool isDynamicProperty, bool setTypeAnnotation = true)
         {
             Debug.Assert(collectionItemType != null, "collectionItemType != null");
 
@@ -260,7 +276,7 @@ namespace Microsoft.OData.Client
 
                 // Note that the collectionItemTypeName will be null if the context does not have the ResolveName func.
                 collectionItemTypeName = this.requestInfo.ResolveNameFromType(collectionItemType);
-                
+
                 if (enumerablePropertyValue != null)
                 {
                     collection.Items = Util.GetEnumerable(
@@ -282,9 +298,9 @@ namespace Microsoft.OData.Client
                                 {
                                     return null;
                                 }
-                                
+
                                 WebUtil.ValidateComplexCollectionItem(val, propertyName, collectionItemType);
-                                return this.CreateODataComplexValue(collectionItemType, val, propertyName, true /*isCollectionItem*/, visitedComplexTypeObjects)
+                                return this.CreateODataComplexValue(val.GetType(), val, propertyName, true /*isCollectionItem*/, visitedComplexTypeObjects)
                                      as ODataValue;
                             }
                         });
@@ -301,8 +317,14 @@ namespace Microsoft.OData.Client
                 collection.TypeName = GetCollectionName(collectionTypeName);
             }
 
-            string wireTypeName = GetCollectionName(collectionItemTypeName);
-            collection.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = wireTypeName });
+            // Ideally, we should not set type annotation on collection value. 
+            // To keep backward compatibility, we'll keep it in request body, but do not include it in url.
+            if (setTypeAnnotation)
+            {
+                string wireTypeName = GetCollectionName(collectionItemTypeName);
+                collection.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = wireTypeName });
+            }
+
             return collection;
         }
 

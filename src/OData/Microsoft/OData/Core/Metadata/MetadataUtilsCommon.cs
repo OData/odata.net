@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -458,19 +458,20 @@ namespace Microsoft.OData.Core.Metadata
         internal static bool TryGetConstantNodePrimitiveDate(SingleValueNode sourceNodeOrNull, out object primitiveValue)
         {
             primitiveValue = null;
-            if ((sourceNodeOrNull != null) && (sourceNodeOrNull is ConstantNode))
+
+            ConstantNode constantNode = sourceNodeOrNull as ConstantNode;
+            if (constantNode != null)
             {
-                ConstantNode tmp = (ConstantNode)sourceNodeOrNull;
-                IEdmPrimitiveType primitiveType = tmp.TypeReference.AsPrimitiveOrNull().Definition as IEdmPrimitiveType;
+                IEdmPrimitiveType primitiveType = constantNode.TypeReference.AsPrimitiveOrNull().Definition as IEdmPrimitiveType;
                 if (primitiveType != null)
                 {
                     switch (primitiveType.PrimitiveKind)
                     {
                         case EdmPrimitiveTypeKind.DateTimeOffset:
                             Date result;
-                            if (UriParser.UriUtils.TryUriStringToDate(tmp.LiteralText, out result))
+                            if (UriParser.UriUtils.TryUriStringToDate(constantNode.LiteralText, out result))
                             {
-                                primitiveValue = tmp.LiteralText;
+                                primitiveValue = constantNode.LiteralText;
                                 return true;
                             }
 
@@ -493,9 +494,10 @@ namespace Microsoft.OData.Core.Metadata
         internal static bool TryGetConstantNodePrimitiveLDMF(SingleValueNode sourceNodeOrNull, out object primitiveValue)
         {
             primitiveValue = null;
-            if ((sourceNodeOrNull != null) && (sourceNodeOrNull is ConstantNode))
+
+            ConstantNode tmp = sourceNodeOrNull as ConstantNode;
+            if (tmp != null)
             {
-                ConstantNode tmp = (ConstantNode)sourceNodeOrNull;
                 IEdmPrimitiveType primitiveType = tmp.TypeReference.AsPrimitiveOrNull().Definition as IEdmPrimitiveType;
                 if (primitiveType != null)
                 {

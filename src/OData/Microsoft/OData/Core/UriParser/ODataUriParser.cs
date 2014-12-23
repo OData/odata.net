@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -22,6 +22,7 @@
 namespace Microsoft.OData.Core.UriParser
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Parsers;
@@ -256,11 +257,33 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             InitQueryOptionDic();
-            string idQuery;
+            string idQuery = null;
 
-            if (!queryOptionDic.TryGetValue(UriQueryConstants.IdQueryOption, out idQuery))
+            if (!this.Resolver.EnableCaseInsensitive)
             {
-                return null;
+                if (!this.queryOptionDic.TryGetValue(UriQueryConstants.IdQueryOption, out idQuery))
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                var list = this.queryOptionDic
+                    .Where(pair => string.Equals(UriQueryConstants.IdQueryOption, pair.Key, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                if (list.Count == 0)
+                {
+                    return null;
+                }
+                else if (list.Count == 1)
+                {
+                    idQuery = list.First().Value;
+                }
+                else
+                {
+                    throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(UriQueryConstants.IdQueryOption));
+                }
             }
 
             Uri idUri = new Uri(idQuery, UriKind.RelativeOrAbsolute);
@@ -449,8 +472,7 @@ namespace Microsoft.OData.Core.UriParser
                         throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(queryOption.Name));
                     }
 
-                    string key = this.configuration.EnableCaseInsensitiveBuiltinIdentifier ? queryOption.Name.ToLowerInvariant() : queryOption.Name;
-                    queryOptionDic.Add(key, queryOption.Value);
+                    queryOptionDic.Add(queryOption.Name, queryOption.Value);
                 }
             }
         }

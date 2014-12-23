@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="state">the current state of the binding algorithm</param>
         /// <param name="boundEnum">the output bound enum node</param>
         /// <returns>true if we bound an enum node, false otherwise.</returns>
-        internal bool TryBindDottedIdentifierAsEnum(DottedIdentifierToken dottedIdentifierToken, SingleValueNode parent, BindingState state, out QueryNode boundEnum)
+        internal static bool TryBindDottedIdentifierAsEnum(DottedIdentifierToken dottedIdentifierToken, SingleValueNode parent, BindingState state, out QueryNode boundEnum)
         {
             return TryBindIdentifier(dottedIdentifierToken.Identifier, null, state.Model, out boundEnum);
         }
@@ -144,7 +144,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             enumValue = null;
             if (success)
             {
-                // ODataEnumValue.Value will always be numeric string like '3', '10' instead of 'Red', 'Solid,Yellow', etc.
+                // ODataEnumValue.Value will always be numeric string like '3', '10' instead of 'Cyan', 'Solid,Yellow', etc.
                 // so user code can easily Enum.Parse() them into CLR value.
                 enumValue = new ODataEnumValue(parsedValue.ToString(CultureInfo.InvariantCulture), enumType.ODataFullName());
             }

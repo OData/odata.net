@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -521,7 +521,7 @@ namespace Microsoft.OData.Core.Atom
 
             ODataComplexValue complexValue = value as ODataComplexValue;
             ProjectedPropertiesAnnotation complexValueProjectedProperties = null;
-            if (!this.ShouldWritePropertyInContent(projectedProperties, propertyName))
+            if (!ShouldWritePropertyInContent(projectedProperties, propertyName))
             {
                 return false;
             }
@@ -682,7 +682,7 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="projectedProperties">The set of projected properties for the owning type</param>
         /// <param name="propertyName">The name of the property to be checked.</param>
         /// <returns>true if the property should be written into content, or false otherwise</returns>
-        private bool ShouldWritePropertyInContent(
+        private static bool ShouldWritePropertyInContent(
             ProjectedPropertiesAnnotation projectedProperties,
             string propertyName)
         {

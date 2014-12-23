@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -56,7 +56,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="messageStream">The stream to read data from.</param>
         /// <param name="encoding">The encoding to use to read the input.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="version">The OData protocol version to be used for reading the payload.</param>
         /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
         /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
         /// <param name="model">The model to use.</param>
@@ -67,12 +66,11 @@ namespace Microsoft.OData.Core.Atom
             Stream messageStream,
             Encoding encoding,
             ODataMessageReaderSettings messageReaderSettings,
-            ODataVersion version,
             bool readingResponse,
             bool synchronous,
             IEdmModel model,
             IODataUrlResolver urlResolver)
-            : base(format, messageReaderSettings, version, readingResponse, synchronous, model, urlResolver)
+            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
         {
             Debug.Assert(messageStream != null, "stream != null");
 
@@ -122,7 +120,7 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base type for the entries in the feed.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        internal override ODataReader CreateFeedReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public override ODataReader CreateFeedReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
             this.AssertSynchronous();
 
@@ -136,7 +134,7 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base type for the entries in the feed.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        internal override Task<ODataReader> CreateFeedReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public override Task<ODataReader> CreateFeedReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
             this.AssertAsynchronous();
 
@@ -151,7 +149,7 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        internal override ODataReader CreateEntryReader(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public override ODataReader CreateEntryReader(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
         {
             this.AssertSynchronous();
 
@@ -165,7 +163,7 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
         /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        internal override Task<ODataReader> CreateEntryReaderAsync(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public override Task<ODataReader> CreateEntryReaderAsync(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
         {
             this.AssertAsynchronous();
 
@@ -179,7 +177,7 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         /// <param name="expectedItemTypeReference">The expected type reference for the items in the collection.</param>
         /// <returns>Newly create <see cref="ODataCollectionReader"/>.</returns>
-        internal override ODataCollectionReader CreateCollectionReader(IEdmTypeReference expectedItemTypeReference)
+        public override ODataCollectionReader CreateCollectionReader(IEdmTypeReference expectedItemTypeReference)
         {
             this.AssertSynchronous();
 
@@ -192,12 +190,68 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         /// <param name="expectedItemTypeReference">The expected type reference for the items in the collection.</param>
         /// <returns>Task which when completed returns the newly create <see cref="ODataCollectionReader"/>.</returns>
-        internal override Task<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
+        public override Task<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
         {
             this.AssertAsynchronous();
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateCollectionReaderImplementation(expectedItemTypeReference));
+        }
+#endif
+
+        /// <summary>
+        /// This method creates an reads the property from the input and 
+        /// returns an <see cref="ODataProperty"/> representing the read property.
+        /// </summary>
+        /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
+        /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
+        /// <returns>An <see cref="ODataProperty"/> representing the read property.</returns>
+        public override ODataProperty ReadProperty(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
+        {
+            this.AssertSynchronous();
+
+            return this.ReadPropertyImplementation(property, expectedPropertyTypeReference);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously read the property from the input and 
+        /// return an <see cref="ODataProperty"/> representing the read property.
+        /// </summary>
+        /// <param name="property">The <see cref="IEdmProperty"/> or <see cref="IEdmOperationImport"/> producing the property to be read.</param>
+        /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
+        /// <returns>Task which when completed returns an <see cref="ODataProperty"/> representing the read property.</returns>
+        public override Task<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
+        {
+            this.AssertAsynchronous();
+
+            // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.ReadPropertyImplementation(property, expectedPropertyTypeReference));
+        }
+#endif
+
+        /// <summary>
+        /// Read a top-level error.
+        /// </summary>
+        /// <returns>An <see cref="ODataError"/> representing the read error.</returns>
+        public override ODataError ReadError()
+        {
+            this.AssertSynchronous();
+
+            return this.ReadErrorImplementation();
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously read a top-level error.
+        /// </summary>
+        /// <returns>Task which when completed returns an <see cref="ODataError"/> representing the read error.</returns>
+        public override Task<ODataError> ReadErrorAsync()
+        {
+            this.AssertAsynchronous();
+
+            // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.ReadErrorImplementation());
         }
 #endif
 
@@ -227,62 +281,6 @@ namespace Microsoft.OData.Core.Atom
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.ReadServiceDocumentImplementation());
-        }
-#endif
-
-        /// <summary>
-        /// This method creates an reads the property from the input and 
-        /// returns an <see cref="ODataProperty"/> representing the read property.
-        /// </summary>
-        /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
-        /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
-        /// <returns>An <see cref="ODataProperty"/> representing the read property.</returns>
-        internal override ODataProperty ReadProperty(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
-        {
-            this.AssertSynchronous();
-
-            return this.ReadPropertyImplementation(property, expectedPropertyTypeReference);
-        }
-
-#if ODATALIB_ASYNC
-        /// <summary>
-        /// Asynchronously read the property from the input and 
-        /// return an <see cref="ODataProperty"/> representing the read property.
-        /// </summary>
-        /// <param name="property">The <see cref="IEdmProperty"/> or <see cref="IEdmOperationImport"/> producing the property to be read.</param>
-        /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
-        /// <returns>Task which when completed returns an <see cref="ODataProperty"/> representing the read property.</returns>
-        internal override Task<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
-        {
-            this.AssertAsynchronous();
-
-            // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.ReadPropertyImplementation(property, expectedPropertyTypeReference));
-        }
-#endif
-
-        /// <summary>
-        /// Read a top-level error.
-        /// </summary>
-        /// <returns>An <see cref="ODataError"/> representing the read error.</returns>
-        internal override ODataError ReadError()
-        {
-            this.AssertSynchronous();
-
-            return this.ReadErrorImplementation();
-        }
-
-#if ODATALIB_ASYNC
-        /// <summary>
-        /// Asynchronously read a top-level error.
-        /// </summary>
-        /// <returns>Task which when completed returns an <see cref="ODataError"/> representing the read error.</returns>
-        internal override Task<ODataError> ReadErrorAsync()
-        {
-            this.AssertAsynchronous();
-
-            // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.ReadErrorImplementation());
         }
 #endif
 
@@ -350,22 +348,28 @@ namespace Microsoft.OData.Core.Atom
         }
 
         /// <summary>
-        /// Disposes the input context.
+        /// Perform the actual cleanup work.
         /// </summary>
-        protected override void DisposeImplementation()
+        /// <param name="disposing">If 'true' this method is called from user code; if 'false' it is called by the runtime.</param>
+        protected override void Dispose(bool disposing)
         {
-            try
+            if (disposing)
             {
-                if (this.baseXmlReader != null)
+                try
                 {
-                    ((IDisposable)this.baseXmlReader).Dispose();
+                    if (this.baseXmlReader != null)
+                    {
+                        ((IDisposable)this.baseXmlReader).Dispose();
+                    }
+                }
+                finally
+                {
+                    this.baseXmlReader = null;
+                    this.xmlReader = null;
                 }
             }
-            finally
-            {
-                this.baseXmlReader = null;
-                this.xmlReader = null;
-            }
+
+            base.Dispose(disposing);
         }
 
         /// <summary>

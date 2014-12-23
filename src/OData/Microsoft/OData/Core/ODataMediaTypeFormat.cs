@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -32,13 +32,24 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// A helper class to associate a <see cref="ODataFormat"/> with a media type.
     /// </summary>
-    internal sealed class MediaTypeWithFormat
+    public sealed class ODataMediaTypeFormat
     {
+        /// <summary>
+        /// Constructor for<see cref="ODataMediaTypeFormat"/>
+        /// </summary>
+        /// <param name="mediaType">MediaType to be used.</param>
+        /// <param name="format">Associated format.</param>
+        public ODataMediaTypeFormat(ODataMediaType mediaType, ODataFormat format)
+        {
+            this.MediaType = mediaType;
+            this.Format = format;
+        }
+
         /// <summary>The media type.</summary>
-        public MediaType MediaType
+        public ODataMediaType MediaType
         {
             get;
-            set;
+            internal set;
         }
 
         /// <summary>
@@ -47,7 +58,7 @@ namespace Microsoft.OData.Core
         public ODataFormat Format
         {
             get;
-            set;
+            internal set;
         }
     }
 }

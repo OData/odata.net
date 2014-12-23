@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -84,13 +84,13 @@ namespace Microsoft.OData.Core.UriBuilder
             ExceptionUtils.CheckArgumentNotNull(node, "node");
 
             var left = this.TranslateNode(node.Left);
-            if (node.Left.Kind == QueryNodeKind.BinaryOperator && this.TranslateBinaryOperatorPriority(((BinaryOperatorNode)node.Left).OperatorKind) < this.TranslateBinaryOperatorPriority(node.OperatorKind))
+            if (node.Left.Kind == QueryNodeKind.BinaryOperator && TranslateBinaryOperatorPriority(((BinaryOperatorNode)node.Left).OperatorKind) < TranslateBinaryOperatorPriority(node.OperatorKind))
             {
                 left = String.Concat(ExpressionConstants.SymbolOpenParen, left, ExpressionConstants.SymbolClosedParen);
             }
             
             var right = this.TranslateNode(node.Right);
-            if (node.Right.Kind == QueryNodeKind.BinaryOperator && this.TranslateBinaryOperatorPriority(((BinaryOperatorNode)node.Right).OperatorKind) < this.TranslateBinaryOperatorPriority(node.OperatorKind))
+            if (node.Right.Kind == QueryNodeKind.BinaryOperator && TranslateBinaryOperatorPriority(((BinaryOperatorNode)node.Right).OperatorKind) < TranslateBinaryOperatorPriority(node.OperatorKind))
             {
                 right = String.Concat(ExpressionConstants.SymbolOpenParen, right, ExpressionConstants.SymbolClosedParen);
             }
@@ -587,7 +587,7 @@ namespace Microsoft.OData.Core.UriBuilder
         /// </summary>
         /// <param name="operatorKind">binary operator </param>
         /// <returns>the priority value of the binary operator</returns>
-        private int TranslateBinaryOperatorPriority(BinaryOperatorKind operatorKind)
+        private static int TranslateBinaryOperatorPriority(BinaryOperatorKind operatorKind)
         {
             switch (operatorKind)
             {
@@ -616,13 +616,12 @@ namespace Microsoft.OData.Core.UriBuilder
             }
         }
 
-
         /// <summary>
         /// Judge a string text is a valid SearchWord or not ?
         /// </summary>
         /// <param name="text">string text to be judged</param>
         /// <returns>if the string is a valid SearchWord, return true, or return false.</returns>
-       private bool IsValidSearchWord(string text)
+       private static bool IsValidSearchWord(string text)
        {
             Match match = SearchLexer.InvalidWordPattern.Match(text);
             if (match.Success || String.Equals(text, "AND") || String.Equals(text, "OR") || String.Equals(text, "NOT"))

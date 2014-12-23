@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -31,12 +31,12 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     #endregion Namespaces
 
     /// <summary>
-    /// Node representing a primitive constant value.
+    /// Node representing a constant value, can either be primtive, complex, entity, or collection value.
     /// </summary>
     public sealed class ConstantNode : SingleValueNode
     {
         /// <summary>
-        /// The primitive constant value.
+        /// The constant value.
         /// </summary>
         private readonly object constantValue;
 
@@ -66,9 +66,10 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="typeReference">The typeReference of this node's value.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input literalText is null.</exception>
         public ConstantNode(object constantValue, string literalText, IEdmTypeReference typeReference)
-            : this(constantValue)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, "literalText");
+
+            this.constantValue = constantValue;
             this.LiteralText = literalText;
             this.typeReference = typeReference;
         }

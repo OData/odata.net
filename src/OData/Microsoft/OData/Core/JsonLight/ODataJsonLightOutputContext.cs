@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="synchronous">true if the output should be written synchronously; false if it should be written asynchronously.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
-        internal ODataJsonLightOutputContext(ODataFormat format, Stream messageStream, MediaType mediaType, Encoding encoding, ODataMessageWriterSettings messageWriterSettings, bool writingResponse, bool synchronous, IEdmModel model, IODataUrlResolver urlResolver)
+        internal ODataJsonLightOutputContext(ODataFormat format, Stream messageStream, ODataMediaType mediaType, Encoding encoding, ODataMessageWriterSettings messageWriterSettings, bool writingResponse, bool synchronous, IEdmModel model, IODataUrlResolver urlResolver)
             : base(format, messageStream, encoding, messageWriterSettings, writingResponse, synchronous, mediaType.HasIeee754CompatibleSetToTrue(), model, urlResolver)
         {
             Debug.Assert(messageStream != null, "messageStream != null");
@@ -130,6 +130,196 @@ namespace Microsoft.OData.Core.JsonLight
                 return metadataLevel.ContextUrlLevel;
             }
         }
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a feed.
+        /// </summary>
+        /// <returns>The created writer.</returns>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override ODataWriter CreateODataFeedWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        {
+            this.AssertSynchronous();
+
+            return this.CreateODataFeedWriterImplementation(entitySet, entityType);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a feed.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override Task<ODataWriter> CreateODataFeedWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataFeedWriterImplementation(entitySet, entityType));
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write an entry.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
+        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <returns>The created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override ODataWriter CreateODataEntryWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        {
+            this.AssertSynchronous();
+
+            return this.CreateODataEntryWriterImplementation(navigationSource, entityType);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write an entry.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
+        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override Task<ODataWriter> CreateODataEntryWriterAsync(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataEntryWriterImplementation(navigationSource, entityType));
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation).
+        /// </summary>
+        /// <param name="itemTypeReference">The item type of the collection being written or null if no metadata is available.</param>
+        /// <returns>The created collection writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override ODataCollectionWriter CreateODataCollectionWriter(IEdmTypeReference itemTypeReference)
+        {
+            this.AssertSynchronous();
+
+            return this.CreateODataCollectionWriterImplementation(itemTypeReference);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation).
+        /// </summary>
+        /// <param name="itemTypeReference">The item type of the collection being written or null if no metadata is available.</param>
+        /// <returns>A running task for the created collection writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override Task<ODataCollectionWriter> CreateODataCollectionWriterAsync(IEdmTypeReference itemTypeReference)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataCollectionWriterImplementation(itemTypeReference));
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
+        /// </summary>
+        /// <param name="operation">The operation whose parameters will be written.</param>
+        /// <returns>The created parameter writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override ODataParameterWriter CreateODataParameterWriter(IEdmOperation operation)
+        {
+            this.AssertSynchronous();
+
+            return this.CreateODataParameterWriterImplementation(operation);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
+        /// </summary>
+        /// <param name="operation">The operation import whose parameters will be written.</param>
+        /// <returns>A running task for the created parameter writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override Task<ODataParameterWriter> CreateODataParameterWriterAsync(IEdmOperation operation)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataParameterWriterImplementation(operation));
+        }
+#endif
+
+        /// <summary>
+        /// Writes an <see cref="ODataProperty"/> as message payload.
+        /// </summary>
+        /// <param name="property">The property to write.</param>
+        /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
+        public override void WriteProperty(ODataProperty property)
+        {
+            this.AssertSynchronous();
+
+            this.WritePropertyImplementation(property);
+            this.Flush();
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously writes an <see cref="ODataProperty"/> as message payload.
+        /// </summary>
+        /// <param name="property">The property to write</param>
+        /// <returns>A task representing the asynchronous operation of writing the property.</returns>
+        /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
+        public override Task WritePropertyAsync(ODataProperty property)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
+                () =>
+                {
+                    this.WritePropertyImplementation(property);
+                    return this.FlushAsync();
+                });
+        }
+#endif
+
+        /// <summary>
+        /// Writes an <see cref="ODataError"/> as the message payload.
+        /// </summary>
+        /// <param name="error">The error to write.</param>
+        /// <param name="includeDebugInformation">
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// be included in the payload. This should only be used in debug scenarios.
+        /// </param>
+        /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
+        public override void WriteError(ODataError error, bool includeDebugInformation)
+        {
+            this.AssertSynchronous();
+
+            this.WriteErrorImplementation(error, includeDebugInformation);
+            this.Flush();
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously writes an <see cref="ODataError"/> as the message payload.
+        /// </summary>
+        /// <param name="error">The error to write.</param>
+        /// <param name="includeDebugInformation">
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// be included in the payload. This should only be used in debug scenarios.
+        /// </param>
+        /// <returns>A task representing the asynchronous operation of writing the error.</returns>
+        /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
+        public override Task WriteErrorAsync(ODataError error, bool includeDebugInformation)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
+                () =>
+                {
+                    this.WriteErrorImplementation(error, includeDebugInformation);
+                    return this.FlushAsync();
+                });
+        }
+#endif
 
         /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
@@ -187,35 +377,6 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter" /> to write a feed.
-        /// </summary>
-        /// <returns>The created writer.</returns>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override ODataWriter CreateODataFeedWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
-        {
-            this.AssertSynchronous();
-
-            return this.CreateODataFeedWriterImplementation(entitySet, entityType);
-        }
-
-#if ODATALIB_ASYNC
-        /// <summary>
-        /// Asynchronously creates an <see cref="ODataWriter" /> to write a feed.
-        /// </summary>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
-        /// <returns>A running task for the created writer.</returns>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataWriter> CreateODataFeedWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
-        {
-            this.AssertAsynchronous();
-
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataFeedWriterImplementation(entitySet, entityType));
-        }
-#endif
-        /// <summary>
         /// Creates an <see cref="ODataDeltaWriter" /> to write a delta response.
         /// </summary>
         /// <returns>The created writer.</returns>
@@ -241,119 +402,6 @@ namespace Microsoft.OData.Core.JsonLight
             this.AssertAsynchronous();
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataDeltaWriterImplementation(entitySet, entityType));
-        }
-#endif
-
-        /// <summary>
-        /// Creates an <see cref="ODataWriter" /> to write an entry.
-        /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
-        /// <returns>The created writer.</returns>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override ODataWriter CreateODataEntryWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
-        {
-            this.AssertSynchronous();
-
-            return this.CreateODataEntryWriterImplementation(navigationSource, entityType);
-        }
-
-#if ODATALIB_ASYNC
-        /// <summary>
-        /// Asynchronously creates an <see cref="ODataWriter" /> to write an entry.
-        /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
-        /// <returns>A running task for the created writer.</returns>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataWriter> CreateODataEntryWriterAsync(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
-        {
-            this.AssertAsynchronous();
-
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataEntryWriterImplementation(navigationSource, entityType));
-        }
-#endif
-
-        /// <summary>
-        /// Creates an <see cref="ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation).
-        /// </summary>
-        /// <param name="itemTypeReference">The item type of the collection being written or null if no metadata is available.</param>
-        /// <returns>The created collection writer.</returns>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override ODataCollectionWriter CreateODataCollectionWriter(IEdmTypeReference itemTypeReference)
-        {
-            this.AssertSynchronous();
-
-            return this.CreateODataCollectionWriterImplementation(itemTypeReference);
-        }
-
-#if ODATALIB_ASYNC
-        /// <summary>
-        /// Asynchronously creates an <see cref="ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation).
-        /// </summary>
-        /// <param name="itemTypeReference">The item type of the collection being written or null if no metadata is available.</param>
-        /// <returns>A running task for the created collection writer.</returns>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataCollectionWriter> CreateODataCollectionWriterAsync(IEdmTypeReference itemTypeReference)
-        {
-            this.AssertAsynchronous();
-
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataCollectionWriterImplementation(itemTypeReference));
-        }
-#endif
-
-        /// <summary>
-        /// Creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
-        /// </summary>
-        /// <param name="operationImport">The operation import whose parameters will be written.</param>
-        /// <returns>The created parameter writer.</returns>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override ODataParameterWriter CreateODataParameterWriter(IEdmOperationImport operationImport)
-        {
-            this.AssertSynchronous();
-
-            return this.CreateODataParameterWriterImplementation(operationImport);
-        }
-
-#if ODATALIB_ASYNC
-        /// <summary>
-        /// Asynchronously creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
-        /// </summary>
-        /// <param name="operationImport">The operation import whose parameters will be written.</param>
-        /// <returns>A running task for the created parameter writer.</returns>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataParameterWriter> CreateODataParameterWriterAsync(IEdmOperationImport operationImport)
-        {
-            this.AssertAsynchronous();
-
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataParameterWriterImplementation(operationImport));
-        }
-#endif
-        /// <summary>
-        /// Creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
-        /// </summary>
-        /// <param name="operation">The operation whose parameters will be written.</param>
-        /// <returns>The created parameter writer.</returns>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override ODataParameterWriter CreateODataParameterWriter(IEdmOperation operation)
-        {
-            this.AssertSynchronous();
-
-            return this.CreateODataParameterWriterImplementation(operation);
-        }
-
-#if ODATALIB_ASYNC
-        /// <summary>
-        /// Asynchronously creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
-        /// </summary>
-        /// <param name="operation">The operation import whose parameters will be written.</param>
-        /// <returns>A running task for the created parameter writer.</returns>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataParameterWriter> CreateODataParameterWriterAsync(IEdmOperation operation)
-        {
-            this.AssertAsynchronous();
-
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataParameterWriterImplementation(operation));
         }
 #endif
 
@@ -387,80 +435,6 @@ namespace Microsoft.OData.Core.JsonLight
                 () =>
                 {
                     this.WriteServiceDocumentImplementation(serviceDocument);
-                    return this.FlushAsync();
-                });
-        }
-#endif
-
-        /// <summary>
-        /// Writes an <see cref="ODataProperty"/> as message payload.
-        /// </summary>
-        /// <param name="property">The property to write.</param>
-        /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
-        internal override void WriteProperty(ODataProperty property)
-        {
-            this.AssertSynchronous();
-
-            this.WritePropertyImplementation(property);
-            this.Flush();
-        }
-
-#if ODATALIB_ASYNC
-        /// <summary>
-        /// Asynchronously writes an <see cref="ODataProperty"/> as message payload.
-        /// </summary>
-        /// <param name="property">The property to write</param>
-        /// <returns>A task representing the asynchronous operation of writing the property.</returns>
-        /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override Task WritePropertyAsync(ODataProperty property)
-        {
-            this.AssertAsynchronous();
-
-            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
-                () =>
-                {
-                    this.WritePropertyImplementation(property);
-                    return this.FlushAsync();
-                });
-        }
-#endif
-
-        /// <summary>
-        /// Writes an <see cref="ODataError"/> as the message payload.
-        /// </summary>
-        /// <param name="error">The error to write.</param>
-        /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
-        /// be included in the payload. This should only be used in debug scenarios.
-        /// </param>
-        /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
-        internal override void WriteError(ODataError error, bool includeDebugInformation)
-        {
-            this.AssertSynchronous();
-
-            this.WriteErrorImplementation(error, includeDebugInformation);
-            this.Flush();
-        }
-
-#if ODATALIB_ASYNC
-        /// <summary>
-        /// Asynchronously writes an <see cref="ODataError"/> as the message payload.
-        /// </summary>
-        /// <param name="error">The error to write.</param>
-        /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
-        /// be included in the payload. This should only be used in debug scenarios.
-        /// </param>
-        /// <returns>A task representing the asynchronous operation of writing the error.</returns>
-        /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override Task WriteErrorAsync(ODataError error, bool includeDebugInformation)
-        {
-            this.AssertAsynchronous();
-
-            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
-                () =>
-                {
-                    this.WriteErrorImplementation(error, includeDebugInformation);
                     return this.FlushAsync();
                 });
         }
@@ -583,19 +557,6 @@ namespace Microsoft.OData.Core.JsonLight
             ODataJsonLightCollectionWriter jsonLightCollectionWriter = new ODataJsonLightCollectionWriter(this, itemTypeReference);
             this.outputInStreamErrorListener = jsonLightCollectionWriter;
             return jsonLightCollectionWriter;
-        }
-
-        /// <summary>
-        /// Creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
-        /// </summary>
-        /// <param name="operationImport">The operation import whose parameters will be written.</param>
-        /// <returns>The created parameter writer.</returns>
-        private ODataParameterWriter CreateODataParameterWriterImplementation(IEdmOperationImport operationImport)
-        {
-            IEdmOperation operation = operationImport != null ? operationImport.Operation : null;
-            ODataJsonLightParameterWriter jsonLightParameterWriter = new ODataJsonLightParameterWriter(this, operation);
-            this.outputInStreamErrorListener = jsonLightParameterWriter;
-            return jsonLightParameterWriter;
         }
 
         /// <summary>

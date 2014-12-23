@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -474,15 +474,23 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             foreach (FunctionParameterToken paraToken in parameterTokens)
             {
                 FunctionParameterToken funcParaToken;
-
-                if (enableCaseInsensitive && operation.FindParameter(paraToken.ParameterName) == null)
+                IEdmOperationParameter functionParameter = operation.FindParameter(paraToken.ParameterName);
+                if (enableCaseInsensitive && functionParameter == null)
                 {
-                    IEdmOperationParameter functionParameter = ODataUriResolver.ResolveOpearationParameterNameCaseInsensitive(operation, paraToken.ParameterName);
+                    functionParameter = ODataUriResolver.ResolveOpearationParameterNameCaseInsensitive(operation, paraToken.ParameterName);
+
+                    // The functionParameter can not be null here, else this method won't be called.
                     funcParaToken = new FunctionParameterToken(functionParameter.Name, paraToken.ValueToken);
                 }
                 else
                 {
                     funcParaToken = paraToken;
+                }
+
+                FunctionParameterAliasToken aliasToken = funcParaToken.ValueToken as FunctionParameterAliasToken;
+                if (aliasToken != null)
+                {
+                    aliasToken.ExpectedParameterType = functionParameter.Type;
                 }
 
                 LiteralToken valueToken = funcParaToken.ValueToken as LiteralToken;
@@ -492,12 +500,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     var lexer = new ExpressionLexer(valueToken.OriginalText, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
                     if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression)
                     {
-                        var functionParameter = operation.FindParameter(funcParaToken.ParameterName);
-                        if (functionParameter == null)
-                        {
-                            throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(funcParaToken.ParameterName, operation.Name));
-                        }
-
                         object result;
                         UriTemplateExpression expression;
 

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -33,10 +33,10 @@ namespace Microsoft.OData.Core
     /// Class representing a media type definition.
     /// </summary>
     [DebuggerDisplay("MediaType [{ToText()}]")]
-    internal sealed class MediaType
+    public sealed class ODataMediaType
     {
         /// <summary>Parameters specified on the media type.</summary>
-        private readonly IList<KeyValuePair<string, string>> parameters;
+        private readonly IEnumerable<KeyValuePair<string, string>> parameters;
 
         /// <summary>Sub-type specification (for example, 'plain').</summary>
         private readonly string subType;
@@ -45,33 +45,22 @@ namespace Microsoft.OData.Core
         private readonly string type;
 
         /// <summary>
-        /// Initializes a new <see cref="MediaType"/> read-only instance.
+        /// Initializes a new <see cref="ODataMediaType"/> read-only instance.
         /// </summary>
         /// <param name="type">Type specification (for example, 'text').</param>
         /// <param name="subType">Sub-type specification (for example, 'plain').</param>
-        internal MediaType(string type, string subType)
+        public ODataMediaType(string type, string subType)
             : this(type, subType, null)
         {
         }
 
         /// <summary>
-        /// Initializes a new <see cref="MediaType"/> read-only instance.
-        /// </summary>
-        /// <param name="type">Type specification (for example, 'text').</param>
-        /// <param name="subType">Sub-type specification (for example, 'plain').</param>
-        /// <param name="parameters">The parameters specified on the media type.</param>
-        internal MediaType(string type, string subType, params KeyValuePair<string, string>[] parameters)
-            : this(type, subType, (IList<KeyValuePair<string, string>>)parameters)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new <see cref="MediaType"/> read-only instance.
+        /// Initializes a new <see cref="ODataMediaType"/> read-only instance.
         /// </summary>
         /// <param name="type">Type specification (for example, 'text').</param>
         /// <param name="subType">Sub-type specification (for example, 'plain').</param>
         /// <param name="parameters">Parameters specified on the media type.</param>
-        internal MediaType(string type, string subType, IList<KeyValuePair<string, string>> parameters)
+        public ODataMediaType(string type, string subType, IEnumerable<KeyValuePair<string, string>> parameters)
         {
             Debug.Assert(type != null, "type != null");
             Debug.Assert(subType != null, "subType != null");
@@ -81,26 +70,41 @@ namespace Microsoft.OData.Core
             this.parameters = parameters;
         }
 
-        /// <summary>Encoding to fall back to an appropriate encoding is not available.</summary>
-        internal static Encoding FallbackEncoding
+        /// <summary>
+        /// Initializes a new <see cref="ODataMediaType"/> read-only instance.
+        /// </summary>
+        /// <param name="type">Type specification (for example, 'text').</param>
+        /// <param name="subType">Sub-type specification (for example, 'plain').</param>
+        /// <param name="parameter">The parameter specified on the media type.</param>
+        internal ODataMediaType(string type, string subType, KeyValuePair<string, string> parameter)
+            : this(type, subType, new[] { parameter })
+        {
+        }
+
+        /// <summary>Returns the subtype part of the media type.</summary>
+        public string SubType
         {
             get
             {
-                return MediaTypeUtils.EncodingUtf8NoPreamble;
+                return this.subType;
             }
         }
 
-        /// <summary>Encoding implied by an unspecified encoding value.</summary>
-        /// <remarks>See http://tools.ietf.org/html/rfc2616#section-3.4.1 for details.</remarks>
-        internal static Encoding MissingEncoding
+        /// <summary>Returns the type part of the media type.</summary>
+        public string Type
         {
             get
             {
-#if !ORCAS
-                return Encoding.UTF8;
-#else
-                return Encoding.GetEncoding("ISO-8859-1", new EncoderExceptionFallback(), new DecoderExceptionFallback());
-#endif
+                return this.type;
+            }
+        }
+
+        /// <summary>media type parameters</summary>
+        public IEnumerable<KeyValuePair<string, string>> Parameters
+        {
+            get
+            {
+                return this.parameters;
             }
         }
 
@@ -110,33 +114,6 @@ namespace Microsoft.OData.Core
             get
             {
                 return this.type + "/" + this.subType;
-            }
-        }
-
-        /// <summary>Returns the subtype part of the media type.</summary>
-        internal string SubTypeName
-        {
-            get
-            {
-                return this.subType;
-            }
-        }
-
-        /// <summary>Returns the type part of the media type.</summary>
-        internal string TypeName
-        {
-            get
-            {
-                return this.type;
-            }
-        }
-
-        /// <summary>media type parameters</summary>
-        internal IList<KeyValuePair<string, string>> Parameters
-        {
-            get
-            {
-                return this.parameters;
             }
         }
 
@@ -175,7 +152,7 @@ namespace Microsoft.OData.Core
                 // Unless the subtype is XML, in which case we should default
                 // to us-ascii. Instead we return null, to let the encoding
                 // in the <?xml ...?> PI win (http://tools.ietf.org/html/rfc3023#section-3.1)
-                return HttpUtils.CompareMediaTypeNames(MimeConstants.MimeXmlSubType, this.subType) ? null : MissingEncoding;
+                return HttpUtils.CompareMediaTypeNames(MimeConstants.MimeXmlSubType, this.subType) ? null : MediaTypeUtils.MissingEncoding;
             }
 
             if (HttpUtils.CompareMediaTypeNames(MimeConstants.MimeApplicationType, this.type) &&
@@ -183,14 +160,14 @@ namespace Microsoft.OData.Core
             {
                 // http://tools.ietf.org/html/rfc4627#section-3
                 // The default encoding is UTF-8.
-                return FallbackEncoding;
+                return MediaTypeUtils.FallbackEncoding;
             }
 
             return null;
         }
 
         /// <summary>
-        /// Converts the current <see cref="MediaType"/> to a string representation suitable for use in a content-type header.
+        /// Converts the current <see cref="ODataMediaType"/> to a string representation suitable for use in a content-type header.
         /// </summary>
         /// <returns>The string representation of media type.</returns>
         internal string ToText()
@@ -199,7 +176,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Converts the current <see cref="MediaType"/> to a string representation suitable for use in a content-type header.
+        /// Converts the current <see cref="ODataMediaType"/> to a string representation suitable for use in a content-type header.
         /// </summary>
         /// <param name="encoding">The encoding to use when converting the media type into text.</param>
         /// <returns>The string representation of the current media type.</returns>
@@ -207,7 +184,7 @@ namespace Microsoft.OData.Core
         {
             // TODO: for now we include all the parameters since we know that we will not have accept parameters (after the quality value)
             //       that needed to be ignored.
-            if (this.parameters == null || this.parameters.Count == 0)
+            if (this.parameters == null || !this.parameters.Any())
             {
                 string typeName = this.FullTypeName;
                 if (encoding != null)

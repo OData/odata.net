@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -737,21 +737,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, binding.Target.Name, EdmValueWriter.StringAsXml);
 
             this.xmlWriter.WriteEndElement();
-        }
-
-        private static string MultiplicityAsXml(EdmMultiplicity endKind)
-        {
-            switch (endKind)
-            {
-                case EdmMultiplicity.Many:
-                    return CsdlConstants.Value_EndMany;
-                case EdmMultiplicity.One:
-                    return CsdlConstants.Value_EndRequired;
-                case EdmMultiplicity.ZeroOrOne:
-                    return CsdlConstants.Value_EndOptional;
-                default:
-                    throw new InvalidOperationException(Strings.UnknownEnumVal_Multiplicity(endKind.ToString()));
-            }
         }
 
         private static string ConcurrencyModeAsXml(EdmConcurrencyMode mode)

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -251,7 +251,6 @@ namespace Microsoft.OData.Core.Atom
                     expectedTypeReference, 
                     propertyAndValueDeserializer.MessageReaderSettings, 
                     /*validateNullValue*/ true,
-                    propertyAndValueDeserializer.Version,
                     termAttributeValue);
                 annotationValue = new ODataNullValue();
             }
@@ -265,8 +264,7 @@ namespace Microsoft.OData.Core.Atom
                     typeAttributeValue,
                     xmlReader.IsEmptyElement,
                     propertyAndValueDeserializer.Model,
-                    propertyAndValueDeserializer.MessageReaderSettings,
-                    propertyAndValueDeserializer.Version);
+                    propertyAndValueDeserializer.MessageReaderSettings);
             }
             else
             {
@@ -366,7 +364,6 @@ namespace Microsoft.OData.Core.Atom
         /// <param name="positionedOnEmptyElement">true if the annotation element is empty, false otherwise.</param>
         /// <param name="model">The edm model instance.</param>
         /// <param name="messageReaderSettings">The message reader settings instance.</param>
-        /// <param name="version">The payload version to read.</param>
         /// <returns>The primitive value represented on this element via attribute value notation.</returns>
         private static ODataPrimitiveValue GetValueFromAttributeValueNotation(
             IEdmTypeReference expectedTypeReference,
@@ -376,8 +373,7 @@ namespace Microsoft.OData.Core.Atom
             string typeAttributeValue,
             bool positionedOnEmptyElement,
             IEdmModel model,
-            ODataMessageReaderSettings messageReaderSettings,
-            ODataVersion version)
+            ODataMessageReaderSettings messageReaderSettings)
         {
             Debug.Assert(attributeValueNotationTypeReference != null, "attributeValueNotationTypeReference != null");
 
@@ -401,8 +397,7 @@ namespace Microsoft.OData.Core.Atom
                 attributeValueNotationTypeReference.ODataFullName(),
                 attributeValueNotationTypeReference.Definition,
                 model,
-                messageReaderSettings,
-                version);
+                messageReaderSettings);
             return new ODataPrimitiveValue(AtomValueUtils.ConvertStringToPrimitive(attributeValueNotationAttributeValue, targetTypeReference.AsPrimitive()));
         }
     }

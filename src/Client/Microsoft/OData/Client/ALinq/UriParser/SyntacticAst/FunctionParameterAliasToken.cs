@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -28,6 +28,7 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
     using System;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Core.UriParser.Visitors;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// A token to represent a parameter alias in a function call.
@@ -56,6 +57,11 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         {
             get { return QueryTokenKind.FunctionParameterAlias; }
         }
+
+        /// <summary>
+        /// The expected edm type of this parameter.
+        /// </summary>
+        internal IEdmTypeReference ExpectedParameterType { get; set; }
 
         /// <summary>
         /// Accept a <see cref="ISyntacticTreeVisitor{T}"/> to walk a tree of <see cref="QueryToken"/>s.

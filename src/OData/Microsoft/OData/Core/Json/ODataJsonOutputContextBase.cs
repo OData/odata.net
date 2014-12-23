@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -201,7 +201,6 @@ namespace Microsoft.OData.Core.Json
         [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "textWriter", Justification = "We don't dispose the jsonWriter or textWriter, instead we dispose the underlying stream directly.")]
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
             try
             {
                 if (this.messageOutputStream != null)
@@ -228,6 +227,8 @@ namespace Microsoft.OData.Core.Json
                 this.textWriter = null;
                 this.jsonWriter = null;
             }
+
+            base.Dispose(disposing);
         }
     }
 }

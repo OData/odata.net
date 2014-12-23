@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -250,15 +250,6 @@ namespace Microsoft.OData.Client
         private static void ThrowInvalidOperationExceptionForJsonLightWithoutModel()
         {
             throw new InvalidOperationException(Strings.DataServiceClientFormat_ValidServiceModelRequiredForJson);
-        }
-
-        /// <summary>
-        /// Throws NotSupportedException for JSON Verbose format.
-        /// </summary>
-        /// <param name="contentType">Content-type to appear on the message.</param>
-        private static void ThrowNotSupportedExceptionForJsonVerbose(string contentType)
-        {
-            throw new NotSupportedException(Strings.DataServiceClientFormat_JsonVerboseUnsupported(contentType));
         }
 
         /// <summary>

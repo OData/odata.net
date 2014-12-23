@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Core.Metadata
             // Writers should use the highest recognized version for type resolution since they need to verify
             // that the type being used is allowed in the given version. So pass the max here
             // so that we recognize all types and writers can fail later on if the type doesn't fit into the payload.
-            return ResolveTypeName(model, /*expectedType*/ null, typeName, /*customTypeResolved*/ null, /*version*/ ODataConstants.MaxODataVersion, out typeKind);
+            return ResolveTypeName(model, /*expectedType*/ null, typeName, /*customTypeResolved*/ null, out typeKind);
         }
 
         /// <summary>
@@ -103,7 +103,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <param name="expectedType">The expected type for the type name being resolved, or null if none is available.</param>
         /// <param name="typeName">The name of the type to resolve.</param>
         /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
-        /// <param name="version">The version of the payload being read.</param>
         /// <param name="typeKind">The type kind of the type, if it could be determined. This will be None if we couldn't tell. It might be filled
         /// even if the method returns null, for example for Collection types with item types which are not recognized.</param>
         /// <returns>The <see cref="IEdmType"/> representing the type specified by the <paramref name="typeName"/>;
@@ -113,7 +112,6 @@ namespace Microsoft.OData.Core.Metadata
             IEdmType expectedType,
             string typeName,
             ODataReaderBehavior readerBehavior,
-            ODataVersion version,
             out EdmTypeKind typeKind)
         {
             Func<IEdmType, string, IEdmType> customTypeResolver = readerBehavior == null ? null : readerBehavior.TypeResolver;
@@ -121,7 +119,7 @@ namespace Microsoft.OData.Core.Metadata
                 customTypeResolver == null || readerBehavior.ApiBehaviorKind == ODataBehaviorKind.WcfDataServicesClient,
                 "Custom type resolver can only be specified in WCF DS Client behavior.");
 
-            return ResolveTypeName(model, expectedType, typeName, customTypeResolver, version, out typeKind);
+            return ResolveTypeName(model, expectedType, typeName, customTypeResolver, out typeKind);
         }
 
         /// <summary>
@@ -131,7 +129,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <param name="expectedType">The expected type for the type name being resolved, or null if none is available.</param>
         /// <param name="typeName">The name of the type to resolve.</param>
         /// <param name="customTypeResolver">Custom type resolver to use, if null the model is used directly.</param>
-        /// <param name="version">The version to use when resolving the type name.</param>
         /// <param name="typeKind">The type kind of the type, if it could be determined. This will be None if we couldn't tell. It might be filled
         /// even if the method returns null, for example for Collection types with item types which are not recognized.</param>
         /// <returns>The <see cref="IEdmType"/> representing the type specified by the <paramref name="typeName"/>;
@@ -142,7 +139,6 @@ namespace Microsoft.OData.Core.Metadata
             IEdmType expectedType,
             string typeName,
             Func<IEdmType, string, IEdmType> customTypeResolver,
-            ODataVersion version,
             out EdmTypeKind typeKind)
         {
             Debug.Assert(model != null, "model != null");
@@ -183,7 +179,7 @@ namespace Microsoft.OData.Core.Metadata
                     expectedItemType = ((IEdmCollectionType)expectedType).ElementType.Definition;
                 }
 
-                IEdmType itemType = ResolveTypeName(model, expectedItemType, itemTypeName, customTypeResolver, version, out itemTypeKind);
+                IEdmType itemType = ResolveTypeName(model, expectedItemType, itemTypeName, customTypeResolver, out itemTypeKind);
                 if (itemType != null)
                 {
                     resolvedType = EdmLibraryExtensions.GetCollectionType(itemType);

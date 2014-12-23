@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -800,6 +800,33 @@ namespace Microsoft.OData.Client
             return new DataServiceQuery<T>.DataServiceOrderedQuery(rse, new DataServiceQueryProvider(this));
         }
 
+        /// <summary>Creates a data service query for function which return collection of data.</summary>
+        /// <typeparam name="T">The type returned by the query</typeparam>
+        /// <param name="path">The path before the function.</param>
+        /// <param name="functionName">The function name.</param>
+        /// <param name="isComposable">Whether this query is composable.</param>
+        /// <param name="parameters">The function parameters.</param>
+        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents the function call.</returns>
+        public DataServiceQuery<T> CreateFunctionQuery<T>(string path, string functionName, bool isComposable, params UriOperationParameter[] parameters)
+        {
+            Dictionary<string, string> operationParameters = this.SerializeOperationParameters(parameters);
+            ResourceSetExpression rse = new ResourceSetExpression(typeof(IOrderedQueryable<T>), null, Expression.Constant(path), typeof(T), null, CountOption.None, null, null, null, null, functionName, operationParameters, false);
+            return new DataServiceQuery<T>.DataServiceOrderedQuery(rse, new DataServiceQueryProvider(this));
+        }
+
+        /// <summary>Creates a data service single query for function which return single data.</summary>
+        /// <typeparam name="T">The type returned by the query</typeparam>
+        /// <param name="path">The path before the function.</param>
+        /// <param name="functionName">The function name.</param>
+        /// <param name="isComposable">Whether this query is composable.</param>
+        /// <param name="parameters">The function parameters.</param>
+        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> instance that represents the function call.</returns>
+        public DataServiceQuerySingle<T> CreateFunctionQuerySingle<T>(string path, string functionName, bool isComposable, params UriOperationParameter[] parameters)
+        {
+            Dictionary<string, string> operationParameters = this.SerializeOperationParameters(parameters);
+            SingletonResourceExpression rse = new SingletonResourceExpression(typeof(IOrderedQueryable<T>), null, Expression.Constant(path), typeof(T), null, CountOption.None, null, null, null, null, functionName, operationParameters, false);
+            return new DataServiceQuerySingle<T>(new DataServiceQuery<T>.DataServiceOrderedQuery(rse, new DataServiceQueryProvider(this)), isComposable);
+        }
 
         /// <summary>Creates a data service query for singleton data of a specified generic type.</summary>
         /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents a data service query.</returns>
@@ -816,6 +843,7 @@ namespace Microsoft.OData.Client
             SingletonResourceExpression rse = new SingletonResourceExpression(typeof(IOrderedQueryable<T>), null, Expression.Constant(singletonName), typeof(T), null, CountOption.None, null, null, null, null);
             return new DataServiceQuery<T>.DataServiceOrderedQuery(rse, new DataServiceQueryProvider(this));
         }
+
         #endregion
 
         #region GetMetadataUri
@@ -1542,7 +1570,7 @@ namespace Microsoft.OData.Client
         /// or ServiceAction that returns void.
         /// </remarks>
         /// <exception cref="ArgumentNullException">null requestUri</exception>
-        /// <exception cref="ArgumentException">The <paramref name="httpMethod"/> is not GET nor POST.</exception>
+        /// <exception cref="ArgumentException">The <paramref name="httpMethod"/> is not GET, POST or DELETE.</exception>
         /// <exception cref="InvalidOperationException">problem materializing results of query into objects</exception>
         /// <exception cref="WebException">failure to get response for requestUri</exception>
         public OperationResponse Execute(Uri requestUri, string httpMethod, params OperationParameter[] operationParameters)
@@ -2754,7 +2782,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <typeparam name="TElement">element type. See Execute method for more details.</typeparam>
         /// <param name="requestUri">request to execute</param>
-        /// <param name="httpMethod">HttpMethod to use. Only GET and POST are supported.</param>
+        /// <param name="httpMethod">HttpMethod to use. Only GET and POST are supported if operation parameters are not empty.</param>
         /// <param name="singleResult">If set to true, indicates that a single result is expected as a response.</param>
         /// <param name="bodyOperationParameters">The list of body operation parameters to be returned.</param>
         /// <param name="uriOperationParameters">The list of uri operation parameters to be returned.</param>
@@ -2768,7 +2796,8 @@ namespace Microsoft.OData.Client
             params OperationParameter[] operationParameters)
         {
             if (string.CompareOrdinal(XmlConstants.HttpMethodGet, httpMethod) != 0 &&
-                string.CompareOrdinal(XmlConstants.HttpMethodPost, httpMethod) != 0)
+                string.CompareOrdinal(XmlConstants.HttpMethodPost, httpMethod) != 0 &&
+                string.CompareOrdinal(XmlConstants.HttpMethodDelete, httpMethod) != 0)
             {
                 throw new ArgumentException(Strings.Context_ExecuteExpectsGetOrPost, "httpMethod");
             }
@@ -2778,7 +2807,7 @@ namespace Microsoft.OData.Client
                 singleResult = null;
             }
 
-            if (operationParameters != null)
+            if (operationParameters != null && operationParameters.Length > 0)
             {
                 DataServiceContext.ValidateOperationParameters(httpMethod, operationParameters, out bodyOperationParameters, out uriOperationParameters);
             }

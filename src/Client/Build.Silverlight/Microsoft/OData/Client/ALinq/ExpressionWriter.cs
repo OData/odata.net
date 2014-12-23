@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -894,9 +894,9 @@ namespace Microsoft.OData.Client
         /// <returns>The checked result</returns>
         private static bool IsEnumTypeExpression(Expression e)
         {
-            if (e is UnaryExpression)
+            UnaryExpression u = e as UnaryExpression;
+            if (u != null)
             {
-                UnaryExpression u = e as UnaryExpression;
                 return u.Operand.Type.IsEnum() || (u.Operand.Type.IsGenericType() && u.Operand.Type.GetGenericArguments()[0].IsEnum());
             }
 
@@ -908,7 +908,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="e">The Expression to get enum type from</param>
         /// <returns>The extracted enum type</returns>
-        private Type GetEnumType(Expression e)
+        private static Type GetEnumType(Expression e)
         {
             UnaryExpression u = e as UnaryExpression;
             if (u != null)
@@ -934,12 +934,12 @@ namespace Microsoft.OData.Client
                 if (constant == b.Left)
                 {
                     Debug.Assert(b.Right is UnaryExpression, "another binary operand should be UnaryExpression");
-                    enumType = this.GetEnumType(b.Right);
+                    enumType = GetEnumType(b.Right);
                 }
                 else
                 {
                     Debug.Assert(b.Left is UnaryExpression, "another binary operand should be UnaryExpression");
-                    enumType = this.GetEnumType(b.Left);
+                    enumType = GetEnumType(b.Left);
                 }
             }
             else
@@ -947,7 +947,7 @@ namespace Microsoft.OData.Client
                 MethodCallExpression m = this.parent as MethodCallExpression;
                 if (m != null && m.Method.Name == "HasFlag")
                 {
-                    enumType = this.GetEnumType(m.Object);
+                    enumType = GetEnumType(m.Object);
                 }
             }
 

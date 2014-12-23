@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -78,7 +78,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="model">The model to use when resolving the target of the URI.</param>
         /// <param name="contextUriFromPayload">The string value of the odata.metadata annotation read from the payload.</param>
         /// <param name="payloadKind">The payload kind we expect the context URI to conform to.</param>
-        /// <param name="version">The OData version to use for determining the set of built-in functions available.</param>
         /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
         /// <param name="needParseFragment">Whether the fragment after $metadata should be parsed, if set to false, only MetadataDocumentUri is parsed.</param>
         /// <returns>The result from parsing the context URI.</returns>
@@ -86,7 +85,6 @@ namespace Microsoft.OData.Core.JsonLight
             IEdmModel model,
             string contextUriFromPayload,
             ODataPayloadKind payloadKind,
-            ODataVersion version,
             ODataReaderBehavior readerBehavior,
             bool needParseFragment)
         {
@@ -108,7 +106,7 @@ namespace Microsoft.OData.Core.JsonLight
             parser.TokenizeContextUri();
             if (needParseFragment)
             {
-                parser.ParseContextUri(payloadKind, readerBehavior, version);
+                parser.ParseContextUri(payloadKind, readerBehavior);
             }
 
             return parser.parseResult;
@@ -150,10 +148,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="expectedPayloadKind">The payload kind we expect the context URI to conform to.</param>
         /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
-        /// <param name="version">The version of the payload being read.</param>
-        private void ParseContextUri(ODataPayloadKind expectedPayloadKind, ODataReaderBehavior readerBehavior, ODataVersion version)
+        private void ParseContextUri(ODataPayloadKind expectedPayloadKind, ODataReaderBehavior readerBehavior)
         {
-            ODataPayloadKind detectedPayloadKind = this.ParseContextUriFragment(this.parseResult.Fragment, readerBehavior, version);
+            ODataPayloadKind detectedPayloadKind = this.ParseContextUriFragment(this.parseResult.Fragment, readerBehavior);
 
             // unsupported payload kind indicates that this is during payload kind detection, so we should not fail.
             bool detectedPayloadKindMatchesExpectation = detectedPayloadKind == expectedPayloadKind || expectedPayloadKind == ODataPayloadKind.Unsupported;
@@ -205,10 +202,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="fragment">The fragment to parse</param>
         /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
-        /// <param name="version">The OData version to use for determining the set of built-in functions available.</param>
         /// <returns>The detected payload kind based on parsing the fragment.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502", Justification = "Will be moving to non case statements later, no point in investing in reducing this now")]
-        private ODataPayloadKind ParseContextUriFragment(string fragment, ODataReaderBehavior readerBehavior, ODataVersion version)
+        private ODataPayloadKind ParseContextUriFragment(string fragment, ODataReaderBehavior readerBehavior)
         {
             bool hasItemSelector = false;
             ODataDeltaKind kind = ODataDeltaKind.None;
@@ -284,7 +280,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             ODataPayloadKind detectedPayloadKind = ODataPayloadKind.Unsupported;
-            EdmTypeResolver edmTypeResolver = new EdmTypeReaderResolver(this.model, readerBehavior, version);
+            EdmTypeResolver edmTypeResolver = new EdmTypeReaderResolver(this.model, readerBehavior);
 
             if (!fragment.Contains(ODataConstants.UriSegmentSeparator) && !hasItemSelector && kind == ODataDeltaKind.None)
             {
@@ -320,7 +316,7 @@ namespace Microsoft.OData.Core.JsonLight
                     else
                     {
                         // Property: {schema.type} or Collection({schema.type}) where schema.type is primitive or complex.
-                        detectedPayloadKind = this.ResolveType(fragment, readerBehavior, version);
+                        detectedPayloadKind = this.ResolveType(fragment, readerBehavior);
                         Debug.Assert(
                             this.parseResult.EdmType.TypeKind == EdmTypeKind.Primitive || this.parseResult.EdmType.TypeKind == EdmTypeKind.Enum || this.parseResult.EdmType.TypeKind == EdmTypeKind.TypeDefinition || this.parseResult.EdmType.TypeKind == EdmTypeKind.Complex || this.parseResult.EdmType.TypeKind == EdmTypeKind.Collection || this.parseResult.EdmType.TypeKind == EdmTypeKind.Entity,
                             "The first context URI segment must be a set or a non-entity type.");
@@ -411,15 +407,14 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="typeName">The type name.</param>
         /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
-        /// <param name="version">The version of the payload being read.</param>
         /// <returns>The resolved Edm type.</returns>
-        private ODataPayloadKind ResolveType(string typeName, ODataReaderBehavior readerBehavior, ODataVersion version)
+        private ODataPayloadKind ResolveType(string typeName, ODataReaderBehavior readerBehavior)
         {
             string typeNameToResolve = EdmLibraryExtensions.GetCollectionItemTypeName(typeName) ?? typeName;
             bool isCollection = typeNameToResolve != typeName;
 
             EdmTypeKind typeKind;
-            IEdmType resolvedType = MetadataUtils.ResolveTypeNameForRead(this.model, /*expectedType*/ null, typeNameToResolve, readerBehavior, version, out typeKind);
+            IEdmType resolvedType = MetadataUtils.ResolveTypeNameForRead(this.model, /*expectedType*/ null, typeNameToResolve, readerBehavior, out typeKind);
             if (resolvedType == null || resolvedType.TypeKind != EdmTypeKind.Primitive && resolvedType.TypeKind != EdmTypeKind.Enum && resolvedType.TypeKind != EdmTypeKind.Complex && resolvedType.TypeKind != EdmTypeKind.Entity && resolvedType.TypeKind != EdmTypeKind.TypeDefinition)
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName(UriUtils.UriToString(this.parseResult.ContextUri), typeName));

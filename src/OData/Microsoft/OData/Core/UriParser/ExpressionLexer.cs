@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -1036,7 +1036,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="numericStr">The numeric string.</param>
         /// <param name="guessedKind">The possbile kind (IntegerLiteral or DoubleLiteral) from ParseFromDigit() method.</param>
         /// <returns>A more accurate ExpressionTokenKind</returns>
-        private ExpressionTokenKind MakeBestGuessOnNoSuffixStr(string numericStr, ExpressionTokenKind guessedKind)
+        private static ExpressionTokenKind MakeBestGuessOnNoSuffixStr(string numericStr, ExpressionTokenKind guessedKind)
         {
             // no suffix, so 
             // (1) make a best guess (note: later we support promoting each to later one: int32->int64->single->double->decimal).

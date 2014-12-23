@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -224,3 +224,68 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "Microsoft.OData.Edm.Validation.ValidationRules.#SingletonTypeMustBeEntityType")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmCoreModel.#Instance")]
 #endregion
+
+// By design and already public APIs thus cannot be changed.
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Date", Scope = "type", Target = "Microsoft.OData.Edm.Library.Date")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Function", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmEntityContainer.#AddFunctionImport(Microsoft.OData.Edm.IEdmFunction)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Function", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmEntityContainer.#AddFunctionImport(System.String,Microsoft.OData.Edm.IEdmFunction)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Function", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmEntityContainer.#AddFunctionImport(System.String,Microsoft.OData.Edm.IEdmFunction,Microsoft.OData.Edm.Expressions.IEdmExpression)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Function", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmEntityContainer.#AddFunctionImport(System.String,Microsoft.OData.Edm.IEdmFunction,Microsoft.OData.Edm.Expressions.IEdmExpression,System.Boolean)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Function", Scope = "member", Target = "Microsoft.OData.Edm.IEdmFunctionImport.#Function")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Alias", Scope = "member", Target = "Microsoft.OData.Edm.IEdmInclude.#Alias")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Namespace", Scope = "member", Target = "Microsoft.OData.Edm.IEdmInclude.#Namespace")]
+
+// By design and already public APIs thus cannot be changed.
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmEnumType.#.ctor(System.String,System.String,Microsoft.OData.Edm.IEdmPrimitiveType,System.Boolean)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmEnumType.#.ctor(System.String,System.String,System.Boolean)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmEnumType.#.ctor(System.String,System.String,Microsoft.OData.Edm.EdmPrimitiveTypeKind,System.Boolean)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Scope = "member", Target = "Microsoft.OData.Edm.IEdmEnumType.#IsFlags")]
+
+// By design.
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Scope = "member", Target = "Microsoft.OData.Edm.Library.TimeOfDay.#op_Implicit(System.TimeSpan):Microsoft.OData.Edm.Library.TimeOfDay")]
+
+// By design.
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Scope = "member", Target = "Microsoft.OData.Edm.Library.Values.EdmValue.#Microsoft.OData.Edm.Values.IEdmDelayedValue.Value")]
+
+// Already public APIs thus cannot be changed.
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Scope = "member", Target = "Microsoft.OData.Edm.IEdmReference.#Uri")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Vocabularis", Scope = "namespace", Target = "Microsoft.OData.Edm.Vocabularis")]
+
+// By design.
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntitySetReferenceExpression.#bindingContext")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEnumMemberExpression.#bindingContext")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsFunctionImport.#csdlSchema")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsOperationReferenceExpression.#bindingContext")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsParameterReferenceExpression.#bindingContext")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Scope = "member", Target = "Microsoft.OData.Edm.EnumHelper.#ToStringLiteral(Microsoft.OData.Edm.IEdmEnumTypeReference,System.Int64)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Scope = "member", Target = "Microsoft.OData.Edm.ExtensionMethods.#SetChangeTrackingAnnotation(Microsoft.OData.Edm.Library.EdmModel,Microsoft.OData.Edm.IEdmEntityContainer,System.Boolean)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Scope = "member", Target = "Microsoft.OData.Edm.ExtensionMethods.#SetChangeTrackingAnnotation(Microsoft.OData.Edm.Library.EdmModel,Microsoft.OData.Edm.IEdmEntitySet,System.Boolean,System.Collections.Generic.IEnumerable`1<Microsoft.OData.Edm.IEdmStructuralProperty>,System.Collections.Generic.IEnumerable`1<Microsoft.OData.Edm.IEdmNavigationProperty>)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Scope = "member", Target = "Microsoft.OData.Edm.ExtensionMethods.#IsActionImport(Microsoft.OData.Edm.IEdmOperationImport)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Scope = "member", Target = "Microsoft.OData.Edm.ExtensionMethods.#IsFunctionImport(Microsoft.OData.Edm.IEdmOperationImport)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Scope = "member", Target = "Microsoft.OData.Edm.ExtensionMethods.#IsAction(Microsoft.OData.Edm.IEdmOperation)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Scope = "member", Target = "Microsoft.OData.Edm.ExtensionMethods.#IsFunction(Microsoft.OData.Edm.IEdmOperation)")]
+
+// Already public APIs thus cannot be changed.
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "0#", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmReference.#.ctor(System.String)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate", Scope = "member", Target = "Microsoft.OData.Edm.EdmToClrConversion.TryCreateObjectInstance.#Invoke(Microsoft.OData.Edm.Values.IEdmStructuredValue,System.Type,Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter,System.Object&,System.Boolean&)")]
+
+// By design.
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration", MessageId = "0#", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmNavigationSource.#FindNavigationTarget(Microsoft.OData.Edm.IEdmNavigationProperty)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "baseType2", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsComplexTypeDefinition.#ComputeBaseType()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "baseType2", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityTypeDefinition.#ComputeBaseType()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "propertyValue", Scope = "member", Target = "Microsoft.OData.Edm.Library.Values.EdmStructuredValue.#.ctor(Microsoft.OData.Edm.IEdmStructuredTypeReference,System.Collections.Generic.IEnumerable`1<Microsoft.OData.Edm.Values.IEdmPropertyValue>)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyModel.#.cctor()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.#.cctor()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Edm.Library.AmbiguousOperationImportBinding.#ReturnType")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Edm.Library.BadNavigationProperty.#DefaultValueString")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Edm.Library.BadNavigationProperty.#ConcurrencyMode")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Edm.Library.EdmCoreModel.#FindOperationImportsByNameNonBindingParameterType(System.String,System.Collections.Generic.IEnumerable`1<System.String>)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.Parsing.Common.EdmXmlDocumentParser`1.#GetOptionalAttribute(Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementInfo,System.String)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Edm.Library.AmbiguousLabeledExpressionBinding.#ComputeExpression()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Edm.Library.BadLabeledExpression.#ComputeExpression()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.UnresolvedEnumMember.#ComputeValue()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsVocabularyAnnotation.#FindParameterizedOperationImport(System.String,System.Func`2<System.String,System.Collections.Generic.IEnumerable`1<Microsoft.OData.Edm.IEdmOperationImport>>,System.Func`2<System.Collections.Generic.IEnumerable`1<Microsoft.OData.Edm.IEdmOperationImport>,Microsoft.OData.Edm.IEdmOperationImport>)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel.#WrapExpression(Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlExpressionBase,Microsoft.OData.Edm.IEdmEntityType,Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Edm.Evaluation.EdmExpressionEvaluator.#MatchesType(Microsoft.OData.Edm.IEdmTypeReference,Microsoft.OData.Edm.Values.IEdmValue,System.Boolean)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Edm.Csdl.Serialization.EdmModelCsdlSchemaWriter.#WriteInlineExpression(Microsoft.OData.Edm.Expressions.IEdmExpression)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Edm.EdmModelVisitor.#VisitExpression(Microsoft.OData.Edm.Expressions.IEdmExpression)")]

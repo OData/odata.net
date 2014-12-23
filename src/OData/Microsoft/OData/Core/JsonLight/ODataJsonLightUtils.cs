@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -33,11 +33,6 @@ namespace Microsoft.OData.Core.JsonLight
     /// </summary>
     internal static class ODataJsonLightUtils
     {
-        /// <summary>
-        /// The character array used for splitting apart the operation parameter type names in a metadata link. Contains ','.
-        /// </summary>
-        private static readonly char[] ParameterSeparatorSplitCharacters = new[] { JsonLightConstants.FunctionParameterSeparator[0] };
-
         /// <summary>
         /// The set of characters to trim from the parameters of an operation. Contains '(' and ')'.
         /// </summary>

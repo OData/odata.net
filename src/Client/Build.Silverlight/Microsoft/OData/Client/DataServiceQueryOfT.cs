@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -166,6 +166,30 @@ namespace Microsoft.OData.Client
             {
                 return resourcePath + UriHelper.LEFTPAREN + keyString + UriHelper.RIGHTPAREN;
             }
+        }
+
+        /// <summary>Creates a data service query for function which return collection of data.</summary>
+        /// <typeparam name="T">The type returned by the query</typeparam>
+        /// <param name="functionName">The function name.</param>
+        /// <param name="isComposable">Whether this query is composable.</param>
+        /// <param name="parameters">The function parameters.</param>
+        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents the function call.</returns>
+        public DataServiceQuery<T> CreateFunctionQuery<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters)
+        {
+            Dictionary<string, string> operationParameters = this.Context.SerializeOperationParameters(parameters);
+            ResourceSetExpression rse = new ResourceSetExpression(typeof(IOrderedQueryable<T>), this.Expression, null, typeof(T), null, CountOption.None, null, null, null, null, functionName, operationParameters, false);
+            return new DataServiceQuery<T>.DataServiceOrderedQuery(rse, new DataServiceQueryProvider(this.Context), isComposable);
+        }
+
+        /// <summary>Creates a data service query for function which return single data.</summary>
+        /// <typeparam name="T">The type returned by the query</typeparam>
+        /// <param name="functionName">The function name.</param>
+        /// <param name="isComposable">Whether this query is composable.</param>
+        /// <param name="parameters">The function parameters.</param>
+        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> instance that represents the function call.</returns>
+        public DataServiceQuerySingle<T> CreateFunctionQuerySingle<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters)
+        {
+            return new DataServiceQuerySingle<T>(CreateFunctionQuery<T>(functionName, isComposable, parameters), isComposable);
         }
 
         /// <summary>

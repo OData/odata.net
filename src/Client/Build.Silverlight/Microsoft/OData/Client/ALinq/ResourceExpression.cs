@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -88,9 +88,6 @@ namespace Microsoft.OData.Client
         /// <summary>names and values of parameters</summary>
         private Dictionary<string, string> operationParameters;
 
-        /// <summary>return type of operation</summary>
-        private Type operationReturnType;
-
         /// <summary>false for function, true for action</summary>
         private bool isAction;
  
@@ -108,7 +105,7 @@ namespace Microsoft.OData.Client
         /// <param name="resourceTypeAs">TypeAs type</param>
         /// <param name="uriVersion">version of the Uri from the expand and projection paths</param>
         internal ResourceExpression(Expression source, Type type, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion)
-            : this(source, type, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion, null, null, null, false)
+            : this(source, type, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion, null, null, false)
         {
         }
 
@@ -125,9 +122,8 @@ namespace Microsoft.OData.Client
         /// <param name="uriVersion">version of the Uri from the expand and projection paths</param>
         /// <param name="operationName">name of function</param>
         /// <param name="operationParameters">parameters' names and values of function</param>
-        /// <param name="operationReturnType">return type of function</param>
         /// <param name="isAction">action flag</param>
-        internal ResourceExpression(Expression source, Type type, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion, string operationName, Dictionary<string, string> operationParameters, Type operationReturnType, bool isAction)
+        internal ResourceExpression(Expression source, Type type, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion, string operationName, Dictionary<string, string> operationParameters, bool isAction)
         {
             this.source = source;
             this.type = type;
@@ -139,7 +135,6 @@ namespace Microsoft.OData.Client
             this.uriVersion = uriVersion ?? Util.ODataVersion4;
             this.operationName = operationName;
             this.OperationParameters = operationParameters ?? new Dictionary<string, string>(StringComparer.Ordinal);
-            this.operationReturnType = operationReturnType;
             this.isAction = isAction;
         }
 
@@ -252,15 +247,6 @@ namespace Microsoft.OData.Client
         {
             get { return this.operationParameters; }
             set { this.operationParameters = value; }
-        }
-
-        /// <summary>
-        /// return type of operation
-        /// </summary>
-        internal Type OperationReturnType
-        {
-            get { return this.operationReturnType; }
-            set { this.operationReturnType = value; }
         }
 
         /// <summary>

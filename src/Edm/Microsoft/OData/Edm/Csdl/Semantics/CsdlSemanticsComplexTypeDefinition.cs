@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 IEdmComplexType baseType = this.Context.FindType(this.complex.BaseTypeName) as IEdmComplexType;
                 if (baseType != null)
                 {
-                    IEdmStructuredType junk = baseType.BaseType; // Evaluate the inductive step to detect cycles.
+                    IEdmStructuredType baseType2 = baseType.BaseType; // Evaluate the inductive step to detect cycles.
                 }
 
                 return baseType ?? new UnresolvedComplexType(this.Context.UnresolvedName(this.complex.BaseTypeName), this.Location);

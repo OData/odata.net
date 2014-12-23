@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -55,9 +55,6 @@ namespace Microsoft.OData.Core
         /// <summary>The model. Non-null if we do have metadata available.</summary>
         private readonly IEdmModel model;
 
-        /// <summary>The <see cref="ODataVersion"/> to be used for reading the payload.</summary>
-        private readonly ODataVersion version;
-
         /// <summary>The optional URL resolver to perform custom URL resolution for URLs read from the payload.</summary>
         private readonly IODataUrlResolver urlResolver;
 
@@ -81,9 +78,9 @@ namespace Microsoft.OData.Core
         /// <remarks>This field is set implicitly when one of the read (or reader creation) methods is called.</remarks>
         private ODataFormat format;
 
-        /// <summary>The <see cref="MediaType"/> parsed from the content type header.</summary>
+        /// <summary>The <see cref="ODataMediaType"/> parsed from the content type header.</summary>
         /// <remarks>This field is set implicitly when one of the read (or reader creation) methods is called.</remarks>
-        private MediaType contentType;
+        private ODataMediaType contentType;
 
         /// <summary>The <see cref="Encoding"/> of the payload to be read with this reader.</summary>
         /// <remarks>This field is set implicitly when one of the read (or reader creation) methods is called.</remarks>
@@ -92,12 +89,6 @@ namespace Microsoft.OData.Core
         /// <summary>The batch boundary string if the payload to be read is a batch request or response.</summary>
         /// <remarks>This is set implicitly when the CreateBatchReader method is called.</remarks>
         private string batchBoundary;
-
-        /// <summary>The media type resolver to use when interpreting the incoming content type.</summary>
-        private MediaTypeResolver mediaTypeResolver;
-
-        /// <summary>Storage for format specific states from payload kind detection.</summary>
-        private Dictionary<ODataFormat, object> payloadKindDetectionFormatStates;
 
         /// <summary>Creates a new <see cref="T:Microsoft.OData.Core.ODataMessageReader" /> for the given request message.</summary>
         /// <param name="requestMessage">The request message for which to create the reader.</param>
@@ -131,9 +122,12 @@ namespace Microsoft.OData.Core
             this.readingResponse = false;
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.urlResolver = requestMessage as IODataUrlResolver;
-            this.version = ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
+
+            // Validate OData version against request message.
+            ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
+
             this.model = model ?? EdmCoreModel.Instance;
-            this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ReaderBehavior, this.version);
+            this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ReaderBehavior);
         }
 
         /// <summary>Creates a new <see cref="T:System.Data.OData.ODataMessageReader" /> for the given response message.</summary>
@@ -168,9 +162,12 @@ namespace Microsoft.OData.Core
             this.readingResponse = true;
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.urlResolver = responseMessage as IODataUrlResolver;
-            this.version = ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
+
+            // Validate OData version against response message.
+            ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
+
             this.model = model ?? EdmCoreModel.Instance;
-            this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ReaderBehavior, this.version);
+            this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ReaderBehavior);
 
             // If the Preference-Applied header on the response message contains an annotation filter, we set the filter
             // to the reader settings if it's not already set, so that we would only read annotations that satisfy the filter.
@@ -189,22 +186,6 @@ namespace Microsoft.OData.Core
             get
             {
                 return this.settings;
-            }
-        }
-
-        /// <summary>
-        /// The media type resolver to use when interpreting the incoming content type.
-        /// </summary>
-        private MediaTypeResolver MediaTypeResolver
-        {
-            get
-            {
-                if (this.mediaTypeResolver == null)
-                {
-                    this.mediaTypeResolver = MediaTypeResolver.GetMediaTypeResolver(this.settings.EnableAtom);
-                }
-
-                return this.mediaTypeResolver;
             }
         }
 
@@ -230,8 +211,6 @@ namespace Microsoft.OData.Core
                 return payloadKindsFromContentType;
             }
 
-            this.payloadKindDetectionFormatStates = new Dictionary<ODataFormat, object>(ReferenceEqualityComparer<ODataFormat>.Instance);
-
             // Otherwise we have to do sniffing
             List<ODataPayloadKindDetectionResult> detectedPayloadKinds = new List<ODataPayloadKindDetectionResult>();
             try
@@ -243,17 +222,17 @@ namespace Microsoft.OData.Core
 
                 foreach (IGrouping<ODataFormat, ODataPayloadKindDetectionResult> payloadKindGroup in payloadKindFromContentTypeGroups)
                 {
-                    ODataPayloadKindDetectionInfo detectionInfo = new ODataPayloadKindDetectionInfo(
-                        this.contentType,
-                        this.encoding,
-                        this.settings,
-                        this.model,
-                        payloadKindGroup.Select(pkg => pkg.PayloadKind));
+                    ODataMessageInfo messageInfo = new ODataMessageInfo()
+                    {
+                        Encoding = this.encoding,
+                        GetMessageStream = this.message.GetStream,
+                        IsResponse = this.readingResponse,
+                        MediaType = this.contentType,
+                        Model = this.model
+                    };
 
                     // Call the payload kind detection code on the format
-                    IEnumerable<ODataPayloadKind> detectionResult = this.readingResponse
-                        ? payloadKindGroup.Key.DetectPayloadKind((IODataResponseMessage)this.message, detectionInfo)
-                        : payloadKindGroup.Key.DetectPayloadKind((IODataRequestMessage)this.message, detectionInfo);
+                    IEnumerable<ODataPayloadKind> detectionResult = payloadKindGroup.Key.DetectPayloadKind(messageInfo, this.settings);
 
                     if (detectionResult != null)
                     {
@@ -267,8 +246,6 @@ namespace Microsoft.OData.Core
                             }
                         }
                     }
-
-                    this.payloadKindDetectionFormatStates.Add(payloadKindGroup.Key, detectionInfo.PayloadKindDetectionFormatState);
                 }
             }
             finally
@@ -307,9 +284,6 @@ namespace Microsoft.OData.Core
             {
                 return TaskUtils.GetCompletedTask(payloadKindsFromContentType);
             }
-
-            // The dictionary is filled by the GetPayloadKindDetectionTasks below.
-            this.payloadKindDetectionFormatStates = new Dictionary<ODataFormat, object>(ReferenceEqualityComparer<ODataFormat>.Instance);
 
             // Otherwise we have to do sniffing
             List<ODataPayloadKindDetectionResult> detectedPayloadKinds = new List<ODataPayloadKindDetectionResult>();
@@ -861,7 +835,7 @@ namespace Microsoft.OData.Core
 
             // Set the format, encoding and payload kind.
             string contentTypeHeader = this.GetContentTypeHeader(payloadKinds);
-            this.format = MediaTypeUtils.GetFormatFromContentType(contentTypeHeader, payloadKinds, this.MediaTypeResolver, out this.contentType, out this.encoding, out this.readerPayloadKind, out this.batchBoundary);
+            this.format = MediaTypeUtils.GetFormatFromContentType(contentTypeHeader, payloadKinds, this.settings.MediaTypeResolver, out this.contentType, out this.encoding, out this.readerPayloadKind, out this.batchBoundary);
         }
 
         /// <summary>
@@ -1137,11 +1111,6 @@ namespace Microsoft.OData.Core
         {
             // NOTE: we decided to not stream links for now but only make reading them async.
             this.VerifyReaderNotDisposedAndNotUsed();
-
-            if (!this.readingResponse)
-            {
-                throw new ODataException(Strings.ODataMessageReader_EntityReferenceLinksInRequestNotAllowed);
-            }
         }
 
         /// <summary>
@@ -1256,23 +1225,21 @@ namespace Microsoft.OData.Core
             this.ProcessContentType(payloadKinds);
             Debug.Assert(this.format != null, "By now we should have figured out which format to use.");
 
-            object payloadKindDetectionFormatState = null;
-            if (this.payloadKindDetectionFormatStates != null)
-            {
-                this.payloadKindDetectionFormatStates.TryGetValue(this.format, out payloadKindDetectionFormatState);
-            }
-
             this.inputContext = this.format.CreateInputContext(
-                this.readerPayloadKind,
-                this.message,
-                this.contentType,
-                this.encoding,
-                this.settings,
-                this.version,
-                this.readingResponse,
-                this.model,
-                this.urlResolver,
-                payloadKindDetectionFormatState);
+                    new ODataMessageInfo()
+                    {
+                        Encoding = this.encoding,
+                        GetMessageStream = this.message.GetStream,
+#if ODATALIB_ASYNC
+                        GetMessageStreamAsync = this.message.GetStreamAsync,
+#endif
+                        IsResponse = this.readingResponse,
+                        MediaType = this.contentType,
+                        Model = this.model,
+                        UrlResolver = this.urlResolver,
+                        PayloadKind = this.readerPayloadKind,
+                    },
+                    this.settings);
 
             return readFunc(this.inputContext);
         }
@@ -1291,7 +1258,7 @@ namespace Microsoft.OData.Core
             }
 
             string contentTypeHeader = this.GetContentTypeHeader();
-            IList<ODataPayloadKindDetectionResult> payloadKindsFromContentType = MediaTypeUtils.GetPayloadKindsForContentType(contentTypeHeader, this.MediaTypeResolver, out this.contentType, out this.encoding);
+            IList<ODataPayloadKindDetectionResult> payloadKindsFromContentType = MediaTypeUtils.GetPayloadKindsForContentType(contentTypeHeader, this.settings.MediaTypeResolver, out this.contentType, out this.encoding);
             payloadKindResults = payloadKindsFromContentType.Where(r => ODataUtilsInternal.IsPayloadKindSupported(r.PayloadKind, !this.readingResponse));
 
             if (payloadKindResults.Count() > 1)
@@ -1343,17 +1310,21 @@ namespace Microsoft.OData.Core
 
             foreach (IGrouping<ODataFormat, ODataPayloadKindDetectionResult> payloadKindGroup in payloadKindFromContentTypeGroups)
             {
-                ODataPayloadKindDetectionInfo detectionInfo = new ODataPayloadKindDetectionInfo(
-                    this.contentType,
-                    this.encoding,
-                    this.settings,
-                    this.model,
-                    payloadKindGroup.Select(pkg => pkg.PayloadKind));
+                ODataMessageInfo messageInfo = new ODataMessageInfo()
+                {
+                    Encoding = this.encoding,
+                    GetMessageStream = this.message.GetStream,
+#if ODATALIB_ASYNC
+                    GetMessageStreamAsync = this.message.GetStreamAsync,
+#endif
+                    IsResponse = this.readingResponse,
+                    MediaType = this.contentType,
+                    Model = this.model,
+                };
 
                 // Call the payload kind detection code on the format
-                Task<IEnumerable<ODataPayloadKind>> detectionResult = this.readingResponse
-                    ? payloadKindGroup.Key.DetectPayloadKindAsync((IODataResponseMessageAsync)this.message, detectionInfo)
-                    : payloadKindGroup.Key.DetectPayloadKindAsync((IODataRequestMessageAsync)this.message, detectionInfo);
+                Task<IEnumerable<ODataPayloadKind>> detectionResult =
+                    payloadKindGroup.Key.DetectPayloadKindAsync(messageInfo, this.settings);
 
                 yield return detectionResult
                     .FollowOnSuccessWith(
@@ -1372,8 +1343,6 @@ namespace Microsoft.OData.Core
                                 }
                             }
                         }
-
-                        this.payloadKindDetectionFormatStates.Add(payloadKindGroup.Key, detectionInfo.PayloadKindDetectionFormatState);
                     });
             }
         }
@@ -1391,24 +1360,21 @@ namespace Microsoft.OData.Core
             this.ProcessContentType(payloadKinds);
             Debug.Assert(this.format != null, "By now we should have figured out which format to use.");
 
-            object payloadKindDetectionFormatState = null;
-            if (this.payloadKindDetectionFormatStates != null)
-            {
-                this.payloadKindDetectionFormatStates.TryGetValue(this.format, out payloadKindDetectionFormatState);
-            }
-
             return this.format.CreateInputContextAsync(
-                this.readerPayloadKind,
-                this.message,
-                this.contentType,
-                this.encoding,
-                this.settings,
-                this.version,
-                this.readingResponse,
-                this.model,
-                this.urlResolver,
-                payloadKindDetectionFormatState)
-
+                new ODataMessageInfo()
+                {
+                    Encoding = this.encoding,
+                    GetMessageStream = this.message.GetStream,
+#if ODATALIB_ASYNC
+                    GetMessageStreamAsync = this.message.GetStreamAsync,
+#endif
+                    IsResponse = this.readingResponse,
+                    MediaType = this.contentType,
+                    Model = this.model,
+                    UrlResolver = this.urlResolver,
+                    PayloadKind = this.readerPayloadKind,
+                },
+                this.settings)
                 .FollowOnSuccessWithTask(
                 (createInputContextTask) =>
                 {

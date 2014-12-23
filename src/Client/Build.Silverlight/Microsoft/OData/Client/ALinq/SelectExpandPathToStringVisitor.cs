@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Client
                 if (tokenIn.NextToken.IsStructuralProperty)
                 {
                     PathSegmentToken firstNonStructuralProperty;
-                    string selectClauses = this.WriteNextStructuralProperties(tokenIn.NextToken, out firstNonStructuralProperty);
+                    string selectClauses = WriteNextStructuralProperties(tokenIn.NextToken, out firstNonStructuralProperty);
                     if (firstNonStructuralProperty != null)
                     {
                         return tokenIn.Identifier + SelectClause + selectClauses + UriHelper.SEMICOLON + NonStartingExpandClause + firstNonStructuralProperty.Accept(this) + UriHelper.RIGHTPAREN;
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Client
         /// <param name="firstStructuralProperty">the first structural property we hit</param>
         /// <param name="firstNonStructuralProperty">the first non structural property we hit</param>
         /// <returns>a comma separated list of structural properties</returns>
-        private string WriteNextStructuralProperties(PathSegmentToken firstStructuralProperty, out PathSegmentToken firstNonStructuralProperty)
+        private static string WriteNextStructuralProperties(PathSegmentToken firstStructuralProperty, out PathSegmentToken firstNonStructuralProperty)
         {
             firstNonStructuralProperty = firstStructuralProperty;
             string stringToWrite = "";

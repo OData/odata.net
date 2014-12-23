@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -68,13 +68,23 @@ namespace Microsoft.OData.Client
             this.IsComposable = isComposable;
             this.isFunction = true;
         }
-        
+
+        /// <summary>Create a query of a single item based on another one.</summary>
+        /// <param name="query">The query.</param>
+        public DataServiceQuerySingle(DataServiceQuerySingle<TElement> query)
+        {
+            this.Context = query.Context;
+            this.Query = query.Query;
+            this.IsComposable = query.IsComposable;
+            this.isFunction = query.isFunction;
+        }
+
         /// <summary>
         /// Query object of a function which returns a single item.
         /// </summary>
         /// <param name="query">Query object.</param>
         /// <param name="isComposable">Whether this query is composable.</param>
-        private DataServiceQuerySingle(DataServiceQuery<TElement> query, bool isComposable)
+        internal DataServiceQuerySingle(DataServiceQuery<TElement> query, bool isComposable)
         {
             this.Query = query;
             this.Context = query.Context;
@@ -107,6 +117,28 @@ namespace Microsoft.OData.Client
             }
         }
 
+        /// <summary>Creates a data service query for function which return collection of data.</summary>
+        /// <typeparam name="T">The type returned by the query</typeparam>
+        /// <param name="functionName">The function name.</param>
+        /// <param name="isComposable">Whether this query is composable.</param>
+        /// <param name="parameters">The function parameters.</param>
+        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents the function call.</returns>
+        public DataServiceQuery<T> CreateFunctionQuery<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters)
+        {
+            return this.Query.CreateFunctionQuery<T>(functionName, isComposable, parameters);
+        }
+
+        /// <summary>Creates a data service query for function which return single data.</summary>
+        /// <typeparam name="T">The type returned by the query</typeparam>
+        /// <param name="functionName">The function name.</param>
+        /// <param name="isComposable">Whether this query is composable.</param>
+        /// <param name="parameters">The function parameters.</param>
+        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> instance that represents the function call.</returns>
+        public DataServiceQuerySingle<T> CreateFunctionQuerySingle<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters)
+        {
+            return new DataServiceQuerySingle<T>(this.CreateFunctionQuery<T>(functionName, isComposable, parameters), isComposable);
+        }
+
 #if !ASTORIA_LIGHT && !PORTABLELIB // Synchronous methods not available
         /// <summary>
         /// Executes the query and returns the result.
@@ -117,12 +149,10 @@ namespace Microsoft.OData.Client
         {
             if (this.isFunction)
             {
-                return this.Context.Execute<TElement>(this.RequestUri, XmlConstants.HttpMethodGet, true).Single();
+                return this.Context.Execute<TElement>(this.RequestUri, XmlConstants.HttpMethodGet, true).SingleOrDefault();
             }
-            else
-            {
-                return this.Query.Execute().Single();
-            }
+            
+            return this.Query.Execute().SingleOrDefault();
         }
 #endif
 
@@ -136,10 +166,8 @@ namespace Microsoft.OData.Client
             {
                 return this.Context.BeginExecute<TElement>(this.RequestUri, callback, state, XmlConstants.HttpMethodGet, true);
             }
-            else
-            {
-                return this.Query.BeginExecute(callback, state);
-            }
+            
+            return this.Query.BeginExecute(callback, state);
         }
 
         /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>

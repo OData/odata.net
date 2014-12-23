@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -23,7 +23,6 @@ namespace Microsoft.OData.Core.UriParser.Metadata
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OData.Core.Metadata;
@@ -78,7 +77,13 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         {
             if (EnableCaseInsensitive)
             {
-                var result = model.EntityContainer.Elements.OfType<IEdmNavigationSource>()
+                IEdmEntityContainer container = model.EntityContainer;
+                if (container == null)
+                {
+                    return null;
+                }
+
+                var result = container.Elements.OfType<IEdmNavigationSource>()
                     .Where(source => string.Equals(identifier, source.Name, StringComparison.OrdinalIgnoreCase)).ToList();
 
                 if (result.Count == 1)
@@ -203,7 +208,13 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         {
             if (EnableCaseInsensitive)
             {
-                return model.EntityContainer.Elements.OfType<IEdmOperationImport>()
+                IEdmEntityContainer container = model.EntityContainer;
+                if (container == null)
+                {
+                    return null;
+                }
+
+                return container.Elements.OfType<IEdmOperationImport>()
                     .Where(source => string.Equals(identifier, source.Name, StringComparison.OrdinalIgnoreCase));
             }
 

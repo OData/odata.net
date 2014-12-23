@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -89,12 +89,9 @@ namespace Microsoft.OData.Core
         /// <summary>Flag to prevent writing more than one error to the payload.</summary>
         private bool writeErrorCalled;
 
-        /// <summary>The media type resolver to use when interpreting the content type.</summary>
-        private MediaTypeResolver mediaTypeResolver;
-
-        /// <summary>The <see cref="MediaType"/> of the payload to be written with this writer.</summary>
+        /// <summary>The <see cref="ODataMediaType"/> of the payload to be written with this writer.</summary>
         /// <remarks>This is either set via the SetHeadersForPayload method or implicitly when one of the write (or writer creation) methods is called.</remarks>
-        private MediaType mediaType;
+        private ODataMediaType mediaType;
 
         /// <summary> Creates a new <see cref="T:Microsoft.OData.Core.ODataMessageWriter" /> for the given request message. </summary>
         /// <param name="requestMessage">The request message for which to create the writer.</param>
@@ -185,32 +182,6 @@ namespace Microsoft.OData.Core
             get
             {
                 return this.settings;
-            }
-        }
-
-        /// <summary>The <see cref="MediaType"/> of the payload to be written with this writer.</summary>
-        internal MediaType MediaType
-        {
-            get
-            {
-                return this.mediaType;
-            }
-        }
-
-        /// <summary>
-        /// The media type resolver to use when interpreting the content type.
-        /// </summary>
-        private MediaTypeResolver MediaTypeResolver
-        {
-            get
-            {
-                if (this.mediaTypeResolver == null)
-                {
-                    Debug.Assert(this.settings.Version.HasValue, "Version should have been set by now.");
-                    this.mediaTypeResolver = MediaTypeResolver.GetMediaTypeResolver(this.settings.EnableAtom);
-                }
-
-                return this.mediaTypeResolver;
             }
         }
 
@@ -809,7 +780,7 @@ namespace Microsoft.OData.Core
             if (!string.IsNullOrEmpty(contentType))
             {
                 ODataPayloadKind computedPayloadKind;
-                this.format = MediaTypeUtils.GetFormatFromContentType(contentType, new ODataPayloadKind[] { this.writerPayloadKind }, this.MediaTypeResolver, out this.mediaType, out this.encoding, out computedPayloadKind, out this.batchBoundary);
+                this.format = MediaTypeUtils.GetFormatFromContentType(contentType, new ODataPayloadKind[] { this.writerPayloadKind }, this.settings.MediaTypeResolver, out this.mediaType, out this.encoding, out computedPayloadKind, out this.batchBoundary);
                 Debug.Assert(this.writerPayloadKind == computedPayloadKind, "The payload kinds must always match.");
 
                 if (this.settings.HasJsonPaddingFunction())
@@ -826,7 +797,7 @@ namespace Microsoft.OData.Core
             {
                 // Determine the content type and format from the settings. Note that if neither format nor accept headers have been specified in the settings
                 // we fall back to a default (of null accept headers).
-                this.format = MediaTypeUtils.GetContentTypeFromSettings(this.settings, this.writerPayloadKind, this.MediaTypeResolver, out this.mediaType, out this.encoding);
+                this.format = MediaTypeUtils.GetContentTypeFromSettings(this.settings, this.writerPayloadKind, this.settings.MediaTypeResolver, out this.mediaType, out this.encoding);
 
                 if (this.writerPayloadKind == ODataPayloadKind.Batch)
                 {
@@ -1199,13 +1170,19 @@ namespace Microsoft.OData.Core
 
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
-                this.message,
-                this.mediaType,
-                this.encoding,
-                this.settings,
-                this.writingResponse,
-                this.model,
-                this.urlResolver);
+                new ODataMessageInfo()
+                {
+                    Encoding = this.encoding,
+                    GetMessageStream = this.message.GetStream,
+#if ODATALIB_ASYNC
+                    GetMessageStreamAsync = this.message.GetStreamAsync,
+#endif
+                    IsResponse = this.writingResponse,
+                    MediaType = this.mediaType,
+                    Model = this.model,
+                    UrlResolver = this.urlResolver,
+                },
+                this.settings);
             writeAction(this.outputContext);
         }
 
@@ -1229,13 +1206,19 @@ namespace Microsoft.OData.Core
 
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
-                this.message,
-                this.mediaType,
-                this.encoding,
-                this.settings,
-                this.writingResponse,
-                this.model,
-                this.urlResolver);
+                new ODataMessageInfo()
+                {
+                    Encoding = this.encoding,
+                    GetMessageStream = this.message.GetStream,
+#if ODATALIB_ASYNC
+                    GetMessageStreamAsync = this.message.GetStreamAsync,
+#endif
+                    IsResponse = this.writingResponse,
+                    MediaType = this.mediaType,
+                    Model = this.model,
+                    UrlResolver = this.urlResolver,
+                },
+                this.settings);
             return writeFunc(this.outputContext);
         }
 
@@ -1260,13 +1243,19 @@ namespace Microsoft.OData.Core
 
             // Create the output context
             return this.format.CreateOutputContextAsync(
-                this.message,
-                this.mediaType,
-                this.encoding,
-                this.settings,
-                this.writingResponse,
-                this.model,
-                this.urlResolver)
+                new ODataMessageInfo()
+                {
+                    Encoding = this.encoding,
+                    GetMessageStream = this.message.GetStream,
+#if ODATALIB_ASYNC
+                    GetMessageStreamAsync = this.message.GetStreamAsync,
+#endif
+                    IsResponse = this.writingResponse,
+                    MediaType = this.mediaType,
+                    Model = this.model,
+                    UrlResolver = this.urlResolver,
+                },
+                this.settings)
 
                 .FollowOnSuccessWithTask(
                     (createOutputContextTask) =>
@@ -1297,13 +1286,19 @@ namespace Microsoft.OData.Core
 
             // Create the output context
             return this.format.CreateOutputContextAsync(
-                this.message,
-                this.mediaType,
-                this.encoding,
-                this.settings,
-                this.writingResponse,
-                this.model,
-                this.urlResolver)
+                new ODataMessageInfo()
+                {
+                    Encoding = this.encoding,
+                    GetMessageStream = this.message.GetStream,
+#if ODATALIB_ASYNC
+                    GetMessageStreamAsync = this.message.GetStreamAsync,
+#endif
+                    IsResponse = this.writingResponse,
+                    MediaType = this.mediaType,
+                    Model = this.model,
+                    UrlResolver = this.urlResolver,
+                },
+                this.settings)
 
                 .FollowOnSuccessWithTask(
                     (createOutputContextTask) =>

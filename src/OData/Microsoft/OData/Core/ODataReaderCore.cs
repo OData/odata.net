@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -475,7 +475,6 @@ namespace Microsoft.OData.Core
                     entityTypeNameFromPayload,
                     this.inputContext.Model,
                     this.inputContext.MessageReaderSettings,
-                    this.inputContext.Version,
                     () => EdmTypeKind.Entity,
                     out targetTypeKind,
                     out serializationTypeNameAnnotation);

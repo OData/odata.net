@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -112,7 +112,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                                               termToken.CountQueryOption,
                                                               termToken.LevelsOption,
                                                               termToken.SearchOption,
-                                                              this.RemoveDuplicateSelect(termToken.SelectOption),
+                                                              RemoveDuplicateSelect(termToken.SelectOption),
                                                               newSubExpand);
                 }
 
@@ -133,7 +133,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             Debug.Assert(new PathSegmentTokenEqualityComparer().Equals(existingToken.PathToNavProp, newToken.PathToNavProp), "Paths should be equal.");
 
             List<ExpandTermToken> childNodes = CombineChildNodes(existingToken, newToken).ToList();
-            SelectToken combinedSelects = this.CombineSelects(existingToken, newToken);
+            SelectToken combinedSelects = CombineSelects(existingToken, newToken);
             return new ExpandTermToken(
                     existingToken.PathToNavProp,
                     existingToken.FilterOption,
@@ -211,7 +211,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="existingToken">the already existing expand term token</param>
         /// <param name="newToken">the new expand term token to be added</param>
         /// <returns>A new select term containing each of the selected entries.</returns>
-        private SelectToken CombineSelects(ExpandTermToken existingToken, ExpandTermToken newToken)
+        private static SelectToken CombineSelects(ExpandTermToken existingToken, ExpandTermToken newToken)
         {
             if (existingToken.SelectOption == null)
             {
@@ -233,10 +233,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="selectToken">Select token to be dealt with</param>
         /// <returns>A new select term containing each of the </returns>
-        private SelectToken RemoveDuplicateSelect(SelectToken selectToken)
+        private static SelectToken RemoveDuplicateSelect(SelectToken selectToken)
         {
-            return selectToken != null 
-                    ? new SelectToken(selectToken.Properties.Distinct(new PathSegmentTokenEqualityComparer())) 
+            return selectToken != null
+                    ? new SelectToken(selectToken.Properties.Distinct(new PathSegmentTokenEqualityComparer()))
                     : null;
         }
     }

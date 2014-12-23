@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -129,7 +129,6 @@ namespace Microsoft.OData.Core.Json
                     expectedTypeReference,
                     inputContext.MessageReaderSettings,
                     validateNullValue,
-                    inputContext.Version,
                     propertyName,
                     isDynamicProperty);
 

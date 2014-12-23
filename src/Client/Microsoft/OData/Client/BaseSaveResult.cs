@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -877,7 +877,7 @@ namespace Microsoft.OData.Client
             }
 
             // in the case of deleting a link from a collection, the key of the target must be appended
-            requestUri = this.AppendTargetEntityKeyIfNeeded(requestUri, binding, targetEntityDescriptor);
+            requestUri = AppendTargetEntityKeyIfNeeded(requestUri, binding, targetEntityDescriptor);
 
             string method = GetLinkHttpMethod(binding);
 
@@ -1073,7 +1073,7 @@ namespace Microsoft.OData.Client
         /// <returns>The original link uri or one with the target entity key appended.</returns>
         [SuppressMessage("DataWeb.Usage", "AC0011:EntityDescriptorPublicPropertiesRule",
              Justification = "This property has been limited by get/set")]
-        private Uri AppendTargetEntityKeyIfNeeded(Uri linkUri, LinkDescriptor binding, EntityDescriptor targetResource)
+        private static Uri AppendTargetEntityKeyIfNeeded(Uri linkUri, LinkDescriptor binding, EntityDescriptor targetResource)
         {
             // To delete from a collection, we need to append the key.
             // For example: if the navigation property name is "Purchases" and the resource type is Order with key '1', then this method will generate 'baseuri/Purchases(1)'

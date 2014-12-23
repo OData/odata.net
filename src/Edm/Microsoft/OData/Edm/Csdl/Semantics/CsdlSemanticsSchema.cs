@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -342,9 +342,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             List<IEdmOperation> operations = new List<IEdmOperation>();
             foreach (CsdlOperation operation in this.schema.Operations)
             {
-                if (operation is CsdlAction)
+                CsdlAction action = operation as CsdlAction;
+                if (action != null)
                 {
-                    operations.Add(new CsdlSemanticsAction(this, (CsdlAction)operation));
+                    operations.Add(new CsdlSemanticsAction(this, action));
                 }
                 else
                 {

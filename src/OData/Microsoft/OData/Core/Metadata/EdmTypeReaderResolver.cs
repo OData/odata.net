@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -43,18 +43,13 @@ namespace Microsoft.OData.Core.Metadata
         /// <summary>Reader behavior if the caller is a reader, null if no reader behavior is available.</summary>
         private readonly ODataReaderBehavior readerBehavior;
 
-        /// <summary>The version of the payload being read.</summary>
-        private readonly ODataVersion version;
-
         /// <summary>Creates a new entity set element type resolver with all the information needed when resolving for reading scenarios.</summary>
         /// <param name="model">The model to use or null if no model is available.</param>
         /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
-        /// <param name="version">The version of the payload being read.</param>
-        public EdmTypeReaderResolver(IEdmModel model, ODataReaderBehavior readerBehavior, ODataVersion version)
+        public EdmTypeReaderResolver(IEdmModel model, ODataReaderBehavior readerBehavior)
         {
             this.model = model;
             this.readerBehavior = readerBehavior;
-            this.version = version;
         }
 
         /// <summary>Returns the entity type of the given navigation source.</summary>
@@ -167,11 +162,11 @@ namespace Microsoft.OData.Core.Metadata
             if (collectionTypeToResolve != null && collectionTypeToResolve.ElementType.IsEntity())
             {
                 IEdmTypeReference itemTypeReferenceToResolve = collectionTypeToResolve.ElementType;
-                IEdmType resolvedItemType = MetadataUtils.ResolveTypeName(this.model, null /*expectedType*/, itemTypeReferenceToResolve.FullName(), customTypeResolver, this.version, out typeKind);
+                IEdmType resolvedItemType = MetadataUtils.ResolveTypeName(this.model, null /*expectedType*/, itemTypeReferenceToResolve.FullName(), customTypeResolver, out typeKind);
                 return new EdmCollectionType(resolvedItemType.ToTypeReference(itemTypeReferenceToResolve.IsNullable));
             }
 
-            return MetadataUtils.ResolveTypeName(this.model, null /*expectedType*/, typeToResolve.ODataFullName(), customTypeResolver, this.version, out typeKind);
+            return MetadataUtils.ResolveTypeName(this.model, null /*expectedType*/, typeToResolve.ODataFullName(), customTypeResolver, out typeKind);
         }
     }
 }

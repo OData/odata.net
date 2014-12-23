@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -25,7 +25,7 @@ namespace Microsoft.OData.Client.ALinq.UriParser
 namespace Microsoft.OData.Core.UriParser.Syntactic
 #endif
 {
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Core.UriParser.Visitors;
 
@@ -40,14 +40,19 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// <summary>
         /// The original text value of the literal.
         /// </summary>
-        /// <remarks>This is used only internally to simulate correct compat behavior with WCF DS.
-        /// We should only use this during type promotion when applying metadata.</remarks>
+        /// <remarks>This is used internally to simulate correct compat behavior with WCF DS, and parameter alias.
+        /// We should use this during type promotion when applying metadata.</remarks>
         private readonly string originalText;
 
         /// <summary>
         /// The value of the literal. This is a parsed primitive value.
         /// </summary>
         private readonly object value;
+
+        /// <summary>
+        /// The expected EDM type of literal.
+        /// </summary>
+        private readonly IEdmTypeReference expectedEdmTypeReference;
 
         /// <summary>
         /// Create a new LiteralToken given value and originalText
@@ -63,12 +68,24 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// </summary>
         /// <param name="value">The value of the literal. This is a parsed primitive value.</param>
         /// <param name="originalText">The original text value of the literal.</param>
-        /// <remarks>This is used only internally to simulate correct compat behavior with WCF DS.
-        /// We should only use this during type promotion when applying metadata.</remarks>
+        /// <remarks>This is used internally to simulate correct compat behavior with WCF DS, and parameter alias.</remarks>
         internal LiteralToken(object value, string originalText)
             : this(value)
         {
             this.originalText = originalText;
+        }
+
+        /// <summary>
+        /// Create a new LiteralToken given value and originalText
+        /// </summary>
+        /// <param name="value">The value of the literal. This is a parsed primitive value.</param>
+        /// <param name="originalText">The original text value of the literal.</param>
+        /// <param name="expectedEdmTypeReference">The expected EDM type of literal..</param>
+        /// <remarks>This is used internally to simulate correct compat behavior with WCF DS, and parameter alias.</remarks>
+        internal LiteralToken(object value, string originalText, IEdmTypeReference expectedEdmTypeReference)
+            : this(value, originalText)
+        {
+            this.expectedEdmTypeReference = expectedEdmTypeReference;
         }
 
         /// <summary>
@@ -90,13 +107,24 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// <summary>
         /// The original text value of the literal.
         /// </summary>
-        /// <remarks>This is used only internally to simulate correct compat behavior with WCF DS.
-        /// We should only use this during type promotion when applying metadata.</remarks>
+        /// <remarks>This is used internally to simulate correct compat behavior with WCF DS, and parameter alias.
+        /// We should use this during type promotion when applying metadata.</remarks>
         internal string OriginalText
         {
             get 
             {
                 return this.originalText;
+            }
+        }
+
+        /// <summary>
+        /// The expected EDM type of literal.
+        /// </summary>
+        internal IEdmTypeReference ExpectedEdmTypeReference
+        {
+            get
+            {
+                return this.expectedEdmTypeReference;
             }
         }
 

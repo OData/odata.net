@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -80,14 +80,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             foreach (var annotation in childValues.ValuesOfType<CsdlAnnotation>())
             {
                 annotatedItem.AddAnnotation(annotation);
-            }
-        }
-
-        private void AddChildParsers(XmlElementParser parent, IEnumerable<XmlElementParser> children)
-        {
-            foreach (XmlElementParser child in children)
-            {
-                parent.AddChildParser(child);
             }
         }
 
@@ -645,6 +637,14 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             IEnumerable<CsdlExpressionBase> arguments = childValues.ValuesOfType<CsdlExpressionBase>();
 
             return new CsdlApplyExpression(function, arguments, element.Location);
+        }
+
+        private static void AddChildParsers(XmlElementParser parent, IEnumerable<XmlElementParser> children)
+        {
+            foreach (XmlElementParser child in children)
+            {
+                parent.AddChildParser(child);
+            }
         }
 
         private static CsdlConstantExpression ConstantExpression(EdmValueKind kind, XmlElementValueCollection childValues, CsdlLocation location)

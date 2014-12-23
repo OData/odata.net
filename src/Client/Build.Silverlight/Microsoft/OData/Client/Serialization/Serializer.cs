@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -132,6 +132,20 @@ namespace Microsoft.OData.Client
 
             stringBuilder.Append(UriHelper.RIGHTPAREN);
             return stringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Seriliaze the parameter value to string.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="parameter">The parameter.</param>
+        /// <returns>Parameter value string.</returns>
+        internal static string GetParameterValue(DataServiceContext context, OperationParameter parameter)
+        {
+            var requestInfo = new RequestInfo(context);
+            var serializer = new Serializer(requestInfo);
+            UriEntityOperationParameter entityParameter = parameter as UriEntityOperationParameter;
+            return serializer.ConvertToEscapedUriValue(parameter.Name, parameter.Value, entityParameter != null && entityParameter.UseEntityReference);
         }
 
         /// <summary>
@@ -485,7 +499,8 @@ namespace Microsoft.OData.Client
                 {
                     throw new DataServiceRequestException(Strings.Serializer_UriDoesNotContainParameterAlias(op.Name));
                 }
-                else if (paramName.StartsWith(Char.ToString(UriHelper.ATSIGN), StringComparison.OrdinalIgnoreCase))
+                
+                if (paramName.StartsWith(Char.ToString(UriHelper.ATSIGN), StringComparison.OrdinalIgnoreCase))
                 {
                     // name=value&
                     queryBuilder.Append(paramName);
@@ -493,12 +508,32 @@ namespace Microsoft.OData.Client
                     queryBuilder.Append(this.ConvertToEscapedUriValue(paramName, op.Value));
                     queryBuilder.Append(UriHelper.AMPERSAND);
                 }
-                else
+
+                string value = this.ConvertToEscapedUriValue(paramName, op.Value);
+
+                // non-primitive value, use alias.
+                if (!UriHelper.IsPrimitiveValue(value))
                 {
-                    // name=value,
+                    // name = @name 
                     pathBuilder.Append(paramName);
                     pathBuilder.Append(UriHelper.EQUALSSIGN);
-                    pathBuilder.Append(this.ConvertToEscapedUriValue(paramName, op.Value));
+                    pathBuilder.Append(UriHelper.ENCODEDATSIGN);
+                    pathBuilder.Append(paramName);
+                    pathBuilder.Append(UriHelper.COMMA);
+
+                    // @name = value&
+                    queryBuilder.Append(UriHelper.ENCODEDATSIGN);
+                    queryBuilder.Append(paramName);
+                    queryBuilder.Append(UriHelper.EQUALSSIGN);
+                    queryBuilder.Append(value);
+                    queryBuilder.Append(UriHelper.AMPERSAND);
+                }
+                else
+                {
+                    // primitive value, do not use alias.
+                    pathBuilder.Append(paramName);
+                    pathBuilder.Append(UriHelper.EQUALSSIGN);
+                    pathBuilder.Append(value);
                     pathBuilder.Append(UriHelper.COMMA);
                 }
             }
@@ -632,107 +667,17 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="paramName">The name of the <see cref="UriOperationParameter"/>. Used for error reporting.</param>
         /// <param name="value">The value of the <see cref="UriOperationParameter"/>.</param>
+        /// <param name="useEntityReference">If true, use entity reference, instead of entity to serialize the parameter.</param>
         /// <returns>A string representation of <paramref name="value"/> for use in a Url.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values being escaped are known not to contain single quotes.")]
-        private string ConvertToEscapedUriValue(string paramName, object value)
+        private string ConvertToEscapedUriValue(string paramName, object value, bool useEntityReference = false)
         {
             Debug.Assert(!string.IsNullOrEmpty(paramName), "!string.IsNullOrEmpty(paramName)");
-            Object valueInODataFormat = null;
-
+            
             // Literal values with single quotes need special escaping due to System.Uri changes in behavior between .NET 4.0 and 4.5.
             // We need to ensure that our escaped values do not change between those versions, so we need to escape values differently when they could contain single quotes.
             bool needsSpecialEscaping = false;
-            if (value == null)
-            {
-                needsSpecialEscaping = true;
-            }
-            else
-            {
-                if (value is ODataNullValue)
-                {
-                    valueInODataFormat = value;
-                    needsSpecialEscaping = true;
-                }
-                else
-                {
-                    ClientEdmModel model = this.requestInfo.Model;
-                    IEdmType edmType = model.GetOrCreateEdmType(value.GetType());
-                    Debug.Assert(edmType != null, "edmType != null");
-
-                    switch (edmType.TypeKind)
-                    {
-                        case EdmTypeKind.Primitive:
-                            valueInODataFormat = value;
-                            needsSpecialEscaping = true;
-                            break;
-
-                        case EdmTypeKind.Enum:
-                            {
-                                ClientTypeAnnotation typeAnnotation = model.GetClientTypeAnnotation(edmType);
-                                string typeNameInEdm = this.requestInfo.GetServerTypeName(model.GetClientTypeAnnotation(edmType));
-                                valueInODataFormat = new ODataEnumValue(ClientTypeUtil.GetEnumValuesString(value.ToString(), typeAnnotation.ElementType), typeNameInEdm ?? typeAnnotation.ElementTypeName);
-                                needsSpecialEscaping = true;
-                            }
-
-                            break;
-
-                        case EdmTypeKind.Complex:
-                            {
-                                ClientTypeAnnotation typeAnnotation = model.GetClientTypeAnnotation(edmType);
-                                Debug.Assert(typeAnnotation != null, "typeAnnotation != null");
-                                valueInODataFormat = this.propertyConverter.CreateODataComplexValue(typeAnnotation.ElementType, value, null /*propertyName*/, false /*isCollectionItemType*/, null /*visitedComplexTypeObjects*/);
-
-                                // When using JsonVerbose to format query string parameters for Actions, 
-                                // we cannot write out Complex values in the URI without the type name of the complex type in the JSON payload.
-                                // If this value is null, the client has to set the ResolveName property on the DataServiceContext instance.
-                                ODataComplexValue complexValue = (ODataComplexValue)valueInODataFormat;
-                                SerializationTypeNameAnnotation serializedTypeNameAnnotation = complexValue.GetAnnotation<SerializationTypeNameAnnotation>();
-                                if (serializedTypeNameAnnotation == null || string.IsNullOrEmpty(serializedTypeNameAnnotation.TypeName))
-                                {
-                                    throw Error.InvalidOperation(Strings.DataServiceException_GeneralError);
-                                }
-                            }
-
-                            break;
-
-                        case EdmTypeKind.Collection:
-                            IEdmCollectionType edmCollectionType = edmType as IEdmCollectionType;
-                            Debug.Assert(edmCollectionType != null, "edmCollectionType != null");
-                            IEdmTypeReference itemTypeReference = edmCollectionType.ElementType;
-                            Debug.Assert(itemTypeReference != null, "itemTypeReference != null");
-                            ClientTypeAnnotation itemTypeAnnotation = model.GetClientTypeAnnotation(itemTypeReference.Definition);
-                            Debug.Assert(itemTypeAnnotation != null, "itemTypeAnnotation != null");
-
-                            switch (itemTypeAnnotation.EdmType.TypeKind)
-                            {
-                                // We only support primitive, Enum or complex type as a collection item type.
-                                case EdmTypeKind.Primitive:
-                                case EdmTypeKind.Enum:
-                                case EdmTypeKind.Complex:
-                                    break;
-
-                                default:
-                                    throw new NotSupportedException(Strings.Serializer_InvalidCollectionParamterItemType(paramName, itemTypeAnnotation.EdmType.TypeKind));
-                            }
-
-                            valueInODataFormat = this.propertyConverter.CreateODataCollection(
-                                itemTypeAnnotation.ElementType,
-                                null /*propertyName*/,
-                                value,
-                                null /*visitedComplexTypeObjects*/,
-                                false /*isDynamicProperty, whether it is a dynamic property doesn't matter here, but set it to false to keep the validation logic*/);
-                            break;
-
-                        default:
-                            // EdmTypeKind.Entity
-                            // EdmTypeKind.Row
-                            // EdmTypeKind.EntityReference
-                            throw new NotSupportedException(Strings.Serializer_InvalidParameterType(paramName, edmType.TypeKind));
-                    }
-                }
-
-                Debug.Assert(valueInODataFormat != null, "valueInODataFormat != null");
-            }
+            object valueInODataFormat = ConvertToODataValue(paramName, value, ref needsSpecialEscaping, useEntityReference);
 
             // When calling Execute() to invoke an Action, the client doesn't support parsing the target url
             // to determine which IEdmOperationImport to pass to the ODL writer. So the ODL writer is
@@ -750,6 +695,188 @@ namespace Microsoft.OData.Client
             }
 
             return Uri.EscapeDataString(literal);
+        }
+
+        /// <summary>
+        /// Converts the object to ODataValue, the result could be null, the original primitive object, ODataNullValue,
+        /// ODataEnumValue, ODataCollectionValue, ODataEntry, ODataEntityReferenceLinks, ODataEntityReferenceLinks, or
+        /// a list of ODataEntry.
+        /// </summary>
+        /// <param name="paramName">The name of the <see cref="UriOperationParameter"/>. Used for error reporting.</param>
+        /// <param name="value">The value of the <see cref="UriOperationParameter"/>.</param>
+        /// <param name="needsSpecialEscaping">True if the result need special escaping.</param>
+        /// <param name="useEntityReference">If true, use entity reference, instead of entity to serialize the parameter.</param>
+        /// <returns>The converted result.</returns>
+        private object ConvertToODataValue(string paramName, object value, ref bool needsSpecialEscaping, bool useEntityReference)
+        {
+            Object valueInODataFormat = null;
+
+            if (value == null)
+            {
+                needsSpecialEscaping = true;
+            }
+            else if (value is ODataNullValue)
+            {
+                valueInODataFormat = value;
+                needsSpecialEscaping = true;
+            }
+            else
+            {
+                ClientEdmModel model = this.requestInfo.Model;
+                IEdmType edmType = model.GetOrCreateEdmType(value.GetType());
+                Debug.Assert(edmType != null, "edmType != null");
+                ClientTypeAnnotation typeAnnotation = model.GetClientTypeAnnotation(edmType);
+                Debug.Assert(typeAnnotation != null, "typeAnnotation != null");
+                switch (edmType.TypeKind)
+                {
+                    case EdmTypeKind.Primitive:
+                        valueInODataFormat = value;
+                        needsSpecialEscaping = true;
+                        break;
+
+                    case EdmTypeKind.Enum:
+                        string typeNameInEdm = this.requestInfo.GetServerTypeName(model.GetClientTypeAnnotation(edmType));
+                        valueInODataFormat =
+                            new ODataEnumValue(
+                                ClientTypeUtil.GetEnumValuesString(value.ToString(), typeAnnotation.ElementType),
+                                typeNameInEdm ?? typeAnnotation.ElementTypeName);
+                        needsSpecialEscaping = true;
+
+                        break;
+
+                    case EdmTypeKind.Complex:
+                        Debug.Assert(typeAnnotation != null, "typeAnnotation != null");
+                        valueInODataFormat = this.propertyConverter.CreateODataComplexValue(typeAnnotation.ElementType, value, null, false, null);
+
+                        // When using JsonVerbose to format query string parameters for Actions, 
+                        // we cannot write out Complex values in the URI without the type name of the complex type in the JSON payload.
+                        // If this value is null, the client has to set the ResolveName property on the DataServiceContext instance.
+                        ODataComplexValue complexValue = (ODataComplexValue)valueInODataFormat;
+                        SerializationTypeNameAnnotation serializedTypeNameAnnotation =
+                            complexValue.GetAnnotation<SerializationTypeNameAnnotation>();
+                        if (serializedTypeNameAnnotation == null ||
+                            string.IsNullOrEmpty(serializedTypeNameAnnotation.TypeName))
+                        {
+                            throw Error.InvalidOperation(Strings.DataServiceException_GeneralError);
+                        }
+
+                        break;
+
+                    case EdmTypeKind.Collection:
+                        IEdmCollectionType edmCollectionType = edmType as IEdmCollectionType;
+                        Debug.Assert(edmCollectionType != null, "edmCollectionType != null");
+                        IEdmTypeReference itemTypeReference = edmCollectionType.ElementType;
+                        Debug.Assert(itemTypeReference != null, "itemTypeReference != null");
+                        ClientTypeAnnotation itemTypeAnnotation =
+                            model.GetClientTypeAnnotation(itemTypeReference.Definition);
+                        Debug.Assert(itemTypeAnnotation != null, "itemTypeAnnotation != null");
+
+                        valueInODataFormat = ConvertToCollectionValue(paramName, value, itemTypeAnnotation, useEntityReference);
+                        break;
+
+                    case EdmTypeKind.Entity:
+                        Debug.Assert(typeAnnotation != null, "typeAnnotation != null");
+                        valueInODataFormat = ConvertToEntityValue(value, typeAnnotation.ElementType, useEntityReference);
+                        break;
+
+                    default:
+                        // EdmTypeKind.Row
+                        // EdmTypeKind.EntityReference
+                        throw new NotSupportedException(Strings.Serializer_InvalidParameterType(paramName, edmType.TypeKind));
+                }
+
+                Debug.Assert(valueInODataFormat != null, "valueInODataFormat != null");
+            }
+
+            return valueInODataFormat;
+        }
+
+        /// <summary>
+        /// Converts the object to ODataCollectionValue, ODataEntityReferenceLinks, or
+        /// a list of ODataEntry.
+        /// </summary>
+        /// <param name="paramName">The name of the <see cref="UriOperationParameter"/>. Used for error reporting.</param>
+        /// <param name="value">The value of the <see cref="UriOperationParameter"/>.</param>
+        /// <param name="itemTypeAnnotation">The client type annotation of the value.</param>
+        /// <param name="useEntityReference">If true, use entity reference, instead of entity to serialize the parameter.</param>
+        /// <returns>The converted result.</returns>
+        private object ConvertToCollectionValue(string paramName, object value, ClientTypeAnnotation itemTypeAnnotation, bool useEntityReference)
+        {
+            object valueInODataFormat;
+
+            switch (itemTypeAnnotation.EdmType.TypeKind)
+            {
+                case EdmTypeKind.Primitive:
+                case EdmTypeKind.Enum:
+                case EdmTypeKind.Complex:
+                    valueInODataFormat = this.propertyConverter.CreateODataCollection(itemTypeAnnotation.ElementType, null, value, null, false, false);
+                    break;
+
+                case EdmTypeKind.Entity:
+                    if (useEntityReference)
+                    {
+                        var list = value as IEnumerable;
+                        var links = (from object o in list
+                            select new ODataEntityReferenceLink()
+                            {
+                                Url = this.requestInfo.EntityTracker.GetEntityDescriptor(o).GetLatestIdentity(),
+                            }).ToList();
+
+                        valueInODataFormat = new ODataEntityReferenceLinks()
+                        {
+                            Links = links,
+                        };
+                    }
+                    else
+                    {
+                        valueInODataFormat = this.propertyConverter.CreateODataEntries(
+                            itemTypeAnnotation.ElementType, value);
+                    }
+
+                    break;
+
+                default:
+                    throw new NotSupportedException(Strings.Serializer_InvalidCollectionParamterItemType(paramName, itemTypeAnnotation.EdmType.TypeKind));
+            }
+
+            return valueInODataFormat;
+        }
+
+        /// <summary>
+        /// Converts the object to ODataEntry or ODataEntityReferenceLink.
+        /// </summary>
+        /// <param name="value">The value of the <see cref="UriOperationParameter"/>.</param>
+        /// <param name="elementType">The type of the value</param>
+        /// <param name="useEntityReference">If true, use entity reference, instead of entity to serialize the parameter.</param>
+        /// <returns>The converted result.</returns>
+        private object ConvertToEntityValue(object value, Type elementType, bool useEntityReference)
+        {
+            object valueInODataFormat;
+
+            if (!useEntityReference)
+            {
+                valueInODataFormat = this.propertyConverter.CreateODataEntry(elementType, value);
+
+                ODataEntry entry = (ODataEntry)valueInODataFormat;
+                SerializationTypeNameAnnotation serializedTypeNameAnnotation =
+                    entry.GetAnnotation<SerializationTypeNameAnnotation>();
+                if (serializedTypeNameAnnotation == null ||
+                    string.IsNullOrEmpty(serializedTypeNameAnnotation.TypeName))
+                {
+                    throw Error.InvalidOperation(Strings.DataServiceException_GeneralError);
+                }
+            }
+            else
+            {
+                EntityDescriptor resource = this.requestInfo.EntityTracker.GetEntityDescriptor(value);
+                Uri link = resource.GetLatestIdentity();
+                valueInODataFormat = new ODataEntityReferenceLink()
+                {
+                    Url = link,
+                };
+            }
+
+            return valueInODataFormat;
         }
     }
 }

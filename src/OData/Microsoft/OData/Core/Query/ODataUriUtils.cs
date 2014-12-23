@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -23,6 +23,8 @@ namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Parsers;
@@ -81,8 +83,7 @@ namespace Microsoft.OData.Core.UriParser
 
             if (token.Kind == ExpressionTokenKind.BracketedExpression)
             {
-                // Should be a complex or collection value
-                return ODataUriConversionUtils.ConvertFromComplexOrCollectionValue(value, version, model, typeReference);
+                return ODataUriConversionUtils.ConvertFromComplexOrCollectionValue(value, model, typeReference);
             }
 
             QueryNode enumConstNode;
@@ -97,7 +98,7 @@ namespace Microsoft.OData.Core.UriParser
             // If we have a typeReference then perform verification and convert if necessary
             if (typeReference != null)
             {
-                result = ODataUriConversionUtils.VerifyAndCoerceUriPrimitiveLiteral(result, model, typeReference, version);
+                result = ODataUriConversionUtils.VerifyAndCoerceUriPrimitiveLiteral(result, model, typeReference);
             }
 
             return result;
@@ -159,6 +160,30 @@ namespace Microsoft.OData.Core.UriParser
             if (enumValue != null)
             {
                 return ODataUriConversionUtils.ConvertToUriEnumLiteral(enumValue, version);
+            }
+
+            ODataEntry entry = value as ODataEntry;
+            if (entry != null)
+            {
+                return ODataUriConversionUtils.ConvertToUriEntityLiteral(entry, model);
+            }
+
+            ODataEntityReferenceLink link = value as ODataEntityReferenceLink;
+            if (link != null)
+            {
+                return ODataUriConversionUtils.ConvertToUriEntityReferenceLiteral(link, model);
+            }
+
+            ODataEntityReferenceLinks links = value as ODataEntityReferenceLinks;
+            if (links != null)
+            {
+                return ODataUriConversionUtils.ConvertToUriEntityReferencesLiteral(links, model);
+            }
+
+            var list = value as IEnumerable<ODataEntry>;
+            if (list != null)
+            {
+                return ODataUriConversionUtils.ConvertToUriEntitiesLiteral(list, model);
             }
 
             // Try to convert uints to their underlying type first according to the model.

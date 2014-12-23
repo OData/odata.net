@@ -326,6 +326,7 @@
     <Compile Include="Microsoft\OData\Client\Serialization\Serializer.cs" />
     <Compile Include="Microsoft\OData\Client\StreamDescriptor.cs" />
     <Compile Include="Microsoft\OData\Client\TypeResolver.cs" />
+    <Compile Include="Microsoft\OData\Client\UriEntityOperationParameter.cs" />
     <Compile Include="Microsoft\OData\Client\UriOperationParameter.cs" />
     <Compile Include="Microsoft\OData\Client\UriResolver.cs" />
     <Compile Include="Microsoft\OData\Client\UriUtil.cs" />

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -180,8 +180,6 @@ namespace Microsoft.OData.Client.Materialization
             if (items != null)
             {
                 bool isCollectionItemTypePrimitive = PrimitiveType.IsKnownNullableType(collectionItemType);
-
-                var edmModel = this.materializerContext.Model;
 
                 foreach (object item in items)
                 {

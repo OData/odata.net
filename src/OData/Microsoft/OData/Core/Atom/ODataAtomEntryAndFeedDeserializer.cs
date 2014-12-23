@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -124,15 +124,7 @@ namespace Microsoft.OData.Core.Atom
         /// null id regular expression
         /// This is used to check if the id is a transient id in atom format
         /// </summary>
-        private static readonly Regex transientIdRegex;
-
-        /// <summary>
-        /// Static Constructor.
-        /// </summary>
-        static ODataAtomEntryAndFeedDeserializer()
-        {
-            transientIdRegex = new Regex(AtomConstants.AtomTransientIdRegularExpression);
-        }
+        private static readonly Regex transientIdRegex = new Regex(AtomConstants.AtomTransientIdRegularExpression);
 
         /// <summary>
         /// Constructor.
@@ -994,7 +986,7 @@ namespace Microsoft.OData.Core.Atom
                 string mediaType = contentType;
                 if (!string.IsNullOrEmpty(contentType))
                 {
-                    mediaType = this.VerifyAtomContentMediaType(contentType);
+                    mediaType = VerifyAtomContentMediaType(contentType);
                 }
 
                 // Normal content with properties - not an MLE
@@ -2101,7 +2093,7 @@ namespace Microsoft.OData.Core.Atom
         /// </summary>
         /// <param name="contentType">The content type value read from the payload.</param>
         /// <returns>The verified media type name (without parameters or charset) of the content type.</returns>
-        private string VerifyAtomContentMediaType(string contentType)
+        private static string VerifyAtomContentMediaType(string contentType)
         {
             // Fast path: compare strings before parsing the MIME type (which is costly)
             if (!HttpUtils.CompareMediaTypeNames(MimeConstants.MimeApplicationXml, contentType) &&

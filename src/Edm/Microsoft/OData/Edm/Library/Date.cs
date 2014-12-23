@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -107,71 +107,71 @@ namespace Microsoft.OData.Edm.Library
         /// <summary>
         /// Determines whether two specified instances of <see cref="Microsoft.OData.Edm.Library.Date"/> are equal.
         /// </summary>
-        /// <param name="d1">The first object to compare.</param>
-        /// <param name="d2">The second object to compare.</param>
-        /// <returns>true if d1 and d2 represent the same date; otherwise, false.</returns>
-        public static bool operator ==(Date d1, Date d2)
+        /// <param name="firstOperand">The first object to compare.</param>
+        /// <param name="secondOperand">The second object to compare.</param>
+        /// <returns>true if firstOperand and secondOperand represent the same date; otherwise, false.</returns>
+        public static bool operator ==(Date firstOperand, Date secondOperand)
         {
-            return d1.dateTime == d2.dateTime;
+            return firstOperand.dateTime == secondOperand.dateTime;
         }
 
         /// <summary>
         /// Determines whether two specified instances of <see cref="Microsoft.OData.Edm.Library.Date"/> are not equal.
         /// </summary>
-        /// <param name="d1">The first object to compare.</param>
-        /// <param name="d2">The second object to compare.</param>
-        /// <returns>true if d1 and d2 do not represent the same date; otherwise, false.</returns>
-        public static bool operator !=(Date d1, Date d2)
+        /// <param name="firstOperand">The first object to compare.</param>
+        /// <param name="secondOperand">The second object to compare.</param>
+        /// <returns>true if firstOperand and secondOperand do not represent the same date; otherwise, false.</returns>
+        public static bool operator !=(Date firstOperand, Date secondOperand)
         {
-            return d1.dateTime != d2.dateTime;
+            return firstOperand.dateTime != secondOperand.dateTime;
         }
 
         /// <summary>
         /// Determines whether one specified <see cref="Microsoft.OData.Edm.Library.Date"/> is less than
         /// another specified <see cref="Microsoft.OData.Edm.Library.Date"/>
         /// </summary>
-        /// <param name="d1">The first object to compare.</param>
-        /// <param name="d2">The second object to compare.</param>
-        /// <returns>true if d1 is less than d2; otherwise, false.</returns>
-        public static bool operator <(Date d1, Date d2)
+        /// <param name="firstOperand">The first object to compare.</param>
+        /// <param name="secondOperand">The second object to compare.</param>
+        /// <returns>true if firstOperand is less than secondOperand; otherwise, false.</returns>
+        public static bool operator <(Date firstOperand, Date secondOperand)
         {
-            return d1.dateTime < d2.dateTime;
+            return firstOperand.dateTime < secondOperand.dateTime;
         }
 
         /// <summary>
         /// Determines whether one specified <see cref="Microsoft.OData.Edm.Library.Date"/> is less equal to
         /// another specified <see cref="Microsoft.OData.Edm.Library.Date"/>
         /// </summary>
-        /// <param name="d1">The first object to compare.</param>
-        /// <param name="d2">The second object to compare.</param>
-        /// <returns>true if d1 is less equal to d2; otherwise, false.</returns>
-        public static bool operator <=(Date d1, Date d2)
+        /// <param name="firstOperand">The first object to compare.</param>
+        /// <param name="secondOperand">The second object to compare.</param>
+        /// <returns>true if firstOperand is less equal to secondOperand; otherwise, false.</returns>
+        public static bool operator <=(Date firstOperand, Date secondOperand)
         {
-            return d1.dateTime <= d2.dateTime;
+            return firstOperand.dateTime <= secondOperand.dateTime;
         }
 
         /// <summary>
         /// Determines whether one specified <see cref="Microsoft.OData.Edm.Library.Date"/> is greater than
         /// another specified <see cref="Microsoft.OData.Edm.Library.Date"/>
         /// </summary>
-        /// <param name="d1">The first object to compare.</param>
-        /// <param name="d2">The second object to compare.</param>
-        /// <returns>true if d1 is greater than d2; otherwise, false.</returns>
-        public static bool operator >(Date d1, Date d2)
+        /// <param name="firstOperand">The first object to compare.</param>
+        /// <param name="secondOperand">The second object to compare.</param>
+        /// <returns>true if firstOperand is greater than secondOperand; otherwise, false.</returns>
+        public static bool operator >(Date firstOperand, Date secondOperand)
         {
-            return d1.dateTime > d2.dateTime;
+            return firstOperand.dateTime > secondOperand.dateTime;
         }
 
         /// <summary>
         /// Determines whether one specified <see cref="Microsoft.OData.Edm.Library.Date"/> is greater equal to
         /// another specified <see cref="Microsoft.OData.Edm.Library.Date"/>
         /// </summary>
-        /// <param name="d1">The first object to compare.</param>
-        /// <param name="d2">The second object to compare.</param>
-        /// <returns>true if d1 is greater equal to d2; otherwise, false.</returns>
-        public static bool operator >=(Date d1, Date d2)
+        /// <param name="firstOperand">The first object to compare.</param>
+        /// <param name="secondOperand">The second object to compare.</param>
+        /// <returns>true if firstOperand is greater equal to secondOperand; otherwise, false.</returns>
+        public static bool operator >=(Date firstOperand, Date secondOperand)
         {
-            return d1.dateTime >= d2.dateTime;
+            return firstOperand.dateTime >= secondOperand.dateTime;
         }
 
         /// <summary>
@@ -228,21 +228,21 @@ namespace Microsoft.OData.Edm.Library
         /// <summary>
         /// Convert Date to Clr DateTime
         /// </summary>
-        /// <param name="d">Date Value</param>
+        /// <param name="operand">Date Value</param>
         /// <returns>DateTime Value which represent the Date</returns>
-        public static implicit operator DateTime(Date d)
+        public static implicit operator DateTime(Date operand)
         {
-            return d.dateTime;
+            return operand.dateTime;
         }
 
         /// <summary>
         /// Convert Clr DateTime to Date
         /// </summary>
-        /// <param name="d">DateTime Value</param>
+        /// <param name="operand">DateTime Value</param>
         /// <returns>Date Value from DateTime</returns>
-        public static implicit operator Date(DateTime d)
+        public static implicit operator Date(DateTime operand)
         {
-            return new Date(d.Year, d.Month, d.Day);
+            return new Date(operand.Year, operand.Month, operand.Day);
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -24,6 +24,7 @@ namespace Microsoft.OData.Client
     using System;
 
     /// <summary>Denotes the original name of a variable defined in metadata. </summary>
+    [AttributeUsage(AttributeTargets.All)]
     public sealed class OriginalNameAttribute : Attribute
     {
         /// <summary>The original name.</summary>

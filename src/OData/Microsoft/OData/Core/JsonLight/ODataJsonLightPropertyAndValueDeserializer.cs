@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -383,7 +383,6 @@ namespace Microsoft.OData.Core.JsonLight
                     expectedPropertyTypeReference,
                     this.MessageReaderSettings,
                     /*validateNullValue*/ true,
-                    this.Version,
                     /*propertyName*/ null);
 
                 // We don't allow properties or non-custom annotations in the null payload.
@@ -703,8 +702,7 @@ namespace Microsoft.OData.Core.JsonLight
                     if ((expectedValueTypeReference.IsDecimal() || expectedValueTypeReference.IsInt64())
                         && result != null)
                     {
-                        if (!(result is string) && this.JsonReader.IsIeee754Compatible 
-                            || (result is string) && !this.JsonReader.IsIeee754Compatible)
+                        if ((result is string) ^ this.JsonReader.IsIeee754Compatible)
                         {
                             throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter(expectedValueTypeReference.ODataFullName()));
                         }
@@ -714,7 +712,6 @@ namespace Microsoft.OData.Core.JsonLight
                         result,
                         expectedValueTypeReference,
                         this.MessageReaderSettings,
-                        this.Version,
                         validateNullValue,
                         propertyName);
                 }
@@ -988,7 +985,6 @@ namespace Microsoft.OData.Core.JsonLight
                 payloadTypeName,
                 this.Model,
                 this.MessageReaderSettings,
-                this.Version,
                 this.GetNonEntityValueKind,
                 out targetTypeKind,
                 out serializationTypeNameAnnotation);
@@ -1207,7 +1203,6 @@ namespace Microsoft.OData.Core.JsonLight
                     expectedPropertyType,
                     payloadTypeName,
                     this.MessageReaderSettings.ReaderBehavior,
-                    this.MessageReaderSettings.MaxProtocolVersion,
                     out typeKind);
 
                 if (actualWirePropertyTypeReference != null)

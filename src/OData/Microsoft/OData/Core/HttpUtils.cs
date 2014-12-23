@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -47,26 +47,26 @@ namespace Microsoft.OData.Core
                 throw new ODataContentTypeException(Strings.HttpUtils_ContentTypeMissing);
             }
 
-            IList<KeyValuePair<MediaType, string>> mediaTypes = ReadMediaTypes(contentType);
+            IList<KeyValuePair<ODataMediaType, string>> mediaTypes = ReadMediaTypes(contentType);
             if (mediaTypes.Count != 1)
             {
                 throw new ODataContentTypeException(Strings.HttpUtils_NoOrMoreThanOneContentTypeSpecified(contentType));
             }
 
-            MediaType mediaType = mediaTypes[0].Key;            
+            ODataMediaType mediaType = mediaTypes[0].Key;
             MediaTypeUtils.CheckMediaTypeForWildCards(mediaType);
 
             mediaTypeName = mediaType.FullTypeName;
             mediaTypeCharset = mediaTypes[0].Value;
 
-            return mediaType.Parameters;
+            return mediaType.Parameters != null ? mediaType.Parameters.ToList() : null;
         }
 
         /// <summary>Builds a Content-Type header which includes media type and encoding information.</summary>
         /// <param name="mediaType">Media type to be used.</param>
         /// <param name="encoding">Encoding to be used in response, possibly null.</param>
         /// <returns>The value for the Content-Type header.</returns>
-        internal static string BuildContentType(MediaType mediaType, Encoding encoding)
+        internal static string BuildContentType(ODataMediaType mediaType, Encoding encoding)
         {
             Debug.Assert(mediaType != null, "mediaType != null");
 
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Core
         /// <summary>Returns all media types from the specified (non-blank) <paramref name='text' />.</summary>
         /// <param name='text'>Non-blank text, as it appears on an HTTP Accepts header.</param>
         /// <returns>An enumerable object with key/value pairs of media type descriptions with their (optional) charset parameter values.</returns>
-        internal static IList<KeyValuePair<MediaType, string>> MediaTypesFromString(string text)
+        internal static IList<KeyValuePair<ODataMediaType, string>> MediaTypesFromString(string text)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Core
         /// <param name="utf8Encoding">The encoding to use for UTF-8 charsets; we use the one without the BOM.</param>
         /// <param name="defaultEncoding">The encoding to use if no encoding could be computed from the <paramref name="acceptableCharsets"/> or <paramref name="mediaType"/>.</param>
         /// <returns>An Encoding object appropriate to the specifed charset request.</returns>
-        internal static Encoding EncodingFromAcceptableCharsets(string acceptableCharsets, MediaType mediaType, Encoding utf8Encoding, Encoding defaultEncoding)
+        internal static Encoding EncodingFromAcceptableCharsets(string acceptableCharsets, ODataMediaType mediaType, Encoding utf8Encoding, Encoding defaultEncoding)
         {
             Debug.Assert(mediaType != null, "mediaType != null");
 
@@ -595,14 +595,14 @@ namespace Microsoft.OData.Core
 
         /// <summary>Reads a media type definition as used in a Content-Type header.</summary>
         /// <param name="text">Text to read.</param>
-        /// <returns>A list of key/value pairs representing the <see cref="MediaType"/>s and their (optional) 'charset' parameters
+        /// <returns>A list of key/value pairs representing the <see cref="ODataMediaType"/>s and their (optional) 'charset' parameters
         /// parsed from the specified <paramref name="text"/></returns>
-        private static IList<KeyValuePair<MediaType, string>> ReadMediaTypes(string text)
+        private static IList<KeyValuePair<ODataMediaType, string>> ReadMediaTypes(string text)
         {
             Debug.Assert(text != null, "text != null");
 
             List<KeyValuePair<string, string>> parameters = null;
-            List<KeyValuePair<MediaType, string>> mediaTypes = new List<KeyValuePair<MediaType, string>>();
+            List<KeyValuePair<ODataMediaType, string>> mediaTypes = new List<KeyValuePair<ODataMediaType, string>>();
             int textIndex = 0;
 
             while (!SkipWhitespace(text, ref textIndex))
@@ -637,8 +637,8 @@ namespace Microsoft.OData.Core
                 }
 
                 mediaTypes.Add(
-                    new KeyValuePair<MediaType, string>(
-                        new MediaType(type, subType, parameters == null ? null : parameters.ToArray()), 
+                    new KeyValuePair<ODataMediaType, string>(
+                        new ODataMediaType(type, subType, parameters),
                         charset));
                 parameters = null;
             }

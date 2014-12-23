@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -1710,11 +1710,11 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// A string like "The HTTP method annotation must not have a null value."
+        /// A string like "The provided model does not contain an entity container."
         /// </summary>
-        internal static string ODataUtils_NullValueForHttpMethodAnnotation {
+        internal static string ODataUtils_ModelDoesNotHaveContainer {
             get {
-                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataUtils_NullValueForHttpMethodAnnotation);
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataUtils_ModelDoesNotHaveContainer);
             }
         }
 
@@ -4654,27 +4654,6 @@ namespace Microsoft.OData.Core {
             get {
                 return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryPathParser_TooManySegments);
             }
-        }
-
-        /// <summary>
-        /// A string like "More than one entity set '{0}' was found. There are multiple entity sets with the same name, the name must be fully qualified or there is an error in the IEdmModel."
-        /// </summary>
-        internal static string UriQueryPathParser_MultipleEntitySetsFound(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryPathParser_MultipleEntitySetsFound,p0);
-        }
-
-        /// <summary>
-        /// A string like "The IEdmModel is invalid when finding the entity set '{0}'."
-        /// </summary>
-        internal static string UriQueryPathParser_FindEntitySetsFromContainerQualifiedNameInvalid(object p0) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryPathParser_FindEntitySetsFromContainerQualifiedNameInvalid,p0);
-        }
-
-        /// <summary>
-        /// A string like "Unable to find property '{2}' on the instance type '{1}' of the structured type '{0}'."
-        /// </summary>
-        internal static string PropertyInfoTypeAnnotation_CannotFindProperty(object p0, object p1, object p2) {
-            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.PropertyInfoTypeAnnotation_CannotFindProperty,p0,p1,p2);
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -92,15 +92,7 @@ namespace Microsoft.OData.Core.Atom
                         // OData namespace for entity reference links, properties, collections
                         // NOTE: everything in the OData namespace is considered a property (or collection). Some of them
                         //       may have a potential other payload kind as well.
-                        //
-                        // Only check for property or collection if these payload kinds are even included in the possible payload kinds
-                        IEnumerable<ODataPayloadKind> possiblePayloadKinds = detectionInfo.PossiblePayloadKinds;
-                        IEnumerable<ODataPayloadKind> payloadKinds =
-                            possiblePayloadKinds.Any(k => k == ODataPayloadKind.Property || k == ODataPayloadKind.Collection)
-                            ? this.DetectPropertyOrCollectionPayloadKind()
-                            : Enumerable.Empty<ODataPayloadKind>();
-
-                        return payloadKinds;
+                        return this.DetectPropertyOrCollectionPayloadKind();
                     }
                     else if (string.CompareOrdinal(AtomConstants.ODataMetadataNamespace, this.XmlReader.NamespaceURI) == 0)
                     {
@@ -108,12 +100,7 @@ namespace Microsoft.OData.Core.Atom
                         // Only check for property or collection if these payload kinds are even included in the possible payload kinds
                         if (string.CompareOrdinal(AtomConstants.ODataValueElementName, this.XmlReader.LocalName) == 0)
                         {
-                            IEnumerable<ODataPayloadKind> possiblePayloadKinds = detectionInfo.PossiblePayloadKinds;
-                            IEnumerable<ODataPayloadKind> payloadKinds =
-                                possiblePayloadKinds.Any(k => k == ODataPayloadKind.Property || k == ODataPayloadKind.Collection)
-                                ? this.DetectPropertyOrCollectionPayloadKind()
-                                : Enumerable.Empty<ODataPayloadKind>();
-                            return payloadKinds;
+                            return this.DetectPropertyOrCollectionPayloadKind();
                         }
 
                         // OData metadata namespace for errors and <m:ref>

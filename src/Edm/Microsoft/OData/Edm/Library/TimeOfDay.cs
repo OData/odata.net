@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -172,71 +172,71 @@ namespace Microsoft.OData.Edm.Library
         /// <summary>
         /// Indicates whether two <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/> instances are not equal.
         /// </summary>
-        /// <param name="t1">The first time interval to compare.</param>
-        /// <param name="t2">The second time interval to compare.</param>
-        /// <returns>true if the values of t1 and t2 are not equal; otherwise, false.</returns>
-        public static bool operator !=(TimeOfDay t1, TimeOfDay t2)
+        /// <param name="firstOperand">The first time interval to compare.</param>
+        /// <param name="secondOperand">The second time interval to compare.</param>
+        /// <returns>true if the values of firstOperand and secondOperand are not equal; otherwise, false.</returns>
+        public static bool operator !=(TimeOfDay firstOperand, TimeOfDay secondOperand)
         {
-            return t1.timeSpan != t2.timeSpan;
+            return firstOperand.timeSpan != secondOperand.timeSpan;
         }
 
         /// <summary>
         /// Indicates whether two <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/> instances are equal.
         /// </summary>
-        /// <param name="t1">The first time interval to compare.</param>
-        /// <param name="t2">The second time interval to compare.</param>
-        /// <returns>true if the values of t1 and t2 are equal; otherwise, false.</returns>
-        public static bool operator ==(TimeOfDay t1, TimeOfDay t2)
+        /// <param name="firstOperand">The first time interval to compare.</param>
+        /// <param name="secondOperand">The second time interval to compare.</param>
+        /// <returns>true if the values of firstOperand and secondOperand are equal; otherwise, false.</returns>
+        public static bool operator ==(TimeOfDay firstOperand, TimeOfDay secondOperand)
         {
-            return t1.timeSpan == t2.timeSpan;
+            return firstOperand.timeSpan == secondOperand.timeSpan;
         }
 
         /// <summary>
         /// Indicates whether a specified <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/> is greater equal to 
         /// another specified <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/>.
         /// </summary>
-        /// <param name="t1">The first time interval to compare.</param>
-        /// <param name="t2">The second time interval to compare.</param>
-        /// <returns>true if the value of t1 is greater equal to the value of t2; otherwise, false.</returns>
-        public static bool operator >=(TimeOfDay t1, TimeOfDay t2)
+        /// <param name="firstOperand">The first time interval to compare.</param>
+        /// <param name="secondOperand">The second time interval to compare.</param>
+        /// <returns>true if the value of firstOperand is greater equal to the value of secondOperand; otherwise, false.</returns>
+        public static bool operator >=(TimeOfDay firstOperand, TimeOfDay secondOperand)
         {
-            return t1.timeSpan >= t2.timeSpan;
+            return firstOperand.timeSpan >= secondOperand.timeSpan;
         }
 
         /// <summary>
         /// Indicates whether a specified <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/> is greater than 
         /// another specified <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/>.
         /// </summary>
-        /// <param name="t1">The first time interval to compare.</param>
-        /// <param name="t2">The second time interval to compare.</param>
-        /// <returns>true if the value of t1 is greater than the value of t2; otherwise, false.</returns>
-        public static bool operator >(TimeOfDay t1, TimeOfDay t2)
+        /// <param name="firstOperand">The first time interval to compare.</param>
+        /// <param name="secondOperand">The second time interval to compare.</param>
+        /// <returns>true if the value of firstOperand is greater than the value of secondOperand; otherwise, false.</returns>
+        public static bool operator >(TimeOfDay firstOperand, TimeOfDay secondOperand)
         {
-            return t1.timeSpan > t2.timeSpan;
+            return firstOperand.timeSpan > secondOperand.timeSpan;
         }
 
         /// <summary>
         /// Indicates whether a specified <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/> is less equal to 
         /// another specified <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/>.
         /// </summary>
-        /// <param name="t1">The first time interval to compare.</param>
-        /// <param name="t2">The second time interval to compare.</param>
-        /// <returns>true if the value of t1 is less equal to the value of t2; otherwise, false.</returns>
-        public static bool operator <=(TimeOfDay t1, TimeOfDay t2)
+        /// <param name="firstOperand">The first time interval to compare.</param>
+        /// <param name="secondOperand">The second time interval to compare.</param>
+        /// <returns>true if the value of firstOperand is less equal to the value of secondOperand; otherwise, false.</returns>
+        public static bool operator <=(TimeOfDay firstOperand, TimeOfDay secondOperand)
         {
-            return t1.timeSpan <= t2.timeSpan;
+            return firstOperand.timeSpan <= secondOperand.timeSpan;
         }
 
         /// <summary>
         /// Indicates whether a specified <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/> is less than 
         /// another specified <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/>.
         /// </summary>
-        /// <param name="t1">The first time interval to compare.</param>
-        /// <param name="t2">The second time interval to compare.</param>
-        /// <returns>true if the value of t1 is less than the value of t2; otherwise, false.</returns>
-        public static bool operator <(TimeOfDay t1, TimeOfDay t2)
+        /// <param name="firstOperand">The first time interval to compare.</param>
+        /// <param name="secondOperand">The second time interval to compare.</param>
+        /// <returns>true if the value of firstOperand is less than the value of secondOperand; otherwise, false.</returns>
+        public static bool operator <(TimeOfDay firstOperand, TimeOfDay secondOperand)
         {
-            return t1.timeSpan < t2.timeSpan;
+            return firstOperand.timeSpan < secondOperand.timeSpan;
         }
 
         /// <summary>

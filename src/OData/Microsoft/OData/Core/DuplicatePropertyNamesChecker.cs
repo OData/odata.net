@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -475,16 +475,6 @@ namespace Microsoft.OData.Core
 
                 throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(propertyName));
             }
-        }
-
-        /// <summary>
-        /// Indicates whether a property's annotations have not yet been processed.
-        /// </summary>
-        /// <param name="property">The name of the property to check.</param>
-        /// <returns>true if the property associated with the given name has unprocessed annotations.</returns>
-        private static bool IsPropertyUnprocessed(KeyValuePair<string, DuplicationRecord> property)
-        {
-            return !string.IsNullOrEmpty(property.Key) && !object.ReferenceEquals(property.Value.PropertyODataAnnotations, propertyAnnotationsProcessedToken);
         }
 
         /// <summary>

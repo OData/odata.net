@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -385,7 +385,6 @@ namespace Microsoft.OData.Core
         [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "rawValueWriter", Justification = "We intentionally don't dispose rawValueWriter, we instead dispose the underlying stream manually.")]
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
             try
             {
                 if (this.messageOutputStream != null)
@@ -413,6 +412,8 @@ namespace Microsoft.OData.Core
                 this.outputStream = null;
                 this.rawValueWriter = null;
             }
+
+            base.Dispose(disposing);
         }
 
         /// <summary>

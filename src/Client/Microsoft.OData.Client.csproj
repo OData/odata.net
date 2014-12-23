@@ -151,6 +151,7 @@
     <Compile Include="Microsoft\OData\Client\Materialization\StructuralValueMaterializationPolicy.cs" />
     <Compile Include="Microsoft\OData\Client\MaterializedEntityArgs.cs" />
     <Compile Include="Microsoft\OData\Client\Serialization\DataServiceClientRequestMessage.cs" />
+    <Compile Include="Microsoft\OData\Client\UriEntityOperationParameter.cs" />
     <Compile Include="Microsoft\OData\Client\Utility.cs" />
     <Compile Include="Microsoft\OData\Client\WritingEntityReferenceLinkArgs.cs" />
     <Compile Include="Microsoft\OData\Client\WritingEntryArgs.cs" />

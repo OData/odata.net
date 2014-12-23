@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -279,7 +279,7 @@ namespace Microsoft.OData.Edm
 
             public override bool TryGetValue(TKey key, out TValue value)
             {
-                VersioningTree<TKey, TValue> tree = this.treeBuckets[this.GetBucket(key)];
+                VersioningTree<TKey, TValue> tree = this.treeBuckets[GetBucket(key)];
 
                 if (tree == null)
                 {
@@ -294,7 +294,7 @@ namespace Microsoft.OData.Edm
 
             private void SetKeyValue(TKey keyToSet, TValue newValue)
             {
-                int hashBucket = this.GetBucket(keyToSet);
+                int hashBucket = GetBucket(keyToSet);
 
                 if (this.treeBuckets[hashBucket] == null)
                 {
@@ -321,7 +321,7 @@ namespace Microsoft.OData.Edm
 
             private void RemoveKey(TKey keyToRemove)
             {
-                int hashBucket = this.GetBucket(keyToRemove);
+                int hashBucket = GetBucket(keyToRemove);
 
                 if (this.treeBuckets[hashBucket] == null)
                 {
@@ -333,7 +333,7 @@ namespace Microsoft.OData.Edm
                 }
             }
 
-            private int GetBucket(TKey key)
+            private static int GetBucket(TKey key)
             {
                 int hash = key.GetHashCode();
                 if (hash < 0)

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -23,6 +23,7 @@ namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -85,11 +86,10 @@ namespace Microsoft.OData.Core.UriParser
         /// </summary>
         /// <remarks>Does not handle primitive values.</remarks>
         /// <param name="value">Value to be deserialized.</param>
-        /// <param name="version">ODataVersion to be compliant with.</param>
         /// <param name="model">Model to use for verification.</param>
         /// <param name="typeReference">Expected type reference from deserialization. If null, verification will be skipped.</param>
         /// <returns>An ODataComplexValue or ODataCollectionValue that results from the deserialization of <paramref name="value"/>.</returns>
-        internal static object ConvertFromComplexOrCollectionValue(string value, ODataVersion version, IEdmModel model, IEdmTypeReference typeReference)
+        internal static object ConvertFromComplexOrCollectionValue(string value, IEdmModel model, IEdmTypeReference typeReference)
         {
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
 
@@ -98,14 +98,12 @@ namespace Microsoft.OData.Core.UriParser
                 using (ODataJsonLightInputContext context = new ODataJsonLightInputContext(
                     ODataFormat.Json,
                     reader,
-                    new MediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType),
+                    new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType),
                     settings,
-                    version,
                     false /*readingResponse*/,
                     true /*synchronous*/,
                     model,
-                    null /*urlResolver*/,
-                    null /*payloadKindDetectionState*/))
+                    null /*urlResolver*/))
                 {
                     ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(context);
 
@@ -136,9 +134,8 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="primitiveValue">An EDM primitive value to verify.</param>
         /// <param name="model">Model to verify against.</param>
         /// <param name="expectedTypeReference">Expected type reference.</param>
-        /// <param name="version">The version to use for reading.</param>
         /// <returns>Coerced version of the <paramref name="primitiveValue"/>.</returns>
-        internal static object VerifyAndCoerceUriPrimitiveLiteral(object primitiveValue, IEdmModel model, IEdmTypeReference expectedTypeReference, ODataVersion version)
+        internal static object VerifyAndCoerceUriPrimitiveLiteral(object primitiveValue, IEdmModel model, IEdmTypeReference expectedTypeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(primitiveValue, "primitiveValue");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
@@ -222,6 +219,83 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// Converts a <see cref="ODataEntry"/> to a string for use in a Url.
+        /// </summary>
+        /// <param name="entry">Instance to convert.</param>
+        /// <param name="model">Model to be used for validation. User model is optional. The EdmLib core model is expected as a minimum.</param>
+        /// <returns>A string representation of <paramref name="entry"/> to be added to a Url.</returns>
+        internal static string ConvertToUriEntityLiteral(ODataEntry entry, IEdmModel model)
+        {
+            ExceptionUtils.CheckArgumentNotNull(entry, "entry");
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
+
+            return ConverToJsonLightLiteral(
+                model, 
+                context =>
+            {
+                ODataWriter writer = context.CreateODataEntryWriter(null, null);
+                writer.WriteStart(entry);
+                writer.WriteEnd();
+            });
+        }
+
+        /// <summary>
+        /// Converts a list of <see cref="ODataEntry"/> to a string for use in a Url.
+        /// </summary>
+        /// <param name="entries">Instance to convert.</param>
+        /// <param name="model">Model to be used for validation. User model is optional. The EdmLib core model is expected as a minimum.</param>
+        /// <returns>A string representation of <paramref name="entries"/> to be added to a Url.</returns>
+        internal static string ConvertToUriEntitiesLiteral(IEnumerable<ODataEntry> entries, IEdmModel model)
+        {
+            ExceptionUtils.CheckArgumentNotNull(entries, "entries");
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
+
+            return ConverToJsonLightLiteral(
+                model, 
+                context =>
+            {
+                ODataWriter writer = context.CreateODataFeedWriter(null, null);
+                writer.WriteStart(new ODataFeed());
+
+                foreach (var entry in entries)
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteEnd();
+                }
+
+                writer.WriteEnd();
+            });
+        }
+
+        /// <summary>
+        /// Converts a <see cref="ODataEntityReferenceLink"/> to a string for use in a Url.
+        /// </summary>
+        /// <param name="link">Instance to convert.</param>
+        /// <param name="model">Model to be used for validation. User model is optional. The EdmLib core model is expected as a minimum.</param>
+        /// <returns>A string representation of <paramref name="link"/> to be added to a Url.</returns>
+        internal static string ConvertToUriEntityReferenceLiteral(ODataEntityReferenceLink link, IEdmModel model)
+        {
+            ExceptionUtils.CheckArgumentNotNull(link, "link");
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
+
+            return ConverToJsonLightLiteral(model, context => context.WriteEntityReferenceLink(link));
+        }
+
+        /// <summary>
+        /// Converts a <see cref="ODataEntityReferenceLinks"/> to a string for use in a Url.
+        /// </summary>
+        /// <param name="links">Instance to convert.</param>
+        /// <param name="model">Model to be used for validation. User model is optional. The EdmLib core model is expected as a minimum.</param>
+        /// <returns>A string representation of <paramref name="links"/> to be added to a Url.</returns>
+        internal static string ConvertToUriEntityReferencesLiteral(ODataEntityReferenceLinks links, IEdmModel model)
+        {
+            ExceptionUtils.CheckArgumentNotNull(links, "links");
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
+
+            return ConverToJsonLightLiteral(model, context => context.WriteEntityReferenceLinks(links));
         }
 
         /// <summary>
@@ -437,10 +511,12 @@ namespace Microsoft.OData.Core.UriParser
                     var dtoValue = (DateTimeOffset)primitiveValue;
                     return new Date(dtoValue.Year, dtoValue.Month, dtoValue.Day);
                 }
-                else if (primitiveValue is String)
+
+                var stringValue = primitiveValue as String;
+                if (stringValue != null)
                 {
                     // Coerce to Date Type from String.
-                    return PlatformHelper.ConvertStringToDate((string)primitiveValue);
+                    return PlatformHelper.ConvertStringToDate(stringValue);
                 }
             }
 
@@ -463,6 +539,33 @@ namespace Microsoft.OData.Core.UriParser
                 ODataJsonLightValueSerializer jsonLightValueSerializer = new ODataJsonLightValueSerializer(jsonOutputContext);
                 writeValue(jsonLightValueSerializer);
                 jsonLightValueSerializer.AssertRecursionDepthIsZero();
+            }
+        }
+
+        /// <summary>
+        /// Convert to a literal value in JSON Light format.
+        /// </summary>
+        /// <param name="model">EDM Model to use for validation and type lookups.</param>
+        /// <param name="writeAction">Delegate to use to actually write the value.</param>
+        /// <returns>The literal value string.</returns>
+        private static string ConverToJsonLightLiteral(IEdmModel model, Action<ODataOutputContext> writeAction)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                ODataMessageWriterSettings messageWriterSettings = new ODataMessageWriterSettings()
+                {
+                    Version = ODataVersion.V4,
+                    Indent = false
+                };
+
+                ODataMediaType mediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType);
+
+                using (ODataJsonLightOutputContext jsonOutputContext = new ODataJsonLightOutputContext(ODataFormat.Json, stream, mediaType, Encoding.UTF8, messageWriterSettings, false, true, model, null))
+                {
+                    writeAction(jsonOutputContext);
+                    stream.Position = 0;
+                    return new StreamReader(stream).ReadToEnd();
+                }
             }
         }
     }

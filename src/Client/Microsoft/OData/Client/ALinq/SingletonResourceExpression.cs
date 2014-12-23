@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -65,10 +65,9 @@ namespace Microsoft.OData.Client
         /// <param name="uriVersion">version of the Uri from the expand and projection paths</param>
         /// <param name="functionName">name of function</param>
         /// <param name="functionParameters">parameters' names and values of function</param>
-        /// <param name="functionReturnType">return type of function</param>
         /// <param name="isAction">action flag</param>
-        internal SingletonResourceExpression(Type type, Expression source, Expression memberExpression, Type resourceType, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion, string functionName, Dictionary<string, string> functionParameters, Type functionReturnType, bool isAction) :
-            base(type, source, memberExpression, resourceType, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion, functionName, functionParameters, functionReturnType, isAction)
+        internal SingletonResourceExpression(Type type, Expression source, Expression memberExpression, Type resourceType, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion, string functionName, Dictionary<string, string> functionParameters, bool isAction) :
+            base(type, source, memberExpression, resourceType, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion, functionName, functionParameters, isAction)
         {
             UseFilterAsPredicate = true;
         }
@@ -118,7 +117,6 @@ namespace Microsoft.OData.Client
                 this.UriVersion,
                 this.OperationName,
                 this.OperationParameters,
-                this.OperationReturnType,
                 this.IsAction);
         }
     }

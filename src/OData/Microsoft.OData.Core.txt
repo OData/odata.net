@@ -1,4 +1,4 @@
-;   OData .NET Libraries ver. 6.8.1
+;   OData .NET Libraries ver. 6.9
 ;   Copyright (c) Microsoft Corporation
 ;   All rights reserved. 
 ;   MIT License
@@ -269,7 +269,7 @@ ODataUtils_CannotConvertValueToRawString=The value of type '{0}' could not be co
 ODataUtils_DidNotFindDefaultMediaType=A default MIME type could not be found for the requested payload in format '{0}'.
 ODataUtils_UnsupportedVersionHeader=The value '{0}' of the OData-Version HTTP header is invalid. Only '4.0' is supported as values for the OData-Version header.
 ODataUtils_UnsupportedVersionNumber=An invalid enum value was specified for the version number.
-ODataUtils_NullValueForHttpMethodAnnotation=The HTTP method annotation must not have a null value.
+ODataUtils_ModelDoesNotHaveContainer=The provided model does not contain an entity container.
 
 ReaderUtils_EnumerableModified=The value returned by the '{0}' property cannot be modified until the end of the owning entry is reported by the reader.
 
@@ -748,10 +748,6 @@ UriQueryExpressionParser_RangeVariableAlreadyDeclared=The range variable '{0}' h
 UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri=The URI '{0}' is not valid because it is not based on '{1}'.
 UriQueryPathParser_SyntaxError=Bad Request: there was an error in the query syntax.
 UriQueryPathParser_TooManySegments=Too many segments in URI.
-UriQueryPathParser_MultipleEntitySetsFound=More than one entity set '{0}' was found. There are multiple entity sets with the same name, the name must be fully qualified or there is an error in the IEdmModel.
-UriQueryPathParser_FindEntitySetsFromContainerQualifiedNameInvalid=The IEdmModel is invalid when finding the entity set '{0}'.
-
-PropertyInfoTypeAnnotation_CannotFindProperty=Unable to find property '{2}' on the instance type '{1}' of the structured type '{0}'.
 
 SelectionItemBinder_NonNavigationPathToken=Inner or start path segments must be navigation properties in $select.
 

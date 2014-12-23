@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="model">The edm model.</param>
         /// <param name="writingResponse">true if we are writing a response, false otherwise.</param>
         /// <returns>The JSON Light metadata level being written.</returns>
-        internal static JsonLightMetadataLevel Create(MediaType mediaType, Uri metadataDocumentUri, IEdmModel model, bool writingResponse)
+        internal static JsonLightMetadataLevel Create(ODataMediaType mediaType, Uri metadataDocumentUri, IEdmModel model, bool writingResponse)
         {
             Debug.Assert(mediaType != null, "mediaType != null");
 

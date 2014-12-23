@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -2667,9 +2667,8 @@ namespace Microsoft.OData.Edm
             }
 
             T ret = finderFunc(container, simpleName);
-            if (ret == null
-                || ret is IEnumerable<IEdmOperationImport>
-                    && !(ret as IEnumerable<IEdmOperationImport>).Any())
+            IEnumerable<IEdmOperationImport> operations = ret as IEnumerable<IEdmOperationImport>;
+            if (ret == null || operations != null && !operations.Any())
             {
                 // for CsdlSemanticsEntityContainer, try searching .Extends container :
                 // (after IEdmModel has public Extends property, don't need to check CsdlSemanticsEntityContainer)

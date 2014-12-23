@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -40,6 +40,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             if (!string.IsNullOrEmpty(literalToken.OriginalText))
             {
+                if (literalToken.ExpectedEdmTypeReference != null)
+                {
+                    return new ConstantNode(literalToken.Value, literalToken.OriginalText, literalToken.ExpectedEdmTypeReference);
+                }
+
                 return new ConstantNode(literalToken.Value, literalToken.OriginalText);
             }
 

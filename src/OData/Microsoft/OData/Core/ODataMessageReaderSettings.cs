@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -22,7 +22,6 @@
 namespace Microsoft.OData.Core
 {
     using System;
-    using System.Xml;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -41,6 +40,11 @@ namespace Microsoft.OData.Core
         /// </summary>
         private Uri payloadBaseUri;
 
+        /// <summary>
+        /// Media type resolver used for this writer.
+        /// </summary>
+        private ODataMediaTypeResolver mediaTypeResolver;
+
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageReaderSettings" /> class with default values.</summary>
         public ODataMessageReaderSettings()
             : base()
@@ -56,6 +60,7 @@ namespace Microsoft.OData.Core
             this.EnableAtom = false;
             this.EnableFullValidation = true;
             this.UseKeyAsSegment = null;
+            this.mediaTypeResolver = null;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageReaderSettings" /> class.</summary>
@@ -76,6 +81,7 @@ namespace Microsoft.OData.Core
             this.EnableAtom = other.EnableAtom;
             this.EnableFullValidation = other.EnableFullValidation;
             this.UseKeyAsSegment = other.UseKeyAsSegment;
+            this.mediaTypeResolver = other.mediaTypeResolver;
         }
 
         /// <summary>
@@ -250,6 +256,28 @@ namespace Microsoft.OData.Core
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// The media type resolver to use when interpreting the incoming content type.
+        /// </summary>
+        public ODataMediaTypeResolver MediaTypeResolver
+        {
+            get
+            {
+                if (this.mediaTypeResolver == null)
+                {
+                    this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.EnableAtom);
+                }
+
+                return this.mediaTypeResolver;
+            }
+
+            set
+            {
+                ExceptionUtils.CheckArgumentNotNull(value, "MediaTypeResolver");
+                this.mediaTypeResolver = value;
+            }
         }
 
         /// <summary>

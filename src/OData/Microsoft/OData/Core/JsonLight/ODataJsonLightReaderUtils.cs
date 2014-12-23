@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -105,7 +105,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="value">Value to the converted.</param>
         /// <param name="primitiveTypeReference">Type reference to which the value needs to be converted.</param>
         /// <param name="messageReaderSettings">The message reader settings used for reading.</param>
-        /// <param name="version">The version of the OData protocol used for reading.</param>
         /// <param name="validateNullValue">true to validate null values; otherwise false.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <returns>Object which is in sync with the property type (modulo the V1 exception of converting numbers to non-compatible target types).</returns>
@@ -114,7 +113,6 @@ namespace Microsoft.OData.Core.JsonLight
             object value,
             IEdmPrimitiveTypeReference primitiveTypeReference,
             ODataMessageReaderSettings messageReaderSettings,
-            ODataVersion version,
             bool validateNullValue,
             string propertyName)
         {
@@ -128,7 +126,6 @@ namespace Microsoft.OData.Core.JsonLight
                     primitiveTypeReference,
                     messageReaderSettings,
                     validateNullValue,
-                    version,
                     propertyName);
                 return null;
             }

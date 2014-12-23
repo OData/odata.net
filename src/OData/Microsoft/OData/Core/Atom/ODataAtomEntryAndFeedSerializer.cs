@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -384,7 +384,7 @@ namespace Microsoft.OData.Core.Atom
             WriterValidationUtils.ValidatePropertyName(propertyName);
             duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(streamProperty);
             IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(streamProperty.Name, owningType);
-            WriterValidationUtils.ValidateStreamReferenceProperty(streamProperty, edmProperty, this.Version, this.WritingResponse);
+            WriterValidationUtils.ValidateStreamReferenceProperty(streamProperty, edmProperty, this.WritingResponse);
             ODataStreamReferenceValue streamReferenceValue = (ODataStreamReferenceValue)streamProperty.Value;
             WriterValidationUtils.ValidateStreamReferenceValue(streamReferenceValue, false /*isDefaultStream*/);
             if (owningType != null && owningType.IsOpen && edmProperty == null)

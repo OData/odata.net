@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -133,9 +133,6 @@ namespace Microsoft.OData.Core.JsonLight
             // If we found a context URI and parsed it, look at the detected payload kind and return it.
             if (this.ContextUriParseResult != null)
             {
-                // Store the parsed context URI on the input context so we can avoid parsing it again.
-                detectionInfo.SetPayloadKindDetectionFormatState(new ODataJsonLightPayloadKindDetectionState(this.ContextUriParseResult));
-
                 return this.ContextUriParseResult.DetectedPayloadKinds;
             }
 

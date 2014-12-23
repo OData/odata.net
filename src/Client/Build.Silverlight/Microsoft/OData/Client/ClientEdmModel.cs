@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -475,7 +475,7 @@ namespace Microsoft.OData.Client
 
                         // Creating an entity type
                         Debug.Assert(edmBaseType == null || edmBaseType.TypeKind == EdmTypeKind.Entity, "baseType == null || baseType.TypeKind == EdmTypeKind.Entity");
-                        bool hasStream = this.GetHasStreamValue((IEdmEntityType)edmBaseType, type);
+                        bool hasStream = GetHasStreamValue((IEdmEntityType)edmBaseType, type);
                         cachedEdmType = new EdmTypeCacheValue(
                             new EdmEntityTypeWithDelayLoadedProperties(CommonUtil.GetModelTypeNamespace(type), CommonUtil.GetModelTypeName(type), (IEdmEntityType)edmBaseType, c.PlatformHelper.IsAbstract(type), /*isOpen*/ false, hasStream, delayLoadEntityProperties),
                             hasProperties);
@@ -669,7 +669,7 @@ namespace Microsoft.OData.Client
         /// <param name="edmBaseType">Base EDM Entity type</param>
         /// <param name="type">The CLR type to check on</param>
         /// <returns>HasStream value to set on the to-be-created EntityType</returns>
-        private bool GetHasStreamValue(IEdmEntityType edmBaseType, Type type)
+        private static bool GetHasStreamValue(IEdmEntityType edmBaseType, Type type)
         {
             // MediaEntryAttribute does not allow multiples, so there can be at most 1 instance on the type.
             MediaEntryAttribute mediaEntryAttribute = (MediaEntryAttribute)type.GetCustomAttributes(typeof(MediaEntryAttribute), true).SingleOrDefault();

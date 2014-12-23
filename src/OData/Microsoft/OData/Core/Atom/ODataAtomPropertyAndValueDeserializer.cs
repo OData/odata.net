@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -338,7 +338,6 @@ namespace Microsoft.OData.Core.Atom
                     payloadTypeName,
                     this.Model,
                     this.MessageReaderSettings,
-                    this.Version,
                     this.GetNonEntityValueKind,
                     out targetTypeKind,
                     out serializationTypeNameAnnotation);
@@ -411,7 +410,7 @@ namespace Microsoft.OData.Core.Atom
 
             // NOTE: when reading a null value we will never ask the type resolver (if present) to resolve the
             //       type; we always fall back to the expected type.
-            ReaderValidationUtils.ValidateNullValue(this.Model, expectedTypeReference, this.MessageReaderSettings, validateNullValue, this.Version, propertyName);
+            ReaderValidationUtils.ValidateNullValue(this.Model, expectedTypeReference, this.MessageReaderSettings, validateNullValue, propertyName);
 
             return null;
         }

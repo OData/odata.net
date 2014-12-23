@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -663,7 +663,7 @@ namespace Microsoft.OData.Core
                 // If we cannot read any of the known preambles we fall back to the default encoding, which is US-ASCII.
 #if !ORCAS
                 // ASCII not available; use UTF8 without preamble
-                return MediaType.FallbackEncoding;
+                return MediaTypeUtils.FallbackEncoding;
 #else
                 return Encoding.ASCII;
 #endif
@@ -718,7 +718,7 @@ namespace Microsoft.OData.Core
             {
 #if !ORCAS
                 // ASCII not available; use UTF8 without preamble
-                return MediaType.FallbackEncoding;
+                return MediaTypeUtils.FallbackEncoding;
 #else
                 return Encoding.ASCII;
 #endif
@@ -801,12 +801,12 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(!string.IsNullOrEmpty(contentType), "Should have validated that non-null, non-empty content type header exists.");
 
-            MediaType mediaType;
+            ODataMediaType mediaType;
             ODataPayloadKind readerPayloadKind;
             MediaTypeUtils.GetFormatFromContentType(
                 contentType,
                 new ODataPayloadKind[] { ODataPayloadKind.Batch },
-                MediaTypeResolver.DefaultMediaTypeResolver,
+                ODataMediaTypeResolver.DefaultMediaTypeResolver,
                 out mediaType,
                 out this.changesetEncoding,
                 out readerPayloadKind,

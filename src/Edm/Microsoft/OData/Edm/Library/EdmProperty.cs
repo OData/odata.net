@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -29,7 +29,6 @@ namespace Microsoft.OData.Edm.Library
     public abstract class EdmProperty : EdmNamedElement, IEdmProperty
     {
         private readonly IEdmStructuredType declaringType;
-        private readonly HashSetInternal<IDependent> dependents = new HashSetInternal<IDependent>();
         private readonly IEdmTypeReference type;
 
         /// <summary>

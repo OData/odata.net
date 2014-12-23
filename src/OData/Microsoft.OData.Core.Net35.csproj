@@ -184,7 +184,6 @@
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightParameterReader.cs" />
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightParameterWriter.cs" />
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightPayloadKindDetectionDeserializer.cs" />
-    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightPayloadKindDetectionState.cs" />
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightPropertyAndValueDeserializer.cs" />
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightPropertySerializer.cs" />
     <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightReader.cs" />
@@ -219,10 +218,10 @@
     <Compile Include="Microsoft\OData\Core\Json\ODataJsonReaderCoreUtils.cs" />
     <Compile Include="Microsoft\OData\Core\Json\ODataJsonWriterUtils.cs" />
     <Compile Include="Microsoft\OData\Core\Json\TextWriterWrapper.cs" />
-    <Compile Include="Microsoft\OData\Core\MediaType.cs" />
-    <Compile Include="Microsoft\OData\Core\MediaTypeResolver.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMediaType.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMediaTypeResolver.cs" />
     <Compile Include="Microsoft\OData\Core\MediaTypeUtils.cs" />
-    <Compile Include="Microsoft\OData\Core\MediaTypeWithFormat.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMediaTypeFormat.cs" />
     <Compile Include="Microsoft\OData\Core\MessageStreamWrapper.cs" />
     <Compile Include="Microsoft\OData\Core\Metadata\CachedPrimitiveKeepInContentAnnotation.cs" />
     <Compile Include="Microsoft\OData\Core\Metadata\EdmConstants.cs" />
@@ -308,6 +307,7 @@
     <Compile Include="Microsoft\OData\Core\ODataJsonDateTimeFormat.cs" />
     <Compile Include="Microsoft\OData\Core\ODataMessage.cs" />
     <Compile Include="Microsoft\OData\Core\ODataMessageExtensions.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataMessageInfo.cs" />
     <Compile Include="Microsoft\OData\Core\ODataMessageQuotas.cs" />
     <Compile Include="Microsoft\OData\Core\ODataMessageReader.cs" />
     <Compile Include="Microsoft\OData\Core\ODataMessageReaderSettings.cs" />

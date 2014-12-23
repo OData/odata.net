@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -69,7 +69,7 @@ namespace Microsoft.OData.Client
         /// <param name="resourceTypeAs">TypeAs type</param>
         /// <param name="uriVersion">version of the Uri from the expand and projection paths</param>
         internal QueryableResourceExpression(Type type, Expression source, Expression memberExpression, Type resourceType, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion)
-            : this(type, source, memberExpression, resourceType, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion, null, null, null, false)
+            : this(type, source, memberExpression, resourceType, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion, null, null, false)
         {
         }
 
@@ -88,10 +88,9 @@ namespace Microsoft.OData.Client
         /// <param name="uriVersion">version of the Uri from the expand and projection paths</param>
         /// <param name="operationName">name of function</param>
         /// <param name="operationParameters">parameters' names and values of function</param>
-        /// <param name="operationReturnType">return type of function</param>
         /// <param name="isAction">action flag</param>
-        internal QueryableResourceExpression(Type type, Expression source, Expression memberExpression, Type resourceType, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion, string operationName, Dictionary<string, string> operationParameters, Type operationReturnType, bool isAction)
-            : base(source, type, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion, operationName, operationParameters, operationReturnType, isAction)
+        internal QueryableResourceExpression(Type type, Expression source, Expression memberExpression, Type resourceType, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion, string operationName, Dictionary<string, string> operationParameters, bool isAction)
+            : base(source, type, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion, operationName, operationParameters, isAction)
         {
             Debug.Assert(type != null, "type != null");
             Debug.Assert(resourceType != null, "resourceType != null");

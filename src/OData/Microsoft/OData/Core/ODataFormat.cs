@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -107,131 +107,60 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Detects the payload kinds supported by this format for the specified message payload.
         /// </summary>
-        /// <param name="responseMessage">The response message with the payload stream.</param>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
+        /// <param name="settings">Configuration settings of the OData reader.</param>
         /// <returns>The set of <see cref="ODataPayloadKind"/>s that are supported with the specified payload.</returns>
-        internal abstract IEnumerable<ODataPayloadKind> DetectPayloadKind(IODataResponseMessage responseMessage, ODataPayloadKindDetectionInfo detectionInfo);
-
-        /// <summary>
-        /// Detects the payload kinds supported by this format for the specified message payload.
-        /// </summary>
-        /// <param name="requestMessage">The request message with the payload stream.</param>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
-        /// <returns>The set of <see cref="ODataPayloadKind"/>s that are supported with the specified payload.</returns>
-        internal abstract IEnumerable<ODataPayloadKind> DetectPayloadKind(IODataRequestMessage requestMessage, ODataPayloadKindDetectionInfo detectionInfo);
+        /// <remarks>
+        /// The stream returned by GetMessageStream of <paramref name="messageInfo"/> could be used for reading for
+        /// payload kind detection. Reading this stream won't affect later reading operations of payload processing.
+        /// </remarks>
+        public abstract IEnumerable<ODataPayloadKind> DetectPayloadKind(ODataMessageInfo messageInfo, ODataMessageReaderSettings settings);
 
         /// <summary>
         /// Creates an instance of the input context for this format.
         /// </summary>
-        /// <param name="readerPayloadKind">The <see cref="ODataPayloadKind"/> to read.</param>
-        /// <param name="message">The message to use.</param>
-        /// <param name="contentType">The content type of the message to read.</param>
-        /// <param name="encoding">The encoding to use.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="version">The OData protocol version to be used for reading the payload.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
-        /// <param name="payloadKindDetectionFormatState">Format specific state stored during payload kind detection
-        /// using the <see cref="ODataPayloadKindDetectionInfo.SetPayloadKindDetectionFormatState"/>.</param>
         /// <returns>The newly created input context.</returns>
-        internal abstract ODataInputContext CreateInputContext(
-            ODataPayloadKind readerPayloadKind,
-            ODataMessage message,
-            MediaType contentType,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings,
-            ODataVersion version,
-            bool readingResponse,
-            IEdmModel model,
-            IODataUrlResolver urlResolver,
-            object payloadKindDetectionFormatState);
+        public abstract ODataInputContext CreateInputContext(ODataMessageInfo messageInfo, ODataMessageReaderSettings messageReaderSettings);
 
         /// <summary>
         /// Creates an instance of the output context for this format.
         /// </summary>
-        /// <param name="message">The message to use.</param>
-        /// <param name="mediaType">The specific media type being written.</param>
-        /// <param name="encoding">The encoding to use.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
-        /// <param name="writingResponse">true if writing a response message; otherwise false.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
         /// <returns>The newly created output context.</returns>
-        internal abstract ODataOutputContext CreateOutputContext(
-            ODataMessage message, 
-            MediaType mediaType,
-            Encoding encoding, 
-            ODataMessageWriterSettings messageWriterSettings, 
-            bool writingResponse, 
-            IEdmModel model,
-            IODataUrlResolver urlResolver);
+        public abstract ODataOutputContext CreateOutputContext(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings);
 
 #if ODATALIB_ASYNC
         /// <summary>
         /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
         /// </summary>
-        /// <param name="responseMessage">The response message with the payload stream.</param>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
+        /// <param name="settings">Configuration settings of the OData reader.</param>
         /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s 
         /// that are supported with the specified payload.</returns>
-        internal abstract Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(IODataResponseMessageAsync responseMessage, ODataPayloadKindDetectionInfo detectionInfo);
-
-        /// <summary>
-        /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
-        /// </summary>
-        /// <param name="requestMessage">The request message with the payload stream.</param>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
-        /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s 
-        /// that are supported with the specified payload.</returns>
-        internal abstract Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(IODataRequestMessageAsync requestMessage, ODataPayloadKindDetectionInfo detectionInfo);
+        /// <remarks>
+        /// The stream returned by GetMessageStream of <paramref name="messageInfo"/> could be used for reading for
+        /// payload kind detection. Reading this stream won't affect later reading operations of payload processing.
+        /// </remarks>
+        public abstract Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings settings);
 
         /// <summary>
         /// Asynchronously creates an instance of the input context for this format.
         /// </summary>
-        /// <param name="readerPayloadKind">The <see cref="ODataPayloadKind"/> to read.</param>
-        /// <param name="message">The message to use.</param>
-        /// <param name="contentType">The content type of the message to read.</param>
-        /// <param name="encoding">The encoding to use.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="version">The OData protocol version to be used for reading the payload.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
-        /// <param name="payloadKindDetectionFormatState">Format specific state stored during payload kind detection
-        /// using the <see cref="ODataPayloadKindDetectionInfo.SetPayloadKindDetectionFormatState"/>.</param>
         /// <returns>Task which when completed returned the newly created input context.</returns>
-        internal abstract Task<ODataInputContext> CreateInputContextAsync(
-            ODataPayloadKind readerPayloadKind,
-            ODataMessage message,
-            MediaType contentType,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings,
-            ODataVersion version,
-            bool readingResponse,
-            IEdmModel model,
-            IODataUrlResolver urlResolver,
-            object payloadKindDetectionFormatState);
+        public abstract Task<ODataInputContext> CreateInputContextAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings messageReaderSettings);
 
         /// <summary>
         /// Creates an instance of the output context for this format.
         /// </summary>
-        /// <param name="message">The message to use.</param>
-        /// <param name="mediaType">The specific media type being written.</param>
-        /// <param name="encoding">The encoding to use.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
-        /// <param name="writingResponse">true if writing a response message; otherwise false.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
         /// <returns>Task which represents the pending create operation.</returns>
-        internal abstract Task<ODataOutputContext> CreateOutputContextAsync(
-            ODataMessage message, 
-            MediaType mediaType, 
-            Encoding encoding, 
-            ODataMessageWriterSettings messageWriterSettings,
-            bool writingResponse, 
-            IEdmModel model,
-            IODataUrlResolver urlResolver);
+        public abstract Task<ODataOutputContext> CreateOutputContextAsync(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings);
 #endif
     }
 }

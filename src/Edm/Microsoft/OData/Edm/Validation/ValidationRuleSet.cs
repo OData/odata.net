@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -54,7 +54,6 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.StructuredTypeInvalidMemberNameMatchesTypeName,
                 ValidationRules.StructuredTypePropertyNameAlreadyDefined,
                 ValidationRules.StructuralPropertyInvalidPropertyType,
-                ValidationRules.ComplexTypeInvalidAbstractComplexType,
                 ValidationRules.OperationParameterNameAlreadyDefinedDuplicate,
                 ValidationRules.OperationImportEntityTypeDoesNotMatchEntitySet,
                 ValidationRules.OperationImportCannotImportBoundOperation,

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -985,7 +985,7 @@ namespace Microsoft.OData.Core
                         if (!this.SkipWriting)
                         {
                             ODataFeed feed = (ODataFeed)currentScope.Item;
-                            WriterValidationUtils.ValidateFeedAtEnd(feed, !this.outputContext.WritingResponse, this.outputContext.Version);
+                            WriterValidationUtils.ValidateFeedAtEnd(feed, !this.outputContext.WritingResponse);
                             this.EndFeed(feed);
                         }
 
@@ -1577,20 +1577,17 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="currentNavigationSource">The navigation source to be evaluated.</param>
         /// <returns>Boolean value indicating whether KeySegment should be appended</returns>
-        private bool ShouldAppendKey(IEdmNavigationSource currentNavigationSource)
+        private static bool ShouldAppendKey(IEdmNavigationSource currentNavigationSource)
         {
             if (currentNavigationSource is IEdmEntitySet)
             {
                 return true;
             }
-            else if (currentNavigationSource is IEdmContainedEntitySet)
+
+            var currentContainedEntitySet = currentNavigationSource as IEdmContainedEntitySet;
+            if (currentContainedEntitySet != null && currentContainedEntitySet.NavigationProperty.Type.TypeKind() == EdmTypeKind.Collection)
             {
-                Debug.Assert(currentNavigationSource is IEdmContainedEntitySet, "If the NavigationSourceKind is ContainedEntitySet, the navigationSource must be IEdmContainedEntitySet.");
-                IEdmContainedEntitySet currentContainedEntitySet = (IEdmContainedEntitySet)currentNavigationSource;
-                if (currentContainedEntitySet.NavigationProperty.Type.TypeKind() == EdmTypeKind.Collection)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
@@ -1928,9 +1925,6 @@ namespace Microsoft.OData.Core
             /// <summary>The serialization info for the current entry.</summary>
             private readonly ODataFeedAndEntrySerializationInfo serializationInfo;
 
-            /// <summary>The value from ODataEntry.TypeName.</summary>
-            private readonly string odataEntryTypeName;
-
             /// <summary>The entity type which was derived from the model (may be either the same as entity type or its base type.</summary>
             private IEdmEntityType entityTypeFromMetadata;
 
@@ -1961,7 +1955,6 @@ namespace Microsoft.OData.Core
                 if (entry != null)
                 {
                     this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(writerBehavior.AllowDuplicatePropertyNames, writingResponse, !enableValidation);
-                    this.odataEntryTypeName = entry.TypeName;
                 }
 
                 this.serializationInfo = serializationInfo;

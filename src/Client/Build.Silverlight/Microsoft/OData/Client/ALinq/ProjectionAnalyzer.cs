@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -197,7 +197,7 @@ namespace Microsoft.OData.Client
         /// <returns>true if expression is disallowed, false otherwise.</returns>
         internal static bool IsDisallowedExpressionForMethodCall(Expression e, ClientEdmModel model)
         {
-            // If this is a collection hanging off a Entity, then that is fine.
+            // If this is a collection attached to an Entity, then that is fine.
             MemberExpression me = e as MemberExpression;
             if (me != null && ClientTypeUtil.TypeIsEntity(me.Expression.Type, model))
             {

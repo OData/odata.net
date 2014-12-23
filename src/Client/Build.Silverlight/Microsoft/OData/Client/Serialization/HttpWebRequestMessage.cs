@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -68,9 +68,6 @@ namespace Microsoft.OData.Client
         /// <summary> The effective HTTP method. </summary>
         private readonly string effectiveHttpMethod;
 
-        /// <summary>RequestInfo instance.</summary>
-        private readonly RequestInfo requestInfo;
-
         /// <summary>HttpWebRequest instance.</summary>
         private readonly HttpWebRequest httpRequest;
 
@@ -129,18 +126,6 @@ namespace Microsoft.OData.Client
             {
                 this.SetHeader(keyValue.Key, keyValue.Value);
             }
-        }
-
-        /// <summary>
-        /// Creates a new instance of HttpWebRequestMessage.
-        /// </summary>
-        /// <param name="args">Arguments for creating the request message.</param>
-        /// <param name="requestInfo">RequestInfo instance.</param>
-        internal HttpWebRequestMessage(DataServiceClientRequestMessageArgs args, RequestInfo requestInfo)
-            : this(args)
-        {
-            Debug.Assert(requestInfo != null, "requestInfo != null");
-            this.requestInfo = requestInfo;
         }
 
         #region Properties

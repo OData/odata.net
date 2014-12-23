@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -302,9 +302,10 @@ namespace Microsoft.OData.Client
             RequestInfo requestInfo = new RequestInfo(context);
 
             Debug.Assert(
-                string.CompareOrdinal(XmlConstants.HttpMethodPost, qc.HttpMethod) == 0 || 
-                string.CompareOrdinal(XmlConstants.HttpMethodGet, qc.HttpMethod) == 0, 
-                "Only get and post are supported in the execute pipeline, which should have been caught earlier");
+                string.CompareOrdinal(XmlConstants.HttpMethodPost, qc.HttpMethod) == 0 ||
+                string.CompareOrdinal(XmlConstants.HttpMethodGet, qc.HttpMethod) == 0 ||
+                string.CompareOrdinal(XmlConstants.HttpMethodDelete, qc.HttpMethod) == 0,
+                "Only get, post and delete are supported in the execute pipeline, which should have been caught earlier");
 
             if (qc.UriOperationParameters != null)
             {

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -21,12 +21,11 @@
 
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// This class binds parameter alias by :
@@ -80,7 +79,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
                 else
                 {
-                    aliasValueNode = this.ParseAndBindParameterAliasValueExpression(bindingState, aliasValueExpression);
+                    aliasValueNode = this.ParseAndBindParameterAliasValueExpression(bindingState, aliasValueExpression, aliasToken.ExpectedParameterType);
                     aliasValueAccessor.ParameterAliasValueNodesCached[alias] = aliasValueNode;
                 }
             }
@@ -93,14 +92,18 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="bindingState">The BindingState.</param>
         /// <param name="aliasValueExpression">The alias value's expression text.</param>
+        /// <param name="parameterType">The edm type of the parameter.</param>
         /// <returns>The semantcs node of the expression text.</returns>
-        private SingleValueNode ParseAndBindParameterAliasValueExpression(BindingState bindingState, string aliasValueExpression)
+        private SingleValueNode ParseAndBindParameterAliasValueExpression(BindingState bindingState, string aliasValueExpression, IEdmTypeReference parameterType)
         {
             // Get the syntactic representation of the filter expression
             // TODO: change Settings.FilterLimit to ParameterAliasValueLimit
             UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(bindingState.Configuration.Settings.FilterLimit);
             QueryToken aliasValueToken = expressionParser.ParseExpressionText(aliasValueExpression);
-
+            
+            // Special logic to handle parameter alias token.
+            aliasValueToken = ParseComplexOrCollectionAlias(aliasValueToken, parameterType, bindingState.Model);
+            
             // Get the semantic node, and check for SingleValueNode
             QueryNode aliasValueNode = this.bindMethod(aliasValueToken);
             SingleValueNode result = aliasValueNode as SingleValueNode;
@@ -111,6 +114,36 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Parse the complex/collection value in parameter alias.
+        /// </summary>
+        /// <param name="queryToken">The parsed token.</param>
+        /// <param name="parameterType">The expected parameter type.</param>
+        /// <param name="model">The model</param>
+        /// <returns>Token with complex/collection value passed.</returns>
+        private static QueryToken ParseComplexOrCollectionAlias(QueryToken queryToken, IEdmTypeReference parameterType, IEdmModel model)
+        {
+            LiteralToken valueToken = queryToken as LiteralToken;
+            string valueStr;
+            if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
+            {
+                var lexer = new ExpressionLexer(valueToken.OriginalText, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
+                if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression)
+                {
+                    object result = valueStr;
+                    if (!parameterType.IsEntity() && !parameterType.IsEntityCollectionType())
+                    {
+                        result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, parameterType);
+                    }
+
+                    // For non-primitive type, we have to pass parameterType to LiteralToken, then to ConstantNode so the service can know what the type it is.
+                    return new LiteralToken(result, valueToken.OriginalText, parameterType);
+                }
+            }
+
+            return queryToken;
         }
     }
 }

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -73,7 +73,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmLabeledExpression ComputeElement()
         {
-            CsdlSemanticsModel model = this.Schema.Model;
             IEdmLabeledExpression result = this.Schema.FindLabeledElement(this.expression.Label, this.bindingContext);
             if (result != null)
             {

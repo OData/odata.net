@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -296,7 +296,7 @@ namespace Microsoft.OData.Core {
         internal const string ODataUtils_DidNotFindDefaultMediaType = "ODataUtils_DidNotFindDefaultMediaType";
         internal const string ODataUtils_UnsupportedVersionHeader = "ODataUtils_UnsupportedVersionHeader";
         internal const string ODataUtils_UnsupportedVersionNumber = "ODataUtils_UnsupportedVersionNumber";
-        internal const string ODataUtils_NullValueForHttpMethodAnnotation = "ODataUtils_NullValueForHttpMethodAnnotation";
+        internal const string ODataUtils_ModelDoesNotHaveContainer = "ODataUtils_ModelDoesNotHaveContainer";
         internal const string ReaderUtils_EnumerableModified = "ReaderUtils_EnumerableModified";
         internal const string ReaderValidationUtils_NullValueForNonNullableType = "ReaderValidationUtils_NullValueForNonNullableType";
         internal const string ReaderValidationUtils_NullNamedValueForNonNullableType = "ReaderValidationUtils_NullNamedValueForNonNullableType";
@@ -687,9 +687,6 @@ namespace Microsoft.OData.Core {
         internal const string UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri = "UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri";
         internal const string UriQueryPathParser_SyntaxError = "UriQueryPathParser_SyntaxError";
         internal const string UriQueryPathParser_TooManySegments = "UriQueryPathParser_TooManySegments";
-        internal const string UriQueryPathParser_MultipleEntitySetsFound = "UriQueryPathParser_MultipleEntitySetsFound";
-        internal const string UriQueryPathParser_FindEntitySetsFromContainerQualifiedNameInvalid = "UriQueryPathParser_FindEntitySetsFromContainerQualifiedNameInvalid";
-        internal const string PropertyInfoTypeAnnotation_CannotFindProperty = "PropertyInfoTypeAnnotation_CannotFindProperty";
         internal const string SelectionItemBinder_NonNavigationPathToken = "SelectionItemBinder_NonNavigationPathToken";
         internal const string MetadataBinder_UnsupportedQueryTokenKind = "MetadataBinder_UnsupportedQueryTokenKind";
         internal const string MetadataBinder_PropertyNotDeclared = "MetadataBinder_PropertyNotDeclared";

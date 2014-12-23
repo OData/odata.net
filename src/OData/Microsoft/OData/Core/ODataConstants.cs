@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -106,11 +106,7 @@ namespace Microsoft.OData.Core
         // TODO: What should be the default version of ODataLib?
 
         /// <summary>The default protocol version to use in ODataLib if none is specified.</summary>
-#if DISABLE_V3
-        internal const ODataVersion ODataDefaultProtocolVersion = ODataVersion.V2;
-#else
         internal const ODataVersion ODataDefaultProtocolVersion = ODataVersion.V4;
-#endif
 
         /// <summary>The template used when computing a batch request boundary.</summary>
         internal const string BatchRequestBoundaryTemplate = "batch_{0}";
@@ -143,9 +139,6 @@ namespace Microsoft.OData.Core
 
         /// <summary>The default maximum number of operations per changeset.</summary>
         internal const int DefulatMaxOperationsPerChangeset = 1000;
-
-        /// <summary>The maximum recognized OData version by this library.</summary>
-        internal const ODataVersion MaxODataVersion = ODataVersion.V4;
 
         /// <summary>The '/' (forward slash) which is the URI segment separator.</summary>
         internal const string UriSegmentSeparator = "/";

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -192,8 +192,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="feed">The feed to validate.</param>
         /// <param name="writingRequest">Flag indicating whether the feed is written as part of a request or a response.</param>
-        /// <param name="version">The version of the OData protocol used for checking.</param>
-        internal static void ValidateFeedAtEnd(ODataFeed feed, bool writingRequest, ODataVersion version)
+        internal static void ValidateFeedAtEnd(ODataFeed feed, bool writingRequest)
         {
             Debug.Assert(feed != null, "feed != null");
 
@@ -206,8 +205,6 @@ namespace Microsoft.OData.Core
                     throw new ODataException(Strings.WriterValidationUtils_NextPageLinkInRequest);
                 }
             }
-
-            // Verify version requirements
         }
 
         /// <summary>
@@ -283,11 +280,10 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="streamProperty">The stream reference property to validate.</param>
         /// <param name="edmProperty">Property metadata to validate against.</param>
-        /// <param name="version">The version of the OData protocol used for checking.</param>
         /// <param name="writingResponse">true when writing a response; otherwise false.</param>
         /// <param name="bypassValidation">Bypass the validation if it is true.</param>
         /// <remarks>This does NOT validate the value of the stream property, just the property itself.</remarks>
-        internal static void ValidateStreamReferenceProperty(ODataProperty streamProperty, IEdmProperty edmProperty, ODataVersion version, bool writingResponse, bool bypassValidation = false)
+        internal static void ValidateStreamReferenceProperty(ODataProperty streamProperty, IEdmProperty edmProperty, bool writingResponse, bool bypassValidation = false)
         {
             Debug.Assert(streamProperty != null, "streamProperty != null");
             if (bypassValidation)

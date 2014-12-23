@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -50,8 +50,9 @@ namespace Microsoft.OData.Edm
                         throw new InvalidOperationException(Edm.Strings.EdmModel_CannotAddMoreThanOneEntityContainerToOneEdmModel);
                     }
 
-                    AddElement((IEdmEntityContainer)element, qualifiedName, containerDictionary, CreateAmbiguousEntityContainerBinding);
-                    AddElement((IEdmEntityContainer)element, element.Name, containerDictionary, CreateAmbiguousEntityContainerBinding);
+                    IEdmEntityContainer container = (IEdmEntityContainer)element;
+                    AddElement(container, qualifiedName, containerDictionary, CreateAmbiguousEntityContainerBinding);
+                    AddElement(container, element.Name, containerDictionary, CreateAmbiguousEntityContainerBinding);
 
                     break;
                 case EdmSchemaElementKind.None:

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -174,6 +174,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 return new UnresolvedNavigationPropertyPath(definingType, bindingPath, binding.Location);
             }
 
+            IEdmNavigationProperty navigationProperty;
             string[] pathSegements = bindingPath.Split(Slash);
             for (int index = 0; index < pathSegements.Length - 1; index++)
             {
@@ -188,12 +189,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 if (derivedType == null)
                 {
                     IEdmProperty property = definingType.FindProperty(pathSegement);
-                    if (property == null || !(property is IEdmNavigationProperty))
+                    navigationProperty = property as IEdmNavigationProperty;
+                    if (navigationProperty == null)
                     {
                         return new UnresolvedNavigationPropertyPath(definingType, bindingPath, binding.Location);
                     }
 
-                    definingType = (property as IEdmNavigationProperty).ToEntityType();
+                    definingType = navigationProperty.ToEntityType();
                 }
                 else
                 {
@@ -201,7 +203,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
             }
 
-            IEdmNavigationProperty navigationProperty = definingType.FindProperty(pathSegements.Last()) as IEdmNavigationProperty;
+            navigationProperty = definingType.FindProperty(pathSegements.Last()) as IEdmNavigationProperty;
             if (navigationProperty == null)
             {
                 // TODO: improve the error given in this case? (Task #1459901)

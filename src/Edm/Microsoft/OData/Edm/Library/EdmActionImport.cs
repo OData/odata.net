@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Edm.Library
     /// </summary>
     public class EdmActionImport : EdmOperationImport, IEdmActionImport
     {
-        private static readonly string ActionArgumentNullParameterName = "action";
+        private const string ActionArgumentNullParameterName = "action";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmActionImport"/> class.

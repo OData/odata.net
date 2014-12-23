@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -861,7 +861,7 @@ namespace Microsoft.OData.Core.JsonLight
                     case WriterState.DeltaFeed:
                         {
                             ODataDeltaFeed feed = (ODataDeltaFeed)currentScope.Item;
-                            WriterValidationUtils.ValidateFeedAtEnd(DeltaConverter.ToODataFeed(feed), /*writingResponse*/ false, this.jsonLightOutputContext.Version);
+                            WriterValidationUtils.ValidateFeedAtEnd(DeltaConverter.ToODataFeed(feed), /*writingResponse*/ false);
                             this.EndDeltaFeed(feed);
                         }
 
@@ -1189,7 +1189,7 @@ namespace Microsoft.OData.Core.JsonLight
         {
             Debug.Assert(link != null, "link != null");
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink, "link must be either DeltaLink or DeltaDeletedLink.");
-            
+
             this.jsonLightOutputContext.JsonWriter.StartObjectScope();
 
             if (link is ODataDeltaLink)
@@ -1200,7 +1200,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 this.WriteDeltaLinkContextUri(ODataDeltaKind.DeletedLink);
             }
-            
+
             this.WriteDeltaLinkSource(link);
             this.WriteDeltaLinkRelationship(link);
             this.WriteDeltaLinkTarget(link);
@@ -1563,22 +1563,24 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Gets the serialization info for the given delta entry.
         /// </summary>
-        /// <param name="entry">The entry to get the serialization info for.</param>
+        /// <param name="item">The entry to get the serialization info for.</param>
         /// <returns>The serialization info for the given entry.</returns>
-        private ODataFeedAndEntrySerializationInfo GetEntrySerializationInfo(ODataItem entry)
+        private ODataFeedAndEntrySerializationInfo GetEntrySerializationInfo(ODataItem item)
         {
-            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(item != null, "item != null");
 
             ODataFeedAndEntrySerializationInfo serializationInfo = null;
 
-            if (entry is ODataEntry)
+            var entry = item as ODataEntry;
+            if (entry != null)
             {
-                serializationInfo = (entry as ODataEntry).SerializationInfo;
+                serializationInfo = entry.SerializationInfo;
             }
 
-            if (entry is ODataDeltaDeletedEntry)
+            var deltaDeletedEntry = item as ODataDeltaDeletedEntry;
+            if (deltaDeletedEntry != null)
             {
-                serializationInfo = DeltaConverter.ToFeedAndEntrySerializationInfo((entry as ODataDeltaDeletedEntry).SerializationInfo);
+                serializationInfo = DeltaConverter.ToFeedAndEntrySerializationInfo(deltaDeletedEntry.SerializationInfo);
             }
 
             if (serializationInfo == null)
@@ -1592,22 +1594,24 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Gets the serialization info for the given delta link.
         /// </summary>
-        /// <param name="link">The entry to get the serialization info for.</param>
+        /// <param name="item">The entry to get the serialization info for.</param>
         /// <returns>The serialization info for the given entry.</returns>
-        private ODataDeltaSerializationInfo GetLinkSerializationInfo(ODataItem link)
+        private ODataDeltaSerializationInfo GetLinkSerializationInfo(ODataItem item)
         {
-            Debug.Assert(link != null, "link != null");
+            Debug.Assert(item != null, "item != null");
 
             ODataDeltaSerializationInfo serializationInfo = null;
 
-            if (link is ODataDeltaLink)
+            var deltaLink = item as ODataDeltaLink;
+            if (deltaLink != null)
             {
-                serializationInfo = (link as ODataDeltaLink).SerializationInfo;
+                serializationInfo = deltaLink.SerializationInfo;
             }
 
-            if (link is ODataDeltaDeletedLink)
+            var deltaDeletedLink = item as ODataDeltaDeletedLink;
+            if (deltaDeletedLink != null)
             {
-                serializationInfo = (link as ODataDeltaDeletedLink).SerializationInfo;
+                serializationInfo = deltaDeletedLink.SerializationInfo;
             }
 
             return serializationInfo ?? this.GetParentFeedSerializationInfo();
@@ -1861,18 +1865,20 @@ namespace Microsoft.OData.Core.JsonLight
             /// <summary>
             /// Constructor to create a new feed scope.
             /// </summary>
-            /// <param name="feed">The feed for the new scope.</param>
+            /// <param name="item">The feed for the new scope.</param>
             /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
             /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            protected DeltaFeedScope(ODataItem feed, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(WriterState.DeltaFeed, feed, navigationSource, entityType, selectedProperties, odataUri)
+            protected DeltaFeedScope(ODataItem item, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(WriterState.DeltaFeed, item, navigationSource, entityType, selectedProperties, odataUri)
             {
-                Debug.Assert(feed != null, "feed != null");
-                Debug.Assert(feed is ODataDeltaFeed, "feed must be either DeltaFeed.");
+                Debug.Assert(item != null, "item != null");
 
-                this.serializationInfo = (feed as ODataDeltaFeed).SerializationInfo;
+                var feed = item as ODataDeltaFeed;
+                Debug.Assert(feed != null, "feed must be DeltaFeed.");
+
+                this.serializationInfo = feed.SerializationInfo;
             }
 
             /// <summary>

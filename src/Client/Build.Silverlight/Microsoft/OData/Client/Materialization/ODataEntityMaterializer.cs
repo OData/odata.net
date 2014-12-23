@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -985,7 +985,7 @@ namespace Microsoft.OData.Client.Materialization
             // not been tracked already; we simply assign the collection too.
             if (entry.ShouldUpdateFromPayload &&
                 property.NullablePropertyType == list.GetType() &&
-                (leftCollection == null || this.NeedToAssignCollectionDirectly(leftCollection)))
+                (leftCollection == null || NeedToAssignCollectionDirectly(leftCollection)))
             {
                 property.SetValue(entry.ResolvedObject, list, property.PropertyName, false /* allowAdd */);
                 this.EntryValueMaterializationPolicy.FoundNextLinkForCollection(list, nextLink, plan);
@@ -1012,7 +1012,7 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="collection">The given collection.</param>
         /// <returns>If the left collection needs to be directly assigned from the right collection.</returns>
-        private bool NeedToAssignCollectionDirectly(object collection)
+        private static bool NeedToAssignCollectionDirectly(object collection)
         {
             Type type = collection.GetType();
             PropertyInfo countProp = type.GetPublicProperties(true).SingleOrDefault(property => property.Name == "Count");

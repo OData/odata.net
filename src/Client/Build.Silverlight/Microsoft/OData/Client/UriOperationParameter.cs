@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -26,7 +26,7 @@ namespace Microsoft.OData.Client
     /// <summary>
     /// Represents a parameter associated with a service operation  or a service function.
     /// </summary>
-    public sealed class UriOperationParameter : OperationParameter
+    public class UriOperationParameter : OperationParameter
     {
         /// <summary> Instantiates a new UriOperationParameter </summary>
         /// <param name="name">The name of the uri operation parameter.</param>

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -129,9 +129,10 @@ namespace Microsoft.OData.Client
             List<UriOperationParameter> uriOperationParameters)
         {
             Debug.Assert(
-                string.CompareOrdinal(XmlConstants.HttpMethodGet, httpMethod) == 0 || 
-                string.CompareOrdinal(XmlConstants.HttpMethodPost, httpMethod) == 0, 
-                "httpMethod should only be GET or POST");
+               string.CompareOrdinal(XmlConstants.HttpMethodGet, httpMethod) == 0 ||
+               string.CompareOrdinal(XmlConstants.HttpMethodPost, httpMethod) == 0 ||
+               string.CompareOrdinal(XmlConstants.HttpMethodDelete, httpMethod) == 0,
+               "httpMethod should only be GET, POST or DELETE");
 
             this.projection = projection;
             this.normalizerRewrites = normalizerRewrites;

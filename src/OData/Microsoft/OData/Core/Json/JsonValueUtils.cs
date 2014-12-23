@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -441,28 +441,6 @@ namespace Microsoft.OData.Core.Json
             // Ticks in .NET are in 100-nanoseconds and start at 1.1.0001.
             // Ticks in the JSON date time format are in milliseconds and start at 1.1.1970.
             return (ticks - JsonDateTimeMinTimeTicks) / 10000;
-        }
-
-        /// <summary>
-        /// Converts a given date time to its universal date time equivalent.
-        /// </summary>
-        /// <param name="value">The date time to convert to UTC</param>
-        /// <returns>universal date time equivalent of the value.</returns>
-        private static DateTime GetUniversalDate(DateTime value)
-        {
-            switch (value.Kind)
-            {
-                case DateTimeKind.Local:
-                    value = value.ToUniversalTime();
-                    break;
-                case DateTimeKind.Unspecified:
-                    value = new DateTime(value.Ticks, DateTimeKind.Utc);
-                    break;
-                case DateTimeKind.Utc:
-                    break;
-            }
-
-            return value;
         }
 
         /// <summary>

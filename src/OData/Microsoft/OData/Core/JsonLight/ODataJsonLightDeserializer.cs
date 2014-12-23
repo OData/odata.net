@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -261,21 +261,14 @@ namespace Microsoft.OData.Core.JsonLight
             // The context URI is only recognized in non-error response top-level payloads.
             // If the payload is nested (for example when we read URL literals) we don't recognize the context URI.
             // Top-level error payloads don't need and use the context URI.
-            if (!isReadingNestedPayload && payloadKind != ODataPayloadKind.Error)
+            if (!isReadingNestedPayload && payloadKind != ODataPayloadKind.Error && contextUriAnnotationValue != null)
             {
-                parseResult = this.jsonLightInputContext.PayloadKindDetectionState == null
-                    ? null
-                    : this.jsonLightInputContext.PayloadKindDetectionState.ContextUriParseResult;
-                if (parseResult == null && contextUriAnnotationValue != null)
-                {
-                    parseResult = ODataJsonLightContextUriParser.Parse(
-                        this.Model,
-                        contextUriAnnotationValue,
-                        payloadKind,
-                        this.Version,
-                        this.MessageReaderSettings.ReaderBehavior,
-                        this.JsonLightInputContext.ReadingResponse);
-                }
+                parseResult = ODataJsonLightContextUriParser.Parse(
+                    this.Model,
+                    contextUriAnnotationValue,
+                    payloadKind,
+                    this.MessageReaderSettings.ReaderBehavior,
+                    this.JsonLightInputContext.ReadingResponse);
             }
 
             this.contextUriParseResult = parseResult;
@@ -319,21 +312,14 @@ namespace Microsoft.OData.Core.JsonLight
                     // The context URI is only recognized in non-error response top-level payloads.
                     // If the payload is nested (for example when we read URL literals) we don't recognize the context URI.
                     // Top-level error payloads don't need and use the context URI.
-                    if (!isReadingNestedPayload && payloadKind != ODataPayloadKind.Error)
+                    if (!isReadingNestedPayload && payloadKind != ODataPayloadKind.Error && contextUriAnnotationValue != null)
                     {
-                        this.contextUriParseResult = this.jsonLightInputContext.PayloadKindDetectionState == null
-                            ? null
-                            : this.jsonLightInputContext.PayloadKindDetectionState.ContextUriParseResult;
-                        if (this.contextUriParseResult == null && contextUriAnnotationValue != null)
-                        {
-                            this.contextUriParseResult = ODataJsonLightContextUriParser.Parse(
-                                this.Model,
-                                contextUriAnnotationValue,
-                                payloadKind,
-                                this.Version,
-                                this.MessageReaderSettings.ReaderBehavior,
-                                this.JsonLightInputContext.ReadingResponse);
-                        }
+                        this.contextUriParseResult = ODataJsonLightContextUriParser.Parse(
+                            this.Model,
+                            contextUriAnnotationValue,
+                            payloadKind,
+                            this.MessageReaderSettings.ReaderBehavior,
+                            this.JsonLightInputContext.ReadingResponse);
                     }
 
 #if DEBUG
@@ -424,8 +410,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             ODataJsonLightReaderUtils.ValidateAnnotationValue(value, annotationName);
 
-            if ((!(value is string) && this.JsonReader.IsIeee754Compatible)
-                || (value is string && !this.JsonReader.IsIeee754Compatible))
+            if ((value is string) ^ this.JsonReader.IsIeee754Compatible)
             {
                 throw new ODataException(OData.Core.Strings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter(Metadata.EdmConstants.EdmInt64TypeName));
             }
@@ -434,8 +419,7 @@ namespace Microsoft.OData.Core.JsonLight
                     value,
                     EdmCoreModel.Instance.GetInt64(false),
                     this.MessageReaderSettings,
-                    this.Version,
-                /*validateNullValue*/ true,
+                    /*validateNullValue*/ true,
                     annotationName);
         }
 
@@ -839,10 +823,7 @@ namespace Microsoft.OData.Core.JsonLight
                 {
                     // Skip over the context URI annotation in request payloads or when we've already read it
                     // during payload kind detection.
-                    bool failOnMissingContextUriAnnotation =
-                        this.jsonLightInputContext.ReadingResponse &&
-                        (this.jsonLightInputContext.PayloadKindDetectionState == null ||
-                         this.jsonLightInputContext.PayloadKindDetectionState.ContextUriParseResult == null);
+                    bool failOnMissingContextUriAnnotation = this.jsonLightInputContext.ReadingResponse;
 
                     // In responses we expect the context URI to be the first thing in the payload
                     // (except for error payloads). In requests we ignore the context URI.
@@ -853,32 +834,6 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// The trim end string.
-        /// </summary>
-        /// <param name="str">
-        /// The str.
-        /// </param>
-        /// <param name="end">
-        /// The end.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        private string TrimEndString(string str, string end)
-        {
-            string path = str;
-            int index = path.LastIndexOf(
-                end,
-                StringComparison.OrdinalIgnoreCase);
-            if (index != -1)
-            {
-                path = path.Substring(0, index);
-            }
-
-            return path;
         }
     }
 }

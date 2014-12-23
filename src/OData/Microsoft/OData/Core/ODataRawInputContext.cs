@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -58,7 +58,6 @@ namespace Microsoft.OData.Core
         /// <param name="messageStream">The stream to read data from.</param>
         /// <param name="encoding">The encoding to use to read the input.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="version">The OData protocol version to be used for reading the payload.</param>
         /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
         /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
         /// <param name="model">The model to use.</param>
@@ -70,13 +69,12 @@ namespace Microsoft.OData.Core
             Stream messageStream,
             Encoding encoding,
             ODataMessageReaderSettings messageReaderSettings,
-            ODataVersion version,
             bool readingResponse,
             bool synchronous,
             IEdmModel model,
             IODataUrlResolver urlResolver,
             ODataPayloadKind readerPayloadKind)
-            : base(format, messageReaderSettings, version, readingResponse, synchronous, model, urlResolver)
+            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
         {
             Debug.Assert(messageStream != null, "stream != null");
             Debug.Assert(readerPayloadKind != ODataPayloadKind.Unsupported, "readerPayloadKind != ODataPayloadKind.Unsupported");
@@ -85,7 +83,7 @@ namespace Microsoft.OData.Core
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
             try
-            { 
+            {
                 this.stream = messageStream;
                 this.encoding = encoding;
                 this.readerPayloadKind = readerPayloadKind;
@@ -156,7 +154,7 @@ namespace Microsoft.OData.Core
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(batchBoundary, /*synchronous*/ false));
         }
 #endif
-        
+
         /// <summary>
         /// Read a top-level value.
         /// </summary>
@@ -181,26 +179,32 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
-        /// Disposes the input context.
+        /// Perform the actual cleanup work.
         /// </summary>
-        protected override void DisposeImplementation()
+        /// <param name="disposing">If 'true' this method is called from user code; if 'false' it is called by the runtime.</param>
+        protected override void Dispose(bool disposing)
         {
-            try
+            if (disposing)
             {
-                if (this.textReader != null)
+                try
                 {
-                    this.textReader.Dispose();
+                    if (this.textReader != null)
+                    {
+                        this.textReader.Dispose();
+                    }
+                    else if (this.stream != null)
+                    {
+                        this.stream.Dispose();
+                    }
                 }
-                else if (this.stream != null)
+                finally
                 {
-                    this.stream.Dispose();
+                    this.textReader = null;
+                    this.stream = null;
                 }
             }
-            finally
-            {
-                this.textReader = null;
-                this.stream = null;
-            }
+
+            base.Dispose(disposing);
         }
 
         /// <summary>

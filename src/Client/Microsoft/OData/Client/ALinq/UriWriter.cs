@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -44,14 +44,14 @@ namespace Microsoft.OData.Client
         /// <summary>Data context used to generate type names for types.</summary>
         private readonly DataServiceContext context;
 
-        /// <summary>stringbuilder for constructed URI</summary>
-        private readonly StringBuilder uriBuilder;
-        
-        /// <summary>the request data service version for the uri</summary>
-        private Version uriVersion;
+        /// <summary>stringbuilder for constructed URI.</summary>
+        private readonly StringBuilder uriBuilder = new StringBuilder();
 
-        /// <summary>the leaf resourceset for the URI being written</summary>
-        private QueryableResourceExpression leafResource;
+        /// <summary>The dictionary to store the alias.</summary>
+        private readonly Dictionary<string, string> alias = new Dictionary<string, string>(StringComparer.Ordinal);
+        
+        /// <summary>the request data service version for the uri.</summary>
+        private Version uriVersion;
         
         /// <summary>
         /// For caching query options to be grouped
@@ -66,7 +66,6 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(context != null, "context != null");
             this.context = context;
-            this.uriBuilder = new StringBuilder();
             this.uriVersion = Util.ODataVersion4;
         }
 
@@ -81,9 +80,33 @@ namespace Microsoft.OData.Client
         internal static void Translate(DataServiceContext context, bool addTrailingParens, Expression e, out Uri uri, out Version version)
         {
             var writer = new UriWriter(context);
-            writer.leafResource = addTrailingParens ? (e as QueryableResourceExpression) : null;
             writer.Visit(e);
-            uri = UriUtil.CreateUri(writer.uriBuilder.ToString(), UriKind.Absolute);
+            string fullUri = writer.uriBuilder.ToString();
+
+            if (writer.alias.Any())
+            {
+                if (fullUri.IndexOf(UriHelper.QUESTIONMARK) > -1)
+                {
+                    fullUri += UriHelper.AMPERSAND;
+                }
+                else
+                {
+                    fullUri += UriHelper.QUESTIONMARK;
+                }
+
+                foreach (var kv in writer.alias)
+                {
+                    fullUri += kv.Key;
+                    fullUri += UriHelper.EQUALSSIGN;
+                    fullUri += kv.Value;
+                    fullUri += UriHelper.AMPERSAND;
+                }
+
+                fullUri = fullUri.Substring(0, fullUri.Length - 1);
+            }
+            
+
+            uri = UriUtil.CreateUri(fullUri, UriKind.Absolute);
             version = writer.uriVersion;
         }
 
@@ -307,9 +330,7 @@ namespace Microsoft.OData.Client
 
             if (rse.IsOperationInvocation)
             {
-                bool isOperationImport = rse.MemberExpression == null;
-                string operationName = isOperationImport ? rse.OperationName : (rse.OperationParameters.Last().Value + "." + rse.OperationName);
-                this.uriBuilder.Append(operationName);
+                this.uriBuilder.Append(rse.OperationName);
                 if (rse.IsAction)
                 {
                     return;
@@ -318,7 +339,7 @@ namespace Microsoft.OData.Client
                 this.uriBuilder.Append(UriHelper.LEFTPAREN);
                 bool needComma = false;
                 KeyValuePair<string, string>[] parameters = rse.OperationParameters.ToArray();
-                for (int i = 0; i < parameters.Length - (isOperationImport ? 0 : 1); ++i)
+                for (int i = 0; i < parameters.Length; ++i)
                 {
                     KeyValuePair<string, string> param = parameters[i];
                     if (needComma)
@@ -328,7 +349,27 @@ namespace Microsoft.OData.Client
 
                     this.uriBuilder.Append(param.Key);
                     this.uriBuilder.Append(UriHelper.EQUALSSIGN);
-                    this.uriBuilder.Append(param.Value);
+
+                    // non-primitive value, use alias.
+                    if (!UriHelper.IsPrimitiveValue(param.Value))
+                    {
+                        string aliasName = UriHelper.ATSIGN + param.Key;
+                        int count = 1;
+                        while (this.alias.ContainsKey(aliasName))
+                        {
+                            aliasName = UriHelper.ATSIGN + param.Key + count;
+                            count++;
+                        }
+
+                        this.uriBuilder.Append(aliasName);
+
+                        this.alias.Add(aliasName, param.Value);
+                    }
+                    else
+                    {
+                        // primitive value, do not use alias.
+                        this.uriBuilder.Append(param.Value);
+                    }
 
                     needComma = true;
                 }

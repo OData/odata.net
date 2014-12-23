@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -161,6 +161,15 @@ namespace Microsoft.OData.Client
         /// <summary>has</summary>
         internal const string HAS = "has";
 
+        /// <summary>The encoded @ sign</summary>
+        internal const string ENCODEDATSIGN = "%40";
+
+        /// <summary>The encoded [ sign</summary>
+        internal const string ENCODEDSQUAREBRACKETSIGN = "%5B";
+
+        /// <summary>The encoded { sign</summary>
+        internal const string ENCODEDBRACESIGN = "%7B";
+
         /// <summary>Gets the type name to be used in the URI for the given <paramref name="type"/>.</summary>
         /// <param name="type">Type to get name for.</param>
         /// <param name="context">Data context used to generate type names for types.</param>
@@ -236,6 +245,16 @@ namespace Microsoft.OData.Client
 
             string typeName = GetTypeNameForUri(type, dataServiceContext);
             stringBuilder.Append(typeName);
+        }
+
+        /// <summary>
+        /// If the value represented by the string is primitive value or not.
+        /// </summary>
+        /// <param name="value">The string value represent the odata value.</param>
+        /// <returns>True if the value is primitive value.</returns>
+        internal static bool IsPrimitiveValue(string value)
+        {
+            return !(value.StartsWith(UriHelper.ENCODEDBRACESIGN, StringComparison.Ordinal) || value.StartsWith(UriHelper.ENCODEDSQUAREBRACKETSIGN, StringComparison.Ordinal));
         }
     }
 }

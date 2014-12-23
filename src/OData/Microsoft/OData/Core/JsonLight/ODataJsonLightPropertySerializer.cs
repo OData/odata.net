@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -217,7 +217,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                 Debug.Assert(owningType == null || owningType.IsODataEntityTypeKind(), "The metadata should not allow named stream properties to be defined on a non-entity type.");
                 Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
-                WriterValidationUtils.ValidateStreamReferenceProperty(property, edmProperty, this.Version, this.WritingResponse, this.bypassValidation);
+                WriterValidationUtils.ValidateStreamReferenceProperty(property, edmProperty, this.WritingResponse, this.bypassValidation);
                 this.WriteStreamReferenceProperty(propertyName, streamReferenceValue);
                 return;
             }

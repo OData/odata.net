@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -125,7 +125,7 @@ namespace Microsoft.OData.Core.UriParser
                         do
                         {
                             this.NextChar();
-                        } while (this.ch.HasValue && this.IsValidSearchTermChar(this.ch.Value));
+                        } while (this.ch.HasValue && IsValidSearchTermChar(this.ch.Value));
                     }
 
                     break;
@@ -164,7 +164,7 @@ namespace Microsoft.OData.Core.UriParser
         /// </summary>
         /// <param name="val">The char to be evaluated on.</param>
         /// <returns>Whether the given char is valid for a SearchTerm</returns>
-        private bool IsValidSearchTermChar(char val)
+        private static bool IsValidSearchTermChar(char val)
         {
             return !Char.IsWhiteSpace(val) && val != ')';
         }

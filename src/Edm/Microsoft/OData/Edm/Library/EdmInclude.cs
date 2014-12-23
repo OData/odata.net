@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -27,17 +27,17 @@ namespace Microsoft.OData.Edm.Library
     public class EdmInclude : IEdmInclude
     {
         private readonly string alias;
-        private readonly string namespace_;
+        private readonly string namespaceIncluded;
 
         /// <summary>
         /// constructor.
         /// </summary>
         /// <param name="alias">The alias.</param>
-        /// <param name="namespace_">The namespace.</param>
-        public EdmInclude(string alias, string namespace_)
+        /// <param name="namespaceIncluded">The namespace.</param>
+        public EdmInclude(string alias, string namespaceIncluded)
         {
             this.alias = alias;
-            this.namespace_ = namespace_;
+            this.namespaceIncluded = namespaceIncluded;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Microsoft.OData.Edm.Library
         {
             get
             {
-                return this.namespace_;
+                return this.namespaceIncluded;
             }
         }
     }

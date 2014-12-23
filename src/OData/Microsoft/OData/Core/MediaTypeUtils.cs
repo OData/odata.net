@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -95,6 +95,29 @@ namespace Microsoft.OData.Core
             }
         }
 
+        /// <summary>Encoding to fall back to an appropriate encoding is not available.</summary>
+        internal static Encoding FallbackEncoding
+        {
+            get
+            {
+                return MediaTypeUtils.EncodingUtf8NoPreamble;
+            }
+        }
+
+        /// <summary>Encoding implied by an unspecified encoding value.</summary>
+        /// <remarks>See http://tools.ietf.org/html/rfc2616#section-3.4.1 for details.</remarks>
+        internal static Encoding MissingEncoding
+        {
+            get
+            {
+#if !ORCAS
+                return Encoding.UTF8;
+#else
+                return Encoding.GetEncoding("ISO-8859-1", new EncoderExceptionFallback(), new DecoderExceptionFallback());
+#endif
+            }
+        }
+
         /// <summary>
         /// Given the Accept and the Accept-Charset headers of the request message computes the media type, encoding and <see cref="ODataFormat"/>
         /// to be used for the response message.
@@ -108,8 +131,8 @@ namespace Microsoft.OData.Core
         internal static ODataFormat GetContentTypeFromSettings(
             ODataMessageWriterSettings settings,
             ODataPayloadKind payloadKind,
-            MediaTypeResolver mediaTypeResolver,
-            out MediaType mediaType,
+            ODataMediaTypeResolver mediaTypeResolver,
+            out ODataMediaType mediaType,
             out Encoding encoding)
         {
             Debug.Assert(settings != null, "settings != null");
@@ -118,7 +141,7 @@ namespace Microsoft.OData.Core
             ODataFormat format;
 
             // get the supported and default media types for the specified payload kind
-            IList<MediaTypeWithFormat> supportedMediaTypes = mediaTypeResolver.GetMediaTypesForPayloadKind(payloadKind);
+            IList<ODataMediaTypeFormat> supportedMediaTypes = mediaTypeResolver.GetMediaTypeFormats(payloadKind).ToList();
             if (supportedMediaTypes == null || supportedMediaTypes.Count == 0)
             {
                 throw new ODataContentTypeException(Strings.MediaTypeUtils_DidNotFindMatchingMediaType(null, settings.AcceptableMediaTypes));
@@ -137,14 +160,14 @@ namespace Microsoft.OData.Core
             else
             {
                 // parse the accept header into its parts
-                IList<KeyValuePair<MediaType, string>> specifiedTypes = HttpUtils.MediaTypesFromString(settings.AcceptableMediaTypes);
+                IList<KeyValuePair<ODataMediaType, string>> specifiedTypes = HttpUtils.MediaTypesFromString(settings.AcceptableMediaTypes);
 
                 // Starting in V3 we replace all occurrences of application/json with application/json;odata.metadata=minimal
                 // before handing the acceptable media types to the conneg code. This is necessary because for an accept
                 // header 'application/json, we want to the result to be 'application/json;odata.metadata=minimal'
                 ConvertApplicationJsonInAcceptableMediaTypes(specifiedTypes);
 
-                MediaTypeWithFormat selectedMediaTypeWithFormat;
+                ODataMediaTypeFormat selectedMediaTypeWithFormat;
                 string specifiedCharset = null;
                 if (specifiedTypes == null || specifiedTypes.Count == 0)
                 {
@@ -199,8 +222,8 @@ namespace Microsoft.OData.Core
         internal static ODataFormat GetFormatFromContentType(
             string contentTypeHeader,
             ODataPayloadKind[] supportedPayloadKinds,
-            MediaTypeResolver mediaTypeResolver,
-            out MediaType mediaType,
+            ODataMediaTypeResolver mediaTypeResolver,
+            out ODataMediaType mediaType,
             out Encoding encoding,
             out ODataPayloadKind selectedPayloadKind,
             out string batchBoundary)
@@ -251,26 +274,26 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="contentTypeHeader">The content type header to get the payload kinds for.</param>
         /// <param name="mediaTypeResolver">The media type resolver to use when interpreting the content type.</param>
-        /// <param name="contentType">The parsed content type as <see cref="MediaType"/>.</param>
-        /// <param name="encoding">The encoding from the content type or the default encoding from <see cref="MediaType" />.</param>
+        /// <param name="contentType">The parsed content type as <see cref="ODataMediaType"/>.</param>
+        /// <param name="encoding">The encoding from the content type or the default encoding from <see cref="ODataMediaType" />.</param>
         /// <returns>The list of payload kinds and formats supported for the specified <paramref name="contentTypeHeader"/>.</returns>
-        internal static IList<ODataPayloadKindDetectionResult> GetPayloadKindsForContentType(string contentTypeHeader, MediaTypeResolver mediaTypeResolver, out MediaType contentType, out Encoding encoding)
+        internal static IList<ODataPayloadKindDetectionResult> GetPayloadKindsForContentType(string contentTypeHeader, ODataMediaTypeResolver mediaTypeResolver, out ODataMediaType contentType, out Encoding encoding)
         {
             Debug.Assert(!String.IsNullOrEmpty(contentTypeHeader), "Content-Type header must not be null or empty.");
 
             string charset;
             encoding = null;
             contentType = ParseContentType(contentTypeHeader, out charset);
-            MediaType[] targetTypes = new MediaType[] { contentType };
+            ODataMediaType[] targetTypes = new ODataMediaType[] { contentType };
 
             List<ODataPayloadKindDetectionResult> payloadKinds = new List<ODataPayloadKindDetectionResult>();
 
-            IList<MediaTypeWithFormat> mediaTypesForKind = null;
+            IList<ODataMediaTypeFormat> mediaTypesForKind = null;
             for (int i = 0; i < allSupportedPayloadKinds.Length; ++i)
             {
                 // get the supported and default media types for the current payload kind
                 ODataPayloadKind payloadKind = allSupportedPayloadKinds[i];
-                mediaTypesForKind = mediaTypeResolver.GetMediaTypesForPayloadKind(payloadKind);
+                mediaTypesForKind = mediaTypeResolver.GetMediaTypeFormats(payloadKind).ToList();
 
                 // match the specified media types against the supported/default ones
                 // and get the format
@@ -326,7 +349,7 @@ namespace Microsoft.OData.Core
         /// <param name="parameterValue">The value of the expected parameter.</param>
         /// <returns>true if the <paramref name="mediaType"/> has a parameter called <paramref name="parameterName"/> 
         /// with value <paramref name="parameterValue"/>; otherwise false.</returns>
-        internal static bool MediaTypeHasParameterWithValue(this MediaType mediaType, string parameterName, string parameterValue)
+        internal static bool MediaTypeHasParameterWithValue(this ODataMediaType mediaType, string parameterName, string parameterValue)
         {
             Debug.Assert(mediaType != null, "mediaType != null");
             Debug.Assert(parameterName != null, "parameterName != null");
@@ -348,7 +371,7 @@ namespace Microsoft.OData.Core
         /// <returns>
         ///   <c>true</c> if  the media type has a 'streaming' parameter with the value 'true'; otherwise, <c>false</c>.
         /// </returns>
-        internal static bool HasStreamingSetToTrue(this MediaType mediaType)
+        internal static bool HasStreamingSetToTrue(this ODataMediaType mediaType)
         {
             return mediaType.MediaTypeHasParameterWithValue(MimeConstants.MimeStreamingParameterName, MimeConstants.MimeParameterValueTrue);
         }
@@ -360,21 +383,21 @@ namespace Microsoft.OData.Core
         /// <returns>
         ///   <c>true</c> if  the media type has a 'IEEE754Compatible' parameter with the value 'true'; otherwise, <c>false</c>.
         /// </returns>
-        internal static bool HasIeee754CompatibleSetToTrue(this MediaType mediaType)
+        internal static bool HasIeee754CompatibleSetToTrue(this ODataMediaType mediaType)
         {
             return mediaType.MediaTypeHasParameterWithValue(MimeConstants.MimeIeee754CompatibleParameterName, MimeConstants.MimeParameterValueTrue);
         }
 
         /// <summary>
-        /// Checks for wildcard characters in the <see cref="MediaType"/>.
+        /// Checks for wildcard characters in the <see cref="ODataMediaType"/>.
         /// </summary>
-        /// <param name="mediaType">The <see cref="MediaType"/> to check.</param>
-        internal static void CheckMediaTypeForWildCards(MediaType mediaType)
+        /// <param name="mediaType">The <see cref="ODataMediaType"/> to check.</param>
+        internal static void CheckMediaTypeForWildCards(ODataMediaType mediaType)
         {
             Debug.Assert(mediaType != null, "mediaType != null");
 
-            if (HttpUtils.CompareMediaTypeNames(MimeConstants.MimeStar, mediaType.TypeName) ||
-                HttpUtils.CompareMediaTypeNames(MimeConstants.MimeStar, mediaType.SubTypeName))
+            if (HttpUtils.CompareMediaTypeNames(MimeConstants.MimeStar, mediaType.Type) ||
+                HttpUtils.CompareMediaTypeNames(MimeConstants.MimeStar, mediaType.SubType))
             {
                 throw new ODataContentTypeException(Strings.ODataMessageReader_WildcardInContentType(mediaType.FullTypeName));
             }
@@ -414,23 +437,23 @@ namespace Microsoft.OData.Core
         /// specified <paramref name="contentTypeName"/>.
         /// </param>
         /// <returns>The <see cref="ODataFormat"/> for the <paramref name="contentTypeName"/>.</returns>
-        private static ODataFormat GetFormatFromContentType(string contentTypeName, ODataPayloadKind[] supportedPayloadKinds, MediaTypeResolver mediaTypeResolver, out MediaType mediaType, out Encoding encoding, out ODataPayloadKind selectedPayloadKind)
+        private static ODataFormat GetFormatFromContentType(string contentTypeName, ODataPayloadKind[] supportedPayloadKinds, ODataMediaTypeResolver mediaTypeResolver, out ODataMediaType mediaType, out Encoding encoding, out ODataPayloadKind selectedPayloadKind)
         {
             Debug.Assert(!supportedPayloadKinds.Contains(ODataPayloadKind.Unsupported), "!supportedPayloadKinds.Contains(ODataPayloadKind.Unsupported)");
 
             string charset;
             mediaType = ParseContentType(contentTypeName, out charset);
 
-            IList<MediaTypeWithFormat> supportedMediaTypes = null;
+            IList<ODataMediaTypeFormat> supportedMediaTypes = null;
             for (int i = 0; i < supportedPayloadKinds.Length; ++i)
             {
                 // get the supported and default media types for the current payload kind
                 ODataPayloadKind supportedPayloadKind = supportedPayloadKinds[i];
-                supportedMediaTypes = mediaTypeResolver.GetMediaTypesForPayloadKind(supportedPayloadKind);
+                supportedMediaTypes = mediaTypeResolver.GetMediaTypeFormats(supportedPayloadKind).ToList();
 
                 // match the specified media types against the supported/default ones
                 // and get the format
-                var cacheKey = new MatchInfoCacheKey(mediaTypeResolver.EnableAtom, supportedPayloadKind, contentTypeName);
+                var cacheKey = new MatchInfoCacheKey(mediaTypeResolver, supportedPayloadKind, contentTypeName);
                 MediaTypeMatchInfo matchInfo;
 
                 if (!MatchInfoCache.TryGetValue(cacheKey, out matchInfo))
@@ -449,7 +472,7 @@ namespace Microsoft.OData.Core
             }
 
             // We're calling the ToArray here since not all platforms support the string.Join which takes IEnumerable.
-            string supportedTypesAsString = String.Join(", ", supportedPayloadKinds.SelectMany(pk => mediaTypeResolver.GetMediaTypesForPayloadKind(pk).Select(mt => mt.MediaType.ToText())).ToArray());
+            string supportedTypesAsString = String.Join(", ", supportedPayloadKinds.SelectMany(pk => mediaTypeResolver.GetMediaTypeFormats(pk).Select(mt => mt.MediaType.ToText())).ToArray());
             throw new ODataContentTypeException(Strings.MediaTypeUtils_CannotDetermineFormatFromContentType(supportedTypesAsString, contentTypeName));
         }
 
@@ -458,19 +481,19 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="contentTypeHeader">The content type header to parse.</param>
         /// <param name="charset">The optional charset specified with the content type.</param>
-        /// <returns>The <see cref="MediaType"/> of the parsed <paramref name="contentTypeHeader"/>.</returns>
-        private static MediaType ParseContentType(string contentTypeHeader, out string charset)
+        /// <returns>The <see cref="ODataMediaType"/> of the parsed <paramref name="contentTypeHeader"/>.</returns>
+        private static ODataMediaType ParseContentType(string contentTypeHeader, out string charset)
         {
             Debug.Assert(!String.IsNullOrEmpty(contentTypeHeader), "!string.IsNullOrEmpty(contentTypeHeader)");
 
             // parse the content type header into its parts, make sure we only allow one content type to be specified.
-            IList<KeyValuePair<MediaType, string>> specifiedTypes = HttpUtils.MediaTypesFromString(contentTypeHeader);
+            IList<KeyValuePair<ODataMediaType, string>> specifiedTypes = HttpUtils.MediaTypesFromString(contentTypeHeader);
             if (specifiedTypes.Count != 1)
             {
                 throw new ODataContentTypeException(Strings.MediaTypeUtils_NoOrMoreThanOneContentTypeSpecified(contentTypeHeader));
             }
 
-            MediaType contentType = specifiedTypes[0].Key;
+            ODataMediaType contentType = specifiedTypes[0].Key;
             CheckMediaTypeForWildCards(contentType);
             charset = specifiedTypes[0].Value;
             return contentType;
@@ -483,8 +506,8 @@ namespace Microsoft.OData.Core
         /// <param name="specifiedFormat">The user-specified format in which to write the payload (can be null).</param>
         /// <param name="actualFormat">The default format for the specified payload kind</param>
         /// <returns>The default media type for the given payload kind and format.</returns>
-        private static MediaType GetDefaultMediaType(
-            IList<MediaTypeWithFormat> supportedMediaTypes,
+        private static ODataMediaType GetDefaultMediaType(
+            IList<ODataMediaTypeFormat> supportedMediaTypes,
             ODataFormat specifiedFormat,
             out ODataFormat actualFormat)
         {
@@ -492,7 +515,7 @@ namespace Microsoft.OData.Core
             {
                 // NOTE: the supportedMediaTypes are sorted (desc) by format and media type; so the 
                 //       default format and media type is the first entry in the list
-                MediaTypeWithFormat supportedMediaType = supportedMediaTypes[i];
+                ODataMediaTypeFormat supportedMediaType = supportedMediaTypes[i];
                 if (specifiedFormat == null || supportedMediaType.Format == specifiedFormat)
                 {
                     actualFormat = supportedMediaType.Format;
@@ -511,7 +534,7 @@ namespace Microsoft.OData.Core
         /// <param name="mediaType">The media type used to compute the default encoding for the payload.</param>
         /// <param name="useDefaultEncoding">true if the default encoding should be returned if no acceptable charset is found; otherwise false.</param>
         /// <returns>The encoding to be used for the response.</returns>
-        private static Encoding GetEncoding(string acceptCharsetHeader, ODataPayloadKind payloadKind, MediaType mediaType, bool useDefaultEncoding)
+        private static Encoding GetEncoding(string acceptCharsetHeader, ODataPayloadKind payloadKind, ODataMediaType mediaType, bool useDefaultEncoding)
         {
             if (payloadKind == ODataPayloadKind.BinaryValue)
             {
@@ -532,7 +555,7 @@ namespace Microsoft.OData.Core
         /// <param name="sourceTypes">The set of media types to be matched against the <paramref name="targetTypes"/>.</param>
         /// <param name="targetTypes">The set of media types the <paramref name="sourceTypes"/> will be matched against.</param>
         /// <returns>The best <see cref="MediaTypeMatchInfo"/> found during the matching process or null if no match was found.</returns>
-        private static MediaTypeMatchInfo MatchMediaTypes(IEnumerable<MediaType> sourceTypes, MediaType[] targetTypes)
+        private static MediaTypeMatchInfo MatchMediaTypes(IEnumerable<ODataMediaType> sourceTypes, ODataMediaType[] targetTypes)
         {
             Debug.Assert(sourceTypes != null, "sourceTypes != null");
             Debug.Assert(targetTypes != null, "targetTypes != null");
@@ -542,10 +565,10 @@ namespace Microsoft.OData.Core
             int sourceIndex = 0;
             if (sourceTypes != null)
             {
-                foreach (MediaType sourceType in sourceTypes)
+                foreach (ODataMediaType sourceType in sourceTypes)
                 {
                     int targetIndex = 0;
-                    foreach (MediaType targetType in targetTypes)
+                    foreach (ODataMediaType targetType in targetTypes)
                     {
                         // match the type name parts and parameters of the media type
                         MediaTypeMatchInfo currentMatchInfo = new MediaTypeMatchInfo(sourceType, targetType, sourceIndex, targetIndex);
@@ -590,7 +613,7 @@ namespace Microsoft.OData.Core
         /// we want the result to be 'application/json;odata.metadata=minimal'
         /// </summary>
         /// <param name="specifiedTypes">The parsed acceptable media types.</param>
-        private static void ConvertApplicationJsonInAcceptableMediaTypes(IList<KeyValuePair<MediaType, string>> specifiedTypes)
+        private static void ConvertApplicationJsonInAcceptableMediaTypes(IList<KeyValuePair<ODataMediaType, string>> specifiedTypes)
         {
             if (specifiedTypes == null)
             {
@@ -599,15 +622,15 @@ namespace Microsoft.OData.Core
 
             for (int i = 0; i < specifiedTypes.Count; ++i)
             {
-                MediaType mediaType = specifiedTypes[i].Key;
-                if (HttpUtils.CompareMediaTypeNames(mediaType.SubTypeName, MimeConstants.MimeJsonSubType) &&
-                    HttpUtils.CompareMediaTypeNames(mediaType.TypeName, MimeConstants.MimeApplicationType))
+                ODataMediaType mediaType = specifiedTypes[i].Key;
+                if (HttpUtils.CompareMediaTypeNames(mediaType.SubType, MimeConstants.MimeJsonSubType) &&
+                    HttpUtils.CompareMediaTypeNames(mediaType.Type, MimeConstants.MimeApplicationType))
                 {
                     if (mediaType.Parameters == null ||
                         !mediaType.Parameters.Any(p => HttpUtils.CompareMediaTypeParameterNames(p.Key, MimeConstants.MimeMetadataParameterName)))
                     {
                         // application/json detected; convert it to Json Light
-                        IList<KeyValuePair<string, string>> existingParams = mediaType.Parameters;
+                        IList<KeyValuePair<string, string>> existingParams = mediaType.Parameters != null ? mediaType.Parameters.ToList() : null;
                         int newCount = existingParams == null ? 1 : existingParams.Count + 1;
                         List<KeyValuePair<string, string>> newParams = new List<KeyValuePair<string, string>>(newCount);
                         newParams.Add(new KeyValuePair<string, string>(MimeConstants.MimeMetadataParameterName, MimeConstants.MimeMetadataParameterValueMinimal));
@@ -616,14 +639,14 @@ namespace Microsoft.OData.Core
                             newParams.AddRange(existingParams);
                         }
 
-                        specifiedTypes[i] = new KeyValuePair<MediaType, string>(new MediaType(mediaType.TypeName, mediaType.SubTypeName, newParams), specifiedTypes[i].Value);
+                        specifiedTypes[i] = new KeyValuePair<ODataMediaType, string>(new ODataMediaType(mediaType.Type, mediaType.SubType, newParams), specifiedTypes[i].Value);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Class representing the result of matching two <see cref="MediaType"/> instances.
+        /// Class representing the result of matching two <see cref="ODataMediaType"/> instances.
         /// </summary>
         private sealed class MediaTypeMatchInfo : IComparable<MediaTypeMatchInfo>
         {
@@ -639,11 +662,11 @@ namespace Microsoft.OData.Core
             /// <summary>
             /// Constructor.
             /// </summary>
-            /// <param name="sourceType">The source <see cref="MediaType"/> to match against the target type.</param>
-            /// <param name="targetType">The target <see cref="MediaType"/> to match against the source type.</param>
+            /// <param name="sourceType">The source <see cref="ODataMediaType"/> to match against the target type.</param>
+            /// <param name="targetType">The target <see cref="ODataMediaType"/> to match against the source type.</param>
             /// <param name="sourceIndex">Index of the source type in the list of all source types.</param>
             /// <param name="targetIndex">Index of the target type in the list of all target types.</param>
-            public MediaTypeMatchInfo(MediaType sourceType, MediaType targetType, int sourceIndex, int targetIndex)
+            public MediaTypeMatchInfo(ODataMediaType sourceType, ODataMediaType targetType, int sourceIndex, int targetIndex)
             {
                 Debug.Assert(sourceType != null, "sourceType != null");
                 Debug.Assert(targetType != null, "targetType != null");
@@ -850,26 +873,26 @@ namespace Microsoft.OData.Core
             /// <summary>
             /// Matches the source type against the media type.
             /// </summary>
-            /// <param name="sourceType">The source <see cref="MediaType"/> to match against the target type.</param>
-            /// <param name="targetType">The target <see cref="MediaType"/> to match against the source type.</param>
-            private void MatchTypes(MediaType sourceType, MediaType targetType)
+            /// <param name="sourceType">The source <see cref="ODataMediaType"/> to match against the target type.</param>
+            /// <param name="targetType">The target <see cref="ODataMediaType"/> to match against the source type.</param>
+            private void MatchTypes(ODataMediaType sourceType, ODataMediaType targetType)
             {
                 this.MatchingTypeNamePartCount = -1;
 
-                if (sourceType.TypeName == "*")
+                if (sourceType.Type == "*")
                 {
                     this.MatchingTypeNamePartCount = 0;
                 }
                 else
                 {
-                    if (HttpUtils.CompareMediaTypeNames(sourceType.TypeName, targetType.TypeName))
+                    if (HttpUtils.CompareMediaTypeNames(sourceType.Type, targetType.Type))
                     {
-                        if (sourceType.SubTypeName == "*")
+                        if (sourceType.SubType == "*")
                         {
                             // only type matches
                             this.MatchingTypeNamePartCount = 1;
                         }
-                        else if (HttpUtils.CompareMediaTypeNames(sourceType.SubTypeName, targetType.SubTypeName))
+                        else if (HttpUtils.CompareMediaTypeNames(sourceType.SubType, targetType.SubType))
                         {
                             // both type and subtype match
                             this.MatchingTypeNamePartCount = 2;
@@ -881,8 +904,8 @@ namespace Microsoft.OData.Core
                 this.SourceTypeParameterCountForMatching = 0;
                 this.MatchingParameterCount = 0;
 
-                IList<KeyValuePair<string, string>> sourceParameters = sourceType.Parameters;
-                IList<KeyValuePair<string, string>> targetParameters = targetType.Parameters;
+                IList<KeyValuePair<string, string>> sourceParameters = sourceType.Parameters != null ? sourceType.Parameters.ToList() : null;
+                IList<KeyValuePair<string, string>> targetParameters = targetType.Parameters != null ? targetType.Parameters.ToList() : null;
                 bool targetHasParams = targetParameters != null && targetParameters.Count > 0;
                 bool sourceHasParams = sourceParameters != null && sourceParameters.Count > 0;
 
@@ -939,12 +962,12 @@ namespace Microsoft.OData.Core
             /// <summary>
             /// Constructor.
             /// </summary>
-            /// <param name="enableAtom">Whether atom is enabled for MediaTypeResolver.</param>
+            /// <param name="resolver">The media type resolver to use.</param>
             /// <param name="payloadKind">Kind of the payload.</param>
             /// <param name="contentTypeName">Name of content type.</param>
-            public MatchInfoCacheKey(bool enableAtom, ODataPayloadKind payloadKind, string contentTypeName)
+            public MatchInfoCacheKey(ODataMediaTypeResolver resolver, ODataPayloadKind payloadKind, string contentTypeName)
             {
-                this.EnableAtom = enableAtom;
+                this.MediaTypeResolver = resolver;
                 this.PayloadKind = payloadKind;
                 this.ContentTypeName = contentTypeName;
             }
@@ -952,17 +975,17 @@ namespace Microsoft.OData.Core
             /// <summary>
             /// Type of the mediaTypeResolver.
             /// </summary>
-            public bool EnableAtom { get; set; }
+            private ODataMediaTypeResolver MediaTypeResolver { get; set; }
 
             /// <summary>
             /// Kind of the payload.
             /// </summary>
-            public ODataPayloadKind PayloadKind { get; set; }
+            private ODataPayloadKind PayloadKind { get; set; }
 
             /// <summary>
             /// Name of content type.
             /// </summary>
-            public string ContentTypeName { get; set; }
+            private string ContentTypeName { get; set; }
 
             /// <summary>
             /// Returns a value indicating whether this instance is equal to a specified object.
@@ -973,7 +996,7 @@ namespace Microsoft.OData.Core
             {
                 MatchInfoCacheKey cacheKey = obj as MatchInfoCacheKey;
                 return cacheKey != null &&
-                    this.EnableAtom == cacheKey.EnableAtom &&
+                    this.MediaTypeResolver == cacheKey.MediaTypeResolver &&
                     this.PayloadKind == cacheKey.PayloadKind &&
                     this.ContentTypeName == cacheKey.ContentTypeName;
             }
@@ -984,7 +1007,7 @@ namespace Microsoft.OData.Core
             /// <returns>A 32-bit signed integer hash code.</returns>
             public override int GetHashCode()
             {
-                int result = this.EnableAtom.GetHashCode() ^ this.PayloadKind.GetHashCode();
+                int result = this.MediaTypeResolver.GetHashCode() ^ this.PayloadKind.GetHashCode();
                 return this.ContentTypeName != null ? result ^ this.ContentTypeName.GetHashCode() : result;
             }
         }

@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -36,8 +36,8 @@ namespace Microsoft.OData.Core
     /// information.</remarks>
     internal sealed class ODataPayloadKindDetectionInfo
     {
-        /// <summary>The parsed content type as <see cref="MediaType"/>.</summary>
-        private readonly MediaType contentType;
+        /// <summary>The parsed content type as <see cref="ODataMediaType"/>.</summary>
+        private readonly ODataMediaType contentType;
 
         /// <summary>The encoding specified in the charset parameter of contentType or the default encoding from MediaType.</summary>
         private readonly Encoding encoding;
@@ -48,42 +48,26 @@ namespace Microsoft.OData.Core
         /// <summary>The <see cref="IEdmModel"/> for the payload.</summary>
         private readonly IEdmModel model;
 
-        /// <summary>The possible payload kinds based on content type negotiation.</summary>
-        private readonly IEnumerable<ODataPayloadKind> possiblePayloadKinds;
-
-        /// <summary>Format specific state created during payload kind detection for that format.</summary>
-        /// <remarks>
-        /// This instance will be stored on the message reader and passed to the format if it will be used
-        /// for actually reading the payload.
-        /// Format can store information which was already extracted from the payload during payload kind detection
-        /// and which it wants to avoid to recompute again during actual reading.
-        /// </remarks>
-        private object payloadKindDetectionFormatState;
-
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="contentType">The parsed content type as <see cref="MediaType"/>.</param>
-        /// <param name="encoding">The encoding from the content type or the default encoding from <see cref="MediaType" />.</param>
+        /// <param name="contentType">The parsed content type as <see cref="ODataMediaType"/>.</param>
+        /// <param name="encoding">The encoding from the content type or the default encoding from <see cref="ODataMediaType" />.</param>
         /// <param name="messageReaderSettings">The <see cref="ODataMessageReaderSettings"/> being used for reading the message.</param>
         /// <param name="model">The <see cref="IEdmModel"/> for the payload.</param>
-        /// <param name="possiblePayloadKinds">The possible payload kinds based on content type negotiation.</param>
         internal ODataPayloadKindDetectionInfo(
-            MediaType contentType,
+            ODataMediaType contentType,
             Encoding encoding,
             ODataMessageReaderSettings messageReaderSettings, 
-            IEdmModel model, 
-            IEnumerable<ODataPayloadKind> possiblePayloadKinds)
+            IEdmModel model)
         {
             ExceptionUtils.CheckArgumentNotNull(contentType, "contentType");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "readerSettings");
-            ExceptionUtils.CheckArgumentNotNull(possiblePayloadKinds, "possiblePayloadKinds");
 
             this.contentType = contentType;
             this.encoding = encoding;
             this.messageReaderSettings = messageReaderSettings;
             this.model = model;
-            this.possiblePayloadKinds = possiblePayloadKinds;
         }
 
         /// <summary>
@@ -103,32 +87,13 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The possible payload kinds based on content type negotiation.
-        /// </summary>
-        public IEnumerable<ODataPayloadKind> PossiblePayloadKinds
-        {
-            get { return this.possiblePayloadKinds; }
-        }
-
-        /// <summary>
         /// The <see cref="ODataMessageReaderSettings"/> being used for reading the message.
         /// </summary>
-        internal MediaType ContentType
+        internal ODataMediaType ContentType
         {
             get
             {
                 return this.contentType;
-            }
-        }
-
-        /// <summary>
-        /// The format specific payload kind detection state.
-        /// </summary>
-        internal object PayloadKindDetectionFormatState
-        {
-            get
-            {
-                return this.payloadKindDetectionFormatState;
             }
         }
 
@@ -140,21 +105,6 @@ namespace Microsoft.OData.Core
         public Encoding GetEncoding()
         {
             return this.encoding ?? this.contentType.SelectEncoding();
-        }
-
-        /// <summary>
-        /// Sets a format specific state created during payload kind detection.
-        /// </summary>
-        /// <param name="state">A format specific state, the value is opaque to the message reader, it only stores the reference.</param>
-        /// <remarks>
-        /// The state will be stored on the message reader and passed to the format if it will be used
-        /// for actually reading the payload.
-        /// Format can store information which was already extracted from the payload during payload kind detection
-        /// and which it wants to avoid to recompute again during actual reading.
-        /// </remarks>
-        public void SetPayloadKindDetectionFormatState(object state)
-        {
-            this.payloadKindDetectionFormatState = state;
         }
     }
 }

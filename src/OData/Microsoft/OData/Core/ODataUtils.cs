@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -206,6 +206,11 @@ namespace Microsoft.OData.Core
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
+            if (model.EntityContainer == null)
+            {
+                throw new ODataException(Strings.ODataUtils_ModelDoesNotHaveContainer);
+            }
+
             ODataServiceDocument serviceDocument = new ODataServiceDocument();
             serviceDocument.EntitySets = model.EntityContainer.EntitySets()
                 .Select(entitySet => new ODataEntitySetInfo() { Name = entitySet.Name, Title = entitySet.Name, Url = new Uri(entitySet.Name, UriKind.RelativeOrAbsolute) }).ToList();
@@ -251,7 +256,7 @@ namespace Microsoft.OData.Core
             }
 
             var extendedParameters = new List<KeyValuePair<string, string>>();
-            var extendedMediaType = new MediaType(mediaType.TypeName, mediaType.SubTypeName, extendedParameters);
+            var extendedMediaType = new ODataMediaType(mediaType.Type, mediaType.SubType, extendedParameters);
 
             var hasMetadata = false;
             var hasStreaming = false;
@@ -282,21 +287,21 @@ namespace Microsoft.OData.Core
 
             if (!hasMetadata)
             {
-                extendedMediaType.Parameters.Add(new KeyValuePair<string, string>(
+                extendedParameters.Add(new KeyValuePair<string, string>(
                     MimeConstants.MimeMetadataParameterName,
                     MimeConstants.MimeMetadataParameterValueMinimal));
             }
 
             if (!hasStreaming)
             {
-                extendedMediaType.Parameters.Add(new KeyValuePair<string, string>(
+                extendedParameters.Add(new KeyValuePair<string, string>(
                     MimeConstants.MimeStreamingParameterName,
                     MimeConstants.MimeParameterValueTrue));
             }
 
             if (!hasIeee754Compatible)
             {
-                extendedMediaType.Parameters.Add(new KeyValuePair<string, string>(
+                extendedParameters.Add(new KeyValuePair<string, string>(
                     MimeConstants.MimeIeee754CompatibleParameterName,
                     MimeConstants.MimeParameterValueFalse));
             }

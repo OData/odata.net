@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -52,234 +52,150 @@ namespace Microsoft.OData.Core.Atom
         /// <summary>
         /// Detects the payload kinds supported by this format for the specified message payload.
         /// </summary>
-        /// <param name="responseMessage">The response message with the payload stream.</param>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
+        /// <param name="settings">Configuration settings of the OData reader.</param>
         /// <returns>The set of <see cref="ODataPayloadKind"/>s that are supported with the specified payload.</returns>
-        internal override IEnumerable<ODataPayloadKind> DetectPayloadKind(
-            IODataResponseMessage responseMessage,
-            ODataPayloadKindDetectionInfo detectionInfo)
+        public override IEnumerable<ODataPayloadKind> DetectPayloadKind(
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings settings)
         {
-            ExceptionUtils.CheckArgumentNotNull(responseMessage, "responseMessage");
-            ExceptionUtils.CheckArgumentNotNull(detectionInfo, "detectionInfo");
+            ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
 
-            Stream messageStream = ((ODataMessage)responseMessage).GetStream();
-            return this.DetectPayloadKindImplementation(messageStream, /*readingResponse*/ true, /*synchronous*/ true, detectionInfo);
-        }
-
-        /// <summary>
-        /// Detects the payload kinds supported by this format for the specified message payload.
-        /// </summary>
-        /// <param name="requestMessage">The request message with the payload stream.</param>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
-        /// <returns>The set of <see cref="ODataPayloadKind"/>s that are supported with the specified payload.</returns>
-        internal override IEnumerable<ODataPayloadKind> DetectPayloadKind(
-            IODataRequestMessage requestMessage,
-            ODataPayloadKindDetectionInfo detectionInfo)
-        {
-            ExceptionUtils.CheckArgumentNotNull(requestMessage, "requestMessage");
-            ExceptionUtils.CheckArgumentNotNull(detectionInfo, "detectionInfo");
-
-            Stream messageStream = ((ODataMessage)requestMessage).GetStream();
-            return this.DetectPayloadKindImplementation(messageStream, /*readingResponse*/ false, /*synchronous*/ true, detectionInfo);
+            return this.DetectPayloadKindImplementation(
+                messageInfo.GetMessageStream(),
+                /*readingResponse*/ messageInfo.IsResponse,
+                /*synchronous*/ true,
+                new ODataPayloadKindDetectionInfo(
+                    messageInfo.MediaType,
+                    messageInfo.Encoding,
+                    settings,
+                    messageInfo.Model));
         }
 
         /// <summary>
         /// Creates an instance of the input context for this format.
         /// </summary>
-        /// <param name="readerPayloadKind">The <see cref="ODataPayloadKind"/> to read.</param>
-        /// <param name="message">The message to use.</param>
-        /// <param name="contentType">The content type of the message to read.</param>
-        /// <param name="encoding">The encoding to use.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="version">The OData protocol version to be used for reading the payload.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
-        /// <param name="payloadKindDetectionFormatState">Format specific state stored during payload kind detection
-        /// using the <see cref="ODataPayloadKindDetectionInfo.SetPayloadKindDetectionFormatState"/>.</param>
         /// <returns>The newly created input context.</returns>
-        internal override ODataInputContext CreateInputContext(
-            ODataPayloadKind readerPayloadKind,
-            ODataMessage message,
-            MediaType contentType,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings,
-            ODataVersion version,
-            bool readingResponse,
-            IEdmModel model,
-            IODataUrlResolver urlResolver,
-            object payloadKindDetectionFormatState)
+        public override ODataInputContext CreateInputContext(
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
         {
-            ExceptionUtils.CheckArgumentNotNull(message, "message");
+            ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            Stream messageStream = message.GetStream();
             return new ODataAtomInputContext(
                 this,
-                messageStream,
-                encoding,
+                messageInfo.GetMessageStream(),
+                messageInfo.Encoding,
                 messageReaderSettings,
-                version,
-                readingResponse,
+                messageInfo.IsResponse,
                 /*synchronous*/ true,
-                model,
-                urlResolver);
+                messageInfo.Model,
+                messageInfo.UrlResolver);
         }
 
         /// <summary>
         /// Creates an instance of the output context for this format.
         /// </summary>
-        /// <param name="message">The message to use.</param>
-        /// <param name="mediaType">The specific media type being written.</param>
-        /// <param name="encoding">The encoding to use.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
-        /// <param name="writingResponse">true if writing a response message; otherwise false.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
         /// <returns>The newly created output context.</returns>
-        internal override ODataOutputContext CreateOutputContext(
-            ODataMessage message, 
-            MediaType mediaType, 
-            Encoding encoding,
-            ODataMessageWriterSettings messageWriterSettings,
-            bool writingResponse,
-            IEdmModel model, 
-            IODataUrlResolver urlResolver)
+        public override ODataOutputContext CreateOutputContext(
+            ODataMessageInfo messageInfo,
+            ODataMessageWriterSettings messageWriterSettings)
         {
-            ExceptionUtils.CheckArgumentNotNull(message, "message");
+            ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            Stream messageStream = message.GetStream();
             return new ODataAtomOutputContext(
                 this,
-                messageStream,
-                encoding,
+                messageInfo.GetMessageStream(),
+                messageInfo.Encoding,
                 messageWriterSettings,
-                writingResponse,
+                messageInfo.IsResponse,
                 /*synchronous*/ true,
-                model,
-                urlResolver);
+                messageInfo.Model,
+                messageInfo.UrlResolver);
         }
 
 #if ODATALIB_ASYNC
         /// <summary>
         /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
         /// </summary>
-        /// <param name="responseMessage">The response message with the payload stream.</param>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
+        /// <param name="settings">Configuration settings of the OData reader.</param>
         /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s 
         /// that are supported with the specified payload.</returns>
-        internal override Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(
-            IODataResponseMessageAsync responseMessage,
-            ODataPayloadKindDetectionInfo detectionInfo)
+        public override Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings settings)
         {
-            ExceptionUtils.CheckArgumentNotNull(responseMessage, "responseMessage");
-            ExceptionUtils.CheckArgumentNotNull(detectionInfo, "detectionInfo");
-
-            // NOTE: After getting the message stream we already (asynchronously) buffered the whole stream in memory (in the AsyncBufferedStream).
-            //       Until we get Task-based async stream APIs and retire the AsyncBufferedStream, we call the synchronous method on the buffered stream.
-            return ((ODataMessage)responseMessage).GetStreamAsync()
-                .FollowOnSuccessWith(streamTask => this.DetectPayloadKindImplementation(streamTask.Result, /*readingResponse*/ true, /*synchronous*/ false, detectionInfo));
-        }
-
-        /// <summary>
-        /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
-        /// </summary>
-        /// <param name="requestMessage">The request message with the payload stream.</param>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
-        /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s 
-        /// that are supported with the specified payload.</returns>
-        internal override Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(
-            IODataRequestMessageAsync requestMessage,
-            ODataPayloadKindDetectionInfo detectionInfo)
-        {
-            ExceptionUtils.CheckArgumentNotNull(requestMessage, "requestMessage");
-            ExceptionUtils.CheckArgumentNotNull(detectionInfo, "detectionInfo");
-
-            // NOTE: After getting the message stream we already (asynchronously) buffered the whole stream in memory (in the AsyncBufferedStream).
-            //       Until we get Task-based async stream APIs and retire the AsyncBufferedStream, we call the synchronous method on the buffered stream.
-            return ((ODataMessage)requestMessage).GetStreamAsync()
-                .FollowOnSuccessWith(streamTask => this.DetectPayloadKindImplementation(streamTask.Result, /*readingResponse*/ false, /*synchronous*/ false, detectionInfo));
+            ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
+            return messageInfo.GetMessageStreamAsync()
+                 .FollowOnSuccessWith(
+                    streamTask => this.DetectPayloadKindImplementation(
+                                    streamTask.Result,
+                                    /*readingResponse*/ messageInfo.IsResponse,
+                                    /*synchronous*/ false,
+                                    new ODataPayloadKindDetectionInfo(
+                                        messageInfo.MediaType,
+                                        messageInfo.Encoding,
+                                        settings,
+                                        messageInfo.Model)));
         }
 
         /// <summary>
         /// Asynchronously creates an instance of the input context for this format.
         /// </summary>
-        /// <param name="readerPayloadKind">The <see cref="ODataPayloadKind"/> to read.</param>
-        /// <param name="message">The message to use.</param>
-        /// <param name="contentType">The content type of the message to read.</param>
-        /// <param name="encoding">The encoding to use.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="version">The OData protocol version to be used for reading the payload.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
-        /// <param name="payloadKindDetectionFormatState">Format specific state stored during payload kind detection
-        /// using the <see cref="ODataPayloadKindDetectionInfo.SetPayloadKindDetectionFormatState"/>.</param>
         /// <returns>Task which when completed returned the newly created input context.</returns>
-        internal override Task<ODataInputContext> CreateInputContextAsync(
-            ODataPayloadKind readerPayloadKind,
-            ODataMessage message,
-            MediaType contentType,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings,
-            ODataVersion version,
-            bool readingResponse,
-            IEdmModel model,
-            IODataUrlResolver urlResolver,
-            object payloadKindDetectionFormatState)
+        public override Task<ODataInputContext> CreateInputContextAsync(
+             ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
         {
-            ExceptionUtils.CheckArgumentNotNull(message, "message");
+            ExceptionUtils.CheckArgumentNotNull(messageInfo, "message");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return message.GetStreamAsync()
+            return messageInfo.GetMessageStreamAsync()
                 .FollowOnSuccessWith(
                     (streamTask) => (ODataInputContext)new ODataAtomInputContext(
                         this,
                         streamTask.Result,
-                        encoding,
+                        messageInfo.Encoding,
                         messageReaderSettings,
-                        version,
-                        readingResponse,
+                        messageInfo.IsResponse,
                         /*synchronous*/ false,
-                        model,
-                        urlResolver));
+                        messageInfo.Model,
+                        messageInfo.UrlResolver));
         }
 
         /// <summary>
         /// Creates an instance of the output context for this format.
         /// </summary>
-        /// <param name="message">The message to use.</param>
-        /// <param name="mediaType">The specific media type being written.</param>
-        /// <param name="encoding">The encoding to use.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
-        /// <param name="writingResponse">true if writing a response message; otherwise false.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
         /// <returns>Task which represents the pending create operation.</returns>
-        internal override Task<ODataOutputContext> CreateOutputContextAsync(
-            ODataMessage message,
-            MediaType mediaType,
-            Encoding encoding,
-            ODataMessageWriterSettings messageWriterSettings,
-            bool writingResponse,
-            IEdmModel model, 
-            IODataUrlResolver urlResolver)
+        public override Task<ODataOutputContext> CreateOutputContextAsync(
+            ODataMessageInfo messageInfo,
+            ODataMessageWriterSettings messageWriterSettings)
         {
-            ExceptionUtils.CheckArgumentNotNull(message, "message");
+            ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            return message.GetStreamAsync()
+            return messageInfo.GetMessageStreamAsync()
                 .FollowOnSuccessWith(
                     (streamTask) => (ODataOutputContext)new ODataAtomOutputContext(
                         this,
                         streamTask.Result,
-                        encoding,
+                        messageInfo.Encoding,
                         messageWriterSettings,
-                        writingResponse,
+                        messageInfo.IsResponse,
                         /*synchronous*/ false,
-                        model,
-                        urlResolver));
+                        messageInfo.Model,
+                        messageInfo.UrlResolver));
         }
 #endif
 
@@ -302,7 +218,6 @@ namespace Microsoft.OData.Core.Atom
                 messageStream,
                 detectionInfo.GetEncoding(),
                 detectionInfo.MessageReaderSettings,
-                ODataVersion.V4,    // NOTE: we don't rely on the version for payload kind detection; taking the latest.
                 readingResponse,
                 synchronous,
                 detectionInfo.Model,

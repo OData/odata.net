@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -138,22 +138,6 @@ namespace Microsoft.OData.Edm
         private static bool IsEquivalentTo(this IEdmEntityReferenceType thisType, IEdmEntityReferenceType otherType)
         {
             return thisType.EntityType.IsEquivalentTo(otherType.EntityType);
-        }
-
-        private static bool IsEquivalentTo(this IEdmStructuralProperty thisProp, IEdmStructuralProperty otherProp)
-        {
-            if (thisProp == otherProp)
-            {
-                return true;
-            }
-
-            if (thisProp == null || otherProp == null)
-            {
-                return false;
-            }
-
-            return thisProp.Name == otherProp.Name &&
-                   thisProp.Type.IsEquivalentTo(otherProp.Type);
         }
 
         private static bool IsEquivalentTo(this IEdmPrimitiveTypeReference thisType, IEdmPrimitiveTypeReference otherType)

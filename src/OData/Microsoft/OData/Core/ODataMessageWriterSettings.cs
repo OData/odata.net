@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -89,6 +89,11 @@ namespace Microsoft.OData.Core
         /// </summary>
         private Uri payloadBaseUri;
 
+        /// <summary>
+        /// Media type resolver used for this writer.
+        /// </summary>
+        private ODataMediaTypeResolver mediaTypeResolver;
+
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageWriterSettings" /> class with default settings. </summary>
         public ODataMessageWriterSettings()
             : base()
@@ -97,6 +102,7 @@ namespace Microsoft.OData.Core
             this.writerBehavior = ODataWriterBehavior.DefaultBehavior;
             this.EnableAtom = false;
             this.EnableFullValidation = true;
+            this.mediaTypeResolver = null;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageWriterSettings" /> class with specified settings.</summary>
@@ -124,6 +130,7 @@ namespace Microsoft.OData.Core
             this.writerBehavior = other.writerBehavior;
             this.EnableAtom = other.EnableAtom;
             this.EnableFullValidation = other.EnableFullValidation;
+            this.mediaTypeResolver = other.mediaTypeResolver;
         }
 
         /// <summary>Gets or sets the OData protocol version to be used for writing payloads. </summary>
@@ -214,6 +221,28 @@ namespace Microsoft.OData.Core
         /// Default to true.
         /// </summary>
         public bool EnableFullValidation { get; set; }
+
+        /// <summary>
+        /// The media type resolver to use when interpreting the content type.
+        /// </summary>
+        public ODataMediaTypeResolver MediaTypeResolver
+        {
+            get
+            {
+                if (this.mediaTypeResolver == null)
+                {
+                    this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.EnableAtom);
+                }
+
+                return this.mediaTypeResolver;
+            }
+
+            set
+            {
+                ExceptionUtils.CheckArgumentNotNull(value, "MediaTypeResolver");
+                this.mediaTypeResolver = value;
+            }
+        }
 
         /// <summary>
         /// If set to true, then the root element of each payload will be written in the default (non-prefix-qualified) namespace of the document. 

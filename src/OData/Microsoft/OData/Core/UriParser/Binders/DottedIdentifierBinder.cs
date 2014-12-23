@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -86,9 +86,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     && (dottedIdentifierToken.Identifier[dottedIdentifierToken.Identifier.Length - 1] == '\''))
                 {
                     // check if it is enum or not
-                    EnumBinder enumBinder = new EnumBinder(this.bindMethod);
                     QueryNode enumNode;
-                    if (enumBinder.TryBindDottedIdentifierAsEnum(dottedIdentifierToken, parentAsSingleValue, state, out enumNode))
+                    if (EnumBinder.TryBindDottedIdentifierAsEnum(dottedIdentifierToken, parentAsSingleValue, state, out enumNode))
                     {
                         return enumNode;
                     }

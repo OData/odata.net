@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -1133,9 +1133,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             if (previous.EdmType.TypeKind == EdmTypeKind.Collection)
             {
                 // creating a new collection type here because the type in the request is just the item type, there is no user-provided collection type.
-                if (actualTypeOfTheTypeSegment is IEdmEntityType)
+                var actualEntityTypeOfTheTypeSegment = actualTypeOfTheTypeSegment as IEdmEntityType;
+                if (actualEntityTypeOfTheTypeSegment != null)
                 {
-                    actualTypeOfTheTypeSegment = new EdmCollectionType(new EdmEntityTypeReference((IEdmEntityType)actualTypeOfTheTypeSegment, false));
+                    actualTypeOfTheTypeSegment = new EdmCollectionType(new EdmEntityTypeReference(actualEntityTypeOfTheTypeSegment, false));
                 }
                 else
                 {

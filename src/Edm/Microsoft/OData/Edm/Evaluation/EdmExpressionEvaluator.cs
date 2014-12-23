@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -385,7 +385,7 @@ namespace Microsoft.OData.Edm.Evaluation
 
                         foreach (string hop in pathExpression.Path)
                         {
-                            result = this.FindProperty(hop, result);
+                            result = FindProperty(hop, result);
 
                             if (result == null)
                             {
@@ -581,7 +581,7 @@ namespace Microsoft.OData.Edm.Evaluation
             return expressionValue;
         }
 
-        private IEdmValue FindProperty(string name, IEdmValue context)
+        private static IEdmValue FindProperty(string name, IEdmValue context)
         {
             IEdmValue result = null;
 

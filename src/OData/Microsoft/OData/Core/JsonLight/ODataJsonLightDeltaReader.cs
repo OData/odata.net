@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -1041,7 +1041,6 @@ namespace Microsoft.OData.Core.JsonLight
                         this.jsonLightInputContext.Model,
                         contextUri,
                         ODataPayloadKind.Delta,
-                        ODataVersion.V4,
                         ODataReaderBehavior.DefaultBehavior,
                         /*needParseFragment*/true);
                 deltaKind = contextUriParseResult.DeltaKind;
@@ -1468,7 +1467,6 @@ namespace Microsoft.OData.Core.JsonLight
                     entityTypeNameFromPayload,
                     this.jsonLightInputContext.Model,
                     this.jsonLightInputContext.MessageReaderSettings,
-                    this.jsonLightInputContext.Version,
                     () => EdmTypeKind.Entity,
                     out targetTypeKind,
                     out serializationTypeNameAnnotation);
@@ -1578,11 +1576,9 @@ namespace Microsoft.OData.Core.JsonLight
                     state == ODataDeltaReaderState.Exception && item == null ||
                     state == ODataDeltaReaderState.DeltaDeletedEntry && (item == null || item is ODataDeltaDeletedEntry) ||
                     state == ODataDeltaReaderState.DeltaDeletedLink && (item == null || item is ODataDeltaDeletedLink) ||
-                    state == ODataDeltaReaderState.DeltaEntryStart && (item == null || item is ODataEntry) ||
-                    state == ODataDeltaReaderState.DeltaEntryEnd && (item == null || item is ODataEntry) ||
-                    state == ODataDeltaReaderState.DeltaFeedStart && item is ODataDeltaFeed ||
+                    (state == ODataDeltaReaderState.DeltaEntryStart || state == ODataDeltaReaderState.DeltaEntryEnd) && (item == null || item is ODataEntry) ||
+                    (state == ODataDeltaReaderState.DeltaFeedStart || state == ODataDeltaReaderState.FeedEnd) && item is ODataDeltaFeed ||
                     state == ODataDeltaReaderState.DeltaLink && (item == null || item is ODataDeltaLink) ||
-                    state == ODataDeltaReaderState.FeedEnd && item is ODataDeltaFeed ||
                     state == ODataDeltaReaderState.Start && item == null ||
                     state == ODataDeltaReaderState.Completed && item == null,
                     "Reader state and associated item do not match.");
@@ -1729,8 +1725,7 @@ namespace Microsoft.OData.Core.JsonLight
                 : base(readerState, entry, navigationSource, expectedEntityType, odataUri)
             {
                 Debug.Assert(
-                    readerState == ODataDeltaReaderState.DeltaEntryStart && entry is ODataEntry ||
-                    readerState == ODataDeltaReaderState.DeltaEntryEnd && entry is ODataEntry ||
+                    (readerState == ODataDeltaReaderState.DeltaEntryStart || readerState == ODataDeltaReaderState.DeltaEntryEnd) && entry is ODataEntry ||
                     readerState == ODataDeltaReaderState.DeltaDeletedEntry && entry is ODataDeltaDeletedEntry,
                     "entry must be either DeltaEntry or DeltaDeletedEntry.");
 

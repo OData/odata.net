@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -103,7 +103,6 @@ namespace Microsoft.OData.Core
         /// <param name="expectedTypeReference">The expected type of the null value.</param>
         /// <param name="messageReaderSettings">The message reader settings.</param>
         /// <param name="validateNullValue">true to validate the the null value; false to only check whether the type is supported.</param>
-        /// <param name="version">The version used to read the payload.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
         internal static void ValidateNullValue(
@@ -111,7 +110,6 @@ namespace Microsoft.OData.Core
             IEdmTypeReference expectedTypeReference,
             ODataMessageReaderSettings messageReaderSettings,
             bool validateNullValue,
-            ODataVersion version,
             string propertyName,
             bool? isDynamicProperty = null)
         {
@@ -122,7 +120,7 @@ namespace Microsoft.OData.Core
             //   - we simply return null (treat it is as primitive null value)
             if (expectedTypeReference != null)
             {
-                ValidateTypeSupported(expectedTypeReference, version);
+                ValidateTypeSupported(expectedTypeReference);
 
                 if (!messageReaderSettings.DisablePrimitiveTypeConversion || expectedTypeReference.TypeKind() != EdmTypeKind.Primitive)
                 {
@@ -317,7 +315,6 @@ namespace Microsoft.OData.Core
         /// <param name="expectedTypeKind">The default payload type kind, this is used when the resolution is not possible,
         /// but the type name is not empty. (Should be either Complex or Entity).</param>
         /// <param name="readerBehavior">Reader behavior to use for compatibility.</param>
-        /// <param name="version">The version of the payload being read.</param>
         /// <param name="payloadTypeKind">This is set to the detected payload type kind, or None if the type was not specified.</param>
         /// <returns>The resolved type. This may be null if either no user-specified model is specified, or the type name is not recognized by the model.</returns>
         /// <remarks>The method detects the payload kind even if the model does not recognize the type. It figures out primitive and collection types always,
@@ -328,7 +325,6 @@ namespace Microsoft.OData.Core
             string payloadTypeName,
             EdmTypeKind expectedTypeKind,
             ODataReaderBehavior readerBehavior,
-            ODataVersion version,
             out EdmTypeKind payloadTypeKind)
         {
             if (payloadTypeName == null)
@@ -348,7 +344,6 @@ namespace Microsoft.OData.Core
                 expectedTypeReference == null ? null : expectedTypeReference.Definition,
                 payloadTypeName,
                 readerBehavior,
-                version,
                 out payloadTypeKind);
             if (payloadTypeKind == EdmTypeKind.None)
             {
@@ -368,7 +363,6 @@ namespace Microsoft.OData.Core
         /// <param name="payloadTypeName">The payload type name, or null if no payload type was specified.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="messageReaderSettings">The message reader settings to use.</param>
-        /// <param name="version">The version of the payload being read.</param>
         /// <param name="typeKindFromPayloadFunc">A func to compute the type kind from the payload shape if it could not be determined from the expected type or the payload type.</param>
         /// <param name="targetTypeKind">The target type kind to be used to read the payload.</param>
         /// <param name="serializationTypeNameAnnotation">Potentially non-null instance of an annotation to put on the value reported from the reader.</param>
@@ -387,7 +381,6 @@ namespace Microsoft.OData.Core
             string payloadTypeName,
             IEdmModel model,
             ODataMessageReaderSettings messageReaderSettings,
-            ODataVersion version,
             Func<EdmTypeKind> typeKindFromPayloadFunc,
             out EdmTypeKind targetTypeKind,
             out SerializationTypeNameAnnotation serializationTypeNameAnnotation)
@@ -407,7 +400,6 @@ namespace Microsoft.OData.Core
                 payloadTypeName,
                 EdmTypeKind.Complex,
                 messageReaderSettings.ReaderBehavior,
-                version,
                 out payloadTypeKind);
 
             // Compute the target type kind based on the expected type, the payload type kind
@@ -431,8 +423,7 @@ namespace Microsoft.OData.Core
                     payloadTypeName,
                     defaultPrimitivePayloadType,
                     model,
-                    messageReaderSettings,
-                    version);
+                    messageReaderSettings);
             }
             else
             {
@@ -443,8 +434,7 @@ namespace Microsoft.OData.Core
                     payloadType,
                     payloadTypeName,
                     model,
-                    messageReaderSettings,
-                    version);
+                    messageReaderSettings);
 
                 if (targetTypeReference != null)
                 {
@@ -471,7 +461,6 @@ namespace Microsoft.OData.Core
         /// for ATOM this is Edm.String, for JSON it is null since there is no payload type name for primitive types in the payload.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="messageReaderSettings">The message reader settings to use.</param>
-        /// <param name="version">The version of the payload being read.</param>
         /// <returns>The target type reference to use for parsing the value. This method never returns null.</returns>
         internal static IEdmTypeReference ResolveAndValidatePrimitiveTargetType(
             IEdmTypeReference expectedTypeReference,
@@ -480,8 +469,7 @@ namespace Microsoft.OData.Core
             string payloadTypeName,
             IEdmType defaultPayloadType,
             IEdmModel model,
-            ODataMessageReaderSettings messageReaderSettings,
-            ODataVersion version)
+            ODataMessageReaderSettings messageReaderSettings)
         {
             Debug.Assert(messageReaderSettings != null, "messageReaderSettings != null");
             Debug.Assert(
@@ -501,7 +489,7 @@ namespace Microsoft.OData.Core
 
             if (expectedTypeReference != null && !useExpectedTypeOnlyForTypeResolution)
             {
-                ValidateTypeSupported(expectedTypeReference, version);
+                ValidateTypeSupported(expectedTypeReference);
             }
 
             // Validate type kinds except for open properties or when in lax mode, but only if primitive type conversion is enabled.
@@ -566,7 +554,6 @@ namespace Microsoft.OData.Core
         /// <param name="payloadTypeName">The payload type name, or null if no payload type was specified.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="messageReaderSettings">The message reader settings to use.</param>
-        /// <param name="version">The version of the payload being read.</param>
         /// <returns>
         /// The target type reference to use for parsing the value.
         /// If there is no user specified model, this will return null.
@@ -582,8 +569,7 @@ namespace Microsoft.OData.Core
             IEdmType payloadType,
             string payloadTypeName,
             IEdmModel model,
-            ODataMessageReaderSettings messageReaderSettings,
-            ODataVersion version)
+            ODataMessageReaderSettings messageReaderSettings)
         {
             Debug.Assert(messageReaderSettings != null, "messageReaderSettings != null");
             Debug.Assert(
@@ -607,7 +593,7 @@ namespace Microsoft.OData.Core
             bool useExpectedTypeOnlyForTypeResolution = messageReaderSettings.ReaderBehavior.TypeResolver != null && payloadType != null;
             if (!useExpectedTypeOnlyForTypeResolution)
             {
-                ValidateTypeSupported(expectedTypeReference, version);
+                ValidateTypeSupported(expectedTypeReference);
 
                 // We should validate that the payload type resolved before anything else to produce reasonable error messages
                 // Otherwise we might report errors which are somewhat confusing (like "Type '' is Complex but Collection was expected.").
@@ -622,7 +608,7 @@ namespace Microsoft.OData.Core
             else
             {
                 // Payload types are always nullable.
-                ValidateTypeSupported(payloadType == null ? null : payloadType.ToTypeReference(/*nullable*/ true), version);
+                ValidateTypeSupported(payloadType == null ? null : payloadType.ToTypeReference(/*nullable*/ true));
             }
 
             if (payloadTypeKind != EdmTypeKind.None && (!messageReaderSettings.DisableStrictMetadataValidation || expectedTypeReference == null))
@@ -705,8 +691,7 @@ namespace Microsoft.OData.Core
         /// Validates whether the specified type reference is supported in the current version.
         /// </summary>
         /// <param name="typeReference">The type reference to check.</param>
-        /// <param name="version">The version currently used.</param>
-        internal static void ValidateTypeSupported(IEdmTypeReference typeReference, ODataVersion version)
+        internal static void ValidateTypeSupported(IEdmTypeReference typeReference)
         {
             if (typeReference != null)
             {

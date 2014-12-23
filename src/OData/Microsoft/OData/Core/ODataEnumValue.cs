@@ -1,4 +1,4 @@
-//   OData .NET Libraries ver. 6.8.1
+//   OData .NET Libraries ver. 6.9
 //   Copyright (c) Microsoft Corporation
 //   All rights reserved. 
 //   MIT License
@@ -27,7 +27,7 @@ namespace Microsoft.OData.Core
     public sealed class ODataEnumValue : ODataValue
     {
         /// <summary>Constructor</summary>
-        /// <param name="value">The backing type, can be "3" or "White" or "Black,Yellow,Red".</param>
+        /// <param name="value">The backing type, can be "3" or "White" or "Black,Yellow,Cyan".</param>
         public ODataEnumValue(string value)
         {
             this.Value = value;
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>Constructor</summary>
-        /// <param name="value">The backing type, can be "3" or "White" or "Black,Yellow,Red".</param>
+        /// <param name="value">The backing type, can be "3" or "White" or "Black,Yellow,Cyan".</param>
         /// <param name="typeName">The type name in edm model.</param>
         public ODataEnumValue(string value, string typeName)
         {
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Core
             this.TypeName = typeName;
         }
 
-        /// <summary>Get backing type value, can be "3" or "White" or "Black,Yellow,Red".</summary>
+        /// <summary>Get backing type value, can be "3" or "White" or "Black,Yellow,Cyan".</summary>
         public string Value { get; private set; }
 
         /// <summary>Get the type name in edm model.</summary>
