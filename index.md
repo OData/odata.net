@@ -4,6 +4,8 @@ layout: default
 
 # Getting started
 
+OData is an [OASIS standard](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=odata) for creating and consuming RESTful APIs. The OData .NET libraries implement the OData version 4.0.
+
 To build an OData V4 **client application**, start by following:
 
 - ["How to use OData Client Code Generator to generate client-side proxy class"](http://blogs.msdn.com/b/odatateam/archive/2014/03/12/how-to-use-odata-client-code-generator-to-generate-client-side-proxy-class.aspx)
@@ -11,6 +13,12 @@ To build an OData V4 **client application**, start by following:
 To build an OData V4 **service**, start by following:
 
 - ["Create an OData v4 Endpoint Using ASP.NET Web API OData"](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/create-an-odata-v4-endpoint)
+
+To learn about OData first:
+
+- ["Open Data Protocol by Example"](http://msdn.microsoft.com/en-us/library/ff478141.aspx)
+- ["Learning OData in 6 steps"](http://www.odata.org)
+- [Protocol specifications](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=odata#technical)
 
 # Introduction to libraries and tooling
 
@@ -33,8 +41,8 @@ To build an OData V4 **service**, start by following:
 
 # Samples
 
-- [Core libraries](https://github.com/OData/ODataSamples)
 - [ASP.NET Web API OData](https://aspnet.codeplex.com/SourceControl/latest#Samples/WebApi/OData/v4/)
+- [Sample services, clients and others](https://github.com/OData/ODataSamples)
 - [OData Team's MSDN blog](http://blogs.msdn.com/b/odatateam/)
 - [StackOverflow](http://stackoverflow.com/questions/tagged/odata)
 
