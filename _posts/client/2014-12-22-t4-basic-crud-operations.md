@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "[Code Generated Proxy] Basic CRUD Operations"
+title: "[Tutorial] Basic CRUD Operations"
 description: ""
-category: Client
+categories: [Client, Tutorial]
 ---
 
 # Request an entity set

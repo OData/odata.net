@@ -10,7 +10,7 @@ permalink: /samples/
   	{% for posts in category %}
       {% for post in posts %}
       {% if post.url %} 
-        <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+        <li><a href="{{site.url}}{{site.baseurl}}{{ post.url }}">{{ post.title }}</a></li>
       {% endif %}
       {% endfor %}
     {% endfor %}
