@@ -20,6 +20,14 @@ To learn about OData first:
 - ["Learning OData in 6 steps"](http://www.odata.org)
 - [Protocol specifications](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=odata#technical)
 
+# More samples
+
+- [This site]({{site.baseurl}}/samples)
+- [ASP.NET Web API OData](https://aspnet.codeplex.com/SourceControl/latest#Samples/WebApi/OData/v4/)
+- [Sample services, clients and others](https://github.com/OData/ODataSamples)
+- [OData Team's MSDN blog](http://blogs.msdn.com/b/odatateam/)
+- [StackOverflow](http://stackoverflow.com/questions/tagged/odata)
+
 # Introduction to libraries and tooling
 
 **Libraries**
@@ -38,13 +46,6 @@ To learn about OData first:
 **Relationship**
 
 ![Client side]({{site.baseurl}}/assets/library-relationship.png)
-
-# Samples
-
-- [ASP.NET Web API OData](https://aspnet.codeplex.com/SourceControl/latest#Samples/WebApi/OData/v4/)
-- [Sample services, clients and others](https://github.com/OData/ODataSamples)
-- [OData Team's MSDN blog](http://blogs.msdn.com/b/odatateam/)
-- [StackOverflow](http://stackoverflow.com/questions/tagged/odata)
 
 # Source code
 

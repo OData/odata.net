@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "[Tutorial] Basic CRUD Operations"
+title: "#1 Basic CRUD Operations"
 description: ""
-categories: [Client, Tutorial]
+category: Client
 ---
 
 # Request an entity set
