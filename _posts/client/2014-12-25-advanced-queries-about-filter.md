@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "#3 Advanced Queries about $filter"
+title: "Advanced Queries about $filter"
 description: ""
-category: Client
+category: Code Generated Client
 ---
 

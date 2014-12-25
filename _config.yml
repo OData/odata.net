@@ -1,8 +1,8 @@
 # Site settings
-title: Docs for OData .NET Libraries
+title: OData .NET Libraries
 email: odatafeedback@microsoft.com
 description: > # this means to ignore newlines until "baseurl:"
-  Documentation covering basic and advanced OData scenarios for
+  This site contains samples covering basic and advanced OData scenarios for
   ODataLib, EdmLib, OData Client for .NET, OData v4 Client Code Generator, and
   ASP.NET Web API OData.
 baseurl: "/odata.net" # the subpath of your site, e.g. /blog/
