@@ -192,6 +192,7 @@ namespace Microsoft.OData.Core.Json
             Scope currentScope = this.scopes.Peek();
             if (currentScope.ObjectCount != 0)
             {
+                this.writer.WriteLine();
                 this.writer.Write(JsonConstants.ObjectMemberSeparator);
             }
 
