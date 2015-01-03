@@ -24,4 +24,4 @@ while ((token = response.GetContinuation()) != null)
     // Get the next page
     response = context.Execute<Person>(token);
 }
-{% end highlight %}
+{% endhighlight %}
