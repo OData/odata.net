@@ -13,6 +13,7 @@ To build an OData V4 **client application**, start by following:
 To build an OData V4 **service**, start by following:
 
 - ["Create an OData v4 Endpoint Using ASP.NET Web API OData"](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/create-an-odata-v4-endpoint)
+- [Building an OData v4 Service within minutes using RESTier](https://github.com/OData/RESTier/wiki/Samples-1:-Getting-started---basic). (RESTier is a new turn-key library for building RESTful services, this library is still a preview release.)
 
 To learn about OData first:
 
@@ -26,6 +27,7 @@ To learn about OData first:
 - [ASP.NET Web API OData](https://aspnet.codeplex.com/SourceControl/latest#Samples/WebApi/OData/v4/)
 - [Sample services, clients and others](https://github.com/OData/ODataSamples)
 - [OData Team's MSDN blog](http://blogs.msdn.com/b/odatateam/)
+- [RESTier wiki](https://github.com/OData/RESTier/wiki)
 - [StackOverflow](http://stackoverflow.com/questions/tagged/odata)
 
 # Introduction to libraries and tooling
@@ -38,6 +40,7 @@ To learn about OData first:
 	- [**Microsoft.Spatial**](http://www.nuget.org/packages/Microsoft.Spatial/), namespace `Microsoft.Spatial`. It contains classes and methods that facilitate geography and geometry spatial operations.
     - [**OData Client for .NET**](http://www.nuget.org/packages/Microsoft.OData.Client/), namespace `Microsoft.OData.Client`. It contains LINQ-enabled client APIs for issuing OData queries and consuming OData JSON payloads.
 - [**ASP.NET Web API OData**](http://www.nuget.org/packages/Microsoft.AspNet.OData/), namespace `System.Web.OData`. It contains everything you need to create OData v4.0 endpoints using ASP.NET Web API and to support OData query syntax for your web APIs.
+- **[RESTier](http://www.nuget.org/packages/Microsoft.Restier/0.1.0-pre)**, namespace `Microsoft.Restier`. It's built upon ASP.NET Web API OData.  RESTier can help developers bootstrap an OData service quickly , add business logic conveniently and customize easily. It is currently a preview version.
 
 **Tooling**
 
