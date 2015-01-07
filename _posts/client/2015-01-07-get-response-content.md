@@ -5,6 +5,8 @@ description: ""
 category: Code Generated Client
 ---
 
+When the service doesn't respond with `204 No Content` to data modification requests, the response contains a non-empty body. The code below helps to retrieve the body content:
+
 {% highlight csharp %}
 static void Main(string[] args)
 {
