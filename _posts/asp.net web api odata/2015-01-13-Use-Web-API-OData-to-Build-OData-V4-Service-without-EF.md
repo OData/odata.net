@@ -16,7 +16,8 @@ Run the following command in the [Package Manager Console](http://docs.nuget.org
 
 #### Add Models
 In this getting-started example, we just add two model class `Person.cs` and `Trip.cs` under folder `Models`. `Person` can navigate to `Trips`.
-```
+
+{% highlight csharp %}
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -35,8 +36,9 @@ namespace Demo.Models
         public List<Trip> Trips { get; set; }
     }
 }
-```
-```
+{% endhighlight %}
+
+{% highlight csharp %}
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -50,7 +52,7 @@ namespace Demo.Models
         public String Name { get; set; }
     }
 }
-```
+{% endhighlight %}
 
 
 The attributes `[Key]` and `[Required]` are all from `System.ComponentModel.DataAnnotations` meaning the property is key and required seperately.
@@ -59,7 +61,8 @@ The attributes `[Key]` and `[Required]` are all from `System.ComponentModel.Data
 This tutorial uses in-memory data source, which is more flexible. Below are only one way to implement, you can definitely have your only way.
 
 Add a folder `DataSource` and add a class file `DemoDataSources.cs` with the code below.
-```
+
+{% highlight csharp %}
 using Demo.Models;
 using System.Collections.Generic;
 
@@ -144,11 +147,11 @@ namespace Demo.DataSource
         }
     }
 }
-```
+{% endhighlight %}
 #### Add Controllers
 Since there are two entity set, we will add two controller class under the folder `Controllers`
 
-```
+{% highlight csharp %}
 using Demo.DataSource;
 using System.Linq;
 using System.Web.Http;
@@ -165,9 +168,9 @@ namespace Demo.Controllers
         }
     }
 }
-```
+{% endhighlight %}
 
-```
+{% highlight csharp %}
 using Demo.DataSource;
 using System.Linq;
 using System.Web.Http;
@@ -184,7 +187,7 @@ namespace Demo.Controllers
     }
 }
 
-```
+{% endhighlight %}
 
 In this very simple implementation, only simple `Get` with query options are allowed. If you want to enable more capabilities in your controller, the code is quite similar with what's done with EF as data source. Please refer to 
 [ASP.NET Web API OData V4 Samples](https://aspnet.codeplex.com/SourceControl/latest#Samples/WebApi/OData/v4/) and [Create an OData v4 Endpoint Using ASP.NET Web API 2.2](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/create-an-odata-v4-endpoint). 
@@ -192,7 +195,7 @@ In this very simple implementation, only simple `Get` with query options are all
 #### Configure the Endpoint
 The last step is to modify the `WebApiConfig.cs` file under `App_Start`.
 
-```
+{% highlight csharp %}
 using Demo.Models;
 using Microsoft.OData.Edm;
 using System.Web.Http;
@@ -225,7 +228,7 @@ namespace Demo
         }
     }
 }
-```
+{% endhighlight %}
 
 #### Try with it
 It's done to create a very basic OData endpoint with in-memory data source using Web API OData. 
