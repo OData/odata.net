@@ -53,4 +53,4 @@ To learn about OData first:
 # Source code
 
 - [Core libraries](https://github.com/odata/odata.net)
-- [ASP.NET Web API OData](http://aspnetwebstack.codeplex.com/SourceControl/latest#OData/)
+- [OData Web API / ASP.NET Web API OData](https://github.com/odata/WebApi/)
