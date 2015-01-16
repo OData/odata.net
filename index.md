@@ -13,7 +13,7 @@ To build an OData V4 **client application**, start by following:
 To build an OData V4 **service**, start by following:
 
 - ["Create an OData v4 Endpoint Using ASP.NET Web API OData"](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/create-an-odata-v4-endpoint)
-- [Building an OData v4 Service within minutes using RESTier](https://github.com/OData/RESTier/wiki/Samples-1:-Getting-started---basic). (RESTier is a new turn-key library for building RESTful services, this library is still a preview release.)
+- [Building an OData v4 Service within minutes using RESTier](https://github.com/OData/RESTier/wiki/%5BSamples-1%5D-Getting-started---basic). (RESTier is a new turn-key library for building RESTful services, this library is still a preview release.)
 
 To learn about OData first:
 
