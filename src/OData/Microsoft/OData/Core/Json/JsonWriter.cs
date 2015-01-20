@@ -188,8 +188,8 @@ namespace Microsoft.OData.Core.Json
             Scope currentScope = this.scopes.Peek();
             if (currentScope.ObjectCount != 0)
             {
-                this.writer.WriteLine();
                 this.writer.Write(JsonConstants.ObjectMemberSeparator);
+                this.writer.WriteLine();
             }
 
             currentScope.ObjectCount++;
@@ -409,6 +409,7 @@ namespace Microsoft.OData.Core.Json
                 if (currentScope.ObjectCount != 0)
                 {
                     this.writer.Write(JsonConstants.ArrayElementSeparator);
+                    this.writer.WriteLine();
                 }
 
                 currentScope.ObjectCount++;
@@ -428,6 +429,7 @@ namespace Microsoft.OData.Core.Json
                     (currentScope.ObjectCount != 0))
                 {
                     this.writer.Write(JsonConstants.ArrayElementSeparator);
+                    this.writer.WriteLine();
                 }
 
                 currentScope.ObjectCount++;
