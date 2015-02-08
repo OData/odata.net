@@ -44,6 +44,18 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>A filter query option name.</summary>
         internal const string FilterQueryOption = "$filter";
 
+        /// <summary>An apply query option name.</summary>
+        internal const string ApplyQueryOption = "$apply";
+
+        /// <summary>An aggregate transformation</summary>
+        internal const string AggregateTransformation = "aggregate";
+
+        /// <summary>A group-by transformation</summary>
+        internal const string GroupbyTransformation = "groupby";
+
+        /// <summary>A filter transformation</summary>
+        internal const string FilterTransformation = "filter";
+
         /// <summary>An order by query option name.</summary>
         internal const string OrderByQueryOption = "$orderby";
 
