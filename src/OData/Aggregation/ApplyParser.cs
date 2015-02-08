@@ -126,7 +126,7 @@ namespace Microsoft.OData.Core.Aggregation
         /// <returns></returns>
         private static ApplyFilterClause ParseFilter(ApplyClause apply, string query, ODataUriParserConfiguration oDataUriParserConfiguration, IEdmType edmType, IEdmNavigationSource edmNavigationSource)
         {
-            query = IsolateQuery(query, UriQueryConstants.FilterTransformation).Trim('(',')');
+            query = IsolateQuery(query, UriQueryConstants.FilterTransformation);
             return new ApplyFilterClause()
             {
                 Apply = apply,

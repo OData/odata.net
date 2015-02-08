@@ -35,7 +35,7 @@ namespace AggregationTestProject.Common
                 foreach (var pi in clrType.GetProperties())
                 {
                     
-                    if (pi.PropertyType.IsPrimitive || pi.PropertyType.FullName == "System.String" || pi.PropertyType.IsEnum)
+                    if (pi.PropertyType.IsValueType || pi.PropertyType.FullName == "System.String" || pi.PropertyType.IsEnum)
                     {
                         edmType.AddStructuralProperty(
                             pi.Name,

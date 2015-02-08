@@ -408,5 +408,27 @@ namespace AggregationTestProject
                  });
             "Then an OData exception is thrown".Then(() => exception.Should().BeOfType<Microsoft.OData.Core.ODataException>());
         }
+
+        [Scenario]
+        [InlineData("$apply=filter(Timestamp gt cast(2014-11-25T12:39:05Z, Edm.DateTimeOffset))")]
+        public void CastingDoesNotRequireSpace(string query)
+        {
+            var model =
+                Common.TestModelBuilder.CreateModel(new Type[] { typeof(Category), typeof(Product), typeof(Sales) });
+            IEdmType edmType = model.FindDeclaredType(typeof(Sales).FullName);
+            var config = new ODataUriParserConfiguration(model);
+            var result = default(ApplyClause);
+
+            "Given a query to parse {0}".Given(() => { });
+            "When I Try to parse".When(
+                () =>
+                {
+                    result = ApplyParser.ParseApplyImplementation(query, config, edmType, null);
+                });
+            "Then we should have one transformation".Then(() => result.Transformations.Count.Should().Be(1));
+            "And the transformation is filter".And(() => result.Transformations.First().Item2.Should().BeOfType<ApplyFilterClause>());
+        }
+
+
     }
 }
