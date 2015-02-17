@@ -50,10 +50,20 @@ The WCFDSV4 branch has the source code of the OData V4 parity of the WCF Data Se
 ## Getting started
 
 ### Building
-This section is being worked on.
+
+Simply open the solution files under 'sln' and build them in Visual Studio IDE.
+
+Here is the usage of each solution file:
+ - Microsoft.OData.Lite.sln - Product source and minimal functional tests. *Recommended* for doing general bugfix and feature development.
+ - Microsoft.OData.Full.sln - Product source and full functional tests. Used to *fully* test your code.
+ - Microsoft.OData.E2E.sln - Product source and end-to-end tests.
+ - Microsoft.OData.CodeGen.sln - Source and tests for OData T4 client code generator.
 
 ### Testing
-This section is being worked on.
+
+Each solution contains some test projects. Please open it, build it and run all the tests in the test explorer. For running tests within Microsoft.OData.Full.sln and Microsoft.OData.E2E.sln, please open the solution in *Administrator* otherwise you will not have the permission to start the test services in IIS express.
+
+**One-click build and test script will be available in the future.*
 
 ## Community
 ### Contribution
