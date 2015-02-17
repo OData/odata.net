@@ -1,0 +1,593 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{2D1338C3-2ADF-4F4F-BE1E-7F8717D55DD8}</ProjectGuid>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.OData.Reader.Tests</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.OData.Reader.Tests</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ODataCrossTargettingSourcePath>..\..\Tests\OData.Reader.Tests</ODataCrossTargettingSourcePath>
+  </PropertyGroup>
+  <!-- References -->
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\sl4\FluentAssertions.Silverlight.dll" />
+    <DataFile Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\sl4\FluentAssertions.Silverlight.dll">
+      <InProject>false</InProject>
+      <SubFolder>
+      </SubFolder>
+    </DataFile>
+    <Reference Include="System" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.XML" />
+    <Reference Include="$(SilverlightClientLibraries)\System.Xml.Linq.dll">
+      <SpecificVersion>true</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.SL\Microsoft.Test.Taupo.SL.csproj">
+      <Project>{E88DCBA1-8E6F-4BB7-8017-7CD5A213107A}</Project>
+      <Name>Microsoft.Test.Taupo.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Edmlib.SL\Microsoft.Test.Taupo.Edmlib.SL.csproj">
+      <Project>{A3FD00F4-65DB-410E-A6D1-6E7832CD0F93}</Project>
+      <Name>Microsoft.Test.Taupo.Edmlib.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Astoria.SL\Microsoft.Test.Taupo.Astoria.SL.csproj">
+      <Project>{ACB8647F-9830-4B96-B45A-6A0ACDE6A25F}</Project>
+      <Name>Microsoft.Test.Taupo.Astoria.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Query.SL\Microsoft.Test.Taupo.Query.SL.csproj">
+      <Project>{62D87E3D-923B-468B-82CA-5F6E65298C58}</Project>
+      <Name>Microsoft.Test.Taupo.Query.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\External\System.CodeDom.SL\System.CodeDom.SL.csproj">
+      <Project>{93850EF2-5F47-404F-8988-812043FB83E9}</Project>
+      <Name>System.CodeDom.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common.Silverlight\OData\Microsoft.Test.Taupo.OData.csproj">
+      <Project>{29BFE3C4-C0A8-4E07-829E-112D1A9FA4DA}</Project>
+      <Name>Microsoft.Test.Taupo.OData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\TestUtils\Common.Silverlight\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj">
+      <Project>{DE0EEB4B-5E35-488A-8D72-04D0DE5963EE}</Project>
+      <Name>Microsoft.Test.OData.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Spatial.SL\Microsoft.Test.Taupo.Spatial.SL.csproj">
+      <Project>{2EBC2D89-C7E7-4214-8954-7C7015B8C5FE}</Project>
+      <Name>Microsoft.Test.Taupo.Spatial.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5D921888-FE03-4C3F-40FE-2F624505461D}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Source files -->
+  <!--
+  This ItemGroup is generated automatically.
+  
+  !!!! DO NOT MODIFY THIS ItemGroup MANUALLY !!!!
+  -->
+  <ItemGroup>
+    <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs">
+      <Link>$(DataFxIncPath)\AssemblyRefs.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\NavigationLinkIsCollectionPropertyValidator.cs">
+      <Link>Common\NavigationLinkIsCollectionPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\NavigationLinkTestCaseDescriptor.cs">
+      <Link>Common\NavigationLinkTestCaseDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightExpectedPayloadElementNormalizer.cs">
+      <Link>JsonLight\JsonLightExpectedPayloadElementNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightPayloadElementFixup.cs">
+      <Link>JsonLight\JsonLightPayloadElementFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\NavigationLinkInRequestReaderJsonLightTests.cs">
+      <Link>JsonLight\NavigationLinkInRequestReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightObjectModelToPayloadElementConverter.cs">
+      <Link>JsonLight\JsonLightObjectModelToPayloadElementConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\NullValueTests.cs">
+      <Link>JsonLight\NullValueTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\UndelcaredPropertyReaderJsonLightTests.cs">
+      <Link>JsonLight\UndelcaredPropertyReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\InStreamErrorReaderJsonTests.cs">
+      <Link>Json\InStreamErrorReaderJsonTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\AtomPayloadElementPropertyOrderNormalizer.cs">
+      <Link>AtomPayloadElementPropertyOrderNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomMetadataReaderTests.cs">
+      <Link>Atom\AtomMetadataReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\CollectionReaderAtomTests.cs">
+      <Link>Atom\CollectionReaderAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomObjectModelToPayloadElementConverter.cs">
+      <Link>Atom\AtomObjectModelToPayloadElementConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ComplexValueReaderAtomTests.cs">
+      <Link>Atom\ComplexValueReaderAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\PayloadKindDetectionAtomTests.cs">
+      <Link>Atom\PayloadKindDetectionAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ElementValueTests.cs">
+      <Link>Atom\ElementValueTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\EncodingAtomTests.cs">
+      <Link>Atom\EncodingAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\EntityReferenceLinkReaderAtomTests.cs">
+      <Link>Atom\EntityReferenceLinkReaderAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\EntryPayloadOrderReaderAtomTests.cs">
+      <Link>Atom\EntryPayloadOrderReaderAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\EntryReaderAtomMetadataTests.cs">
+      <Link>Atom\EntryReaderAtomMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\EntryReaderAtomTests.cs">
+      <Link>Atom\EntryReaderAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ErrorReaderAtomTests.cs">
+      <Link>Atom\ErrorReaderAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ErrorMessageNormalizer.cs">
+      <Link>Atom\ErrorMessageNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\FeedPayloadOrderReaderAtomTests.cs">
+      <Link>Atom\FeedPayloadOrderReaderAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderCrossReferenceTests.cs">
+      <Link>Batch\BatchReaderCrossReferenceTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderHttpStreamSimulationTests.cs">
+      <Link>Batch\BatchReaderHttpStreamSimulationTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderMixedEncodingTests.cs">
+      <Link>Batch\BatchReaderMixedEncodingTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderStreamBufferState.cs">
+      <Link>Batch\BatchReaderStreamBufferState.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderStreamOrBufferTestCase.cs">
+      <Link>Batch\BatchReaderStreamOrBufferTestCase.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderStreamTestCase.cs">
+      <Link>Batch\BatchReaderStreamTestCase.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\FeedReaderAtomMetadataTests.cs">
+      <Link>Atom\FeedReaderAtomMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataAtomMetadataReaderTestCase.cs">
+      <Link>Atom\ODataAtomMetadataReaderTestCase.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderTestExpectedResults.cs">
+      <Link>Batch\BatchReaderTestExpectedResults.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderTests.cs">
+      <Link>Batch\BatchReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderStreamBufferWrapper.cs">
+      <Link>Batch\BatchReaderStreamBufferWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderStreamBufferTests.cs">
+      <Link>Batch\BatchReaderStreamBufferTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderStreamWrapper.cs">
+      <Link>Batch\BatchReaderStreamWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderStreamTestUtils.cs">
+      <Link>Batch\BatchReaderStreamTestUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderStreamBufferTestCase.cs">
+      <Link>Batch\BatchReaderStreamBufferTestCase.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderStreamReadWithDelimiterTests.cs">
+      <Link>Batch\BatchReaderStreamReadWithDelimiterTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderStreamReadDescriptor.cs">
+      <Link>Batch\BatchReaderStreamReadDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderStreamReadWithLengthTests.cs">
+      <Link>Batch\BatchReaderStreamReadWithLengthTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderStreamProcessPartHeaderTests.cs">
+      <Link>Batch\BatchReaderStreamProcessPartHeaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderStreamReadLineTests.cs">
+      <Link>Batch\BatchReaderStreamReadLineTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderSkipToBoundaryTests.cs">
+      <Link>Batch\BatchReaderSkipToBoundaryTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderPayloadKindDetectionTests.cs">
+      <Link>Batch\BatchReaderPayloadKindDetectionTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchOperationHeadersWrapper.cs">
+      <Link>Batch\BatchOperationHeadersWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderHeadersTests.cs">
+      <Link>Batch\BatchReaderHeadersTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\BatchReaderTestStream.cs">
+      <Link>Batch\BatchReaderTestStream.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Batch\MemoryStreamBatchPayloadBuilder.cs">
+      <Link>Batch\MemoryStreamBatchPayloadBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ExtensionMethods.cs">
+      <Link>Common\ExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\RemoveOperationsNormalizer.cs">
+      <Link>Common\RemoveOperationsNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\RemoveStreamPropertyPayloadElementNormalizer.cs">
+      <Link>Common\RemoveStreamPropertyPayloadElementNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ConvertFromUriLiteralTests.cs">
+      <Link>ConvertFromUriLiteralTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ConvertAtomMetadataForConfigurationPayloadElementNormalizer.cs">
+      <Link>Common\ConvertAtomMetadataForConfigurationPayloadElementNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\RemoveAssociationLinkPayloadElementNormalizer.cs">
+      <Link>Common\RemoveAssociationLinkPayloadElementNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\ReaderSyncAsyncMismatchTests.cs">
+      <Link>Reader\ReaderSyncAsyncMismatchTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\RemoveCollectionNameAnnotationForCollectionPayloadElementVisitor.cs">
+      <Link>RemoveCollectionNameAnnotationForCollectionPayloadElementVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\CollectionValueReaderJsonLightTests.cs">
+      <Link>JsonLight\CollectionValueReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ComplexValueReaderJsonLightTests.cs">
+      <Link>JsonLight\ComplexValueReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\CollectionReaderJsonLightTests.cs">
+      <Link>JsonLight\CollectionReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\FeedReaderJsonLightTests.cs">
+      <Link>JsonLight\FeedReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\EntryReaderJsonLightTests.cs">
+      <Link>JsonLight\EntryReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightPayloadElementNormalizer.cs">
+      <Link>JsonLight\JsonLightPayloadElementNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\MessageReaderJsonLightTests.cs">
+      <Link>JsonLight\MessageReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\NavigationLinkInResponseReaderJsonLightTests.cs">
+      <Link>JsonLight\NavigationLinkInResponseReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\OperationReaderJsonLightTests.cs">
+      <Link>JsonLight\OperationReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ParameterReaderJsonLightTests.cs">
+      <Link>JsonLight\ParameterReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\PayloadKindDetectionJsonLightTests.cs">
+      <Link>JsonLight\PayloadKindDetectionJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\PropertyReaderJsonLightTests.cs">
+      <Link>JsonLight\PropertyReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ContextUriParserJsonLightTests.cs">
+      <Link>JsonLight\ContextUriParserJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ReorderingJsonReaderTestCaseDescriptor.cs">
+      <Link>JsonLight\ReorderingJsonReaderTestCaseDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ReorderingJsonReader.cs">
+      <Link>JsonLight\ReorderingJsonReader.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ErrorReaderJsonLightTests.cs">
+      <Link>JsonLight\ErrorReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ServiceDocumentReaderJsonLightTests.cs">
+      <Link>JsonLight\ServiceDocumentReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\StreamReferenceValueReaderJsonLightTests.cs">
+      <Link>JsonLight\StreamReferenceValueReaderJsonLightTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\OperationsJsonReaderTestValues.cs">
+      <Link>Json\OperationsJsonReaderTestValues.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\PayloadKindDetectionResult.cs">
+      <Link>PayloadKindDetectionResult.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\PayloadKindDetectionTestDescriptor.cs">
+      <Link>PayloadKindDetectionTestDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\PayloadKindDetectionTestExpectedResult.cs">
+      <Link>PayloadKindDetectionTestExpectedResult.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonPayloadElementPropertyDeduplicationNormalizer.cs">
+      <Link>JsonPayloadElementPropertyDeduplicationNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataFeedPayloadOrderObjectModelAnnotation.cs">
+      <Link>ODataFeedPayloadOrderObjectModelAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataParameterReaderTestWrapper.cs">
+      <Link>ODataParameterReaderTestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonPayloadElementPropertyOrderNormalizer.cs">
+      <Link>JsonPayloadElementPropertyOrderNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\OperationReaderAtomTests.cs">
+      <Link>Atom\OperationReaderAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\FeedReaderAtomTests.cs">
+      <Link>Atom\FeedReaderAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\CollectionValueReaderAtomTests.cs">
+      <Link>Atom\CollectionValueReaderAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\NavigationLinkReaderAtomTests.cs">
+      <Link>Atom\NavigationLinkReaderAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\PropertiesElementAtomValues.cs">
+      <Link>Atom\PropertiesElementAtomValues.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ReadPropertyAtomTests.cs">
+      <Link>Atom\ReadPropertyAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ServiceDocumentReaderAtomTests.cs">
+      <Link>Atom\ServiceDocumentReaderAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\StreamReferenceValueReaderAtomTests.cs">
+      <Link>Atom\StreamReferenceValueReaderAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MetadataReaderTestExpectedResult.cs">
+      <Link>MetadataReaderTestExpectedResult.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MetadataReaderTestDescriptor.cs">
+      <Link>MetadataReaderTestDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\XmlBaseReaderTests.cs">
+      <Link>Atom\XmlBaseReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\BufferingXmlReader.cs">
+      <Link>Atom\BufferingXmlReader.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\BufferingXmlReaderTests.cs">
+      <Link>Atom\BufferingXmlReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelToPayloadElementPayloadWithPayloadOrderConverter.cs">
+      <Link>ObjectModelToPayloadElementPayloadWithPayloadOrderConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataEntryPayloadOrderObjectModelAnnotation.cs">
+      <Link>ODataEntryPayloadOrderObjectModelAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataMessageReaderSettingsInspector.cs">
+      <Link>ODataMessageReaderSettingsInspector.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataPayloadOrderReaderTestCase.cs">
+      <Link>ODataPayloadOrderReaderTestCase.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataReaderBehaviorInspector.cs">
+      <Link>ODataReaderBehaviorInspector.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\PayloadOrderODataPayloadElementAnnotation.cs">
+      <Link>PayloadOrderODataPayloadElementAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\PayloadReaderTestDescriptorGenerator.cs">
+      <Link>PayloadReaderTestDescriptorGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ReaderAbsoluteUriODataObjectModelValidator.cs">
+      <Link>ReaderAbsoluteUriODataObjectModelValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ReaderContentTypeTestDescriptor.cs">
+      <Link>ReaderContentTypeTestDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ReaderTestConfigurationProvider.cs">
+      <Link>ReaderTestConfigurationProvider.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\MessageSizeLimitsReaderTests.cs">
+      <Link>Reader\MessageSizeLimitsReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\ParameterReaderTests.cs">
+      <Link>Reader\ParameterReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\MetadataDocumentReaderErrorTests.cs">
+      <Link>Reader\MetadataDocumentReaderErrorTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\MetadataDocumentReaderTests.cs">
+      <Link>Reader\MetadataDocumentReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\OperationReaderTests.cs">
+      <Link>Reader\OperationReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\ReaderContentTypeTests.cs">
+      <Link>Reader\ReaderContentTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\RemoveAtomMetadataFromPayloadElementVisitor.cs">
+      <Link>RemoveAtomMetadataFromPayloadElementVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\RemoveCollectionNameFromCollectionPayloadElementVisitor.cs">
+      <Link>RemoveCollectionNameFromCollectionPayloadElementVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\UriHandlingTests.cs">
+      <Link>Reader\UriHandlingTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\ServiceDocumentReaderTests.cs">
+      <Link>Reader\ServiceDocumentReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\ErrorReaderTests.cs">
+      <Link>Reader\ErrorReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\EntityReferenceLinkReaderTests.cs">
+      <Link>Reader\EntityReferenceLinkReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\TestEntityReferenceLinks.cs">
+      <Link>TestEntityReferenceLinks.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\FillTypeNamesFromTypeAnnotationsPayloadElementVisitor.cs">
+      <Link>FillTypeNamesFromTypeAnnotationsPayloadElementVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\PayloadReaderTestDescriptorExtensions.cs">
+      <Link>PayloadReaderTestDescriptorExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\AssociationLinkReaderTests.cs">
+      <Link>Reader\AssociationLinkReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\CollectionReaderTests.cs">
+      <Link>Reader\CollectionReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\CollectionValueReaderTests.cs">
+      <Link>Reader\CollectionValueReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\StreamReferenceValueReaderTests.cs">
+      <Link>Reader\StreamReferenceValueReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\DataServiceVersionHeaderTests.cs">
+      <Link>Reader\DataServiceVersionHeaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\NavigationLinkReaderTests.cs">
+      <Link>Reader\NavigationLinkReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\AggregateODataObjectModelValidator.cs">
+      <Link>Common\AggregateODataObjectModelValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ReaderEnumerablesODataObjectModelValidator.cs">
+      <Link>ReaderEnumerablesODataObjectModelValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\IODataObjectModelValidator.cs">
+      <Link>Contracts\IODataObjectModelValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\BufferingJsonReader.cs">
+      <Link>Json\BufferingJsonReader.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\BufferingJsonReaderTestCaseDescriptor.cs">
+      <Link>Json\BufferingJsonReaderTestCaseDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\BufferingJsonReaderTests.cs">
+      <Link>Json\BufferingJsonReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonPayloadErrorTestCase.cs">
+      <Link>Json\JsonPayloadErrorTestCase.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonReader.cs">
+      <Link>Json\JsonReader.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonReaderPayloads.cs">
+      <Link>Json\JsonReaderPayloads.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonReaderTestCaseDescriptor.cs">
+      <Link>Json\JsonReaderTestCaseDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonReaderTestConfiguration.cs">
+      <Link>Json\JsonReaderTestConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonReaderTests.cs">
+      <Link>Json\JsonReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonReaderUtils.cs">
+      <Link>Json\JsonReaderUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MessageToObjectModelReader.cs">
+      <Link>MessageToObjectModelReader.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\NativeInputReaderTestDescriptor.cs">
+      <Link>NativeInputReaderTestDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelToPayloadElementConverter.cs">
+      <Link>ObjectModelToPayloadElementConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchReaderTestWrapper.cs">
+      <Link>ODataBatchReaderTestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataCollectionReaderTestWrapper.cs">
+      <Link>ODataCollectionReaderTestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataMessageReaderTestWrapper.cs">
+      <Link>ODataMessageReaderTestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataReaderTestsTestModule.cs">
+      <Link>ODataReaderTestsTestModule.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataReaderTestWrapper.cs">
+      <Link>ODataReaderTestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ReaderDefaultODataObjectModelValidator.cs">
+      <Link>ReaderDefaultODataObjectModelValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\PayloadReaderTestDescriptor.cs">
+      <Link>PayloadReaderTestDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\PayloadReaderTestExpectedResult.cs">
+      <Link>PayloadReaderTestExpectedResult.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ReaderTestConfiguration.cs">
+      <Link>ReaderTestConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ReaderTestDescriptor.cs">
+      <Link>ReaderTestDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ReaderTestExpectedResult.cs">
+      <Link>ReaderTestExpectedResult.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataReaderTestCase.cs">
+      <Link>ODataReaderTestCase.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\TestReaderUtils.cs">
+      <Link>TestReaderUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\ComplexValueReaderTests.cs">
+      <Link>Reader\ComplexValueReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\EntryReaderTests.cs">
+      <Link>Reader\EntryReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\MessageReaderTests.cs">
+      <Link>Reader\MessageReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\PrimitiveValueReaderTest.cs">
+      <Link>Reader\PrimitiveValueReaderTest.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\FeedReaderTests.cs">
+      <Link>Reader\FeedReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Reader\PropertyReaderTests.cs">
+      <Link>Reader\PropertyReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MetadataReaderTestDescriptorGenerator.cs">
+      <Link>MetadataReaderTestDescriptorGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\WcfDsServerPayloadElementNormalizer.cs">
+      <Link>WcfDsServerPayloadElementNormalizer.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

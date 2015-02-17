@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <ProjectGuid>{1B591F55-379C-4439-B5F7-9AE1F05D6AA5}</ProjectGuid>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.OData.Query.TDD.Tests</RootNamespace>
+    <AssemblyName>Microsoft.Test.OData.Query.TDD.Tests</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5D921888-FE03-4C3F-40FE-2F624505461D}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll" />
+    <DataFile Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll">
+      <InProject>false</InProject>
+      <SubFolder>
+      </SubFolder>
+    </DataFile>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ExceptionUtilTests.cs" />
+    <Compile Include="ExpandAndSelectPathExtractingTests.cs" />
+    <Compile Include="ExpandDepthAndCountValidatorTests.cs" />
+    <Compile Include="Metadata\CaseInsensitiveBuiltinIdentifierUnitTests.cs" />
+    <Compile Include="Metadata\CaseInsensitiveResolverUnitTests.cs" />
+    <Compile Include="Metadata\ExtensionTestBase.cs" />
+    <Compile Include="Metadata\ODataUriResolverUnitTests.cs" />
+    <Compile Include="Metadata\UnqualifiedExtensionUnitTests.cs" />
+    <Compile Include="ODataQueryOptionParserUnitTests.cs" />
+    <Compile Include="ODataUriParserUnitTests.cs" />
+    <Compile Include="ODataUriUtilsTest.cs" />
+    <Compile Include="ODataUrlConventionsTests.cs" />
+    <Compile Include="Semantic\Binders\BinaryOperatorBinderTests.cs" />
+    <Compile Include="Semantic\Binders\DottedIdentifierBinderTests.cs" />
+    <Compile Include="Semantic\Binders\EndPathBinderTests.cs" />
+    <Compile Include="Semantic\Binders\ExpandBinderUnitTests.cs" />
+    <Compile Include="Semantic\Binders\ExpandTreeNormalizerTests.cs" />
+    <Compile Include="Semantic\Binders\FunctionCallBinderTests.cs" />
+    <Compile Include="Semantic\Binders\FunctionOverloadResolverTests.cs" />
+    <Compile Include="Semantic\Binders\KeyBinderTests.cs" />
+    <Compile Include="Semantic\Binders\KeyFinderUnitTests.cs" />
+    <Compile Include="Semantic\Binders\LambdaBinderTests.cs" />
+    <Compile Include="Semantic\Binders\LiteralBinderTests.cs" />
+    <Compile Include="Semantic\Binders\NonrootSegmentBinderTests.cs" />
+    <Compile Include="Semantic\Binders\OrderByBinderTests.cs" />
+    <Compile Include="Semantic\Binders\PathReverserTests.cs" />
+    <Compile Include="Semantic\Binders\PathSegmentTokenEqualityComparerTests.cs" />
+    <Compile Include="Semantic\Binders\SegmentArgumentParserUnitTests.cs" />
+    <Compile Include="Semantic\Binders\SelectBinderTests.cs" />
+    <Compile Include="Semantic\Binders\SelectExpandClauseFinisherTests.cs" />
+    <Compile Include="Semantic\Binders\SelectExpandPathBinderTests.cs" />
+    <Compile Include="Semantic\Binders\SelectExpandSyntacticUnifierUnitTests.cs" />
+    <Compile Include="Semantic\Binders\SelectPathSegmentTokenBinderTests.cs" />
+    <Compile Include="Semantic\Binders\SelectTreeNormalizerUnitTests.cs" />
+    <Compile Include="Semantic\Binders\UnaryOperatorBinderTests.cs" />
+    <Compile Include="Semantic\ExpandOM\ExpandedNavigationSelectItemUnitTests.cs" />
+    <Compile Include="Semantic\FunctionParameterParserTests.cs" />
+    <Compile Include="Semantic\Functional\CountFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\EntityIdFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\EntityReferenceFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\EnumFilterFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\ExapndOptionFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\ExtendedContainerElementsFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\FilterAndOrderByFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\FullUriFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\OpenPropertiesFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\ParameterAliasFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\PathFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\PathFunctionalTestsUtil.cs" />
+    <Compile Include="Semantic\Functional\SearchFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\SelectExpandFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\SemanticTreeFunctionalTests.cs" />
+    <Compile Include="Semantic\Functional\SpatialFuntionalTests.cs" />
+    <Compile Include="Semantic\Functional\TopAndSkipFunctionalTests.cs" />
+    <Compile Include="Semantic\MetadataBindingUtilsTests.cs" />
+    <Compile Include="Semantic\NodeFactoryTests.cs" />
+    <Compile Include="Semantic\Nodes\AllUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\AnyUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\BinaryOperatorUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\CollectionFunctionCallUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\CollectionNavigationNodeUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\CollectionPropertyAccessUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\ConstantUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\ConvertUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\EntityCollectionCastNodeUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\EntityCollectionCastUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\EntityCollectionFunctionCallUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\EntityRangeVariableReferenceUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\EntityRangeVariableUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\EntitySetTests.cs" />
+    <Compile Include="Semantic\Nodes\NonentityRangeVariableReferenceUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\NonentityRangeVariableUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\QueryNodeObjectModelTests.cs" />
+    <Compile Include="Semantic\Nodes\SelectExpandClauseUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\SingleEntityCastNodeUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\SingleEntityFunctionCallNodeUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\SingleNavigationNodeUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\SingleValueFunctionCallUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\SingleValueOpenPropertyAccessNodeTests.cs" />
+    <Compile Include="Semantic\Nodes\SingleValuePropertyAccessUnitTests.cs" />
+    <Compile Include="Semantic\Nodes\UnaryOperatorUnitTests.cs" />
+    <Compile Include="Semantic\ODataPathExtensionsTests.cs" />
+    <Compile Include="Semantic\ODataPathParserTests.cs" />
+    <Compile Include="Semantic\PathOM\BatchReferenceSegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\BatchSegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\CountSegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\EntitySetSegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\KeySegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\MetadataSegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\NavigationPropertyLinkSegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\NavigationPropertySegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\ODataExpandPathTests.cs" />
+    <Compile Include="Semantic\PathOM\ODataPathTests.cs" />
+    <Compile Include="Semantic\PathOM\ODataPathUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\ODataSelectPathTests.cs" />
+    <Compile Include="Semantic\PathOM\OpenPropertySegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\OperationSegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\PropertyAccessUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\PropertySegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\SegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\TypeSegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathOM\ValueSegmentUnitTests.cs" />
+    <Compile Include="Semantic\PathParserModelUtilsTests.cs" />
+    <Compile Include="Semantic\QueryNodeKindTests.cs" />
+    <Compile Include="Semantic\SegmentKeyHandlerTests.cs" />
+    <Compile Include="Semantic\SelectOM\ContainerQualifiedWildcardSelectionItemTests.cs" />
+    <Compile Include="Semantic\SelectOM\OpenPropertySelectionItemTests.cs" />
+    <Compile Include="Semantic\SelectOM\WildcardSelectionItemTests.cs" />
+    <Compile Include="Semantic\SemanticTreeVisitorUnitTests.cs" />
+    <Compile Include="Semantic\TypePromotionUtilsTests.cs" />
+    <Compile Include="Syntactic\EndPathTokenUnitTests.cs" />
+    <Compile Include="Syntactic\ExpandOptionParserTests.cs" />
+    <Compile Include="Syntactic\ExpandTermTokenUnitTests.cs" />
+    <Compile Include="Syntactic\ExpressionLexerTests.cs" />
+    <Compile Include="Syntactic\FunctionCallParserTests.cs" />
+    <Compile Include="Syntactic\IdentifierTokenizerTests.cs" />
+    <Compile Include="Syntactic\InnerPathTokenUnitTests.cs" />
+    <Compile Include="Syntactic\LIteralParserUnitTests.cs" />
+    <Compile Include="Syntactic\LiteralUtilsUnitTests.cs" />
+    <Compile Include="Syntactic\ParsePrimitiveValues.cs" />
+    <Compile Include="Syntactic\PathOM\NonSystemTokenUnitTests.cs" />
+    <Compile Include="Syntactic\PathOM\PathSegmentTokenUnitTests.cs" />
+    <Compile Include="Syntactic\PathOM\SystemTokenUnitTests.cs" />
+    <Compile Include="Syntactic\SearchLexerTests.cs" />
+    <Compile Include="Syntactic\SearchParserTests.cs" />
+    <Compile Include="Syntactic\SelectExpandParserTests.cs" />
+    <Compile Include="Syntactic\SelectExpandTermParserTests.cs" />
+    <Compile Include="Syntactic\StarTokenUnitTests.cs" />
+    <Compile Include="Syntactic\SyntacticPathParserTests.cs" />
+    <Compile Include="Syntactic\SyntacticTreeVisitorUnitTests.cs" />
+    <Compile Include="Syntactic\UriPathParserTests.cs" />
+    <Compile Include="Syntactic\UriPrimitiveTypeParserUnitTests.cs" />
+    <Compile Include="Syntactic\UriQueryExpressionParserTests.cs" />
+    <Compile Include="TestUtilities\EdmAssertions.cs" />
+    <Compile Include="TestUtilities\EdmExtensionMethods.cs" />
+    <Compile Include="TestUtilities\FakeBindMethods.cs" />
+    <Compile Include="TestUtilities\FakeParseMethods.cs" />
+    <Compile Include="TestUtilities\FakeSingleEntityNode.cs" />
+    <Compile Include="TestUtilities\FluentAssertionsExtensions.cs" />
+    <Compile Include="TestUtilities\HardCodedTestModel.cs" />
+    <Compile Include="TestUtilities\ModelBuildingHelpers.cs" />
+    <Compile Include="TestUtilities\NodeAssertions.cs" />
+    <Compile Include="TestUtilities\ODataValueAssertions.cs" />
+    <Compile Include="TestUtilities\SegmentAssertions.cs" />
+    <Compile Include="TestUtilities\SelectionAssertions.cs" />
+    <Compile Include="TestUtilities\SpatialHelpers.cs" />
+    <Compile Include="TestUtilities\TokenAssertions.cs" />
+    <Compile Include="TestUtilities\VerificationHelpers.cs" />
+    <Compile Include="UriBuilder\ContextUrlPathStringTests.cs" />
+    <Compile Include="UriBuilder\CountBuilderTests.cs" />
+    <Compile Include="UriBuilder\FilterAndOrderByBuilderTests.cs" />
+    <Compile Include="UriBuilder\PathBuilderCreationTests.cs" />
+    <Compile Include="UriBuilder\PathBuilderTests.cs" />
+    <Compile Include="UriBuilder\SearchBuilderTests.cs" />
+    <Compile Include="UriBuilder\SelectExpandBuilderTests.cs" />
+    <Compile Include="UriBuilder\TopAndSkipBuilderTests.cs" />
+    <Compile Include="UriBuilder\UriBuilderTestBase.cs" />
+    <Compile Include="UriBuilder\UrlBuilderWithParameterAliasTests.cs" />
+    <Compile Include="UriUtilsTests.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Global settings that apply unconditionally. -->
+    <EnlistmentRoot>$(MSBuildThisFileDirectory.TrimEnd('\'))</EnlistmentRoot>
+
+    <SilverlightClientLibraries>$(MSBuildProgramFiles32)\Microsoft SDKs\Silverlight\$(TargetFrameworkVersion)\Libraries\Client</SilverlightClientLibraries>
+
+    <!-- We only do test signing in OSS -->
+    <SigningScenario Condition="'$(SigningScenario)' == '' and '$(Configuration)' == 'Release'">$(SigningScenarioForRelease)</SigningScenario>
+    <SigningScenario Condition="'$(SigningScenario)' == ''">Test</SigningScenario>
+    <SigningType Condition="'$(SigningType)' == ''">Test</SigningType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--Default generated assembly attributes-->
+    <AssemblyAttributeClsCompliant Condition="'$(AssemblyAttributeClsCompliant)' == ''">true</AssemblyAttributeClsCompliant>
+    <SecurityMigration Condition="'$(SecurityMigration)' == ''">true</SecurityMigration>
+    <AssemblyAttributeComVisible Condition="'$(AssemblyAttributeComVisible)' == ''">false</AssemblyAttributeComVisible>
+    <AssemblyAttributeComCompatibleSideBySide Condition="'$(AssemblyAttributeComCompatibleSideBySide)' == ''">false</AssemblyAttributeComCompatibleSideBySide>
+    <UseOwnAssemblyVersion Condition="'$(UseOwnAssemblyVersion)' == ''">false</UseOwnAssemblyVersion>
+    <NoRuntimeCompatibilityAttribute Condition="'$(NoRuntimeCompatibilityAttribute)' == ''">false</NoRuntimeCompatibilityAttribute>
+    <GenerateTargetFrameworkAttribute Condition="'$(GenerateTargetFrameworkAttribute)' == ''">false</GenerateTargetFrameworkAttribute>
+    <TransparentAssembly Condition="'$(TransparentAssembly)' == ''">false</TransparentAssembly>
+    <AssemblyAttributeSkipVerificationInFullTrust Condition="'$(AssemblyAttributeSkipVerificationInFullTrust)' == ''">true</AssemblyAttributeSkipVerificationInFullTrust>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--Define constants that are used in ...\src\AssemblyInfo\AssemblyInfoCommon.cs to generate assembly attributes-->
+    <DefineConstants Condition="'$(UseVsVersion)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_PRODUCT_VS</DefineConstants>
+    <DefineConstants Condition="'$(AssemblyAttributeSuppressSecurityRules)' == 'true'">$(DefineConstants);SUPPRESS_SECURITY_RULES</DefineConstants>
+    <DefineConstants Condition="'$(AssemblyAttributeClsCompliant)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_CLS_COMPLIANT</DefineConstants>
+    <DefineConstants Condition="'$(SecurityMigration)' == 'true'">$(DefineConstants);SECURITY_MIGRATION</DefineConstants>
+    <DefineConstants Condition="'$(AssemblyAttributeComVisible)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_COM_VISIBLE</DefineConstants>
+    <DefineConstants Condition="'$(AssemblyAttributeComCompatibleSideBySide)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_COM_COMPATIBLE_SIDEBYSIDE</DefineConstants>
+    <DefineConstants Condition="'$(TransparentAssembly)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_TRANSPARENT_ASSEMBLY</DefineConstants>
+    <DefineConstants Condition="'$(AllowPartialTrustedCalls)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_ALLOW_PARTIALLY_TRUSTED_CALLERS</DefineConstants>
+    <DefineConstants Condition="'$(ConditionalAPTCA_L2)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2</DefineConstants>
+    <DefineConstants Condition="'$(AssemblyAttributeSkipVerificationInFullTrust)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_SKIP_VERIFICATION_IN_FULLTRUST</DefineConstants>
+    <DefineConstants Condition="'$(TargetFrameworkVersion)' == 'v3.5'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_NO_BUILD_NUM_IN_VERSION</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == '.NETPortable'">
+    <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_SECURITY_RULES;SUPPRESS_COM_VISIBLE_ATTRIBUTE;</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition ="'$(TargetFrameworkVersion)' == 'v3.5'">
+    <DefineConstants>$(DefineConstants);ORCAS;SUPPRESS_SECURITY_RULES</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+    <NoWarn>$(NoWarn);1699;1570;1572;1573;1591;1607</NoWarn>
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);1058</WarningsNotAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.vbproj'">
+    <!-- VB's prejudices against semi-colons extend to the defines passed to the compiler, so convert them to commas.  Unescape string since string methods return escaped strings. -->
+    <DefineConstants>$([MSBuild]::Unescape($(DefineConstants.Replace(';',','))))</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+    <!--Overide the default full debug symbols regardless of configuration-->
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+  
+  <Import Project="$(EnlistmentRoot)\tools\CustomMSBuild\Build.props" />
+
+  <!-- NuGet packages settings -->
+  <PropertyGroup>
+    <SolutionDir>$(EnlistmentRoot)\sln</SolutionDir>
+    <NugetPack>$(SolutionDir)\packages</NugetPack>
+    <NuGetToolsPath>$(SolutionDir)\.nuget</NuGetToolsPath>
+    <NuGetExePath>$(NuGetToolsPath)\NuGet.exe</NuGetExePath>
+    <PackagesConfig>$(NuGetToolsPath)\packages.config</PackagesConfig>
+  </PropertyGroup>
+
+  <Target Name="RestoreNuGetPackages" BeforeTargets="$(GenerateTextStringResourcesDependsOn)">
+    <Exec Command="$(NuGetExePath) restore $(PackagesConfig) -PackageSaveMode nuspec -SolutionDirectory $(SolutionDir)" />
+  </Target>
+
+  <!-- StyleCop settings -->
+  <PropertyGroup>
+    <StyleCopTargets>$(NuGetPack)\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets</StyleCopTargets>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--OData has some project files with the same name that are targeted for different framework platforms. Isolate their intermediate output folders-->
+    <IntermediateOutputPath Condition="$(TargetFrameworkFolderName) != ''">$(IntermediateOutputPath.TrimEnd('\'))\$(TargetFrameworkFolderName)</IntermediateOutputPath>
+
+    <!-- Scrub src/AssemblyInfo/AssemblyRefs.cs and .vb for conflicts and merge with AssemblyInfoCommon files. -->
+    <DataFxIncPath>$(EnlistmentRoot)\src\AssemblyInfo</DataFxIncPath>
+
+    <!-- Define where our AssemblyKeys.cs file which defines public keys for InternalsVisibleTo attributes is -->
+    <AssemblyKeysCSharpFilePath>$(DataFxIncPath)\AssemblyKeys.cs</AssemblyKeysCSharpFilePath>
+    
+    <!-- Install directory of Visual Studio e.g. C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ -->
+    <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '12.0'">$(VS120COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
+    <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '14.0'">$(VS140COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
+  </PropertyGroup>
+
+  <!--These empty property groups are used to ensure x64, x86 and AnyCPU are included in the platform list. 
+      VS will pick AnyCPU as the default purely because of alphabetic order.-->
+  <PropertyGroup Condition="'$(Platform)' == 'x64'" />
+  <PropertyGroup Condition="'$(Platform)' == 'x86'" />
+  <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'" />
+
+</Project>

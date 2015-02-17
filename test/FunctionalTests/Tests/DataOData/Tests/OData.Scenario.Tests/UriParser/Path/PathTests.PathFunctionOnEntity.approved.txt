@@ -1,0 +1,1 @@
+Path[(EntitySet: Orders)/(Key: OrderID = 1)/(Operation: GetOrderRate)]

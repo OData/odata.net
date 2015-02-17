@@ -1,0 +1,1 @@
+Path[(Singleton: VipCustomer)/(Operation: Within(Distance = ParameterAliasNode(Type Name = [Edm.Int32 Nullable=False], Alias Name = @a)))]

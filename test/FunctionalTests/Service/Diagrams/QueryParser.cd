@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Microsoft.OData.Service.Parsing.FunctionDescription">
+    <Position X="0.75" Y="1" Width="4.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>gASAAABAAAAgAAIMAREAAAAAJAEEIIAISAAAgAQEAgA=</HashCode>
+      <FileName>System\Data\Services\Parsing\FunctionDescription.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Parsing.OperationSignatures">
+    <Position X="5.75" Y="1" Width="2" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Interface Name="Microsoft.OData.Service.Parsing.OperationSignatures.IRelationalSignatures" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\Parsing\OperationSignatures.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Interface Name="Microsoft.OData.Service.Parsing.OperationSignatures.INegationSignatures" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\Parsing\OperationSignatures.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Interface Name="Microsoft.OData.Service.Parsing.OperationSignatures.ILogicalSignatures" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\Parsing\OperationSignatures.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Interface Name="Microsoft.OData.Service.Parsing.OperationSignatures.IEqualitySignatures" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\Parsing\OperationSignatures.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Interface Name="Microsoft.OData.Service.Parsing.OperationSignatures.INotSignatures" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\Parsing\OperationSignatures.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Interface Name="Microsoft.OData.Service.Parsing.OperationSignatures.IAddSignatures" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\Parsing\OperationSignatures.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Interface Name="Microsoft.OData.Service.Parsing.OperationSignatures.IEnumerableSignatures" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\Parsing\OperationSignatures.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Interface Name="Microsoft.OData.Service.Parsing.OperationSignatures.IArithmeticSignatures" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\Parsing\OperationSignatures.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Interface Name="Microsoft.OData.Service.Parsing.OperationSignatures.ISubtractSignatures" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\Parsing\OperationSignatures.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Data\Services\Parsing\OperationSignatures.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Parsing.ExpressionConstants" Collapsed="true">
+    <Position X="8.5" Y="4.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAABAAAAAABgAgAAIQIABAAECAAKAACgCAAggAA=</HashCode>
+      <FileName>System\Data\Services\Parsing\ExpressionConstants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Parsing.ExpressionLexer">
+    <Position X="8.5" Y="5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAMAAgAAAAAgIBQgAAAAAoAAAACAQCAICAAABBIAAAk=</HashCode>
+      <FileName>System\Data\Services\Parsing\ExpressionLexer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Parsing.RequestQueryParser">
+    <Position X="8.5" Y="1" Width="2.5" />
+    <NestedTypes>
+      <Class Name="Microsoft.OData.Service.Parsing.RequestQueryParser.DynamicOrdering" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\Parsing\RequestQueryParser.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="Microsoft.OData.Service.Parsing.RequestQueryParser.ExpressionParser" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\Parsing\RequestQueryParser.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>CIAAAAAAAAAAAAAAAAABAAAAgQUgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Data\Services\Parsing\RequestQueryParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Microsoft.OData.Service.Parsing.Token">
+    <Position X="0.75" Y="6.25" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AQACEAAAAAAAAAAkAkAAAAAAAAAAAAAAAAACCAAAAAA=</HashCode>
+      <FileName>System\Data\Services\Parsing\Token.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="Microsoft.OData.Service.Parsing.TokenId">
+    <Position X="3.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAACAAAgAEAAgCAAEBABCAAgAAUEAQBAQgBAAFg=</HashCode>
+      <FileName>System\Data\Services\Parsing\TokenId.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

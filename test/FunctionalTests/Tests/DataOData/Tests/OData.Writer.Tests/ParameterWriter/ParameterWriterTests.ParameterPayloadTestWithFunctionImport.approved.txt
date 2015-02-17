@@ -1,0 +1,96 @@
+Combination: 1; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{}
+
+Combination: 2; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"p1":5}
+
+Combination: 3; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"primitive":"foo"}
+
+Combination: 4; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"complex":{"PrimitiveProperty":"foo","ComplexProperty":null}}
+
+Combination: 5; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"primitiveCollection":["foo"]}
+
+Combination: 6; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"complexCollection":[{"PrimitiveProperty":"foo","ComplexProperty":null}]}
+
+Combination: 7; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{}
+
+Combination: 8; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"p1":5}
+
+Combination: 9; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"primitive":"foo"}
+
+Combination: 10; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"complex":{"PrimitiveProperty":"foo","ComplexProperty":null}}
+
+Combination: 11; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"primitiveCollection":["foo"]}
+
+Combination: 12; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"complexCollection":[{"PrimitiveProperty":"foo","ComplexProperty":null}]}
+
+Combination: 13; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{}
+
+Combination: 14; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"p1":5}
+
+Combination: 15; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"primitive":"foo"}
+
+Combination: 16; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"complex":{"PrimitiveProperty":"foo","ComplexProperty":null}}
+
+Combination: 17; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"primitiveCollection":["foo"]}
+
+Combination: 18; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"complexCollection":[{"PrimitiveProperty":"foo","ComplexProperty":null}]}
+
+Combination: 19; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{}
+
+Combination: 20; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"p1":5}
+
+Combination: 21; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"primitive":"foo"}
+
+Combination: 22; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"complex":{"PrimitiveProperty":"foo","ComplexProperty":null}}
+
+Combination: 23; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"primitiveCollection":["foo"]}
+
+Combination: 24; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"complexCollection":[{"PrimitiveProperty":"foo","ComplexProperty":null}]}
+

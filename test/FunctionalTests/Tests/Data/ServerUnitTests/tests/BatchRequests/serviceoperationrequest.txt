@@ -1,0 +1,21 @@
+﻿--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: mUltIpArt/mIxEd; bOUndAry=changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 1
+
+POST /CreateCustomer()?id=55&name='foo' HTTP/1.1
+
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c--
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+Accept: application/atom+xml,application/xml
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+
+GET /GetCustomerByCity?city='Redmond' HTTP/1.1
+Accept: application/atom+xml,application/xml
+cOntEnt-lEngth: 0
+
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b--

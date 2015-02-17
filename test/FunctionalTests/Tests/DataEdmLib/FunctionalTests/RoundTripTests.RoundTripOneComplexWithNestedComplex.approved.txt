@@ -1,0 +1,19 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" />
+    <Property Name="ComplexProperty" Type="NS1.ComplexLevel1" Nullable="false" />
+  </EntityType>
+  <ComplexType Name="ComplexLevel1">
+    <Property Name="ComplexProperty" Type="NS1.ComplexLevel2" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="ComplexLevel2">
+    <Property Name="ComplexProperty" Type="NS1.ComplexLevel3" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="ComplexLevel3">
+    <Property Name="IntProperty" Type="Edm.Int32" />
+  </ComplexType>
+</Schema>
+

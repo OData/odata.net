@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PT" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm" xmlns:m2="http://schemas.microsoft.com/ado/2008/11/dataservices/metadata">
+  <EntityContainer Name="PTEntities">
+    <EntitySet Name="FileStorage" EntityType="PT.FileStorage" />
+    <EntitySet Name="LogEntries" EntityType="PT.LogEntry" />
+    <EntitySet Name="LogEntryHeaders" EntityType="PT.LogEntryHeader" />
+    <EntitySet Name="Pictures" EntityType="PT.Picture" />
+    <EntitySet Name="Tags" EntityType="PT.Tag" />
+    <EntitySet Name="TestOperations" EntityType="PT.TestOperation" />
+    <AssociationSet Name="FK_LogEntry_TestOperation" Association="PT.FK_LogEntry_TestOperation">
+      <End Role="TestOperations" EntitySet="TestOperations" />
+      <End Role="LogEntries" EntitySet="LogEntries" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LogEntryHeaders_LogEntry1" Association="PT.FK_LogEntryHeaders_LogEntry1">
+      <End Role="LogEntries" EntitySet="LogEntries" />
+      <End Role="LogEntryHeaders" EntitySet="LogEntryHeaders" />
+    </AssociationSet>
+    <AssociationSet Name="PictureTag" Association="PT.PictureTag">
+      <End EntitySet="Pictures" Role="Pictures" />
+      <End EntitySet="Tags" Role="Tags" />
+    </AssociationSet>
+    <AssociationSet Name="FK_FileStorage_InternalPictures1" Association="PT.FK_FileStorage_InternalPictures1">
+      <End Role="InternalPicture" EntitySet="Pictures" />
+      <End Role="FileStorage" EntitySet="FileStorage" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="DummyPictureNonMLE" BaseType="PT.Picture">
+    <Property Name="DummyMessage" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="ExternalPicture" BaseType="PT.Picture">
+    <Property Name="URL" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="ContentType" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="BlobETag" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="FileStorage">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Location" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="ContentType" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="ContentDisposition" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Picture" Relationship="PT.FK_FileStorage_InternalPictures1" FromRole="FileStorage" ToRole="InternalPicture" />
+  </EntityType>
+  <EntityType Name="InternalPicture" BaseType="PT.Picture">
+    <Property Name="Exif" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="FileStorage" Relationship="PT.FK_FileStorage_InternalPictures1" FromRole="InternalPicture" ToRole="FileStorage" />
+  </EntityType>
+  <EntityType Name="LogEntry">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Verb" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+    <Property Name="URI" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="TestOperation" Relationship="PT.FK_LogEntry_TestOperation" FromRole="LogEntries" ToRole="TestOperations" />
+    <NavigationProperty Name="LogEntryHeaders" Relationship="PT.FK_LogEntryHeaders_LogEntry1" FromRole="LogEntries" ToRole="LogEntryHeaders" />
+  </EntityType>
+  <EntityType Name="LogEntryHeader">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Header" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="Value" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="LogEntry" Relationship="PT.FK_LogEntryHeaders_LogEntry1" FromRole="LogEntryHeaders" ToRole="LogEntries" />
+  </EntityType>
+  <EntityType Name="Picture" 
+              m2:EpmAtom="true"
+              m2:EpmTargetPath="EpmSyndicationTitle"
+              m2:EpmSourcePath="Name"
+              m2:EpmKeepContent="true">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String"  MaxLength="Max" Unicode="true" FixedLength="false" ConcurrencyMode="Fixed"/> 
+    <Property Name="Date" Type="String"  MaxLength="Max" Unicode="true" FixedLength="false" ConcurrencyMode="Fixed" /> 
+    <NavigationProperty Name="Tags" Relationship="PT.PictureTag" FromRole="Pictures" ToRole="Tags" />
+  </EntityType>
+  <EntityType Name="Tag">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="TagName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Pictures" Relationship="PT.PictureTag" FromRole="Tags" ToRole="Pictures" />
+  </EntityType>
+  <EntityType Name="TestOperation">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Date" Type="DateTime" />
+    <NavigationProperty Name="LogEntries" Relationship="PT.FK_LogEntry_TestOperation" FromRole="TestOperations" ToRole="LogEntries" />
+  </EntityType>
+  <Association Name="FK_LogEntry_TestOperation">
+    <End Role="TestOperations" Type="PT.TestOperation" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="LogEntries" Type="PT.LogEntry" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_LogEntryHeaders_LogEntry1">
+    <End Role="LogEntries" Type="PT.LogEntry" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="LogEntryHeaders" Type="PT.LogEntryHeader" Multiplicity="*" />
+  </Association>
+  <Association Name="PictureTag">
+    <End Type="PT.Picture" Multiplicity="*" Role="Pictures" />
+    <End Type="PT.Tag" Multiplicity="*" Role="Tags" />
+  </Association>
+  <Association Name="FK_FileStorage_InternalPictures1">
+    <End Type="PT.InternalPicture" Role="InternalPicture" Multiplicity="1" />
+    <End Type="PT.FileStorage" Role="FileStorage" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="InternalPicture">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="FileStorage">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

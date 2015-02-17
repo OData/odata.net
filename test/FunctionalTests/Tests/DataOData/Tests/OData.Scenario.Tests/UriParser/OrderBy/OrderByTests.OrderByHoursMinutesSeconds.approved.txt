@@ -1,0 +1,63 @@
+$orderby = hour(TimeBetweenLastTwoOrders) mul 3 sub minute(TimeBetweenLastTwoOrders) div 2 add second(TimeBetweenLastTwoOrders) mod 30
+
+
+OrderByClause
+	Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+	Direction = Ascending
+	Range Variable = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = Customers
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+	Expression = 
+				SingleValueFunctionCallNode
+					Name = hour
+					Return Type = [Edm.Int32 Nullable=False]
+					Function = 
+					Arguments = 
+						SingleValuePropertyAccessNode
+							Property = TimeBetweenLastTwoOrders
+							TypeReference = [Edm.Duration Nullable=False Precision=0]
+							Source = 
+							EntityRangeVariableReferenceNode
+								Name = $it
+								NavigationSource = Customers
+								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+			Multiply
+				3(Type: [Edm.Int32 Nullable=False])
+		Subtract
+				SingleValueFunctionCallNode
+					Name = minute
+					Return Type = [Edm.Int32 Nullable=False]
+					Function = 
+					Arguments = 
+						SingleValuePropertyAccessNode
+							Property = TimeBetweenLastTwoOrders
+							TypeReference = [Edm.Duration Nullable=False Precision=0]
+							Source = 
+							EntityRangeVariableReferenceNode
+								Name = $it
+								NavigationSource = Customers
+								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+			Divide
+				2(Type: [Edm.Int32 Nullable=False])
+	Add
+			SingleValueFunctionCallNode
+				Name = second
+				Return Type = [Edm.Int32 Nullable=False]
+				Function = 
+				Arguments = 
+					SingleValuePropertyAccessNode
+						Property = TimeBetweenLastTwoOrders
+						TypeReference = [Edm.Duration Nullable=False Precision=0]
+						Source = 
+						EntityRangeVariableReferenceNode
+							Name = $it
+							NavigationSource = Customers
+							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+		Modulo
+			30(Type: [Edm.Int32 Nullable=False])
+	Then By = 

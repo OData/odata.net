@@ -1,0 +1,128 @@
+Combination: 1; TestConfiguration = Format: RawValue, Request: True, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 2; TestConfiguration = Format: RawValue, Request: True, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 3; TestConfiguration = Format: RawValue, Request: False, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 4; TestConfiguration = Format: RawValue, Request: False, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 5; TestConfiguration = Format: RawValue, Request: True, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 6; TestConfiguration = Format: RawValue, Request: True, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 7; TestConfiguration = Format: RawValue, Request: False, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 8; TestConfiguration = Format: RawValue, Request: False, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 9; TestConfiguration = Format: RawValue, Request: True, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 10; TestConfiguration = Format: RawValue, Request: True, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 11; TestConfiguration = Format: RawValue, Request: False, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 12; TestConfiguration = Format: RawValue, Request: False, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 13; TestConfiguration = Format: RawValue, Request: True, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 14; TestConfiguration = Format: RawValue, Request: True, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 15; TestConfiguration = Format: RawValue, Request: False, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 16; TestConfiguration = Format: RawValue, Request: False, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 17; TestConfiguration = Format: RawValue, Request: True, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 18; TestConfiguration = Format: RawValue, Request: True, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 19; TestConfiguration = Format: RawValue, Request: False, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 20; TestConfiguration = Format: RawValue, Request: False, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 21; TestConfiguration = Format: RawValue, Request: True, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 22; TestConfiguration = Format: RawValue, Request: True, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 23; TestConfiguration = Format: RawValue, Request: False, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 24; TestConfiguration = Format: RawValue, Request: False, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 25; TestConfiguration = Format: RawValue, Request: True, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 26; TestConfiguration = Format: RawValue, Request: True, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 27; TestConfiguration = Format: RawValue, Request: False, Synchronous: False
+Model Present: false
+﻿42
+
+Combination: 28; TestConfiguration = Format: RawValue, Request: False, Synchronous: True
+Model Present: false
+﻿42
+
+Combination: 29; TestConfiguration = Format: RawValue, Request: True, Synchronous: False
+Model Present: false
+42
+
+Combination: 30; TestConfiguration = Format: RawValue, Request: True, Synchronous: True
+Model Present: false
+42
+
+Combination: 31; TestConfiguration = Format: RawValue, Request: False, Synchronous: False
+Model Present: false
+42
+
+Combination: 32; TestConfiguration = Format: RawValue, Request: False, Synchronous: True
+Model Present: false
+42
+

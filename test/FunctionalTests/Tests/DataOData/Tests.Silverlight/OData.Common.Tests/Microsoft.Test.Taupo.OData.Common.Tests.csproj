@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <ProjectGuid>{CA6F2E3B-D297-44B9-8642-912A2D58A851}</ProjectGuid>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.OData.Common.Tests</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.OData.Common.Tests</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <ODataCrossTargettingSourcePath>..\..\Tests\OData.Common.Tests</ODataCrossTargettingSourcePath>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="$(SilverlightClientLibraries)\System.Xml.Linq.dll">
+      <SpecificVersion>true</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Web\Client.PortableLibrary\Microsoft.OData.Client.Portable.csproj">
+      <Project>{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.SL\Microsoft.Test.Taupo.SL.csproj">
+      <Project>{E88DCBA1-8E6F-4BB7-8017-7CD5A213107A}</Project>
+      <Name>Microsoft.Test.Taupo.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Edmlib.SL\Microsoft.Test.Taupo.Edmlib.SL.csproj">
+      <Project>{A3FD00F4-65DB-410E-A6D1-6E7832CD0F93}</Project>
+      <Name>Microsoft.Test.Taupo.Edmlib.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Astoria.SL\Microsoft.Test.Taupo.Astoria.SL.csproj">
+      <Project>{ACB8647F-9830-4B96-B45A-6A0ACDE6A25F}</Project>
+      <Name>Microsoft.Test.Taupo.Astoria.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Query.SL\Microsoft.Test.Taupo.Query.SL.csproj">
+      <Project>{62D87E3D-923B-468B-82CA-5F6E65298C58}</Project>
+      <Name>Microsoft.Test.Taupo.Query.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\External\System.CodeDom.SL\System.CodeDom.SL.csproj">
+      <Project>{93850EF2-5F47-404F-8988-812043FB83E9}</Project>
+      <Name>System.CodeDom.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common.Silverlight\OData\Microsoft.Test.Taupo.OData.csproj">
+      <Project>{29BFE3C4-C0A8-4E07-829E-112D1A9FA4DA}</Project>
+      <Name>Microsoft.Test.Taupo.OData</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5D921888-FE03-4C3F-40FE-2F624505461D}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Source files -->
+  <!--
+  This ItemGroup is generated automatically.
+  
+  !!!! DO NOT MODIFY THIS ItemGroup MANUALLY !!!!
+  -->
+  <ItemGroup>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\InfrastructureTests\BufferingReadStreamTests.cs">
+      <Link>InfrastructureTests\BufferingReadStreamTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\InfrastructureTests\ODataUtilsTests.cs">
+      <Link>InfrastructureTests\ODataUtilsTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\AtomCategoriesMetadataTests.cs">
+      <Link>ObjectModelTests\AtomCategoriesMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\AtomResourceCollectionMetadataTests.cs">
+      <Link>ObjectModelTests\AtomResourceCollectionMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\AtomWorkspaceMetadataTests.cs">
+      <Link>ObjectModelTests\AtomWorkspaceMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataEdmValueUtils.cs">
+      <Link>ObjectModelTests\ODataEdmValueUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataActionsAndFunctionsTests.cs">
+      <Link>ObjectModelTests\ODataActionsAndFunctionsTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataInnerErrorTests.cs">
+      <Link>ObjectModelTests\ODataInnerErrorTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataServiceOperationCollectionResultTests.cs">
+      <Link>ObjectModelTests\ODataServiceOperationCollectionResultTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ObjectModelTypesTests.cs">
+      <Link>ObjectModelTests\ObjectModelTypesTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataCommonTestsTestModule.cs">
+      <Link>ODataCommonTestsTestModule.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\TestCodeTests\CombinatorialLinqExtensionsTests.cs">
+      <Link>TestCodeTests\CombinatorialLinqExtensionsTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\InfrastructureTests\BufferedReadStreamTests.cs">
+      <Link>InfrastructureTests\BufferedReadStreamTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataMessageTests.cs">
+      <Link>ObjectModelTests\ODataMessageTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataTestCase.cs">
+      <Link>ODataTestCase.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataEntityReferenceLinksTests.cs">
+      <Link>ObjectModelTests\ODataEntityReferenceLinksTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataEntityReferenceLinkTests.cs">
+      <Link>ObjectModelTests\ODataEntityReferenceLinkTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataEntitySetInfoTests.cs">
+      <Link>ObjectModelTests\ODataEntitySetInfoTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataServiceDocumentTests.cs">
+      <Link>ObjectModelTests\ODataServiceDocumentTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataStreamReferenceValueTests.cs">
+      <Link>ObjectModelTests\ODataStreamReferenceValueTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\InfrastructureTests\MediaTypeTests.cs">
+      <Link>InfrastructureTests\MediaTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataErrorTests.cs">
+      <Link>ObjectModelTests\ODataErrorTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataComplexValueTests.cs">
+      <Link>ObjectModelTests\ODataComplexValueTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataEntryTests.cs">
+      <Link>ObjectModelTests\ODataEntryTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataFeedTests.cs">
+      <Link>ObjectModelTests\ODataFeedTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\AnnotationTests.cs">
+      <Link>ObjectModelTests\AnnotationTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataNavigationLinkTests.cs">
+      <Link>ObjectModelTests\ODataNavigationLinkTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataPropertyTests.cs">
+      <Link>ObjectModelTests\ODataPropertyTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelTests\ODataEdmStructuredValueTests.cs">
+      <Link>ObjectModelTests\ODataEdmStructuredValueTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\InfrastructureTests\AsyncBufferedStreamTests.cs">
+      <Link>InfrastructureTests\AsyncBufferedStreamTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\TestCodeTests\AnnotatedPayloadElementToJsonLightConverterTests.cs">
+      <Link>TestCodeTests\AnnotatedPayloadElementToJsonLightConverterTests.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(ODataCrossTargettingSourcePath)\TestModels\TestModel.csdl">
+      <Link>TestModels\TestModel.csdl</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

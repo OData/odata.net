@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Test" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+  <EntityContainer Name="BugEntityContainer">
+    <EntitySet Name="Customers" EntityType="Test.BugEntity" />
+  </EntityContainer>
+  <EntityType Name="BugEntity">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="FooBaz" Type="Double" Nullable="false"/>
+  </EntityType>
+</Schema>

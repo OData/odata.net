@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LayeringRules ModuleName="Microsoft.Test.Taupo.Query">
+  <CommonDependencies>
+    <DependsOn Namespace="Microsoft.Test.Taupo.Common" />
+    <DependsOn Namespace="Microsoft.Test.Taupo.Query.Common" />
+  </CommonDependencies>
+  <ContractsDependencies>
+    <Namespace Name="Microsoft.Test.Taupo.Query">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Query.Common">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Query.Contracts">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Query.Contracts.Linq">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.Linq.Expressions" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Query.Contracts.Linq.Expressions">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Query.Linq">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.Linq.Expressions" />
+    </Namespace>
+  </ContractsDependencies>
+  <ImplementationDependencies>
+    <Namespace Name="Microsoft.Test.Taupo.Query">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Linq" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Query.Contracts">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query" Justification="Platform helpers"/>
+    </Namespace>
+  </ImplementationDependencies>
+  <CycleDependencies>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Query.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Query.Contracts.Linq" />
+      <Namespace Name="Microsoft.Test.Taupo.Query.Contracts.Linq.Expressions" />
+    </Cycle>
+  </CycleDependencies>
+</LayeringRules>

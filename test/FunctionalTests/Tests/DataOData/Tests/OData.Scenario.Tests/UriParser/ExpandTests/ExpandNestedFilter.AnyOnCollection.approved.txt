@@ -1,0 +1,50 @@
+$select = 
+$expand = CustomerForOrder($filter=Numbers/any(a: a eq '4258828080'))
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: CustomerForOrder)]
+			FilterQueryOption
+				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+				Parameter = 
+				EntityRangeVariable
+					Name = $it
+					NavigationSource = CustomerForOrder
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+				Expression = 
+				AnyNode
+					TypeReference = [Edm.Boolean Nullable=True]
+					Body = 
+						NonentityRangeVariableReferenceNode
+							Name = a
+							Range Variable = 
+							NonentityRangeVariable
+								Name = a
+								TypeReference = [Edm.String Nullable=True Unicode=True]
+							TypeReference = [Edm.String Nullable=True Unicode=True]
+					Equal
+						4258828080(Type: [Edm.String Nullable=True Unicode=True])
+					Source = 
+					CollectionPropertyAccessNode
+						Property = Numbers
+						ItemType = [Edm.String Nullable=True Unicode=True]
+						Source = 
+						EntityRangeVariableReferenceNode
+							Name = $it
+							NavigationSource = CustomerForOrder
+							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Parameters = 
+					NonentityRangeVariable
+						Name = a
+						TypeReference = [Edm.String Nullable=True Unicode=True]
+					EntityRangeVariable
+						Name = $it
+						NavigationSource = CustomerForOrder
+						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems(Empty List)

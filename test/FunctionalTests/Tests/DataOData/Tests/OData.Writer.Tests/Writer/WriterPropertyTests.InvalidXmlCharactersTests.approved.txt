@@ -1,0 +1,19 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Edm.String" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">Invalid character: '&#x1;'</m:value>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Edm.String" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">Invalid character: '&#x1;'</m:value>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Edm.String" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">Invalid character: '&#x1;'</m:value>
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Edm.String" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">Invalid character: '&#x1;'</m:value>
+

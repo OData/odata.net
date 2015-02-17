@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
+  <EntityContainerMapping StorageEntityContainer="dbo1" CdmEntityContainer="CustomManyToManyContainer">
+    <EntitySetMapping Name="Persons" StoreEntitySet="Persons" TypeName="AstoriaUnitTests.ObjectContextStubs.Person">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="Name" ColumnName="Name" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="Homes" StoreEntitySet="Homes" TypeName="AstoriaUnitTests.ObjectContextStubs.Home">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="Address" ColumnName="Address" />
+    </EntitySetMapping>
+    <AssociationSetMapping Name="Person_Home_Ownership" TypeName="AstoriaUnitTests.ObjectContextStubs.Person_Home_Ownership" StoreEntitySet="Person_Home_Ownership">
+      <EndProperty Name="Persons">
+        <ScalarProperty Name="Id" ColumnName="PersonId" />
+      </EndProperty>
+      <EndProperty Name="Homes">
+        <ScalarProperty Name="Id" ColumnName="HomeId" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>

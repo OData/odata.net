@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="EdmDataTypesContext" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+  <EntityContainer Name="EdmDataTypesContext">
+    <EntitySet Name="DataTypes" EntityType="EdmDataTypesContext.DataTypes" />
+  </EntityContainer>
+  <EntityType Name="DataTypes">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="Integer" Type="Int32" />
+    <Property Name="Float" Type="Double" />
+    <Property Name="Decimal" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="String" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <Property Name="Date" Type="DateTime" />
+    <Property Name="Boolean" Type="Boolean" />
+    <Property Name="UniqueId" Type="Guid" />
+  </EntityType>
+</Schema>

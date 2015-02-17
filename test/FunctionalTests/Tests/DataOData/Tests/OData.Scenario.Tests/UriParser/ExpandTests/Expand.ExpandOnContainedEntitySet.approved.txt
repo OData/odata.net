@@ -1,0 +1,12 @@
+$select = 
+$expand = Child
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: Child)]
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems(Empty List)

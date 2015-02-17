@@ -1,0 +1,2838 @@
+Combination: 53; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed>
+
+Combination: 54; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 55; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 56; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 61; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed>
+
+Combination: 62; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 63; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 64; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 69; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link"><m:inline><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 70; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml" />
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 71; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml" />
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 72; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml" />
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 77; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 78; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 79; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 80; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 85; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 86; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 87; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 88; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 93; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 94; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/xml" />
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 95; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/xml" />
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 96; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/xml" />
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 150; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 152; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 158; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 160; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 166; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml" />
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 168; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml" />
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 174; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 176; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 182; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 184; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 190; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/xml" />
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 192; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/xml" />
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 246; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 248; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 254; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 256; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 262; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml" />
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 264; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml" />
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 270; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 272; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 278; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 280; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 286; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/xml" />
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 288; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/xml" />
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 342; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 344; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 350; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 352; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 358; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+        <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml" />
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 360; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+        <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml" />
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 366; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 368; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 374; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 376; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 382; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/xml" />
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 384; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/xml" />
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 438; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 440; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 446; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 448; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+    <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+    <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml" />
+  </entry>
+</feed>
+
+Combination: 454; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+        <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml" />
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 456; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+        <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml" />
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 462; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 464; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 470; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 472; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+          <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 478; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/xml" />
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 480; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <category term="#TestModel.CustomerType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkTwo" type="application/xml" title="AssociationLinkTwo" href="http://odata.org/associationlink2" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkTwo" type="application/atom+xml;type=entry" title="AssociationLinkTwo" href="http://odata.org/link" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/relatedlinks/AssociationLinkOne" type="application/xml" title="AssociationLinkOne" href="http://odata.org/associationlink" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/AssociationLinkOne" type="application/atom+xml;type=entry" title="AssociationLinkOne" href="http://odata.org/link" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/xml" />
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+

@@ -1,0 +1,64 @@
+﻿<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="OverrideOperations" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="ET">
+        <Key>
+          <PropertyRef Name="UserName" />
+        </Key>
+        <Property Name="UserName" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityType Name="DerivedET" BaseType="OverrideOperations.ET">
+        <Property Name="DerivedComplexP" Type="OverrideOperations.DerivedCT" />
+      </EntityType>
+      <ComplexType Name="CT">
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="DerivedCT" BaseType="OverrideOperations.CT">
+        <Property Name="Description" Type="Edm.String" Nullable="false" />
+      </ComplexType>
+      <Function Name="FunctionWithoutParameter" IsBound="true">
+        <Parameter Name="entity" Type="OverrideOperations.ET" Nullable="false" />
+        <ReturnType Type="OverrideOperations.CT" Nullable="false" />
+      </Function>
+      <Function Name="FunctionWithoutParameter" IsBound="true">
+        <Parameter Name="entity" Type="OverrideOperations.DerivedET" Nullable="false" />
+        <ReturnType Type="OverrideOperations.CT" Nullable="false" />
+      </Function>
+      <Action Name="ActionWithParameter" IsBound="true">
+        <Parameter Name="entity" Type="OverrideOperations.ET" Nullable="false" />
+        <Parameter Name="p1" Type="Edm.String" Nullable="false" />
+        <ReturnType Type="OverrideOperations.ET" Nullable="false" />
+      </Action>
+      <Action Name="ActionWithParameter" IsBound="true">
+        <Parameter Name="entity" Type="OverrideOperations.DerivedET" Nullable="false" />
+        <Parameter Name="p1" Type="Edm.String" Nullable="false" />
+        <ReturnType Type="OverrideOperations.ET" Nullable="false" />
+      </Action>
+      <Function Name="FunctionBoundToCollectionOfEntity" IsBound="true">
+        <Parameter Name="entity" Type="Collection(OverrideOperations.ET)" Nullable="false" />
+        <Parameter Name="p1" Type="Edm.String" Nullable="false" />
+        <ReturnType Type="Collection(OverrideOperations.ET)" Nullable="false" />
+      </Function>
+      <Function Name="FunctionBoundToCollectionOfEntity" IsBound="true">
+        <Parameter Name="entity" Type="Collection(OverrideOperations.DerivedET)" Nullable="false" />
+        <Parameter Name="p1" Type="Edm.String" Nullable="false" />
+        <ReturnType Type="Collection(OverrideOperations.ET)" Nullable="false" />
+      </Function>
+      <Action Name="ActionBoundToCollectionOfEntity" IsBound="true">
+        <Parameter Name="entity" Type="Collection(OverrideOperations.ET)" Nullable="false" />
+        <Parameter Name="p1" Type="Edm.String" Nullable="false" />
+        <ReturnType Type="Collection(OverrideOperations.ET)" Nullable="false" />
+      </Action>
+      <Action Name="ActionBoundToCollectionOfEntity" IsBound="true">
+        <Parameter Name="entity" Type="Collection(OverrideOperations.DerivedET)" Nullable="false" />
+        <Parameter Name="p1" Type="Edm.String" Nullable="false" />
+        <ReturnType Type="Collection(OverrideOperations.ET)" Nullable="false" />
+      </Action>
+      <EntityContainer Name="OverrideOperationsContainer">
+        <EntitySet Name="ETSets" EntityType="OverrideOperations.ET">
+          <NavigationPropertyBinding Path="NavP" Target="ETSets" />
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

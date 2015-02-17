@@ -1,0 +1,19 @@
+﻿BEGIN:VCARD
+VERSION:2.1
+N:Last;First;Middle;Prof.;II
+FN:Prof. First Middle Last II
+TEL:Tel-Default
+TEL;WORK;VOICE:Tel-Bussiness-1
+TEL;PREF;CELL;VOICE:Tel-Mobile
+TEL;HOME;FAX:Tele-Home-Fax2
+ADR;WORK;PREF:;;Street1;City1;State1;;United States of America
+LABEL;WORK;PREF;ENCODING=QUOTED-PRINTABLE:Street1=0D=0A=City1, State1
+ADR;HOME:;;Street2;City2;State2;;United States of America
+LABEL;HOME;ENCODING=QUOTED-PRINTABLE:Street2=0D=0A=City2, State2
+X-MS-OL-DEFAULT-POSTAL-ADDRESS:2
+URL;WORK:http://example.org/
+EMAIL;PREF;INTERNET:email1@example.org
+EMAIL;INTERNET:email2@exmple.org
+X-MS-CARDPICTURE;JPEG;ENCODING=BASE64:AQIDBA==
+REV:20140926T062504Z
+END:VCARD

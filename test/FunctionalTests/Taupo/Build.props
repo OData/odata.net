@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Disable warnings for non-CLS compliant APIs. These could be removed if we set AssemblyAttributeClsCompliant to false
+         for all test projects and remove CLSCompliant(false) declarations. -->
+    <NoWarn>$(NoWarn),3001,3002,3003,3009</NoWarn>
+    
+    <DefineConstants Condition="'$(TargetFrameworkProfile)' == 'WindowsPhone71'">$(DefineConstants);WINDOWS_PHONE;SILVERLIGHT;</DefineConstants>
+
+    <TaupoExternalPath>$(MSBuildThisFileDirectory)External\</TaupoExternalPath>
+    <!-- Set this so that we get SecurityRulesetAttribute(Level2) on Taupo assemblies -->
+    <SecurityMigration>false</SecurityMigration>
+    
+    <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">Taupo.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis Condition="'$(RunCodeAnalysis)' == '' and '$(TargetFrameworkIdentifier)' != 'Silverlight'">true</RunCodeAnalysis>
+  </PropertyGroup>
+  
+  <Import Project="..\Build.props" />
+  
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo\CustomDictionary.xml" />
+  </ItemGroup>
+  
+</Project>

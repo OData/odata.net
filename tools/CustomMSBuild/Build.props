@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <MSBuildTasksPath>$(MSBuildToolsPath)\Microsoft.Build.Tasks.v$(MSBuildToolsVersion).dll</MSBuildTasksPath>
+    <MSBuildTasksPath Condition="!Exists('$(MSBuildTasksPath)')">$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll</MSBuildTasksPath>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Define Basic Properties">
+    <EnlistmentRoot Condition=" '$(EnlistmentRoot)'=='' ">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.root))</EnlistmentRoot>
+    <EnlistmentRoot>$(EnlistmentRoot.TrimEnd({'\\'}))</EnlistmentRoot>
+    <BuildExtensionsPath Condition=" '$(BuildExtensionsPath)'=='' ">$(MSBuildThisFileDirectory.TrimEnd('\'))</BuildExtensionsPath>
+    <CustomBuildExtensionsPath Condition=" '$(CustomBuildExtensionsPath)'=='' ">$(EnlistmentRoot)\tools\CustomMSBuild</CustomBuildExtensionsPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <!-- when a TFS build definition, building for mixed platforms, specifies no platform. -->
+    <Platform Condition=" '$(Platform)' == '' And '$(MSBuildProjectExtension)' != '.vcxproj' ">AnyCPU</Platform>
+    <!-- SelfContainedBuildOutput indicates whether to isolate the build output on a per-project basis. -->
+    <SelfContainedBuildOutput Condition="'$(SelfContainedBuildOutput)' == ''">false</SelfContainedBuildOutput>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Default Drop Structure Variables">
+    <!-- These variables define the object and binary roots, respectively. -->
+    <IntermediateOutputRootDir Condition=" '$(IntermediateOutputRootDir)'=='' ">$(EnlistmentRoot)\obj</IntermediateOutputRootDir>
+    <OutputRootDir Condition=" '$(OutputRootDir)' == '' ">$(EnlistmentRoot)\bin\$(Platform)\$(Configuration)</OutputRootDir>
+    <OutputRootDir>$(OutputRootDir.TrimEnd({'\\'}))</OutputRootDir>
+
+    <RelativeOutputPath Condition="'$(SelfContainedBuildOutput)' == 'true'">$([System.IO.Path]::Combine($(RelativeOutputPath), $(MSBuildProjectName)))</RelativeOutputPath>
+
+    <!-- These variables are the ones that the standard MSBuild targets recognize.  We override them here.  -->
+    <OutDir Condition=" '$(OutDir)' =='' ">$([System.IO.Path]::Combine($(OutputRootDir), $(RelativeOutputPath)))</OutDir>
+    <!-- OutDir requires a trailing slash to prevent MSB8004 warning -->
+    <OutDir>$(OutDir.TrimEnd("\\"))\</OutDir>
+
+    <!-- This ensures OutputPath always matches OutDir, especially when TFS overrides OutDir. -->
+    <OutputPath>$(OutDir)</OutputPath>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(RedirectOutputToLocalBin)'=='' ">
+    <!-- If we are in vs, we want to build web applications to bin, where vs expects to find them. -->
+    <RedirectOutputToLocalBin Condition="'$(BuildingInsideVisualStudio)' == 'true' and $(ProjectTypeGuids.ToLower().Contains('{349c5851-65df-11da-9384-00065b846f21}'))">true</RedirectOutputToLocalBin>
+    <!-- If we are in vs, we want to build phone applications to bin, where vs expects to find them. -->
+    <RedirectOutputToLocalBin Condition="'$(BuildingInsideVisualStudio)' == 'true' and $(ProjectTypeGuids.ToLower().Contains('{fae04ec0-301f-11d3-bf4b-00c04f79efbc}'))">true</RedirectOutputToLocalBin>
+    <RedirectOutputToLocalBin Condition="'$(RedirectOutputToLocalBin)'==''">false</RedirectOutputToLocalBin>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(RedirectOutputToLocalBin)'=='true'">
+    <OutputPath>bin\</OutputPath>
+    <OutDir></OutDir>
+  </PropertyGroup>
+
+  <!-- Due to a VS bug, avoid customizing the intermediate output path when running code analysis in VS. -->
+  <PropertyGroup Condition="!($(BuildingInsideVisualStudio) == 'true' and '$(RunCodeAnalysisOnce)' == 'true')">
+    <BaseIntermediateOutputPath Condition=" '$(BaseIntermediateOutputPath)' =='' ">$(IntermediateOutputRootDir)</BaseIntermediateOutputPath>
+    <!-- IntermediateOutputPath requires a trailing slash to prevent MSB8004 warning -->
+    <IntermediateOutputPath Condition=" '$(IntermediateOutputPath)' =='' ">$(BaseIntermediateOutputPath)\$(Platform)\$(Configuration)\$(MSBuildProjectFile)\</IntermediateOutputPath>
+  </PropertyGroup>
+
+  <Import Project="$(BuildExtensionsPath)\Codesign.props" />
+
+  <PropertyGroup>
+    <!-- Before/After injection Settings -->
+    <CustomBeforeMicrosoftCommonTargets>$(MSBuildThisFileDirectory)Before.Common.targets</CustomBeforeMicrosoftCommonTargets>
+    <CustomAfterMicrosoftCommonTargets>$(MSBuildThisFileDirectory)After.Common.targets</CustomAfterMicrosoftCommonTargets>
+
+    <!-- Code Analysis Settings -->
+    <RunCodeAnalysis Condition=" '$(RunCodeAnalysis)' == '' ">false</RunCodeAnalysis>
+    <EnableCodeAnalysis Condition=" '$(EnableCodeAnalysis)' == '' ">true</EnableCodeAnalysis>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <EnableCodeAnalysisSilentErrorHandling Condition="'$(EnableCodeAnalysisSilentErrorHandling)' == ''">true</EnableCodeAnalysisSilentErrorHandling>
+
+    <!-- Stylecop Settings -->
+    <EnableStyleCop Condition="'$(EnableStyleCop)'==''">true</EnableStyleCop>
+    <RunStyleCop Condition="'$(RunStyleCop)'==''">true</RunStyleCop>
+</PropertyGroup>
+
+  <!-- *Only targets are no-ops unless specified otherwise (ex: managed code when stylecop is enabled) -->
+  <Target Name="StyleCopOnly" DependsOnTargets="$(StyleCopOnlyDependsOn)" />
+  <!-- Silence "target does not exist in the project, and will be ignored" message. -->
+  <Target Name="ResolveProjectReferences" />
+  <Target Name="AssignProjectConfiguration" />
+
+  <!--
+    The "Private" Item Attribute specifies whether the reference should be copied to the output folder. This attribute matches the "Copy Local" property of the reference that's in the Visual Studio IDE.
+    To avoid file copy race conditions, we default it to false for projects without self-contained build output. 
+  -->
+  <ItemDefinitionGroup Condition="'$(SelfContainedBuildOutput)' == 'false'">
+    <Reference>
+      <Private></Private>
+    </Reference>
+    <ProjectReference>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+
+  <!-- Verify hint paths exist -->
+  <Target Name="VerifyHintPaths" BeforeTargets="Build">
+    <ItemGroup>
+      <MissingHints Include="%(Reference.HintPath)" Condition="'%(Reference.HintPath)'!='' and !Exists('%(Reference.HintPath)')" />
+    </ItemGroup>
+    <Warning Text="Reference HintPath not found &quot;%(MissingHints.identity)&quot;" Condition="'@(MissingHints)'!=''" />
+  </Target>
+
+  <!-- ===============================================================
+    MSBuild settings
+    ================================================================ -->
+  <PropertyGroup>
+    <CopyRetryCount Condition="'$(CopyRetryCount)'==''">10</CopyRetryCount>
+    <CopyRetryDelayMilliseconds Condition="'$(CopyRetryDelayMilliseconds)'==''">1000</CopyRetryDelayMilliseconds>
+    <OverwriteReadOnlyFiles Condition="'$(OverwriteReadOnlyFiles)' == ''">false</OverwriteReadOnlyFiles>
+    <SkipCopyUnchangedFiles Condition="'$(SkipCopyUnchangedFiles)' == ''">true</SkipCopyUnchangedFiles>
+    <TrackFileAccess Condition="'$(TrackFileAccess)' == '' and '$(BuildingInLab)' == 'true'">false</TrackFileAccess>
+  </PropertyGroup>
+
+  <!-- ===============================================================
+    Compile settings
+    ================================================================ -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <Optimize Condition="'$(Optimize)' == ''">false</Optimize>
+    <DefineConstants>$(DefineConstants),DEBUG,TRACE,CODE_ANALYSIS</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' or '$(Configuration)' == 'Cover'">
+    <Optimize Condition="'$(Optimize)' == ''">true</Optimize>
+    <DebugType Condition="'$(DebugType)' == ''">pdbonly</DebugType>
+    <DefineConstants>$(DefineConstants),TRACE,CODE_ANALYSIS</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DebugSymbols Condition="'$(DebugSymbols)' == ''">true</DebugSymbols>
+    <DebugType Condition="'$(DebugType)' == ''">full</DebugType>
+    <ErrorReport Condition="'$(ErrorReport)' == ''">prompt</ErrorReport>
+    <WarningLevel Condition="'$(WarningLevel)' == ''">4</WarningLevel>
+    <TreatWarningsAsErrors Condition="'$(TreatWarningsAsErrors)' == ''">true</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

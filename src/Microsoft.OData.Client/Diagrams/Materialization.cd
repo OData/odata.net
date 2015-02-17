@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Materialization in the ADO.NET Data Service Client library is driven at the top level by an instance of MaterializeAtom, which implements the enumerable/enumerator. The data is accessed with a pull model, but it originally comes from an XmlReader, over which an XmlAtomErrorReader is used (that checks for inline errors while reading), over which an AtomParser is used (which created AtomEntry and AtomFeed instances), over which an AtomMaterializer is used (which updates the AtomEntry instances with typed values). The materializer tracks activity in an AtomMaterializerLog, which the MaterializeAtom instance applies onto the context for each successful call to MoveNext().">
+    <Position X="2.01" Y="1.312" Height="1.292" Width="4.835" />
+  </Comment>
+  <Class Name="Microsoft.OData.Client.AtomContentProperty">
+    <Position X="11" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAQAgAIAAAQAAAAAAAAAAQAAAAAABAIAAAACAACAAA=</HashCode>
+      <FileName>System\Data\Services\Client\AtomContentProperty.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Properties" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Microsoft.OData.Client.AtomParser">
+    <Position X="8" Y="2.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BBhgGEAAAAgAAAgCQAAAgAAgACAAAYABAAgkAQEQEEI=</HashCode>
+      <FileName>System\Data\Services\Client\AtomParser.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CurrentEntry" />
+      <Property Name="CurrentFeed" />
+      <Property Name="DataKind" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Microsoft.OData.Client.AtomEntry">
+    <Position X="8.5" Y="4.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAgAQgBgABBAACIAABBAAAFBAAQEACAAAAAAU=</HashCode>
+      <FileName>System\Data\Services\Client\AtomEntry.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="DataValues" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Microsoft.OData.Client.AtomFeed">
+    <Position X="5.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAACAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Data\Services\Client\AtomFeed.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Entries" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Microsoft.OData.Client.AtomMaterializer">
+    <Position X="5.5" Y="5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>QgACEAAAAAAREAAIAAAgSAIgQKsAAQAJIBgFAFIQrEA=</HashCode>
+      <FileName>System\Data\Services\Client\AtomMaterializer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CurrentFeed" />
+      <Property Name="CurrentEntry" />
+      <Property Name="Log" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Microsoft.OData.Client.AtomMaterializerLog">
+    <Position X="5.5" Y="8.25" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BIACAAIAAAAAABAQAAggAAQAAAAIAAAAAAQAoIBAAAA=</HashCode>
+      <FileName>System\Data\Services\Client\AtomMaterializerLog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Client.MaterializeAtom">
+    <Position X="2.5" Y="7" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Microsoft.OData.Client.MaterializeAtom.ResultsWrapper" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>System\Data\Services\Client\MaterializeFromAtom.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>RQAGQEAIAiQAQJICCACgAIgBgAAAAhEAIQAJAAIwIAA=</HashCode>
+      <FileName>System\Data\Services\Client\MaterializeFromAtom.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="materializer" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.OData.Client.Xml.XmlAtomErrorReader" Collapsed="true">
+    <Position X="1.5" Y="5.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Data\Services\Client\Xml\XmlAtomErrorReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Client.Xml.XmlWrappingReader" Collapsed="true">
+    <Position X="1.5" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAQSACBCAICSEQAEAoQAQjBAoDAQKjgBAgAACQFAA=</HashCode>
+      <FileName>System\Data\Services\Client\Xml\XmlWrappingReader.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Enum Name="Microsoft.OData.Client.AtomDataKind" Collapsed="true">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAYAgAgAAAAAAAAAAQAAAAAAAAACAAAAAAAAAEAAAA=</HashCode>
+      <FileName>System\Data\Services\Client\AtomDataKind.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

@@ -1,0 +1,117 @@
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: multipart/mixed; boundary=changesetresponse_00000001-0000-0000-0000-000000000000
+
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+HTTP/1.1 201 Created
+OData-Version: 4.0;
+Content-Type: application/atom+xml;type=entry;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+Location: $(BaseUri)Values(1)
+
+<?xml version="1.0" encoding="utf-8"?><entry xml:base="$(BaseUri)" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="$(BaseUri)$metadata#Values/$entity"><id>$(BaseUri)Values(1)</id><category term="#AstoriaUnitTests.Tests.NamedStreamUnitTestModule_NamedStreamTests_MyEntityWithNamedStreams" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="edit" title="NamedStreamUnitTestModule_NamedStreamTests_MyEntityWithNamedStreams" href="Values(1)" /><title /><updated>2013-10-30T12:09:37Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/edit-media/Stream1" title="Stream1" href="Values(1)/Stream1" /><link rel="http://docs.oasis-open.org/odata/ns/edit-media/Stream2" title="Stream2" href="Values(1)/Stream2" /><content type="application/xml"><m:properties><d:ID m:type="Int32">1</d:ID></m:properties></content></entry>
+--changesetresponse_00000001-0000-0000-0000-000000000000--
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+
+
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: multipart/mixed; boundary=changesetresponse_00000002-0000-0000-0000-000000000000
+
+--changesetresponse_00000002-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 0
+
+HTTP/1.1 201 Created
+OData-Version: 4.0;
+Content-Type: application/atom+xml;type=entry;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+Location: $(BaseUri)Values(2)
+
+<?xml version="1.0" encoding="utf-8"?><entry xml:base="$(BaseUri)" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="$(BaseUri)$metadata#Values/$entity"><id>$(BaseUri)Values(2)</id><category term="#AstoriaUnitTests.Tests.NamedStreamUnitTestModule_NamedStreamTests_MyEntityWithNamedStreams" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="edit" title="NamedStreamUnitTestModule_NamedStreamTests_MyEntityWithNamedStreams" href="Values(2)" /><title /><updated>2013-10-30T12:09:37Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/edit-media/Stream1" type="CustomType/Stream1" title="Stream1" href="Values(2)/Stream1" m:etag="&quot;00000003-0000-0000-0000-000000000000&quot;" /><link rel="http://docs.oasis-open.org/odata/ns/edit-media/Stream2" title="Stream2" href="Values(2)/Stream2" /><content type="application/xml"><m:properties><d:ID m:type="Int32">2</d:ID></m:properties></content></entry>
+--changesetresponse_00000002-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 2
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+ETag: "00000003-0000-0000-0000-000000000000"
+
+
+--changesetresponse_00000002-0000-0000-0000-000000000000--
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+OData-Version: 4.0;
+Content-Type: application/atom+xml;type=entry;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+
+<?xml version="1.0" encoding="utf-8"?><entry xml:base="$(BaseUri)" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="$(BaseUri)$metadata#Values/$entity"><id>$(BaseUri)Values(2)</id><category term="#AstoriaUnitTests.Tests.NamedStreamUnitTestModule_NamedStreamTests_MyEntityWithNamedStreams" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="edit" title="NamedStreamUnitTestModule_NamedStreamTests_MyEntityWithNamedStreams" href="Values(2)" /><title /><updated>2013-10-30T12:09:37Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/edit-media/Stream1" type="CustomType/Stream1" title="Stream1" href="Values(2)/Stream1" m:etag="&quot;00000003-0000-0000-0000-000000000000&quot;" /><link rel="http://docs.oasis-open.org/odata/ns/edit-media/Stream2" title="Stream2" href="Values(2)/Stream2" /><content type="application/xml"><m:properties><d:ID m:type="Int32">2</d:ID></m:properties></content></entry>
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+Content-Type: CustomType/Stream1
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+ETag: "00000003-0000-0000-0000-000000000000"
+
+1234
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+OData-Version: 4.0;
+Content-Type: application/atom+xml;type=feed;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+
+<?xml version="1.0" encoding="utf-8"?><feed xml:base="$(BaseUri)" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="$(BaseUri)$metadata#Values"><id>$(BaseUri)Values</id><title type="text">Values</title><updated>2013-10-30T12:09:37Z</updated><link rel="self" title="Values" href="Values" /><entry><id>$(BaseUri)Values(1)</id><category term="#AstoriaUnitTests.Tests.NamedStreamUnitTestModule_NamedStreamTests_MyEntityWithNamedStreams" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="edit" title="NamedStreamUnitTestModule_NamedStreamTests_MyEntityWithNamedStreams" href="Values(1)" /><title /><updated>2013-10-30T12:09:37Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/edit-media/Stream1" title="Stream1" href="Values(1)/Stream1" /><link rel="http://docs.oasis-open.org/odata/ns/edit-media/Stream2" title="Stream2" href="Values(1)/Stream2" /><content type="application/xml"><m:properties><d:ID m:type="Int32">1</d:ID></m:properties></content></entry><entry><id>$(BaseUri)Values(2)</id><category term="#AstoriaUnitTests.Tests.NamedStreamUnitTestModule_NamedStreamTests_MyEntityWithNamedStreams" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="edit" title="NamedStreamUnitTestModule_NamedStreamTests_MyEntityWithNamedStreams" href="Values(2)" /><title /><updated>2013-10-30T12:09:37Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/edit-media/Stream1" type="CustomType/Stream1" title="Stream1" href="Values(2)/Stream1" m:etag="&quot;00000003-0000-0000-0000-000000000000&quot;" /><link rel="http://docs.oasis-open.org/odata/ns/edit-media/Stream2" title="Stream2" href="Values(2)/Stream2" /><content type="application/xml"><m:properties><d:ID m:type="Int32">2</d:ID></m:properties></content></entry></feed>
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: multipart/mixed; boundary=changesetresponse_00000004-0000-0000-0000-000000000000
+
+--changesetresponse_00000004-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 3
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+
+
+--changesetresponse_00000004-0000-0000-0000-000000000000--
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+OData-Version: 4.0;
+Content-Type: application/atom+xml;type=feed;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+
+<?xml version="1.0" encoding="utf-8"?><feed xml:base="$(BaseUri)" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="$(BaseUri)$metadata#Values"><id>$(BaseUri)Values</id><title type="text">Values</title><updated>2013-10-30T12:09:37Z</updated><link rel="self" title="Values" href="Values" /><entry><id>$(BaseUri)Values(2)</id><category term="#AstoriaUnitTests.Tests.NamedStreamUnitTestModule_NamedStreamTests_MyEntityWithNamedStreams" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="edit" title="NamedStreamUnitTestModule_NamedStreamTests_MyEntityWithNamedStreams" href="Values(2)" /><title /><updated>2013-10-30T12:09:37Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/edit-media/Stream1" type="CustomType/Stream1" title="Stream1" href="Values(2)/Stream1" m:etag="&quot;00000003-0000-0000-0000-000000000000&quot;" /><link rel="http://docs.oasis-open.org/odata/ns/edit-media/Stream2" title="Stream2" href="Values(2)/Stream2" /><content type="application/xml"><m:properties><d:ID m:type="Int32">2</d:ID></m:properties></content></entry></feed>
+--batchresponse_00000000-0000-0000-0000-000000000000--

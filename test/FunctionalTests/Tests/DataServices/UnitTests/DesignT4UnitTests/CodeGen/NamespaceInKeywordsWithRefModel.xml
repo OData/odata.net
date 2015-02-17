@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="yes" ?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="http://host/schema/EdmxWithNamespaceInKeywords_referencedEdm.xml">
+    <edmx:Include Namespace="simple.double" Alias="ESI" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="event.string.int" xmlns:d="http://docs.oasis-open.org/odata/ns/data"
+            xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"
+            xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <ComplexType Name="complexType">
+        <Property Name="value" Type="Edm.String" Nullable="false" />
+      </ComplexType>
+      <EntityType Name="testType1">
+        <Key>
+          <PropertyRef Name="keyProp" />
+        </Key>
+        <Property Name="keyProp" Type="Edm.Int32" Nullable="false" />
+        <Property Name="valueProp" Type="Edm.String" Nullable="false" />
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

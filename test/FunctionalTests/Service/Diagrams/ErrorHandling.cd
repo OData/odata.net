@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access">
+  <Comment CommentText="The ErrorHandler class provides static methods to handle errors at different points in the processing cycle. HandleExceptionArgs is used to convey all necessary information, and is used by ErrorHandler when brokering with IDataService and IExceptionWriter, which is implemented by all serializers.">
+    <Position X="3.969" Y="3.927" Height="1.167" Width="3.627" />
+  </Comment>
+  <Class Name="Microsoft.OData.Service.ErrorHandler">
+    <Position X="7.75" Y="3" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EAhQCAAAAEBAAQEQAAgAAACAAAAAAIgAAAAEAABAAAA=</HashCode>
+      <FileName>System\Data\Services\ErrorHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.AtomServiceDocumentSerializer" Collapsed="true">
+    <Position X="0.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAgAAAAAAAAAAAAAAAAAAAAICAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\AtomServiceDocumentSerializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.JsonSerializer" Collapsed="true">
+    <Position X="3" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAADABCAAIABIAABAAAAAAACACAAAAQAAABEJCAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\JsonSerializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.PlainXmlSerializer" Collapsed="true">
+    <Position X="5.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAABAACAAIAAIAAAAAAAAAACAKACAAQAAAAAJCAQ=</HashCode>
+      <FileName>System\Data\Services\Serializers\PlainXmlSerializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.Serializer" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BQBQIAQAQRAGIAAIgAGAACCAgAgACIIAgAAQAAAPSAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\Serializer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.SyndicationSerializer" Collapsed="true">
+    <Position X="0.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>kgAAAAEAADAkIABIACAAAAQABAAACCAAAQiAQAAJiAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\SyndicationSerializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.XmlDocumentSerializer" Collapsed="true">
+    <Position X="1.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAQAAAAEBAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\XmlDocumentSerializer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.MetadataSerializer" Collapsed="true">
+    <Position X="2.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\MetadataSerializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.HandleExceptionArgs">
+    <Position X="7.75" Y="5.75" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAQAAQAUAAEAAAAAAAABAAEAAAABAAAAABAA=</HashCode>
+      <FileName>System\Data\Services\HandleExceptionArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.DataServiceException">
+    <Position X="11.25" Y="8" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Protected" Collapsed="true" />
+      <Compartment Name="Internal" Collapsed="true" />
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAACAQgAAAEAACAAgAQgAABQIIBAmACAAAAA=</HashCode>
+      <FileName>System\Data\Services\DataServiceException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Microsoft.OData.Service.Serializers.BinarySerializer" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\BinarySerializer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Struct>
+  <Struct Name="Microsoft.OData.Service.Serializers.TextSerializer" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAABAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\TextSerializer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Struct>
+  <Interface Name="Microsoft.OData.Service.Serializers.IExceptionWriter">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\IExceptionWriter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Microsoft.OData.Service.IDataService">
+    <Position X="4.75" Y="5.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgEAAAAAACACEAAAAAACAAA4AAACAAAAAA=</HashCode>
+      <FileName>System\Data\Services\IDataService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Microsoft.OData.Service.IDataServiceHost">
+    <Position X="11.25" Y="3" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AACAAKAAAAAIAgQAwAEAwACAAABJBGAAAIAAAAAAIAA=</HashCode>
+      <FileName>System\Data\Services\IDataServiceHost.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

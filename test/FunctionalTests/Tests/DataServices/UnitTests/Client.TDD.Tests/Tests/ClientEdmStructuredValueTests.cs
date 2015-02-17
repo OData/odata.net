@@ -1,0 +1,150 @@
+﻿//---------------------------------------------------------------------
+// <copyright file="ClientEdmStructuredValueTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+namespace AstoriaUnitTests.TDD.Tests.Client
+{
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.OData.Client;
+    using Microsoft.OData.Client.Metadata;
+    using System.Linq;
+    using FluentAssertions;
+    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm.Library.Values;
+    using Microsoft.OData.Edm.Values;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    [TestClass]
+    public class ClientEdmStructuredValueTests
+    {
+        private Customer _entity;
+        private Address _address;
+        private ClientEdmStructuredValue _complexValue;
+        private ClientEdmStructuredValue _entityValue;
+
+        [TestInitialize]
+        public void Init()
+        {
+            this._address = new Address { Street = "123 fake st" };
+            this._entity = new Customer { Id = 1, Address = this._address, Emails = new List<string> { "fake@fake.com"} };
+
+            var model = new ClientEdmModel(ODataProtocolVersion.V4);
+            var entityType = model.GetOrCreateEdmType(typeof(Customer));
+            var complexType = model.GetOrCreateEdmType(typeof(Address));
+
+            this._complexValue = new ClientEdmStructuredValue(this._address, model, model.GetClientTypeAnnotation(complexType));
+            this._entityValue = new ClientEdmStructuredValue(this._entity, model, model.GetClientTypeAnnotation(entityType));
+        }
+
+        [TestMethod]
+        public void KindShouldBeStructured()
+        {
+            this._entityValue.ValueKind.Should().Be(EdmValueKind.Structured);
+        }
+
+        [TestMethod]
+        public void TypeReferenceShouldBeEntity()
+        {
+            this._entityValue.Type.Should().BeAssignableTo<EdmEntityTypeReference>();
+        }
+
+        [TestMethod]
+        public void TypeReferenceShouldBeComplex()
+        {
+            this._complexValue.Type.Should().BeAssignableTo<EdmComplexTypeReference>();
+        }
+
+        [TestMethod]
+        public void FindPropertyValueShouldNotFindProperty()
+        {
+            this._entityValue.FindPropertyValue("Fake").Should().BeNull();
+        }
+
+        [TestMethod]
+        public void FindPropertyValueShouldReturnPrimitive()
+        {
+            var property = this._entityValue.FindPropertyValue("Id");
+            property.Should().NotBeNull();
+            property.Name.Should().Be("Id");
+            property.Value.Should().BeAssignableTo<EdmIntegerConstant>();
+            property.Value.As<EdmIntegerConstant>().Value.Should().Be(this._entity.Id);
+        }
+
+        [TestMethod]
+        public void FindPropertyValueShouldReturnComplex()
+        {
+            var property = this._entityValue.FindPropertyValue("Address");
+            property.Should().NotBeNull();
+            property.Name.Should().Be("Address");
+            property.Value.Should().BeAssignableTo<ClientEdmStructuredValue>();
+            property.Value.As<ClientEdmStructuredValue>().FindPropertyValue("Street").Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void FindPropertyValueShouldReturnCollection()
+        {
+            var property = this._entityValue.FindPropertyValue("Emails");
+            property.Should().NotBeNull();
+            property.Name.Should().Be("Emails");
+            property.Value.Should().BeAssignableTo<IEdmCollectionValue>();
+            property.Value.As<IEdmCollectionValue>().Elements.Should().HaveCount(1).And.Contain(d => d.Value is EdmStringConstant);
+        }
+
+
+        [TestMethod]
+        public void FindPropertyValueShouldReturnNullValue()
+        {
+            this._entity.Address = null;
+            var property = this._entityValue.FindPropertyValue("Address");
+            property.Should().NotBeNull();
+            property.Name.Should().Be("Address");
+            property.Value.ValueKind.Should().Be(EdmValueKind.Null);
+        }
+
+        [TestMethod]
+        public void PropertyValuesShouldNotBeCached()
+        {
+            var property = this._entityValue.FindPropertyValue("Id");
+            property.Value.As<EdmIntegerConstant>().Value.Should().Be(this._entity.Id);
+
+            this._entity.Id += 10;
+            property = this._entityValue.FindPropertyValue("Id");
+            property.Value.As<EdmIntegerConstant>().Value.Should().Be(this._entity.Id);
+        }
+
+        [TestMethod]
+        public void PropertyValuesShouldContainFullSet()
+        {
+            this._entityValue.PropertyValues.Select(p => p.Name).Should().Contain(new[] { "Id", "Address", "Emails" });
+        }
+
+        [TestMethod]
+        public void ContextShouldCreateStructuredValueOnAttach()
+        {
+            var ctx = new DataServiceContext(new Uri("http://test.org/"), ODataProtocolVersion.V4);
+            ctx.AttachTo("Customers", new Customer());
+            ctx.Entities[0].EdmValue.Should().BeAssignableTo<ClientEdmStructuredValue>();
+        }
+    }
+
+    [Key("Id")]
+    public class Customer
+    {
+        public int Id { get; set; }
+        public Address Address { get; set; }
+        public IList<string> Emails { get; set; }
+    }
+
+    public class Address
+    {
+        public string Street { get; set; }
+    }
+
+    public class HomeAddress : Address
+    {
+        public string Number { get; set; }
+    }
+}

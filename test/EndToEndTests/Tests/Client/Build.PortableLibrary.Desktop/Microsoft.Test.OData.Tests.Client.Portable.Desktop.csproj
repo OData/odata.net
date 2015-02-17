@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D40D9FEB-F6B1-4C2E-88AE-853E825988BD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.OData.Tests.Client</RootNamespace>
+    <AssemblyName>Microsoft.Test.OData.Tests.Client.Portable.Desktop</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;</DefineConstants>
+    <TargetFrameworkFolderName>Desktop</TargetFrameworkFolderName>
+    <RelativeOutputPath>PortableTests</RelativeOutputPath>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.DataDriven.dll" />
+    <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.Extensions.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7d921888-fe03-4c3f-80fe-2f624505461c}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989a83cc-b864-4a75-8bf3-5eda99203a86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Build.Portable\Microsoft.OData.Client.Portable.csproj">
+      <Project>{aed0dc9d-76e5-4145-af5e-9e2f856f4d18}</Project>
+      <Name>Microsoft.OData.Client.Portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\EndToEndTests\Framework\Core\Build.PortableLibrary\Microsoft.Test.OData.Framework.Portable.csproj">
+      <Project>{134D2AD7-3C82-45C9-AC43-75F482081F8D}</Project>
+      <Name>Microsoft.Test.OData.Framework.Portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\EndToEndTests\Services\TestServices\Build.PortableLibrary\Microsoft.Test.OData.Services.TestServices.Portable.csproj">
+      <Project>{4382d649-1a86-48d0-9156-ac37c3d568c0}</Project>
+      <Name>Microsoft.Test.OData.Services.TestServices.Portable</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
+      <Visible>False</Visible>
+    </CodeAnalysisDependentAssemblyPaths>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\AsynchronousTests\AsynchronousAttribute.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousDelayQueryTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousQueryTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousSingletonClientTest.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousUpdateTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousTestsExtensionMethodsDesktop.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousTestsExtensionMethodsSilverlight.cs" />
+    <Compile Include="..\AsynchronousTests\AsyncMethodTests.cs" />
+    <Compile Include="..\BindingTests.cs" />
+    <Compile Include="..\EndToEndTestBase.cs" />
+    <Compile Include="..\ServiceGeneratorFactory.cs" />
+    <Compile Include="DesktopExternalUriGenerator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\packages.config" />
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

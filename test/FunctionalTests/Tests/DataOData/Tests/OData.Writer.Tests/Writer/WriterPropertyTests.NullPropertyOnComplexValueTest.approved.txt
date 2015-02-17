@@ -1,0 +1,2115 @@
+Combination: 9; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 11; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 13; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 15; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 25; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 26; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 27; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 28; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 29; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 30; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 31; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 41; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 42; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 43; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 44; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 45; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 46; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 47; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 48; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 57; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 58; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 59; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 60; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 61; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 62; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 63; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 64; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 73; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 74; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 75; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 76; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 77; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 78; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 79; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 80; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 89; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 90; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 91; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 92; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 93; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 94; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 95; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 96; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 105; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 106; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 107; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 108; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 109; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 110; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 111; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 112; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 121; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 122; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 123; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 124; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 125; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 126; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 127; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 128; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 137; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 138; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 139; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 140; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 141; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 142; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 143; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 144; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 153; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 154; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 155; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 156; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 157; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 158; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 159; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 160; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 169; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 170; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 171; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 172; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 173; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 174; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 175; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 176; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 185; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 186; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 187; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 188; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 189; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 190; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 191; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 192; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 201; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 202; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 203; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 204; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 205; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 206; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 207; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 208; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 217; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 218; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 219; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 220; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 221; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 222; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 223; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 224; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 233; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 234; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 235; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 236; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 237; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 238; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 239; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 240; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 249; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 250; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 251; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 252; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 253; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 254; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 255; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 256; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 265; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 266; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 267; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 268; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 269; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 270; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 271; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 272; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 281; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 282; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 283; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 284; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 285; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 286; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 287; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 288; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 297; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 298; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 299; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 300; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 301; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 302; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 303; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 304; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 313; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 314; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 315; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 316; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 317; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 318; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 319; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 320; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 329; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 330; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 331; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 332; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 333; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 334; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 335; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 336; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 345; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 346; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 347; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 348; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 349; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 350; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 351; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 352; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 361; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 362; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 363; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 364; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 365; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 366; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 367; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 368; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 377; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 378; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 379; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 380; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 381; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 382; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 383; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 384; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 393; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 394; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 395; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 396; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 397; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 398; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 399; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 400; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 409; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 410; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 411; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 412; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 413; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 414; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 415; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 416; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 425; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 426; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 427; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 428; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 429; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 430; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 431; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 432; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 441; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 442; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 443; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 444; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 445; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 446; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 447; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 448; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 457; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 458; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 459; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 460; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 461; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 462; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 463; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 464; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 473; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 474; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 475; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 476; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 477; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 478; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 479; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 480; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 489; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 490; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 491; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 492; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 493; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 494; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 495; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 496; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 505; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 506; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 507; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 508; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 509; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 510; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 511; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 512; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 521; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 522; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 523; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 524; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 525; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 526; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 527; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 528; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 537; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 538; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 539; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 540; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 541; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 542; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 543; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 544; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 553; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 554; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 555; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 556; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 557; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 558; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 559; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 560; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 569; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 570; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 571; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 572; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 573; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 574; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 575; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 576; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 585; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 586; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 587; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 588; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 589; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 590; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 591; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 592; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 601; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 602; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 603; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 604; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 605; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 606; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 607; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 608; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 617; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 618; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 619; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 620; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 621; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 622; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 623; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 624; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 633; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 634; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 635; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 636; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 637; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 638; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 639; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 640; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 649; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 650; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 651; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 652; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 653; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 654; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 655; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 656; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 665; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 666; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 667; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 668; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 669; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 670; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 671; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 672; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 681; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 682; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 683; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 684; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 685; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 686; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 687; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 688; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 697; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 698; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 699; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 700; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 701; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 702; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 703; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 704; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 713; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null}
+
+Combination: 714; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 715; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 716; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nullProperty":null
+}
+
+Combination: 717; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><d:nullProperty m:null="true" /></m:value>
+
+Combination: 718; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 719; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+
+Combination: 720; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#TestModel.ComplexType" m:type="#TestModel.ComplexType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <d:nullProperty m:null="true" />
+</m:value>
+

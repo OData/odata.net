@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AstoriaUnitTests.ObjectContextStubs" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+  <EntityContainer Name="EpmCustomObjectContext">
+    <EntitySet Name="EpmCustomers" EntityType="AstoriaUnitTests.ObjectContextStubs.Types.EpmCustomer" />
+    <EntitySet Name="EpmOrders" EntityType="AstoriaUnitTests.ObjectContextStubs.Types.EpmOrder" />
+    <EntitySet Name="EpmProducts" EntityType="AstoriaUnitTests.ObjectContextStubs.Types.EpmProduct" />
+    <AssociationSet Name="FK__EpmOrders__EpmCustomer__00551192" Association="AstoriaUnitTests.ObjectContextStubs.Types.FK__EpmOrders__EpmCustomer__00551192">
+      <End Role="Customers" EntitySet="EpmCustomers" />
+      <End Role="Orders" EntitySet="EpmOrders" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

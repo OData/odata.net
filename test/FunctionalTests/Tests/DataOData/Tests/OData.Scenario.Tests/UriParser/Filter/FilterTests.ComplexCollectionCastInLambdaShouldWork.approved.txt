@@ -1,0 +1,48 @@
+$filter = ManufactureAddresss/any(d:d/Microsoft.Test.Taupo.OData.WCFService.HomeAddress/HomeNO ne '999')
+
+
+FilterQueryOption
+	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+	Parameter = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = Products
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+	Expression = 
+	AnyNode
+		TypeReference = [Edm.Boolean Nullable=True]
+		Body = 
+			SingleValuePropertyAccessNode
+				Property = HomeNO
+				TypeReference = [Edm.String Nullable=True Unicode=True]
+				Source = 
+				SingleValueCastNode
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
+					Source = 
+					NonentityRangeVariableReferenceNode
+						Name = d
+						Range Variable = 
+						NonentityRangeVariable
+							Name = d
+							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Address Nullable=True]
+						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Address Nullable=True]
+		NotEqual
+			999(Type: [Edm.String Nullable=True Unicode=True])
+		Source = 
+		CollectionPropertyAccessNode
+			Property = ManufactureAddresss
+			ItemType = [Microsoft.Test.Taupo.OData.WCFService.Address Nullable=True]
+			Source = 
+			EntityRangeVariableReferenceNode
+				Name = $it
+				NavigationSource = Products
+				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+		Parameters = 
+		NonentityRangeVariable
+			Name = d
+			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Address Nullable=True]
+		EntityRangeVariable
+			Name = $it
+			NavigationSource = Products
+			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]

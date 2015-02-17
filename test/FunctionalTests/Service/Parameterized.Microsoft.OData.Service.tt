@@ -1,0 +1,19 @@
+﻿<#@ include file="..\..\..\tools\StringResourceGenerator\StringsClassGenerator.ttinclude" #>
+<#+
+public static class Configuration
+{
+    // The namespace where the generated resource classes reside.
+    public const string ResourceClassNamespace = "Microsoft.OData.Service";
+    
+    // The assembly name where the generated resource classes will be linked.
+    public const string AssemblyName = "Microsoft.OData.Service";
+    
+    // The name of the generated resource class.
+    public const string ResourceClassName = "TextRes";
+
+    // The list of text files containing all the string resources.
+    public static readonly string[] TextFiles = {
+        "Microsoft.OData.Service.txt"
+    };
+}
+#>

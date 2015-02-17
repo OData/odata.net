@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{6762001D-60F0-4E70-A816-C15897C39B7F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <DefineConstants>$(DefineConstants);MICROSOFT_ASTORIA</DefineConstants>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>System.Data.Test.Astoria.CustomData</RootNamespace>
+    <AssemblyName>CustomData.ObjectContext</AssemblyName>
+    <TargetFrameworkVersion>$(WinFxRefsVersion)</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AssemblyKeyType>ECMA</AssemblyKeyType>
+    <CreateMetaAssembly>false</CreateMetaAssembly>
+    <DebugSymbols>true</DebugSymbols>
+    <SignAssemblyAttribute>false</SignAssemblyAttribute>
+    <NoWarn>;1699;1570;1572;1573;1591;3005;3003;3008;3016;3001;3002;3009;0618;0168;0169;1684</NoWarn>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Core" />
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
+      <Name>Microsoft.OData.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CustomWebObjectContext.cs" />
+    <Compile Include="CustomEntitySetContainer.cs" />
+    <Compile Include="CustomMetadataAttributes.cs" />
+    <Compile Include="CustomMetadataWorkspace.cs" />
+    <Compile Include="CustomObjectCollection.cs" />
+    <Compile Include="CustomObjectContext.cs" />
+    <Compile Include="CustomUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ObjectContextPrototyping.vsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.VisualBasic.PowerPacks.10.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft Visual Basic PowerPacks 10.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

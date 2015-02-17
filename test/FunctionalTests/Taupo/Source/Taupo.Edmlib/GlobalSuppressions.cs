@@ -1,0 +1,36 @@
+﻿//---------------------------------------------------------------------
+// <copyright file="GlobalSuppressions.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "CollectionType", Scope = "member", Target = "Microsoft.Test.Taupo.Edmlib.TypeReferenceFactory.#CollectionTypeReference(Microsoft.OData.Edm.IEdmCollectionType)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "CollectionType", Scope = "member", Target = "Microsoft.Test.Taupo.Edmlib.TypeReferenceFactory.#ToCollectionTypeReference(Microsoft.OData.Edm.IEdmType)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "CollectionType", Scope = "member", Target = "Microsoft.Test.Taupo.Edmlib.TypeReferenceFactory.#ToCollectionTypeReference(Microsoft.OData.Edm.IEdmTypeReference)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmAssociationEnd")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmAssociationSet")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmAssociationSetEnd")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmAssociationType")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmComplexType")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmElement")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmEntityContainer")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmEntitySet")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmEntityType")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmEnumMember")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmEnumType")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmOperation")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmOperationImport")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmOperationParameter")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmModel")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmNavigationProperty")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmReferentialConstraint")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmStructuralProperty")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmEntitySetReferenceExpression")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmStringConstant")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Scope = "member", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmNavigationProperty.#Type")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmRowType")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmType")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmTypeReference")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target", Scope = "member", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmEntitySet.#SetNavigationTarget(Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmNavigationProperty,Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmEntitySet)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "navigationProperty", Scope = "member", Target = "Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmEntitySet.#SetNavigationTarget(Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmNavigationProperty,Microsoft.Test.Taupo.Edmlib.StubEdm.StubEdmEntitySet)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1500:VariableNamesShouldNotMatchFieldNames", MessageId = "edmModel", Scope = "member", Target = "Microsoft.Test.Taupo.Edmlib.EdmToTaupoModelConverter.#ConvertToTaupoModel(Microsoft.OData.Edm.IEdmModel)")]

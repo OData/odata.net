@@ -1,0 +1,31 @@
+This file contains alphabet entries for ChineseTraditional string generator.
+One entry per line. Only entries starting with single quote are used, everything else is a comment.
+
+'\ue7c7'         U+e7c7
+'\ue7c8'         U+e7c8
+'\ue7e7'         U+e7e7
+'\ue7f3'         U+e7f3
+'\ue815'         U+e815
+'\ue864'         U+e864
+'\u3000'         IDEOGRAPHIC SPACE
+'\uff0c'         FULLWIDTH COMMA
+'\u3001'         IDEOGRAPHIC COMMA
+'\uff0e'         FULLWIDTH FULL STOP
+'\uff1b'         FULLWIDTH SEMICOLON
+'\uff01'         FULLWIDTH EXCLAMATION MARK
+'\ufe30'         PRESENTATION FORM FOR VERTICAL TWO DOT LEADER
+'\u2026'         HORIZONTAL ELLIPSIS
+'\ufe50'         SMALL COMMA
+'\u32a3'         CIRCLED IDEOGRAPH CORRECT
+'\u5159'         CJK UNIFIED IDEOGRAPH-#
+'\u3105'         BOPOMOFO LETTER B
+'\u2554'         BOX DRAWINGS DOUBLE DOWN AND RIGHT
+'\u2593'         DARK SHADE
+'\u3127'         BOPOMOFO LETTER I
+'\u4ea2'         CJK UNIFIED IDEOGRAPH-#
+'\u5dc3'         CJK UNIFIED IDEOGRAPH-#
+'\u66e3'         CJK UNIFIED IDEOGRAPH-#
+'\u7c57'         CJK UNIFIED IDEOGRAPH-#
+'\u8c45'         CJK UNIFIED IDEOGRAPH-#
+'\u9f98'         CJK UNIFIED IDEOGRAPH-#
+'\u5afa'         CJK UNIFIED IDEOGRAPH-#

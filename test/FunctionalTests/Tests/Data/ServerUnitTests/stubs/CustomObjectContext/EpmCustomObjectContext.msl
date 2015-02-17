@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
+  <EntityContainerMapping StorageEntityContainer="dbo2" CdmEntityContainer="EpmCustomObjectContext">
+    <EntitySetMapping Name="EpmCustomers">
+      <EntityTypeMapping TypeName="IsTypeOf(AstoriaUnitTests.ObjectContextStubs.Types.EpmCustomer)">
+        <MappingFragment StoreEntitySet="EpmCustomers">
+          <ScalarProperty Name="ID" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ComplexProperty Name="Address" TypeName="AstoriaUnitTests.ObjectContextStubs.Types.EpmAddress">
+            <ScalarProperty Name="StreetAddress" ColumnName="Address" />
+            <ScalarProperty Name="City" ColumnName="City" />
+            <ScalarProperty Name="State" ColumnName="State" />
+            <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+          </ComplexProperty>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="AstoriaUnitTests.ObjectContextStubs.Types.EpmCustomerWithBirthday">
+        <MappingFragment StoreEntitySet="EpmCustomers">
+          <ScalarProperty Name="ID" ColumnName="Id" />
+          <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+          <Condition IsNull="false" ColumnName="Birthday" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="AstoriaUnitTests.ObjectContextStubs.Types.EpmCustomer">
+        <MappingFragment StoreEntitySet="EpmCustomers">
+          <ScalarProperty Name="ID" ColumnName="Id" />
+          <Condition IsNull="true" ColumnName="Birthday" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EpmOrders">
+      <EntityTypeMapping TypeName="IsTypeOf(AstoriaUnitTests.ObjectContextStubs.Types.EpmOrder)">
+        <MappingFragment StoreEntitySet="EpmOrders">
+          <ScalarProperty Name="ID" ColumnName="Id" />
+          <ScalarProperty Name="DollarAmount" ColumnName="DollarAmount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EpmProducts" StoreEntitySet="EpmProducts" TypeName="AstoriaUnitTests.ObjectContextStubs.Types.EpmProduct">
+      <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+      <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+      <ScalarProperty Name="QuantityPerUnit" ColumnName="QuantityPerUnit" />
+      <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+      <ScalarProperty Name="UnitsInStock" ColumnName="UnitsInStock" />
+      <ScalarProperty Name="UnitsOnOrder" ColumnName="UnitsOnOrder" />
+      <ScalarProperty Name="ReorderLevel" ColumnName="ReorderLevel" />
+      <ScalarProperty Name="Discontinued" ColumnName="Discontinued" />
+    </EntitySetMapping>
+    <AssociationSetMapping Name="FK__EpmOrders__EpmCustomer__00551192" TypeName="AstoriaUnitTests.ObjectContextStubs.Types.FK__EpmOrders__EpmCustomer__00551192" StoreEntitySet="EpmOrders">
+      <EndProperty Name="Customers">
+        <ScalarProperty Name="ID" ColumnName="CustomerId" />
+      </EndProperty>
+      <EndProperty Name="Orders">
+        <ScalarProperty Name="ID" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="CustomerId" IsNull="false" />
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>

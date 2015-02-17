@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <ProjectGuid>{29BFE3C4-C0A8-4E07-829E-112D1A9FA4DA}</ProjectGuid>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.OData</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.OData</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <SignAssemblyAttribute>false</SignAssemblyAttribute>
+    <!-- path to the sources -->
+    <ODataCrossTargettingSourcePath>..\..\Common\OData</ODataCrossTargettingSourcePath>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Xml" />
+    <Reference Include="$(SilverlightClientLibraries)\System.Xml.Linq.dll">
+      <SpecificVersion>true</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Web\Client.PortableLibrary\Microsoft.OData.Client.Portable.csproj">
+      <Project>{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.SL\Microsoft.Test.Taupo.SL.csproj">
+      <Project>{E88DCBA1-8E6F-4BB7-8017-7CD5A213107A}</Project>
+      <Name>Microsoft.Test.Taupo.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Edmlib.SL\Microsoft.Test.Taupo.Edmlib.SL.csproj">
+      <Project>{A3FD00F4-65DB-410E-A6D1-6E7832CD0F93}</Project>
+      <Name>Microsoft.Test.Taupo.Edmlib.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Astoria.SL\Microsoft.Test.Taupo.Astoria.SL.csproj">
+      <Project>{ACB8647F-9830-4B96-B45A-6A0ACDE6A25F}</Project>
+      <Name>Microsoft.Test.Taupo.Astoria.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Query.SL\Microsoft.Test.Taupo.Query.SL.csproj">
+      <Project>{62D87E3D-923B-468B-82CA-5F6E65298C58}</Project>
+      <Name>Microsoft.Test.Taupo.Query.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Spatial.SL\Microsoft.Test.Taupo.Spatial.SL.csproj">
+      <Project>{2EBC2D89-C7E7-4214-8954-7C7015B8C5FE}</Project>
+      <Name>Microsoft.Test.Taupo.Spatial.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\External\System.CodeDom.SL\System.CodeDom.SL.csproj">
+      <Project>{93850EF2-5F47-404F-8988-812043FB83E9}</Project>
+      <Name>System.CodeDom.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\External\TestShell\InputSpaceModeling.SL\Microsoft.SqlServer.TestShell.InputSpaceModeling.SL.csproj">
+      <Project>{16164F49-0C3C-4811-BE51-5FAAB6CBD977}</Project>
+      <Name>Microsoft.SqlServer.TestShell.InputSpaceModeling.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5D921888-FE03-4C3F-40FE-2F624505461D}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Source files -->
+  <!--
+  This ItemGroup is generated automatically.
+  
+  !!!! DO NOT MODIFY THIS ItemGroup MANUALLY !!!!
+  -->
+  <ItemGroup>
+    <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs">
+      <Link>$(DataFxIncPath)\AssemblyRefs.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Microsoft.Spatial\Utils\SpatialFactory.cs">
+      <Link>Common\SpatialFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\TestAtomConstants.cs">
+      <Link>Atom\TestAtomConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomMetadataBuilder.cs">
+      <Link>Atom\AtomMetadataBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataPayloadElementAtomMetadataNormalizer.cs">
+      <Link>Atom\ODataPayloadElementAtomMetadataNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\ODataPayloadElementDefaultAtomAnnotationExtensions.cs">
+      <Link>Atom\ODataPayloadElementDefaultAtomAnnotationExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Annotations\BatchBoundaryAnnotation.cs">
+      <Link>Common\Annotations\BatchBoundaryAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Annotations\CustomContentTypeHeaderAnnotation.cs">
+      <Link>Common\Annotations\CustomContentTypeHeaderAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Annotations\IgnoreEntitySetAnnotation.cs">
+      <Link>Common\Annotations\IgnoreEntitySetAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Annotations\EntityModelSchemaAnnotation.cs">
+      <Link>Common\Annotations\EntityModelSchemaAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Annotations\EntityModelTypeAnnotation.cs">
+      <Link>Common\Annotations\EntityModelTypeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Annotations\ExpectedTypeODataPayloadElementAnnotation.cs">
+      <Link>Common\Annotations\ExpectedTypeODataPayloadElementAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Annotations\ClrTypeAnnotation.cs">
+      <Link>Common\Annotations\ClrTypeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Annotations\NamedStreamAtomLinkMetadataAnnotation.cs">
+      <Link>Common\Annotations\NamedStreamAtomLinkMetadataAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Annotations\MinimumRequiredVersionAnnotation.cs">
+      <Link>Common\Annotations\MinimumRequiredVersionAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Annotations\SerializationTypeNameTestAnnotation.cs">
+      <Link>Common\Annotations\SerializationTypeNameTestAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\AsyncTestStream.cs">
+      <Link>Common\AsyncTestStream.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomMetadataODataObjectModelVisitor.cs">
+      <Link>Atom\AtomMetadataODataObjectModelVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Batch\BatchGeneratorExtensions.cs">
+      <Link>Common\Batch\BatchGeneratorExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Batch\BatchPayloadGenerator.cs">
+      <Link>Common\Batch\BatchPayloadGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Batch\BatchResponseToDummyRequestGenerator.cs">
+      <Link>Common\Batch\BatchResponseToDummyRequestGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Batch\BatchUtils.cs">
+      <Link>Common\Batch\BatchUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Batch\ODataBatchResponseOperation.cs">
+      <Link>Common\Batch\ODataBatchResponseOperation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Batch\ODataBatchRequestOperation.cs">
+      <Link>Common\Batch\ODataBatchRequestOperation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Batch\ODataBatchChangeset.cs">
+      <Link>Common\Batch\ODataBatchChangeset.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Batch\ODataBatchOperation.cs">
+      <Link>Common\Batch\ODataBatchOperation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Batch\ODataBatchPart.cs">
+      <Link>Common\Batch\ODataBatchPart.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\Batch\ODataBatch.cs">
+      <Link>Common\Batch\ODataBatch.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\CombinatorialEngineExtensionMethods.cs">
+      <Link>Common\CombinatorialEngineExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\AstoriaAttributeToODataLibAnnotationConverter.cs">
+      <Link>Common\AstoriaAttributeToODataLibAnnotationConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataAssemblyResourceLookup.cs">
+      <Link>Common\ODataAssemblyResourceLookup.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\SpatialUtils.cs">
+      <Link>Common\SpatialUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\EdmModelUtils.cs">
+      <Link>Common\EdmModelUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\EdmModelBuilder.cs">
+      <Link>Common\EdmModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ObjectModelExtensions.cs">
+      <Link>Common\ObjectModelExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataAnnotatedError.cs">
+      <Link>Common\ODataAnnotatedError.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataObjectModelVisitor.cs">
+      <Link>Common\ODataObjectModelVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataObjectModelVisitor`T.cs">
+      <Link>Common\ODataObjectModelVisitor`T.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataPayloadElementConfigurationValidator.cs">
+      <Link>Common\ODataPayloadElementConfigurationValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\RemoveExpandedLinkUriStringVisitor.cs">
+      <Link>Common\RemoveExpandedLinkUriStringVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestUriUtils.cs">
+      <Link>Common\TestUriUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\PayloadFormatVersionAnnotatingVisitor.cs">
+      <Link>Common\PayloadFormatVersionAnnotatingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataBatchResponseRequestAnnotation.cs">
+      <Link>Common\ODataBatchResponseRequestAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataCollectionItemsObjectModelAnnotation.cs">
+      <Link>Common\ODataCollectionItemsObjectModelAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataParameters.cs">
+      <Link>Common\ODataParameters.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestParameters.cs">
+      <Link>Common\TestParameters.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\EdmConstants.cs">
+      <Link>Common\EdmConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\EntityModelSchemaSerializer.cs">
+      <Link>Common\EntityModelSchemaSerializer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\EntityModelSchemaDeserializer.cs">
+      <Link>Common\EntityModelSchemaDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\EntityModelSchemaToEdmModelConverter.cs">
+      <Link>Common\EntityModelSchemaToEdmModelConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestMediaTypeUtils.cs">
+      <Link>Common\TestMediaTypeUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataEntryNavigationLinksObjectModelAnnotation.cs">
+      <Link>Common\ODataEntryNavigationLinksObjectModelAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataFeedEntriesObjectModelAnnotation.cs">
+      <Link>Common\ODataFeedEntriesObjectModelAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataNavigationLinkExpandedItemObjectModelAnnotation.cs">
+      <Link>Common\ODataNavigationLinkExpandedItemObjectModelAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataPropertyKind.cs">
+      <Link>Common\ODataPropertyKind.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataPayloadElementToObjectModelConverter.cs">
+      <Link>Common\ODataPayloadElementToObjectModelConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\RandomPayloadBuilder.cs">
+      <Link>Common\RandomPayloadBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ModelBuilder.cs">
+      <Link>Common\ModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataObjectModelValidationUtils.cs">
+      <Link>Common\ODataObjectModelValidationUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataObjectResultComparerContextAdapter.cs">
+      <Link>Common\ODataObjectResultComparerContextAdapter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataPropertyMetadataAnnotation.cs">
+      <Link>Common\ODataPropertyMetadataAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\DataTypeUtils.cs">
+      <Link>Common\DataTypeUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\EntityModelUtils.cs">
+      <Link>Common\EntityModelUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestExceptionUtils.cs">
+      <Link>Common\TestExceptionUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ExceptionVerifier.cs">
+      <Link>Common\ExceptionVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ExpectedException.cs">
+      <Link>Common\ExpectedException.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ExpressionTreeToXmlSerializer.cs">
+      <Link>Common\ExpressionTreeToXmlSerializer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ExpressionUtils.cs">
+      <Link>Common\ExpressionUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\FullCombinatorialEngineProvider.cs">
+      <Link>Common\FullCombinatorialEngineProvider.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestHttpUtils.cs">
+      <Link>Common\TestHttpUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\LinqExtensions.cs">
+      <Link>Common\LinqExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataExpectedExceptions.cs">
+      <Link>Common\ODataExpectedExceptions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataFormatUtils.cs">
+      <Link>Common\ODataFormatUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataPayloadElementExtensions.cs">
+      <Link>Common\ODataPayloadElementExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataQueryDataSetBuilder.cs">
+      <Link>Common\ODataQueryDataSetBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataTestException.cs">
+      <Link>Common\ODataTestException.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataUnitTestModule.cs">
+      <Link>Common\ODataUnitTestModule.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataVersionUtils.cs">
+      <Link>Common\ODataVersionUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\PayloadBuilder.cs">
+      <Link>Common\PayloadBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\PayloadElementODataWriter.cs">
+      <Link>Common\PayloadElementODataWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\PayloadGeneratorExtensions.cs">
+      <Link>Common\PayloadGeneratorExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\PayloadTestDescriptor.cs">
+      <Link>Common\PayloadTestDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\PayloadTestDescriptorAnnotation.cs">
+      <Link>Common\PayloadTestDescriptorAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestBatches.cs">
+      <Link>Common\TestBatches.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestMessageUtils.cs">
+      <Link>Common\TestMessageUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ReadTestStream.cs">
+      <Link>Common\ReadTestStream.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ReflectionUtils.cs">
+      <Link>Common\ReflectionUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\RemoveAnnotationsPayloadElementVisitor.cs">
+      <Link>Common\RemoveAnnotationsPayloadElementVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\StackBasedAssertionHandler.cs">
+      <Link>Common\StackBasedAssertionHandler.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\StreamUtils.cs">
+      <Link>Common\StreamUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\StringUtils.cs">
+      <Link>Common\StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestTaskUtils.cs">
+      <Link>Common\TestTaskUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestAsyncResult.cs">
+      <Link>Common\TestAsyncResult.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestConfiguration.cs">
+      <Link>Common\TestConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestEntityInstances.cs">
+      <Link>Common\TestEntityInstances.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestErrors.cs">
+      <Link>Common\TestErrors.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestFeeds.cs">
+      <Link>Common\TestFeeds.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestModels.cs">
+      <Link>Common\TestModels.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestRequestMessageWithUrlResolver.cs">
+      <Link>Common\TestRequestMessageWithUrlResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestResponseMessageWithUrlResolver.cs">
+      <Link>Common\TestResponseMessageWithUrlResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestRunKind.cs">
+      <Link>Common\TestRunKind.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestServiceDocuments.cs">
+      <Link>Common\TestServiceDocuments.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestStream.cs">
+      <Link>Common\TestStream.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestMessage.cs">
+      <Link>Common\TestMessage.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestMessageFlags.cs">
+      <Link>Common\TestMessageFlags.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestRequestMessage.cs">
+      <Link>Common\TestRequestMessage.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestResponseMessage.cs">
+      <Link>Common\TestResponseMessage.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestTextReader.cs">
+      <Link>Common\TestTextReader.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestUrlResolver.cs">
+      <Link>Common\TestUrlResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestValues.cs">
+      <Link>Common\TestValues.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\VerificationUtils.cs">
+      <Link>Common\VerificationUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\XmlUtils.cs">
+      <Link>Common\XmlUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\Atom\XmlODataPayloadElementExtensions.cs">
+      <Link>Contracts\Atom\XmlODataPayloadElementExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\CombinatorialDimension.cs">
+      <Link>Contracts\CombinatorialDimension.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\IAttributeToODataLibAnnotationConverter.cs">
+      <Link>Contracts\IAttributeToODataLibAnnotationConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\ICombinatorialEngine.cs">
+      <Link>Contracts\ICombinatorialEngine.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\ICombinatorialEngineProvider.cs">
+      <Link>Contracts\ICombinatorialEngineProvider.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\IExceptionVerifier.cs">
+      <Link>Contracts\IExceptionVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\IJsonValueComparer.cs">
+      <Link>Contracts\IJsonValueComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\IPayloadElementODataWriter.cs">
+      <Link>Contracts\IPayloadElementODataWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\IReaderMetadata.cs">
+      <Link>Contracts\IReaderMetadata.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\JsonLight\JsonLightMaintainPropertyOrderAnnotation.cs">
+      <Link>Contracts\JsonLight\JsonLightMaintainPropertyOrderAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\JsonLight\JsonLightContextUriProjectionAnnotation.cs">
+      <Link>Contracts\JsonLight\JsonLightContextUriProjectionAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\JsonLight\JsonLightMetadataDocumentUriAnnotation.cs">
+      <Link>Contracts\JsonLight\JsonLightMetadataDocumentUriAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\JsonLight\JsonLightContextUriAnnotation.cs">
+      <Link>Contracts\JsonLight\JsonLightContextUriAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\JsonLight\JsonLightODataPayloadElementExtensions.cs">
+      <Link>Contracts\JsonLight\JsonLightODataPayloadElementExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\JsonLight\JsonLightPropertyAnnotationAnnotation.cs">
+      <Link>Contracts\JsonLight\JsonLightPropertyAnnotationAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\NavigationPropertyCardinalityAnnotation.cs">
+      <Link>Contracts\NavigationPropertyCardinalityAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\TestODataBehaviorKind.cs">
+      <Link>Contracts\TestODataBehaviorKind.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\PayloadFormatVersionAnnotation.cs">
+      <Link>Contracts\PayloadFormatVersionAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\DependencyImplementationAssemblies.cs">
+      <Link>DependencyImplementationAssemblies.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\EmptyErrorResultComparer.cs">
+      <Link>Common\EmptyErrorResultComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\IDataServiceProviderFactory.cs">
+      <Link>Contracts\IDataServiceProviderFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\InheritODataAnnotationsUtils.cs">
+      <Link>Common\InheritODataAnnotationsUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\IODataLibPayloadElementComparer.cs">
+      <Link>Contracts\IODataLibPayloadElementComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\IODataPayloadElementPropertyWriter.cs">
+      <Link>Contracts\IODataPayloadElementPropertyWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\IODataQueryProvider.cs">
+      <Link>Contracts\IODataQueryProvider.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\IPayloadGenerator.cs">
+      <Link>Contracts\IPayloadGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\MetadataUtils.cs">
+      <Link>Common\MetadataUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataV2ModelGenerator.cs">
+      <Link>Common\ODataV2ModelGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataV2ModelGenerator.objectlayer.cs">
+      <Link>Common\ODataV2ModelGenerator.objectlayer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataObjectResultComparer.cs">
+      <Link>Common\ODataObjectResultComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataPayloadElementComparer.cs">
+      <Link>Common\ODataPayloadElementComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataPayloadElementDeepCopyingVisitor.cs">
+      <Link>Common\ODataPayloadElementDeepCopyingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataPayloadElementPropertyWriter.cs">
+      <Link>Common\ODataPayloadElementPropertyWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataPayloadElementUtils.cs">
+      <Link>Common\ODataPayloadElementUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataPayloadJsonConverter.cs">
+      <Link>Common\ODataPayloadJsonConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataPayloadJsonNormalizer.cs">
+      <Link>Common\ODataPayloadJsonNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataTaupoTestUtils.cs">
+      <Link>Common\ODataTaupoTestUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightUtils.cs">
+      <Link>JsonLight\JsonLightUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightConstants.cs">
+      <Link>JsonLight\JsonLightConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\SpatialPrimitiveToODataJsonLightValueConverter.cs">
+      <Link>JsonLight\SpatialPrimitiveToODataJsonLightValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\AnnotatedPayloadElementToJsonConverter.cs">
+      <Link>Json\AnnotatedPayloadElementToJsonConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\AnnotatedPayloadElementToJsonLightConverter.cs">
+      <Link>JsonLight\AnnotatedPayloadElementToJsonLightConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonConstants.cs">
+      <Link>Json\JsonConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonLinqExtensions.cs">
+      <Link>Json\JsonLinqExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonNodeType.cs">
+      <Link>Json\JsonNodeType.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\Json\JsonODataPayloadElementExtensions.cs">
+      <Link>Contracts\Json\JsonODataPayloadElementExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Contracts\Json\JsonPayloadElementRepresentationAnnotation.cs">
+      <Link>Contracts\Json\JsonPayloadElementRepresentationAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonTextPreservingParser.cs">
+      <Link>Json\JsonTextPreservingParser.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonTextPreservingWriter.cs">
+      <Link>Json\JsonTextPreservingWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonValueComparer.cs">
+      <Link>Json\JsonValueComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextAnnotations\JsonAnnotationExtensions.cs">
+      <Link>Json\TextAnnotations\JsonAnnotationExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextAnnotations\JsonArrayElementSeparatorTextAnnocation.cs">
+      <Link>Json\TextAnnotations\JsonArrayElementSeparatorTextAnnocation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextAnnotations\JsonEndArrayTextAnnotation.cs">
+      <Link>Json\TextAnnotations\JsonEndArrayTextAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextAnnotations\JsonEndObjectTextAnnotation.cs">
+      <Link>Json\TextAnnotations\JsonEndObjectTextAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextAnnotations\JsonPrimitiveValueTextAnnotation.cs">
+      <Link>Json\TextAnnotations\JsonPrimitiveValueTextAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextAnnotations\JsonPropertyNameTextAnnotation.cs">
+      <Link>Json\TextAnnotations\JsonPropertyNameTextAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextAnnotations\JsonPropertyNameValueSeparatorTextAnnotation.cs">
+      <Link>Json\TextAnnotations\JsonPropertyNameValueSeparatorTextAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextAnnotations\JsonPropertySeparatorTextAnnotation.cs">
+      <Link>Json\TextAnnotations\JsonPropertySeparatorTextAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextAnnotations\JsonStartArrayTextAnnotation.cs">
+      <Link>Json\TextAnnotations\JsonStartArrayTextAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextAnnotations\JsonStartObjectTextAnnotation.cs">
+      <Link>Json\TextAnnotations\JsonStartObjectTextAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataTestCaseBase.cs">
+      <Link>ODataTestCaseBase.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataTestModule.cs">
+      <Link>ODataTestModule.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataTestWorkspace.cs">
+      <Link>ODataTestWorkspace.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataWorkspaceBuilder.cs">
+      <Link>ODataWorkspaceBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataWriterPayloadNormalizer.cs">
+      <Link>Common\ODataWriterPayloadNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\QueryValueToClrValueConverter.cs">
+      <Link>Common\QueryValueToClrValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TraceLogger.cs">
+      <Link>Common\TraceLogger.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\TestTypeUtils.cs">
+      <Link>Common\TestTypeUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MSTestStubs\IgnoreAttribute.cs">
+      <Link>MSTestStubs\IgnoreAttribute.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MSTestStubs\TestCategoryAttribute.cs">
+      <Link>MSTestStubs\TestCategoryAttribute.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MSTestStubs\TestClassAttribute.cs">
+      <Link>MSTestStubs\TestClassAttribute.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MSTestStubs\TestInitializeAttribute.cs">
+      <Link>MSTestStubs\TestInitializeAttribute.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MSTestStubs\TestMethodAttribute.cs">
+      <Link>MSTestStubs\TestMethodAttribute.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MSTestStubs\Trace.cs">
+      <Link>MSTestStubs\Trace.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\PayloadTransformation\AddWhiteSpaceJsonTransform.cs">
+      <Link>PayloadTransformation\AddWhiteSpaceJsonTransform.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\PayloadTransformation\MetadataDocumentReorderingTransform.cs">
+      <Link>PayloadTransformation\MetadataDocumentReorderingTransform.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\PayloadTransformation\ODataLibPayloadTransformFactory.cs">
+      <Link>PayloadTransformation\ODataLibPayloadTransformFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\PayloadTransformation\ReorderPayloadElementPropertiesTransform.cs">
+      <Link>PayloadTransformation\ReorderPayloadElementPropertiesTransform.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(ODataCrossTargettingSourcePath)\Models\OData.csdl">
+      <Link>Models\OData.csdl</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

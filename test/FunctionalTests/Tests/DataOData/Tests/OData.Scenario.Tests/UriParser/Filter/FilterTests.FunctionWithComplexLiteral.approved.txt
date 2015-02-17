@@ -1,0 +1,25 @@
+$filter = Microsoft.Test.Taupo.OData.WCFService.Within(Location={ Street:'1 Microsoft Way', City:'Redmond', PostalCode:'98052' }, Distance=5)
+
+
+FilterQueryOption
+	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+	Parameter = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = Customers
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+	Expression = 
+	SingleValueFunctionCallNode
+		Name = Microsoft.Test.Taupo.OData.WCFService.Within
+		Return Type = [Edm.Boolean Nullable=False]
+		Function = 
+			Primitive Within([Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False],[Microsoft.Test.Taupo.OData.WCFService.Address Nullable=False],[Edm.Int32 Nullable=False],)
+		Arguments = 
+			NamedFunctionParameterNode
+				Parameter Name = Location
+				Value = 
+				Microsoft.OData.Core.ODataComplexValue(Type: )
+			NamedFunctionParameterNode
+				Parameter Name = Distance
+				Value = 
+				5(Type: [Edm.Int32 Nullable=False])

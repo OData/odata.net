@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="northwind" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Categories">
+        <Key>
+          <PropertyRef Name="CategoryID" />
+        </Key>
+        <Property Name="CategoryID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CategoryName" Type="Edm.String" Nullable="true" />
+        <Property Name="Description" Type="Edm.String" Nullable="true" />
+        <Property Name="Picture" Type="Edm.Binary" Nullable="true" />
+        <NavigationProperty Name="Products" Relationship="northwind.Categories_Products" FromRole="Categories" ToRole="Products" />
+      </EntityType>
+      <EntityType Name="CustomerCustomerDemo">
+        <Key>
+          <PropertyRef Name="CustomerID" />
+          <PropertyRef Name="CustomerTypeID" />
+        </Key>
+        <Property Name="CustomerID" Type="Edm.String" Nullable="false" />
+        <Property Name="CustomerTypeID" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="CustomerDemographics" Relationship="northwind.CustomerCustomerDemo_CustomerDemographics" FromRole="CustomerCustomerDemo" ToRole="CustomerDemographics" />
+        <NavigationProperty Name="Customers" Relationship="northwind.CustomerCustomerDemo_Customers" FromRole="CustomerCustomerDemo" ToRole="Customers" />
+      </EntityType>
+      <EntityType Name="CustomerDemographics">
+        <Key>
+          <PropertyRef Name="CustomerTypeID" />
+        </Key>
+        <Property Name="CustomerTypeID" Type="Edm.String" Nullable="false" />
+        <Property Name="CustomerDesc" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="CustomerCustomerDemo" Relationship="northwind.CustomerDemographics_CustomerCustomerDemo" FromRole="CustomerDemographics" ToRole="CustomerCustomerDemo" />
+      </EntityType>
+      <EntityType Name="Customers">
+        <Key>
+          <PropertyRef Name="CustomerID" />
+        </Key>
+        <Property Name="CustomerID" Type="Edm.String" Nullable="false" />
+        <Property Name="CompanyName" Type="Edm.String" Nullable="true" />
+        <Property Name="ContactName" Type="Edm.String" Nullable="true" />
+        <Property Name="ContactTitle" Type="Edm.String" Nullable="true" />
+        <Property Name="Address" Type="Edm.String" Nullable="true" />
+        <Property Name="City" Type="Edm.String" Nullable="true" />
+        <Property Name="Region" Type="Edm.String" Nullable="true" />
+        <Property Name="PostalCode" Type="Edm.String" Nullable="true" />
+        <Property Name="Phone" Type="Edm.String" Nullable="true" />
+        <Property Name="Fax" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="CustomerCustomerDemo" Relationship="northwind.Customers_CustomerCustomerDemo" FromRole="Customers" ToRole="CustomerCustomerDemo" />
+        <NavigationProperty Name="Orders" Relationship="northwind.Customers_Orders" FromRole="Customers" ToRole="Orders" />
+      </EntityType>
+      <EntityType Name="Employees">
+        <Key>
+          <PropertyRef Name="EmployeeID" />
+        </Key>
+        <Property Name="EmployeeID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="LastName" Type="Edm.String" Nullable="true" />
+        <Property Name="FirstName" Type="Edm.String" Nullable="true" />
+        <Property Name="Title" Type="Edm.String" Nullable="true" />
+        <Property Name="TitleOfCourtesy" Type="Edm.String" Nullable="true" />
+        <Property Name="BirthDate" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="HireDate" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="Address" Type="Edm.String" Nullable="true" />
+        <Property Name="City" Type="Edm.String" Nullable="true" />
+        <Property Name="Region" Type="Edm.String" Nullable="true" />
+        <Property Name="PostalCode" Type="Edm.String" Nullable="true" />
+        <Property Name="HomePhone" Type="Edm.String" Nullable="true" />
+        <Property Name="Extension" Type="Edm.String" Nullable="true" />
+        <Property Name="Photo" Type="Edm.Binary" Nullable="true" />
+        <Property Name="Notes" Type="Edm.String" Nullable="true" />
+        <Property Name="ReportsTo" Type="Edm.Int32" Nullable="true" />
+        <Property Name="PhotoPath" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="ReportsToEmployees" Relationship="northwind.Employees_ReportsToEmployees" FromRole="Employees" ToRole="ReportsToEmployees" />
+        <NavigationProperty Name="Employee" Relationship="northwind.Employees_Employee" FromRole="Employees" ToRole="Employee" />
+        <NavigationProperty Name="EmployeeTerritories" Relationship="northwind.Employees_EmployeeTerritories" FromRole="Employees" ToRole="EmployeeTerritories" />
+        <NavigationProperty Name="Orders" Relationship="northwind.Employees_Orders" FromRole="Employees" ToRole="Orders" />
+      </EntityType>
+      <EntityType Name="EmployeeTerritories">
+        <Key>
+          <PropertyRef Name="EmployeeID" />
+          <PropertyRef Name="TerritoryID" />
+        </Key>
+        <Property Name="EmployeeID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="TerritoryID" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="Employees" Relationship="northwind.EmployeeTerritories_Employees" FromRole="EmployeeTerritories" ToRole="Employees" />
+        <NavigationProperty Name="Territories" Relationship="northwind.EmployeeTerritories_Territories" FromRole="EmployeeTerritories" ToRole="Territories" />
+      </EntityType>
+      <EntityType Name="OrderDetails">
+        <Key>
+          <PropertyRef Name="OrderID" />
+          <PropertyRef Name="ProductID" />
+        </Key>
+        <Property Name="OrderID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ProductID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="UnitPrice" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="Quantity" Type="Edm.Int16" Nullable="false" />
+        <Property Name="Discount" Type="Edm.Single" Nullable="false" />
+        <NavigationProperty Name="Orders" Relationship="northwind.OrderDetails_Orders" FromRole="OrderDetails" ToRole="Orders" />
+        <NavigationProperty Name="Products" Relationship="northwind.OrderDetails_Products" FromRole="OrderDetails" ToRole="Products" />
+      </EntityType>
+      <EntityType Name="Orders">
+        <Key>
+          <PropertyRef Name="OrderID" />
+        </Key>
+        <Property Name="OrderID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CustomerID" Type="Edm.String" Nullable="true" />
+        <Property Name="EmployeeID" Type="Edm.Int32" Nullable="true" />
+        <Property Name="OrderDate" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="RequiredDate" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="ShippedDate" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="ShipVia" Type="Edm.Int32" Nullable="true" />
+        <Property Name="Freight" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="ShipName" Type="Edm.String" Nullable="true" />
+        <Property Name="ShipAddress" Type="Edm.String" Nullable="true" />
+        <Property Name="ShipCity" Type="Edm.String" Nullable="true" />
+        <Property Name="ShipRegion" Type="Edm.String" Nullable="true" />
+        <Property Name="ShipPostalCode" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="OrderDetails" Relationship="northwind.Orders_OrderDetails" FromRole="Orders" ToRole="OrderDetails" />
+        <NavigationProperty Name="Customers" Relationship="northwind.Orders_Customers" FromRole="Orders" ToRole="Customers" />
+        <NavigationProperty Name="Employees" Relationship="northwind.Orders_Employees" FromRole="Orders" ToRole="Employees" />
+        <NavigationProperty Name="Shippers" Relationship="northwind.Orders_Shippers" FromRole="Orders" ToRole="Shippers" />
+      </EntityType>
+      <EntityType Name="Products">
+        <Key>
+          <PropertyRef Name="ProductID" />
+        </Key>
+        <Property Name="ProductID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ProductName" Type="Edm.String" Nullable="true" />
+        <Property Name="SupplierID" Type="Edm.Int32" Nullable="true" />
+        <Property Name="CategoryID" Type="Edm.Int32" Nullable="true" />
+        <Property Name="QuantityPerUnit" Type="Edm.String" Nullable="true" />
+        <Property Name="UnitPrice" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="UnitsInStock" Type="Edm.Int16" Nullable="true" />
+        <Property Name="UnitsOnOrder" Type="Edm.Int16" Nullable="true" />
+        <Property Name="ReorderLevel" Type="Edm.Int16" Nullable="true" />
+        <Property Name="Discontinued" Type="Edm.Boolean" Nullable="false" />
+        <NavigationProperty Name="OrderDetails" Relationship="northwind.Products_OrderDetails" FromRole="Products" ToRole="OrderDetails" />
+        <NavigationProperty Name="Categories" Relationship="northwind.Products_Categories" FromRole="Products" ToRole="Categories" />
+        <NavigationProperty Name="Suppliers" Relationship="northwind.Products_Suppliers" FromRole="Products" ToRole="Suppliers" />
+      </EntityType>
+      <EntityType Name="Region">
+        <Key>
+          <PropertyRef Name="RegionID" />
+        </Key>
+        <Property Name="RegionID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="RegionDescription" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="Territories" Relationship="northwind.Region_Territories" FromRole="Region" ToRole="Territories" />
+      </EntityType>
+      <EntityType Name="Shippers">
+        <Key>
+          <PropertyRef Name="ShipperID" />
+        </Key>
+        <Property Name="ShipperID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CompanyName" Type="Edm.String" Nullable="true" />
+        <Property Name="Phone" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="Orders" Relationship="northwind.Shippers_Orders" FromRole="Shippers" ToRole="Orders" />
+      </EntityType>
+      <EntityType Name="Suppliers">
+        <Key>
+          <PropertyRef Name="SupplierID" />
+        </Key>
+        <Property Name="SupplierID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CompanyName" Type="Edm.String" Nullable="true" />
+        <Property Name="ContactName" Type="Edm.String" Nullable="true" />
+        <Property Name="ContactTitle" Type="Edm.String" Nullable="true" />
+        <Property Name="Address" Type="Edm.String" Nullable="true" />
+        <Property Name="City" Type="Edm.String" Nullable="true" />
+        <Property Name="Region" Type="Edm.String" Nullable="true" />
+        <Property Name="PostalCode" Type="Edm.String" Nullable="true" />
+        <Property Name="Phone" Type="Edm.String" Nullable="true" />
+        <Property Name="Fax" Type="Edm.String" Nullable="true" />
+        <Property Name="HomePage" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="Products" Relationship="northwind.Suppliers_Products" FromRole="Suppliers" ToRole="Products" />
+      </EntityType>
+      <EntityType Name="Territories">
+        <Key>
+          <PropertyRef Name="TerritoryID" />
+        </Key>
+        <Property Name="TerritoryID" Type="Edm.String" Nullable="false" />
+        <Property Name="TerritoryDescription" Type="Edm.String" Nullable="true" />
+        <Property Name="RegionID" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="EmployeeTerritories" Relationship="northwind.Territories_EmployeeTerritories" FromRole="Territories" ToRole="EmployeeTerritories" />
+        <NavigationProperty Name="Region" Relationship="northwind.Territories_Region" FromRole="Territories" ToRole="Region" />
+      </EntityType>
+      <Association Name="Categories_Products">
+        <End Role="Products" Type="northwind.Products" Multiplicity="*" />
+        <End Role="Categories" Type="northwind.Categories" Multiplicity="*" />
+      </Association>
+      <Association Name="CustomerCustomerDemo_CustomerDemographics">
+        <End Role="CustomerDemographics" Type="northwind.CustomerDemographics" Multiplicity="0..1" />
+        <End Role="CustomerCustomerDemo" Type="northwind.CustomerCustomerDemo" Multiplicity="*" />
+      </Association>
+      <Association Name="CustomerCustomerDemo_Customers">
+        <End Role="Customers" Type="northwind.Customers" Multiplicity="0..1" />
+        <End Role="CustomerCustomerDemo" Type="northwind.CustomerCustomerDemo" Multiplicity="*" />
+      </Association>
+      <Association Name="CustomerDemographics_CustomerCustomerDemo">
+        <End Role="CustomerCustomerDemo" Type="northwind.CustomerCustomerDemo" Multiplicity="*" />
+        <End Role="CustomerDemographics" Type="northwind.CustomerDemographics" Multiplicity="*" />
+      </Association>
+      <Association Name="Customers_CustomerCustomerDemo">
+        <End Role="CustomerCustomerDemo" Type="northwind.CustomerCustomerDemo" Multiplicity="*" />
+        <End Role="Customers" Type="northwind.Customers" Multiplicity="*" />
+      </Association>
+      <Association Name="Customers_Orders">
+        <End Role="Orders" Type="northwind.Orders" Multiplicity="*" />
+        <End Role="Customers" Type="northwind.Customers" Multiplicity="*" />
+      </Association>
+      <Association Name="Employees_ReportsToEmployees">
+        <End Role="ReportsToEmployees" Type="northwind.Employees" Multiplicity="0..1" />
+        <End Role="Employees" Type="northwind.Employees" Multiplicity="*" />
+      </Association>
+      <Association Name="Employees_Employee">
+        <End Role="Employee" Type="northwind.Employees" Multiplicity="*" />
+        <End Role="Employees" Type="northwind.Employees" Multiplicity="*" />
+      </Association>
+      <Association Name="Employees_EmployeeTerritories">
+        <End Role="EmployeeTerritories" Type="northwind.EmployeeTerritories" Multiplicity="*" />
+        <End Role="Employees" Type="northwind.Employees" Multiplicity="*" />
+      </Association>
+      <Association Name="Employees_Orders">
+        <End Role="Orders" Type="northwind.Orders" Multiplicity="*" />
+        <End Role="Employees" Type="northwind.Employees" Multiplicity="*" />
+      </Association>
+      <Association Name="EmployeeTerritories_Employees">
+        <End Role="Employees" Type="northwind.Employees" Multiplicity="0..1" />
+        <End Role="EmployeeTerritories" Type="northwind.EmployeeTerritories" Multiplicity="*" />
+      </Association>
+      <Association Name="EmployeeTerritories_Territories">
+        <End Role="Territories" Type="northwind.Territories" Multiplicity="0..1" />
+        <End Role="EmployeeTerritories" Type="northwind.EmployeeTerritories" Multiplicity="*" />
+      </Association>
+      <Association Name="OrderDetails_Orders">
+        <End Role="Orders" Type="northwind.Orders" Multiplicity="0..1" />
+        <End Role="OrderDetails" Type="northwind.OrderDetails" Multiplicity="*" />
+      </Association>
+      <Association Name="OrderDetails_Products">
+        <End Role="Products" Type="northwind.Products" Multiplicity="0..1" />
+        <End Role="OrderDetails" Type="northwind.OrderDetails" Multiplicity="*" />
+      </Association>
+      <Association Name="Orders_OrderDetails">
+        <End Role="OrderDetails" Type="northwind.OrderDetails" Multiplicity="*" />
+        <End Role="Orders" Type="northwind.Orders" Multiplicity="*" />
+      </Association>
+      <Association Name="Orders_Customers">
+        <End Role="Customers" Type="northwind.Customers" Multiplicity="0..1" />
+        <End Role="Orders" Type="northwind.Orders" Multiplicity="*" />
+      </Association>
+      <Association Name="Orders_Employees">
+        <End Role="Employees" Type="northwind.Employees" Multiplicity="0..1" />
+        <End Role="Orders" Type="northwind.Orders" Multiplicity="*" />
+      </Association>
+      <Association Name="Orders_Shippers">
+        <End Role="Shippers" Type="northwind.Shippers" Multiplicity="0..1" />
+        <End Role="Orders" Type="northwind.Orders" Multiplicity="*" />
+      </Association>
+      <Association Name="Products_OrderDetails">
+        <End Role="OrderDetails" Type="northwind.OrderDetails" Multiplicity="*" />
+        <End Role="Products" Type="northwind.Products" Multiplicity="*" />
+      </Association>
+      <Association Name="Products_Categories">
+        <End Role="Categories" Type="northwind.Categories" Multiplicity="0..1" />
+        <End Role="Products" Type="northwind.Products" Multiplicity="*" />
+      </Association>
+      <Association Name="Products_Suppliers">
+        <End Role="Suppliers" Type="northwind.Suppliers" Multiplicity="0..1" />
+        <End Role="Products" Type="northwind.Products" Multiplicity="*" />
+      </Association>
+      <Association Name="Region_Territories">
+        <End Role="Territories" Type="northwind.Territories" Multiplicity="*" />
+        <End Role="Region" Type="northwind.Region" Multiplicity="*" />
+      </Association>
+      <Association Name="Shippers_Orders">
+        <End Role="Orders" Type="northwind.Orders" Multiplicity="*" />
+        <End Role="Shippers" Type="northwind.Shippers" Multiplicity="*" />
+      </Association>
+      <Association Name="Suppliers_Products">
+        <End Role="Products" Type="northwind.Products" Multiplicity="*" />
+        <End Role="Suppliers" Type="northwind.Suppliers" Multiplicity="*" />
+      </Association>
+      <Association Name="Territories_EmployeeTerritories">
+        <End Role="EmployeeTerritories" Type="northwind.EmployeeTerritories" Multiplicity="*" />
+        <End Role="Territories" Type="northwind.Territories" Multiplicity="*" />
+      </Association>
+      <Association Name="Territories_Region">
+        <End Role="Region" Type="northwind.Region" Multiplicity="0..1" />
+        <End Role="Territories" Type="northwind.Territories" Multiplicity="*" />
+      </Association>
+      <EntityContainer Name="northwindDataContext">
+        <EntitySet Name="Categories" EntityType="northwind.Categories" />
+        <EntitySet Name="CustomerCustomerDemo" EntityType="northwind.CustomerCustomerDemo" />
+        <EntitySet Name="CustomerDemographics" EntityType="northwind.CustomerDemographics" />
+        <EntitySet Name="Customers" EntityType="northwind.Customers" />
+        <EntitySet Name="Employees" EntityType="northwind.Employees" />
+        <EntitySet Name="EmployeeTerritories" EntityType="northwind.EmployeeTerritories" />
+        <EntitySet Name="OrderDetails" EntityType="northwind.OrderDetails" />
+        <EntitySet Name="Orders" EntityType="northwind.Orders" />
+        <EntitySet Name="Products" EntityType="northwind.Products" />
+        <EntitySet Name="Region" EntityType="northwind.Region" />
+        <EntitySet Name="Shippers" EntityType="northwind.Shippers" />
+        <EntitySet Name="Suppliers" EntityType="northwind.Suppliers" />
+        <EntitySet Name="Territories" EntityType="northwind.Territories" />
+        <AssociationSet Name="Categories_Products" Association="northwind.Categories_Products">
+          <End Role="Products" EntitySet="Products" />
+          <End Role="Categories" EntitySet="Categories" />
+        </AssociationSet>
+        <AssociationSet Name="CustomerCustomerDemo_CustomerDemographics" Association="northwind.CustomerCustomerDemo_CustomerDemographics">
+          <End Role="CustomerDemographics" EntitySet="CustomerDemographics" />
+          <End Role="CustomerCustomerDemo" EntitySet="CustomerCustomerDemo" />
+        </AssociationSet>
+        <AssociationSet Name="CustomerCustomerDemo_Customers" Association="northwind.CustomerCustomerDemo_Customers">
+          <End Role="Customers" EntitySet="Customers" />
+          <End Role="CustomerCustomerDemo" EntitySet="CustomerCustomerDemo" />
+        </AssociationSet>
+        <AssociationSet Name="CustomerDemographics_CustomerCustomerDemo" Association="northwind.CustomerDemographics_CustomerCustomerDemo">
+          <End Role="CustomerCustomerDemo" EntitySet="CustomerCustomerDemo" />
+          <End Role="CustomerDemographics" EntitySet="CustomerDemographics" />
+        </AssociationSet>
+        <AssociationSet Name="Customers_CustomerCustomerDemo" Association="northwind.Customers_CustomerCustomerDemo">
+          <End Role="CustomerCustomerDemo" EntitySet="CustomerCustomerDemo" />
+          <End Role="Customers" EntitySet="Customers" />
+        </AssociationSet>
+        <AssociationSet Name="Customers_Orders" Association="northwind.Customers_Orders">
+          <End Role="Orders" EntitySet="Orders" />
+          <End Role="Customers" EntitySet="Customers" />
+        </AssociationSet>
+        <AssociationSet Name="Employees_ReportsToEmployees" Association="northwind.Employees_ReportsToEmployees">
+          <End Role="ReportsToEmployees" EntitySet="Employees" />
+          <End Role="Employees" EntitySet="Employees" />
+        </AssociationSet>
+        <AssociationSet Name="Employees_Employee" Association="northwind.Employees_Employee">
+          <End Role="Employee" EntitySet="Employees" />
+          <End Role="Employees" EntitySet="Employees" />
+        </AssociationSet>
+        <AssociationSet Name="Employees_EmployeeTerritories" Association="northwind.Employees_EmployeeTerritories">
+          <End Role="EmployeeTerritories" EntitySet="EmployeeTerritories" />
+          <End Role="Employees" EntitySet="Employees" />
+        </AssociationSet>
+        <AssociationSet Name="Employees_Orders" Association="northwind.Employees_Orders">
+          <End Role="Orders" EntitySet="Orders" />
+          <End Role="Employees" EntitySet="Employees" />
+        </AssociationSet>
+        <AssociationSet Name="EmployeeTerritories_Employees" Association="northwind.EmployeeTerritories_Employees">
+          <End Role="Employees" EntitySet="Employees" />
+          <End Role="EmployeeTerritories" EntitySet="EmployeeTerritories" />
+        </AssociationSet>
+        <AssociationSet Name="EmployeeTerritories_Territories" Association="northwind.EmployeeTerritories_Territories">
+          <End Role="Territories" EntitySet="Territories" />
+          <End Role="EmployeeTerritories" EntitySet="EmployeeTerritories" />
+        </AssociationSet>
+        <AssociationSet Name="OrderDetails_Orders" Association="northwind.OrderDetails_Orders">
+          <End Role="Orders" EntitySet="Orders" />
+          <End Role="OrderDetails" EntitySet="OrderDetails" />
+        </AssociationSet>
+        <AssociationSet Name="OrderDetails_Products" Association="northwind.OrderDetails_Products">
+          <End Role="Products" EntitySet="Products" />
+          <End Role="OrderDetails" EntitySet="OrderDetails" />
+        </AssociationSet>
+        <AssociationSet Name="Orders_OrderDetails" Association="northwind.Orders_OrderDetails">
+          <End Role="OrderDetails" EntitySet="OrderDetails" />
+          <End Role="Orders" EntitySet="Orders" />
+        </AssociationSet>
+        <AssociationSet Name="Orders_Customers" Association="northwind.Orders_Customers">
+          <End Role="Customers" EntitySet="Customers" />
+          <End Role="Orders" EntitySet="Orders" />
+        </AssociationSet>
+        <AssociationSet Name="Orders_Employees" Association="northwind.Orders_Employees">
+          <End Role="Employees" EntitySet="Employees" />
+          <End Role="Orders" EntitySet="Orders" />
+        </AssociationSet>
+        <AssociationSet Name="Orders_Shippers" Association="northwind.Orders_Shippers">
+          <End Role="Shippers" EntitySet="Shippers" />
+          <End Role="Orders" EntitySet="Orders" />
+        </AssociationSet>
+        <AssociationSet Name="Products_OrderDetails" Association="northwind.Products_OrderDetails">
+          <End Role="OrderDetails" EntitySet="OrderDetails" />
+          <End Role="Products" EntitySet="Products" />
+        </AssociationSet>
+        <AssociationSet Name="Products_Categories" Association="northwind.Products_Categories">
+          <End Role="Categories" EntitySet="Categories" />
+          <End Role="Products" EntitySet="Products" />
+        </AssociationSet>
+        <AssociationSet Name="Products_Suppliers" Association="northwind.Products_Suppliers">
+          <End Role="Suppliers" EntitySet="Suppliers" />
+          <End Role="Products" EntitySet="Products" />
+        </AssociationSet>
+        <AssociationSet Name="Region_Territories" Association="northwind.Region_Territories">
+          <End Role="Territories" EntitySet="Territories" />
+          <End Role="Region" EntitySet="Region" />
+        </AssociationSet>
+        <AssociationSet Name="Shippers_Orders" Association="northwind.Shippers_Orders">
+          <End Role="Orders" EntitySet="Orders" />
+          <End Role="Shippers" EntitySet="Shippers" />
+        </AssociationSet>
+        <AssociationSet Name="Suppliers_Products" Association="northwind.Suppliers_Products">
+          <End Role="Products" EntitySet="Products" />
+          <End Role="Suppliers" EntitySet="Suppliers" />
+        </AssociationSet>
+        <AssociationSet Name="Territories_EmployeeTerritories" Association="northwind.Territories_EmployeeTerritories">
+          <End Role="EmployeeTerritories" EntitySet="EmployeeTerritories" />
+          <End Role="Territories" EntitySet="Territories" />
+        </AssociationSet>
+        <AssociationSet Name="Territories_Region" Association="northwind.Territories_Region">
+          <End Role="Region" EntitySet="Region" />
+          <End Role="Territories" EntitySet="Territories" />
+        </AssociationSet>
+        <FunctionImport Name="GetNoParam" ReturnType="Edm.Int32" d:HttpMethod="GET" />
+        <FunctionImport Name="GetSingleParam" ReturnType="Edm.Int32" d:HttpMethod="GET">
+          <Parameter Name="intParam" Type="Edm.Int32" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetTwoParams" ReturnType="Edm.Int32" d:HttpMethod="GET">
+          <Parameter Name="intParam" Type="Edm.Int32" Mode="In" />
+          <Parameter Name="intParam2" Type="Edm.Int32" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetAllParamTypes" ReturnType="Edm.Double" d:HttpMethod="GET">
+          <Parameter Name="Byte" Type="Edm.Byte" Mode="In" />
+          <Parameter Name="Bool" Type="Edm.Boolean" Mode="In" />
+          <Parameter Name="dec" Type="Edm.Decimal" Mode="In" />
+          <Parameter Name="doub" Type="Edm.Double" Mode="In" />
+          <Parameter Name="guid" Type="Edm.Guid" Mode="In" />
+          <Parameter Name="int16" Type="Edm.Int16" Mode="In" />
+          <Parameter Name="int32" Type="Edm.Int32" Mode="In" />
+          <Parameter Name="int64" Type="Edm.Int64" Mode="In" />
+          <Parameter Name="single" Type="Edm.Single" Mode="In" />
+          <Parameter Name="str" Type="Edm.String" Mode="In" />
+          <Parameter Name="dt" Type="Edm.DateTimeOffset" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetGuid" ReturnType="Edm.Guid" d:HttpMethod="GET">
+          <Parameter Name="guid" Type="Edm.Guid" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetByte" ReturnType="Edm.Byte" d:HttpMethod="GET">
+          <Parameter Name="Byte" Type="Edm.Byte" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetBool" ReturnType="Edm.Boolean" d:HttpMethod="GET">
+          <Parameter Name="Bool" Type="Edm.Boolean" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetDecimal" ReturnType="Edm.Decimal" d:HttpMethod="GET">
+          <Parameter Name="dec" Type="Edm.Decimal" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetDouble" ReturnType="Edm.Double" d:HttpMethod="GET">
+          <Parameter Name="doub" Type="Edm.Double" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetInt16" ReturnType="Edm.Int16" d:HttpMethod="GET">
+          <Parameter Name="int16" Type="Edm.Int16" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetInt32" ReturnType="Edm.Int32" d:HttpMethod="GET">
+          <Parameter Name="int32" Type="Edm.Int32" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetInt64" ReturnType="Edm.Int64" d:HttpMethod="GET">
+          <Parameter Name="int64" Type="Edm.Int64" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetSingle" ReturnType="Edm.Single" d:HttpMethod="GET">
+          <Parameter Name="single" Type="Edm.Single" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetString" ReturnType="Edm.String" d:HttpMethod="GET">
+          <Parameter Name="str" Type="Edm.String" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetSByte" ReturnType="Edm.SByte" d:HttpMethod="GET">
+          <Parameter Name="Sbyte" Type="Edm.SByte" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetDateTime" ReturnType="Edm.DateTimeOffset" d:HttpMethod="GET">
+          <Parameter Name="datetime" Type="Edm.DateTimeOffset" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="BinaryServiceOpTest" ReturnType="Edm.Binary" d:HttpMethod="GET" />
+        <FunctionImport Name="BooleanServiceOperation" ReturnType="Edm.Boolean" d:HttpMethod="GET" />
+        <FunctionImport Name="ByteServiceOperation" ReturnType="Edm.Byte" d:HttpMethod="GET" />
+        <FunctionImport Name="DateTimeServiceOperation" ReturnType="Edm.DateTimeOffset" d:HttpMethod="GET" />
+        <FunctionImport Name="DecimalServiceOperation" ReturnType="Edm.Decimal" d:HttpMethod="GET" />
+        <FunctionImport Name="DoubleServiceOperation" ReturnType="Edm.Double" d:HttpMethod="GET" />
+        <FunctionImport Name="GuidServiceOperation" ReturnType="Edm.Guid" d:HttpMethod="GET" />
+        <FunctionImport Name="Int16ServiceOperation" ReturnType="Edm.Int16" d:HttpMethod="GET" />
+        <FunctionImport Name="Int32ServiceOperation" ReturnType="Edm.Int32" d:HttpMethod="GET" />
+        <FunctionImport Name="Int64ServiceOperation" ReturnType="Edm.Int64" d:HttpMethod="GET" />
+        <FunctionImport Name="SByteServiceOperation" ReturnType="Edm.SByte" d:HttpMethod="GET" />
+        <FunctionImport Name="SingleServiceOperation" ReturnType="Edm.Single" d:HttpMethod="GET" />
+        <FunctionImport Name="StringServiceOperation" ReturnType="Edm.String" d:HttpMethod="GET" />
+        <FunctionImport Name="Clear" d:HttpMethod="GET" />
+        <FunctionImport Name="VerifyResourceInstanceState" ReturnType="Edm.String" d:HttpMethod="GET">
+          <Parameter Name="resourceState" Type="Edm.String" Mode="In" />
+          <Parameter Name="resourceSetName" Type="Edm.String" Mode="In" />
+          <Parameter Name="resourceTypeName" Type="Edm.String" Mode="In" />
+          <Parameter Name="keyProperties" Type="Edm.String" Mode="In" />
+          <Parameter Name="keyPropertyTypes" Type="Edm.String" Mode="In" />
+          <Parameter Name="keyValues" Type="Edm.String" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="VerifyResourceInstanceProperty" ReturnType="Edm.String" d:HttpMethod="GET">
+          <Parameter Name="resourceSetName" Type="Edm.String" Mode="In" />
+          <Parameter Name="resourceTypeName" Type="Edm.String" Mode="In" />
+          <Parameter Name="keyProperties" Type="Edm.String" Mode="In" />
+          <Parameter Name="keyPropertyTypes" Type="Edm.String" Mode="In" />
+          <Parameter Name="keyValues" Type="Edm.String" Mode="In" />
+          <Parameter Name="propertyName" Type="Edm.String" Mode="In" />
+          <Parameter Name="propertyValue" Type="Edm.String" Mode="In" />
+          <Parameter Name="propertyType" Type="Edm.String" Mode="In" />
+        </FunctionImport>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

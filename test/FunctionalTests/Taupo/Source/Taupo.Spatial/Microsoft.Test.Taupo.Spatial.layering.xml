@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LayeringRules ModuleName="Microsoft.Test.Taupo.Spatial">
+  <CommonDependencies>
+    <DependsOn Namespace="Microsoft.Test.Taupo.Common" />
+    <DependsOn Namespace="Microsoft.Test.Taupo.Spatial.Common" />
+  </CommonDependencies>
+  <ContractsDependencies>
+    <Namespace Name="Microsoft.Test.Taupo.Spatial">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <DependsOn Namespace="Microsoft.Spatial" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Spatial.Common">
+      <DependsOn Namespace="Microsoft.Spatial" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Spatial.Contracts">
+      <DependsOn Namespace="Microsoft.Spatial" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Spatial.DataGeneration">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Spatial" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Spatial.EntityModel">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Spatial" />
+    </Namespace>
+  </ContractsDependencies>
+  <ImplementationDependencies>
+    <Namespace Name="Microsoft.Test.Taupo.Spatial.DataGeneration">
+      <DependsOn Namespace="Microsoft.Test.Taupo.DataGeneration" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Spatial.Contracts">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Spatial" Justification="Platform helpers"/>
+    </Namespace>
+  </ImplementationDependencies>
+</LayeringRules>

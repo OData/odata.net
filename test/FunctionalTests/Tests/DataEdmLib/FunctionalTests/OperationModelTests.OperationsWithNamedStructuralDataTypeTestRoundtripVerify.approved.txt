@@ -1,0 +1,733 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <ComplexType Name="Phone">
+    <Property Name="PhoneNumber" Type="Edm.String" Nullable="false" MaxLength="16" Unicode="false" />
+    <Property Name="Extension" Type="Edm.String" MaxLength="16" Unicode="false" />
+  </ComplexType>
+  <ComplexType Name="ContactDetails">
+    <Property Name="Email" Type="Edm.String" Nullable="false" MaxLength="32" Unicode="false" />
+    <Property Name="HomePhone" Type="NS1.Phone" Nullable="false" />
+    <Property Name="WorkPhone" Type="NS1.Phone" Nullable="false" />
+    <Property Name="MobilePhone" Type="NS1.Phone" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="ConcurrencyInfo">
+    <Property Name="Token" Type="Edm.String" ConcurrencyMode="Fixed" DefaultValue="" Nullable="false" MaxLength="20" Unicode="false" />
+    <Property Name="QueriedDateTimeOffset" Type="Edm.DateTimeOffset" />
+  </ComplexType>
+  <ComplexType Name="AuditInfo">
+    <Property Name="ModifiedDate" Type="Edm.DateTimeOffset" />
+    <Property Name="ModifiedBy" Type="Edm.String" Nullable="false" MaxLength="50" Unicode="false" />
+    <Property Name="Concurrency" Type="NS1.ConcurrencyInfo" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="Dimensions">
+    <Property Name="Width" Type="Edm.Decimal" Nullable="false" Precision="10" Scale="3" />
+    <Property Name="Height" Type="Edm.Decimal" Nullable="false" Precision="10" Scale="3" />
+    <Property Name="Depth" Type="Edm.Decimal" Nullable="false" Precision="10" Scale="3" />
+  </ComplexType>
+  <EntityType Name="SuspiciousActivity">
+    <Key>
+      <PropertyRef Name="SuspiciousActivityId" />
+    </Key>
+    <Property Name="SuspiciousActivityId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Activity" Type="Edm.String" />
+  </EntityType>
+  <EntityType Name="Message">
+    <Key>
+      <PropertyRef Name="MessageId" />
+      <PropertyRef Name="FromUsername" />
+    </Key>
+    <Property Name="FromUsername" Type="Edm.String" Nullable="false" MaxLength="50" Unicode="false" />
+    <Property Name="MessageId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="ToUsername" Type="Edm.String" Nullable="false" MaxLength="50" Unicode="false" />
+    <Property Name="Sent" Type="Edm.DateTimeOffset" />
+    <Property Name="Subject" Type="Edm.String" />
+    <Property Name="Body" Type="Edm.String" />
+    <Property Name="IsRead" Type="Edm.Boolean" Nullable="false" />
+    <NavigationProperty Name="Sender" Type="NS1.Login" Nullable="false" Partner="SentMessages">
+      <ReferentialConstraint Property="FromUsername" ReferencedProperty="Username" />
+    </NavigationProperty>
+    <NavigationProperty Name="Recipient" Type="NS1.Login" Nullable="false" Partner="ReceivedMessages">
+      <ReferentialConstraint Property="FromUsername" ReferencedProperty="Username" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="Login">
+    <Key>
+      <PropertyRef Name="Username" />
+    </Key>
+    <Property Name="Username" Type="Edm.String" Nullable="false" MaxLength="50" Unicode="false" />
+    <Property Name="CustomerId" Type="Edm.Int32" Nullable="false" />
+    <NavigationProperty Name="SentMessages" Type="Collection(NS1.Message)" Partner="Sender" />
+    <NavigationProperty Name="ReceivedMessages" Type="Collection(NS1.Message)" Partner="Recipient" />
+    <NavigationProperty Name="SuspiciousActivity" Type="Collection(NS1.SuspiciousActivity)" />
+    <NavigationProperty Name="LastLogin" Type="NS1.LastLogin" Partner="Login" />
+    <NavigationProperty Name="Orders" Type="Collection(NS1.Order)" Partner="Login" />
+    <NavigationProperty Name="Customer" Type="NS1.Customer" Nullable="false" Partner="Logins">
+      <ReferentialConstraint Property="CustomerId" ReferencedProperty="CustomerId" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="LastLogin">
+    <Key>
+      <PropertyRef Name="Username" />
+    </Key>
+    <Property Name="Username" Type="Edm.String" Nullable="false" MaxLength="50" Unicode="false" />
+    <Property Name="LoggedIn" Type="Edm.DateTimeOffset" />
+    <Property Name="LoggedOut" Type="Edm.DateTimeOffset" />
+    <NavigationProperty Name="Login" Type="NS1.Login" Nullable="false" Partner="LastLogin">
+      <ReferentialConstraint Property="Username" ReferencedProperty="Username" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="OrderId" />
+    </Key>
+    <Property Name="OrderId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="CustomerId" Type="Edm.Int32" />
+    <Property Name="Concurrency" Type="NS1.ConcurrencyInfo" Nullable="false" />
+    <NavigationProperty Name="Login" Type="NS1.Login" Partner="Orders" />
+    <NavigationProperty Name="Customer" Type="NS1.Customer" Partner="Orders">
+      <ReferentialConstraint Property="CustomerId" ReferencedProperty="CustomerId" />
+    </NavigationProperty>
+    <NavigationProperty Name="Notes" Type="Collection(NS1.OrderNote)" Partner="Order">
+      <OnDelete Action="Cascade" />
+    </NavigationProperty>
+    <NavigationProperty Name="OrderLines" Type="Collection(NS1.OrderLine)" Partner="Order" />
+  </EntityType>
+  <EntityType Name="CustomerInfo">
+    <Key>
+      <PropertyRef Name="CustomerInfoId" />
+    </Key>
+    <Property Name="CustomerInfoId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Information" Type="Edm.String" />
+  </EntityType>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="CustomerId" />
+    </Key>
+    <Property Name="CustomerId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="100" Unicode="false" />
+    <Property Name="ContactInfo" Type="NS1.ContactDetails" Nullable="false" />
+    <NavigationProperty Name="Orders" Type="Collection(NS1.Order)" Partner="Customer" />
+    <NavigationProperty Name="Logins" Type="Collection(NS1.Login)" Partner="Customer" />
+    <NavigationProperty Name="Husband" Type="NS1.Customer" Partner="Wife" />
+    <NavigationProperty Name="Wife" Type="NS1.Customer" Partner="Husband" />
+    <NavigationProperty Name="CustomerInfo" Type="NS1.CustomerInfo" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="ProductId" />
+    </Key>
+    <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Description" Type="Edm.String" MaxLength="1000" Unicode="false" />
+    <Property Name="Dimensions" Type="NS1.Dimensions" Nullable="false" />
+    <Property Name="BaseConcurrency" Type="Edm.String" ConcurrencyMode="Fixed" DefaultValue="" Nullable="false" />
+    <Property Name="ComplexConcurrency" Type="NS1.ConcurrencyInfo" Nullable="false" />
+    <Property Name="NestedComplexConcurrency" Type="NS1.AuditInfo" Nullable="false" />
+    <NavigationProperty Name="Barcodes" Type="Collection(NS1.Barcode)" Partner="Product" />
+    <NavigationProperty Name="Suppliers" Type="Collection(NS1.Supplier)" Partner="Products" />
+    <NavigationProperty Name="Replaces" Type="Collection(NS1.DiscontinuedProduct)" Partner="ReplacedBy" />
+    <NavigationProperty Name="Detail" Type="NS1.ProductDetail" Partner="Product" />
+    <NavigationProperty Name="Reviews" Type="Collection(NS1.ProductReview)" Partner="Product" />
+    <NavigationProperty Name="Photos" Type="Collection(NS1.ProductPhoto)" Partner="Product" />
+  </EntityType>
+  <EntityType Name="Barcode">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="Edm.Binary" Nullable="false" MaxLength="50" />
+    <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Text" Type="Edm.String" />
+    <NavigationProperty Name="Product" Type="NS1.Product" Nullable="false" Partner="Barcodes">
+      <ReferentialConstraint Property="ProductId" ReferencedProperty="ProductId" />
+    </NavigationProperty>
+    <NavigationProperty Name="BadScans" Type="Collection(NS1.IncorrectScan)" Partner="ExpectedBarcode" />
+    <NavigationProperty Name="Detail" Type="NS1.BarcodeDetail" Nullable="false">
+      <ReferentialConstraint Property="Code" ReferencedProperty="Code" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="IncorrectScan">
+    <Key>
+      <PropertyRef Name="IncorrectScanId" />
+    </Key>
+    <Property Name="IncorrectScanId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="ExpectedCode" Type="Edm.Binary" Nullable="false" MaxLength="50" />
+    <Property Name="ActualCode" Type="Edm.Binary" MaxLength="50" />
+    <Property Name="ScanDate" Type="Edm.DateTimeOffset" />
+    <Property Name="Details" Type="Edm.String" />
+    <NavigationProperty Name="ExpectedBarcode" Type="NS1.Barcode" Nullable="false" Partner="BadScans">
+      <ReferentialConstraint Property="ExpectedCode" ReferencedProperty="Code" />
+    </NavigationProperty>
+    <NavigationProperty Name="ActualBarcode" Type="NS1.Barcode">
+      <ReferentialConstraint Property="ActualCode" ReferencedProperty="Code" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="BarcodeDetail">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="Edm.Binary" Nullable="false" MaxLength="50" />
+    <Property Name="RegisteredTo" Type="Edm.String" />
+  </EntityType>
+  <EntityType Name="Resolution">
+    <Key>
+      <PropertyRef Name="ResolutionId" />
+    </Key>
+    <Property Name="ResolutionId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Details" Type="Edm.String" />
+    <NavigationProperty Name="Complaint" Type="NS1.Complaint" Nullable="false" Partner="Resolution" />
+  </EntityType>
+  <EntityType Name="Complaint">
+    <Key>
+      <PropertyRef Name="ComplaintId" />
+    </Key>
+    <Property Name="ComplaintId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="CustomerId" Type="Edm.Int32" />
+    <Property Name="Logged" Type="Edm.DateTimeOffset" />
+    <Property Name="Details" Type="Edm.String" />
+    <NavigationProperty Name="Customer" Type="NS1.Customer">
+      <ReferentialConstraint Property="CustomerId" ReferencedProperty="CustomerId" />
+    </NavigationProperty>
+    <NavigationProperty Name="Resolution" Type="NS1.Resolution" Partner="Complaint" />
+  </EntityType>
+  <EntityType Name="SmartCard">
+    <Key>
+      <PropertyRef Name="Username" />
+    </Key>
+    <Property Name="Username" Type="Edm.String" Nullable="false" MaxLength="50" Unicode="false" />
+    <Property Name="CardSerial" Type="Edm.String" />
+    <Property Name="Issued" Type="Edm.DateTimeOffset" />
+    <NavigationProperty Name="Login" Type="NS1.Login" Nullable="false">
+      <ReferentialConstraint Property="Username" ReferencedProperty="Username" />
+    </NavigationProperty>
+    <NavigationProperty Name="LastLogin" Type="NS1.LastLogin" />
+  </EntityType>
+  <EntityType Name="RSAToken">
+    <Key>
+      <PropertyRef Name="Serial" />
+    </Key>
+    <Property Name="Serial" Type="Edm.String" Nullable="false" MaxLength="20" Unicode="false" />
+    <Property Name="Issued" Type="Edm.DateTimeOffset" />
+    <NavigationProperty Name="Login" Type="NS1.Login" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PasswordReset">
+    <Key>
+      <PropertyRef Name="ResetNo" />
+    </Key>
+    <Property Name="ResetNo" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Username" Type="Edm.String" Nullable="false" MaxLength="50" Unicode="false" />
+    <Property Name="TempPassword" Type="Edm.String" />
+    <Property Name="EmailedTo" Type="Edm.String" />
+    <NavigationProperty Name="Login" Type="NS1.Login" Nullable="false">
+      <ReferentialConstraint Property="Username" ReferencedProperty="Username" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="PageView">
+    <Key>
+      <PropertyRef Name="PageViewId" />
+    </Key>
+    <Property Name="PageViewId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Username" Type="Edm.String" Nullable="false" MaxLength="50" Unicode="false" />
+    <Property Name="Viewed" Type="Edm.DateTimeOffset" />
+    <Property Name="PageUrl" Type="Edm.String" Nullable="false" MaxLength="500" Unicode="false" />
+    <NavigationProperty Name="Login" Type="NS1.Login" Nullable="false">
+      <ReferentialConstraint Property="Username" ReferencedProperty="Username" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ProductPageView" BaseType="NS1.PageView">
+    <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
+    <NavigationProperty Name="Product" Type="NS1.Product" Nullable="false">
+      <ReferentialConstraint Property="ProductId" ReferencedProperty="ProductId" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="Supplier">
+    <Key>
+      <PropertyRef Name="SupplierId" />
+    </Key>
+    <Property Name="SupplierId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Name" Type="Edm.String" />
+    <NavigationProperty Name="Products" Type="Collection(NS1.Product)" Partner="Suppliers" />
+    <NavigationProperty Name="Logo" Type="NS1.SupplierLogo" Nullable="false">
+      <ReferentialConstraint Property="SupplierId" ReferencedProperty="SupplierId" />
+    </NavigationProperty>
+    <NavigationProperty Name="BackOrderLines" Type="Collection(NS1.BackOrderLine)" Partner="Supplier" />
+  </EntityType>
+  <EntityType Name="SupplierLogo">
+    <Key>
+      <PropertyRef Name="SupplierId" />
+    </Key>
+    <Property Name="SupplierId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Logo" Type="Edm.Binary" Nullable="false" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="SupplierInfo">
+    <Key>
+      <PropertyRef Name="SupplierInfoId" />
+    </Key>
+    <Property Name="SupplierInfoId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Information" Type="Edm.String" />
+    <NavigationProperty Name="Supplier" Type="NS1.Supplier" Nullable="false">
+      <OnDelete Action="Cascade" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="OrderNote">
+    <Key>
+      <PropertyRef Name="NoteId" />
+    </Key>
+    <Property Name="NoteId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Note" Type="Edm.String" />
+    <NavigationProperty Name="Order" Type="NS1.Order" Nullable="false" Partner="Notes" />
+  </EntityType>
+  <EntityType Name="OrderQualityCheck">
+    <Key>
+      <PropertyRef Name="OrderId" />
+    </Key>
+    <Property Name="OrderId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="CheckedBy" Type="Edm.String" />
+    <Property Name="CheckedDateTime" Type="Edm.DateTimeOffset" />
+    <NavigationProperty Name="Order" Type="NS1.Order" Nullable="false">
+      <ReferentialConstraint Property="OrderId" ReferencedProperty="OrderId" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="OrderLine">
+    <Key>
+      <PropertyRef Name="OrderId" />
+      <PropertyRef Name="ProductId" />
+    </Key>
+    <Property Name="OrderId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Quantity" Type="Edm.Int32" />
+    <Property Name="ConcurrencyToken" Type="Edm.String" ConcurrencyMode="Fixed" DefaultValue="" Nullable="false" />
+    <NavigationProperty Name="Order" Type="NS1.Order" Nullable="false" Partner="OrderLines">
+      <ReferentialConstraint Property="OrderId" ReferencedProperty="OrderId" />
+    </NavigationProperty>
+    <NavigationProperty Name="Product" Type="NS1.Product" Nullable="false">
+      <ReferentialConstraint Property="ProductId" ReferencedProperty="ProductId" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="BackOrderLine" BaseType="NS1.OrderLine">
+    <Property Name="ETA" Type="Edm.DateTimeOffset" />
+    <NavigationProperty Name="Supplier" Type="NS1.Supplier" Partner="BackOrderLines" />
+  </EntityType>
+  <EntityType Name="BackOrderLine2" BaseType="NS1.BackOrderLine" />
+  <EntityType Name="DiscontinuedProduct" BaseType="NS1.Product">
+    <Property Name="Discontinued" Type="Edm.DateTimeOffset" />
+    <Property Name="ReplacementProductId" Type="Edm.Int32" />
+    <NavigationProperty Name="ReplacedBy" Type="NS1.Product" Partner="Replaces">
+      <ReferentialConstraint Property="ReplacementProductId" ReferencedProperty="ProductId" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ProductDetail">
+    <Key>
+      <PropertyRef Name="ProductId" />
+    </Key>
+    <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Details" Type="Edm.String" />
+    <NavigationProperty Name="Product" Type="NS1.Product" Nullable="false" Partner="Detail">
+      <ReferentialConstraint Property="ProductId" ReferencedProperty="ProductId" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="ProductReview">
+    <Key>
+      <PropertyRef Name="ProductId" />
+      <PropertyRef Name="ReviewId" />
+    </Key>
+    <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="ReviewId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Review" Type="Edm.String" />
+    <NavigationProperty Name="Product" Type="NS1.Product" Nullable="false" Partner="Reviews">
+      <ReferentialConstraint Property="ProductId" ReferencedProperty="ProductId" />
+    </NavigationProperty>
+    <NavigationProperty Name="Features" Type="Collection(NS1.ProductWebFeature)" Partner="Review" />
+  </EntityType>
+  <EntityType Name="ProductPhoto">
+    <Key>
+      <PropertyRef Name="ProductId" />
+      <PropertyRef Name="PhotoId" />
+    </Key>
+    <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="PhotoId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Photo" Type="Edm.Binary" />
+    <NavigationProperty Name="Product" Type="NS1.Product" Nullable="false" Partner="Photos">
+      <ReferentialConstraint Property="ProductId" ReferencedProperty="ProductId" />
+    </NavigationProperty>
+    <NavigationProperty Name="Features" Type="Collection(NS1.ProductWebFeature)" Partner="Photo" />
+  </EntityType>
+  <EntityType Name="ProductWebFeature">
+    <Key>
+      <PropertyRef Name="FeatureId" />
+    </Key>
+    <Property Name="FeatureId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="ProductId" Type="Edm.Int32" />
+    <Property Name="PhotoId" Type="Edm.Int32" />
+    <Property Name="ReviewId" Type="Edm.Int32" />
+    <Property Name="Heading" Type="Edm.String" />
+    <NavigationProperty Name="Review" Type="NS1.ProductReview" Partner="Features">
+      <ReferentialConstraint Property="ReviewId" ReferencedProperty="ProductId" />
+      <ReferentialConstraint Property="ProductId" ReferencedProperty="ReviewId" />
+    </NavigationProperty>
+    <NavigationProperty Name="Photo" Type="NS1.ProductPhoto" Partner="Features">
+      <ReferentialConstraint Property="PhotoId" ReferencedProperty="ProductId" />
+      <ReferentialConstraint Property="ProductId" ReferencedProperty="PhotoId" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityType Name="Computer">
+    <Key>
+      <PropertyRef Name="ComputerId" />
+    </Key>
+    <Property Name="ComputerId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Name" Type="Edm.String" />
+    <NavigationProperty Name="ComputerDetail" Type="NS1.ComputerDetail" Nullable="false" Partner="Computer" />
+  </EntityType>
+  <EntityType Name="ComputerDetail">
+    <Key>
+      <PropertyRef Name="ComputerDetailId" />
+    </Key>
+    <Property Name="ComputerDetailId" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Model" Type="Edm.String" />
+    <Property Name="Serial" Type="Edm.String" />
+    <Property Name="Specifications" Type="Edm.String" />
+    <Property Name="PurchaseDate" Type="Edm.DateTimeOffset" />
+    <Property Name="Dimensions" Type="NS1.Dimensions" Nullable="false" />
+    <NavigationProperty Name="Computer" Type="NS1.Computer" Nullable="false" Partner="ComputerDetail" />
+  </EntityType>
+  <EntityType Name="Driver">
+    <Key>
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="100" Unicode="false" />
+    <Property Name="BirthDate" Type="Edm.DateTimeOffset" />
+    <NavigationProperty Name="License" Type="NS1.License" Nullable="false" Partner="Driver" />
+  </EntityType>
+  <EntityType Name="License">
+    <Key>
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="100" Unicode="false" />
+    <Property Name="LicenseNumber" Type="Edm.String" />
+    <Property Name="LicenseClass" Type="Edm.String" />
+    <Property Name="Restrictions" Type="Edm.String" />
+    <Property Name="ExpirationDate" Type="Edm.DateTimeOffset" />
+    <NavigationProperty Name="Driver" Type="NS1.Driver" Nullable="false" Partner="License">
+      <ReferentialConstraint Property="Name" ReferencedProperty="Name" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityContainer Name="DefaultContainer_sub">
+    <EntitySet Name="SuspiciousActivity" EntityType="NS1.SuspiciousActivity" />
+    <EntitySet Name="Message" EntityType="NS1.Message">
+      <NavigationPropertyBinding Path="Sender" Target="Login" />
+      <NavigationPropertyBinding Path="Recipient" Target="Login" />
+    </EntitySet>
+    <EntitySet Name="Login" EntityType="NS1.Login">
+      <NavigationPropertyBinding Path="SentMessages" Target="Message" />
+      <NavigationPropertyBinding Path="ReceivedMessages" Target="Message" />
+      <NavigationPropertyBinding Path="SuspiciousActivity" Target="SuspiciousActivity" />
+      <NavigationPropertyBinding Path="LastLogin" Target="LastLogin" />
+      <NavigationPropertyBinding Path="Orders" Target="Order" />
+      <NavigationPropertyBinding Path="Customer" Target="Customer" />
+    </EntitySet>
+    <EntitySet Name="LastLogin" EntityType="NS1.LastLogin">
+      <NavigationPropertyBinding Path="Login" Target="Login" />
+    </EntitySet>
+    <EntitySet Name="Order" EntityType="NS1.Order">
+      <NavigationPropertyBinding Path="Login" Target="Login" />
+      <NavigationPropertyBinding Path="Customer" Target="Customer" />
+      <NavigationPropertyBinding Path="Notes" Target="OrderNote" />
+      <NavigationPropertyBinding Path="OrderLines" Target="OrderLine" />
+    </EntitySet>
+    <EntitySet Name="CustomerInfo" EntityType="NS1.CustomerInfo" />
+    <EntitySet Name="Customer" EntityType="NS1.Customer">
+      <NavigationPropertyBinding Path="Orders" Target="Order" />
+      <NavigationPropertyBinding Path="Logins" Target="Login" />
+      <NavigationPropertyBinding Path="Husband" Target="Customer" />
+      <NavigationPropertyBinding Path="Wife" Target="Customer" />
+      <NavigationPropertyBinding Path="CustomerInfo" Target="CustomerInfo" />
+    </EntitySet>
+    <EntitySet Name="Product" EntityType="NS1.Product">
+      <NavigationPropertyBinding Path="Barcodes" Target="Barcode" />
+      <NavigationPropertyBinding Path="Suppliers" Target="Supplier" />
+      <NavigationPropertyBinding Path="Replaces" Target="Product" />
+      <NavigationPropertyBinding Path="Detail" Target="ProductDetail" />
+      <NavigationPropertyBinding Path="Reviews" Target="ProductReview" />
+      <NavigationPropertyBinding Path="Photos" Target="ProductPhoto" />
+      <NavigationPropertyBinding Path="NS1.DiscontinuedProduct/ReplacedBy" Target="Product" />
+    </EntitySet>
+    <EntitySet Name="Barcode" EntityType="NS1.Barcode">
+      <NavigationPropertyBinding Path="Product" Target="Product" />
+      <NavigationPropertyBinding Path="BadScans" Target="IncorrectScan" />
+      <NavigationPropertyBinding Path="Detail" Target="BarcodeDetail" />
+    </EntitySet>
+    <EntitySet Name="IncorrectScan" EntityType="NS1.IncorrectScan">
+      <NavigationPropertyBinding Path="ExpectedBarcode" Target="Barcode" />
+      <NavigationPropertyBinding Path="ActualBarcode" Target="Barcode" />
+    </EntitySet>
+    <EntitySet Name="BarcodeDetail" EntityType="NS1.BarcodeDetail" />
+    <EntitySet Name="Resolution" EntityType="NS1.Resolution">
+      <NavigationPropertyBinding Path="Complaint" Target="Complaint" />
+    </EntitySet>
+    <EntitySet Name="Complaint" EntityType="NS1.Complaint">
+      <NavigationPropertyBinding Path="Customer" Target="Customer" />
+      <NavigationPropertyBinding Path="Resolution" Target="Resolution" />
+    </EntitySet>
+    <EntitySet Name="SmartCard" EntityType="NS1.SmartCard">
+      <NavigationPropertyBinding Path="Login" Target="Login" />
+      <NavigationPropertyBinding Path="LastLogin" Target="LastLogin" />
+    </EntitySet>
+    <EntitySet Name="RSAToken" EntityType="NS1.RSAToken">
+      <NavigationPropertyBinding Path="Login" Target="Login" />
+    </EntitySet>
+    <EntitySet Name="PasswordReset" EntityType="NS1.PasswordReset">
+      <NavigationPropertyBinding Path="Login" Target="Login" />
+    </EntitySet>
+    <EntitySet Name="PageView" EntityType="NS1.PageView">
+      <NavigationPropertyBinding Path="Login" Target="Login" />
+      <NavigationPropertyBinding Path="NS1.ProductPageView/Product" Target="Product" />
+    </EntitySet>
+    <EntitySet Name="Supplier" EntityType="NS1.Supplier">
+      <NavigationPropertyBinding Path="Products" Target="Product" />
+      <NavigationPropertyBinding Path="Logo" Target="SupplierLogo" />
+      <NavigationPropertyBinding Path="BackOrderLines" Target="OrderLine" />
+    </EntitySet>
+    <EntitySet Name="SupplierLogo" EntityType="NS1.SupplierLogo" />
+    <EntitySet Name="SupplierInfo" EntityType="NS1.SupplierInfo">
+      <NavigationPropertyBinding Path="Supplier" Target="Supplier" />
+    </EntitySet>
+    <EntitySet Name="OrderNote" EntityType="NS1.OrderNote">
+      <NavigationPropertyBinding Path="Order" Target="Order" />
+    </EntitySet>
+    <EntitySet Name="OrderQualityCheck" EntityType="NS1.OrderQualityCheck">
+      <NavigationPropertyBinding Path="Order" Target="Order" />
+    </EntitySet>
+    <EntitySet Name="OrderLine" EntityType="NS1.OrderLine">
+      <NavigationPropertyBinding Path="Order" Target="Order" />
+      <NavigationPropertyBinding Path="Product" Target="Product" />
+      <NavigationPropertyBinding Path="NS1.BackOrderLine/Supplier" Target="Supplier" />
+    </EntitySet>
+    <EntitySet Name="ProductDetail" EntityType="NS1.ProductDetail">
+      <NavigationPropertyBinding Path="Product" Target="Product" />
+    </EntitySet>
+    <EntitySet Name="ProductReview" EntityType="NS1.ProductReview">
+      <NavigationPropertyBinding Path="Product" Target="Product" />
+      <NavigationPropertyBinding Path="Features" Target="ProductWebFeature" />
+    </EntitySet>
+    <EntitySet Name="ProductPhoto" EntityType="NS1.ProductPhoto">
+      <NavigationPropertyBinding Path="Product" Target="Product" />
+      <NavigationPropertyBinding Path="Features" Target="ProductWebFeature" />
+    </EntitySet>
+    <EntitySet Name="ProductWebFeature" EntityType="NS1.ProductWebFeature">
+      <NavigationPropertyBinding Path="Review" Target="ProductReview" />
+      <NavigationPropertyBinding Path="Photo" Target="ProductPhoto" />
+    </EntitySet>
+    <EntitySet Name="Computer" EntityType="NS1.Computer">
+      <NavigationPropertyBinding Path="ComputerDetail" Target="ComputerDetail" />
+    </EntitySet>
+    <EntitySet Name="ComputerDetail" EntityType="NS1.ComputerDetail">
+      <NavigationPropertyBinding Path="Computer" Target="Computer" />
+    </EntitySet>
+    <EntitySet Name="Driver" EntityType="NS1.Driver">
+      <NavigationPropertyBinding Path="License" Target="License" />
+    </EntitySet>
+    <EntitySet Name="License" EntityType="NS1.License">
+      <NavigationPropertyBinding Path="Driver" Target="Driver" />
+    </EntitySet>
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType1" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType1" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType3" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType3" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType5" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType5" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType7" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType7" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType9" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType9" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType11" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType11" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType13" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType13" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType15" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType15" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType17" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType17" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType19" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType19" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType21" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType21" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType23" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType23" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType25" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType25" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType27" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType27" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType29" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType29" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType31" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType31" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType33" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType33" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType35" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType35" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType37" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType37" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType39" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType39" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType41" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType41" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType43" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType43" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType45" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType45" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType47" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType47" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType49" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType49" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType51" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType51" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType53" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType53" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType55" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType55" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType57" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType57" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType59" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType59" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType61" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType61" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType63" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType63" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType65" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType65" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType67" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType67" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType69" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType69" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType71" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType71" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType73" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType73" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType75" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType75" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType77" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType77" />
+    <FunctionImport Name="FunctionsWithNamedStructuralDataType79" Function="DefaultNamespace.FunctionsWithNamedStructuralDataType79" />
+  </EntityContainer>
+</Schema>
+<Schema Namespace="DefaultNamespace" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <Function Name="FunctionsWithNamedStructuralDataType1">
+    <Parameter Name="ComplexTypeParameter2" Type="NS1.Phone" />
+    <ReturnType Type="NS1.Phone" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType3">
+    <Parameter Name="ComplexTypeParameter4" Type="NS1.ContactDetails" />
+    <ReturnType Type="NS1.ContactDetails" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType5">
+    <Parameter Name="ComplexTypeParameter6" Type="NS1.ConcurrencyInfo" />
+    <ReturnType Type="NS1.ConcurrencyInfo" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType7">
+    <Parameter Name="ComplexTypeParameter8" Type="NS1.AuditInfo" />
+    <ReturnType Type="NS1.AuditInfo" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType9">
+    <Parameter Name="ComplexTypeParameter10" Type="NS1.Dimensions" />
+    <ReturnType Type="NS1.Dimensions" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType11">
+    <Parameter Name="EntityTypeParameter12" Type="NS1.SuspiciousActivity" Nullable="false" />
+    <ReturnType Type="NS1.SuspiciousActivity" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType13">
+    <Parameter Name="EntityTypeParameter14" Type="NS1.Message" Nullable="false" />
+    <ReturnType Type="NS1.Message" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType15">
+    <Parameter Name="EntityTypeParameter16" Type="NS1.Login" Nullable="false" />
+    <ReturnType Type="NS1.Login" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType17">
+    <Parameter Name="EntityTypeParameter18" Type="NS1.LastLogin" Nullable="false" />
+    <ReturnType Type="NS1.LastLogin" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType19">
+    <Parameter Name="EntityTypeParameter20" Type="NS1.Order" Nullable="false" />
+    <ReturnType Type="NS1.Order" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType21">
+    <Parameter Name="EntityTypeParameter22" Type="NS1.CustomerInfo" Nullable="false" />
+    <ReturnType Type="NS1.CustomerInfo" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType23">
+    <Parameter Name="EntityTypeParameter24" Type="NS1.Customer" Nullable="false" />
+    <ReturnType Type="NS1.Customer" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType25">
+    <Parameter Name="EntityTypeParameter26" Type="NS1.Product" Nullable="false" />
+    <ReturnType Type="NS1.Product" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType27">
+    <Parameter Name="EntityTypeParameter28" Type="NS1.Barcode" Nullable="false" />
+    <ReturnType Type="NS1.Barcode" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType29">
+    <Parameter Name="EntityTypeParameter30" Type="NS1.IncorrectScan" Nullable="false" />
+    <ReturnType Type="NS1.IncorrectScan" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType31">
+    <Parameter Name="EntityTypeParameter32" Type="NS1.BarcodeDetail" Nullable="false" />
+    <ReturnType Type="NS1.BarcodeDetail" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType33">
+    <Parameter Name="EntityTypeParameter34" Type="NS1.Resolution" Nullable="false" />
+    <ReturnType Type="NS1.Resolution" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType35">
+    <Parameter Name="EntityTypeParameter36" Type="NS1.Complaint" Nullable="false" />
+    <ReturnType Type="NS1.Complaint" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType37">
+    <Parameter Name="EntityTypeParameter38" Type="NS1.SmartCard" Nullable="false" />
+    <ReturnType Type="NS1.SmartCard" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType39">
+    <Parameter Name="EntityTypeParameter40" Type="NS1.RSAToken" Nullable="false" />
+    <ReturnType Type="NS1.RSAToken" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType41">
+    <Parameter Name="EntityTypeParameter42" Type="NS1.PasswordReset" Nullable="false" />
+    <ReturnType Type="NS1.PasswordReset" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType43">
+    <Parameter Name="EntityTypeParameter44" Type="NS1.PageView" Nullable="false" />
+    <ReturnType Type="NS1.PageView" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType45">
+    <Parameter Name="EntityTypeParameter46" Type="NS1.ProductPageView" Nullable="false" />
+    <ReturnType Type="NS1.ProductPageView" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType47">
+    <Parameter Name="EntityTypeParameter48" Type="NS1.Supplier" Nullable="false" />
+    <ReturnType Type="NS1.Supplier" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType49">
+    <Parameter Name="EntityTypeParameter50" Type="NS1.SupplierLogo" Nullable="false" />
+    <ReturnType Type="NS1.SupplierLogo" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType51">
+    <Parameter Name="EntityTypeParameter52" Type="NS1.SupplierInfo" Nullable="false" />
+    <ReturnType Type="NS1.SupplierInfo" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType53">
+    <Parameter Name="EntityTypeParameter54" Type="NS1.OrderNote" Nullable="false" />
+    <ReturnType Type="NS1.OrderNote" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType55">
+    <Parameter Name="EntityTypeParameter56" Type="NS1.OrderQualityCheck" Nullable="false" />
+    <ReturnType Type="NS1.OrderQualityCheck" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType57">
+    <Parameter Name="EntityTypeParameter58" Type="NS1.OrderLine" Nullable="false" />
+    <ReturnType Type="NS1.OrderLine" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType59">
+    <Parameter Name="EntityTypeParameter60" Type="NS1.BackOrderLine" Nullable="false" />
+    <ReturnType Type="NS1.BackOrderLine" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType61">
+    <Parameter Name="EntityTypeParameter62" Type="NS1.BackOrderLine2" Nullable="false" />
+    <ReturnType Type="NS1.BackOrderLine2" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType63">
+    <Parameter Name="EntityTypeParameter64" Type="NS1.DiscontinuedProduct" Nullable="false" />
+    <ReturnType Type="NS1.DiscontinuedProduct" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType65">
+    <Parameter Name="EntityTypeParameter66" Type="NS1.ProductDetail" Nullable="false" />
+    <ReturnType Type="NS1.ProductDetail" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType67">
+    <Parameter Name="EntityTypeParameter68" Type="NS1.ProductReview" Nullable="false" />
+    <ReturnType Type="NS1.ProductReview" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType69">
+    <Parameter Name="EntityTypeParameter70" Type="NS1.ProductPhoto" Nullable="false" />
+    <ReturnType Type="NS1.ProductPhoto" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType71">
+    <Parameter Name="EntityTypeParameter72" Type="NS1.ProductWebFeature" Nullable="false" />
+    <ReturnType Type="NS1.ProductWebFeature" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType73">
+    <Parameter Name="EntityTypeParameter74" Type="NS1.Computer" Nullable="false" />
+    <ReturnType Type="NS1.Computer" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType75">
+    <Parameter Name="EntityTypeParameter76" Type="NS1.ComputerDetail" Nullable="false" />
+    <ReturnType Type="NS1.ComputerDetail" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType77">
+    <Parameter Name="EntityTypeParameter78" Type="NS1.Driver" Nullable="false" />
+    <ReturnType Type="NS1.Driver" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithNamedStructuralDataType79">
+    <Parameter Name="EntityTypeParameter80" Type="NS1.License" Nullable="false" />
+    <ReturnType Type="NS1.License" Nullable="false" />
+  </Function>
+</Schema>
+

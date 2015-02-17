@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="dbo" CdmEntityContainer="CustomObjectContext">
+    <EntitySetMapping Name="Customers">
+      <EntityTypeMapping TypeName="IsTypeOf(AstoriaUnitTests.ObjectContextStubs.Types.Customer)">
+        <MappingFragment StoreEntitySet="Customers">
+          <ScalarProperty Name="ID" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="GuidValue" ColumnName="GuidValue" />
+          <ScalarProperty Name="Concurrency" ColumnName="Concurrency" />
+          <ScalarProperty Name="EditTimeStamp" ColumnName="EditTimeStamp" />
+          <ComplexProperty Name="Address" TypeName="AstoriaUnitTests.ObjectContextStubs.Types.Address">
+            <ScalarProperty Name="StreetAddress" ColumnName="Address" />
+            <ScalarProperty Name="City" ColumnName="City" />
+            <ScalarProperty Name="State" ColumnName="State" />
+            <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+          </ComplexProperty>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="AstoriaUnitTests.ObjectContextStubs.Types.CustomerWithBirthday">
+        <MappingFragment StoreEntitySet="Customers">
+          <ScalarProperty Name="ID" ColumnName="Id" />
+          <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+          <Condition IsNull="false" ColumnName="Birthday" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="AstoriaUnitTests.ObjectContextStubs.Types.Customer">
+        <MappingFragment StoreEntitySet="Customers">
+          <ScalarProperty Name="ID" ColumnName="Id" />
+          <Condition IsNull="true" ColumnName="Birthday" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CustomerBlobs">
+      <EntityTypeMapping TypeName="IsTypeOf(AstoriaUnitTests.ObjectContextStubs.Types.CustomerBlob)">
+        <MappingFragment StoreEntitySet="CustomerBlobs">
+          <ScalarProperty Name="ID" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="GuidValue" ColumnName="GuidValue" />
+          <ScalarProperty Name="Concurrency" ColumnName="Concurrency" />
+          <ScalarProperty Name="EditTimeStamp" ColumnName="EditTimeStamp" />
+          <ComplexProperty Name="Address" TypeName="AstoriaUnitTests.ObjectContextStubs.Types.Address">
+            <ScalarProperty Name="StreetAddress" ColumnName="Address" />
+            <ScalarProperty Name="City" ColumnName="City" />
+            <ScalarProperty Name="State" ColumnName="State" />
+            <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+          </ComplexProperty>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="AstoriaUnitTests.ObjectContextStubs.Types.CustomerBlobWithBirthday">
+        <MappingFragment StoreEntitySet="CustomerBlobs">
+          <ScalarProperty Name="ID" ColumnName="Id" />
+          <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+          <Condition IsNull="false" ColumnName="Birthday" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="AstoriaUnitTests.ObjectContextStubs.Types.CustomerBlob">
+        <MappingFragment StoreEntitySet="CustomerBlobs">
+          <ScalarProperty Name="ID" ColumnName="Id" />
+          <Condition IsNull="true" ColumnName="Birthday" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Orders">
+      <EntityTypeMapping TypeName="IsTypeOf(AstoriaUnitTests.ObjectContextStubs.Types.Order)">
+        <MappingFragment StoreEntitySet="Orders">
+          <ScalarProperty Name="ID" ColumnName="Id" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="DollarAmount" ColumnName="DollarAmount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="OrderDetails" StoreEntitySet="Order Details" TypeName="AstoriaUnitTests.ObjectContextStubs.Types.OrderDetail">
+      <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+      <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+      <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+      <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+      <ScalarProperty Name="Discount" ColumnName="Discount" />
+    </EntitySetMapping>
+    <AssociationSetMapping Name="CustomersBestFriend" TypeName="AstoriaUnitTests.ObjectContextStubs.Types.CustomersBestFriend" StoreEntitySet="Customers">
+      <EndProperty Name="BestFriend">
+        <ScalarProperty Name="ID" ColumnName="BestFriend" />
+      </EndProperty>
+      <EndProperty Name="CustomersWhoConsiderMeTheirBestFriend">
+        <ScalarProperty Name="ID" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="BestFriend" IsNull="false" />
+    </AssociationSetMapping>
+
+    <EntitySetMapping Name="Workers" StoreEntitySet="Workers" TypeName="AstoriaUnitTests.ObjectContextStubs.Types.Worker">
+      <ScalarProperty Name="ID" ColumnName="Id" />
+      <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+      <ScalarProperty Name="LastName" ColumnName="LastName" />
+      <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+    </EntitySetMapping>
+
+    <EntitySetMapping Name="Offices" StoreEntitySet="Offices" TypeName="AstoriaUnitTests.ObjectContextStubs.Types.Office">
+      <ScalarProperty Name="ID" ColumnName="Id" />
+      <ScalarProperty Name="OfficeNumber" ColumnName="OfficeNumber" />
+      <ScalarProperty Name="FloorNumber" ColumnName="FloorNumber" />
+      <ScalarProperty Name="BuildingName" ColumnName="BuildingName" />
+    </EntitySetMapping>
+
+  </EntityContainerMapping>
+</Mapping>

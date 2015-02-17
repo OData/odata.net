@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://microsoft.com/taupo/entitycontainerdata" elementFormDefault="qualified" targetNamespace="http://microsoft.com/taupo/entitycontainerdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="SerializableContainer">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Entities" nillable="true" type="tns:ArrayOfSerializableEntity" />
+      <xs:element minOccurs="0" name="EntityContainerName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableContainer" nillable="true" type="tns:SerializableContainer" />
+  <xs:complexType name="ArrayOfSerializableEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SerializableEntity" nillable="true" type="tns:SerializableEntity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSerializableEntity" nillable="true" type="tns:ArrayOfSerializableEntity" />
+  <xs:complexType name="SerializableEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="EntitySetName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EntityType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Properties" nillable="true" type="tns:ArrayOfSerializableNamedValue" />
+      <xs:element minOccurs="0" name="Streams" nillable="true" type="tns:ArrayOfSerializableStreamData" />
+    </xs:sequence>
+    <xs:attribute ref="ser:Id" />
+    <xs:attribute ref="ser:Ref" />
+  </xs:complexType>
+  <xs:element name="SerializableEntity" nillable="true" type="tns:SerializableEntity" />
+  <xs:complexType name="ArrayOfSerializableNamedValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SerializableNamedValue" nillable="true" type="tns:SerializableNamedValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSerializableNamedValue" nillable="true" type="tns:ArrayOfSerializableNamedValue" />
+  <xs:complexType name="SerializableNamedValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:anyType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableNamedValue" nillable="true" type="tns:SerializableNamedValue" />
+  <xs:complexType name="SerializableEmptyData">
+    <xs:sequence />
+    <xs:attribute ref="ser:Id" />
+    <xs:attribute ref="ser:Ref" />
+  </xs:complexType>
+  <xs:element name="SerializableEmptyData" nillable="true" type="tns:SerializableEmptyData" />
+  <xs:complexType name="SerializableSpatialData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BaseTypeName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="WellKnownTextRepresentation" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableSpatialData" nillable="true" type="tns:SerializableSpatialData" />
+  <xs:complexType name="ArrayOfSerializableStreamData">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SerializableStreamData" nillable="true" type="tns:SerializableStreamData" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSerializableStreamData" nillable="true" type="tns:ArrayOfSerializableStreamData" />
+  <xs:complexType name="SerializableStreamData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Content" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="ContentType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ETag" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EditLink" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsEditLinkBasedOnConvention" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SelfLink" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SerializableStreamData" nillable="true" type="tns:SerializableStreamData" />
+</xs:schema>

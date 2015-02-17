@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AstoriaUnitTests.ObjectContextStubs.Types" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm" xmlns:annotations="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" />
+    <Property Name="Concurrency" Type="String" ConcurrencyMode="Fixed" />
+    <Property Name="EditTimeStamp" Nullable="false" Type="Binary" MaxLength="8" FixedLength="true" ConcurrencyMode="Fixed" annotations:StoreGeneratedPattern="Computed" />
+    <Property Name="GuidValue" Type="Guid" />
+    <Property Name="Address" Type="AstoriaUnitTests.ObjectContextStubs.Types.Address" Nullable="false" />
+    <NavigationProperty Name="Orders" Relationship="AstoriaUnitTests.ObjectContextStubs.Types.FK__Orders__Customer__00551192" FromRole="Customers" ToRole="Orders" />
+    <NavigationProperty Name="BestFriend" Relationship="AstoriaUnitTests.ObjectContextStubs.Types.CustomersBestFriend" FromRole="CustomersWhoConsiderMeTheirBestFriend" ToRole="BestFriend" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="DollarAmount" Type="Double" Nullable="false"/>
+    <NavigationProperty Name="Customers" Relationship="AstoriaUnitTests.ObjectContextStubs.Types.FK__Orders__Customer__00551192" FromRole="Orders" ToRole="Customers" />
+  </EntityType>
+  <Association Name="FK__Orders__Customer__00551192">
+    <End Role="Customers" Type="AstoriaUnitTests.ObjectContextStubs.Types.Customer" Multiplicity="0..1" />
+    <End Role="Orders" Type="AstoriaUnitTests.ObjectContextStubs.Types.Order" Multiplicity="*" />
+  </Association>
+  <Association Name="CustomersBestFriend">
+    <End Role="BestFriend" Type="AstoriaUnitTests.ObjectContextStubs.Types.Customer" Multiplicity="0..1"/>
+    <End Role="CustomersWhoConsiderMeTheirBestFriend" Type="AstoriaUnitTests.ObjectContextStubs.Types.Customer" Multiplicity="*"/>
+  </Association>
+  <EntityType Name="CustomerWithBirthday" BaseType="AstoriaUnitTests.ObjectContextStubs.Types.Customer">
+    <Property Name="Birthday" Type="DateTime" Nullable="false" DefaultValue="1979-02-15 12:00:00.000Z" />
+  </EntityType>
+  <ComplexType Name="Address">
+    <Property Name="StreetAddress" Type="String" />
+    <Property Name="City" Type="String" />
+    <Property Name="State" Type="String" />
+    <Property Name="PostalCode" Type="String" />
+  </ComplexType>
+</Schema>

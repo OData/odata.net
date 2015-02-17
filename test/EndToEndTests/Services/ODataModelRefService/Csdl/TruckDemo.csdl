@@ -1,0 +1,85 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="[ServiceBaseUrl]CoreTerms.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Core.V1" Alias="Core"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="[ServiceBaseUrl]DeviceModelTerms.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1" Alias="IoTDeviceModel"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="[ServiceBaseUrl]GPS.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.GPS" Alias="GPS"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="[ServiceBaseUrl]Location.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Location" Alias="Location"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="[ServiceBaseUrl]Map.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Map" Alias="Map"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo" Alias="Self">
+      <ComplexType Name="LocationAndFuel">
+        <Property Name="FuelLevel" Type="Edm.Double"/>
+        <Property Name="Location" Type="Location.GeoLocation"/>
+      </ComplexType>
+      <ComplexType Name="TruckStoppedAlarmType">
+        <Annotation Term="Core.Description" String="Alarm: Truck Stopped!"/>
+        <Annotation Term="IoTDeviceModel.IsAlarm" Bool="true"/>
+        <Property Name="Severity" Type="Edm.Int32" DefaultValue="3"/>
+        <Property Name="LocationAndFuel" Type="Self.LocationAndFuel"/>
+      </ComplexType>
+      <EntityType Name="HeadUnitType">
+        <Key>
+          <PropertyRef Name="SerialNo"/>
+        </Key>
+        <Property Name="SerialNo" Type="Edm.String" Nullable="false"/>
+        <Property Name="DimmingLevel" Type="Edm.Double"/>
+      </EntityType>
+      <EntityType Name="TruckType">
+        <Key>
+          <PropertyRef Name="Key"/>
+        </Key>
+        <Property Name="Key" Type="Edm.String" Nullable="false"/>
+        <Property Name="VIN" Type="Edm.String"/>
+        <Property Name="FuelLevel" Type="Edm.Double"/>
+        <Property Name="ACState" Type="Edm.Boolean"/>
+        <NavigationProperty Name="HeadUnit" Type="Self.HeadUnitType" ContainsTarget="true"/>
+        <NavigationProperty Name="VehicleGPS" Type="GPS.VehicleGPSType" ContainsTarget="true"/>
+        <NavigationProperty Name="VehicleGPSGroupFromGPS" Type="Collection(GPS.VehicleGPSType)"/>
+        <NavigationProperty Name="VehicleGPSGroup" Type="Collection(GPS.VehicleGPSType)"/>
+        <Property Name="TruckIsHomeFuelLevel" Type="Edm.Double">
+          <Annotation Term="IoTDeviceModel.IsEvent" Bool="true"/>
+        </Property>
+        <Property Name="TruckStoppedAlarm" Type="Self.TruckStoppedAlarmType">
+          <Annotation Term="IoTDeviceModel.IsEvent" Bool="true"/>
+        </Property>
+        <Property Name="OutsideGeoFenceAlarm" Type="Location.OutsideGeoFenceAlarmType">
+          <Annotation Term="IoTDeviceModel.IsEvent" Bool="true"/>
+        </Property>
+      </EntityType>
+      <EntityType Name="DerivedVehicleGPSType" BaseType="GPS.VehicleGPSType">
+        <Property Name="DisplayName" Type="Edm.String" Nullable="false"/>
+      </EntityType>
+      <Action Name="SetACState" IsBound="True">
+        <Annotation Term="Core.Description" String="Set the AC state"/>
+        <Parameter Name="targetTruck" Type="Self.TruckType"/>
+        <Parameter Name="state" Type="Edm.Boolean">
+          <Annotation Term="Core.Description" String="The state of AC"/>
+        </Parameter>
+      </Action>
+      <Action Name="TurnOffAC" IsBound="True">
+        <Annotation Term="Core.Description" String="Turn off AC"/>
+        <Parameter Name="targetTruck" Type="Self.TruckType"/>
+      </Action>
+      <Action Name="ResetDataSource"/>
+      <EntityContainer Name="TruckDemoService" Extends="GPS.GPSContainer">
+        <EntitySet Name="Trucks" EntityType="Self.TruckType">
+          <Annotation Term="Core.Description" String="Our Trucks"/>
+          <NavigationPropertyBinding Path="VehicleGPSGroupFromGPS" Target="VehicleGPSSetInGPS"/>
+          <NavigationPropertyBinding Path="VehicleGPSGroup" Target="VehicleGPSSet"/>
+        </EntitySet>
+        <EntitySet Name="VehicleGPSSet" EntityType="GPS.VehicleGPSType"/>
+        <EntitySet Name="DerivedVehicleGPSSet" EntityType="Self.DerivedVehicleGPSType"/>
+        <ActionImport Name="ResetDataSource" Action="Self.ResetDataSource"/>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

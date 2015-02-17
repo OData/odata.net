@@ -1,0 +1,30 @@
+Combination #1: $search=A AND B
+Match:AB, ABC;
+Unmatch:, A, B, C, AC, BC;
+
+Combination #2: $search=A NOT B
+Match:A, AC;
+Unmatch:, B, AB, C, BC, ABC;
+
+Combination #3: $search=NOT A AND B
+Match:B, BC;
+Unmatch:, A, AB, C, AC, ABC;
+
+Combination #4: $search=NOT A NOT B
+Match:, C;
+Unmatch:A, B, AB, AC, BC, ABC;
+
+Combination #5: $search=A( OR B
+Exception:Syntax error: character '(' is not valid at position 1 in 'A( OR B'.
+
+Combination #6: $search=A AND OR NOT B
+Exception:Expression expected at position 6 in 'A AND OR NOT B'.
+
+Combination #7: $search=NOT A OR B
+Match:, B, AB, C, BC, ABC;
+Unmatch:A, AC;
+
+Combination #8: $search=NOT A OR NOT B
+Match:, A, B, C, AC, BC;
+Unmatch:AB, ABC;
+

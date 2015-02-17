@@ -1,0 +1,35 @@
+This file contains alphabet entries for Chinese string generator.
+One entry per line. Only entries starting with single quote are used, everything else is a comment.
+
+'A'              LATIN CAPITAL LETTER A
+'z'              LATIN SMALL LETTER Z
+'\u0414'         CYRILLIC CAPITAL LETTER DE
+'\u4e00'         CJK UNIFIED IDEOGRAPH-#
+'\u4f83'         CJK UNIFIED IDEOGRAPH-#
+'\u5000'         CJK UNIFIED IDEOGRAPH-#
+'\u5001'         CJK UNIFIED IDEOGRAPH-#
+'\u52a2'         CJK UNIFIED IDEOGRAPH-#
+'\u55ff'         CJK UNIFIED IDEOGRAPH-#
+'\u66c2'         CJK UNIFIED IDEOGRAPH-#
+'\u6d10'         CJK UNIFIED IDEOGRAPH-#
+'\u7187'         CJK UNIFIED IDEOGRAPH-#
+'\u7868'         CJK UNIFIED IDEOGRAPH-#
+'\u8233'         CJK UNIFIED IDEOGRAPH-#
+'\u8864'         CJK UNIFIED IDEOGRAPH-#
+'\u9a8c'         CJK UNIFIED IDEOGRAPH-#
+'\u9fa5'         CJK UNIFIED IDEOGRAPH-#
+'\u93fb'         CJK UNIFIED IDEOGRAPH-#
+'\ue864'         U+e864
+'\uf92c'         CJK COMPATIBILITY IDEOGRAPH-#
+'\ufa29'         CJK COMPATIBILITY IDEOGRAPH-#
+'0'              DIGIT ZERO
+'\uff10'         FULLWIDTH DIGIT ZERO
+'A'              LATIN CAPITAL LETTER A
+'\uff21'         FULLWIDTH LATIN CAPITAL LETTER A
+'a'              LATIN SMALL LETTER A
+'\uff41'         FULLWIDTH LATIN SMALL LETTER A
+'\u4e00'         CJK UNIFIED IDEOGRAPH-#
+'\u4e2d'         CJK UNIFIED IDEOGRAPH-#
+'\u4eba'         CJK UNIFIED IDEOGRAPH-#
+'\u5730'         CJK UNIFIED IDEOGRAPH-#
+'\u6c49'         CJK UNIFIED IDEOGRAPH-#

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<suite>
+  <desktop>
+    <assembly name="Microsoft.Test.Taupo.OData.Writer.Tests" />
+  </desktop>
+  <Silverlight>
+    <assembly name="Microsoft.Test.Taupo.OData.Writer.Tests" />
+    <assembly name="Microsoft.OData.Core" />
+    <assembly name="Microsoft.SqlServer.TestShell.InputSpaceModeling.SL" />
+    <assembly name="Microsoft.Test.Taupo.Astoria.SL" />
+    <assembly name="Microsoft.Test.Taupo.Edmlib.SL" />
+    <assembly name="Microsoft.Test.Taupo.OData" />
+    <assembly name="Microsoft.Test.Taupo.Query.SL" />
+    <assembly name="Microsoft.Test.Taupo.SL" />
+    <assembly name="Microsoft.Test.Taupo.Spatial.SL" />
+  </Silverlight>
+  <include name="."/>
+  <parameter name="TrustLevel" value="Full"/>
+  <parameter name="TestLoader" value="OData.Writer"/>
+</suite>

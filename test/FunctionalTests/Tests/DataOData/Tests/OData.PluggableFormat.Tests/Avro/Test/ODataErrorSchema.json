@@ -1,0 +1,1 @@
+﻿{"type":"record","name":"OData.Error","fields":[{"name":"ErrorCode","type":"string"},{"name":"Message","type":"string"}]}

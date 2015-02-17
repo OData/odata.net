@@ -1,0 +1,15 @@
+This file contains alphabet entries for Hebrew string generator.
+One entry per line. Only entries starting with single quote are used, everything else is a comment.
+
+'\u05b0'         HEBREW POINT SHEVA
+'\u05d0'         HEBREW LETTER ALEF
+'\u05d4'         HEBREW LETTER HE
+'\u05dc'         HEBREW LETTER LAMED
+'\u05e2'         HEBREW LETTER AYIN
+'\u05e7'         HEBREW LETTER QOF
+'\u05f0'         HEBREW LIGATURE YIDDISH DOUBLE VAV
+'\u05f4'         HEBREW PUNCTUATION GERSHAYIM
+'\ufb1d'         HEBREW LETTER YOD WITH HIRIQ
+'\ufb41'         HEBREW LETTER SAMEKH WITH DAGESH
+'\ufb49'         HEBREW LETTER SHIN WITH DAGESH
+'\ufb4f'         HEBREW LIGATURE ALEF LAMED

@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1211B700-008A-4646-8F5F-25BC96EBC138}</ProjectGuid>
+    <ProjectTypeGuids>{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <DefineConstants>$(DefineConstants);TESTPROVIDERS</DefineConstants>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.OData.Framework.TestProviders</RootNamespace>
+    <AssemblyName>Microsoft.Test.OData.Framework.TestProviders</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <EnableStyleCop>true</EnableStyleCop>
+    <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="System.Core" />
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
+      <Name>Microsoft.OData.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\DataServiceProviderMethodsReplacementStrategy.cs" />
+    <Compile Include="Common\LazyResourceType.cs" />
+    <Compile Include="Common\MethodReplacingExpressionVisitor.cs" />
+    <Compile Include="Common\OpenTypeMethodsReplacementStrategy.cs" />
+    <Compile Include="Common\PseudoDistanceImplementation.cs" />
+    <Compile Include="Common\ResourceTypeExtensions.cs" />
+    <Compile Include="Common\StaticMethodReplacementStrategyBase.cs" />
+    <Compile Include="Contracts\IMethodReplacementStrategy.cs" />
+    <Compile Include="Dictionary\DefaultDataServiceProviderMethodsReplacementStrategy.cs" />
+    <Compile Include="Dictionary\DictionaryDataContext.cs" />
+    <Compile Include="Dictionary\DictionaryMetadataHelper.cs" />
+    <Compile Include="Dictionary\MethodReplacingQueryProvider.cs" />
+    <Compile Include="Dictionary\RealisticOpenTypeMethodsReplacementStrategy.cs" />
+    <Compile Include="Dictionary\ResourceInstance.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="OptionalProviders\TestDataServiceActionProvider.cs" />
+    <Compile Include="OptionalProviders\TestDataServiceInvokable.cs" />
+    <Compile Include="Common\ExceptionUtilities.cs" />
+    <Compile Include="Common\ReferenceEqualityComparer.cs" />
+    <Compile Include="Common\UpdatableToken.cs" />
+    <Compile Include="Contracts\DataOracle\IDataServiceDataSourceCreator.cs" />
+    <Compile Include="Contracts\DataServiceActionProviderOverrides.cs" />
+    <Compile Include="Contracts\DataServiceOverrides.cs" />
+    <Compile Include="Contracts\DataServiceUpdatable2Overrides.cs" />
+    <Compile Include="Contracts\ProviderImplementationSettings.cs" />
+    <Compile Include="Contracts\WithDisposableAction.cs" />
+    <Compile Include="OptionalProviders\InMemoryStreamProvider`1.cs" />
+    <Compile Include="OptionalProviders\ReusableStream.cs" />
+    <Compile Include="OptionalProviders\StreamWrapper.cs" />
+    <Compile Include="Reflection\NavigationPropertyInfo.cs" />
+    <Compile Include="Reflection\ReflectionDataContext.cs" />
+    <Compile Include="Reflection\ReflectionMetadataHelper.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

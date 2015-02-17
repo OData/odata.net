@@ -1,0 +1,14 @@
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: multipart/mixed; boundary=changesetresponse_00000001-0000-0000-0000-000000000000
+
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 400 Bad Request
+OData-Version: 4.0
+Content-Type: application/xml;charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?><m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><m:code /><m:message>An error occurred while processing this request.</m:message><m:innererror><m:message>An invalid HTTP method 'GET' was detected for a request in a change set. Requests in change sets only support the HTTP methods 'POST', 'PUT', 'DELETE', and 'PATCH'.</m:message><m:type>Microsoft.OData.Core.ODataException</m:type>
+--changesetresponse_00000001-0000-0000-0000-000000000000--
+--batchresponse_00000000-0000-0000-0000-000000000000--

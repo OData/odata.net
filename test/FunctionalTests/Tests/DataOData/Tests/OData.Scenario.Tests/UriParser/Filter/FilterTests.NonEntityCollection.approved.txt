@@ -1,0 +1,26 @@
+$filter = contains($it,'200')
+
+
+FilterQueryOption
+	ItemType = [Edm.String Nullable=False Unicode=True]
+	Parameter = 
+	NonentityRangeVariable
+		Name = $it
+		TypeReference = [Edm.String Nullable=False Unicode=True]
+	Expression = 
+	SingleValueFunctionCallNode
+		Name = contains
+		Return Type = [Edm.Boolean Nullable=False]
+		Function = 
+		Arguments = 
+			ConvertNode
+				TypeReference = [Edm.String Nullable=True Unicode=True]
+				Source = 
+				NonentityRangeVariableReferenceNode
+					Name = $it
+					Range Variable = 
+					NonentityRangeVariable
+						Name = $it
+						TypeReference = [Edm.String Nullable=False Unicode=True]
+					TypeReference = [Edm.String Nullable=False Unicode=True]
+			200(Type: [Edm.String Nullable=True Unicode=True])

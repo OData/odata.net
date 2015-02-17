@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <!-- 
+    This is where you place settings that should apply to all projects under this folder.  See 
+    $(EnlistmentRoot)\Build.props for examples. 
+  -->
+
+  <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+    <NoWarn>$(NoWarn);618</NoWarn>
+  </PropertyGroup>
+  
+  <Import Project="..\Build.props" />
+
+  <PropertyGroup>
+    <MadManPackageId Condition="'$(BuildInOSS)' != 'true'">Microsoft.MadMan.SQLIS</MadManPackageId>
+    <MadManPackageId Condition="'$(BuildInOSS)' == 'true'">Microsoft.MadMan</MadManPackageId>
+    <MadManPackageVersion>3.1.112712.0</MadManPackageVersion>
+    <MadManPackageName>$(MadManPackageId).$(MadManPackageVersion)</MadManPackageName>
+  </PropertyGroup>
+
+</Project>

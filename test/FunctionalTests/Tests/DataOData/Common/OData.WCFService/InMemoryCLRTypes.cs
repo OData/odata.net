@@ -1,0 +1,99 @@
+﻿//---------------------------------------------------------------------
+// <copyright file="InMemoryCLRTypes.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+namespace Microsoft.Test.Taupo.OData.WCFService
+{
+    using System;
+    using System.Collections.ObjectModel;
+    using Microsoft.OData.Service.Common;
+    using Microsoft.Spatial;
+
+
+    /// <summary>
+    /// The class represents the Person model type.
+    /// </summary>
+    [DataServiceKeyAttribute("PersonID")]
+    public class Person
+    {
+        public int PersonID { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public Collection<string> Numbers { get; set; }
+        public Address HomeAddress { get; set; }
+        public GeographyPoint Home { get; set; }
+    }
+
+    public class Address
+    {
+        public string Street { get; set; }
+        public string City { get; set; }
+        public string PostalCode { get; set; }
+    }
+
+    /// <summary>
+    /// The class represents the Customer model type.
+    /// </summary>
+    [DataServiceKeyAttribute("PersonID")]
+    public class Customer : Person
+    {
+        public string City { get; set; }
+        public DateTime Birthday { get; set; }
+        public TimeSpan TimeBetweenLastTwoOrders { get; set; }
+    }
+
+    /// <summary>
+    /// The class represents the Order model type.
+    /// </summary>
+    [DataServiceKeyAttribute("OrderID")]
+    public class Order
+    {
+        public int OrderID { get; set; }
+        public int CustomerID { get; set; }
+        public int EmployeeID { get; set; }
+        public DateTime OrderDate { get; set; }
+        public Employee LoggedInEmployee { get; set; }
+        public Customer CustomerForOrder { get; set; }
+    }
+
+    /// <summary>
+    /// The class represents the OrderDetail model type.
+    /// </summary>
+    [DataServiceKeyAttribute("PropertyID", "OrderID")]
+    public class OrderDetail
+    {
+        public int OrderID { get; set; }
+        public int ProductID { get; set; }
+        public DateTime OrderPlaced { get; set; }
+        public int Quantity { get; set; }
+        public float UnitPrice { get; set; }
+        public Product ProductOrdered { get; set; }
+        public Order AssociatedOrder { get; set; }
+    }
+
+    /// <summary>
+    /// The class represents the Product model type.
+    /// </summary>
+    [DataServiceKeyAttribute("PropertyID")]
+    public class Product
+    {
+        public int ProductID { get; set; }
+        public string Name { get; set; }
+        public string QuantityPerUnit { get; set; }
+        public float UnitPrice { get; set; }
+        public int QuantityInStock { get; set; }
+        public bool Discontinued { get; set; }
+    }
+
+    /// <summary>
+    /// The class represents the Employee model type.
+    /// </summary>
+    [DataServiceKeyAttribute("PersonID")]
+    public class Employee : Person
+    {
+        public DateTime DateHired { get; set; }
+        public GeographyPoint Office { get; set; }
+    }
+}

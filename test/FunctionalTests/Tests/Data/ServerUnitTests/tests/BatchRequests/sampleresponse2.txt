@@ -1,0 +1,82 @@
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: multipart/mixed; boundary=changesetresponse_00000001-0000-0000-0000-000000000000
+
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+HTTP/1.1 201 Created
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+Location: $(BaseUri)Customers(123456)
+ETag: W/"00000002-0000-0000-0000-000000000000"
+
+{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000002-0000-0000-0000-000000000000\"","ID":123456,"Name":"FooBaz","Address":{"StreetAddress":"Street Number, Street Address","City":"Redmond","State":null,"PostalCode":"98052"},"GuidValue":"00000002-0000-0000-0000-000000000000","NameAsHtml":"<html><body>FooBaz</body></html>"}
+--changesetresponse_00000001-0000-0000-0000-000000000000--
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+
+{"@odata.context":"$(BaseUri)$metadata#Customers","value":[{"@odata.etag":"W/\"00000003-0000-0000-0000-000000000000\"","ID":0,"Name":"Customer 0","Address":{"StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"},"GuidValue":"00000003-0000-0000-0000-000000000000","NameAsHtml":"<html><body>Customer 0</body></html>"},{"@odata.type":"#AstoriaUnitTests.Stubs.CustomerWithBirthday","@odata.etag":"W/\"948650bd-28da-42c6-9f5e-31f2362f3bad\"","ID":1,"Name":"Customer 1","Address":{"StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"},"GuidValue":"948650bd-28da-42c6-9f5e-31f2362f3bad","NameAsHtml":"<html><body>Customer 1</body></html>","Birthday":"1985-01-29T00:00:00+08:00"},{"@odata.etag":"W/\"18c0f8bd-8c8b-4d2a-9f0f-5266781467e7\"","ID":2,"Name":"Customer 2","Address":{"StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"},"GuidValue":"18c0f8bd-8c8b-4d2a-9f0f-5266781467e7","NameAsHtml":"<html><body>Customer 2</body></html>"},{"@odata.etag":"W/\"6e3dc5fe-77a0-43d2-9825-a59410461e30\"","ID":123456,"Name":"FooBaz","Address":{"StreetAddress":"Street Number, Street Address","City":"Redmond","State":null,"PostalCode":"98052"},"GuidValue":"6e3dc5fe-77a0-43d2-9825-a59410461e30","NameAsHtml":"<html><body>FooBaz</body></html>"}]}
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: multipart/mixed; boundary=changesetresponse_00000004-0000-0000-0000-000000000000
+
+--changesetresponse_00000004-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 3
+
+HTTP/1.1 400 Bad Request
+X-Content-Type-Options: nosniff
+OData-Version: 4.0
+Content-Type: application/xml;charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?><m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><m:code /><m:message>An error occurred while processing this request.</m:message><m:innererror><m:message>Unexpected end of file has occurred. The following elements are not closed: entry. Line 8, position 1.</m:message><m:type>System.Xml.XmlException</m:type>
+--changesetresponse_00000004-0000-0000-0000-000000000000--
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+
+{"@odata.context":"$(BaseUri)$metadata#Orders/$entity","ID":1,"DollarAmount":20.1,"CurrencyAmount":null}
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: multipart/mixed; boundary=changesetresponse_00000005-0000-0000-0000-000000000000
+
+--changesetresponse_00000005-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 5
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+
+
+--changesetresponse_00000005-0000-0000-0000-000000000000--
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+
+{"@odata.context":"$(BaseUri)$metadata#Orders","value":[{"ID":0,"DollarAmount":20.1,"CurrencyAmount":null},{"ID":1,"DollarAmount":20.1,"CurrencyAmount":null},{"ID":101,"DollarAmount":30.2,"CurrencyAmount":null},{"ID":2,"DollarAmount":20.1,"CurrencyAmount":null},{"ID":102,"DollarAmount":30.2,"CurrencyAmount":null}]}
+--batchresponse_00000000-0000-0000-0000-000000000000--

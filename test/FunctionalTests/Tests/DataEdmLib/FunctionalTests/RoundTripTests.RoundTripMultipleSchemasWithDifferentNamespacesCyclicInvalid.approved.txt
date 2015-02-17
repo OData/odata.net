@@ -1,0 +1,19 @@
+<Schema Namespace="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesCyclicInvalid.third" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="VALIDeNTITYtYPE1" BaseType="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesCyclicInvalid.second.VALIDeNTITYtYPE2" />
+  <ComplexType Name="V1alidcomplexType">
+    <Property Name="aPropertyOne" Type="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesCyclicInvalid.second.V1alidcomplexType" Nullable="false" />
+  </ComplexType>
+</Schema>
+<Schema Namespace="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesCyclicInvalid.second" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="VALIDeNTITYtYPE2" BaseType="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesCyclicInvalid.first.validEntityType1" />
+  <ComplexType Name="V1alidcomplexType">
+    <Property Name="aPropertyOne" Type="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesCyclicInvalid.first.V1alidcomplexType" Nullable="false" />
+  </ComplexType>
+</Schema>
+<Schema Namespace="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesCyclicInvalid.first" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="validEntityType1" BaseType="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesCyclicInvalid.third.VALIDeNTITYtYPE1" />
+  <ComplexType Name="V1alidcomplexType">
+    <Property Name="aPropertyOne" Type="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesCyclicInvalid.third.V1alidcomplexType" Nullable="false" />
+  </ComplexType>
+</Schema>
+

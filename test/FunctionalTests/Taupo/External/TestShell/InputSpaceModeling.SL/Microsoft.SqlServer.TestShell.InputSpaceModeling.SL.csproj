@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectGuid>{16164F49-0C3C-4811-BE51-5FAAB6CBD977}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Microsoft.SqlServer.TestShell.InputSpaceModeling.SL</AssemblyName>
+    <RootNamespace>Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling.SL</RootNamespace>
+    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <SilverlightApplication>false</SilverlightApplication>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <EnableStyleCop>false</EnableStyleCop>
+    <DefineConstants>TAUPO_TESTSHELL</DefineConstants>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\Source\PlatformHelper.cs">
+      <Link>PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\AllCombinationsStrategy.cs">
+      <Link>AllCombinationsStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\CategoricalStrategy.cs">
+      <Link>CategoricalStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\Category.cs">
+      <Link>Category.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\CombinatorialStrategy.cs">
+      <Link>CombinatorialStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ConcatStrategy.cs">
+      <Link>ConcatStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\Constraint.cs">
+      <Link>Constraint.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\Dimension.cs">
+      <Link>Dimension.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\DimensionValuePair.cs">
+      <Link>DimensionValuePair.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\EqualsImplementationUtils.cs">
+      <Link>EqualsImplementationUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExceptionUtilities.cs">
+      <Link>ExceptionUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExhaustiveCombinatorialStrategy.cs">
+      <Link>ExhaustiveCombinatorialStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExhaustiveEnumStrategy.cs">
+      <Link>ExhaustiveEnumStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExhaustiveIEnumerableStrategy.cs">
+      <Link>ExhaustiveIEnumerableStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExplorationHelpers\CombinatorialUtilities.cs">
+      <Link>ExplorationHelpers\CombinatorialUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExplorationHelpers\CompositeDimensionIndexCombinationGenerator.cs">
+      <Link>ExplorationHelpers\CompositeDimensionIndexCombinationGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExplorationHelpers\DimensionIndexCombinationGenerator.cs">
+      <Link>ExplorationHelpers\DimensionIndexCombinationGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExplorationHelpers\DimensionValueIndexCombination.cs">
+      <Link>ExplorationHelpers\DimensionValueIndexCombination.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExplorationHelpers\DimensionWithValues.cs">
+      <Link>ExplorationHelpers\DimensionWithValues.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExplorationHelpers\FilteredDimensionIndexCombinationGenerator.cs">
+      <Link>ExplorationHelpers\FilteredDimensionIndexCombinationGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExplorationHelpers\PartialVectorConstraintChecker.cs">
+      <Link>ExplorationHelpers\PartialVectorConstraintChecker.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExplorationHelpers\PrimitiveDimensionIndexCombinationGenerator.cs">
+      <Link>ExplorationHelpers\PrimitiveDimensionIndexCombinationGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExplorationHelpers\TranslatedDimensionIndexCombinationGenerator.cs">
+      <Link>ExplorationHelpers\TranslatedDimensionIndexCombinationGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ExplorationStrategy.cs">
+      <Link>ExplorationStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\FilterStrategy.cs">
+      <Link>FilterStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\FirstNStrategy.cs">
+      <Link>FirstNStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\GroupByStrategy.cs">
+      <Link>GroupByStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\IntegerRangeStrategy.cs">
+      <Link>IntegerRangeStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\LimitCoverageStrategy.cs">
+      <Link>LimitCoverageStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\MakeDeterministicStrategy.cs">
+      <Link>MakeDeterministicStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\Matrix.cs">
+      <Link>Matrix.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\MatrixConstraint.cs">
+      <Link>MatrixConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\NullableRangeCategory.cs">
+      <Link>NullableRangeCategory.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\OneDimensionalConstraint.cs">
+      <Link>OneDimensionalConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\PairwiseStrategy.cs">
+      <Link>PairwiseStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ParseableCollection.cs">
+      <Link>ParseableCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\PointCategory.cs">
+      <Link>PointCategory.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\QualifiedDimension.cs">
+      <Link>QualifiedDimension.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\RandomEnumStrategy.cs">
+      <Link>RandomEnumStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\RandomIEnumerableStrategy.cs">
+      <Link>RandomIEnumerableStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\RandomIntegerRangeStrategy.cs">
+      <Link>RandomIntegerRangeStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\RandomStrategyFromCategory.cs">
+      <Link>RandomStrategyFromCategory.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\RandomUtilities.cs">
+      <Link>RandomUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\RangeCategory.cs">
+      <Link>RangeCategory.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\RepeatStrategy.cs">
+      <Link>RepeatStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\RestrictCombinationsStrategy.cs">
+      <Link>RestrictCombinationsStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ShuffleStrategy.cs">
+      <Link>ShuffleStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\Strategies.cs">
+      <Link>Strategies.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\SymbolicConstraint.cs">
+      <Link>SymbolicConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ThreeDimensionalConstraint.cs">
+      <Link>ThreeDimensionalConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\TwoDimensionalConstraint.cs">
+      <Link>TwoDimensionalConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\TypeConversion.cs">
+      <Link>TypeConversion.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\UnionStrategy.cs">
+      <Link>UnionStrategy.cs</Link>
+    </Compile>
+    <Compile Include="Utilities.SL.cs" />
+    <Compile Include="..\InputSpaceModeling\ValueFactory.cs">
+      <Link>ValueFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\ValueFactoryWithOptionalConcreteValue.cs">
+      <Link>ValueFactoryWithOptionalConcreteValue.cs</Link>
+    </Compile>
+    <Compile Include="..\InputSpaceModeling\Vector.cs">
+      <Link>Vector.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LayeringRules ModuleName="Microsoft.Test.Taupo.Astoria">
+  <CommonDependencies>
+    <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Common" />
+    <DependsOn Namespace="Microsoft.Test.Taupo.Common" />
+    <DependsOn Namespace="Microsoft.Test.Taupo.Query.Common" />
+  </CommonDependencies>
+  <ContractsDependencies>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Client" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel.Data" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.ServiceReferences" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.DotNet" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.Linq.Expressions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Spatial.Contracts" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Client">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Product" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.DotNet" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Wrappers" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Wrappers" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.Linq.Expressions" />
+      <DependsOn Namespace="Microsoft.OData.Client" />
+      <DependsOn Namespace="Microsoft.OData.Service.Common" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Common">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Client" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.ServiceReferences" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Wrappers" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.Linq" />
+      <DependsOn Namespace="Microsoft.OData.Client" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.DataServices.WebServerLocator" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.ResponseVerification" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.DotNet" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Wrappers" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.Linq.Expressions" />
+      <DependsOn Namespace="Microsoft.OData.Service.Common" />
+      <DependsOn Namespace="System.Runtime.Serialization" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Client">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Product" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Wrappers" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Wrappers" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts" />
+      <DependsOn Namespace="Microsoft.OData.Client" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.DataServices.WebServerLocator">
+      <DependsOn Namespace="Microsoft.OData.Client" />
+      <DependsOn Namespace="Microsoft.OData.Service.Common" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel.Data">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Json">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Wrappers" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.Linq.Expressions" />
+      <DependsOn Namespace="Microsoft.OData.Client" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Json" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.ResponseVerification">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.ServiceReferences">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Wrappers">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Client" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Product" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Wrappers" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts" />
+      <DependsOn Namespace="Microsoft.OData.Client" />
+      <DependsOn Namespace="Microsoft.OData.Service.Common" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.EntityModel">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.Linq.Expressions" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.LinqToAstoria">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.CommonExpressions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.Linq.Expressions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Spatial.Contracts" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Client" Justification="Required for AstoriaQueryVerifierCapabilityInspector" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.OData">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Json" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Spatial.Contracts" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Php">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.ResponseVerification">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.Json" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Contracts.Linq.Expressions" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.ServiceCreation">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.DataServices.WebServerLocator" />
+      <DependsOn Namespace="Microsoft.OData.Client" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.ServiceReferences">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.DotNet" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.WebServices.CompilerService.DotNet" />
+      <DependsOn Namespace="System.ServiceModel.Channels" />
+      <DependsOn Namespace="System.Xml" />
+    </Namespace>
+  </ContractsDependencies>
+  <ImplementationDependencies>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria">
+      <DependsOn Namespace="Microsoft.OData.Edm.Csdl" />
+      <DependsOn Namespace="Microsoft.OData.Edm.Validation" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Client" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.LinqToAstoria" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Utilities" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Client">
+      <DependsOn Namespace="Microsoft.OData.Edm" />
+      <DependsOn Namespace="Microsoft.OData.Core" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.LinqToAstoria" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Linq" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Utilities" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Common">
+      <DependsOn Namespace="Microsoft.Test.Taupo.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Utilities" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts">
+      <DependsOn Namespace="Microsoft.OData.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Execution" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria" Justification="Platform helpers" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Execution" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria" Justification="Platform helpers" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.EntityModel">
+      <DependsOn Namespace="Microsoft.Test.Taupo.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Execution" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.LinqToAstoria">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query.Linq" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.OData">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Json" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.ResponseVerification">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria.Json" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Execution" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Query" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria" Justification="Platform helpers" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Wrappers">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Astoria" Justification="Platform helpers" />
+    </Namespace>
+  </ImplementationDependencies>
+  <CycleDependencies>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Wrappers" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Wrappers" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Client" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Wrappers" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Client" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.ResponseVerification" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.ResponseVerification" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.ResponseVerification" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.ResponseVerification" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.ResponseVerification" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Client" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Wrappers" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Client" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Wrappers" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Wrappers" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Client" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.ResponseVerification" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.OData" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Http" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Wrappers" />
+      <Namespace Name="Microsoft.Test.Taupo.Astoria.Contracts.Client" />
+    </Cycle>
+  </CycleDependencies>
+</LayeringRules>

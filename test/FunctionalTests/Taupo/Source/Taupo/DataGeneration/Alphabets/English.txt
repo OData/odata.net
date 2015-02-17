@@ -1,0 +1,29 @@
+This file contains alphabet entries for English string generator.
+One entry per line. Only entries starting with single quote are used, everything else is a comment.
+
+'a'              LATIN SMALL LETTER A
+'e'              LATIN SMALL LETTER E
+'i'              LATIN SMALL LETTER I
+'o'              LATIN SMALL LETTER O
+'u'              LATIN SMALL LETTER U
+'b'              LATIN SMALL LETTER B
+'c'              LATIN SMALL LETTER C
+'d'              LATIN SMALL LETTER D
+'f'              LATIN SMALL LETTER F
+'g'              LATIN SMALL LETTER G
+'h'              LATIN SMALL LETTER H
+'j'              LATIN SMALL LETTER J
+'k'              LATIN SMALL LETTER K
+'l'              LATIN SMALL LETTER L
+'m'              LATIN SMALL LETTER M
+'n'              LATIN SMALL LETTER N
+'p'              LATIN SMALL LETTER P
+'q'              LATIN SMALL LETTER Q
+'r'              LATIN SMALL LETTER R
+'s'              LATIN SMALL LETTER S
+'t'              LATIN SMALL LETTER T
+'u'              LATIN SMALL LETTER U
+'v'              LATIN SMALL LETTER V
+'x'              LATIN SMALL LETTER X
+'y'              LATIN SMALL LETTER Y
+'z'              LATIN SMALL LETTER Z

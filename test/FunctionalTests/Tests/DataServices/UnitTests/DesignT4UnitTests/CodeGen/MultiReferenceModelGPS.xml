@@ -1,0 +1,54 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="http://odatae2etest.azurewebsites.net/demo/ModelRefService/Location.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Location" Alias="Loc"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://odatae2etest.azurewebsites.net/demo/ModelRefService/Map.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Map" Alias="Map"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://odatae2etest.azurewebsites.net/demo/ModelRefService/TruckDemo.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo" Alias="TruckDemo"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://odatae2etest.azurewebsites.net/demo/ModelRefService/DeviceModelTerms.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1" Alias="IoTDeviceModel"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.GPS" Alias="Self">
+      <ComplexType Name="GPSLostSignalAlarmType">
+        <Annotation Term="IoTDeviceModel.IsAlarm" Bool="true"/>
+        <Property Name="Severity" Type="Edm.Int32"/>
+        <Property Name="LastKnownLocation" Type="Loc.GeoLocation"/>
+      </ComplexType>
+      <EntityType Name="VehicleGPSType">
+        <Key>
+          <PropertyRef Name="Key"/>
+        </Key>
+        <Property Name="Key" Type="Edm.String" Nullable="false"/>
+        <Property Name="VehicleSpeed" Type="Edm.Double"/>
+        <Property Name="StartLocation" Type="Loc.GeoLocation"/>
+        <Property Name="EndLocation" Type="Loc.GeoLocation"/>
+        <Property Name="CurrentLocation" Type="Loc.GeoLocation"/>
+        <Property Name="Map" Type="Map.MapType"/>
+        <Property Name="LostSignalAlarm" Type="Self.GPSLostSignalAlarmType">
+          <Annotation Term="IoTDeviceModel.IsEvent" Bool="true"/>
+        </Property>
+      </EntityType>
+      <Action Name="ResetVehicleSpeed" IsBound="true">
+        <Annotation Term="Core.Description" String="Reset VehicleSpeed to Zero"/>
+        <Parameter Name="targetVehicleGPS" Type="Self.VehicleGPSType"/>
+        <Parameter Name="targetValue" Type="Edm.Double"/>
+      </Action>
+      <Function Name="GetVehicleSpeed" IsBound="true">
+        <Parameter Name="targetVehicleGPS" Type="Self.VehicleGPSType" Nullable="false"/>
+        <ReturnType Type="Edm.Double" Nullable="false"/>
+      </Function>
+      <Action Name="ResetVehicleSpeedToValue">
+        <ReturnType Type="Collection(Self.VehicleGPSType)" Nullable="false"/>
+        <Parameter Name="targetValue" Type="Edm.Double"/>
+      </Action>
+      <EntityContainer Name="GPSContainer">
+        <EntitySet Name="VehicleGPSSetInGPS" EntityType="Self.VehicleGPSType"/>
+        <ActionImport Name="ResetVehicleSpeedToValue" Action="Self.ResetVehicleSpeedToValue"/>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

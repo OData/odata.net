@@ -1,0 +1,48 @@
+Combination: 1; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 3; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 5; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 7; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 9; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 10; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 11; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+

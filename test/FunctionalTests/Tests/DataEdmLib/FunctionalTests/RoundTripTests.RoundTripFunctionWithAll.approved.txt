@@ -1,0 +1,7 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <Function Name="FunctionWithAll">
+    <Parameter Name="Param1" Type="Edm.Int32" Nullable="false" />
+    <ReturnType Type="Edm.Int32" />
+  </Function>
+</Schema>
+

@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="DataOracleService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://microsoft.com/taupo/entitycontainerdata" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IDataOracleService_GetEntitySet_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetEntitySet" />
+  </wsdl:message>
+  <wsdl:message name="IDataOracleService_GetEntitySet_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetEntitySetResponse" />
+  </wsdl:message>
+  <wsdl:message name="IDataOracleService_GetEntity_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetEntity" />
+  </wsdl:message>
+  <wsdl:message name="IDataOracleService_GetEntity_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetEntityResponse" />
+  </wsdl:message>
+  <wsdl:message name="IDataOracleService_GetContainerData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetContainerData" />
+  </wsdl:message>
+  <wsdl:message name="IDataOracleService_GetContainerData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetContainerDataResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IDataOracleService">
+    <wsdl:operation name="GetEntitySet">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDataOracleService/GetEntitySet" message="tns:IDataOracleService_GetEntitySet_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDataOracleService/GetEntitySetResponse" message="tns:IDataOracleService_GetEntitySet_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEntity">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDataOracleService/GetEntity" message="tns:IDataOracleService_GetEntity_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDataOracleService/GetEntityResponse" message="tns:IDataOracleService_GetEntity_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetContainerData">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDataOracleService/GetContainerData" message="tns:IDataOracleService_GetContainerData_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDataOracleService/GetContainerDataResponse" message="tns:IDataOracleService_GetContainerData_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IDataOracleService" type="tns:IDataOracleService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetEntitySet">
+      <soap:operation soapAction="http://tempuri.org/IDataOracleService/GetEntitySet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntity">
+      <soap:operation soapAction="http://tempuri.org/IDataOracleService/GetEntity" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetContainerData">
+      <soap:operation soapAction="http://tempuri.org/IDataOracleService/GetContainerData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DataOracleService">
+    <wsdl:port name="BasicHttpBinding_IDataOracleService" binding="tns:BasicHttpBinding_IDataOracleService">
+      <soap:address location="http://localhost:8732/Design_Time_Addresses/Microsoft.Test.Taupo.WebServices/DataOracleService/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

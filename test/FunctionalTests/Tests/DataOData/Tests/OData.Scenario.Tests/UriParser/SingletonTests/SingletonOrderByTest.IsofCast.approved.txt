@@ -1,0 +1,45 @@
+$orderby = isof('Microsoft.Test.Taupo.OData.WCFService.Customer') and cast('Microsoft.Test.Taupo.OData.WCFService.Customer') ne null
+
+
+OrderByClause
+	Item Type = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
+	Direction = Ascending
+	Range Variable = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = SpecialPerson
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
+	Expression = 
+		SingleValueFunctionCallNode
+			Name = isof
+			Return Type = [Edm.Boolean Nullable=True]
+			Function = 
+			Arguments = 
+				EntityRangeVariableReferenceNode
+					Name = $it
+					NavigationSource = SpecialPerson
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
+					Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Microsoft.Test.Taupo.OData.WCFService.Customer(Type: [Edm.String Nullable=True Unicode=True])
+	And
+		ConvertNode
+			TypeReference = [Edm.Boolean Nullable=True]
+			Source = 
+				SingleEntityFunctionCallNode
+					NavigationSource = SpecialPerson
+					Type Reference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+					Name = cast
+					Function = 
+					Arguments = 
+						EntityRangeVariableReferenceNode
+							Name = $it
+							NavigationSource = SpecialPerson
+							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
+							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+						Microsoft.Test.Taupo.OData.WCFService.Customer(Type: [Edm.String Nullable=True Unicode=True])
+			NotEqual
+				ConvertNode
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+					Source = 
+					(Type: )
+	Then By = 

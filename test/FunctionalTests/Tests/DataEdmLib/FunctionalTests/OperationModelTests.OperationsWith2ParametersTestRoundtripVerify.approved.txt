@@ -1,0 +1,233 @@
+<Schema Namespace="DefaultNamespace" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <Function Name="FunctionWith2Parameters0">
+    <Parameter Name="Param1" Type="Edm.Binary" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.Binary" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters1">
+    <Parameter Name="Param1" Type="Edm.Boolean" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.Boolean" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters2">
+    <Parameter Name="Param1" Type="Edm.Byte" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.Byte" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters3">
+    <Parameter Name="Param1" Type="Edm.DateTimeOffset" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.DateTimeOffset" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters4">
+    <Parameter Name="Param1" Type="Edm.Decimal" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.Decimal" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters5">
+    <Parameter Name="Param1" Type="Edm.Double" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.Double" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters6">
+    <Parameter Name="Param1" Type="Edm.Guid" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.Guid" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters7">
+    <Parameter Name="Param1" Type="Edm.Int16" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.Int16" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters8">
+    <Parameter Name="Param1" Type="Edm.Int32" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.Int32" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters9">
+    <Parameter Name="Param1" Type="Edm.Int64" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.Int64" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters10">
+    <Parameter Name="Param1" Type="Edm.SByte" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.SByte" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters11">
+    <Parameter Name="Param1" Type="Edm.Single" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.Single" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters12">
+    <Parameter Name="Param1" Type="Edm.Stream" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.Stream" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters13">
+    <Parameter Name="Param1" Type="Edm.String" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.String" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters14">
+    <Parameter Name="Param1" Type="Edm.Duration" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.Duration" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters15">
+    <Parameter Name="Param1" Type="Edm.Date" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.Date" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters16">
+    <Parameter Name="Param1" Type="Edm.TimeOfDay" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.TimeOfDay" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters17">
+    <Parameter Name="Param1" Type="Edm.Geography" SRID="4326" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.Geography" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWith2Parameters18">
+    <Parameter Name="Param1" Type="Edm.GeographyPoint" SRID="4326" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.GeographyPoint" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWith2Parameters19">
+    <Parameter Name="Param1" Type="Edm.GeographyPolygon" SRID="4326" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.GeographyPolygon" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWith2Parameters20">
+    <Parameter Name="Param1" Type="Edm.GeographyLineString" SRID="4326" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.GeographyLineString" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWith2Parameters21">
+    <Parameter Name="Param1" Type="Edm.GeographyCollection" SRID="4326" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.GeographyCollection" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWith2Parameters22">
+    <Parameter Name="Param1" Type="Edm.GeographyMultiPolygon" SRID="4326" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.GeographyMultiPolygon" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWith2Parameters23">
+    <Parameter Name="Param1" Type="Edm.GeographyMultiLineString" SRID="4326" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.GeographyMultiLineString" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWith2Parameters24">
+    <Parameter Name="Param1" Type="Edm.GeographyMultiPoint" SRID="4326" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.GeographyMultiPoint" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWith2Parameters25">
+    <Parameter Name="Param1" Type="Edm.Geometry" SRID="0" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.Geometry" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWith2Parameters26">
+    <Parameter Name="Param1" Type="Edm.GeometryPoint" SRID="0" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.GeometryPoint" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWith2Parameters27">
+    <Parameter Name="Param1" Type="Edm.GeometryPolygon" SRID="0" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.GeometryPolygon" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWith2Parameters28">
+    <Parameter Name="Param1" Type="Edm.GeometryLineString" SRID="0" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.GeometryLineString" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWith2Parameters29">
+    <Parameter Name="Param1" Type="Edm.GeometryCollection" SRID="0" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.GeometryCollection" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWith2Parameters30">
+    <Parameter Name="Param1" Type="Edm.GeometryMultiPolygon" SRID="0" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.GeometryMultiPolygon" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWith2Parameters31">
+    <Parameter Name="Param1" Type="Edm.GeometryMultiLineString" SRID="0" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.GeometryMultiLineString" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWith2Parameters32">
+    <Parameter Name="Param1" Type="Edm.GeometryMultiPoint" SRID="0" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.GeometryMultiPoint" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWith2Parameters33">
+    <Parameter Name="Param1" Type="Edm.Binary" MaxLength="2147483647" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.Binary" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters34">
+    <Parameter Name="Param1" Type="Edm.String" MaxLength="0" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.Boolean" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters35">
+    <Parameter Name="Param1" Type="Edm.Duration" Nullable="false" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.Byte" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters36">
+    <Parameter Name="Param1" Type="Edm.Decimal" Nullable="false" Precision="2147483647" Scale="1" />
+    <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
+    <ReturnType Type="Edm.DateTimeOffset" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWith2Parameters37">
+    <Parameter Name="Param1" Type="Edm.DateTimeOffset" Nullable="false" />
+    <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
+    <ReturnType Type="Edm.Decimal" Nullable="false" />
+  </Function>
+  <EntityContainer Name="DefaultContainer">
+    <FunctionImport Name="FunctionWith2Parameters0" Function="DefaultNamespace.FunctionWith2Parameters0" />
+    <FunctionImport Name="FunctionWith2Parameters1" Function="DefaultNamespace.FunctionWith2Parameters1" />
+    <FunctionImport Name="FunctionWith2Parameters2" Function="DefaultNamespace.FunctionWith2Parameters2" />
+    <FunctionImport Name="FunctionWith2Parameters3" Function="DefaultNamespace.FunctionWith2Parameters3" />
+    <FunctionImport Name="FunctionWith2Parameters4" Function="DefaultNamespace.FunctionWith2Parameters4" />
+    <FunctionImport Name="FunctionWith2Parameters5" Function="DefaultNamespace.FunctionWith2Parameters5" />
+    <FunctionImport Name="FunctionWith2Parameters6" Function="DefaultNamespace.FunctionWith2Parameters6" />
+    <FunctionImport Name="FunctionWith2Parameters7" Function="DefaultNamespace.FunctionWith2Parameters7" />
+    <FunctionImport Name="FunctionWith2Parameters8" Function="DefaultNamespace.FunctionWith2Parameters8" />
+    <FunctionImport Name="FunctionWith2Parameters9" Function="DefaultNamespace.FunctionWith2Parameters9" />
+    <FunctionImport Name="FunctionWith2Parameters10" Function="DefaultNamespace.FunctionWith2Parameters10" />
+    <FunctionImport Name="FunctionWith2Parameters11" Function="DefaultNamespace.FunctionWith2Parameters11" />
+    <FunctionImport Name="FunctionWith2Parameters12" Function="DefaultNamespace.FunctionWith2Parameters12" />
+    <FunctionImport Name="FunctionWith2Parameters13" Function="DefaultNamespace.FunctionWith2Parameters13" />
+    <FunctionImport Name="FunctionWith2Parameters14" Function="DefaultNamespace.FunctionWith2Parameters14" />
+    <FunctionImport Name="FunctionWith2Parameters15" Function="DefaultNamespace.FunctionWith2Parameters15" />
+    <FunctionImport Name="FunctionWith2Parameters16" Function="DefaultNamespace.FunctionWith2Parameters16" />
+    <FunctionImport Name="FunctionWith2Parameters17" Function="DefaultNamespace.FunctionWith2Parameters17" />
+    <FunctionImport Name="FunctionWith2Parameters18" Function="DefaultNamespace.FunctionWith2Parameters18" />
+    <FunctionImport Name="FunctionWith2Parameters19" Function="DefaultNamespace.FunctionWith2Parameters19" />
+    <FunctionImport Name="FunctionWith2Parameters20" Function="DefaultNamespace.FunctionWith2Parameters20" />
+    <FunctionImport Name="FunctionWith2Parameters21" Function="DefaultNamespace.FunctionWith2Parameters21" />
+    <FunctionImport Name="FunctionWith2Parameters22" Function="DefaultNamespace.FunctionWith2Parameters22" />
+    <FunctionImport Name="FunctionWith2Parameters23" Function="DefaultNamespace.FunctionWith2Parameters23" />
+    <FunctionImport Name="FunctionWith2Parameters24" Function="DefaultNamespace.FunctionWith2Parameters24" />
+    <FunctionImport Name="FunctionWith2Parameters25" Function="DefaultNamespace.FunctionWith2Parameters25" />
+    <FunctionImport Name="FunctionWith2Parameters26" Function="DefaultNamespace.FunctionWith2Parameters26" />
+    <FunctionImport Name="FunctionWith2Parameters27" Function="DefaultNamespace.FunctionWith2Parameters27" />
+    <FunctionImport Name="FunctionWith2Parameters28" Function="DefaultNamespace.FunctionWith2Parameters28" />
+    <FunctionImport Name="FunctionWith2Parameters29" Function="DefaultNamespace.FunctionWith2Parameters29" />
+    <FunctionImport Name="FunctionWith2Parameters30" Function="DefaultNamespace.FunctionWith2Parameters30" />
+    <FunctionImport Name="FunctionWith2Parameters31" Function="DefaultNamespace.FunctionWith2Parameters31" />
+    <FunctionImport Name="FunctionWith2Parameters32" Function="DefaultNamespace.FunctionWith2Parameters32" />
+    <FunctionImport Name="FunctionWith2Parameters33" Function="DefaultNamespace.FunctionWith2Parameters33" />
+    <FunctionImport Name="FunctionWith2Parameters34" Function="DefaultNamespace.FunctionWith2Parameters34" />
+    <FunctionImport Name="FunctionWith2Parameters35" Function="DefaultNamespace.FunctionWith2Parameters35" />
+    <FunctionImport Name="FunctionWith2Parameters36" Function="DefaultNamespace.FunctionWith2Parameters36" />
+    <FunctionImport Name="FunctionWith2Parameters37" Function="DefaultNamespace.FunctionWith2Parameters37" />
+  </EntityContainer>
+</Schema>
+

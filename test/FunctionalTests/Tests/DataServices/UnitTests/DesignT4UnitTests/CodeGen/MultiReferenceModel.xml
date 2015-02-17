@@ -1,0 +1,83 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="http://odatae2etest.azurewebsites.net/demo/ModelRefService/CoreTerms.csdl">
+    <edmx:Include Alias="Core" Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Core.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://odatae2etest.azurewebsites.net/demo/ModelRefService/DeviceModelTerms.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1" Alias="IoTDeviceModel"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://odatae2etest.azurewebsites.net/demo/ModelRefService/GPS.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.GPS" Alias="GPS"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://odatae2etest.azurewebsites.net/demo/ModelRefService/Location.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Location" Alias="Location"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="http://odatae2etest.azurewebsites.net/demo/ModelRefService/Map.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Map" Alias="Map"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo" Alias="Self">
+      <ComplexType Name="LocationAndFuel">
+        <Property Name="FuelLevel" Type="Edm.Double"/>
+        <Property Name="Location" Type="Location.GeoLocation"/>
+      </ComplexType>
+      <ComplexType Name="TruckStoppedAlarmType">
+        <Property Name="Severity" Type="Edm.Int32" DefaultValue="3"/>
+        <Property Name="LocationAndFuel" Type="Self.LocationAndFuel"/>
+        <Annotation Term="Core.Description" String="Alarm: Truck Stopped!"/>
+        <Annotation Term="IoTDeviceModel.IsAlarm" Bool="true"/>
+      </ComplexType>
+      <EntityType Name="HeadUnitType">
+        <Key>
+          <PropertyRef Name="SerialNo"/>
+        </Key>
+        <Property Name="SerialNo" Type="Edm.String" Nullable="false"/>
+        <Property Name="DimmingLevel" Type="Edm.Double"/>
+      </EntityType>
+      <EntityType Name="TruckType">
+        <Key>
+          <PropertyRef Name="Key"/>
+        </Key>
+        <Property Name="Key" Type="Edm.String" Nullable="false"/>
+        <Property Name="VIN" Type="Edm.String"/>
+        <Property Name="FuelLevel" Type="Edm.Double"/>
+        <Property Name="ACState" Type="Edm.Boolean"/>
+        <Property Name="TruckIsHomeFuelLevel" Type="Edm.Double">
+          <Annotation Term="IoTDeviceModel.IsEvent" Bool="true"/>
+        </Property>
+        <Property Name="TruckStoppedAlarm" Type="Self.TruckStoppedAlarmType">
+          <Annotation Term="IoTDeviceModel.IsEvent" Bool="true"/>
+        </Property>
+        <Property Name="OutsideGeoFenceAlarm" Type="Location.OutsideGeoFenceAlarmType">
+          <Annotation Term="IoTDeviceModel.IsEvent" Bool="true"/>
+        </Property>
+        <NavigationProperty Name="HeadUnit" Type="Self.HeadUnitType" ContainsTarget="true"/>
+        <NavigationProperty Name="VehicleGPS" Type="GPS.VehicleGPSType" ContainsTarget="true"/>
+      </EntityType>
+      <EntityType Name="DerivedVehicleGPSType" BaseType="GPS.VehicleGPSType">
+        <Property Name="DisplayName" Type="Edm.String"/>
+      </EntityType>
+      <Action Name="SetACState" IsBound="true">
+        <Parameter Name="targetTruck" Type="Self.TruckType"/>
+        <Parameter Name="state" Type="Edm.Boolean">
+          <Annotation Term="Core.Description" String="The state of AC"/>
+        </Parameter>
+        <Annotation Term="Core.Description" String="Set the AC state"/>
+      </Action>
+      <Action Name="TurnOffAC" IsBound="true">
+        <Parameter Name="targetTruck" Type="Self.TruckType"/>
+        <Annotation Term="Core.Description" String="Turn off AC"/>
+      </Action>
+      <Function Name="GetDefaultOutsideGeoFenceAlarm" IsComposable="true">
+        <ReturnType Type="Location.OutsideGeoFenceAlarmType"/>
+      </Function>
+      <EntityContainer Name="TruckDemoService" Extends="GPS.GPSContainer">
+        <EntitySet Name="Trucks" EntityType="Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.TruckType">
+          <Annotation Term="Core.Description" String="Our Trucks"/>
+        </EntitySet>
+        <EntitySet Name="VehicleGPSSet" EntityType="Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType"/>
+        <EntitySet Name="DerivedVehicleGPSSet" EntityType="Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.DerivedVehicleGPSType"/>
+        <FunctionImport Name="GetDefaultOutsideGeoFenceAlarm" Function="Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.GetDefaultOutsideGeoFenceAlarm"/>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

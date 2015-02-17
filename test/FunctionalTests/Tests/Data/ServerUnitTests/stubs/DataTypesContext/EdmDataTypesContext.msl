@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
+  <EntityContainerMapping StorageEntityContainer="EdmDataTypesContextStoreContainer" CdmEntityContainer="EdmDataTypesContext">
+    <EntitySetMapping Name="DataTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(EdmDataTypesContext.DataTypes)">
+        <MappingFragment StoreEntitySet="DataTypes">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Integer" ColumnName="Integer" />
+          <ScalarProperty Name="Float" ColumnName="Float" />
+          <ScalarProperty Name="Decimal" ColumnName="Decimal" />
+          <ScalarProperty Name="String" ColumnName="String" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Boolean" ColumnName="Boolean" />
+          <ScalarProperty Name="UniqueId" ColumnName="UniqueId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

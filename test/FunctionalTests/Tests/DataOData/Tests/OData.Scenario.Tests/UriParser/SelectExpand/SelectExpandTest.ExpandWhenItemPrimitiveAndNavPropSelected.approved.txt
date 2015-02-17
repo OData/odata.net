@@ -1,0 +1,14 @@
+$select = OrderPlaced,AssociatedOrder
+$expand = AssociatedOrder
+
+
+SelectExpandQueryOption
+	AllSelected = False
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: AssociatedOrder)]
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems(Empty List)
+		Path[(Property: OrderPlaced)]
+		Path[(NavigationProperty: AssociatedOrder)]

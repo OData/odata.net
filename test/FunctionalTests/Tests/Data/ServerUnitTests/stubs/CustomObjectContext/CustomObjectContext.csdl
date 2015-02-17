@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AstoriaUnitTests.ObjectContextStubs" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+  <EntityContainer Name="CustomObjectContext">
+    <EntitySet Name="Customers" EntityType="AstoriaUnitTests.ObjectContextStubs.Types.Customer" />
+    <EntitySet Name="CustomerBlobs" EntityType="AstoriaUnitTests.ObjectContextStubs.Types.CustomerBlob" />
+    <EntitySet Name="Orders" EntityType="AstoriaUnitTests.ObjectContextStubs.Types.Order" />
+    <AssociationSet Name="FK__Orders__Customer__00551192" Association="AstoriaUnitTests.ObjectContextStubs.Types.FK__Orders__Customer__00551192">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="CustomersBestFriend" Association="AstoriaUnitTests.ObjectContextStubs.Types.CustomersBestFriend">
+      <End Role="BestFriend" EntitySet="Customers" />
+      <End Role="CustomersWhoConsiderMeTheirBestFriend" EntitySet="Customers" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

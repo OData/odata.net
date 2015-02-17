@@ -1,0 +1,1293 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:ID m:type="Int32">1</d:ID><d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType3)"><m:element><d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType2)"><m:element><d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType1)"><m:element><d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType0)"><m:element><d:RootProperyName m:type="#TestModel.Address"><d:Street>1234 Redmond Way</d:Street><d:Zip m:type="Int32">12345</d:Zip></d:RootProperyName></m:element></d:PropertyName></m:element></d:PropertyName></m:element></d:PropertyName></m:element></d:PropertyName></m:properties></content></entry>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:ID m:type="Int32">1</d:ID>
+      <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType3)">
+        <m:element>
+          <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType2)">
+            <m:element>
+              <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType1)">
+                <m:element>
+                  <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType0)">
+                    <m:element>
+                      <d:RootProperyName m:type="#TestModel.Address">
+                        <d:Street>1234 Redmond Way</d:Street>
+                        <d:Zip m:type="Int32">12345</d:Zip>
+                      </d:RootProperyName>
+                    </m:element>
+                  </d:PropertyName>
+                </m:element>
+              </d:PropertyName>
+            </m:element>
+          </d:PropertyName>
+        </m:element>
+      </d:PropertyName>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:ID m:type="Int32">1</d:ID>
+      <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType3)">
+        <m:element>
+          <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType2)">
+            <m:element>
+              <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType1)">
+                <m:element>
+                  <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType0)">
+                    <m:element>
+                      <d:RootProperyName m:type="#TestModel.Address">
+                        <d:Street>1234 Redmond Way</d:Street>
+                        <d:Zip m:type="Int32">12345</d:Zip>
+                      </d:RootProperyName>
+                    </m:element>
+                  </d:PropertyName>
+                </m:element>
+              </d:PropertyName>
+            </m:element>
+          </d:PropertyName>
+        </m:element>
+      </d:PropertyName>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:ID m:type="Int32">1</d:ID>
+      <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType3)">
+        <m:element>
+          <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType2)">
+            <m:element>
+              <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType1)">
+                <m:element>
+                  <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType0)">
+                    <m:element>
+                      <d:RootProperyName m:type="#TestModel.Address">
+                        <d:Street>1234 Redmond Way</d:Street>
+                        <d:Zip m:type="Int32">12345</d:Zip>
+                      </d:RootProperyName>
+                    </m:element>
+                  </d:PropertyName>
+                </m:element>
+              </d:PropertyName>
+            </m:element>
+          </d:PropertyName>
+        </m:element>
+      </d:PropertyName>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 5; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:ID m:type="Int32">1</d:ID><d:Extra_Number_0 m:type="Int32">42</d:Extra_Number_0><d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType9"><d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType8"><d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType7"><d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType6"><d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType5"><d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType4"><d:RootProperyName m:type="#TestModel.Address"><d:Street>1234 Redmond Way</d:Street><d:Zip m:type="Int32">12345</d:Zip></d:RootProperyName></d:PropertyName></d:PropertyName></d:PropertyName></d:PropertyName></d:PropertyName></d:PropertyName></m:properties></content></entry>
+
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:ID m:type="Int32">1</d:ID>
+      <d:Extra_Number_0 m:type="Int32">42</d:Extra_Number_0>
+      <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType9">
+        <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType8">
+          <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType7">
+            <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType6">
+              <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType5">
+                <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType4">
+                  <d:RootProperyName m:type="#TestModel.Address">
+                    <d:Street>1234 Redmond Way</d:Street>
+                    <d:Zip m:type="Int32">12345</d:Zip>
+                  </d:RootProperyName>
+                </d:PropertyName>
+              </d:PropertyName>
+            </d:PropertyName>
+          </d:PropertyName>
+        </d:PropertyName>
+      </d:PropertyName>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 7; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:ID m:type="Int32">1</d:ID>
+      <d:Extra_Number_0 m:type="Int32">42</d:Extra_Number_0>
+      <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType9">
+        <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType8">
+          <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType7">
+            <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType6">
+              <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType5">
+                <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType4">
+                  <d:RootProperyName m:type="#TestModel.Address">
+                    <d:Street>1234 Redmond Way</d:Street>
+                    <d:Zip m:type="Int32">12345</d:Zip>
+                  </d:RootProperyName>
+                </d:PropertyName>
+              </d:PropertyName>
+            </d:PropertyName>
+          </d:PropertyName>
+        </d:PropertyName>
+      </d:PropertyName>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:ID m:type="Int32">1</d:ID>
+      <d:Extra_Number_0 m:type="Int32">42</d:Extra_Number_0>
+      <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType9">
+        <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType8">
+          <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType7">
+            <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType6">
+              <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType5">
+                <d:PropertyName m:type="#TestModel.PGInComplexValue_ResultComplexType4">
+                  <d:RootProperyName m:type="#TestModel.Address">
+                    <d:Street>1234 Redmond Way</d:Street>
+                    <d:Zip m:type="Int32">12345</d:Zip>
+                  </d:RootProperyName>
+                </d:PropertyName>
+              </d:PropertyName>
+            </d:PropertyName>
+          </d:PropertyName>
+        </d:PropertyName>
+      </d:PropertyName>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 9; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><category term="#TestModel.PGEntityTypeWithExpandedLink11" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp"><m:inline><entry><category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:ID m:type="Int32">1</d:ID><d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType10)"><m:element><d:PropertyName m:type="#Collection(TestModel.Address)"><m:element><d:Street>stringvalue</d:Street><d:Zip m:type="Int32">-42</d:Zip></m:element><m:element><d:Street>1234 Redmond Way</d:Street><d:Zip m:type="Int32">12345</d:Zip></m:element><m:element><d:Street>stringvalue</d:Street><d:Zip m:type="Int32">-42</d:Zip></m:element></d:PropertyName></m:element></d:PropertyName></m:properties></content></entry></m:inline></link><id /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Id m:type="Int32">1</d:Id><d:Name></d:Name></m:properties></content></entry>
+
+Combination: 10; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGEntityTypeWithExpandedLink11" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+    <m:inline>
+      <entry>
+        <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <id />
+        <title />
+        <updated>0000-00-00T00:00:00Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml">
+          <m:properties>
+            <d:ID m:type="Int32">1</d:ID>
+            <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType10)">
+              <m:element>
+                <d:PropertyName m:type="#Collection(TestModel.Address)">
+                  <m:element>
+                    <d:Street>stringvalue</d:Street>
+                    <d:Zip m:type="Int32">-42</d:Zip>
+                  </m:element>
+                  <m:element>
+                    <d:Street>1234 Redmond Way</d:Street>
+                    <d:Zip m:type="Int32">12345</d:Zip>
+                  </m:element>
+                  <m:element>
+                    <d:Street>stringvalue</d:Street>
+                    <d:Zip m:type="Int32">-42</d:Zip>
+                  </m:element>
+                </d:PropertyName>
+              </m:element>
+            </d:PropertyName>
+          </m:properties>
+        </content>
+      </entry>
+    </m:inline>
+  </link>
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name></d:Name>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 11; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGEntityTypeWithExpandedLink11" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+    <m:inline>
+      <entry>
+        <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <id />
+        <title />
+        <updated>0000-00-00T00:00:00Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml">
+          <m:properties>
+            <d:ID m:type="Int32">1</d:ID>
+            <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType10)">
+              <m:element>
+                <d:PropertyName m:type="#Collection(TestModel.Address)">
+                  <m:element>
+                    <d:Street>stringvalue</d:Street>
+                    <d:Zip m:type="Int32">-42</d:Zip>
+                  </m:element>
+                  <m:element>
+                    <d:Street>1234 Redmond Way</d:Street>
+                    <d:Zip m:type="Int32">12345</d:Zip>
+                  </m:element>
+                  <m:element>
+                    <d:Street>stringvalue</d:Street>
+                    <d:Zip m:type="Int32">-42</d:Zip>
+                  </m:element>
+                </d:PropertyName>
+              </m:element>
+            </d:PropertyName>
+          </m:properties>
+        </content>
+      </entry>
+    </m:inline>
+  </link>
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name></d:Name>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGEntityTypeWithExpandedLink11" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+    <m:inline>
+      <entry>
+        <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <id />
+        <title />
+        <updated>0000-00-00T00:00:00Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml">
+          <m:properties>
+            <d:ID m:type="Int32">1</d:ID>
+            <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType10)">
+              <m:element>
+                <d:PropertyName m:type="#Collection(TestModel.Address)">
+                  <m:element>
+                    <d:Street>stringvalue</d:Street>
+                    <d:Zip m:type="Int32">-42</d:Zip>
+                  </m:element>
+                  <m:element>
+                    <d:Street>1234 Redmond Way</d:Street>
+                    <d:Zip m:type="Int32">12345</d:Zip>
+                  </m:element>
+                  <m:element>
+                    <d:Street>stringvalue</d:Street>
+                    <d:Zip m:type="Int32">-42</d:Zip>
+                  </m:element>
+                </d:PropertyName>
+              </m:element>
+            </d:PropertyName>
+          </m:properties>
+        </content>
+      </entry>
+    </m:inline>
+  </link>
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name></d:Name>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGEntityTypeWithExpandedLink13" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=feed" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+    <m:inline>
+      <feed>
+        <id>urn:FeedID</id>
+        <title />
+        <updated>0000-00-00T00:00:00Z</updated>
+        <entry>
+          <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <id />
+          <title />
+          <updated>0000-00-00T00:00:00Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml">
+            <m:properties>
+              <d:ID m:type="Int32">1</d:ID>
+              <d:Extra_Number_0 m:type="Int32">42</d:Extra_Number_0>
+              <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType12)">
+                <m:element>
+                  <d:Extra_Number_0 m:type="Int32">-42</d:Extra_Number_0>
+                  <d:PropertyName m:type="#Collection(TestModel.Address)">
+                    <m:element>
+                      <d:Street></d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                    <m:element>
+                      <d:Street>stringvalue</d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                    <m:element>
+                      <d:Street></d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                    <m:element>
+                      <d:Street></d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                  </d:PropertyName>
+                  <d:Extra_ComplexMultiValue_2 m:type="#Collection(TestModel.PGInComplexValue_ExtraComplexType)">
+                    <m:element>
+                      <d:Name>stringvalue</d:Name>
+                      <d:Value m:type="Int32">-42</d:Value>
+                    </m:element>
+                  </d:Extra_ComplexMultiValue_2>
+                </m:element>
+                <m:element>
+                  <d:Extra_Number_0 m:type="Int32">42</d:Extra_Number_0>
+                  <d:PropertyName m:type="#Collection(TestModel.Address)">
+                    <m:element>
+                      <d:Street>stringvalue</d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                    <m:element>
+                      <d:Street>1234 Redmond Way</d:Street>
+                      <d:Zip m:type="Int32">12345</d:Zip>
+                    </m:element>
+                    <m:element>
+                      <d:Street>stringvalue</d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                    <m:element>
+                      <d:Street>stringvalue</d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                  </d:PropertyName>
+                  <d:Extra_ComplexMultiValue_2 m:type="#Collection(TestModel.PGInComplexValue_ExtraComplexType)">
+                    <m:element>
+                      <d:Name>Value2</d:Name>
+                      <d:Value m:type="Int32">4</d:Value>
+                    </m:element>
+                  </d:Extra_ComplexMultiValue_2>
+                </m:element>
+              </d:PropertyName>
+              <d:Extra_ComplexCollection_2 m:type="#Collection(TestModel.PGInEntity_ExtraComplexType)">
+                <m:element>
+                  <d:Name>Value2</d:Name>
+                  <d:Value m:type="Int32">4</d:Value>
+                </m:element>
+              </d:Extra_ComplexCollection_2>
+            </m:properties>
+          </content>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name></d:Name>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGEntityTypeWithExpandedLink13" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=feed" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+    <m:inline>
+      <feed>
+        <id>urn:FeedID</id>
+        <title />
+        <updated>0000-00-00T00:00:00Z</updated>
+        <entry>
+          <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <id />
+          <title />
+          <updated>0000-00-00T00:00:00Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml">
+            <m:properties>
+              <d:ID m:type="Int32">1</d:ID>
+              <d:Extra_Number_0 m:type="Int32">42</d:Extra_Number_0>
+              <d:PropertyName m:type="#Collection(TestModel.PGInComplexValue_ResultComplexType12)">
+                <m:element>
+                  <d:Extra_Number_0 m:type="Int32">-42</d:Extra_Number_0>
+                  <d:PropertyName m:type="#Collection(TestModel.Address)">
+                    <m:element>
+                      <d:Street></d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                    <m:element>
+                      <d:Street>stringvalue</d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                    <m:element>
+                      <d:Street></d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                    <m:element>
+                      <d:Street></d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                  </d:PropertyName>
+                  <d:Extra_ComplexMultiValue_2 m:type="#Collection(TestModel.PGInComplexValue_ExtraComplexType)">
+                    <m:element>
+                      <d:Name>stringvalue</d:Name>
+                      <d:Value m:type="Int32">-42</d:Value>
+                    </m:element>
+                  </d:Extra_ComplexMultiValue_2>
+                </m:element>
+                <m:element>
+                  <d:Extra_Number_0 m:type="Int32">42</d:Extra_Number_0>
+                  <d:PropertyName m:type="#Collection(TestModel.Address)">
+                    <m:element>
+                      <d:Street>stringvalue</d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                    <m:element>
+                      <d:Street>1234 Redmond Way</d:Street>
+                      <d:Zip m:type="Int32">12345</d:Zip>
+                    </m:element>
+                    <m:element>
+                      <d:Street>stringvalue</d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                    <m:element>
+                      <d:Street>stringvalue</d:Street>
+                      <d:Zip m:type="Int32">-42</d:Zip>
+                    </m:element>
+                  </d:PropertyName>
+                  <d:Extra_ComplexMultiValue_2 m:type="#Collection(TestModel.PGInComplexValue_ExtraComplexType)">
+                    <m:element>
+                      <d:Name>Value2</d:Name>
+                      <d:Value m:type="Int32">4</d:Value>
+                    </m:element>
+                  </d:Extra_ComplexMultiValue_2>
+                </m:element>
+              </d:PropertyName>
+              <d:Extra_ComplexCollection_2 m:type="#Collection(TestModel.PGInEntity_ExtraComplexType)">
+                <m:element>
+                  <d:Name>Value2</d:Name>
+                  <d:Value m:type="Int32">4</d:Value>
+                </m:element>
+              </d:Extra_ComplexCollection_2>
+            </m:properties>
+          </content>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name></d:Name>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 17; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><category term="#TestModel.PGEntityTypeWithExpandedLink19" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp"><m:inline><entry><category term="#TestModel.PGEntityTypeWithExpandedLink18" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp"><m:inline><entry><category term="#TestModel.PGEntityTypeWithExpandedLink17" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp"><m:inline><entry><category term="#TestModel.PGEntityTypeWithExpandedLink16" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp"><m:inline><entry><category term="#TestModel.PGEntityTypeWithExpandedLink15" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp"><m:inline><entry><category term="#TestModel.PGEntityTypeWithExpandedLink14" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp"><m:inline><entry><category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:ID m:type="Int32">1</d:ID><d:Extra_Number_0 m:type="Int32">42</d:Extra_Number_0><d:RootProperyName m:type="#TestModel.Address"><d:Street>1234 Redmond Way</d:Street><d:Zip m:type="Int32">12345</d:Zip></d:RootProperyName><d:Extra_ComplexCollection_2 m:type="#Collection(TestModel.PGInEntity_ExtraComplexType)"><m:element><d:Name>Value2</d:Name><d:Value m:type="Int32">4</d:Value></m:element></d:Extra_ComplexCollection_2></m:properties></content></entry></m:inline></link><id /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Id m:type="Int32">1</d:Id><d:Name></d:Name></m:properties></content></entry></m:inline></link><id /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Id m:type="Int32">1</d:Id><d:Name></d:Name></m:properties></content></entry></m:inline></link><id /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Id m:type="Int32">1</d:Id><d:Name></d:Name></m:properties></content></entry></m:inline></link><id /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Id m:type="Int32">1</d:Id><d:Name></d:Name></m:properties></content></entry></m:inline></link><id /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Id m:type="Int32">1</d:Id><d:Name></d:Name></m:properties></content></entry></m:inline></link><id /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Id m:type="Int32">1</d:Id><d:Name></d:Name></m:properties></content></entry>
+
+Combination: 18; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGEntityTypeWithExpandedLink19" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+    <m:inline>
+      <entry>
+        <category term="#TestModel.PGEntityTypeWithExpandedLink18" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+          <m:inline>
+            <entry>
+              <category term="#TestModel.PGEntityTypeWithExpandedLink17" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+              <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                <m:inline>
+                  <entry>
+                    <category term="#TestModel.PGEntityTypeWithExpandedLink16" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                    <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                      <m:inline>
+                        <entry>
+                          <category term="#TestModel.PGEntityTypeWithExpandedLink15" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                          <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                            <m:inline>
+                              <entry>
+                                <category term="#TestModel.PGEntityTypeWithExpandedLink14" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                                <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                                  <m:inline>
+                                    <entry>
+                                      <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                                      <id />
+                                      <title />
+                                      <updated>0000-00-00T00:00:00Z</updated>
+                                      <author>
+                                        <name />
+                                      </author>
+                                      <content type="application/xml">
+                                        <m:properties>
+                                          <d:ID m:type="Int32">1</d:ID>
+                                          <d:Extra_Number_0 m:type="Int32">42</d:Extra_Number_0>
+                                          <d:RootProperyName m:type="#TestModel.Address">
+                                            <d:Street>1234 Redmond Way</d:Street>
+                                            <d:Zip m:type="Int32">12345</d:Zip>
+                                          </d:RootProperyName>
+                                          <d:Extra_ComplexCollection_2 m:type="#Collection(TestModel.PGInEntity_ExtraComplexType)">
+                                            <m:element>
+                                              <d:Name>Value2</d:Name>
+                                              <d:Value m:type="Int32">4</d:Value>
+                                            </m:element>
+                                          </d:Extra_ComplexCollection_2>
+                                        </m:properties>
+                                      </content>
+                                    </entry>
+                                  </m:inline>
+                                </link>
+                                <id />
+                                <title />
+                                <updated>0000-00-00T00:00:00Z</updated>
+                                <author>
+                                  <name />
+                                </author>
+                                <content type="application/xml">
+                                  <m:properties>
+                                    <d:Id m:type="Int32">1</d:Id>
+                                    <d:Name></d:Name>
+                                  </m:properties>
+                                </content>
+                              </entry>
+                            </m:inline>
+                          </link>
+                          <id />
+                          <title />
+                          <updated>0000-00-00T00:00:00Z</updated>
+                          <author>
+                            <name />
+                          </author>
+                          <content type="application/xml">
+                            <m:properties>
+                              <d:Id m:type="Int32">1</d:Id>
+                              <d:Name></d:Name>
+                            </m:properties>
+                          </content>
+                        </entry>
+                      </m:inline>
+                    </link>
+                    <id />
+                    <title />
+                    <updated>0000-00-00T00:00:00Z</updated>
+                    <author>
+                      <name />
+                    </author>
+                    <content type="application/xml">
+                      <m:properties>
+                        <d:Id m:type="Int32">1</d:Id>
+                        <d:Name></d:Name>
+                      </m:properties>
+                    </content>
+                  </entry>
+                </m:inline>
+              </link>
+              <id />
+              <title />
+              <updated>0000-00-00T00:00:00Z</updated>
+              <author>
+                <name />
+              </author>
+              <content type="application/xml">
+                <m:properties>
+                  <d:Id m:type="Int32">1</d:Id>
+                  <d:Name></d:Name>
+                </m:properties>
+              </content>
+            </entry>
+          </m:inline>
+        </link>
+        <id />
+        <title />
+        <updated>0000-00-00T00:00:00Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml">
+          <m:properties>
+            <d:Id m:type="Int32">1</d:Id>
+            <d:Name></d:Name>
+          </m:properties>
+        </content>
+      </entry>
+    </m:inline>
+  </link>
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name></d:Name>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 19; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGEntityTypeWithExpandedLink19" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+    <m:inline>
+      <entry>
+        <category term="#TestModel.PGEntityTypeWithExpandedLink18" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+          <m:inline>
+            <entry>
+              <category term="#TestModel.PGEntityTypeWithExpandedLink17" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+              <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                <m:inline>
+                  <entry>
+                    <category term="#TestModel.PGEntityTypeWithExpandedLink16" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                    <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                      <m:inline>
+                        <entry>
+                          <category term="#TestModel.PGEntityTypeWithExpandedLink15" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                          <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                            <m:inline>
+                              <entry>
+                                <category term="#TestModel.PGEntityTypeWithExpandedLink14" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                                <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                                  <m:inline>
+                                    <entry>
+                                      <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                                      <id />
+                                      <title />
+                                      <updated>0000-00-00T00:00:00Z</updated>
+                                      <author>
+                                        <name />
+                                      </author>
+                                      <content type="application/xml">
+                                        <m:properties>
+                                          <d:ID m:type="Int32">1</d:ID>
+                                          <d:Extra_Number_0 m:type="Int32">42</d:Extra_Number_0>
+                                          <d:RootProperyName m:type="#TestModel.Address">
+                                            <d:Street>1234 Redmond Way</d:Street>
+                                            <d:Zip m:type="Int32">12345</d:Zip>
+                                          </d:RootProperyName>
+                                          <d:Extra_ComplexCollection_2 m:type="#Collection(TestModel.PGInEntity_ExtraComplexType)">
+                                            <m:element>
+                                              <d:Name>Value2</d:Name>
+                                              <d:Value m:type="Int32">4</d:Value>
+                                            </m:element>
+                                          </d:Extra_ComplexCollection_2>
+                                        </m:properties>
+                                      </content>
+                                    </entry>
+                                  </m:inline>
+                                </link>
+                                <id />
+                                <title />
+                                <updated>0000-00-00T00:00:00Z</updated>
+                                <author>
+                                  <name />
+                                </author>
+                                <content type="application/xml">
+                                  <m:properties>
+                                    <d:Id m:type="Int32">1</d:Id>
+                                    <d:Name></d:Name>
+                                  </m:properties>
+                                </content>
+                              </entry>
+                            </m:inline>
+                          </link>
+                          <id />
+                          <title />
+                          <updated>0000-00-00T00:00:00Z</updated>
+                          <author>
+                            <name />
+                          </author>
+                          <content type="application/xml">
+                            <m:properties>
+                              <d:Id m:type="Int32">1</d:Id>
+                              <d:Name></d:Name>
+                            </m:properties>
+                          </content>
+                        </entry>
+                      </m:inline>
+                    </link>
+                    <id />
+                    <title />
+                    <updated>0000-00-00T00:00:00Z</updated>
+                    <author>
+                      <name />
+                    </author>
+                    <content type="application/xml">
+                      <m:properties>
+                        <d:Id m:type="Int32">1</d:Id>
+                        <d:Name></d:Name>
+                      </m:properties>
+                    </content>
+                  </entry>
+                </m:inline>
+              </link>
+              <id />
+              <title />
+              <updated>0000-00-00T00:00:00Z</updated>
+              <author>
+                <name />
+              </author>
+              <content type="application/xml">
+                <m:properties>
+                  <d:Id m:type="Int32">1</d:Id>
+                  <d:Name></d:Name>
+                </m:properties>
+              </content>
+            </entry>
+          </m:inline>
+        </link>
+        <id />
+        <title />
+        <updated>0000-00-00T00:00:00Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml">
+          <m:properties>
+            <d:Id m:type="Int32">1</d:Id>
+            <d:Name></d:Name>
+          </m:properties>
+        </content>
+      </entry>
+    </m:inline>
+  </link>
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name></d:Name>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 20; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGEntityTypeWithExpandedLink19" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+    <m:inline>
+      <entry>
+        <category term="#TestModel.PGEntityTypeWithExpandedLink18" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+        <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+          <m:inline>
+            <entry>
+              <category term="#TestModel.PGEntityTypeWithExpandedLink17" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+              <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                <m:inline>
+                  <entry>
+                    <category term="#TestModel.PGEntityTypeWithExpandedLink16" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                    <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                      <m:inline>
+                        <entry>
+                          <category term="#TestModel.PGEntityTypeWithExpandedLink15" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                          <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                            <m:inline>
+                              <entry>
+                                <category term="#TestModel.PGEntityTypeWithExpandedLink14" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                                <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=entry" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                                  <m:inline>
+                                    <entry>
+                                      <category term="#TestModel.PGInEntity_ResultEntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                                      <id />
+                                      <title />
+                                      <updated>0000-00-00T00:00:00Z</updated>
+                                      <author>
+                                        <name />
+                                      </author>
+                                      <content type="application/xml">
+                                        <m:properties>
+                                          <d:ID m:type="Int32">1</d:ID>
+                                          <d:Extra_Number_0 m:type="Int32">42</d:Extra_Number_0>
+                                          <d:RootProperyName m:type="#TestModel.Address">
+                                            <d:Street>1234 Redmond Way</d:Street>
+                                            <d:Zip m:type="Int32">12345</d:Zip>
+                                          </d:RootProperyName>
+                                          <d:Extra_ComplexCollection_2 m:type="#Collection(TestModel.PGInEntity_ExtraComplexType)">
+                                            <m:element>
+                                              <d:Name>Value2</d:Name>
+                                              <d:Value m:type="Int32">4</d:Value>
+                                            </m:element>
+                                          </d:Extra_ComplexCollection_2>
+                                        </m:properties>
+                                      </content>
+                                    </entry>
+                                  </m:inline>
+                                </link>
+                                <id />
+                                <title />
+                                <updated>0000-00-00T00:00:00Z</updated>
+                                <author>
+                                  <name />
+                                </author>
+                                <content type="application/xml">
+                                  <m:properties>
+                                    <d:Id m:type="Int32">1</d:Id>
+                                    <d:Name></d:Name>
+                                  </m:properties>
+                                </content>
+                              </entry>
+                            </m:inline>
+                          </link>
+                          <id />
+                          <title />
+                          <updated>0000-00-00T00:00:00Z</updated>
+                          <author>
+                            <name />
+                          </author>
+                          <content type="application/xml">
+                            <m:properties>
+                              <d:Id m:type="Int32">1</d:Id>
+                              <d:Name></d:Name>
+                            </m:properties>
+                          </content>
+                        </entry>
+                      </m:inline>
+                    </link>
+                    <id />
+                    <title />
+                    <updated>0000-00-00T00:00:00Z</updated>
+                    <author>
+                      <name />
+                    </author>
+                    <content type="application/xml">
+                      <m:properties>
+                        <d:Id m:type="Int32">1</d:Id>
+                        <d:Name></d:Name>
+                      </m:properties>
+                    </content>
+                  </entry>
+                </m:inline>
+              </link>
+              <id />
+              <title />
+              <updated>0000-00-00T00:00:00Z</updated>
+              <author>
+                <name />
+              </author>
+              <content type="application/xml">
+                <m:properties>
+                  <d:Id m:type="Int32">1</d:Id>
+                  <d:Name></d:Name>
+                </m:properties>
+              </content>
+            </entry>
+          </m:inline>
+        </link>
+        <id />
+        <title />
+        <updated>0000-00-00T00:00:00Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/xml">
+          <m:properties>
+            <d:Id m:type="Int32">1</d:Id>
+            <d:Name></d:Name>
+          </m:properties>
+        </content>
+      </entry>
+    </m:inline>
+  </link>
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name></d:Name>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 22; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGEntityTypeWithExpandedLink24" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=feed" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+    <m:inline>
+      <feed>
+        <id>urn:FeedID</id>
+        <title />
+        <updated>0000-00-00T00:00:00Z</updated>
+        <entry>
+          <category term="#TestModel.PGEntityTypeWithExpandedLink23" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=feed" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+            <m:inline>
+              <feed>
+                <id>urn:FeedID</id>
+                <title />
+                <updated>0000-00-00T00:00:00Z</updated>
+                <entry>
+                  <category term="#TestModel.PGEntityTypeWithExpandedLink22" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=feed" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                    <m:inline>
+                      <feed>
+                        <id>urn:FeedID</id>
+                        <title />
+                        <updated>0000-00-00T00:00:00Z</updated>
+                        <entry>
+                          <category term="#TestModel.PGEntityTypeWithExpandedLink21" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                          <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=feed" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                            <m:inline>
+                              <feed>
+                                <id>urn:FeedID</id>
+                                <title />
+                                <updated>0000-00-00T00:00:00Z</updated>
+                                <entry>
+                                  <category term="#TestModel.PGEntityTypeWithExpandedLink20" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                                  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=feed" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                                    <m:inline>
+                                      <feed>
+                                        <id>urn:FeedID</id>
+                                        <title />
+                                        <updated>0000-00-00T00:00:00Z</updated>
+                                        <author>
+                                          <name />
+                                        </author>
+                                      </feed>
+                                    </m:inline>
+                                  </link>
+                                  <id />
+                                  <title />
+                                  <updated>0000-00-00T00:00:00Z</updated>
+                                  <author>
+                                    <name />
+                                  </author>
+                                  <content type="application/xml">
+                                    <m:properties>
+                                      <d:Id m:type="Int32">1</d:Id>
+                                      <d:Name></d:Name>
+                                    </m:properties>
+                                  </content>
+                                </entry>
+                              </feed>
+                            </m:inline>
+                          </link>
+                          <id />
+                          <title />
+                          <updated>0000-00-00T00:00:00Z</updated>
+                          <author>
+                            <name />
+                          </author>
+                          <content type="application/xml">
+                            <m:properties>
+                              <d:Id m:type="Int32">1</d:Id>
+                              <d:Name></d:Name>
+                            </m:properties>
+                          </content>
+                        </entry>
+                      </feed>
+                    </m:inline>
+                  </link>
+                  <id />
+                  <title />
+                  <updated>0000-00-00T00:00:00Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/xml">
+                    <m:properties>
+                      <d:Id m:type="Int32">1</d:Id>
+                      <d:Name></d:Name>
+                    </m:properties>
+                  </content>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <id />
+          <title />
+          <updated>0000-00-00T00:00:00Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml">
+            <m:properties>
+              <d:Id m:type="Int32">1</d:Id>
+              <d:Name></d:Name>
+            </m:properties>
+          </content>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name></d:Name>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.PGEntityTypeWithExpandedLink24" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=feed" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+    <m:inline>
+      <feed>
+        <id>urn:FeedID</id>
+        <title />
+        <updated>0000-00-00T00:00:00Z</updated>
+        <entry>
+          <category term="#TestModel.PGEntityTypeWithExpandedLink23" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=feed" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+            <m:inline>
+              <feed>
+                <id>urn:FeedID</id>
+                <title />
+                <updated>0000-00-00T00:00:00Z</updated>
+                <entry>
+                  <category term="#TestModel.PGEntityTypeWithExpandedLink22" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=feed" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                    <m:inline>
+                      <feed>
+                        <id>urn:FeedID</id>
+                        <title />
+                        <updated>0000-00-00T00:00:00Z</updated>
+                        <entry>
+                          <category term="#TestModel.PGEntityTypeWithExpandedLink21" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                          <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=feed" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                            <m:inline>
+                              <feed>
+                                <id>urn:FeedID</id>
+                                <title />
+                                <updated>0000-00-00T00:00:00Z</updated>
+                                <entry>
+                                  <category term="#TestModel.PGEntityTypeWithExpandedLink20" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+                                  <link rel="http://docs.oasis-open.org/odata/ns/related/NavigationProp" type="application/atom+xml;type=feed" title="NavigationProp" href="http://services.odata.org/OData.svc/Table(1)/NavigationProp">
+                                    <m:inline>
+                                      <feed>
+                                        <id>urn:FeedID</id>
+                                        <title />
+                                        <updated>0000-00-00T00:00:00Z</updated>
+                                        <author>
+                                          <name />
+                                        </author>
+                                      </feed>
+                                    </m:inline>
+                                  </link>
+                                  <id />
+                                  <title />
+                                  <updated>0000-00-00T00:00:00Z</updated>
+                                  <author>
+                                    <name />
+                                  </author>
+                                  <content type="application/xml">
+                                    <m:properties>
+                                      <d:Id m:type="Int32">1</d:Id>
+                                      <d:Name></d:Name>
+                                    </m:properties>
+                                  </content>
+                                </entry>
+                              </feed>
+                            </m:inline>
+                          </link>
+                          <id />
+                          <title />
+                          <updated>0000-00-00T00:00:00Z</updated>
+                          <author>
+                            <name />
+                          </author>
+                          <content type="application/xml">
+                            <m:properties>
+                              <d:Id m:type="Int32">1</d:Id>
+                              <d:Name></d:Name>
+                            </m:properties>
+                          </content>
+                        </entry>
+                      </feed>
+                    </m:inline>
+                  </link>
+                  <id />
+                  <title />
+                  <updated>0000-00-00T00:00:00Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/xml">
+                    <m:properties>
+                      <d:Id m:type="Int32">1</d:Id>
+                      <d:Name></d:Name>
+                    </m:properties>
+                  </content>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <id />
+          <title />
+          <updated>0000-00-00T00:00:00Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml">
+            <m:properties>
+              <d:Id m:type="Int32">1</d:Id>
+              <d:Name></d:Name>
+            </m:properties>
+          </content>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <id />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name></d:Name>
+    </m:properties>
+  </content>
+</entry>
+

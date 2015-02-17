@@ -1,0 +1,51 @@
+<Schema Namespace="TestNS" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="EntityType">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Edm.Int32" Nullable="false" />
+    <Property Name="ComplexProperty" Type="TestModel.ComplexType" Nullable="false" />
+  </EntityType>
+  <EnumType Name="EnumType" />
+  <Action Name="FunctionImport_Primitive">
+    <Parameter Name="primitive" Type="Edm.String" />
+  </Action>
+  <Action Name="FunctionImport_PrimitiveCollection">
+    <Parameter Name="primitiveCollection" Type="Collection(Edm.String)" />
+  </Action>
+  <Action Name="FunctionImport_Complex">
+    <Parameter Name="complex" Type="TestModel.ComplexType" />
+  </Action>
+  <Action Name="FunctionImport_ComplexCollection">
+    <Parameter Name="complexCollection" Type="Collection(TestModel.ComplexType)" />
+  </Action>
+  <Action Name="FunctionImport_Entry">
+    <Parameter Name="entry" Type="TestNS.EntityType" />
+  </Action>
+  <Action Name="FunctionImport_Feed">
+    <Parameter Name="feed" Type="Collection(TestNS.EntityType)" />
+  </Action>
+  <Action Name="FunctionImport_Stream">
+    <Parameter Name="stream" Type="Edm.Stream" />
+  </Action>
+  <Action Name="FunctionImport_Enum">
+    <Parameter Name="enum" Type="TestNS.EnumType" />
+  </Action>
+  <EntityContainer Name="TestContainer">
+    <ActionImport Name="FunctionImport_Primitive" Action="TestNS.FunctionImport_Primitive" />
+    <ActionImport Name="FunctionImport_PrimitiveCollection" Action="TestNS.FunctionImport_PrimitiveCollection" />
+    <ActionImport Name="FunctionImport_Complex" Action="TestNS.FunctionImport_Complex" />
+    <ActionImport Name="FunctionImport_ComplexCollection" Action="TestNS.FunctionImport_ComplexCollection" />
+    <ActionImport Name="FunctionImport_Entry" Action="TestNS.FunctionImport_Entry" />
+    <ActionImport Name="FunctionImport_Feed" Action="TestNS.FunctionImport_Feed" />
+    <ActionImport Name="FunctionImport_Stream" Action="TestNS.FunctionImport_Stream" />
+    <ActionImport Name="FunctionImport_Enum" Action="TestNS.FunctionImport_Enum" />
+  </EntityContainer>
+</Schema>
+<Schema Namespace="TestModel" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <ComplexType Name="ComplexType">
+    <Property Name="PrimitiveProperty" Type="Edm.String" Nullable="false" />
+    <Property Name="ComplexProperty" Type="TestModel.ComplexType" Nullable="false" />
+  </ComplexType>
+</Schema>
+

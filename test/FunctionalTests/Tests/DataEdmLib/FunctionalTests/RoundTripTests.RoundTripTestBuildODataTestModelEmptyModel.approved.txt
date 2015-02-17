@@ -1,0 +1,4 @@
+<Schema Namespace="DefaultNamespace" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityContainer Name="DefaultContainer" />
+</Schema>
+

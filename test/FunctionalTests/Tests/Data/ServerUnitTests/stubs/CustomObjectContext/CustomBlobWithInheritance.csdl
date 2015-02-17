@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AstoriaUnitTests.ObjectContextStubs.Types" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+<EntityType Name="CustomerBlob" m:HasStream="true">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" />
+    <Property Name="Concurrency" Type="String" ConcurrencyMode="Fixed" />
+    <Property Name="EditTimeStamp" Nullable="false" Type="Binary" MaxLength="8" FixedLength="true" ConcurrencyMode="Fixed" />
+    <Property Name="GuidValue" Type="Guid" />
+    <Property Name="Address" Type="AstoriaUnitTests.ObjectContextStubs.Types.Address" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CustomerBlobWithBirthday" BaseType="AstoriaUnitTests.ObjectContextStubs.Types.CustomerBlob">
+    <Property Name="Birthday" Type="DateTime" Nullable="false" DefaultValue="1979-02-15 12:00:00.000Z" />
+  </EntityType>
+</Schema>

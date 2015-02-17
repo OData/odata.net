@@ -1,0 +1,6 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <ComplexType Name="ComplexType">
+    <Property Name="Prop1" Type="Edm.Int32" />
+  </ComplexType>
+</Schema>
+

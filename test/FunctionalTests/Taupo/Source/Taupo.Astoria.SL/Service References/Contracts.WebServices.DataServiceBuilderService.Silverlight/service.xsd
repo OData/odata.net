@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/Microsoft.Test.Taupo.WebServices" />
+  <xs:element name="CreateCustomDataService">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="csdlContent" nillable="true" type="q1:ArrayOfstring" />
+        <xs:element minOccurs="0" name="dataProviderKind" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="deployerKind" nillable="true" type="xs:string" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Microsoft.Test.Taupo.WebServices" minOccurs="0" name="parameters" nillable="true" type="q2:ArrayOfServiceBuilderParameter" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CreateCustomDataServiceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Microsoft.Test.Taupo.WebServices" minOccurs="0" name="CreateCustomDataServiceResult" nillable="true" type="q3:AstoriaWorkspaceInfo" />
+        <xs:element minOccurs="0" name="errorLog" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GenerateClientLayerCode">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="dataServiceUri" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="designVersion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="clientVersion" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="fileExtension" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GenerateClientLayerCodeResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GenerateClientLayerCodeResult" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="errorLog" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UninstallDataService">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="dataServiceUri" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UninstallDataServiceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="errorLog" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

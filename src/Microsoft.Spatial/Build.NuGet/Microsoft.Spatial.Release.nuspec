@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <title>Microsoft.Spatial</title>
+    <id>Microsoft.Spatial</id>
+    <tags>wcf data services odata odatalib edmlib spatial ado.net ef entity framework open protocol wcfds wcfdataservices dataservices</tags>
+    <version>$VersionNuGetSemantic$</version>
+    <authors>Microsoft Corporation</authors>
+    <owners>Microsoft Corporation</owners>
+    <licenseUrl>http://go.microsoft.com/?linkid=9809688</licenseUrl>
+    <projectUrl>http://go.microsoft.com/fwlink/?LinkId=220868</projectUrl>
+    <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <summary>Contains classes and methods that facilitate geography and geometry spatial operations. Supports OData v4 only.</summary>
+    <description>Contains classes and methods that facilitate geography and geometry spatial operations. Support OData v4 only. Targets .NET Portable Lib with support for .NET 4.0, SL 5.0, Win Phone 8, Win Phone 8.1, and Win 8. Localized for CHS, CHT, DEU, ESN, FRA, ITA, JPN, KOR and RUS.
+OData .NET library is open source at http://odata.codeplex.com</description>
+  </metadata>
+  <files>
+    <file src=".NETPortable\v4.0\Microsoft.Spatial\Microsoft.Spatial.dll" target="lib\portable-net40+sl5+wp8+win8+wpa" />
+    <file src=".NETPortable\v4.0\Microsoft.Spatial\Microsoft.Spatial.pdb" target="lib\portable-net40+sl5+wp8+win8+wpa" />
+    <file src=".NETPortable\v4.0\Microsoft.Spatial\Microsoft.Spatial.xml" target="lib\portable-net40+sl5+wp8+win8+wpa" />
+    <file src=".NETPortable\v4.0\Microsoft.Spatial\2052\Microsoft.Spatial.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\zh-Hans" />
+    <file src=".NETPortable\v4.0\Microsoft.Spatial\1028\Microsoft.Spatial.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\zh-Hant" />
+    <file src=".NETPortable\v4.0\Microsoft.Spatial\1031\Microsoft.Spatial.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\de" />
+    <file src=".NETPortable\v4.0\Microsoft.Spatial\3082\Microsoft.Spatial.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\es" />
+    <file src=".NETPortable\v4.0\Microsoft.Spatial\1036\Microsoft.Spatial.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\fr" />
+    <file src=".NETPortable\v4.0\Microsoft.Spatial\1040\Microsoft.Spatial.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\it" />
+    <file src=".NETPortable\v4.0\Microsoft.Spatial\1041\Microsoft.Spatial.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\ja" />
+    <file src=".NETPortable\v4.0\Microsoft.Spatial\1042\Microsoft.Spatial.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\ko" />
+    <file src=".NETPortable\v4.0\Microsoft.Spatial\1049\Microsoft.Spatial.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\ru" />
+    <file src="$SourcesRoot$\src\Microsoft.Spatial\**\*.cs" target="src\Microsoft.Spatial" />
+    <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
+  </files>
+</package>

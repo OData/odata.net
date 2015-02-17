@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B84D2744-53E4-40D9-BEB3-2C2B43C27394}</ProjectGuid>
+    <ProjectTypeGuids>{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.OData.Framework.Reliability</RootNamespace>
+    <AssemblyName>Microsoft.Test.OData.Framework.Reliability</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.Common" />
+    <Reference Include="System.Core" />
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.DataDriven.dll"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Logging\ConsoleLogger.cs" />
+    <Compile Include="Logging\FileLogger.cs" />
+    <Compile Include="Logging\ILogCompare.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\MSTestLogger.cs" />
+    <Compile Include="Logging\ToCompareAttribute.cs" />
+    <Compile Include="BaseTest.cs" />
+    <Compile Include="Extension\Type.Ext.cs" />
+    <Compile Include="Extension\List.Ext.cs" />
+    <Compile Include="Extension\String.Ext.cs" />
+    <Compile Include="Request\AtomResult.cs" />
+    <Compile Include="Request\JsonLightResult.cs" />
+    <Compile Include="Request\Link.cs" />
+    <Compile Include="Request\HttpContent.cs" />
+    <Compile Include="Extension\CookieCollection.Ext.cs" />
+    <Compile Include="Extension\Enumerable.Ext.cs" />
+    <Compile Include="Request\HttpMethod.cs" />
+    <Compile Include="Request\JsonResult.cs" />
+    <Compile Include="Request\Request.cs" />
+    <Compile Include="Request\Response.cs" />
+    <Compile Include="Request\Entry.cs" />
+    <Compile Include="Request\Property.cs" />
+    <Compile Include="Request\Result.cs" />
+    <Compile Include="TestConfig.cs" />
+    <Compile Include="WeightedCollection.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

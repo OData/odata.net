@@ -1,0 +1,19 @@
+$filter = Microsoft.Test.Taupo.OData.WCFService.HowManyPotatoesEaten() eq 3
+
+
+FilterQueryOption
+	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
+	Parameter = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = People
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
+	Expression = 
+		SingleValueFunctionCallNode
+			Name = Microsoft.Test.Taupo.OData.WCFService.HowManyPotatoesEaten
+			Return Type = [Edm.Int32 Nullable=False]
+			Function = 
+				Primitive HowManyPotatoesEaten()
+			Arguments = 
+	Equal
+		3(Type: [Edm.Int32 Nullable=False])

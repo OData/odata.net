@@ -1,0 +1,16 @@
+﻿<Schema Namespace="Core" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <Term Name="ChangeTracking" Type="Capabilities.ChangeTrackingType" AppliesTo="EntityContainer EntitySet">
+    <Annotation Term="Core.Description" String="Change tracking capabilities of this service or entity set"/>
+  </Term>
+  <ComplexType Name="ChangeTrackingType">
+    <Property Name="Supported" Type="Edm.Boolean" DefaultValue="true">
+      <Annotation Term="Core.Description" String="This entity set supports the odata.track-changes preference"/>
+    </Property>
+    <Property Name="FilterableProperties" Type="Collection(Edm.PropertyPath)">
+      <Annotation Term="Core.Description" String="Change tracking supports filters on these properties"/>
+    </Property>
+    <Property Name="ExpandableProperties" Type="Collection(Edm.NavigationPropertyPath)">
+      <Annotation Term="Core.Description" String="Change tracking supports these properties expanded"/>
+    </Property>
+  </ComplexType>
+</Schema>

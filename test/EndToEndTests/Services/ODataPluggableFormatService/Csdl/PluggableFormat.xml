@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Microsoft.Test.OData.Services.PluggableFormat" Alias="Self">
+      <EntityType Name="Person">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Numbers" Type="Collection(Edm.Int32)" Nullable="true" />
+        <Property Name="Picture" Type="Edm.Binary" Nullable="true" />
+        <Property Name="BusinessCard" Type="Self.ContactInfo" />
+      </EntityType>
+      <ComplexType Name="ContactInfo" OpenType="true">
+        <Property Name="N" Type="Edm.String" />
+      </ComplexType>
+      <EntityType Name="Product">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" />
+        <Property Name="Info" Type="Self.ProductInfo" Nullable="true" />
+      </EntityType>
+      <ComplexType Name="ProductInfo">
+        <Property Name="Site" Type="Edm.String" Nullable="true" />
+        <Property Name="Serial" Type="Edm.Int64" Nullable="false" />
+      </ComplexType>
+      <Action Name="ResetDataSource"/>
+      <Action Name="AddProduct" IsBound="true">
+        <Parameter Name="Set" Nullable="false" Type="Collection(Self.Product)" />
+        <Parameter Name="Value" Nullable="false" Type="Self.Product" />
+        <Parameter Name="Override" Nullable="false" Type="Edm.Boolean" />
+      </Action>
+      <EntityContainer Name="PluggableFormatService">
+        <EntitySet Name="People" EntityType="Self.Person" />
+        <EntitySet Name="Products" EntityType="Self.Product" />
+        <ActionImport Name="ResetDataSource" Action="Self.ResetDataSource"/>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

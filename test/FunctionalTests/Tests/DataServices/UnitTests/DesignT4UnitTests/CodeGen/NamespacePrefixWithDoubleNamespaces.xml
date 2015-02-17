@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="NamespacePrefixWithDoubleNamespaces" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <ComplexType Name="ComplexType">
+        <Property Name="Value" Type="Edm.String" Nullable="false" />
+      </ComplexType>
+      <EntityType Name="EntityType">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Complex" Type="NamespacePrefixWithDoubleNamespaces.ComplexType" Nullable="true" />
+      </EntityType>
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Set1" EntityType="NamespacePrefixWithDoubleNamespaces.EntityType" />
+        <EntitySet Name="Set2" EntityType="NamespacePrefixWithDoubleNamespaces.EntityType" />
+      </EntityContainer>
+    </Schema>
+    <Schema Namespace="NamespacePrefixWithDoubleNamespaces2" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <ComplexType Name="ComplexType">
+        <Property Name="Value" Type="Edm.String" Nullable="false" />
+      </ComplexType>
+      <EntityType Name="EntityType">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Complex" Type="NamespacePrefixWithDoubleNamespaces2.ComplexType" Nullable="true" />
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

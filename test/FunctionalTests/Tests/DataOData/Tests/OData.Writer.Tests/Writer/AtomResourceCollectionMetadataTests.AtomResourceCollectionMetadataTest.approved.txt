@@ -1,0 +1,96 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title /></collection></workspace></service>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title /></collection></workspace></service>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title /></collection></workspace></service>
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title /></collection></workspace></service>
+
+Combination: 5; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title></collection></workspace></service>
+
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title></collection></workspace></service>
+
+Combination: 7; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title></collection></workspace></service>
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title></collection></workspace></service>
+
+Combination: 9; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><accept>mime/type</accept></collection></workspace></service>
+
+Combination: 10; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><accept>mime/type</accept></collection></workspace></service>
+
+Combination: 11; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><accept>mime/type</accept></collection></workspace></service>
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><accept>mime/type</accept></collection></workspace></service>
+
+Combination: 13; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><accept></accept></collection></workspace></service>
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><accept></accept></collection></workspace></service>
+
+Combination: 15; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><accept></accept></collection></workspace></service>
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><accept></accept></collection></workspace></service>
+
+Combination: 17; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><categories /></collection></workspace></service>
+
+Combination: 18; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><categories /></collection></workspace></service>
+
+Combination: 19; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><categories /></collection></workspace></service>
+
+Combination: 20; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><categories /></collection></workspace></service>
+
+Combination: 21; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><accept>mime/type</accept><categories /></collection></workspace></service>
+
+Combination: 22; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><accept>mime/type</accept><categories /></collection></workspace></service>
+
+Combination: 23; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><accept>mime/type</accept><categories /></collection></workspace></service>
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/url"><atom:title type="text">collection title</atom:title><accept>mime/type</accept><categories /></collection></workspace></service>
+

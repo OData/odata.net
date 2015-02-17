@@ -1,0 +1,5 @@
+<Schema Namespace="MyNamespace" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <ComplexType Name="MyBaseComplexType" />
+  <ComplexType Name="MyComplexType" BaseType="MyNamespace.MyBaseComplexType" Abstract="true" />
+</Schema>
+

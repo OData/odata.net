@@ -1,0 +1,32 @@
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: multipart/mixed; boundary=changesetresponse_00000001-0000-0000-0000-000000000000
+
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+HTTP/1.1 201 Created
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+Location: $(BaseUri)Customers(123456)
+ETag: W/"00000002-0000-0000-0000-000000000000"
+
+{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000002-0000-0000-0000-000000000000\"","ID":123456,"Name":"FooBaz","Address":{"StreetAddress":"Street Number, Street Address","City":"Redmond","State":null,"PostalCode":"98052"},"GuidValue":"00000002-0000-0000-0000-000000000000","NameAsHtml":"<html><body>FooBaz</body></html>"}
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 2
+
+HTTP/1.1 201 Created
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+Location: $(BaseUri)Orders(151)
+
+{"@odata.context":"$(BaseUri)$metadata#Orders/$entity","ID":151,"DollarAmount":1500.0,"CurrencyAmount":null}
+--changesetresponse_00000001-0000-0000-0000-000000000000--
+--batchresponse_00000000-0000-0000-0000-000000000000--

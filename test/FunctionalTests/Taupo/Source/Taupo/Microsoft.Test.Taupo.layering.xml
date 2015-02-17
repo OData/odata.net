@@ -1,0 +1,573 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LayeringRules ModuleName="Microsoft.Test.Taupo">
+  <CommonDependencies>
+    <DependsOn Namespace="Microsoft.Test.Taupo.Common" />
+  </CommonDependencies>
+  <ContractsDependencies>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.DatabaseModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Wrappers" />
+      <DependsOn Namespace="System.Runtime.Serialization" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions">
+      <DependsOn Namespace="Microsoft.Test.Taupo" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel.Data">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration">
+      <DependsOn Namespace="Microsoft.Test.Taupo" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Spatial" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.Types">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Spatial" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.DatabaseModel">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.DataGeneration">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Objects" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.EntityModel">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.EntityModel.Edm">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.EntityModel.Goals">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.EntityModel.Internal">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Execution">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.ProgrammingLanguages">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.WebServices.CompilerService.DotNet" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Types">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Utilities">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Wrappers" />
+    </Namespace>
+  </ContractsDependencies>
+  <ImplementationDependencies>
+    <Namespace Name="Microsoft.Test.Taupo.Common">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Utilities" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts">
+      <DependsOn Namespace="Microsoft.Test.Taupo.ProgrammingLanguages" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel">
+      <DependsOn Namespace="Microsoft.Test.Taupo.DatabaseModel" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel.Data">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Utilities" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel">
+      <DependsOn Namespace="Microsoft.Test.Taupo.EntityModel" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Utilities" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Utilities" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.TestConfiguration">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Execution" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.Types">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Utilities" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.DependencyInjection">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Utilities" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.EntityModel">
+      <DependsOn Namespace="Microsoft.Test.Taupo.DataGeneration" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.EntityModel.Data" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.EntityModel.Goals" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.EntityModel.Internal" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Types" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Utilities" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Execution">
+      <DependsOn Namespace="Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.DependencyInjection" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Utilities" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Execution.Ltm">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Utilities" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.ProgrammingLanguages">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Utilities" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Runners">
+      <DependsOn Namespace="Microsoft.Test.Taupo.DependencyInjection" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Execution" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.TestConfiguration">
+      <DependsOn Namespace="Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Execution" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Types">
+      <DependsOn Namespace="Microsoft.Test.Taupo.DataGeneration" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Utilities">
+      <DependsOn Namespace="" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.DataGeneration" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Contracts.Objects">
+	  <DependsOn Namespace="Microsoft.Test.Taupo" Justification="Platform helpers"/>
+    </Namespace>
+  </ImplementationDependencies>
+  <CycleDependencies>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Wrappers" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.CodeDomExtensions" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DataGeneration" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.DatabaseModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+    </Cycle>
+    <Cycle>
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Types" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.Spatial" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts" />
+      <Namespace Name="Microsoft.Test.Taupo.Contracts.EntityModel.Data" />
+    </Cycle>
+  </CycleDependencies>
+</LayeringRules>

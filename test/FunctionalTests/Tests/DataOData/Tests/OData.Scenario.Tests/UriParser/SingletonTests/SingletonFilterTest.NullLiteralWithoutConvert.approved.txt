@@ -1,0 +1,25 @@
+$filter = EmployeeID eq null
+
+
+FilterQueryOption
+	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+	Parameter = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = SpecialOrder
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+	Expression = 
+		SingleValuePropertyAccessNode
+			Property = EmployeeID
+			TypeReference = [Edm.Int32 Nullable=True]
+			Source = 
+			EntityRangeVariableReferenceNode
+				Name = $it
+				NavigationSource = SpecialOrder
+				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+	Equal
+		ConvertNode
+			TypeReference = [Edm.Int32 Nullable=True]
+			Source = 
+			(Type: )

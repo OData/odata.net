@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ModelNamespace.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="ModelNamespaceStoreContainer">
+    <EntitySet Name="Customers" EntityType="ModelNamespace.Store.Customers" Table="#Customers" />
+    <EntitySet Name="Customers_CustomerBlob" EntityType="ModelNamespace.Store.Customers_CustomerBlob" Table="#Customers_CustomerBlob" />
+    <EntitySet Name="Customers_CustomerBlobWithBirthday" EntityType="ModelNamespace.Store.Customers_CustomerBlobWithBirthday" Table="#Customers_CustomerBlobWithBirthday" />
+    <EntitySet Name="Customers_CustomerWithBirthday" EntityType="ModelNamespace.Store.Customers_CustomerWithBirthday" Table="#Customers_CustomerWithBirthday" />
+    <EntitySet Name="Offices" EntityType="ModelNamespace.Store.Offices" Table="#Offices" />
+    <EntitySet Name="Orders" EntityType="ModelNamespace.Store.Orders" Table="#Orders" />
+    <EntitySet Name="Workers" EntityType="ModelNamespace.Store.Workers" Table="#Workers" />
+    <AssociationSet Name="FK_Customer_BestFriend" Association="ModelNamespace.Store.FK_Customer_BestFriend">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="Customers1" EntitySet="Customers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CustomerBlob_inherits_Customer" Association="ModelNamespace.Store.FK_CustomerBlob_inherits_Customer">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="Customers_CustomerBlob" EntitySet="Customers_CustomerBlob" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CustomerBlobWithBirthday_inherits_CustomerBlob" Association="ModelNamespace.Store.FK_CustomerBlobWithBirthday_inherits_CustomerBlob">
+      <End Role="Customers_CustomerBlob" EntitySet="Customers_CustomerBlob" />
+      <End Role="Customers_CustomerBlobWithBirthday" EntitySet="Customers_CustomerBlobWithBirthday" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CustomerWithBirthday_inherits_Customer" Association="ModelNamespace.Store.FK_CustomerWithBirthday_inherits_Customer">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="Customers_CustomerWithBirthday" EntitySet="Customers_CustomerWithBirthday" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orders_Customer" Association="ModelNamespace.Store.FK_Orders_Customer">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Worker_Office" Association="ModelNamespace.Store.FK_Worker_Office">
+      <End Role="Offices" EntitySet="Offices" />
+      <End Role="Workers" EntitySet="Workers" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Customers">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Concurrency" Type="nvarchar(max)" />
+    <Property Name="EditTimeStamp" Type="timestamp" Nullable="false" StoreGeneratedPattern="Computed" />
+    <Property Name="GuidValue" Type="uniqueidentifier" />
+    <Property Name="Address_StreetAddress" Type="nvarchar(max)" />
+    <Property Name="Address_City" Type="nvarchar(max)" />
+    <Property Name="Address_State" Type="nvarchar(max)" />
+    <Property Name="Address_PostalCode" Type="nvarchar(max)" />
+    <Property Name="BestFriendId" Type="int" />
+  </EntityType>
+  <EntityType Name="Customers_CustomerBlob">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Customers_CustomerBlobWithBirthday">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="Birthday" Type="datetime" Nullable="false" />
+    <Property Name="ID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Customers_CustomerWithBirthday">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="Birthday" Type="datetime" Nullable="false" />
+    <Property Name="ID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Offices">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="OfficeNumber" Type="int" Nullable="false" />
+    <Property Name="FloorNumber" Type="smallint" Nullable="false" />
+    <Property Name="BuildingName" Type="nvarchar" Nullable="false" MaxLength="30" />
+  </EntityType>
+  <EntityType Name="Orders">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="CustomerId" Type="int" />
+    <Property Name="DollarAmount" Type="float" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Workers">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" Nullable="false" MaxLength="30" />
+    <Property Name="LastName" Type="nvarchar" Nullable="false" MaxLength="30" />
+    <Property Name="MiddleName" Type="nvarchar" MaxLength="30" />
+  </EntityType>
+  <Association Name="FK_Customer_BestFriend">
+    <End Role="Customers" Type="ModelNamespace.Store.Customers" Multiplicity="0..1" />
+    <End Role="Customers1" Type="ModelNamespace.Store.Customers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Customers1">
+        <PropertyRef Name="BestFriendId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CustomerBlob_inherits_Customer">
+    <End Role="Customers" Type="ModelNamespace.Store.Customers" Multiplicity="1" />
+    <End Role="Customers_CustomerBlob" Type="ModelNamespace.Store.Customers_CustomerBlob" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Customers_CustomerBlob">
+        <PropertyRef Name="ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CustomerBlobWithBirthday_inherits_CustomerBlob">
+    <End Role="Customers_CustomerBlob" Type="ModelNamespace.Store.Customers_CustomerBlob" Multiplicity="1" />
+    <End Role="Customers_CustomerBlobWithBirthday" Type="ModelNamespace.Store.Customers_CustomerBlobWithBirthday" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Customers_CustomerBlob">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Customers_CustomerBlobWithBirthday">
+        <PropertyRef Name="ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CustomerWithBirthday_inherits_Customer">
+    <End Role="Customers" Type="ModelNamespace.Store.Customers" Multiplicity="1" />
+    <End Role="Customers_CustomerWithBirthday" Type="ModelNamespace.Store.Customers_CustomerWithBirthday" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Customers_CustomerWithBirthday">
+        <PropertyRef Name="ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orders_Customer">
+    <End Role="Customers" Type="ModelNamespace.Store.Customers" Multiplicity="0..1" />
+    <End Role="Orders" Type="ModelNamespace.Store.Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Worker_Office">
+    <End Role="Offices" Type="ModelNamespace.Store.Offices" Multiplicity="1" />
+    <End Role="Workers" Type="ModelNamespace.Store.Workers" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Offices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Workers">
+        <PropertyRef Name="ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

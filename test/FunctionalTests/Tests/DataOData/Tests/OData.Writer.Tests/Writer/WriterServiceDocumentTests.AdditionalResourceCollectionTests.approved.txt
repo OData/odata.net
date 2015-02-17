@@ -1,0 +1,54 @@
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="A">
+      <atom:title />
+    </collection>
+    <collection href="A">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="A">
+      <atom:title />
+    </collection>
+    <collection href="A">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="SomeName">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="SomeName">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+

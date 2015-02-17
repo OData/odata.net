@@ -1,0 +1,15 @@
+$search = mountain OR bike AND NOT clothing
+
+
+SearchQueryOption
+	Expression = 
+		SearchTermNode
+			Text = mountain
+	Or
+			SearchTermNode
+				Text = bike
+		And
+			Not(
+				SearchTermNode
+					Text = clothing
+			)

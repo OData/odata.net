@@ -1,0 +1,82 @@
+$filter = round(UnitPrice) eq floor(UnitPrice) and round(UnitPrice) ne ceiling(UnitPrice)
+
+
+FilterQueryOption
+	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+	Parameter = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = Products
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+	Expression = 
+			SingleValueFunctionCallNode
+				Name = round
+				Return Type = [Edm.Double Nullable=False]
+				Function = 
+				Arguments = 
+					ConvertNode
+						TypeReference = [Edm.Double Nullable=False]
+						Source = 
+						SingleValuePropertyAccessNode
+							Property = UnitPrice
+							TypeReference = [Edm.Single Nullable=False]
+							Source = 
+							EntityRangeVariableReferenceNode
+								Name = $it
+								NavigationSource = Products
+								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+		Equal
+			SingleValueFunctionCallNode
+				Name = floor
+				Return Type = [Edm.Double Nullable=False]
+				Function = 
+				Arguments = 
+					ConvertNode
+						TypeReference = [Edm.Double Nullable=False]
+						Source = 
+						SingleValuePropertyAccessNode
+							Property = UnitPrice
+							TypeReference = [Edm.Single Nullable=False]
+							Source = 
+							EntityRangeVariableReferenceNode
+								Name = $it
+								NavigationSource = Products
+								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+	And
+			SingleValueFunctionCallNode
+				Name = round
+				Return Type = [Edm.Double Nullable=False]
+				Function = 
+				Arguments = 
+					ConvertNode
+						TypeReference = [Edm.Double Nullable=False]
+						Source = 
+						SingleValuePropertyAccessNode
+							Property = UnitPrice
+							TypeReference = [Edm.Single Nullable=False]
+							Source = 
+							EntityRangeVariableReferenceNode
+								Name = $it
+								NavigationSource = Products
+								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+		NotEqual
+			SingleValueFunctionCallNode
+				Name = ceiling
+				Return Type = [Edm.Double Nullable=False]
+				Function = 
+				Arguments = 
+					ConvertNode
+						TypeReference = [Edm.Double Nullable=False]
+						Source = 
+						SingleValuePropertyAccessNode
+							Property = UnitPrice
+							TypeReference = [Edm.Single Nullable=False]
+							Source = 
+							EntityRangeVariableReferenceNode
+								Name = $it
+								NavigationSource = Products
+								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <Import Project="..\Build.props" />
+
+  <PropertyGroup>
+    <!-- default to the same code analysis settings as Taupo -->    
+    <CodeAnalysisRuleSet Condition=" '$(CodeAnalysisRuleSet)' == '' ">Taupo.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis Condition=" '$(RunCodeAnalysis)' == '' ">true</RunCodeAnalysis>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Astoria\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+
+</Project>

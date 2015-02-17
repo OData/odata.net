@@ -1,0 +1,26 @@
+<Schema Namespace="TestModel" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <ComplexType Name="Address">
+    <Property Name="Street" Type="Edm.String" />
+    <Property Name="Zip" Type="Edm.Int32" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="PersonType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Name" Type="Edm.String" Nullable="false" />
+    <Property Name="Address" Type="TestModel.Address" Nullable="false" />
+    <Property Name="Picture" Type="Edm.Stream" Nullable="false" />
+  </EntityType>
+  <Action Name="ServiceOperation1">
+    <Parameter Name="a" Type="Edm.Int32" />
+    <Parameter Name="b" Type="Edm.String" />
+    <ReturnType Type="Edm.Int32" Nullable="false" />
+  </Action>
+  <EntityContainer Name="DefaultContainer">
+    <EntitySet Name="People" EntityType="TestModel.PersonType" />
+    <EntitySet Name="PersonType" EntityType="TestModel.PersonType" />
+    <ActionImport Name="ServiceOperation1" Action="TestModel.ServiceOperation1" />
+  </EntityContainer>
+</Schema>
+

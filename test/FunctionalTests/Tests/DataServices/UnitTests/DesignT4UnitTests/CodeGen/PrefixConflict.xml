@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="PrefixConflict" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="EntityType">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Name" Type="Edm.Int32" Nullable="true" />
+        <Property Name="_Name" Type="Edm.String" Nullable="true" />
+        <Property Name="__Name" Type="Edm.Int32" Nullable="true" />
+      </EntityType>
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Set1" EntityType="PrefixConflict.EntityType" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

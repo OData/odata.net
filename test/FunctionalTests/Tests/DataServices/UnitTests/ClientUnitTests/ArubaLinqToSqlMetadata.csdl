@@ -1,0 +1,1146 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Aruba" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="AllTypes">
+        <Key>
+          <PropertyRef Name="C1_int" />
+        </Key>
+        <Property Name="C1_int" Type="Edm.Int32" Nullable="false" />
+        <Property Name="C2_int" Type="Edm.Int32" Nullable="false" />
+        <Property Name="C3_smallint" Type="Edm.Int16" Nullable="false" />
+        <Property Name="C4_tinyint" Type="Edm.Byte" Nullable="false" />
+        <Property Name="C5_bit" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="C6_datetime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="C7_smalldatetime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="C8_decimal28_4" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C9_numeric28_4" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C10_real" Type="Edm.Single" Nullable="false" />
+        <Property Name="C11_float" Type="Edm.Double" Nullable="false" />
+        <Property Name="C12_money" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C13_smallmoney" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C14_varchar512" Type="Edm.String" Nullable="true" />
+        <Property Name="C15_char512" Type="Edm.String" Nullable="true" />
+        <Property Name="C16_text" Type="Edm.String" Nullable="true" />
+        <Property Name="C17_binary512" Type="Edm.Binary" Nullable="true" />
+        <Property Name="C18_varbinary512" Type="Edm.Binary" Nullable="true" />
+        <Property Name="C19_image" Type="Edm.Binary" Nullable="true" />
+        <Property Name="C20_nvarchar512" Type="Edm.String" Nullable="true" />
+        <Property Name="C21_nchar512" Type="Edm.String" Nullable="true" />
+        <Property Name="C22_ntext" Type="Edm.String" Nullable="true" />
+        <Property Name="C23_uniqueidentifier" Type="Edm.Guid" Nullable="false" />
+        <Property Name="C24_bigint" Type="Edm.Int64" Nullable="false" />
+        <Property Name="C25_int" Type="Edm.Int32" Nullable="true" />
+        <Property Name="C26_smallint" Type="Edm.Int16" Nullable="true" />
+        <Property Name="C27_tinyint" Type="Edm.Byte" Nullable="true" />
+        <Property Name="C28_bit" Type="Edm.Boolean" Nullable="true" />
+        <Property Name="C29_datetime" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="C30_smalldatetime" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="C31_decimal28_4" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C32_numeric28_4" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C33_real" Type="Edm.Single" Nullable="true" />
+        <Property Name="C34_float" Type="Edm.Double" Nullable="true" />
+        <Property Name="C35_money" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C36_smallmoney" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C37_varchar512" Type="Edm.String" Nullable="true" />
+        <Property Name="C38_char512" Type="Edm.String" Nullable="true" />
+        <Property Name="C39_text" Type="Edm.String" Nullable="true" />
+        <Property Name="C40_binary512" Type="Edm.Binary" Nullable="true" />
+        <Property Name="C41_varbinary512" Type="Edm.Binary" Nullable="true" />
+        <Property Name="C42_image" Type="Edm.Binary" Nullable="true" />
+        <Property Name="C43_nvarchar512" Type="Edm.String" Nullable="true" />
+        <Property Name="C44_nchar512" Type="Edm.String" Nullable="true" />
+        <Property Name="C45_ntext" Type="Edm.String" Nullable="true" />
+        <Property Name="C46_uniqueidentifier" Type="Edm.Guid" Nullable="true" />
+        <Property Name="C47_bigint" Type="Edm.Int64" Nullable="true" />
+      </EntityType>
+      <EntityType Name="AllTypesComplex">
+        <Key>
+          <PropertyRef Name="C1_int" />
+        </Key>
+        <Property Name="C1_int" Type="Edm.Int32" Nullable="false" />
+        <Property Name="C2_int" Type="Edm.Int32" Nullable="false" />
+        <Property Name="C3_smallint" Type="Edm.Int16" Nullable="false" />
+        <Property Name="C4_tinyint" Type="Edm.Byte" Nullable="false" />
+        <Property Name="C5_bit" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="C6_datetime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="C7_smalldatetime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="C8_decimal28_4" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C9_numeric28_4" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C10_real" Type="Edm.Single" Nullable="false" />
+        <Property Name="C11_float" Type="Edm.Double" Nullable="false" />
+        <Property Name="C12_money" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C13_smallmoney" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C14_varchar512" Type="Edm.String" Nullable="true" />
+        <Property Name="C15_char512" Type="Edm.String" Nullable="true" />
+        <Property Name="C16_text" Type="Edm.String" Nullable="true" />
+        <Property Name="C17_binary512" Type="Edm.Binary" Nullable="true" />
+        <Property Name="C18_varbinary512" Type="Edm.Binary" Nullable="true" />
+        <Property Name="C19_image" Type="Edm.Binary" Nullable="true" />
+        <Property Name="C20_nvarchar512" Type="Edm.String" Nullable="true" />
+        <Property Name="C21_nchar512" Type="Edm.String" Nullable="true" />
+        <Property Name="C22_ntext" Type="Edm.String" Nullable="true" />
+        <Property Name="C23_uniqueidentifier" Type="Edm.Guid" Nullable="false" />
+        <Property Name="C24_bigint" Type="Edm.Int64" Nullable="false" />
+      </EntityType>
+      <EntityType Name="BugsDefectTracking">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Number" Type="Edm.Int32" Nullable="false" />
+        <Property Name="FailureId" Type="Edm.Int32" Nullable="true" />
+        <Property Name="AssignedToId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ResolvedById" Type="Edm.Int32" Nullable="true" />
+        <Property Name="Comment" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="Owners" Relationship="Aruba.BugsDefectTracking_Owners" FromRole="BugsDefectTracking" ToRole="Owners" />
+        <NavigationProperty Name="Failures" Relationship="Aruba.BugsDefectTracking_Failures" FromRole="BugsDefectTracking" ToRole="Failures" />
+        <NavigationProperty Name="ResolvedBy" Relationship="Aruba.BugsDefectTracking_ResolvedBy" FromRole="BugsDefectTracking" ToRole="ResolvedBy" />
+      </EntityType>
+      <EntityType Name="BugsProjectTracking">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Number" Type="Edm.Int32" Nullable="false" />
+        <Property Name="FailureId" Type="Edm.Int32" Nullable="true" />
+        <Property Name="AssignedToId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ResolvedById" Type="Edm.Int32" Nullable="true" />
+        <Property Name="Comment" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="Owners" Relationship="Aruba.BugsProjectTracking_Owners" FromRole="BugsProjectTracking" ToRole="Owners" />
+        <NavigationProperty Name="Failures" Relationship="Aruba.BugsProjectTracking_Failures" FromRole="BugsProjectTracking" ToRole="Failures" />
+        <NavigationProperty Name="ResolvedBy" Relationship="Aruba.BugsProjectTracking_ResolvedBy" FromRole="BugsProjectTracking" ToRole="ResolvedBy" />
+      </EntityType>
+      <EntityType Name="ConfigFailures">
+        <Key>
+          <PropertyRef Name="ConfigId" />
+          <PropertyRef Name="FailureId" />
+        </Key>
+        <Property Name="ConfigId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="FailureId" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Configs" Relationship="Aruba.ConfigFailures_Configs" FromRole="ConfigFailures" ToRole="Configs" />
+        <NavigationProperty Name="Failures" Relationship="Aruba.ConfigFailures_Failures" FromRole="ConfigFailures" ToRole="Failures" />
+      </EntityType>
+      <EntityType Name="Configs">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="OS" Type="Edm.String" Nullable="true" />
+        <Property Name="Language" Type="Edm.String" Nullable="true" />
+        <Property Name="Architecture" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="ConfigFailures" Relationship="Aruba.Configs_ConfigFailures" FromRole="Configs" ToRole="ConfigFailures" />
+        <NavigationProperty Name="MachineConfigs" Relationship="Aruba.Configs_MachineConfigs" FromRole="Configs" ToRole="MachineConfigs" />
+      </EntityType>
+      <EntityType Name="DataKey_BigInt">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int64" Nullable="false" />
+        <Property Name="DataColumn" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.DataKey_BigInt_ThirteenNavigations" FromRole="DataKey_BigInt" ToRole="ThirteenNavigations" />
+      </EntityType>
+      <EntityType Name="DataKey_Bit">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="DataColumn" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.DataKey_Bit_ThirteenNavigations" FromRole="DataKey_Bit" ToRole="ThirteenNavigations" />
+      </EntityType>
+      <EntityType Name="DataKey_DateTime">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="DataColumn" Type="Edm.Binary" Nullable="true" />
+        <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.DataKey_DateTime_ThirteenNavigations" FromRole="DataKey_DateTime" ToRole="ThirteenNavigations" />
+      </EntityType>
+      <EntityType Name="DataKey_Decimal">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="DataColumn" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.DataKey_Decimal_ThirteenNavigations" FromRole="DataKey_Decimal" ToRole="ThirteenNavigations" />
+      </EntityType>
+      <EntityType Name="DataKey_Float">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Double" Nullable="false" />
+        <Property Name="DataColumn" Type="Edm.Binary" Nullable="true" />
+        <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.DataKey_Float_ThirteenNavigations" FromRole="DataKey_Float" ToRole="ThirteenNavigations" />
+      </EntityType>
+      <EntityType Name="DataKey_GUID">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Guid" Nullable="false" />
+        <Property Name="DataColumn" Type="Edm.Binary" Nullable="true" />
+        <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.DataKey_GUID_ThirteenNavigations" FromRole="DataKey_GUID" ToRole="ThirteenNavigations" />
+      </EntityType>
+      <EntityType Name="DataKey_Money">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="DataColumn" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.DataKey_Money_ThirteenNavigations" FromRole="DataKey_Money" ToRole="ThirteenNavigations" />
+      </EntityType>
+      <EntityType Name="DataKey_Numeric">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="DataColumn" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.DataKey_Numeric_ThirteenNavigations" FromRole="DataKey_Numeric" ToRole="ThirteenNavigations" />
+      </EntityType>
+      <EntityType Name="DataKey_Real">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Single" Nullable="false" />
+        <Property Name="DataColumn" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.DataKey_Real_ThirteenNavigations" FromRole="DataKey_Real" ToRole="ThirteenNavigations" />
+      </EntityType>
+      <EntityType Name="DataKey_SmallDateTime">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="DataColumn" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.DataKey_SmallDateTime_ThirteenNavigations" FromRole="DataKey_SmallDateTime" ToRole="ThirteenNavigations" />
+      </EntityType>
+      <EntityType Name="DataKey_SmallMoney">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="DataColumn" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.DataKey_SmallMoney_ThirteenNavigations" FromRole="DataKey_SmallMoney" ToRole="ThirteenNavigations" />
+      </EntityType>
+      <EntityType Name="DataKey_TinyInt">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Byte" Nullable="false" />
+        <Property Name="DataColumn" Type="Edm.Guid" Nullable="true" />
+        <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.DataKey_TinyInt_ThirteenNavigations" FromRole="DataKey_TinyInt" ToRole="ThirteenNavigations" />
+      </EntityType>
+      <EntityType Name="DataKey_VarChar50">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.String" Nullable="false" />
+        <Property Name="DataColumn" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.DataKey_VarChar50_ThirteenNavigations" FromRole="DataKey_VarChar50" ToRole="ThirteenNavigations" />
+      </EntityType>
+      <EntityType Name="DeploymentScenarios">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" />
+        <Property Name="ProjectId" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="Projects" Relationship="Aruba.DeploymentScenarios_Projects" FromRole="DeploymentScenarios" ToRole="Projects" />
+      </EntityType>
+      <EntityType Name="FailureDetails">
+        <Key>
+          <PropertyRef Name="FailureId" />
+        </Key>
+        <Property Name="FailureId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Log" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="Failures" Relationship="Aruba.FailureDetails_Failures" FromRole="FailureDetails" ToRole="Failures" />
+      </EntityType>
+      <EntityType Name="Failures">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="TestId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Baseline" Type="Edm.Boolean" Nullable="true" />
+        <Property Name="TypeId" Type="Edm.Int32" Nullable="true" />
+        <Property Name="TestCase" Type="Edm.String" Nullable="true" />
+        <Property Name="Variation" Type="Edm.Int32" Nullable="true" />
+        <Property Name="Comment" Type="Edm.String" Nullable="true" />
+        <Property Name="Changed" Type="Edm.DateTimeOffset" Nullable="false" />
+        <NavigationProperty Name="BugsDefectTracking" Relationship="Aruba.Failures_BugsDefectTracking" FromRole="Failures" ToRole="BugsDefectTracking" />
+        <NavigationProperty Name="BugsProjectTracking" Relationship="Aruba.Failures_BugsProjectTracking" FromRole="Failures" ToRole="BugsProjectTracking" />
+        <NavigationProperty Name="ConfigFailures" Relationship="Aruba.Failures_ConfigFailures" FromRole="Failures" ToRole="ConfigFailures" />
+        <NavigationProperty Name="FailureDetails" Relationship="Aruba.Failures_FailureDetails" FromRole="Failures" ToRole="FailureDetails" />
+      </EntityType>
+      <EntityType Name="FailureTypes">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" />
+      </EntityType>
+      <EntityType Name="MachineConfigs">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Host" Type="Edm.String" Nullable="true" />
+        <Property Name="IPAddress" Type="Edm.Guid" Nullable="true" />
+        <NavigationProperty Name="Configs" Relationship="Aruba.MachineConfigs_Configs" FromRole="MachineConfigs" ToRole="Configs" />
+      </EntityType>
+      <EntityType Name="NonDefaultFacets">
+        <Key>
+          <PropertyRef Name="C1_int" />
+        </Key>
+        <Property Name="C1_int" Type="Edm.Int32" Nullable="false" />
+        <Property Name="C_decimal27_3_AS_decimal28_4" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C_decimal24_0_AS_decimal26_2" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C_numeric24_0_AS_numeric28_4" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C_numeric24_0_AS_numeric25_1" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C_varchar230_AS_varchar512" Type="Edm.String" Nullable="true" />
+        <Property Name="C_varchar17_AS_varchar98" Type="Edm.String" Nullable="true" />
+        <Property Name="C_varbinary60_AS_varbinary512" Type="Edm.Binary" Nullable="true" />
+        <Property Name="C_varbinary31_AS_varbinary365" Type="Edm.Binary" Nullable="true" />
+        <Property Name="C_varchar80_AS_nvarchar512" Type="Edm.String" Nullable="true" />
+        <Property Name="C_varchar185_AS_nvarchar285" Type="Edm.String" Nullable="true" />
+      </EntityType>
+      <EntityType Name="NonDefaultMappings">
+        <Key>
+          <PropertyRef Name="C1_int" />
+        </Key>
+        <Property Name="C1_int" Type="Edm.Int32" Nullable="false" />
+        <Property Name="C_int_AS_decimal" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C_int_AS_numeric" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C_int_AS_float" Type="Edm.Double" Nullable="false" />
+        <Property Name="C_int_AS_money" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C_int_AS_bigint" Type="Edm.Int64" Nullable="false" />
+        <Property Name="C_smallint_AS_int" Type="Edm.Int32" Nullable="true" />
+        <Property Name="C_smallint_AS_decimal" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C_smallint_AS_numeric" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C_smallint_AS_real" Type="Edm.Single" Nullable="false" />
+        <Property Name="C_smallint_AS_float" Type="Edm.Double" Nullable="true" />
+        <Property Name="C_smallint_AS_money" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C_smallint_AS_smallmoney" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C_smallint_AS_bigint" Type="Edm.Int64" Nullable="false" />
+        <Property Name="C_tinyint_AS_int" Type="Edm.Int32" Nullable="true" />
+        <Property Name="C_tinyint_AS_smallint" Type="Edm.Int16" Nullable="false" />
+        <Property Name="C_tinyint_AS_decimal" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C_tinyint_AS_numeric" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C_tinyint_AS_real" Type="Edm.Single" Nullable="true" />
+        <Property Name="C_tinyint_AS_float" Type="Edm.Double" Nullable="false" />
+        <Property Name="C_tinyint_AS_money" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="C_tinyint_AS_smallmoney" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C_tinyint_AS_bigint" Type="Edm.Int64" Nullable="true" />
+        <Property Name="C_smalldatetime_AS_datetime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="C_varchar_AS_nvarchar" Type="Edm.String" Nullable="true" />
+        <Property Name="C_char_AS_nchar" Type="Edm.String" Nullable="true" />
+        <Property Name="C_nvarchar_AS_ntext" Type="Edm.String" Nullable="true" />
+        <Property Name="C_bigint_AS_decimal" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="C_bigint_AS_numeric" Type="Edm.Decimal" Nullable="true" />
+      </EntityType>
+      <EntityType Name="OwnerContactInfos">
+        <Key>
+          <PropertyRef Name="ContactInfoId" />
+        </Key>
+        <Property Name="ContactInfoId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Email" Type="Edm.String" Nullable="true" />
+        <Property Name="WorkPhone" Type="Edm.String" Nullable="true" />
+        <Property Name="StreetAddress" Type="Edm.String" Nullable="true" />
+        <Property Name="City" Type="Edm.String" Nullable="true" />
+        <Property Name="State" Type="Edm.String" Nullable="true" />
+        <Property Name="MainZip" Type="Edm.String" Nullable="true" />
+        <Property Name="ExtendedZip" Type="Edm.String" Nullable="true" />
+      </EntityType>
+      <EntityType Name="OwnerDetails">
+        <Key>
+          <PropertyRef Name="DetailId" />
+        </Key>
+        <Property Name="DetailId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="HomeAddress1" Type="Edm.String" Nullable="true" />
+        <Property Name="HomeAddress2" Type="Edm.String" Nullable="true" />
+        <Property Name="Level" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="OwnerOwnerDetails" Relationship="Aruba.OwnerDetails_OwnerOwnerDetails" FromRole="OwnerDetails" ToRole="OwnerOwnerDetails" />
+      </EntityType>
+      <EntityType Name="OwnerOwnerDetails">
+        <Key>
+          <PropertyRef Name="OwnerId" />
+        </Key>
+        <Property Name="OwnerId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="DetailId" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="OwnerDetails" Relationship="Aruba.OwnerOwnerDetails_OwnerDetails" FromRole="OwnerOwnerDetails" ToRole="OwnerDetails" />
+        <NavigationProperty Name="Owners" Relationship="Aruba.OwnerOwnerDetails_Owners" FromRole="OwnerOwnerDetails" ToRole="Owners" />
+      </EntityType>
+      <EntityType Name="Owners">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="FirstName" Type="Edm.String" Nullable="true" />
+        <Property Name="LastName" Type="Edm.Int32" Nullable="true" />
+        <Property Name="Alias" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="BugsDefectTracking" Relationship="Aruba.Owners_BugsDefectTracking" FromRole="Owners" ToRole="BugsDefectTracking" />
+        <NavigationProperty Name="Bugs_ResolvedByOwners" Relationship="Aruba.Owners_Bugs_ResolvedByOwners" FromRole="Owners" ToRole="Bugs_ResolvedByOwners" />
+        <NavigationProperty Name="BugsProjectTracking" Relationship="Aruba.Owners_BugsProjectTracking" FromRole="Owners" ToRole="BugsProjectTracking" />
+        <NavigationProperty Name="BugsProject_ResolvedByOwners" Relationship="Aruba.Owners_BugsProject_ResolvedByOwners" FromRole="Owners" ToRole="BugsProject_ResolvedByOwners" />
+        <NavigationProperty Name="OwnerOwnerDetails" Relationship="Aruba.Owners_OwnerOwnerDetails" FromRole="Owners" ToRole="OwnerOwnerDetails" />
+        <NavigationProperty Name="RunOwners" Relationship="Aruba.Owners_RunOwners" FromRole="Owners" ToRole="RunOwners" />
+      </EntityType>
+      <EntityType Name="Projects">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="DeploymentScenarios" Relationship="Aruba.Projects_DeploymentScenarios" FromRole="Projects" ToRole="DeploymentScenarios" />
+        <NavigationProperty Name="TestScenarios" Relationship="Aruba.Projects_TestScenarios" FromRole="Projects" ToRole="TestScenarios" />
+      </EntityType>
+      <EntityType Name="RunOwners">
+        <Key>
+          <PropertyRef Name="RunId" />
+        </Key>
+        <Property Name="RunId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="OwnerId" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Owners" Relationship="Aruba.RunOwners_Owners" FromRole="RunOwners" ToRole="Owners" />
+        <NavigationProperty Name="Runs" Relationship="Aruba.RunOwners_Runs" FromRole="RunOwners" ToRole="Runs" />
+      </EntityType>
+      <EntityType Name="Runs">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" />
+        <Property Name="Purpose" Type="Edm.Int32" Nullable="true" />
+        <Property Name="Started" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="Completed" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="StartedBy" Type="Edm.String" Nullable="true" />
+        <Property Name="RequestStarted" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="RequestCompleted" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="RequestStartedBy" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="RunOwners" Relationship="Aruba.Runs_RunOwners" FromRole="Runs" ToRole="RunOwners" />
+        <NavigationProperty Name="Tasks" Relationship="Aruba.Runs_Tasks" FromRole="Runs" ToRole="Tasks" />
+      </EntityType>
+      <EntityType Name="TaskInvestigates">
+        <Key>
+          <PropertyRef Name="TaskId" />
+        </Key>
+        <Property Name="TaskId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Investigates" Type="Edm.Int64" Nullable="true" />
+        <Property Name="Improvements" Type="Edm.Int64" Nullable="true" />
+        <NavigationProperty Name="Tasks" Relationship="Aruba.TaskInvestigates_Tasks" FromRole="TaskInvestigates" ToRole="Tasks" />
+      </EntityType>
+      <EntityType Name="TaskResults">
+        <Key>
+          <PropertyRef Name="TaskId" />
+        </Key>
+        <Property Name="TaskId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Passed" Type="Edm.Int64" Nullable="true" />
+        <Property Name="Failed" Type="Edm.Int64" Nullable="true" />
+        <NavigationProperty Name="Tasks" Relationship="Aruba.TaskResults_Tasks" FromRole="TaskResults" ToRole="Tasks" />
+      </EntityType>
+      <EntityType Name="Tasks">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ConfigId" Type="Edm.Int32" Nullable="true" />
+        <Property Name="Deleted" Type="Edm.Boolean" Nullable="true" />
+        <Property Name="RunId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Started" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="Completed" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="StartedBy" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="TaskInvestigates" Relationship="Aruba.Tasks_TaskInvestigates" FromRole="Tasks" ToRole="TaskInvestigates" />
+        <NavigationProperty Name="TaskResults" Relationship="Aruba.Tasks_TaskResults" FromRole="Tasks" ToRole="TaskResults" />
+        <NavigationProperty Name="Runs" Relationship="Aruba.Tasks_Runs" FromRole="Tasks" ToRole="Runs" />
+      </EntityType>
+      <EntityType Name="Testers">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" />
+      </EntityType>
+      <EntityType Name="TestScenarios">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" />
+        <Property Name="ProjectId" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="Projects" Relationship="Aruba.TestScenarios_Projects" FromRole="TestScenarios" ToRole="Projects" />
+      </EntityType>
+      <EntityType Name="ThirteenNavigations">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="BigInt_Id" Type="Edm.Int64" Nullable="true" />
+        <Property Name="Bit_Id" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="DateTime_Id" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="Decimal_Id" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="Float_Id" Type="Edm.Double" Nullable="true" />
+        <Property Name="Money_Id" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="Numeric_Id" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="Real_Id" Type="Edm.Single" Nullable="true" />
+        <Property Name="SmallDateTime_Id" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="TinyInt_Id" Type="Edm.Byte" Nullable="true" />
+        <Property Name="GUID_Id" Type="Edm.Guid" Nullable="true" />
+        <Property Name="Varchar_Id" Type="Edm.String" Nullable="true" />
+        <Property Name="SmallMoney_Id" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="DataColumn" Type="Edm.String" Nullable="true" />
+        <NavigationProperty Name="DataKey_BigInt" Relationship="Aruba.ThirteenNavigations_DataKey_BigInt" FromRole="ThirteenNavigations" ToRole="DataKey_BigInt" />
+        <NavigationProperty Name="DataKey_Bit" Relationship="Aruba.ThirteenNavigations_DataKey_Bit" FromRole="ThirteenNavigations" ToRole="DataKey_Bit" />
+        <NavigationProperty Name="DataKey_DateTime" Relationship="Aruba.ThirteenNavigations_DataKey_DateTime" FromRole="ThirteenNavigations" ToRole="DataKey_DateTime" />
+        <NavigationProperty Name="DataKey_Decimal" Relationship="Aruba.ThirteenNavigations_DataKey_Decimal" FromRole="ThirteenNavigations" ToRole="DataKey_Decimal" />
+        <NavigationProperty Name="DataKey_Float" Relationship="Aruba.ThirteenNavigations_DataKey_Float" FromRole="ThirteenNavigations" ToRole="DataKey_Float" />
+        <NavigationProperty Name="DataKey_GUID" Relationship="Aruba.ThirteenNavigations_DataKey_GUID" FromRole="ThirteenNavigations" ToRole="DataKey_GUID" />
+        <NavigationProperty Name="DataKey_Money" Relationship="Aruba.ThirteenNavigations_DataKey_Money" FromRole="ThirteenNavigations" ToRole="DataKey_Money" />
+        <NavigationProperty Name="DataKey_Numeric" Relationship="Aruba.ThirteenNavigations_DataKey_Numeric" FromRole="ThirteenNavigations" ToRole="DataKey_Numeric" />
+        <NavigationProperty Name="DataKey_Real" Relationship="Aruba.ThirteenNavigations_DataKey_Real" FromRole="ThirteenNavigations" ToRole="DataKey_Real" />
+        <NavigationProperty Name="DataKey_SmallDateTime" Relationship="Aruba.ThirteenNavigations_DataKey_SmallDateTime" FromRole="ThirteenNavigations" ToRole="DataKey_SmallDateTime" />
+        <NavigationProperty Name="DataKey_SmallMoney" Relationship="Aruba.ThirteenNavigations_DataKey_SmallMoney" FromRole="ThirteenNavigations" ToRole="DataKey_SmallMoney" />
+        <NavigationProperty Name="DataKey_TinyInt" Relationship="Aruba.ThirteenNavigations_DataKey_TinyInt" FromRole="ThirteenNavigations" ToRole="DataKey_TinyInt" />
+        <NavigationProperty Name="DataKey_VarChar50" Relationship="Aruba.ThirteenNavigations_DataKey_VarChar50" FromRole="ThirteenNavigations" ToRole="DataKey_VarChar50" />
+      </EntityType>
+      <Association Name="BugsDefectTracking_Owners">
+        <End Role="Owners" Type="Aruba.Owners" Multiplicity="0..1" />
+        <End Role="BugsDefectTracking" Type="Aruba.BugsDefectTracking" Multiplicity="*" />
+      </Association>
+      <Association Name="BugsDefectTracking_Failures">
+        <End Role="Failures" Type="Aruba.Failures" Multiplicity="0..1" />
+        <End Role="BugsDefectTracking" Type="Aruba.BugsDefectTracking" Multiplicity="*" />
+      </Association>
+      <Association Name="BugsDefectTracking_ResolvedBy">
+        <End Role="ResolvedBy" Type="Aruba.Owners" Multiplicity="0..1" />
+        <End Role="BugsDefectTracking" Type="Aruba.BugsDefectTracking" Multiplicity="*" />
+      </Association>
+      <Association Name="BugsProjectTracking_Owners">
+        <End Role="Owners" Type="Aruba.Owners" Multiplicity="0..1" />
+        <End Role="BugsProjectTracking" Type="Aruba.BugsProjectTracking" Multiplicity="*" />
+      </Association>
+      <Association Name="BugsProjectTracking_Failures">
+        <End Role="Failures" Type="Aruba.Failures" Multiplicity="0..1" />
+        <End Role="BugsProjectTracking" Type="Aruba.BugsProjectTracking" Multiplicity="*" />
+      </Association>
+      <Association Name="BugsProjectTracking_ResolvedBy">
+        <End Role="ResolvedBy" Type="Aruba.Owners" Multiplicity="0..1" />
+        <End Role="BugsProjectTracking" Type="Aruba.BugsProjectTracking" Multiplicity="*" />
+      </Association>
+      <Association Name="ConfigFailures_Configs">
+        <End Role="Configs" Type="Aruba.Configs" Multiplicity="0..1" />
+        <End Role="ConfigFailures" Type="Aruba.ConfigFailures" Multiplicity="*" />
+      </Association>
+      <Association Name="ConfigFailures_Failures">
+        <End Role="Failures" Type="Aruba.Failures" Multiplicity="0..1" />
+        <End Role="ConfigFailures" Type="Aruba.ConfigFailures" Multiplicity="*" />
+      </Association>
+      <Association Name="Configs_ConfigFailures">
+        <End Role="ConfigFailures" Type="Aruba.ConfigFailures" Multiplicity="*" />
+        <End Role="Configs" Type="Aruba.Configs" Multiplicity="*" />
+      </Association>
+      <Association Name="Configs_MachineConfigs">
+        <End Role="MachineConfigs" Type="Aruba.MachineConfigs" Multiplicity="0..1" />
+        <End Role="Configs" Type="Aruba.Configs" Multiplicity="*" />
+      </Association>
+      <Association Name="DataKey_BigInt_ThirteenNavigations">
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+        <End Role="DataKey_BigInt" Type="Aruba.DataKey_BigInt" Multiplicity="*" />
+      </Association>
+      <Association Name="DataKey_Bit_ThirteenNavigations">
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+        <End Role="DataKey_Bit" Type="Aruba.DataKey_Bit" Multiplicity="*" />
+      </Association>
+      <Association Name="DataKey_DateTime_ThirteenNavigations">
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+        <End Role="DataKey_DateTime" Type="Aruba.DataKey_DateTime" Multiplicity="*" />
+      </Association>
+      <Association Name="DataKey_Decimal_ThirteenNavigations">
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+        <End Role="DataKey_Decimal" Type="Aruba.DataKey_Decimal" Multiplicity="*" />
+      </Association>
+      <Association Name="DataKey_Float_ThirteenNavigations">
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+        <End Role="DataKey_Float" Type="Aruba.DataKey_Float" Multiplicity="*" />
+      </Association>
+      <Association Name="DataKey_GUID_ThirteenNavigations">
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+        <End Role="DataKey_GUID" Type="Aruba.DataKey_GUID" Multiplicity="*" />
+      </Association>
+      <Association Name="DataKey_Money_ThirteenNavigations">
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+        <End Role="DataKey_Money" Type="Aruba.DataKey_Money" Multiplicity="*" />
+      </Association>
+      <Association Name="DataKey_Numeric_ThirteenNavigations">
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+        <End Role="DataKey_Numeric" Type="Aruba.DataKey_Numeric" Multiplicity="*" />
+      </Association>
+      <Association Name="DataKey_Real_ThirteenNavigations">
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+        <End Role="DataKey_Real" Type="Aruba.DataKey_Real" Multiplicity="*" />
+      </Association>
+      <Association Name="DataKey_SmallDateTime_ThirteenNavigations">
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+        <End Role="DataKey_SmallDateTime" Type="Aruba.DataKey_SmallDateTime" Multiplicity="*" />
+      </Association>
+      <Association Name="DataKey_SmallMoney_ThirteenNavigations">
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+        <End Role="DataKey_SmallMoney" Type="Aruba.DataKey_SmallMoney" Multiplicity="*" />
+      </Association>
+      <Association Name="DataKey_TinyInt_ThirteenNavigations">
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+        <End Role="DataKey_TinyInt" Type="Aruba.DataKey_TinyInt" Multiplicity="*" />
+      </Association>
+      <Association Name="DataKey_VarChar50_ThirteenNavigations">
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+        <End Role="DataKey_VarChar50" Type="Aruba.DataKey_VarChar50" Multiplicity="*" />
+      </Association>
+      <Association Name="DeploymentScenarios_Projects">
+        <End Role="Projects" Type="Aruba.Projects" Multiplicity="0..1" />
+        <End Role="DeploymentScenarios" Type="Aruba.DeploymentScenarios" Multiplicity="*" />
+      </Association>
+      <Association Name="FailureDetails_Failures">
+        <End Role="Failures" Type="Aruba.Failures" Multiplicity="0..1" />
+        <End Role="FailureDetails" Type="Aruba.FailureDetails" Multiplicity="*" />
+      </Association>
+      <Association Name="Failures_BugsDefectTracking">
+        <End Role="BugsDefectTracking" Type="Aruba.BugsDefectTracking" Multiplicity="*" />
+        <End Role="Failures" Type="Aruba.Failures" Multiplicity="*" />
+      </Association>
+      <Association Name="Failures_BugsProjectTracking">
+        <End Role="BugsProjectTracking" Type="Aruba.BugsProjectTracking" Multiplicity="*" />
+        <End Role="Failures" Type="Aruba.Failures" Multiplicity="*" />
+      </Association>
+      <Association Name="Failures_ConfigFailures">
+        <End Role="ConfigFailures" Type="Aruba.ConfigFailures" Multiplicity="*" />
+        <End Role="Failures" Type="Aruba.Failures" Multiplicity="*" />
+      </Association>
+      <Association Name="Failures_FailureDetails">
+        <End Role="FailureDetails" Type="Aruba.FailureDetails" Multiplicity="0..1" />
+        <End Role="Failures" Type="Aruba.Failures" Multiplicity="*" />
+      </Association>
+      <Association Name="MachineConfigs_Configs">
+        <End Role="Configs" Type="Aruba.Configs" Multiplicity="0..1" />
+        <End Role="MachineConfigs" Type="Aruba.MachineConfigs" Multiplicity="*" />
+      </Association>
+      <Association Name="OwnerDetails_OwnerOwnerDetails">
+        <End Role="OwnerOwnerDetails" Type="Aruba.OwnerOwnerDetails" Multiplicity="*" />
+        <End Role="OwnerDetails" Type="Aruba.OwnerDetails" Multiplicity="*" />
+      </Association>
+      <Association Name="OwnerOwnerDetails_OwnerDetails">
+        <End Role="OwnerDetails" Type="Aruba.OwnerDetails" Multiplicity="0..1" />
+        <End Role="OwnerOwnerDetails" Type="Aruba.OwnerOwnerDetails" Multiplicity="*" />
+      </Association>
+      <Association Name="OwnerOwnerDetails_Owners">
+        <End Role="Owners" Type="Aruba.Owners" Multiplicity="0..1" />
+        <End Role="OwnerOwnerDetails" Type="Aruba.OwnerOwnerDetails" Multiplicity="*" />
+      </Association>
+      <Association Name="Owners_BugsDefectTracking">
+        <End Role="BugsDefectTracking" Type="Aruba.BugsDefectTracking" Multiplicity="*" />
+        <End Role="Owners" Type="Aruba.Owners" Multiplicity="*" />
+      </Association>
+      <Association Name="Owners_Bugs_ResolvedByOwners">
+        <End Role="Bugs_ResolvedByOwners" Type="Aruba.BugsDefectTracking" Multiplicity="*" />
+        <End Role="Owners" Type="Aruba.Owners" Multiplicity="*" />
+      </Association>
+      <Association Name="Owners_BugsProjectTracking">
+        <End Role="BugsProjectTracking" Type="Aruba.BugsProjectTracking" Multiplicity="*" />
+        <End Role="Owners" Type="Aruba.Owners" Multiplicity="*" />
+      </Association>
+      <Association Name="Owners_BugsProject_ResolvedByOwners">
+        <End Role="BugsProject_ResolvedByOwners" Type="Aruba.BugsProjectTracking" Multiplicity="*" />
+        <End Role="Owners" Type="Aruba.Owners" Multiplicity="*" />
+      </Association>
+      <Association Name="Owners_OwnerOwnerDetails">
+        <End Role="OwnerOwnerDetails" Type="Aruba.OwnerOwnerDetails" Multiplicity="0..1" />
+        <End Role="Owners" Type="Aruba.Owners" Multiplicity="*" />
+      </Association>
+      <Association Name="Owners_RunOwners">
+        <End Role="RunOwners" Type="Aruba.RunOwners" Multiplicity="*" />
+        <End Role="Owners" Type="Aruba.Owners" Multiplicity="*" />
+      </Association>
+      <Association Name="Projects_DeploymentScenarios">
+        <End Role="DeploymentScenarios" Type="Aruba.DeploymentScenarios" Multiplicity="*" />
+        <End Role="Projects" Type="Aruba.Projects" Multiplicity="*" />
+      </Association>
+      <Association Name="Projects_TestScenarios">
+        <End Role="TestScenarios" Type="Aruba.TestScenarios" Multiplicity="*" />
+        <End Role="Projects" Type="Aruba.Projects" Multiplicity="*" />
+      </Association>
+      <Association Name="RunOwners_Owners">
+        <End Role="Owners" Type="Aruba.Owners" Multiplicity="0..1" />
+        <End Role="RunOwners" Type="Aruba.RunOwners" Multiplicity="*" />
+      </Association>
+      <Association Name="RunOwners_Runs">
+        <End Role="Runs" Type="Aruba.Runs" Multiplicity="0..1" />
+        <End Role="RunOwners" Type="Aruba.RunOwners" Multiplicity="*" />
+      </Association>
+      <Association Name="Runs_RunOwners">
+        <End Role="RunOwners" Type="Aruba.RunOwners" Multiplicity="0..1" />
+        <End Role="Runs" Type="Aruba.Runs" Multiplicity="*" />
+      </Association>
+      <Association Name="Runs_Tasks">
+        <End Role="Tasks" Type="Aruba.Tasks" Multiplicity="*" />
+        <End Role="Runs" Type="Aruba.Runs" Multiplicity="*" />
+      </Association>
+      <Association Name="TaskInvestigates_Tasks">
+        <End Role="Tasks" Type="Aruba.Tasks" Multiplicity="0..1" />
+        <End Role="TaskInvestigates" Type="Aruba.TaskInvestigates" Multiplicity="*" />
+      </Association>
+      <Association Name="TaskResults_Tasks">
+        <End Role="Tasks" Type="Aruba.Tasks" Multiplicity="0..1" />
+        <End Role="TaskResults" Type="Aruba.TaskResults" Multiplicity="*" />
+      </Association>
+      <Association Name="Tasks_TaskInvestigates">
+        <End Role="TaskInvestigates" Type="Aruba.TaskInvestigates" Multiplicity="0..1" />
+        <End Role="Tasks" Type="Aruba.Tasks" Multiplicity="*" />
+      </Association>
+      <Association Name="Tasks_TaskResults">
+        <End Role="TaskResults" Type="Aruba.TaskResults" Multiplicity="0..1" />
+        <End Role="Tasks" Type="Aruba.Tasks" Multiplicity="*" />
+      </Association>
+      <Association Name="Tasks_Runs">
+        <End Role="Runs" Type="Aruba.Runs" Multiplicity="0..1" />
+        <End Role="Tasks" Type="Aruba.Tasks" Multiplicity="*" />
+      </Association>
+      <Association Name="TestScenarios_Projects">
+        <End Role="Projects" Type="Aruba.Projects" Multiplicity="0..1" />
+        <End Role="TestScenarios" Type="Aruba.TestScenarios" Multiplicity="*" />
+      </Association>
+      <Association Name="ThirteenNavigations_DataKey_BigInt">
+        <End Role="DataKey_BigInt" Type="Aruba.DataKey_BigInt" Multiplicity="0..1" />
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+      </Association>
+      <Association Name="ThirteenNavigations_DataKey_Bit">
+        <End Role="DataKey_Bit" Type="Aruba.DataKey_Bit" Multiplicity="0..1" />
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+      </Association>
+      <Association Name="ThirteenNavigations_DataKey_DateTime">
+        <End Role="DataKey_DateTime" Type="Aruba.DataKey_DateTime" Multiplicity="0..1" />
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+      </Association>
+      <Association Name="ThirteenNavigations_DataKey_Decimal">
+        <End Role="DataKey_Decimal" Type="Aruba.DataKey_Decimal" Multiplicity="0..1" />
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+      </Association>
+      <Association Name="ThirteenNavigations_DataKey_Float">
+        <End Role="DataKey_Float" Type="Aruba.DataKey_Float" Multiplicity="0..1" />
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+      </Association>
+      <Association Name="ThirteenNavigations_DataKey_GUID">
+        <End Role="DataKey_GUID" Type="Aruba.DataKey_GUID" Multiplicity="0..1" />
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+      </Association>
+      <Association Name="ThirteenNavigations_DataKey_Money">
+        <End Role="DataKey_Money" Type="Aruba.DataKey_Money" Multiplicity="0..1" />
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+      </Association>
+      <Association Name="ThirteenNavigations_DataKey_Numeric">
+        <End Role="DataKey_Numeric" Type="Aruba.DataKey_Numeric" Multiplicity="0..1" />
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+      </Association>
+      <Association Name="ThirteenNavigations_DataKey_Real">
+        <End Role="DataKey_Real" Type="Aruba.DataKey_Real" Multiplicity="0..1" />
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+      </Association>
+      <Association Name="ThirteenNavigations_DataKey_SmallDateTime">
+        <End Role="DataKey_SmallDateTime" Type="Aruba.DataKey_SmallDateTime" Multiplicity="0..1" />
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+      </Association>
+      <Association Name="ThirteenNavigations_DataKey_SmallMoney">
+        <End Role="DataKey_SmallMoney" Type="Aruba.DataKey_SmallMoney" Multiplicity="0..1" />
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+      </Association>
+      <Association Name="ThirteenNavigations_DataKey_TinyInt">
+        <End Role="DataKey_TinyInt" Type="Aruba.DataKey_TinyInt" Multiplicity="0..1" />
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+      </Association>
+      <Association Name="ThirteenNavigations_DataKey_VarChar50">
+        <End Role="DataKey_VarChar50" Type="Aruba.DataKey_VarChar50" Multiplicity="0..1" />
+        <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+      </Association>
+      <EntityContainer Name="ArubaDataContext">
+        <EntitySet Name="AllTypes" EntityType="Aruba.AllTypes" />
+        <EntitySet Name="AllTypesComplex" EntityType="Aruba.AllTypesComplex" />
+        <EntitySet Name="BugsDefectTracking" EntityType="Aruba.BugsDefectTracking" />
+        <EntitySet Name="BugsProjectTracking" EntityType="Aruba.BugsProjectTracking" />
+        <EntitySet Name="ConfigFailures" EntityType="Aruba.ConfigFailures" />
+        <EntitySet Name="Configs" EntityType="Aruba.Configs" />
+        <EntitySet Name="DataKey_BigInt" EntityType="Aruba.DataKey_BigInt" />
+        <EntitySet Name="DataKey_Bit" EntityType="Aruba.DataKey_Bit" />
+        <EntitySet Name="DataKey_DateTime" EntityType="Aruba.DataKey_DateTime" />
+        <EntitySet Name="DataKey_Decimal" EntityType="Aruba.DataKey_Decimal" />
+        <EntitySet Name="DataKey_Float" EntityType="Aruba.DataKey_Float" />
+        <EntitySet Name="DataKey_GUID" EntityType="Aruba.DataKey_GUID" />
+        <EntitySet Name="DataKey_Money" EntityType="Aruba.DataKey_Money" />
+        <EntitySet Name="DataKey_Numeric" EntityType="Aruba.DataKey_Numeric" />
+        <EntitySet Name="DataKey_Real" EntityType="Aruba.DataKey_Real" />
+        <EntitySet Name="DataKey_SmallDateTime" EntityType="Aruba.DataKey_SmallDateTime" />
+        <EntitySet Name="DataKey_SmallMoney" EntityType="Aruba.DataKey_SmallMoney" />
+        <EntitySet Name="DataKey_TinyInt" EntityType="Aruba.DataKey_TinyInt" />
+        <EntitySet Name="DataKey_VarChar50" EntityType="Aruba.DataKey_VarChar50" />
+        <EntitySet Name="DeploymentScenarios" EntityType="Aruba.DeploymentScenarios" />
+        <EntitySet Name="FailureDetails" EntityType="Aruba.FailureDetails" />
+        <EntitySet Name="Failures" EntityType="Aruba.Failures" />
+        <EntitySet Name="FailureTypes" EntityType="Aruba.FailureTypes" />
+        <EntitySet Name="MachineConfigs" EntityType="Aruba.MachineConfigs" />
+        <EntitySet Name="NonDefaultFacets" EntityType="Aruba.NonDefaultFacets" />
+        <EntitySet Name="NonDefaultMappings" EntityType="Aruba.NonDefaultMappings" />
+        <EntitySet Name="OwnerContactInfos" EntityType="Aruba.OwnerContactInfos" />
+        <EntitySet Name="OwnerDetails" EntityType="Aruba.OwnerDetails" />
+        <EntitySet Name="OwnerOwnerDetails" EntityType="Aruba.OwnerOwnerDetails" />
+        <EntitySet Name="Owners" EntityType="Aruba.Owners" />
+        <EntitySet Name="Projects" EntityType="Aruba.Projects" />
+        <EntitySet Name="RunOwners" EntityType="Aruba.RunOwners" />
+        <EntitySet Name="Runs" EntityType="Aruba.Runs" />
+        <EntitySet Name="TaskInvestigates" EntityType="Aruba.TaskInvestigates" />
+        <EntitySet Name="TaskResults" EntityType="Aruba.TaskResults" />
+        <EntitySet Name="Tasks" EntityType="Aruba.Tasks" />
+        <EntitySet Name="Testers" EntityType="Aruba.Testers" />
+        <EntitySet Name="TestScenarios" EntityType="Aruba.TestScenarios" />
+        <EntitySet Name="ThirteenNavigations" EntityType="Aruba.ThirteenNavigations" />
+        <AssociationSet Name="BugsDefectTracking_Owners" Association="Aruba.BugsDefectTracking_Owners">
+          <End Role="Owners" EntitySet="Owners" />
+          <End Role="BugsDefectTracking" EntitySet="BugsDefectTracking" />
+        </AssociationSet>
+        <AssociationSet Name="BugsDefectTracking_Failures" Association="Aruba.BugsDefectTracking_Failures">
+          <End Role="Failures" EntitySet="Failures" />
+          <End Role="BugsDefectTracking" EntitySet="BugsDefectTracking" />
+        </AssociationSet>
+        <AssociationSet Name="BugsDefectTracking_ResolvedBy" Association="Aruba.BugsDefectTracking_ResolvedBy">
+          <End Role="ResolvedBy" EntitySet="Owners" />
+          <End Role="BugsDefectTracking" EntitySet="BugsDefectTracking" />
+        </AssociationSet>
+        <AssociationSet Name="BugsProjectTracking_Owners" Association="Aruba.BugsProjectTracking_Owners">
+          <End Role="Owners" EntitySet="Owners" />
+          <End Role="BugsProjectTracking" EntitySet="BugsProjectTracking" />
+        </AssociationSet>
+        <AssociationSet Name="BugsProjectTracking_Failures" Association="Aruba.BugsProjectTracking_Failures">
+          <End Role="Failures" EntitySet="Failures" />
+          <End Role="BugsProjectTracking" EntitySet="BugsProjectTracking" />
+        </AssociationSet>
+        <AssociationSet Name="BugsProjectTracking_ResolvedBy" Association="Aruba.BugsProjectTracking_ResolvedBy">
+          <End Role="ResolvedBy" EntitySet="Owners" />
+          <End Role="BugsProjectTracking" EntitySet="BugsProjectTracking" />
+        </AssociationSet>
+        <AssociationSet Name="ConfigFailures_Configs" Association="Aruba.ConfigFailures_Configs">
+          <End Role="Configs" EntitySet="Configs" />
+          <End Role="ConfigFailures" EntitySet="ConfigFailures" />
+        </AssociationSet>
+        <AssociationSet Name="ConfigFailures_Failures" Association="Aruba.ConfigFailures_Failures">
+          <End Role="Failures" EntitySet="Failures" />
+          <End Role="ConfigFailures" EntitySet="ConfigFailures" />
+        </AssociationSet>
+        <AssociationSet Name="Configs_ConfigFailures" Association="Aruba.Configs_ConfigFailures">
+          <End Role="ConfigFailures" EntitySet="ConfigFailures" />
+          <End Role="Configs" EntitySet="Configs" />
+        </AssociationSet>
+        <AssociationSet Name="Configs_MachineConfigs" Association="Aruba.Configs_MachineConfigs">
+          <End Role="MachineConfigs" EntitySet="MachineConfigs" />
+          <End Role="Configs" EntitySet="Configs" />
+        </AssociationSet>
+        <AssociationSet Name="DataKey_BigInt_ThirteenNavigations" Association="Aruba.DataKey_BigInt_ThirteenNavigations">
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+          <End Role="DataKey_BigInt" EntitySet="DataKey_BigInt" />
+        </AssociationSet>
+        <AssociationSet Name="DataKey_Bit_ThirteenNavigations" Association="Aruba.DataKey_Bit_ThirteenNavigations">
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+          <End Role="DataKey_Bit" EntitySet="DataKey_Bit" />
+        </AssociationSet>
+        <AssociationSet Name="DataKey_DateTime_ThirteenNavigations" Association="Aruba.DataKey_DateTime_ThirteenNavigations">
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+          <End Role="DataKey_DateTime" EntitySet="DataKey_DateTime" />
+        </AssociationSet>
+        <AssociationSet Name="DataKey_Decimal_ThirteenNavigations" Association="Aruba.DataKey_Decimal_ThirteenNavigations">
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+          <End Role="DataKey_Decimal" EntitySet="DataKey_Decimal" />
+        </AssociationSet>
+        <AssociationSet Name="DataKey_Float_ThirteenNavigations" Association="Aruba.DataKey_Float_ThirteenNavigations">
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+          <End Role="DataKey_Float" EntitySet="DataKey_Float" />
+        </AssociationSet>
+        <AssociationSet Name="DataKey_GUID_ThirteenNavigations" Association="Aruba.DataKey_GUID_ThirteenNavigations">
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+          <End Role="DataKey_GUID" EntitySet="DataKey_GUID" />
+        </AssociationSet>
+        <AssociationSet Name="DataKey_Money_ThirteenNavigations" Association="Aruba.DataKey_Money_ThirteenNavigations">
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+          <End Role="DataKey_Money" EntitySet="DataKey_Money" />
+        </AssociationSet>
+        <AssociationSet Name="DataKey_Numeric_ThirteenNavigations" Association="Aruba.DataKey_Numeric_ThirteenNavigations">
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+          <End Role="DataKey_Numeric" EntitySet="DataKey_Numeric" />
+        </AssociationSet>
+        <AssociationSet Name="DataKey_Real_ThirteenNavigations" Association="Aruba.DataKey_Real_ThirteenNavigations">
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+          <End Role="DataKey_Real" EntitySet="DataKey_Real" />
+        </AssociationSet>
+        <AssociationSet Name="DataKey_SmallDateTime_ThirteenNavigations" Association="Aruba.DataKey_SmallDateTime_ThirteenNavigations">
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+          <End Role="DataKey_SmallDateTime" EntitySet="DataKey_SmallDateTime" />
+        </AssociationSet>
+        <AssociationSet Name="DataKey_SmallMoney_ThirteenNavigations" Association="Aruba.DataKey_SmallMoney_ThirteenNavigations">
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+          <End Role="DataKey_SmallMoney" EntitySet="DataKey_SmallMoney" />
+        </AssociationSet>
+        <AssociationSet Name="DataKey_TinyInt_ThirteenNavigations" Association="Aruba.DataKey_TinyInt_ThirteenNavigations">
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+          <End Role="DataKey_TinyInt" EntitySet="DataKey_TinyInt" />
+        </AssociationSet>
+        <AssociationSet Name="DataKey_VarChar50_ThirteenNavigations" Association="Aruba.DataKey_VarChar50_ThirteenNavigations">
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+          <End Role="DataKey_VarChar50" EntitySet="DataKey_VarChar50" />
+        </AssociationSet>
+        <AssociationSet Name="DeploymentScenarios_Projects" Association="Aruba.DeploymentScenarios_Projects">
+          <End Role="Projects" EntitySet="Projects" />
+          <End Role="DeploymentScenarios" EntitySet="DeploymentScenarios" />
+        </AssociationSet>
+        <AssociationSet Name="FailureDetails_Failures" Association="Aruba.FailureDetails_Failures">
+          <End Role="Failures" EntitySet="Failures" />
+          <End Role="FailureDetails" EntitySet="FailureDetails" />
+        </AssociationSet>
+        <AssociationSet Name="Failures_BugsDefectTracking" Association="Aruba.Failures_BugsDefectTracking">
+          <End Role="BugsDefectTracking" EntitySet="BugsDefectTracking" />
+          <End Role="Failures" EntitySet="Failures" />
+        </AssociationSet>
+        <AssociationSet Name="Failures_BugsProjectTracking" Association="Aruba.Failures_BugsProjectTracking">
+          <End Role="BugsProjectTracking" EntitySet="BugsProjectTracking" />
+          <End Role="Failures" EntitySet="Failures" />
+        </AssociationSet>
+        <AssociationSet Name="Failures_ConfigFailures" Association="Aruba.Failures_ConfigFailures">
+          <End Role="ConfigFailures" EntitySet="ConfigFailures" />
+          <End Role="Failures" EntitySet="Failures" />
+        </AssociationSet>
+        <AssociationSet Name="Failures_FailureDetails" Association="Aruba.Failures_FailureDetails">
+          <End Role="FailureDetails" EntitySet="FailureDetails" />
+          <End Role="Failures" EntitySet="Failures" />
+        </AssociationSet>
+        <AssociationSet Name="MachineConfigs_Configs" Association="Aruba.MachineConfigs_Configs">
+          <End Role="Configs" EntitySet="Configs" />
+          <End Role="MachineConfigs" EntitySet="MachineConfigs" />
+        </AssociationSet>
+        <AssociationSet Name="OwnerDetails_OwnerOwnerDetails" Association="Aruba.OwnerDetails_OwnerOwnerDetails">
+          <End Role="OwnerOwnerDetails" EntitySet="OwnerOwnerDetails" />
+          <End Role="OwnerDetails" EntitySet="OwnerDetails" />
+        </AssociationSet>
+        <AssociationSet Name="OwnerOwnerDetails_OwnerDetails" Association="Aruba.OwnerOwnerDetails_OwnerDetails">
+          <End Role="OwnerDetails" EntitySet="OwnerDetails" />
+          <End Role="OwnerOwnerDetails" EntitySet="OwnerOwnerDetails" />
+        </AssociationSet>
+        <AssociationSet Name="OwnerOwnerDetails_Owners" Association="Aruba.OwnerOwnerDetails_Owners">
+          <End Role="Owners" EntitySet="Owners" />
+          <End Role="OwnerOwnerDetails" EntitySet="OwnerOwnerDetails" />
+        </AssociationSet>
+        <AssociationSet Name="Owners_BugsDefectTracking" Association="Aruba.Owners_BugsDefectTracking">
+          <End Role="BugsDefectTracking" EntitySet="BugsDefectTracking" />
+          <End Role="Owners" EntitySet="Owners" />
+        </AssociationSet>
+        <AssociationSet Name="Owners_Bugs_ResolvedByOwners" Association="Aruba.Owners_Bugs_ResolvedByOwners">
+          <End Role="Bugs_ResolvedByOwners" EntitySet="BugsDefectTracking" />
+          <End Role="Owners" EntitySet="Owners" />
+        </AssociationSet>
+        <AssociationSet Name="Owners_BugsProjectTracking" Association="Aruba.Owners_BugsProjectTracking">
+          <End Role="BugsProjectTracking" EntitySet="BugsProjectTracking" />
+          <End Role="Owners" EntitySet="Owners" />
+        </AssociationSet>
+        <AssociationSet Name="Owners_BugsProject_ResolvedByOwners" Association="Aruba.Owners_BugsProject_ResolvedByOwners">
+          <End Role="BugsProject_ResolvedByOwners" EntitySet="BugsProjectTracking" />
+          <End Role="Owners" EntitySet="Owners" />
+        </AssociationSet>
+        <AssociationSet Name="Owners_OwnerOwnerDetails" Association="Aruba.Owners_OwnerOwnerDetails">
+          <End Role="OwnerOwnerDetails" EntitySet="OwnerOwnerDetails" />
+          <End Role="Owners" EntitySet="Owners" />
+        </AssociationSet>
+        <AssociationSet Name="Owners_RunOwners" Association="Aruba.Owners_RunOwners">
+          <End Role="RunOwners" EntitySet="RunOwners" />
+          <End Role="Owners" EntitySet="Owners" />
+        </AssociationSet>
+        <AssociationSet Name="Projects_DeploymentScenarios" Association="Aruba.Projects_DeploymentScenarios">
+          <End Role="DeploymentScenarios" EntitySet="DeploymentScenarios" />
+          <End Role="Projects" EntitySet="Projects" />
+        </AssociationSet>
+        <AssociationSet Name="Projects_TestScenarios" Association="Aruba.Projects_TestScenarios">
+          <End Role="TestScenarios" EntitySet="TestScenarios" />
+          <End Role="Projects" EntitySet="Projects" />
+        </AssociationSet>
+        <AssociationSet Name="RunOwners_Owners" Association="Aruba.RunOwners_Owners">
+          <End Role="Owners" EntitySet="Owners" />
+          <End Role="RunOwners" EntitySet="RunOwners" />
+        </AssociationSet>
+        <AssociationSet Name="RunOwners_Runs" Association="Aruba.RunOwners_Runs">
+          <End Role="Runs" EntitySet="Runs" />
+          <End Role="RunOwners" EntitySet="RunOwners" />
+        </AssociationSet>
+        <AssociationSet Name="Runs_RunOwners" Association="Aruba.Runs_RunOwners">
+          <End Role="RunOwners" EntitySet="RunOwners" />
+          <End Role="Runs" EntitySet="Runs" />
+        </AssociationSet>
+        <AssociationSet Name="Runs_Tasks" Association="Aruba.Runs_Tasks">
+          <End Role="Tasks" EntitySet="Tasks" />
+          <End Role="Runs" EntitySet="Runs" />
+        </AssociationSet>
+        <AssociationSet Name="TaskInvestigates_Tasks" Association="Aruba.TaskInvestigates_Tasks">
+          <End Role="Tasks" EntitySet="Tasks" />
+          <End Role="TaskInvestigates" EntitySet="TaskInvestigates" />
+        </AssociationSet>
+        <AssociationSet Name="TaskResults_Tasks" Association="Aruba.TaskResults_Tasks">
+          <End Role="Tasks" EntitySet="Tasks" />
+          <End Role="TaskResults" EntitySet="TaskResults" />
+        </AssociationSet>
+        <AssociationSet Name="Tasks_TaskInvestigates" Association="Aruba.Tasks_TaskInvestigates">
+          <End Role="TaskInvestigates" EntitySet="TaskInvestigates" />
+          <End Role="Tasks" EntitySet="Tasks" />
+        </AssociationSet>
+        <AssociationSet Name="Tasks_TaskResults" Association="Aruba.Tasks_TaskResults">
+          <End Role="TaskResults" EntitySet="TaskResults" />
+          <End Role="Tasks" EntitySet="Tasks" />
+        </AssociationSet>
+        <AssociationSet Name="Tasks_Runs" Association="Aruba.Tasks_Runs">
+          <End Role="Runs" EntitySet="Runs" />
+          <End Role="Tasks" EntitySet="Tasks" />
+        </AssociationSet>
+        <AssociationSet Name="TestScenarios_Projects" Association="Aruba.TestScenarios_Projects">
+          <End Role="Projects" EntitySet="Projects" />
+          <End Role="TestScenarios" EntitySet="TestScenarios" />
+        </AssociationSet>
+        <AssociationSet Name="ThirteenNavigations_DataKey_BigInt" Association="Aruba.ThirteenNavigations_DataKey_BigInt">
+          <End Role="DataKey_BigInt" EntitySet="DataKey_BigInt" />
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+        </AssociationSet>
+        <AssociationSet Name="ThirteenNavigations_DataKey_Bit" Association="Aruba.ThirteenNavigations_DataKey_Bit">
+          <End Role="DataKey_Bit" EntitySet="DataKey_Bit" />
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+        </AssociationSet>
+        <AssociationSet Name="ThirteenNavigations_DataKey_DateTime" Association="Aruba.ThirteenNavigations_DataKey_DateTime">
+          <End Role="DataKey_DateTime" EntitySet="DataKey_DateTime" />
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+        </AssociationSet>
+        <AssociationSet Name="ThirteenNavigations_DataKey_Decimal" Association="Aruba.ThirteenNavigations_DataKey_Decimal">
+          <End Role="DataKey_Decimal" EntitySet="DataKey_Decimal" />
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+        </AssociationSet>
+        <AssociationSet Name="ThirteenNavigations_DataKey_Float" Association="Aruba.ThirteenNavigations_DataKey_Float">
+          <End Role="DataKey_Float" EntitySet="DataKey_Float" />
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+        </AssociationSet>
+        <AssociationSet Name="ThirteenNavigations_DataKey_GUID" Association="Aruba.ThirteenNavigations_DataKey_GUID">
+          <End Role="DataKey_GUID" EntitySet="DataKey_GUID" />
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+        </AssociationSet>
+        <AssociationSet Name="ThirteenNavigations_DataKey_Money" Association="Aruba.ThirteenNavigations_DataKey_Money">
+          <End Role="DataKey_Money" EntitySet="DataKey_Money" />
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+        </AssociationSet>
+        <AssociationSet Name="ThirteenNavigations_DataKey_Numeric" Association="Aruba.ThirteenNavigations_DataKey_Numeric">
+          <End Role="DataKey_Numeric" EntitySet="DataKey_Numeric" />
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+        </AssociationSet>
+        <AssociationSet Name="ThirteenNavigations_DataKey_Real" Association="Aruba.ThirteenNavigations_DataKey_Real">
+          <End Role="DataKey_Real" EntitySet="DataKey_Real" />
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+        </AssociationSet>
+        <AssociationSet Name="ThirteenNavigations_DataKey_SmallDateTime" Association="Aruba.ThirteenNavigations_DataKey_SmallDateTime">
+          <End Role="DataKey_SmallDateTime" EntitySet="DataKey_SmallDateTime" />
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+        </AssociationSet>
+        <AssociationSet Name="ThirteenNavigations_DataKey_SmallMoney" Association="Aruba.ThirteenNavigations_DataKey_SmallMoney">
+          <End Role="DataKey_SmallMoney" EntitySet="DataKey_SmallMoney" />
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+        </AssociationSet>
+        <AssociationSet Name="ThirteenNavigations_DataKey_TinyInt" Association="Aruba.ThirteenNavigations_DataKey_TinyInt">
+          <End Role="DataKey_TinyInt" EntitySet="DataKey_TinyInt" />
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+        </AssociationSet>
+        <AssociationSet Name="ThirteenNavigations_DataKey_VarChar50" Association="Aruba.ThirteenNavigations_DataKey_VarChar50">
+          <End Role="DataKey_VarChar50" EntitySet="DataKey_VarChar50" />
+          <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+        </AssociationSet>
+        <FunctionImport Name="GetNoParam" ReturnType="Edm.Int32" d:HttpMethod="GET" />
+        <FunctionImport Name="GetSingleParam" ReturnType="Edm.Int32" d:HttpMethod="GET">
+          <Parameter Name="intParam" Type="Edm.Int32" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetTwoParams" ReturnType="Edm.Int32" d:HttpMethod="GET">
+          <Parameter Name="intParam" Type="Edm.Int32" Mode="In" />
+          <Parameter Name="intParam2" Type="Edm.Int32" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetAllParamTypes" ReturnType="Edm.Double" d:HttpMethod="GET">
+          <Parameter Name="Byte" Type="Edm.Byte" Mode="In" />
+          <Parameter Name="Bool" Type="Edm.Boolean" Mode="In" />
+          <Parameter Name="dec" Type="Edm.Decimal" Mode="In" />
+          <Parameter Name="doub" Type="Edm.Double" Mode="In" />
+          <Parameter Name="guid" Type="Edm.Guid" Mode="In" />
+          <Parameter Name="int16" Type="Edm.Int16" Mode="In" />
+          <Parameter Name="int32" Type="Edm.Int32" Mode="In" />
+          <Parameter Name="int64" Type="Edm.Int64" Mode="In" />
+          <Parameter Name="single" Type="Edm.Single" Mode="In" />
+          <Parameter Name="str" Type="Edm.String" Mode="In" />
+          <Parameter Name="dt" Type="Edm.DateTimeOffset" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetGuid" ReturnType="Edm.Guid" d:HttpMethod="GET">
+          <Parameter Name="guid" Type="Edm.Guid" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetByte" ReturnType="Edm.Byte" d:HttpMethod="GET">
+          <Parameter Name="Byte" Type="Edm.Byte" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetBool" ReturnType="Edm.Boolean" d:HttpMethod="GET">
+          <Parameter Name="Bool" Type="Edm.Boolean" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetDecimal" ReturnType="Edm.Decimal" d:HttpMethod="GET">
+          <Parameter Name="dec" Type="Edm.Decimal" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetDouble" ReturnType="Edm.Double" d:HttpMethod="GET">
+          <Parameter Name="doub" Type="Edm.Double" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetInt16" ReturnType="Edm.Int16" d:HttpMethod="GET">
+          <Parameter Name="int16" Type="Edm.Int16" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetInt32" ReturnType="Edm.Int32" d:HttpMethod="GET">
+          <Parameter Name="int32" Type="Edm.Int32" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetInt64" ReturnType="Edm.Int64" d:HttpMethod="GET">
+          <Parameter Name="int64" Type="Edm.Int64" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetSingle" ReturnType="Edm.Single" d:HttpMethod="GET">
+          <Parameter Name="single" Type="Edm.Single" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetString" ReturnType="Edm.String" d:HttpMethod="GET">
+          <Parameter Name="str" Type="Edm.String" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetSByte" ReturnType="Edm.SByte" d:HttpMethod="GET">
+          <Parameter Name="Sbyte" Type="Edm.SByte" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="GetDateTime" ReturnType="Edm.DateTimeOffset" d:HttpMethod="GET">
+          <Parameter Name="datetime" Type="Edm.DateTimeOffset" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="BinaryServiceOpTest" ReturnType="Edm.Binary" d:HttpMethod="GET" />
+        <FunctionImport Name="BooleanServiceOperation" ReturnType="Edm.Boolean" d:HttpMethod="GET" />
+        <FunctionImport Name="ByteServiceOperation" ReturnType="Edm.Byte" d:HttpMethod="GET" />
+        <FunctionImport Name="DateTimeServiceOperation" ReturnType="Edm.DateTimeOffset" d:HttpMethod="GET" />
+        <FunctionImport Name="DecimalServiceOperation" ReturnType="Edm.Decimal" d:HttpMethod="GET" />
+        <FunctionImport Name="DoubleServiceOperation" ReturnType="Edm.Double" d:HttpMethod="GET" />
+        <FunctionImport Name="GuidServiceOperation" ReturnType="Edm.Guid" d:HttpMethod="GET" />
+        <FunctionImport Name="Int16ServiceOperation" ReturnType="Edm.Int16" d:HttpMethod="GET" />
+        <FunctionImport Name="Int32ServiceOperation" ReturnType="Edm.Int32" d:HttpMethod="GET" />
+        <FunctionImport Name="Int64ServiceOperation" ReturnType="Edm.Int64" d:HttpMethod="GET" />
+        <FunctionImport Name="SByteServiceOperation" ReturnType="Edm.SByte" d:HttpMethod="GET" />
+        <FunctionImport Name="SingleServiceOperation" ReturnType="Edm.Single" d:HttpMethod="GET" />
+        <FunctionImport Name="StringServiceOperation" ReturnType="Edm.String" d:HttpMethod="GET" />
+        <FunctionImport Name="Clear" d:HttpMethod="GET" />
+        <FunctionImport Name="VerifyResourceInstanceState" ReturnType="Edm.String" d:HttpMethod="GET">
+          <Parameter Name="resourceState" Type="Edm.String" Mode="In" />
+          <Parameter Name="resourceSetName" Type="Edm.String" Mode="In" />
+          <Parameter Name="resourceTypeName" Type="Edm.String" Mode="In" />
+          <Parameter Name="keyProperties" Type="Edm.String" Mode="In" />
+          <Parameter Name="keyPropertyTypes" Type="Edm.String" Mode="In" />
+          <Parameter Name="keyValues" Type="Edm.String" Mode="In" />
+        </FunctionImport>
+        <FunctionImport Name="VerifyResourceInstanceProperty" ReturnType="Edm.String" d:HttpMethod="GET">
+          <Parameter Name="resourceSetName" Type="Edm.String" Mode="In" />
+          <Parameter Name="resourceTypeName" Type="Edm.String" Mode="In" />
+          <Parameter Name="keyProperties" Type="Edm.String" Mode="In" />
+          <Parameter Name="keyPropertyTypes" Type="Edm.String" Mode="In" />
+          <Parameter Name="keyValues" Type="Edm.String" Mode="In" />
+          <Parameter Name="propertyName" Type="Edm.String" Mode="In" />
+          <Parameter Name="propertyValue" Type="Edm.String" Mode="In" />
+          <Parameter Name="propertyType" Type="Edm.String" Mode="In" />
+        </FunctionImport>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,22 @@
+$orderby = FirstName
+
+
+OrderByClause
+	Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+	Direction = Ascending
+	Range Variable = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = VipCustomer
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+	Expression = 
+	SingleValuePropertyAccessNode
+		Property = FirstName
+		TypeReference = [Edm.String Nullable=True Unicode=True]
+		Source = 
+		EntityRangeVariableReferenceNode
+			Name = $it
+			NavigationSource = VipCustomer
+			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+			Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+	Then By = 

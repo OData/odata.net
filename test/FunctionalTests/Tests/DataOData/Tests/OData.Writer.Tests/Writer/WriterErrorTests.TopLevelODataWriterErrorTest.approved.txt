@@ -1,0 +1,492 @@
+Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "error":{
+    "code":"","message":""
+  }
+}
+
+Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "error":{
+    "code":"","message":""
+  }
+}
+
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code />
+  <m:message />
+</m:error>
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code />
+  <m:message />
+</m:error>
+
+Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "error":{
+    "code":"code1","message":""
+  }
+}
+
+Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "error":{
+    "code":"code1","message":""
+  }
+}
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code1</m:code>
+  <m:message />
+</m:error>
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code1</m:code>
+  <m:message />
+</m:error>
+
+Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "error":{
+    "code":"","message":"message text"
+  }
+}
+
+Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "error":{
+    "code":"","message":"message text"
+  }
+}
+
+Combination: 22; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code />
+  <m:message>message text</m:message>
+</m:error>
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code />
+  <m:message>message text</m:message>
+</m:error>
+
+Combination: 26; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "error":{
+    "code":"","message":""
+  }
+}
+
+Combination: 28; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "error":{
+    "code":"","message":""
+  }
+}
+
+Combination: 30; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code />
+  <m:message />
+</m:error>
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code />
+  <m:message />
+</m:error>
+
+Combination: 34; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "error":{
+    "code":"","message":"","innererror":{
+      "message":"some inner error","type":"","stacktrace":""
+    }
+  }
+}
+
+Combination: 36; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "error":{
+    "code":"","message":"","innererror":{
+      "message":"some inner error","type":"","stacktrace":""
+    }
+  }
+}
+
+Combination: 38; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code />
+  <m:message />
+  <m:innererror>
+    <m:message>some inner error</m:message>
+    <m:type></m:type>
+    <m:stacktrace></m:stacktrace>
+  </m:innererror>
+</m:error>
+
+Combination: 40; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code />
+  <m:message />
+  <m:innererror>
+    <m:message>some inner error</m:message>
+    <m:type></m:type>
+    <m:stacktrace></m:stacktrace>
+  </m:innererror>
+</m:error>
+
+Combination: 42; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "error":{
+    "code":"code42","message":"message text"
+  }
+}
+
+Combination: 44; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "error":{
+    "code":"code42","message":"message text"
+  }
+}
+
+Combination: 46; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code42</m:code>
+  <m:message>message text</m:message>
+</m:error>
+
+Combination: 48; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code42</m:code>
+  <m:message>message text</m:message>
+</m:error>
+
+Combination: 50; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "error":{
+    "code":"code42","message":"message text","innererror":{
+      "message":"some inner error","type":"","stacktrace":""
+    }
+  }
+}
+
+Combination: 52; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "error":{
+    "code":"code42","message":"message text","innererror":{
+      "message":"some inner error","type":"","stacktrace":""
+    }
+  }
+}
+
+Combination: 54; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code42</m:code>
+  <m:message>message text</m:message>
+  <m:innererror>
+    <m:message>some inner error</m:message>
+    <m:type></m:type>
+    <m:stacktrace></m:stacktrace>
+  </m:innererror>
+</m:error>
+
+Combination: 56; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code42</m:code>
+  <m:message>message text</m:message>
+  <m:innererror>
+    <m:message>some inner error</m:message>
+    <m:type></m:type>
+    <m:stacktrace></m:stacktrace>
+  </m:innererror>
+</m:error>
+
+Combination: 58; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "error":{
+    "code":"code42","message":"message text","innererror":{
+      "message":"some inner error","type":"some type name","stacktrace":"some stack trace"
+    }
+  }
+}
+
+Combination: 60; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "error":{
+    "code":"code42","message":"message text","innererror":{
+      "message":"some inner error","type":"some type name","stacktrace":"some stack trace"
+    }
+  }
+}
+
+Combination: 62; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code42</m:code>
+  <m:message>message text</m:message>
+  <m:innererror>
+    <m:message>some inner error</m:message>
+    <m:type>some type name</m:type>
+    <m:stacktrace>some stack trace</m:stacktrace>
+  </m:innererror>
+</m:error>
+
+Combination: 64; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code42</m:code>
+  <m:message>message text</m:message>
+  <m:innererror>
+    <m:message>some inner error</m:message>
+    <m:type>some type name</m:type>
+    <m:stacktrace>some stack trace</m:stacktrace>
+  </m:innererror>
+</m:error>
+
+Combination: 66; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "error":{
+    "code":"code42","message":"message text","innererror":{
+      "message":"some inner error","type":"some type name","stacktrace":"some stack trace","internalexception":{
+        "message":"nested inner error","type":"nested type name","stacktrace":"nested stack trace","internalexception":{
+          "message":"nested nested inner error","type":"nested nested type name","stacktrace":"nested nested stack trace"
+        }
+      }
+    }
+  }
+}
+
+Combination: 68; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "error":{
+    "code":"code42","message":"message text","innererror":{
+      "message":"some inner error","type":"some type name","stacktrace":"some stack trace","internalexception":{
+        "message":"nested inner error","type":"nested type name","stacktrace":"nested stack trace","internalexception":{
+          "message":"nested nested inner error","type":"nested nested type name","stacktrace":"nested nested stack trace"
+        }
+      }
+    }
+  }
+}
+
+Combination: 70; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code42</m:code>
+  <m:message>message text</m:message>
+  <m:innererror>
+    <m:message>some inner error</m:message>
+    <m:type>some type name</m:type>
+    <m:stacktrace>some stack trace</m:stacktrace>
+    <m:internalexception>
+      <m:message>nested inner error</m:message>
+      <m:type>nested type name</m:type>
+      <m:stacktrace>nested stack trace</m:stacktrace>
+      <m:internalexception>
+        <m:message>nested nested inner error</m:message>
+        <m:type>nested nested type name</m:type>
+        <m:stacktrace>nested nested stack trace</m:stacktrace>
+      </m:internalexception>
+    </m:internalexception>
+  </m:innererror>
+</m:error>
+
+Combination: 72; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code42</m:code>
+  <m:message>message text</m:message>
+  <m:innererror>
+    <m:message>some inner error</m:message>
+    <m:type>some type name</m:type>
+    <m:stacktrace>some stack trace</m:stacktrace>
+    <m:internalexception>
+      <m:message>nested inner error</m:message>
+      <m:type>nested type name</m:type>
+      <m:stacktrace>nested stack trace</m:stacktrace>
+      <m:internalexception>
+        <m:message>nested nested inner error</m:message>
+        <m:type>nested nested type name</m:type>
+        <m:stacktrace>nested nested stack trace</m:stacktrace>
+      </m:internalexception>
+    </m:internalexception>
+  </m:innererror>
+</m:error>
+
+Combination: 74; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "error":{
+    "code":"code42","message":"message text","innererror":{
+      "message":"some inner error","type":"System.Exception","stacktrace":""
+    }
+  }
+}
+
+Combination: 76; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "error":{
+    "code":"code42","message":"message text","innererror":{
+      "message":"some inner error","type":"System.Exception","stacktrace":""
+    }
+  }
+}
+
+Combination: 78; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code42</m:code>
+  <m:message>message text</m:message>
+  <m:innererror>
+    <m:message>some inner error</m:message>
+    <m:type>System.Exception</m:type>
+    <m:stacktrace></m:stacktrace>
+  </m:innererror>
+</m:error>
+
+Combination: 80; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code42</m:code>
+  <m:message>message text</m:message>
+  <m:innererror>
+    <m:message>some inner error</m:message>
+    <m:type>System.Exception</m:type>
+    <m:stacktrace></m:stacktrace>
+  </m:innererror>
+</m:error>
+
+Combination: 82; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "error":{
+    "code":"code42","message":"message text","innererror":{
+      "message":"some inner error","type":"System.Exception","stacktrace":"","internalexception":{
+        "message":"nested inner error","type":"System.Exception","stacktrace":"","internalexception":{
+          "message":"nested nested inner error","type":"System.Exception","stacktrace":""
+        }
+      }
+    }
+  }
+}
+
+Combination: 84; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "error":{
+    "code":"code42","message":"message text","innererror":{
+      "message":"some inner error","type":"System.Exception","stacktrace":"","internalexception":{
+        "message":"nested inner error","type":"System.Exception","stacktrace":"","internalexception":{
+          "message":"nested nested inner error","type":"System.Exception","stacktrace":""
+        }
+      }
+    }
+  }
+}
+
+Combination: 86; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code42</m:code>
+  <m:message>message text</m:message>
+  <m:innererror>
+    <m:message>some inner error</m:message>
+    <m:type>System.Exception</m:type>
+    <m:stacktrace></m:stacktrace>
+    <m:internalexception>
+      <m:message>nested inner error</m:message>
+      <m:type>System.Exception</m:type>
+      <m:stacktrace></m:stacktrace>
+      <m:internalexception>
+        <m:message>nested nested inner error</m:message>
+        <m:type>System.Exception</m:type>
+        <m:stacktrace></m:stacktrace>
+      </m:internalexception>
+    </m:internalexception>
+  </m:innererror>
+</m:error>
+
+Combination: 88; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+  <m:code>code42</m:code>
+  <m:message>message text</m:message>
+  <m:innererror>
+    <m:message>some inner error</m:message>
+    <m:type>System.Exception</m:type>
+    <m:stacktrace></m:stacktrace>
+    <m:internalexception>
+      <m:message>nested inner error</m:message>
+      <m:type>System.Exception</m:type>
+      <m:stacktrace></m:stacktrace>
+      <m:internalexception>
+        <m:message>nested nested inner error</m:message>
+        <m:type>System.Exception</m:type>
+        <m:stacktrace></m:stacktrace>
+      </m:internalexception>
+    </m:internalexception>
+  </m:innererror>
+</m:error>
+

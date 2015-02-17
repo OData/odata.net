@@ -1,0 +1,1 @@
+﻿{"type":"record","name":"NS.SimpleEntry","fields":[{"name":"TNull","type":"null"},{"name":"TBoolean","type":"boolean"},{"name":"TInt32","type":"int"},{"name":"TLong","type":"long"},{"name":"TFloat","type":"float"},{"name":"TDouble","type":"double"},{"name":"TBytes","type":"bytes"},{"name":"TString","type":"string"}]}

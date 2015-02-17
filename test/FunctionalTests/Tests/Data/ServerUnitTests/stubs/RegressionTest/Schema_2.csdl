@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TestDerived" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+  <EntityType Name="BugEntityDerived" BaseType="Test.BugEntity">
+    <Property Name="DerivedProperty" Type="Decimal" />
+  </EntityType>
+</Schema>

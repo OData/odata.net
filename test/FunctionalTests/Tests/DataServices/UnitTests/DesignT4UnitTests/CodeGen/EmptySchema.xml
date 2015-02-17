@@ -1,0 +1,9 @@
+<?xml version="1.0" standalone="yes" ?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Test" xmlns:d="http://docs.oasis-open.org/odata/ns/data"
+            xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"
+            xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

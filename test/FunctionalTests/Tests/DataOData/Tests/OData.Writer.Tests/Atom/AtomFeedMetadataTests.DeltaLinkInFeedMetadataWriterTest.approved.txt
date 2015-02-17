@@ -1,0 +1,96 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed>
+
+Combination: 5; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><author><name /></author></feed>
+
+Combination: 7; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><author><name /></author></feed>
+
+Combination: 10; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed>
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed>
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><author><name /></author></feed>
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><author><name /></author></feed>
+
+Combination: 18; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed>
+
+Combination: 20; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed>
+
+Combination: 22; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><author><name /></author></feed>
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><author><name /></author></feed>
+
+Combination: 26; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/delta" href="http://odata.org/links/1" /></feed>
+
+Combination: 28; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/delta" href="http://odata.org/links/1" /></feed>
+
+Combination: 30; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/delta" href="http://odata.org/links/1" /></feed>
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/delta" href="http://odata.org/links/1" /></feed>
+
+Combination: 34; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/delta" type="image/png" title="Test link 1" href="http://odata.org/links/1" hreflang="de-AT" length="999" /></feed>
+
+Combination: 36; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/delta" type="image/png" title="Test link 1" href="http://odata.org/links/1" hreflang="de-AT" length="999" /></feed>
+
+Combination: 38; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/delta" type="image/png" title="Test link 1" href="http://odata.org/links/1" hreflang="de-AT" length="999" /></feed>
+
+Combination: 40; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/delta" type="image/png" title="Test link 1" href="http://odata.org/links/1" hreflang="de-AT" length="999" /></feed>
+
+Combination: 42; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/delta" type="image/png" title="Test link 1" href="http://odata.org/links/1" hreflang="de-AT" length="999" /></feed>
+
+Combination: 44; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/delta" type="image/png" title="Test link 1" href="http://odata.org/links/1" hreflang="de-AT" length="999" /></feed>
+
+Combination: 46; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/delta" type="image/png" title="Test link 1" href="http://odata.org/links/1" hreflang="de-AT" length="999" /></feed>
+
+Combination: 48; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><author><name /></author><link rel="http://docs.oasis-open.org/odata/ns/delta" type="image/png" title="Test link 1" href="http://odata.org/links/1" hreflang="de-AT" length="999" /></feed>
+

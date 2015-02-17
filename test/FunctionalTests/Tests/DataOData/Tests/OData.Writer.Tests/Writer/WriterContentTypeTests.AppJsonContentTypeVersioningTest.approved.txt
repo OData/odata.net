@@ -1,0 +1,384 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 3; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 5; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 7; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 9; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 10; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 11; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 13; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 15; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+{"error":{"code":"","message":"Some error message."}}
+
+Combination: 1; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 3; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 5; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 7; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 9; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 10; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 11; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 13; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 15; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata","value":[]}
+
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 2; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 3; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 5; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 6; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 7; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 9; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 10; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 11; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 13; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 14; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 15; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 17; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 18; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 19; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 20; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 21; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 22; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 23; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 25; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 26; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 27; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 28; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 29; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 30; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 31; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
+
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 2; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 3; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 5; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 6; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 7; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 9; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 10; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 11; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 13; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 14; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 15; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 17; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 18; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 19; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 20; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 21; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 22; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 23; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 25; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 26; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 27; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 28; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 29; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 30; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 31; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int32","value":42}
+

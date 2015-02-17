@@ -1,0 +1,24 @@
+$select = 
+$expand = CustomerForOrder($search=(mountain OR bike) AND NOT clothing)
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: CustomerForOrder)]
+			SearchQueryOption
+				Expression = 
+						SearchTermNode
+							Text = mountain
+					Or
+						SearchTermNode
+							Text = bike
+				And
+					Not(
+						SearchTermNode
+							Text = clothing
+					)
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems(Empty List)

@@ -1,0 +1,116 @@
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: multipart/mixed; boundary=changesetresponse_00000001-0000-0000-0000-000000000000
+
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 2
+
+HTTP/1.1 201 Created
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+CustomResponseHeader1: CustomResponseHeaderValue1
+CustomResponseHeader2: CustomResponseHeaderValue2
+Cache-Control: no-cache
+Location: http://host/Customers('C4321')
+
+{"@odata.context":"http://host/$metadata#Customers/$entity","@odata.mediaReadLink":"Customers('C4321')/$value","@odata.mediaContentType":"CustomType/CustomSubType","@odata.mediaEtag":"\"BlobETag123\"","CustomerID":"C4321","CompanyName":"Microsoft Corp.","ContactName":null,"ContactTitle":null,"Address":"One Microsoft Way","City":"Redmond","Region":null,"PostalCode":null,"Phone":null,"Fax":null}
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 3
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+
+
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 4
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+
+
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 5
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+
+
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 6
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+CustomResponseHeader1: CustomResponseHeaderValue1
+CustomResponseHeader2: CustomResponseHeaderValue2
+Cache-Control: no-cache
+OData-Version: 4.0;
+ETag: "BlobETag123"
+
+
+--changesetresponse_00000001-0000-0000-0000-000000000000--
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 304 Not Modified
+Content-Type: CustomType/CustomSubType
+X-Content-Type-Options: nosniff
+CustomResponseHeader1: CustomResponseHeaderValue1
+CustomResponseHeader2: CustomResponseHeaderValue2
+ETag: "BlobETag123"
+
+
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 304 Not Modified
+Content-Type: CustomType/CustomSubType
+X-Content-Type-Options: nosniff
+CustomResponseHeader1: CustomResponseHeaderValue1
+CustomResponseHeader2: CustomResponseHeaderValue2
+ETag: "BlobETag123"
+
+
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+Content-Type: CustomType/CustomSubType
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+CustomResponseHeader1: CustomResponseHeaderValue1
+CustomResponseHeader2: CustomResponseHeaderValue2
+ETag: "BlobETag123"
+
+22222222222222222222
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+
+{"error":{"code":"","message":"Expected custom request headers not found!"}}
+--batchresponse_00000000-0000-0000-0000-000000000000--

@@ -1,0 +1,48 @@
+Combination: 3; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 7; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 8; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 11; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 15; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 16; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 19; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 23; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 24; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: false
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+

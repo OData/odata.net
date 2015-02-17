@@ -1,0 +1,12 @@
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 404 Not Found
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0
+Content-Type: application/xml;charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?><m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><m:code /><m:message>Resource not found for the segment 'Orders'.</m:message></m:error>
+--batchresponse_00000000-0000-0000-0000-000000000000--

@@ -1,0 +1,808 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet"><id>urn:FeedID</id><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author></feed>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+</feed>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+</feed>
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+</feed>
+
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <m:count>0</m:count>
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+</feed>
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <m:count>0</m:count>
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+</feed>
+
+Combination: 10; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <m:count>0</m:count>
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="next" href="http://www.odata.org/Feed" />
+</feed>
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <m:count>0</m:count>
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="next" href="http://www.odata.org/Feed" />
+</feed>
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="next" href="http://www.odata.org/Feed" />
+</feed>
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="next" href="http://www.odata.org/Feed" />
+</feed>
+
+Combination: 17; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet"><id>urn:FeedID</id><title /><updated>0000-00-00T00:00:00Z</updated><entry><id>urn:id</id><category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id></m:properties></content></entry></feed>
+
+Combination: 18; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+</feed>
+
+Combination: 19; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+</feed>
+
+Combination: 20; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+</feed>
+
+Combination: 22; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <m:count>1</m:count>
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+</feed>
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <m:count>1</m:count>
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+</feed>
+
+Combination: 26; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <link rel="next" href="http://www.odata.org/Feed" />
+</feed>
+
+Combination: 28; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <link rel="next" href="http://www.odata.org/Feed" />
+</feed>
+
+Combination: 30; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <link rel="next" href="http://www.odata.org/Feed" />
+</feed>
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <link rel="next" href="http://www.odata.org/Feed" />
+</feed>
+
+Combination: 33; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet"><id>urn:FeedID</id><title /><updated>0000-00-00T00:00:00Z</updated><entry><id>urn:id</id><category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id></m:properties></content></entry><entry><id>urn:id</id><category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id></m:properties></content></entry><entry><id>urn:id</id><category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id></m:properties></content></entry></feed>
+
+Combination: 34; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+</feed>
+
+Combination: 35; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+</feed>
+
+Combination: 36; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+</feed>
+
+Combination: 38; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <m:count>3</m:count>
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+</feed>
+
+Combination: 40; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <m:count>3</m:count>
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+</feed>
+
+Combination: 42; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <m:count>3</m:count>
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <link rel="next" href="http://www.odata.org/Feed" />
+</feed>
+
+Combination: 44; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <m:count>3</m:count>
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <link rel="next" href="http://www.odata.org/Feed" />
+</feed>
+
+Combination: 46; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <link rel="next" href="http://www.odata.org/Feed" />
+</feed>
+
+Combination: 48; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet">
+  <id>urn:FeedID</id>
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>urn:id</id>
+    <category term="#TestModel.MyBaseType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+    <title />
+    <updated>0000-00-00T00:00:00Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/xml">
+      <m:properties>
+        <d:Id m:type="Guid">00000000-0000-0000-0000-000000000000</d:Id>
+      </m:properties>
+    </content>
+  </entry>
+  <link rel="next" href="http://www.odata.org/Feed" />
+</feed>
+

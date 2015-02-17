@@ -1,0 +1,3364 @@
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 22; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 30; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 38; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 40; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 46; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 48; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 54; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 56; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 62; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 64; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 70; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 72; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 78; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 80; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 86; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 88; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 94; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 96; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 102; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 104; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 110; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 112; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 118; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 120; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 126; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 128; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 134; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 136; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 142; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 144; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 150; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 152; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 158; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 160; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 166; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 168; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 174; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 176; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 182; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 184; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 190; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 192; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 198; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 200; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 206; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 208; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 214; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 216; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 222; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 224; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 230; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 232; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 238; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 240; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 246; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 248; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 254; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 256; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 262; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 264; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 270; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 272; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 278; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 280; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 286; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 288; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 294; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 296; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 302; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 304; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 310; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 312; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 318; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 320; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 326; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 328; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 334; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 336; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="http://www.odata.org/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 342; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 344; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 350; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 352; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 358; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 360; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 366; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 368; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 374; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 376; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 382; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 384; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 390; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 392; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 398; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 400; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 406; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 408; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 414; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 416; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 422; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 424; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 430; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 432; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 438; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 440; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 446; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 448; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 454; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 456; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 462; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 464; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 470; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 472; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 478; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 480; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://mybaseuri/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="http://www.odata.org/editlink" m:etag="&quot;myetagvalue&quot;" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 486; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 488; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 494; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 496; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 502; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 504; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 510; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 512; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 518; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 520; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 526; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 528; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 534; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 536; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 542; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 544; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 550; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 552; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 558; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 560; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 566; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 568; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 574; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 576; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" title="stream1" href="editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 582; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 584; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 590; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 592; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 598; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 600; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 606; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 608; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml" />
+</entry>
+
+Combination: 614; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 616; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithStreamPropertyAndOtherProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:Name>Clemens</d:Name>
+      <d:Address m:type="#TestModel.AddressType">
+        <d:Street>Am Euro Platz</d:Street>
+        <d:City>Vienna</d:City>
+      </d:Address>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 622; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 624; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xml:base="http://www.odata.org/" xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.EntityWithSeveralStreamProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream1" title="__Stream1" href="http://odata.org/stream1/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/__Stream2" title="__Stream2" href="http://odata.org/stream2/editlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/stream1" type="application/binary" title="stream1" href="http://www.odata.org/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/edit-media/stream1" type="application/binary" title="stream1" href="editlink" m:etag="&quot;myetagvalue&quot;" />
+  <link rel="http://docs.oasis-open.org/odata/ns/mediaresource/__Stream3" type="stream3:contenttype" title="__Stream3" href="http://odata.org/stream3/readlink" />
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+    </m:properties>
+  </content>
+</entry>
+

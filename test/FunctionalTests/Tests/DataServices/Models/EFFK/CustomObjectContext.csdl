@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AstoriaUnitTests.ObjectContextStubs" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+  <EntityContainer Name="CustomObjectContext">
+    <EntitySet Name="Customers" EntityType="AstoriaUnitTests.ObjectContextStubs.Types.Customer" />
+    <EntitySet Name="CustomerBlobs" EntityType="AstoriaUnitTests.ObjectContextStubs.Types.CustomerBlob" />
+    <EntitySet Name="Orders" EntityType="AstoriaUnitTests.ObjectContextStubs.Types.Order" />
+    <EntitySet Name="OrderDetails" EntityType="AstoriaUnitTests.ObjectContextStubs.Types.OrderDetail" />
+    <AssociationSet Name="FK__Orders__Customer__00551192" Association="AstoriaUnitTests.ObjectContextStubs.Types.FK__Orders__Customer__00551192">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="CustomersBestFriend" Association="AstoriaUnitTests.ObjectContextStubs.Types.CustomersBestFriend">
+      <End Role="BestFriend" EntitySet="Customers" />
+      <End Role="CustomersWhoConsiderMeTheirBestFriend" EntitySet="Customers" />
+    </AssociationSet>
+    <AssociationSet Name="Order_OrderDetails" Association="AstoriaUnitTests.ObjectContextStubs.Types.FK_Order_Details_Orders">
+      <End Role="Orders" EntitySet="Orders" />
+      <End Role="OrderDetails" EntitySet="OrderDetails" />
+    </AssociationSet>
+
+    <EntitySet Name="Workers" EntityType="AstoriaUnitTests.ObjectContextStubs.Types.Worker" />
+    <EntitySet Name="Offices" EntityType="AstoriaUnitTests.ObjectContextStubs.Types.Office" />
+    <AssociationSet Name="FK_Worker_Office" Association="AstoriaUnitTests.ObjectContextStubs.Types.FK_Worker_Office">
+      <End Role="Worker" EntitySet="Workers" />
+      <End Role="Office" EntitySet="Offices" />
+    </AssociationSet>
+
+  </EntityContainer>
+</Schema>

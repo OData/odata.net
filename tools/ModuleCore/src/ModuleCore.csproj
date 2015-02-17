@@ -1,0 +1,43 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
+    <AssemblyName>Microsoft.Test.ModuleCore</AssemblyName>
+    <NoWarn>;1699;1570;1572;1573;1591;</NoWarn>
+    <ErrorReport>prompt</ErrorReport>
+    <OutputType>Library</OutputType>
+    <ProjectGuid>{5E46C9E2-8B2F-4961-8C26-EFA9DF6CD68D}</ProjectGuid>
+    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
+    <RootNamespace>Microsoft.Test.ModuleCore</RootNamespace>
+    <SignAssemblyAttribute>false</SignAssemblyAttribute>
+    <KeyOriginatorFile>modulecore.snk</KeyOriginatorFile>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="TestAttribute.cs" />
+    <Compile Include="TestItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TestProperties.cs" />
+    <Compile Include="TestThread.cs" />
+    <Compile Include="Util.cs" />
+    <Compile Include="TestLog.cs" />
+    <Compile Include="TestParser.cs" />
+    <Compile Include="TestCase.cs" />
+    <Compile Include="TestException.cs" />
+    <Compile Include="TestLoader.cs" />
+    <Compile Include="TestModule.cs" />
+    <Compile Include="TestSpec.cs" />
+    <Compile Include="TestVariation.cs" />
+    <Compile Include="Interop.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ModuleCore.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

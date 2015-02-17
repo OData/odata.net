@@ -1,0 +1,5 @@
+﻿### This file contains valid MULTILINESTRING data in geometry well kown text format. Comments are lines starting with # ###
+### wikipedia sample data ###
+MULTILINESTRING EMPTY
+MULTILINESTRING ((10 10, 20 20, 10 40), (40 40, 30 30, 40 20, 30 10))
+MULTILINESTRING ((10.5 10.5, 20.5 20.5, 10.5 40.5), (40.5 40.5, 30.5 30.5, 40.5 20.5, 30.5 10.5))

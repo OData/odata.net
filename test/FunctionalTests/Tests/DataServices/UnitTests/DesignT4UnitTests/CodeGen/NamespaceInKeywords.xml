@@ -1,0 +1,35 @@
+<?xml version="1.0" standalone="yes" ?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="NamespaceInKeywords.event.string.int" xmlns:d="http://docs.oasis-open.org/odata/ns/data"
+            xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"
+            xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <ComplexType Name="ComplexType">
+        <Property Name="Value" Type="Edm.String" Nullable="false" />
+      </ComplexType>
+      <EntityType Name="TestType1">
+        <Key>
+          <PropertyRef Name="KeyProp" />
+        </Key>
+        <Property Name="KeyProp" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ValueProp" Type="Edm.String" Nullable="false" />
+      </EntityType>
+    </Schema>
+    <Schema Namespace="NamespaceInKeywords.double" xmlns:d="http://docs.oasis-open.org/odata/ns/data"
+            xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"
+            xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="TestType2">
+        <Key>
+          <PropertyRef Name="KeyProp" />
+        </Key>
+        <Property Name="KeyProp" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ValueProp" Type="Edm.String" Nullable="false" />
+        <Property Name="ComplexValueProp" Type="NamespaceInKeywords.event.string.int.ComplexType" Nullable="false" />
+      </EntityType>
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Set1" EntityType="NamespaceInKeywords.event.string.int.TestType1" />
+        <EntitySet Name="Set2" EntityType="NamespaceInKeywords.double.TestType2" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

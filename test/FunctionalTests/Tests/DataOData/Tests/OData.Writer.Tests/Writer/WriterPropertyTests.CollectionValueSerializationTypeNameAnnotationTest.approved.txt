@@ -1,0 +1,197 @@
+Combination: 5; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 7; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 9; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[]}
+
+Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[
+    
+  ]
+}
+
+Combination: 11; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[
+    
+  ]
+}
+
+Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[
+    
+  ]
+}
+
+Combination: 13; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.Int32)" m:type="#Collection(Int32)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.Int32)" m:type="#Collection(Int32)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 15; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.Int32)" m:type="#Collection(Int32)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.Int32)" m:type="#Collection(Int32)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 17; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[]}
+
+Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[
+    
+  ]
+}
+
+Combination: 19; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[
+    
+  ]
+}
+
+Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[
+    
+  ]
+}
+
+Combination: 21; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.Int32)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 22; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.Int32)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 23; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.Int32)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.Int32)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 29; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.String)" m:type="#Collection(String)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 30; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.String)" m:type="#Collection(String)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 31; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.String)" m:type="#Collection(String)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.String)" m:type="#Collection(String)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 37; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:type="" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 39; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:type="" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 45; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#NonCollectionTypeName" m:type="#NonCollectionTypeName" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 46; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#NonCollectionTypeName" m:type="#NonCollectionTypeName" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 47; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#NonCollectionTypeName" m:type="#NonCollectionTypeName" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 48; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#NonCollectionTypeName" m:type="#NonCollectionTypeName" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 49; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":[]}
+
+Combination: 50; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":[
+    
+  ]
+}
+
+Combination: 51; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":[
+    
+  ]
+}
+
+Combination: 52; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":[
+    
+  ]
+}
+
+Combination: 53; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.String)" m:type="#Collection(String)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 54; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.String)" m:type="#Collection(String)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 55; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.String)" m:type="#Collection(String)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 56; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Collection(Edm.String)" m:type="#Collection(String)" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+

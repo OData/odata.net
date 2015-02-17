@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="NonPublicPropertiesContextStoreContainer" CdmEntityContainer="NonPublicPropertiesContext">
+    <EntitySetMapping Name="Customers">
+      <EntityTypeMapping TypeName="IsTypeOf(NonPublicPropertiesContext.Customer)">
+        <MappingFragment StoreEntitySet="Customers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Orders">
+      <EntityTypeMapping TypeName="IsTypeOf(NonPublicPropertiesContext.Order)">
+        <MappingFragment StoreEntitySet="Orders">
+          <ScalarProperty Name="bKey" ColumnName="bKey" />
+          <ScalarProperty Name="AKey" ColumnName="AKey" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="CustomerOrder" TypeName="NonPublicPropertiesContext.CustomerOrder" StoreEntitySet="Orders">
+      <EndProperty Name="Customer">
+        <ScalarProperty Name="Id" ColumnName="Customer_Id" />
+      </EndProperty>
+      <EndProperty Name="Order">
+        <ScalarProperty Name="bKey" ColumnName="bKey" />
+        <ScalarProperty Name="AKey" ColumnName="AKey" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <PortableClassLibraryImportTarget Condition="'$(PortableClassLibraryImportTarget)' == ''">$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets</PortableClassLibraryImportTarget>
+  </PropertyGroup>
+  <!-- Set the PortableClassLibraryFrameworkPathOverride property to the custom location of the Portable Class Library(PCL) profile to use. -->
+  <PropertyGroup Condition="'$(PortableClassLibraryFrameworkPathOverride)' != ''">
+    <!-- Set FrameworkPathOverride so mscorlib is taken from the appropriate location.  This property must end with a trailing backslash because later targets assume it has one. -->
+    <FrameworkPathOverride>$(PortableClassLibraryFrameworkPathOverride.TrimEnd('\\'))\</FrameworkPathOverride>
+    <!-- _TargetFrameworkDirectories and _FullFrameworkReferenceAssemblyPaths need to be defined so GetReferenceAssemblyPaths task in the target GetReferenceAssemblyPaths is not run which resolves from the GAC. -->
+    <_TargetFrameworkDirectories>$(FrameworkPathOverride)</_TargetFrameworkDirectories>
+    <_FullFrameworkReferenceAssemblyPaths>$(FrameworkPathOverride)</_FullFrameworkReferenceAssemblyPaths>
+  </PropertyGroup>
+
+  <Import Project="$(PortableClassLibraryImportTarget)" />
+</Project>

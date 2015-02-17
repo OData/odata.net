@@ -1,0 +1,1668 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Mapping Space="C-S" xmlns:cdm="urn:schemas-microsoft-com:windows:storage:mapping:CS" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
+  <EntityContainerMapping CdmEntityContainer="ArubaContainer" StorageEntityContainer="dbo">
+    <EntitySetMapping Name="DataKey_BigInt" StoreEntitySet="DataKey_BigInt" TypeName="Aruba.DataKey_BigInt">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="DataKey_Bit" StoreEntitySet="DataKey_Bit" TypeName="Aruba.DataKey_Bit">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="DataKey_DateTime" StoreEntitySet="DataKey_DateTime" TypeName="Aruba.DataKey_DateTime">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="DataKey_Decimal" StoreEntitySet="DataKey_Decimal" TypeName="Aruba.DataKey_Decimal">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="DataKey_Float" StoreEntitySet="DataKey_Float" TypeName="Aruba.DataKey_Float">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="DataKey_GUID" StoreEntitySet="DataKey_GUID" TypeName="Aruba.DataKey_GUID">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="DataKey_Money" StoreEntitySet="DataKey_Money" TypeName="Aruba.DataKey_Money">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="DataKey_Numeric" StoreEntitySet="DataKey_Numeric" TypeName="Aruba.DataKey_Numeric">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="DataKey_Real" StoreEntitySet="DataKey_Real" TypeName="Aruba.DataKey_Real">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="DataKey_SmallDateTime" StoreEntitySet="DataKey_SmallDateTime" TypeName="Aruba.DataKey_SmallDateTime">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="DataKey_SmallMoney" StoreEntitySet="DataKey_SmallMoney" TypeName="Aruba.DataKey_SmallMoney">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="DataKey_TinyInt" StoreEntitySet="DataKey_TinyInt" TypeName="Aruba.DataKey_TinyInt">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="DataKey_VarChar50" StoreEntitySet="DataKey_VarChar50" TypeName="Aruba.DataKey_VarChar50">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <EntitySetMapping Name="ThirteenNavigations" StoreEntitySet="ThirteenNavigations" TypeName="Aruba.ThirteenNavigations">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="DataColumn" ColumnName="DataColumn" />
+    </EntitySetMapping>
+    <AssociationSetMapping Name="FK_ThirteenNavigations_DataKey_BigInt" TypeName="Aruba.FK_ThirteenNavigations_DataKey_BigInt" StoreEntitySet="ThirteenNavigations">
+      <EndProperty Name="DataKey_BigInt">
+        <ScalarProperty Name="Id" ColumnName="BigInt_Id" />
+      </EndProperty>
+      <EndProperty Name="ThirteenNavigations">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="BigInt_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_ThirteenNavigations_DataKey_Bit" TypeName="Aruba.FK_ThirteenNavigations_DataKey_Bit" StoreEntitySet="ThirteenNavigations">
+      <EndProperty Name="DataKey_Bit">
+        <ScalarProperty Name="Id" ColumnName="Bit_Id" />
+      </EndProperty>
+      <EndProperty Name="ThirteenNavigations">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_ThirteenNavigations_DataKey_DateTime" TypeName="Aruba.FK_ThirteenNavigations_DataKey_DateTime" StoreEntitySet="ThirteenNavigations">
+      <EndProperty Name="DataKey_DateTime">
+        <ScalarProperty Name="Id" ColumnName="DateTime_Id" />
+      </EndProperty>
+      <EndProperty Name="ThirteenNavigations">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="DateTime_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_ThirteenNavigations_DataKey_Decimal" TypeName="Aruba.FK_ThirteenNavigations_DataKey_Decimal" StoreEntitySet="ThirteenNavigations">
+      <EndProperty Name="DataKey_Decimal">
+        <ScalarProperty Name="Id" ColumnName="Decimal_Id" />
+      </EndProperty>
+      <EndProperty Name="ThirteenNavigations">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="Decimal_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_ThirteenNavigations_DataKey_Float" TypeName="Aruba.FK_ThirteenNavigations_DataKey_Float" StoreEntitySet="ThirteenNavigations">
+      <EndProperty Name="DataKey_Float">
+        <ScalarProperty Name="Id" ColumnName="Float_Id" />
+      </EndProperty>
+      <EndProperty Name="ThirteenNavigations">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="Float_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_ThirteenNavigations_DataKey_GUID" TypeName="Aruba.FK_ThirteenNavigations_DataKey_GUID" StoreEntitySet="ThirteenNavigations">
+      <EndProperty Name="DataKey_GUID">
+        <ScalarProperty Name="Id" ColumnName="GUID_Id" />
+      </EndProperty>
+      <EndProperty Name="ThirteenNavigations">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="GUID_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_ThirteenNavigations_DataKey_Money" TypeName="Aruba.FK_ThirteenNavigations_DataKey_Money" StoreEntitySet="ThirteenNavigations">
+      <EndProperty Name="DataKey_Money">
+        <ScalarProperty Name="Id" ColumnName="Money_Id" />
+      </EndProperty>
+      <EndProperty Name="ThirteenNavigations">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="Money_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_ThirteenNavigations_DataKey_Numeric" TypeName="Aruba.FK_ThirteenNavigations_DataKey_Numeric" StoreEntitySet="ThirteenNavigations">
+      <EndProperty Name="DataKey_Numeric">
+        <ScalarProperty Name="Id" ColumnName="Numeric_Id" />
+      </EndProperty>
+      <EndProperty Name="ThirteenNavigations">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="Numeric_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_ThirteenNavigations_DataKey_Real" TypeName="Aruba.FK_ThirteenNavigations_DataKey_Real" StoreEntitySet="ThirteenNavigations">
+      <EndProperty Name="DataKey_Real">
+        <ScalarProperty Name="Id" ColumnName="Real_Id" />
+      </EndProperty>
+      <EndProperty Name="ThirteenNavigations">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="Real_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_ThirteenNavigations_DataKey_SmallDateTime" TypeName="Aruba.FK_ThirteenNavigations_DataKey_SmallDateTime" StoreEntitySet="ThirteenNavigations">
+      <EndProperty Name="DataKey_SmallDateTime">
+        <ScalarProperty Name="Id" ColumnName="SmallDateTime_Id" />
+      </EndProperty>
+      <EndProperty Name="ThirteenNavigations">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="SmallDateTime_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_ThirteenNavigations_DataKey_SmallMoney" TypeName="Aruba.FK_ThirteenNavigations_DataKey_SmallMoney" StoreEntitySet="ThirteenNavigations">
+      <EndProperty Name="DataKey_SmallMoney">
+        <ScalarProperty Name="Id" ColumnName="SmallMoney_Id" />
+      </EndProperty>
+      <EndProperty Name="ThirteenNavigations">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="SmallMoney_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_ThirteenNavigations_DataKey_TinyInt" TypeName="Aruba.FK_ThirteenNavigations_DataKey_TinyInt" StoreEntitySet="ThirteenNavigations">
+      <EndProperty Name="DataKey_TinyInt">
+        <ScalarProperty Name="Id" ColumnName="TinyInt_Id" />
+      </EndProperty>
+      <EndProperty Name="ThirteenNavigations">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="TinyInt_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_ThirteenNavigations_DataKey_VarChar50" TypeName="Aruba.FK_ThirteenNavigations_DataKey_VarChar50" StoreEntitySet="ThirteenNavigations">
+      <EndProperty Name="DataKey_VarChar50">
+        <ScalarProperty Name="Id" ColumnName="Varchar_Id" />
+      </EndProperty>
+      <EndProperty Name="ThirteenNavigations">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="Varchar_Id" IsNull="false" />
+    </AssociationSetMapping>
+
+
+    <EntitySetMapping Name="People">
+      <EntityTypeMapping TypeName="Aruba.Person">
+        <MappingFragment StoreEntitySet="People">
+          <ScalarProperty ColumnName="FirstName" Name="FirstName" />
+          <ScalarProperty ColumnName="MiddleName" Name="MiddleName" />
+          <ScalarProperty ColumnName="LastName" Name="LastName" />
+          <Condition ColumnName="PersonType" Value="1" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.PropertyOwner">
+        <MappingFragment StoreEntitySet="People">
+          <ScalarProperty ColumnName="FirstName" Name="FirstName" />
+          <ScalarProperty ColumnName="MiddleName" Name="MiddleName" />
+          <ScalarProperty ColumnName="LastName" Name="LastName" />
+          <ScalarProperty ColumnName="PropertyValue" Name="PropertyValue" />
+          <Condition ColumnName="PersonType" Value="2" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Vehicles">
+      <EntityTypeMapping TypeName="Aruba.Vehicle">
+        <MappingFragment StoreEntitySet="Vehicles">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="Make" Name="Make" />
+          <ScalarProperty ColumnName="Model" Name="Model" />
+          <ScalarProperty ColumnName="Year" Name="Year" />
+          <Condition ColumnName="Type" Value="V" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.Car">
+        <MappingFragment StoreEntitySet="Vehicles">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="Make" Name="Make" />
+          <ScalarProperty ColumnName="Model" Name="Model" />
+          <ScalarProperty ColumnName="Year" Name="Year" />
+          <Condition ColumnName="Type" Value="C" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.Suv">
+        <MappingFragment StoreEntitySet="Vehicles">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="Make" Name="Make" />
+          <ScalarProperty ColumnName="Model" Name="Model" />
+          <ScalarProperty ColumnName="Year" Name="Year" />
+          <Condition ColumnName="Type" Value="S" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.Truck">
+        <MappingFragment StoreEntitySet="Vehicles">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="Make" Name="Make" />
+          <ScalarProperty ColumnName="Model" Name="Model" />
+          <ScalarProperty ColumnName="Year" Name="Year" />
+          <Condition ColumnName="Type" Value="T" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="FK_Person_Vehicle" TypeName="Aruba.FK_Person_Vehicle" StoreEntitySet="People">
+      <EndProperty Name="Person">
+        <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+        <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+        <ScalarProperty Name="LastName" ColumnName="LastName" />
+      </EndProperty>
+      <EndProperty Name="Vehicle">
+        <ScalarProperty Name="Id" ColumnName="PrimaryVehicleId" />
+      </EndProperty>
+      <Condition ColumnName="PrimaryVehicleId" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Person_OldVehicles" TypeName="Aruba.FK_Person_OldVehicles" StoreEntitySet="OldVehiclesLinkTable">
+      <EndProperty Name="Person">
+        <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+        <ScalarProperty Name="LastName" ColumnName="LastName" />
+        <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+      </EndProperty>
+      <EndProperty Name="OldVehicles">
+        <ScalarProperty Name="Id" ColumnName="VehicleId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    
+    <EntitySetMapping Name="Computers">
+      <EntityTypeMapping TypeName="Aruba.Computer">
+        <MappingFragment StoreEntitySet="Computers">
+          <ScalarProperty ColumnName="MachineName" Name="MachineName" />
+          <ScalarProperty ColumnName="Manufacturer" Name="Manufacturer" />
+          <ScalarProperty ColumnName="Model" Name="Model" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ComputerDetails">
+      <EntityTypeMapping TypeName="Aruba.ComputerDetails">
+        <MappingFragment StoreEntitySet="ComputerDetails">
+          <ScalarProperty ColumnName="MachineName" Name="MachineName" />
+          <ScalarProperty ColumnName="OperatingSystem" Name="OperatingSystem" />
+          <ScalarProperty ColumnName="OperatingSystemVersion" Name="OperatingSystemVersion" />
+          <ScalarProperty ColumnName="Status" Name="Status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="FK_Computer_ComputerDetails" TypeName="Aruba.FK_Computer_ComputerDetails" StoreEntitySet="ComputerDetails">
+      <EndProperty Name="Computer">
+        <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+      </EndProperty>
+      <EndProperty Name="ComputerDetails">
+        <ScalarProperty Name="MachineName" ColumnName="MachineName" />
+      </EndProperty>
+    </AssociationSetMapping>
+
+    <EntitySetMapping Name="Students">
+      <EntityTypeMapping TypeName="Aruba.Student">
+        <MappingFragment StoreEntitySet="Students">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+          <ScalarProperty Name="Major" ColumnName="Major" />
+          <Condition ColumnName="StudentType" Value="1"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.GradStudent">
+        <MappingFragment StoreEntitySet="Students">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+          <ScalarProperty Name="Major" ColumnName="Major" />
+          <Condition ColumnName="StudentType" Value="2"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    
+    <EntitySetMapping Name="Colleges">
+      <EntityTypeMapping TypeName="Aruba.College">
+        <MappingFragment StoreEntitySet="Colleges">
+          <ScalarProperty ColumnName="CollegeId" Name="Id" />
+          <ScalarProperty ColumnName="Name" Name="Name" />
+          <ScalarProperty ColumnName="City" Name="City" />
+          <ScalarProperty ColumnName="State" Name="State" />
+          <Condition ColumnName="Type" Value="C"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.University">
+        <MappingFragment StoreEntitySet="Colleges">
+          <ScalarProperty ColumnName="CollegeId" Name="Id" />
+          <ScalarProperty ColumnName="Name" Name="Name" />
+          <ScalarProperty ColumnName="City" Name="City" />
+          <ScalarProperty ColumnName="State" Name="State" />
+          <Condition ColumnName="Type" Value="U"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="FK_Students_College" TypeName="Aruba.FK_Students_College" StoreEntitySet="Students">
+      <EndProperty Name="Students">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <EndProperty Name="College">
+        <ScalarProperty Name="Id" ColumnName="CollegeId" />
+      </EndProperty>
+    </AssociationSetMapping>
+
+    <EntitySetMapping Name="Workers" StoreEntitySet="Workers" TypeName="Aruba.Worker">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+      <ScalarProperty Name="LastName" ColumnName="LastName" />
+      <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+    </EntitySetMapping>
+    
+    <EntitySetMapping Name="Offices" StoreEntitySet="Offices" TypeName="Aruba.Office">
+      <ScalarProperty Name="Id" ColumnName="Id" />
+      <ScalarProperty Name="OfficeNumber" ColumnName="OfficeNumber" />
+      <ScalarProperty Name="FloorNumber" ColumnName="FloorNumber" />
+      <ScalarProperty Name="BuildingName" ColumnName="BuildingName" />
+      <ScalarProperty Name="City" ColumnName="City" />
+      <ScalarProperty Name="State" ColumnName="State" />
+      <ScalarProperty Name="IsWindowOffice" ColumnName="IsWindowOffice" />
+    </EntitySetMapping>
+    
+    <AssociationSetMapping Name="FK_Worker_Office" TypeName="Aruba.FK_Worker_Office" StoreEntitySet="Workers">
+      <EndProperty Name="Worker">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <EndProperty Name="Office">
+        <ScalarProperty Name="Id" ColumnName="OfficeId" />
+      </EndProperty>
+      <Condition ColumnName="OfficeId" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Worker_Mentor" TypeName="Aruba.FK_Worker_Mentor" StoreEntitySet="Workers">
+      <EndProperty Name="Worker">
+        <ScalarProperty Name="Id" ColumnName="MentorId" />
+      </EndProperty>
+      <EndProperty Name="Mentor">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="MentorId" IsNull="false" />
+    </AssociationSetMapping>
+
+    <EntitySetMapping Name="WideInheritanceSet">
+      <EntityTypeMapping TypeName="Aruba.WideTree_A">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <Condition ColumnName="TypeFlag" Value="A"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.WideTree_B">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <Condition ColumnName="TypeFlag" Value="B"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.WideTree_C">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="C_Int" Name="C_Int" />
+          <Condition ColumnName="TypeFlag" Value="C"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.WideTree_D">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="D_Int" Name="D_Int" />
+          <Condition ColumnName="TypeFlag" Value="D"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.WideTree_E">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="E_Int" Name="E_Int" />
+          <Condition ColumnName="TypeFlag" Value="E"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.WideTree_F">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="F_Int" Name="F_Int" />
+          <Condition ColumnName="TypeFlag" Value="F"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.WideTree_G">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="G_Int" Name="G_Int" />
+          <Condition ColumnName="TypeFlag" Value="G"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.WideTree_H">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="H_Int" Name="H_Int" />
+          <Condition ColumnName="TypeFlag" Value="H"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.WideTree_I">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="I_Int" Name="I_Int" />
+          <Condition ColumnName="TypeFlag" Value="I"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.WideTree_J">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="J_Int" Name="J_Int" />
+          <Condition ColumnName="TypeFlag" Value="J"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.WideTree_K">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="K_Int" Name="K_Int" />
+          <Condition ColumnName="TypeFlag" Value="K"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.WideTree_L">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="L_Int" Name="L_Int" />
+          <Condition ColumnName="TypeFlag" Value="L"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.WideTree_M">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="M_Int" Name="M_Int" />
+          <Condition ColumnName="TypeFlag" Value="M"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.WideTree_N">
+        <MappingFragment StoreEntitySet="WideTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="N_Int" Name="N_Int" />
+          <Condition ColumnName="TypeFlag" Value="N"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+
+    <EntitySetMapping Name="DeepInheritanceSet">
+      <EntityTypeMapping TypeName="Aruba.DeepTree_A">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <Condition ColumnName="TypeFlag" Value="A"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.DeepTree_B">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <Condition ColumnName="TypeFlag" Value="B"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.DeepTree_C">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <ScalarProperty ColumnName="C_Int" Name="C_Int" />
+          <Condition ColumnName="TypeFlag" Value="C"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.DeepTree_D">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <ScalarProperty ColumnName="C_Int" Name="C_Int" />
+          <ScalarProperty ColumnName="D_Int" Name="D_Int" />
+          <Condition ColumnName="TypeFlag" Value="D"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.DeepTree_E">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <ScalarProperty ColumnName="C_Int" Name="C_Int" />
+          <ScalarProperty ColumnName="D_Int" Name="D_Int" />
+          <ScalarProperty ColumnName="E_Int" Name="E_Int" />
+          <Condition ColumnName="TypeFlag" Value="E"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.DeepTree_F">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <ScalarProperty ColumnName="C_Int" Name="C_Int" />
+          <ScalarProperty ColumnName="D_Int" Name="D_Int" />
+          <ScalarProperty ColumnName="E_Int" Name="E_Int" />
+          <ScalarProperty ColumnName="F_Int" Name="F_Int" />
+          <Condition ColumnName="TypeFlag" Value="F"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.DeepTree_G">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <ScalarProperty ColumnName="C_Int" Name="C_Int" />
+          <ScalarProperty ColumnName="D_Int" Name="D_Int" />
+          <ScalarProperty ColumnName="E_Int" Name="E_Int" />
+          <ScalarProperty ColumnName="F_Int" Name="F_Int" />
+          <ScalarProperty ColumnName="G_Int" Name="G_Int" />
+          <Condition ColumnName="TypeFlag" Value="G"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.DeepTree_H">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <ScalarProperty ColumnName="C_Int" Name="C_Int" />
+          <ScalarProperty ColumnName="D_Int" Name="D_Int" />
+          <ScalarProperty ColumnName="E_Int" Name="E_Int" />
+          <ScalarProperty ColumnName="F_Int" Name="F_Int" />
+          <ScalarProperty ColumnName="G_Int" Name="G_Int" />
+          <ScalarProperty ColumnName="H_Int" Name="H_Int" />
+          <Condition ColumnName="TypeFlag" Value="H"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.DeepTree_I">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <ScalarProperty ColumnName="C_Int" Name="C_Int" />
+          <ScalarProperty ColumnName="D_Int" Name="D_Int" />
+          <ScalarProperty ColumnName="E_Int" Name="E_Int" />
+          <ScalarProperty ColumnName="F_Int" Name="F_Int" />
+          <ScalarProperty ColumnName="G_Int" Name="G_Int" />
+          <ScalarProperty ColumnName="H_Int" Name="H_Int" />
+          <ScalarProperty ColumnName="I_Int" Name="I_Int" />
+          <Condition ColumnName="TypeFlag" Value="I"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.DeepTree_J">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <ScalarProperty ColumnName="C_Int" Name="C_Int" />
+          <ScalarProperty ColumnName="D_Int" Name="D_Int" />
+          <ScalarProperty ColumnName="E_Int" Name="E_Int" />
+          <ScalarProperty ColumnName="F_Int" Name="F_Int" />
+          <ScalarProperty ColumnName="G_Int" Name="G_Int" />
+          <ScalarProperty ColumnName="H_Int" Name="H_Int" />
+          <ScalarProperty ColumnName="I_Int" Name="I_Int" />
+          <ScalarProperty ColumnName="J_Int" Name="J_Int" />
+          <Condition ColumnName="TypeFlag" Value="J"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.DeepTree_K">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <ScalarProperty ColumnName="C_Int" Name="C_Int" />
+          <ScalarProperty ColumnName="D_Int" Name="D_Int" />
+          <ScalarProperty ColumnName="E_Int" Name="E_Int" />
+          <ScalarProperty ColumnName="F_Int" Name="F_Int" />
+          <ScalarProperty ColumnName="G_Int" Name="G_Int" />
+          <ScalarProperty ColumnName="H_Int" Name="H_Int" />
+          <ScalarProperty ColumnName="I_Int" Name="I_Int" />
+          <ScalarProperty ColumnName="J_Int" Name="J_Int" />
+          <ScalarProperty ColumnName="K_Int" Name="K_Int" />
+          <Condition ColumnName="TypeFlag" Value="K"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.DeepTree_L">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <ScalarProperty ColumnName="C_Int" Name="C_Int" />
+          <ScalarProperty ColumnName="D_Int" Name="D_Int" />
+          <ScalarProperty ColumnName="E_Int" Name="E_Int" />
+          <ScalarProperty ColumnName="F_Int" Name="F_Int" />
+          <ScalarProperty ColumnName="G_Int" Name="G_Int" />
+          <ScalarProperty ColumnName="H_Int" Name="H_Int" />
+          <ScalarProperty ColumnName="I_Int" Name="I_Int" />
+          <ScalarProperty ColumnName="J_Int" Name="J_Int" />
+          <ScalarProperty ColumnName="K_Int" Name="K_Int" />
+          <ScalarProperty ColumnName="L_Int" Name="L_Int" />
+          <Condition ColumnName="TypeFlag" Value="L"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.DeepTree_M">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <ScalarProperty ColumnName="C_Int" Name="C_Int" />
+          <ScalarProperty ColumnName="D_Int" Name="D_Int" />
+          <ScalarProperty ColumnName="E_Int" Name="E_Int" />
+          <ScalarProperty ColumnName="F_Int" Name="F_Int" />
+          <ScalarProperty ColumnName="G_Int" Name="G_Int" />
+          <ScalarProperty ColumnName="H_Int" Name="H_Int" />
+          <ScalarProperty ColumnName="I_Int" Name="I_Int" />
+          <ScalarProperty ColumnName="J_Int" Name="J_Int" />
+          <ScalarProperty ColumnName="K_Int" Name="K_Int" />
+          <ScalarProperty ColumnName="L_Int" Name="L_Int" />
+          <ScalarProperty ColumnName="M_Int" Name="M_Int" />
+          <Condition ColumnName="TypeFlag" Value="M"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.DeepTree_N">
+        <MappingFragment StoreEntitySet="DeepTreeTable">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="B_Int" Name="B_Int" />
+          <ScalarProperty ColumnName="C_Int" Name="C_Int" />
+          <ScalarProperty ColumnName="D_Int" Name="D_Int" />
+          <ScalarProperty ColumnName="E_Int" Name="E_Int" />
+          <ScalarProperty ColumnName="F_Int" Name="F_Int" />
+          <ScalarProperty ColumnName="G_Int" Name="G_Int" />
+          <ScalarProperty ColumnName="H_Int" Name="H_Int" />
+          <ScalarProperty ColumnName="I_Int" Name="I_Int" />
+          <ScalarProperty ColumnName="J_Int" Name="J_Int" />
+          <ScalarProperty ColumnName="K_Int" Name="K_Int" />
+          <ScalarProperty ColumnName="L_Int" Name="L_Int" />
+          <ScalarProperty ColumnName="M_Int" Name="M_Int" />
+          <ScalarProperty ColumnName="N_Int" Name="N_Int" />
+          <Condition ColumnName="TypeFlag" Value="N"/>
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    
+    <EntitySetMapping Name="OwnerContactInfoSet">
+      <EntityTypeMapping TypeName="Aruba.OwnerContactInfo">
+        <MappingFragment StoreEntitySet="OwnerContactInfos">
+          <ScalarProperty ColumnName="ContactInfoId" Name="ContactInfoId" />
+          <ComplexProperty Name="ContactInfo" TypeName="Aruba.ContactInfo">
+            <ComplexProperty TypeName="Aruba.AddressInfo" Name="AddressInfo">
+              <ComplexProperty TypeName="Aruba.ZipCode" Name="ZipCode">
+                <ScalarProperty Name="ExtendedZip" ColumnName="ExtendedZip" />
+                <ScalarProperty ColumnName="MainZip" Name="MainZip" />
+              </ComplexProperty>
+              <ScalarProperty ColumnName="City" Name="City" />
+              <ScalarProperty Name="State" ColumnName="State" />
+              <ScalarProperty Name="StreetAddress" ColumnName="StreetAddress" />
+            </ComplexProperty>
+            <ScalarProperty ColumnName="Email" Name="Email" />
+            <ScalarProperty ColumnName="WorkPhone" Name="WorkPhone" />
+          </ComplexProperty>
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="NonDefaultFacetsSet">
+      <EntityTypeMapping TypeName="Aruba.NonDefaultFacets">
+        <MappingFragment StoreEntitySet="NonDefaultFacets">
+          <ScalarProperty Name="c_varchar230_AS_varchar512" ColumnName="c_varchar230_AS_varchar512" />
+          <ScalarProperty Name="c_numeric24_0_AS_numeric25_1" ColumnName="c_numeric24_0_AS_numeric25_1" />
+          <ScalarProperty Name="c_decimal27_3_AS_decimal28_4" ColumnName="c_decimal27_3_AS_decimal28_4" />
+          <ScalarProperty ColumnName="c_varbinary31_AS_varbinary365" Name="c_varbinary31_AS_varbinary365" />
+          <ScalarProperty Name="c1_int" ColumnName="c1_int" />
+          <ScalarProperty ColumnName="c_varchar185_AS_nvarchar285" Name="c_varchar185_AS_nvarchar285" />
+          <ScalarProperty ColumnName="c_numeric24_0_AS_numeric28_4" Name="c_numeric24_0_AS_numeric28_4" />
+          <ScalarProperty ColumnName="c_varbinary60_AS_varbinary512" Name="c_varbinary60_AS_varbinary512" />
+          <ScalarProperty ColumnName="c_decimal24_0_AS_decimal26_2" Name="c_decimal24_0_AS_decimal26_2" />
+          <ScalarProperty ColumnName="c_varchar80_AS_nvarchar512" Name="c_varchar80_AS_nvarchar512" />
+          <ScalarProperty Name="c_varchar17_AS_varchar98" ColumnName="c_varchar17_AS_varchar98" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping StoreEntitySet="DeploymentScenarios" TypeName="Aruba.ProjectDeploymentScenario" Name="ProjectDeploymentScenarioSet">
+      <EndProperty Name="Scenario">
+        <ScalarProperty ColumnName="Id" Name="Id" />
+      </EndProperty>
+      <EndProperty Name="Project">
+        <ScalarProperty Name="Id" ColumnName="ProjectId" />
+      </EndProperty>
+      <Condition ColumnName="ProjectId" IsNull="false" />
+    </AssociationSetMapping>
+    <EntitySetMapping Name="AllTypesSet">
+      <EntityTypeMapping TypeName="Aruba.AllTypes">
+        <MappingFragment StoreEntitySet="AllTypes">
+          <ScalarProperty ColumnName="c23_uniqueidentifier" Name="c23_uniqueidentifier" />
+          <ScalarProperty ColumnName="c7_smalldatetime" Name="c7_smalldatetime" />
+          <ScalarProperty Name="c14_varchar_512_" ColumnName="c14_varchar(512)" />
+          <ScalarProperty ColumnName="c46_uniqueidentifier" Name="c46_uniqueidentifier" />
+          <ScalarProperty ColumnName="c38_char(512)" Name="c38_char_512_" />
+          <ScalarProperty Name="c1_int" ColumnName="c1_int" />
+          <ScalarProperty Name="c21_nchar_512_" ColumnName="c21_nchar(512)" />
+          <ScalarProperty ColumnName="c22_ntext" Name="c22_ntext" />
+          <ScalarProperty Name="c11_float" ColumnName="c11_float" />
+          <ScalarProperty Name="c18_varbinary_512_" ColumnName="c18_varbinary(512)" />
+          <ScalarProperty Name="c9_numeric_28_4_" ColumnName="c9_numeric(28,4)" />
+          <ScalarProperty Name="c25_int" ColumnName="c25_int" />
+          <ScalarProperty Name="c3_smallint" ColumnName="c3_smallint" />
+          <ScalarProperty ColumnName="c40_binary(512)" Name="c40_binary_512_" />
+          <ScalarProperty ColumnName="c6_datetime" Name="c6_datetime" />
+          <ScalarProperty ColumnName="c15_char(512)" Name="c15_char_512_" />
+          <ScalarProperty Name="c44_nchar_512_" ColumnName="c44_nchar(512)" />
+          <ScalarProperty Name="c20_nvarchar_512_" ColumnName="c20_nvarchar(512)" />
+          <ScalarProperty ColumnName="c43_nvarchar(512)" Name="c43_nvarchar_512_" />
+          <ScalarProperty ColumnName="c34_float" Name="c34_float" />
+          <ScalarProperty Name="c37_varchar_512_" ColumnName="c37_varchar(512)" />
+          <ScalarProperty ColumnName="c8_decimal(28,4)" Name="c8_decimal_28_4_" />
+          <ScalarProperty Name="c47_bigint" ColumnName="c47_bigint" />
+          <ScalarProperty Name="c39_text" ColumnName="c39_text" />
+          <ScalarProperty Name="c12_money" ColumnName="c12_money" />
+          <ScalarProperty Name="c4_tinyint" ColumnName="c4_tinyint" />
+          <ScalarProperty ColumnName="c31_decimal(28,4)" Name="c31_decimal_28_4_" />
+          <ScalarProperty ColumnName="c26_smallint" Name="c26_smallint" />
+          <ScalarProperty ColumnName="c17_binary(512)" Name="c17_binary_512_" />
+          <ScalarProperty Name="c29_datetime" ColumnName="c29_datetime" />
+          <ScalarProperty Name="c5_bit" ColumnName="c5_bit" />
+          <ScalarProperty Name="c35_money" ColumnName="c35_money" />
+          <ScalarProperty ColumnName="c30_smalldatetime" Name="c30_smalldatetime" />
+          <ScalarProperty ColumnName="c24_bigint" Name="c24_bigint" />
+          <ScalarProperty Name="c13_smallmoney" ColumnName="c13_smallmoney" />
+          <ScalarProperty ColumnName="c10_real" Name="c10_real" />
+          <ScalarProperty ColumnName="c41_varbinary(512)" Name="c41_varbinary_512_" />
+          <ScalarProperty Name="c2_int" ColumnName="c2_int" />
+          <ScalarProperty ColumnName="c36_smallmoney" Name="c36_smallmoney" />
+          <ScalarProperty Name="c28_bit" ColumnName="c28_bit" />
+          <ScalarProperty ColumnName="c45_ntext" Name="c45_ntext" />
+          <ScalarProperty ColumnName="c16_text" Name="c16_text" />
+          <ScalarProperty ColumnName="c32_numeric(28,4)" Name="c32_numeric_28_4_" />
+          <ScalarProperty Name="c19_image" ColumnName="c19_image" />
+          <ScalarProperty Name="c42_image" ColumnName="c42_image" />
+          <ScalarProperty Name="c33_real" ColumnName="c33_real" />
+          <ScalarProperty ColumnName="c27_tinyint" Name="c27_tinyint" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="OwnerBugsDefect_ResolvedBySet" TypeName="Aruba.OwnerBugsDefect_ResolvedBy" StoreEntitySet="BugsDefectTracking">
+      <EndProperty Name="Owner">
+        <ScalarProperty ColumnName="ResolvedById" Name="Id" />
+      </EndProperty>
+      <EndProperty Name="DefectBug">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="ResolvedById" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping TypeName="Aruba.ProjectTestScenario" StoreEntitySet="TestScenarios" Name="ProjectTestScenarioSet">
+      <EndProperty Name="Scenario">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <EndProperty Name="Project">
+        <ScalarProperty Name="Id" ColumnName="ProjectId" />
+      </EndProperty>
+      <Condition ColumnName="ProjectId" IsNull="false" />
+    </AssociationSetMapping>
+    <EntitySetMapping Name="BugDefectTrackingSet">
+      <EntityTypeMapping TypeName="Aruba.DefectBug">
+        <MappingFragment StoreEntitySet="BugsDefectTracking">
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="OwnerBugsProject_ResolvedBySet" StoreEntitySet="BugsProjectTracking" TypeName="Aruba.OwnerBugsProject_ResolvedBy">
+      <EndProperty Name="Owner">
+        <ScalarProperty ColumnName="ResolvedById" Name="Id" />
+      </EndProperty>
+      <EndProperty Name="ProjectBug">
+        <ScalarProperty ColumnName="Id" Name="Id" />
+      </EndProperty>
+      <Condition ColumnName="ResolvedById" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="OwnerRunsSet" TypeName="Aruba.OwnerRuns" StoreEntitySet="RunOwners">
+      <EndProperty Name="Run">
+        <ScalarProperty Name="Id" ColumnName="RunId" />
+      </EndProperty>
+      <EndProperty Name="Owner">
+        <ScalarProperty Name="Id" ColumnName="OwnerId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <EntitySetMapping Name="BugProjectTrackingSet">
+      <EntityTypeMapping TypeName="Aruba.ProjectBug">
+        <MappingFragment StoreEntitySet="BugsProjectTracking">
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty ColumnName="Comment" Name="Comment" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProjectSet">
+      <EntityTypeMapping TypeName="Aruba.Project">
+        <MappingFragment StoreEntitySet="Projects">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping TypeName="Aruba.OwnerBugsDefect_AssignedTo" StoreEntitySet="BugsDefectTracking" Name="OwnerBugsDefect_AssignedToSet">
+      <EndProperty Name="DefectBug">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <EndProperty Name="Owner">
+        <ScalarProperty Name="Id" ColumnName="AssignedToId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FailureBugDefectTrackingSet" TypeName="Aruba.FailureBugDefectTracking" StoreEntitySet="BugsDefectTracking">
+      <EndProperty Name="DefectBug">
+        <ScalarProperty ColumnName="Id" Name="Id" />
+      </EndProperty>
+      <EndProperty Name="Failure">
+        <ScalarProperty Name="Id" ColumnName="FailureId" />
+      </EndProperty>
+      <Condition ColumnName="FailureId" IsNull="false" />
+    </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="SelectFromAllTypesSet" FunctionName="Aruba.Store.SP_SelectAllTypes" />
+    <AssociationSetMapping TypeName="Aruba.OwnerOwnerDetails" StoreEntitySet="OwnerOwnerDetails" Name="OwnerOwnerDetailsSet">
+      <EndProperty Name="Owner">
+        <ScalarProperty ColumnName="OwnerId" Name="Id" />
+      </EndProperty>
+      <EndProperty Name="OwnerDetail">
+        <ScalarProperty ColumnName="DetailId" Name="DetailId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping StoreEntitySet="Tasks" Name="RunTasksSet" TypeName="Aruba.RunTasks">
+      <EndProperty Name="Run">
+        <ScalarProperty Name="Id" ColumnName="RunId" />
+      </EndProperty>
+      <EndProperty Name="Task">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <EntitySetMapping Name="OwnerDetailSet">
+      <EntityTypeMapping TypeName="Aruba.OwnerDetail">
+        <MappingFragment StoreEntitySet="OwnerDetails">
+          <ScalarProperty Name="HomeAddress2" ColumnName="HomeAddress2" />
+          <ScalarProperty ColumnName="Level" Name="Level" />
+          <ScalarProperty Name="DetailId" ColumnName="DetailId" />
+          <ScalarProperty ColumnName="HomeAddress1" Name="HomeAddress1" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="OwnerSet">
+      <EntityTypeMapping TypeName="Aruba.Owner">
+        <MappingFragment StoreEntitySet="Owners">
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty ColumnName="FirstName" Name="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="Alias" ColumnName="Alias" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TestScenarioSet">
+      <EntityTypeMapping TypeName="Aruba.Scenario">
+        <MappingFragment StoreEntitySet="TestScenarios">
+          <ScalarProperty ColumnName="Name" Name="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="SelectBugs" FunctionName="Aruba.Store.SSelectBugs" />
+    <EntitySetMapping Name="NonDefaultMappingsSet">
+      <EntityTypeMapping TypeName="Aruba.NonDefaultMappings">
+        <MappingFragment StoreEntitySet="NonDefaultMappings">
+          <ScalarProperty ColumnName="c_smallint_AS_bigint" Name="c_smallint_AS_bigint" />
+          <ScalarProperty ColumnName="c_int_AS_bigint" Name="c_int_AS_bigint" />
+          <ScalarProperty Name="c_tinyint_AS_decimal" ColumnName="c_tinyint_AS_decimal" />
+          <ScalarProperty Name="c1_int" ColumnName="c1_int" />
+          <ScalarProperty ColumnName="c_smallint_AS_decimal" Name="c_smallint_AS_decimal" />
+          <ScalarProperty ColumnName="c_tinyint_AS_int" Name="c_tinyint_AS_int" />
+          <ScalarProperty ColumnName="c_smalldatetime_AS_datetime" Name="c_smalldatetime_AS_datetime" />
+          <ScalarProperty Name="c_tinyint_AS_real" ColumnName="c_tinyint_AS_real" />
+          <ScalarProperty ColumnName="c_bigint_AS_decimal" Name="c_bigint_AS_decimal" />
+          <ScalarProperty ColumnName="c_tinyint_AS_bigint" Name="c_tinyint_AS_bigint" />
+          <ScalarProperty Name="c_tinyint_AS_smallint" ColumnName="c_tinyint_AS_smallint" />
+          <ScalarProperty Name="c_int_AS_money" ColumnName="c_int_AS_money" />
+          <ScalarProperty ColumnName="c_char_AS_nchar" Name="c_char_AS_nchar" />
+          <ScalarProperty Name="c_int_AS_decimal" ColumnName="c_int_AS_decimal" />
+          <ScalarProperty Name="c_tinyint_AS_smallmoney" ColumnName="c_tinyint_AS_smallmoney" />
+          <ScalarProperty ColumnName="c_tinyint_AS_money" Name="c_tinyint_AS_money" />
+          <ScalarProperty ColumnName="c_smallint_AS_smallmoney" Name="c_smallint_AS_smallmoney" />
+          <ScalarProperty ColumnName="c_tinyint_AS_numeric" Name="c_tinyint_AS_numeric" />
+          <ScalarProperty Name="c_smallint_AS_int" ColumnName="c_smallint_AS_int" />
+          <!--ScalarProperty Name="c_nvarchar_AS_ntext" ColumnName="c_nvarchar_AS_ntext" /-->
+          <ScalarProperty ColumnName="c_bigint_AS_numeric" Name="c_bigint_AS_numeric" />
+          <ScalarProperty ColumnName="c_int_AS_numeric" Name="c_int_AS_numeric" />
+          <ScalarProperty Name="c_tinyint_AS_float" ColumnName="c_tinyint_AS_float" />
+          <ScalarProperty ColumnName="c_smallint_AS_float" Name="c_smallint_AS_float" />
+          <ScalarProperty Name="c_int_AS_float" ColumnName="c_int_AS_float" />
+          <ScalarProperty Name="c_varchar_AS_nvarchar" ColumnName="c_varchar_AS_nvarchar" />
+          <ScalarProperty ColumnName="c_smallint_AS_money" Name="c_smallint_AS_money" />
+          <ScalarProperty ColumnName="c_smallint_AS_numeric" Name="c_smallint_AS_numeric" />
+          <ScalarProperty ColumnName="c_smallint_AS_real" Name="c_smallint_AS_real" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="SelectFromOwnerSet" FunctionName="Aruba.Store.SP_SelectOwners" />
+    <AssociationSetMapping StoreEntitySet="ConfigFailures" Name="FailureConfigSet" TypeName="Aruba.FailureConfig">
+      <EndProperty Name="Config">
+        <ScalarProperty ColumnName="ConfigId" Name="Id" />
+      </EndProperty>
+      <EndProperty Name="Failure">
+        <ScalarProperty ColumnName="FailureId" Name="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <EntitySetMapping Name="DeploymentScenarioSet">
+      <EntityTypeMapping TypeName="Aruba.Scenario">
+        <MappingFragment StoreEntitySet="DeploymentScenarios">
+          <ScalarProperty ColumnName="Name" Name="Name" />
+          <ScalarProperty ColumnName="Id" Name="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FailureSet">
+      <EntityTypeMapping TypeName="Aruba.Failure;Aruba.Baseline;Aruba.TestFailure;Aruba.Uninvestigated">
+        <MappingFragment StoreEntitySet="Failures">
+          <ScalarProperty Name="TestCase" ColumnName="TestCase" />
+          <ScalarProperty Name="Variation" ColumnName="Variation" />
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty Name="Changed" ColumnName="Changed" />
+          <ScalarProperty ColumnName="TestId" Name="TestId" />
+        </MappingFragment>
+        <MappingFragment StoreEntitySet="FailureDetails">
+          <ScalarProperty Name="Log" ColumnName="Log" />
+          <ScalarProperty Name="Id" ColumnName="FailureId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.Baseline;Aruba.TestFailure">
+        <MappingFragment StoreEntitySet="Failures">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <Condition ColumnName="Baseline" Value="1" />
+          <ScalarProperty ColumnName="Comment" Name="Comment" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.TestFailure">
+        <MappingFragment StoreEntitySet="Failures">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <Condition Value="1" ColumnName="TypeId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.Uninvestigated">
+        <MappingFragment StoreEntitySet="Failures">
+          <Condition Value="0" ColumnName="Baseline" />
+          <ScalarProperty ColumnName="Id" Name="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AllTypesComplexEntitySet">
+      <EntityTypeMapping TypeName="Aruba.AllTypesComplexEntity">
+        <MappingFragment StoreEntitySet="AllTypesComplex">
+          <ComplexProperty Name="MemberAllTypesComplex" TypeName="Aruba.AllTypesComplexType">
+            <ScalarProperty Name="c23_bigint" ColumnName="c24_bigint" />
+            <ScalarProperty Name="c18_image" ColumnName="c19_image" />
+            <ScalarProperty Name="c13_varchar_512_" ColumnName="c14_varchar(512)" />
+            <ScalarProperty ColumnName="c11_float" Name="c10_float" />
+            <ScalarProperty ColumnName="c17_binary(512)" Name="c16_binary_512_" />
+            <ScalarProperty Name="c8_numeric_28_4_" ColumnName="c9_numeric(28,4)" />
+            <ScalarProperty Name="c1_int" ColumnName="c2_int" />
+            <ScalarProperty Name="c19_nvarchar_512_" ColumnName="c20_nvarchar(512)" />
+            <ScalarProperty ColumnName="c23_uniqueidentifier" Name="c22_uniqueidentifier" />
+            <ScalarProperty ColumnName="c15_char(512)" Name="c14_char_512_" />
+            <ScalarProperty ColumnName="c7_smalldatetime" Name="c6_smalldatetime" />
+            <ScalarProperty ColumnName="c5_bit" Name="c4_bit" />
+            <ScalarProperty Name="c11_money" ColumnName="c12_money" />
+            <ScalarProperty ColumnName="c10_real" Name="c9_real" />
+            <ScalarProperty ColumnName="c22_ntext" Name="c21_ntext" />
+            <ScalarProperty ColumnName="c6_datetime" Name="c5_datetime" />
+            <ScalarProperty Name="c20_nchar_512_" ColumnName="c21_nchar(512)" />
+            <ScalarProperty Name="c2_smallint" ColumnName="c3_smallint" />
+            <ScalarProperty Name="c17_varbinary_512_" ColumnName="c18_varbinary(512)" />
+            <ScalarProperty ColumnName="c4_tinyint" Name="c3_tinyint" />
+            <ScalarProperty Name="c7_decimal_28_4_" ColumnName="c8_decimal(28,4)" />
+            <ScalarProperty ColumnName="c16_text" Name="c15_text" />
+            <ScalarProperty Name="c12_smallmoney" ColumnName="c13_smallmoney" />
+          </ComplexProperty>
+          <ScalarProperty Name="c1_int" ColumnName="c1_int" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ConfigSet">
+      <EntityTypeMapping TypeName="Aruba.Config;Aruba.MachineConfig">
+        <MappingFragment StoreEntitySet="Configs">
+          <ScalarProperty Name="Lang" ColumnName="Language" />
+          <ScalarProperty ColumnName="OS" Name="OS" />
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ScalarProperty Name="Arch" ColumnName="Architecture" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="Aruba.MachineConfig">
+        <MappingFragment StoreEntitySet="MachineConfigs">
+          <ScalarProperty Name="Host" ColumnName="Host" />
+          <ScalarProperty ColumnName="IP Address" Name="Address" />
+          <ScalarProperty ColumnName="Id" Name="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping StoreEntitySet="BugsProjectTracking" Name="FailureBugProjectTrackingSet" TypeName="Aruba.FailureBugProjectTracking">
+      <EndProperty Name="ProjectBug">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <EndProperty Name="Failure">
+        <ScalarProperty Name="Id" ColumnName="FailureId" />
+      </EndProperty>
+      <Condition ColumnName="FailureId" IsNull="false" />
+    </AssociationSetMapping>
+    <EntitySetMapping Name="TaskSet">
+      <EntityTypeMapping TypeName="Aruba.Task">
+        <MappingFragment StoreEntitySet="Tasks">
+          <ScalarProperty ColumnName="Deleted" Name="Deleted" />
+          <ScalarProperty ColumnName="Id" Name="Id" />
+          <ComplexProperty TypeName="Aruba.StatusInfo" Name="StatusInfo">
+            <ScalarProperty ColumnName="Completed" Name="Completed" />
+            <ScalarProperty Name="Started" ColumnName="Started" />
+            <ScalarProperty ColumnName="StartedBy" Name="StartedBy" />
+          </ComplexProperty>
+        </MappingFragment>
+        <MappingFragment StoreEntitySet="TaskResults">
+          <ScalarProperty ColumnName="Passed" Name="Passed" />
+          <ScalarProperty Name="Failed" ColumnName="Failed" />
+          <ScalarProperty ColumnName="TaskId" Name="Id" />
+        </MappingFragment>
+        <MappingFragment StoreEntitySet="TaskInvestigates">
+          <ScalarProperty Name="Investigates" ColumnName="Investigates" />
+          <ScalarProperty Name="Improvements" ColumnName="Improvements" />
+          <ScalarProperty Name="Id" ColumnName="TaskId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping TypeName="Aruba.OwnerBugsProject_AssignedTo" Name="OwnerBugsProject_AssignedToSet" StoreEntitySet="BugsProjectTracking">
+      <EndProperty Name="Owner">
+        <ScalarProperty ColumnName="AssignedToId" Name="Id" />
+      </EndProperty>
+      <EndProperty Name="ProjectBug">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <EntitySetMapping Name="RunSet">
+      <EntityTypeMapping TypeName="Aruba.Run">
+        <MappingFragment StoreEntitySet="Runs">
+          <ScalarProperty Name="Purpose" ColumnName="Purpose" />
+          <ComplexProperty Name="RequestStatusInfo" TypeName="Aruba.StatusInfo">
+            <ScalarProperty Name="StartedBy" ColumnName="RequestStartedBy" />
+            <ScalarProperty ColumnName="RequestStarted" Name="Started" />
+            <ScalarProperty ColumnName="RequestCompleted" Name="Completed" />
+          </ComplexProperty>
+          <ScalarProperty ColumnName="Name" Name="Name" />
+          <ComplexProperty TypeName="Aruba.StatusInfo" Name="StatusInfo">
+            <ScalarProperty Name="StartedBy" ColumnName="StartedBy" />
+            <ScalarProperty Name="Completed" ColumnName="Completed" />
+            <ScalarProperty Name="Started" ColumnName="Started" />
+          </ComplexProperty>
+          <ScalarProperty ColumnName="Id" Name="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Albums">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Albums)">
+        <MappingFragment StoreEntitySet="Albums">
+          <ScalarProperty Name="albumId" ColumnName="albumId" />
+          <ScalarProperty Name="AlbumName" ColumnName="AlbumName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Albums2">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Albums2)">
+        <MappingFragment StoreEntitySet="Albums2">
+          <ScalarProperty Name="albumId" ColumnName="albumId" />
+          <ScalarProperty Name="AlbumName" ColumnName="AlbumName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Albums3">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Albums3)">
+        <MappingFragment StoreEntitySet="Albums3">
+          <ScalarProperty Name="albumId" ColumnName="albumId" />
+          <ScalarProperty Name="AlbumName" ColumnName="AlbumName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Artists">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Artists)">
+        <MappingFragment StoreEntitySet="Artists">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ArtistName" ColumnName="ArtistName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Artists2">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Artists2)">
+        <MappingFragment StoreEntitySet="Artists2">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ArtistName" ColumnName="ArtistName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Artists3">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Artists3)">
+        <MappingFragment StoreEntitySet="Artists3">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ArtistName" ColumnName="ArtistName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Builds">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Builds)">
+        <MappingFragment StoreEntitySet="Builds">
+          <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LabIssues">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.LabIssues)">
+        <MappingFragment StoreEntitySet="LabIssues">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="IssueType" ColumnName="IssueType" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LabOwners">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.LabOwners)">
+        <MappingFragment StoreEntitySet="LabOwners">
+          <ScalarProperty Name="ownerAlias" ColumnName="ownerAlias" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="Changed" ColumnName="Changed" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Recordings">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Recordings)">
+        <MappingFragment StoreEntitySet="Recordings">
+          <ScalarProperty Name="SongId" ColumnName="SongId" />
+          <ScalarProperty Name="ArtistId" ColumnName="ArtistId" />
+          <ScalarProperty Name="DateOccurred" ColumnName="DateOccurred" />
+          <ScalarProperty Name="OriginalSongId" ColumnName="OriginalSongId" />
+          <ScalarProperty Name="OriginalArtistId" ColumnName="OriginalArtistId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Recordings2">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Recordings2)">
+        <MappingFragment StoreEntitySet="Recordings2">
+          <ScalarProperty Name="SongId" ColumnName="SongId" />
+          <ScalarProperty Name="ArtistId" ColumnName="ArtistId" />
+          <ScalarProperty Name="DateOccurred" ColumnName="DateOccurred" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Recordings3">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Recordings3)">
+        <MappingFragment StoreEntitySet="Recordings3">
+          <ScalarProperty Name="SongId" ColumnName="SongId" />
+          <ScalarProperty Name="ArtistId" ColumnName="ArtistId" />
+          <ScalarProperty Name="DateOccurred" ColumnName="DateOccurred" />
+          <ScalarProperty Name="OriginalSongId" ColumnName="OriginalSongId" />
+          <ScalarProperty Name="OriginalArtistId" ColumnName="OriginalArtistId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Run1s">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Run1s)">
+        <MappingFragment StoreEntitySet="Run1s">
+          <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+          <ScalarProperty Name="BuildID" ColumnName="BuildID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Run2s">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Run2s)">
+        <MappingFragment StoreEntitySet="Run2s">
+          <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+          <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Run3s">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Run3s)">
+        <MappingFragment StoreEntitySet="Run3s">
+          <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+          <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Songs">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Songs)">
+        <MappingFragment StoreEntitySet="Songs">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SongName" ColumnName="SongName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Songs2">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Songs2)">
+        <MappingFragment StoreEntitySet="Songs2">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SongName" ColumnName="SongName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Songs3">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Songs3)">
+        <MappingFragment StoreEntitySet="Songs3">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SongName" ColumnName="SongName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Test1s">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Test1s)">
+        <MappingFragment StoreEntitySet="Test1s">
+          <ScalarProperty Name="TestId1" ColumnName="TestId1" />
+          <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+          <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Test2s">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Test2s)">
+        <MappingFragment StoreEntitySet="Test2s">
+          <ScalarProperty Name="TestId2" ColumnName="TestId2" />
+          <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+          <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Test3s">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Test3s)">
+        <MappingFragment StoreEntitySet="Test3s">
+          <ScalarProperty Name="TestId3" ColumnName="TestId3" />
+          <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+          <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Test4s">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Test4s)">
+        <MappingFragment StoreEntitySet="Test4s">
+          <ScalarProperty Name="TestId4" ColumnName="TestId4" />
+          <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+          <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Test5s">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Test5s)">
+        <MappingFragment StoreEntitySet="Test5s">
+          <ScalarProperty Name="TestId5" ColumnName="TestId5" />
+          <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+          <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Test6s">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Test6s)">
+        <MappingFragment StoreEntitySet="Test6s">
+          <ScalarProperty Name="TestId6" ColumnName="TestId6" />
+          <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+          <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Test7s">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Test7s)">
+        <MappingFragment StoreEntitySet="Test7s">
+          <ScalarProperty Name="TestId7" ColumnName="TestId7" />
+          <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+          <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Test8s">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Test8s)">
+        <MappingFragment StoreEntitySet="Test8s">
+          <ScalarProperty Name="TestId8" ColumnName="TestId8" />
+          <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+          <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Test9s">
+      <EntityTypeMapping TypeName="IsTypeOf(Aruba.Test9s)">
+        <MappingFragment StoreEntitySet="Test9s">
+          <ScalarProperty Name="TestId9" ColumnName="TestId9" />
+          <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+          <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="FK_Recordings_Artists" TypeName="Aruba.FK_Recordings_Artists" StoreEntitySet="Recordings">
+      <EndProperty Name="Artists">
+        <ScalarProperty Name="Id" ColumnName="ArtistId" />
+      </EndProperty>
+      <EndProperty Name="Recordings">
+        <ScalarProperty Name="SongId" ColumnName="SongId" />
+        <ScalarProperty Name="ArtistId" ColumnName="ArtistId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Recordings2_Artists" TypeName="Aruba.FK_Recordings2_Artists" StoreEntitySet="Recordings2">
+      <EndProperty Name="Artists2">
+        <ScalarProperty Name="Id" ColumnName="ArtistId" />
+      </EndProperty>
+      <EndProperty Name="Recordings2">
+        <ScalarProperty Name="SongId" ColumnName="SongId" />
+        <ScalarProperty Name="ArtistId" ColumnName="ArtistId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Recordings3_Artists3" TypeName="Aruba.FK_Recordings3_Artists3" StoreEntitySet="Recordings3">
+      <EndProperty Name="Artists3">
+        <ScalarProperty Name="Id" ColumnName="ArtistId" />
+      </EndProperty>
+      <EndProperty Name="Recordings3">
+        <ScalarProperty Name="SongId" ColumnName="SongId" />
+        <ScalarProperty Name="ArtistId" ColumnName="ArtistId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Builds_LabOwners" TypeName="Aruba.FK_Builds_LabOwners" StoreEntitySet="Builds">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="Builds">
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Run1s_Builds" TypeName="Aruba.FK_Run1s_Builds" StoreEntitySet="Run1s">
+      <EndProperty Name="Builds">
+        <ScalarProperty Name="BuildId" ColumnName="BuildID" />
+      </EndProperty>
+      <EndProperty Name="Run1s">
+        <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+        <ScalarProperty Name="BuildID" ColumnName="BuildID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Run2s_Builds" TypeName="Aruba.FK_Run2s_Builds" StoreEntitySet="Run2s">
+      <EndProperty Name="Builds">
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+      <EndProperty Name="Run2s">
+        <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Run3s_Builds" TypeName="Aruba.FK_Run3s_Builds" StoreEntitySet="Run3s">
+      <EndProperty Name="Builds">
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+      <EndProperty Name="Run3s">
+        <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_LabIssues_LabOwners" TypeName="Aruba.FK_LabIssues_LabOwners" StoreEntitySet="LabIssues">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="LabIssues">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Run1s_LabOwners" TypeName="Aruba.FK_Run1s_LabOwners" StoreEntitySet="Run1s">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="Run1s">
+        <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+        <ScalarProperty Name="BuildID" ColumnName="BuildID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Run2s_LabOwners" TypeName="Aruba.FK_Run2s_LabOwners" StoreEntitySet="Run2s">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="Run2s">
+        <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Run3s_LabOwners" TypeName="Aruba.FK_Run3s_LabOwners" StoreEntitySet="Run3s">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="Run3s">
+        <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test1s_LabOwners" TypeName="Aruba.FK_Test1s_LabOwners" StoreEntitySet="Test1s">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="Test1s">
+        <ScalarProperty Name="TestId1" ColumnName="TestId1" />
+        <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test2s_LabOwners" TypeName="Aruba.FK_Test2s_LabOwners" StoreEntitySet="Test2s">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="Test2s">
+        <ScalarProperty Name="TestId2" ColumnName="TestId2" />
+        <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test3s_LabOwners" TypeName="Aruba.FK_Test3s_LabOwners" StoreEntitySet="Test3s">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="Test3s">
+        <ScalarProperty Name="TestId3" ColumnName="TestId3" />
+        <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test4s_LabOwners" TypeName="Aruba.FK_Test4s_LabOwners" StoreEntitySet="Test4s">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="Test4s">
+        <ScalarProperty Name="TestId4" ColumnName="TestId4" />
+        <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test5s_LabOwners" TypeName="Aruba.FK_Test5s_LabOwners" StoreEntitySet="Test5s">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="Test5s">
+        <ScalarProperty Name="TestId5" ColumnName="TestId5" />
+        <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test6s_LabOwners" TypeName="Aruba.FK_Test6s_LabOwners" StoreEntitySet="Test6s">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="Test6s">
+        <ScalarProperty Name="TestId6" ColumnName="TestId6" />
+        <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test7s_LabOwners" TypeName="Aruba.FK_Test7s_LabOwners" StoreEntitySet="Test7s">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="Test7s">
+        <ScalarProperty Name="TestId7" ColumnName="TestId7" />
+        <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test8s_LabOwners" TypeName="Aruba.FK_Test8s_LabOwners" StoreEntitySet="Test8s">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="Test8s">
+        <ScalarProperty Name="TestId8" ColumnName="TestId8" />
+        <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test9s_LabOwners" TypeName="Aruba.FK_Test9s_LabOwners" StoreEntitySet="Test9s">
+      <EndProperty Name="LabOwners">
+        <ScalarProperty Name="ownerAlias" ColumnName="LabOwnerAlias" />
+      </EndProperty>
+      <EndProperty Name="Test9s">
+        <ScalarProperty Name="TestId9" ColumnName="TestId9" />
+        <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Recordings_Songs" TypeName="Aruba.FK_Recordings_Songs" StoreEntitySet="Recordings">
+      <EndProperty Name="Songs">
+        <ScalarProperty Name="Id" ColumnName="SongId" />
+      </EndProperty>
+      <EndProperty Name="Recordings">
+        <ScalarProperty Name="SongId" ColumnName="SongId" />
+        <ScalarProperty Name="ArtistId" ColumnName="ArtistId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Recordings2_Recordings2" TypeName="Aruba.FK_Recordings2_Recordings2" StoreEntitySet="Recordings2">
+      <EndProperty Name="Recordings2">
+        <ScalarProperty Name="SongId" ColumnName="OriginalSongId" />
+        <ScalarProperty Name="ArtistId" ColumnName="OriginalArtistId" />
+      </EndProperty>
+      <EndProperty Name="Recordings21">
+        <ScalarProperty Name="SongId" ColumnName="SongId" />
+        <ScalarProperty Name="ArtistId" ColumnName="ArtistId" />
+      </EndProperty>
+      <Condition ColumnName="OriginalSongId" IsNull="false" />
+      <Condition ColumnName="OriginalArtistId" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Recordings2_Songs2" TypeName="Aruba.FK_Recordings2_Songs2" StoreEntitySet="Recordings2">
+      <EndProperty Name="Songs2">
+        <ScalarProperty Name="Id" ColumnName="SongId" />
+      </EndProperty>
+      <EndProperty Name="Recordings2">
+        <ScalarProperty Name="SongId" ColumnName="SongId" />
+        <ScalarProperty Name="ArtistId" ColumnName="ArtistId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Recordings3_Songs3" TypeName="Aruba.FK_Recordings3_Songs3" StoreEntitySet="Recordings3">
+      <EndProperty Name="Songs3">
+        <ScalarProperty Name="Id" ColumnName="SongId" />
+      </EndProperty>
+      <EndProperty Name="Recordings3">
+        <ScalarProperty Name="SongId" ColumnName="SongId" />
+        <ScalarProperty Name="ArtistId" ColumnName="ArtistId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test1s_Run1s" TypeName="Aruba.FK_Test1s_Run1s" StoreEntitySet="Test1s">
+      <EndProperty Name="Run1s">
+        <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+        <ScalarProperty Name="BuildID" ColumnName="BuildId" />
+      </EndProperty>
+      <EndProperty Name="Test1s">
+        <ScalarProperty Name="TestId1" ColumnName="TestId1" />
+        <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test2s_Run1s" TypeName="Aruba.FK_Test2s_Run1s" StoreEntitySet="Test2s">
+      <EndProperty Name="Run1s">
+        <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+        <ScalarProperty Name="BuildID" ColumnName="BuildId" />
+      </EndProperty>
+      <EndProperty Name="Test2s">
+        <ScalarProperty Name="TestId2" ColumnName="TestId2" />
+        <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test3s_Run1s" TypeName="Aruba.FK_Test3s_Run1s" StoreEntitySet="Test3s">
+      <EndProperty Name="Run1s">
+        <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+        <ScalarProperty Name="BuildID" ColumnName="BuildId" />
+      </EndProperty>
+      <EndProperty Name="Test3s">
+        <ScalarProperty Name="TestId3" ColumnName="TestId3" />
+        <ScalarProperty Name="RunId1" ColumnName="RunId1" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test4s_Run2s" TypeName="Aruba.FK_Test4s_Run2s" StoreEntitySet="Test4s">
+      <EndProperty Name="Run2s">
+        <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+      <EndProperty Name="Test4s">
+        <ScalarProperty Name="TestId4" ColumnName="TestId4" />
+        <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test5s_Run2s" TypeName="Aruba.FK_Test5s_Run2s" StoreEntitySet="Test5s">
+      <EndProperty Name="Run2s">
+        <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+      <EndProperty Name="Test5s">
+        <ScalarProperty Name="TestId5" ColumnName="TestId5" />
+        <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test7s_Run3s" TypeName="Aruba.FK_Test7s_Run3s" StoreEntitySet="Test7s">
+      <EndProperty Name="Run3s">
+        <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+      <EndProperty Name="Test7s">
+        <ScalarProperty Name="TestId7" ColumnName="TestId7" />
+        <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test8s_Run3s" TypeName="Aruba.FK_Test8s_Run3s" StoreEntitySet="Test8s">
+      <EndProperty Name="Run3s">
+        <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+      <EndProperty Name="Test8s">
+        <ScalarProperty Name="TestId8" ColumnName="TestId8" />
+        <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test9s_Run3s" TypeName="Aruba.FK_Test9s_Run3s" StoreEntitySet="Test9s">
+      <EndProperty Name="Run3s">
+        <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+      <EndProperty Name="Test9s">
+        <ScalarProperty Name="TestId9" ColumnName="TestId9" />
+        <ScalarProperty Name="RunId3" ColumnName="RunId3" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Test6s_Run2s" TypeName="Aruba.FK_Test6s_Run2s" StoreEntitySet="Test6s">
+      <EndProperty Name="Run2s">
+        <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+      <EndProperty Name="Test6s">
+        <ScalarProperty Name="TestId6" ColumnName="TestId6" />
+        <ScalarProperty Name="RunId2" ColumnName="RunId2" />
+        <ScalarProperty Name="BuildId" ColumnName="BuildId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="RecordingAlbumsLinkTable" TypeName="Aruba.RecordingAlbumsLinkTable" StoreEntitySet="RecordingAlbumsLinkTable">
+      <EndProperty Name="Albums">
+        <ScalarProperty Name="albumId" ColumnName="AlbumId" />
+      </EndProperty>
+      <EndProperty Name="Recordings">
+        <ScalarProperty Name="SongId" ColumnName="SongId" />
+        <ScalarProperty Name="ArtistId" ColumnName="ArtistId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="RecordingAlbumsLinkTable2" TypeName="Aruba.RecordingAlbumsLinkTable2" StoreEntitySet="RecordingAlbumsLinkTable2">
+      <EndProperty Name="Albums2">
+        <ScalarProperty Name="albumId" ColumnName="AlbumId" />
+      </EndProperty>
+      <EndProperty Name="Recordings2">
+        <ScalarProperty Name="SongId" ColumnName="SongId" />
+        <ScalarProperty Name="ArtistId" ColumnName="ArtistId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="RecordingAlbumsLinkTable3" TypeName="Aruba.RecordingAlbumsLinkTable3" StoreEntitySet="RecordingAlbumsLinkTable3">
+      <EndProperty Name="Albums3">
+        <ScalarProperty Name="albumId" ColumnName="AlbumId" />
+      </EndProperty>
+      <EndProperty Name="Recordings3">
+        <ScalarProperty Name="SongId" ColumnName="SongId" />
+        <ScalarProperty Name="ArtistId" ColumnName="ArtistId" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>

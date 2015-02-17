@@ -1,0 +1,1502 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#My.EntryWithoutProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#My.EntryWithoutProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#My.EntryWithOpenProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Null m:null="true" /><d:Double m:type="Double">1</d:Double><d:Binary m:type="Binary">AAEAAQ==</d:Binary><d:Single m:type="Single">1</d:Single><d:Boolean m:type="Boolean">true</d:Boolean><d:Byte m:type="Byte">1</d:Byte><d:DateTimeOffset1 m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:DateTimeOffset1><d:DateTimeOffset2 m:type="DateTimeOffset">2010-10-10T10:10:10+01:00</d:DateTimeOffset2><d:DateTimeOffset3 m:type="DateTimeOffset">2010-10-10T10:10:10-08:00</d:DateTimeOffset3><d:Decimal m:type="Decimal">1</d:Decimal><d:Guid m:type="Guid">11111111-2222-3333-4444-555555555555</d:Guid><d:SByte m:type="SByte">1</d:SByte><d:Int16 m:type="Int16">1</d:Int16><d:Int32 m:type="Int32">1</d:Int32><d:Int64 m:type="Int64">1</d:Int64><d:String>1</d:String><d:Duration m:type="Duration">PT12M20.4S</d:Duration><d:Geography m:type="GeographyPoint"><gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:pos>32 -100</gml:pos></gml:Point></d:Geography><d:GeographyPoint m:type="GeographyPoint"><gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:pos>33.1 -110</gml:pos></gml:Point></d:GeographyPoint><d:GeographyLineString m:type="GeographyLineString"><gml:LineString gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:pos>33.1 -110</gml:pos><gml:pos>35.97 -110</gml:pos></gml:LineString></d:GeographyLineString><d:GeographyPolygon m:type="GeographyPolygon"><gml:Polygon gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:exterior><gml:LinearRing><gml:pos>33.1 -110</gml:pos><gml:pos>35.97 -110.15</gml:pos><gml:pos>11.45 87.75</gml:pos><gml:pos>33.1 -110</gml:pos></gml:LinearRing></gml:exterior><gml:interior><gml:LinearRing><gml:pos>35.97 -110</gml:pos><gml:pos>36.97 -110.15</gml:pos><gml:pos>45.23 23.18</gml:pos><gml:pos>35.97 -110</gml:pos></gml:LinearRing></gml:interior></gml:Polygon></d:GeographyPolygon><d:GeographyCollection m:type="GeographyCollection"><gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:geometryMembers><gml:Point><gml:pos>-19.99 -12</gml:pos></gml:Point></gml:geometryMembers></gml:MultiGeometry></d:GeographyCollection><d:GeographyMultiPoint m:type="GeographyMultiPoint"><gml:MultiPoint gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:pointMembers><gml:Point><gml:pos>10.2 11.2</gml:pos></gml:Point><gml:Point><gml:pos>11.9 11.6</gml:pos></gml:Point></gml:pointMembers></gml:MultiPoint></d:GeographyMultiPoint><d:GeographyMultiLineString m:type="GeographyMultiLineString"><gml:MultiCurve gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:curveMembers><gml:LineString><gml:pos>10.2 11.2</gml:pos><gml:pos>11.9 11.6</gml:pos></gml:LineString><gml:LineString><gml:pos>16.2 17.2</gml:pos><gml:pos>18.9 19.6</gml:pos></gml:LineString></gml:curveMembers></gml:MultiCurve></d:GeographyMultiLineString><d:GeographyMultiPolygon m:type="GeographyMultiPolygon"><gml:MultiSurface gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:surfaceMembers><gml:Polygon><gml:exterior><gml:LinearRing><gml:pos>10.2 11.2</gml:pos><gml:pos>11.9 11.6</gml:pos><gml:pos>11.45 87.75</gml:pos><gml:pos>10.2 11.2</gml:pos></gml:LinearRing></gml:exterior><gml:interior><gml:LinearRing><gml:pos>16.2 17.2</gml:pos><gml:pos>18.9 19.6</gml:pos><gml:pos>11.45 87.75</gml:pos><gml:pos>16.2 17.2</gml:pos></gml:LinearRing></gml:interior></gml:Polygon></gml:surfaceMembers></gml:MultiSurface></d:GeographyMultiPolygon><d:Geometry m:type="GeometryPoint"><gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0"><gml:pos>32 -10</gml:pos></gml:Point></d:Geometry><d:GeometryPoint m:type="GeometryPoint"><gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0"><gml:pos>33.1 -11</gml:pos></gml:Point></d:GeometryPoint><d:GeometryLineString m:type="GeometryLineString"><gml:LineString gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0"><gml:pos>33.1 -11.5</gml:pos><gml:pos>35.97 -11</gml:pos></gml:LineString></d:GeometryLineString><d:GeometryPolygon m:type="GeometryPolygon"><gml:Polygon gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0"><gml:exterior><gml:LinearRing><gml:pos>33.1 -13.6</gml:pos><gml:pos>35.97 -11.15</gml:pos><gml:pos>11.45 87.75</gml:pos><gml:pos>33.1 -13.6</gml:pos></gml:LinearRing></gml:exterior><gml:interior><gml:LinearRing><gml:pos>35.97 -11</gml:pos><gml:pos>36.97 -11.15</gml:pos><gml:pos>45.23 23.18</gml:pos><gml:pos>35.97 -11</gml:pos></gml:LinearRing></gml:interior></gml:Polygon></d:GeometryPolygon><d:GeometryCollection m:type="GeometryCollection"><gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0"><gml:geometryMembers><gml:Point><gml:pos>-19.99 -12</gml:pos></gml:Point></gml:geometryMembers></gml:MultiGeometry></d:GeometryCollection><d:GeometryMultiPoint m:type="GeometryMultiPoint"><gml:MultiPoint gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0"><gml:pointMembers><gml:Point><gml:pos>10.2 11.2</gml:pos></gml:Point><gml:Point><gml:pos>11.9 11.6</gml:pos></gml:Point></gml:pointMembers></gml:MultiPoint></d:GeometryMultiPoint><d:GeometryMultiLineString m:type="GeometryMultiLineString"><gml:MultiCurve gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0"><gml:curveMembers><gml:LineString><gml:pos>10.2 11.2</gml:pos><gml:pos>11.9 11.6</gml:pos></gml:LineString><gml:LineString><gml:pos>16.2 17.2</gml:pos><gml:pos>18.9 19.6</gml:pos></gml:LineString></gml:curveMembers></gml:MultiCurve></d:GeometryMultiLineString><d:GeometryMultiPolygon m:type="GeometryMultiPolygon"><gml:MultiSurface gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0"><gml:surfaceMembers><gml:Polygon><gml:exterior><gml:LinearRing><gml:pos>10.2 11.2</gml:pos><gml:pos>11.9 11.6</gml:pos><gml:pos>11.45 87.75</gml:pos><gml:pos>10.2 11.2</gml:pos></gml:LinearRing></gml:exterior><gml:interior><gml:LinearRing><gml:pos>16.2 17.2</gml:pos><gml:pos>18.9 19.6</gml:pos><gml:pos>11.45 87.75</gml:pos><gml:pos>16.2 17.2</gml:pos></gml:LinearRing></gml:interior></gml:Polygon></gml:surfaceMembers></gml:MultiSurface></d:GeometryMultiPolygon><d:NullableDouble m:type="Double">1</d:NullableDouble><d:NullableSingle m:type="Single">1</d:NullableSingle><d:NullableBoolean m:type="Boolean">true</d:NullableBoolean><d:NullableByte m:type="Byte">1</d:NullableByte><d:NullableDateTimeOffset1 m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:NullableDateTimeOffset1><d:NullableDateTimeOffset2 m:type="DateTimeOffset">2010-10-10T10:10:10+01:00</d:NullableDateTimeOffset2><d:NullableDateTimeOffset3 m:type="DateTimeOffset">2010-10-10T10:10:10-08:00</d:NullableDateTimeOffset3><d:NullableDecimal m:type="Decimal">1</d:NullableDecimal><d:NullableGuid m:type="Guid">11111111-2222-3333-4444-555555555555</d:NullableGuid><d:NullableSByte m:type="SByte">1</d:NullableSByte><d:NullableInt16 m:type="Int16">1</d:NullableInt16><d:NullableInt32 m:type="Int32">1</d:NullableInt32><d:NullableInt64 m:type="Int64">1</d:NullableInt64><d:NullableString>1</d:NullableString><d:NullableDuration m:type="Duration">PT12M20.4S</d:NullableDuration><d:NullDouble m:null="true" /><d:NullBinary m:null="true" /><d:NullSingle m:null="true" /><d:NullBoolean m:null="true" /><d:NullByte m:null="true" /><d:NullDateTimeOffset1 m:null="true" /><d:NullDateTimeOffset2 m:null="true" /><d:NullDateTimeOffset3 m:null="true" /><d:NullDecimal m:null="true" /><d:NullGuid m:null="true" /><d:NullSByte m:null="true" /><d:NullInt16 m:null="true" /><d:NullInt32 m:null="true" /><d:NullInt64 m:null="true" /><d:NullString m:null="true" /><d:NullDuration m:null="true" /><d:NullGeography m:null="true" /><d:NullGeographyPoint m:null="true" /><d:NullGeographyLineString m:null="true" /><d:NullGeographyPolygon m:null="true" /><d:NullGeographyMultiPoint m:null="true" /><d:NullGeographyMultiLineString m:null="true" /><d:NullGeographyMultiPolygon m:null="true" /><d:NullGeographyCollection m:null="true" /><d:NullGeometry m:null="true" /><d:NullGeometryPoint m:null="true" /><d:NullGeometryLineString m:null="true" /><d:NullGeometryPolygon m:null="true" /><d:NullGeometryMultiPoint m:null="true" /><d:NullGeometryMultiLineString m:null="true" /><d:NullGeometryMultiPolygon m:null="true" /><d:NullGeometryCollection m:null="true" /></m:properties></content></entry>
+
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#My.EntryWithOpenProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Id m:type="Int32">1</d:Id><d:ComplexAddress m:type="#My.AddressType"><d:Street>One Redmond Way</d:Street><d:City xml:space="preserve"> Redmond</d:City></d:ComplexAddress><d:NestedComplex m:type="#My.NestedAddressType"><d:Street m:type="#OtherTestNamespace.StreetType"><d:StreetName>One Redmond Way</d:StreetName><d:Number m:type="Int32">1234</d:Number></d:Street><d:City xml:space="preserve">Redmond </d:City></d:NestedComplex></m:properties></content></entry>
+
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#My.EntryWithOpenProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:Id m:type="Int32">1</d:Id><d:EmptyCollection m:type="#Collection(String)" /><d:PrimitiveCollection m:type="#Collection(Int32)"><m:element>0</m:element><m:element>1</m:element><m:element>2</m:element><m:element>3</m:element><m:element>4</m:element><m:element>5</m:element><m:element>6</m:element><m:element>7</m:element><m:element>8</m:element><m:element>9</m:element></d:PrimitiveCollection><d:IntCollectionNoTypeName m:type="#Collection(Int32)"><m:element>0</m:element><m:element>1</m:element><m:element>2</m:element></d:IntCollectionNoTypeName><d:StringCollectionNoTypeName m:type="#Collection(String)"><m:element>One</m:element><m:element>Two</m:element><m:element>Three</m:element></d:StringCollectionNoTypeName><d:GeographyCollectionNoTypeName m:type="#Collection(Geography)"><m:element m:type="GeographyCollection"><gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:geometryMembers><gml:Point><gml:pos>-19.99 -12</gml:pos></gml:Point></gml:geometryMembers></gml:MultiGeometry></m:element><m:element m:type="GeographyLineString"><gml:LineString gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:pos>33.1 -110</gml:pos><gml:pos>35.97 -110</gml:pos></gml:LineString></m:element><m:element m:type="GeographyMultiLineString"><gml:MultiCurve gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:curveMembers><gml:LineString><gml:pos>10.2 11.2</gml:pos><gml:pos>11.9 11.6</gml:pos></gml:LineString><gml:LineString><gml:pos>16.2 17.2</gml:pos><gml:pos>18.9 19.6</gml:pos></gml:LineString></gml:curveMembers></gml:MultiCurve></m:element><m:element m:type="GeographyMultiPoint"><gml:MultiPoint gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:pointMembers><gml:Point><gml:pos>10.2 11.2</gml:pos></gml:Point><gml:Point><gml:pos>11.9 11.6</gml:pos></gml:Point></gml:pointMembers></gml:MultiPoint></m:element><m:element m:type="GeographyMultiPolygon"><gml:MultiSurface gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:surfaceMembers><gml:Polygon><gml:exterior><gml:LinearRing><gml:pos>10.2 11.2</gml:pos><gml:pos>11.9 11.6</gml:pos><gml:pos>11.45 87.75</gml:pos><gml:pos>10.2 11.2</gml:pos></gml:LinearRing></gml:exterior><gml:interior><gml:LinearRing><gml:pos>16.2 17.2</gml:pos><gml:pos>18.9 19.6</gml:pos><gml:pos>11.45 87.75</gml:pos><gml:pos>16.2 17.2</gml:pos></gml:LinearRing></gml:interior></gml:Polygon></gml:surfaceMembers></gml:MultiSurface></m:element><m:element m:type="GeographyPoint"><gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:pos>33.1 -110</gml:pos></gml:Point></m:element><m:element m:type="GeographyPolygon"><gml:Polygon gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:exterior><gml:LinearRing><gml:pos>33.1 -110</gml:pos><gml:pos>35.97 -110.15</gml:pos><gml:pos>11.45 87.75</gml:pos><gml:pos>33.1 -110</gml:pos></gml:LinearRing></gml:exterior><gml:interior><gml:LinearRing><gml:pos>35.97 -110</gml:pos><gml:pos>36.97 -110.15</gml:pos><gml:pos>45.23 23.18</gml:pos><gml:pos>35.97 -110</gml:pos></gml:LinearRing></gml:interior></gml:Polygon></m:element><m:element m:type="GeographyPoint"><gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326"><gml:pos>32 -100</gml:pos></gml:Point></m:element></d:GeographyCollectionNoTypeName><d:ComplexCollection m:type="#Collection(My.AddressType)"><m:element><d:Street>One Redmond Way</d:Street><d:City xml:space="preserve"> Redmond</d:City></m:element><m:element><d:Street>Am Euro Platz 3</d:Street><d:City xml:space="preserve">Vienna </d:City></m:element></d:ComplexCollection><d:ComplexCollectionWithoutTypeName><m:element m:type="#My.AddressType"><d:Street>One Redmond Way</d:Street><d:City xml:space="preserve"> Redmond</d:City></m:element><m:element m:type="#My.AddressType"><d:Street>Am Euro Platz 3</d:Street><d:City xml:space="preserve">Vienna </d:City></m:element><m:element m:type="#My.AddressType"><d:City>Sammamish</d:City></m:element></d:ComplexCollectionWithoutTypeName></m:properties></content></entry>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithoutProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithoutProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithOpenProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Null m:null="true" />
+      <d:Double m:type="Double">1</d:Double>
+      <d:Binary m:type="Binary">AAEAAQ==</d:Binary>
+      <d:Single m:type="Single">1</d:Single>
+      <d:Boolean m:type="Boolean">true</d:Boolean>
+      <d:Byte m:type="Byte">1</d:Byte>
+      <d:DateTimeOffset1 m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:DateTimeOffset1>
+      <d:DateTimeOffset2 m:type="DateTimeOffset">2010-10-10T10:10:10+01:00</d:DateTimeOffset2>
+      <d:DateTimeOffset3 m:type="DateTimeOffset">2010-10-10T10:10:10-08:00</d:DateTimeOffset3>
+      <d:Decimal m:type="Decimal">1</d:Decimal>
+      <d:Guid m:type="Guid">11111111-2222-3333-4444-555555555555</d:Guid>
+      <d:SByte m:type="SByte">1</d:SByte>
+      <d:Int16 m:type="Int16">1</d:Int16>
+      <d:Int32 m:type="Int32">1</d:Int32>
+      <d:Int64 m:type="Int64">1</d:Int64>
+      <d:String>1</d:String>
+      <d:Duration m:type="Duration">PT12M20.4S</d:Duration>
+      <d:Geography m:type="GeographyPoint">
+        <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:pos>32 -100</gml:pos>
+        </gml:Point>
+      </d:Geography>
+      <d:GeographyPoint m:type="GeographyPoint">
+        <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:pos>33.1 -110</gml:pos>
+        </gml:Point>
+      </d:GeographyPoint>
+      <d:GeographyLineString m:type="GeographyLineString">
+        <gml:LineString gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:pos>33.1 -110</gml:pos>
+          <gml:pos>35.97 -110</gml:pos>
+        </gml:LineString>
+      </d:GeographyLineString>
+      <d:GeographyPolygon m:type="GeographyPolygon">
+        <gml:Polygon gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:exterior>
+            <gml:LinearRing>
+              <gml:pos>33.1 -110</gml:pos>
+              <gml:pos>35.97 -110.15</gml:pos>
+              <gml:pos>11.45 87.75</gml:pos>
+              <gml:pos>33.1 -110</gml:pos>
+            </gml:LinearRing>
+          </gml:exterior>
+          <gml:interior>
+            <gml:LinearRing>
+              <gml:pos>35.97 -110</gml:pos>
+              <gml:pos>36.97 -110.15</gml:pos>
+              <gml:pos>45.23 23.18</gml:pos>
+              <gml:pos>35.97 -110</gml:pos>
+            </gml:LinearRing>
+          </gml:interior>
+        </gml:Polygon>
+      </d:GeographyPolygon>
+      <d:GeographyCollection m:type="GeographyCollection">
+        <gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:geometryMembers>
+            <gml:Point>
+              <gml:pos>-19.99 -12</gml:pos>
+            </gml:Point>
+          </gml:geometryMembers>
+        </gml:MultiGeometry>
+      </d:GeographyCollection>
+      <d:GeographyMultiPoint m:type="GeographyMultiPoint">
+        <gml:MultiPoint gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:pointMembers>
+            <gml:Point>
+              <gml:pos>10.2 11.2</gml:pos>
+            </gml:Point>
+            <gml:Point>
+              <gml:pos>11.9 11.6</gml:pos>
+            </gml:Point>
+          </gml:pointMembers>
+        </gml:MultiPoint>
+      </d:GeographyMultiPoint>
+      <d:GeographyMultiLineString m:type="GeographyMultiLineString">
+        <gml:MultiCurve gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:curveMembers>
+            <gml:LineString>
+              <gml:pos>10.2 11.2</gml:pos>
+              <gml:pos>11.9 11.6</gml:pos>
+            </gml:LineString>
+            <gml:LineString>
+              <gml:pos>16.2 17.2</gml:pos>
+              <gml:pos>18.9 19.6</gml:pos>
+            </gml:LineString>
+          </gml:curveMembers>
+        </gml:MultiCurve>
+      </d:GeographyMultiLineString>
+      <d:GeographyMultiPolygon m:type="GeographyMultiPolygon">
+        <gml:MultiSurface gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:surfaceMembers>
+            <gml:Polygon>
+              <gml:exterior>
+                <gml:LinearRing>
+                  <gml:pos>10.2 11.2</gml:pos>
+                  <gml:pos>11.9 11.6</gml:pos>
+                  <gml:pos>11.45 87.75</gml:pos>
+                  <gml:pos>10.2 11.2</gml:pos>
+                </gml:LinearRing>
+              </gml:exterior>
+              <gml:interior>
+                <gml:LinearRing>
+                  <gml:pos>16.2 17.2</gml:pos>
+                  <gml:pos>18.9 19.6</gml:pos>
+                  <gml:pos>11.45 87.75</gml:pos>
+                  <gml:pos>16.2 17.2</gml:pos>
+                </gml:LinearRing>
+              </gml:interior>
+            </gml:Polygon>
+          </gml:surfaceMembers>
+        </gml:MultiSurface>
+      </d:GeographyMultiPolygon>
+      <d:Geometry m:type="GeometryPoint">
+        <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:pos>32 -10</gml:pos>
+        </gml:Point>
+      </d:Geometry>
+      <d:GeometryPoint m:type="GeometryPoint">
+        <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:pos>33.1 -11</gml:pos>
+        </gml:Point>
+      </d:GeometryPoint>
+      <d:GeometryLineString m:type="GeometryLineString">
+        <gml:LineString gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:pos>33.1 -11.5</gml:pos>
+          <gml:pos>35.97 -11</gml:pos>
+        </gml:LineString>
+      </d:GeometryLineString>
+      <d:GeometryPolygon m:type="GeometryPolygon">
+        <gml:Polygon gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:exterior>
+            <gml:LinearRing>
+              <gml:pos>33.1 -13.6</gml:pos>
+              <gml:pos>35.97 -11.15</gml:pos>
+              <gml:pos>11.45 87.75</gml:pos>
+              <gml:pos>33.1 -13.6</gml:pos>
+            </gml:LinearRing>
+          </gml:exterior>
+          <gml:interior>
+            <gml:LinearRing>
+              <gml:pos>35.97 -11</gml:pos>
+              <gml:pos>36.97 -11.15</gml:pos>
+              <gml:pos>45.23 23.18</gml:pos>
+              <gml:pos>35.97 -11</gml:pos>
+            </gml:LinearRing>
+          </gml:interior>
+        </gml:Polygon>
+      </d:GeometryPolygon>
+      <d:GeometryCollection m:type="GeometryCollection">
+        <gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:geometryMembers>
+            <gml:Point>
+              <gml:pos>-19.99 -12</gml:pos>
+            </gml:Point>
+          </gml:geometryMembers>
+        </gml:MultiGeometry>
+      </d:GeometryCollection>
+      <d:GeometryMultiPoint m:type="GeometryMultiPoint">
+        <gml:MultiPoint gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:pointMembers>
+            <gml:Point>
+              <gml:pos>10.2 11.2</gml:pos>
+            </gml:Point>
+            <gml:Point>
+              <gml:pos>11.9 11.6</gml:pos>
+            </gml:Point>
+          </gml:pointMembers>
+        </gml:MultiPoint>
+      </d:GeometryMultiPoint>
+      <d:GeometryMultiLineString m:type="GeometryMultiLineString">
+        <gml:MultiCurve gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:curveMembers>
+            <gml:LineString>
+              <gml:pos>10.2 11.2</gml:pos>
+              <gml:pos>11.9 11.6</gml:pos>
+            </gml:LineString>
+            <gml:LineString>
+              <gml:pos>16.2 17.2</gml:pos>
+              <gml:pos>18.9 19.6</gml:pos>
+            </gml:LineString>
+          </gml:curveMembers>
+        </gml:MultiCurve>
+      </d:GeometryMultiLineString>
+      <d:GeometryMultiPolygon m:type="GeometryMultiPolygon">
+        <gml:MultiSurface gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:surfaceMembers>
+            <gml:Polygon>
+              <gml:exterior>
+                <gml:LinearRing>
+                  <gml:pos>10.2 11.2</gml:pos>
+                  <gml:pos>11.9 11.6</gml:pos>
+                  <gml:pos>11.45 87.75</gml:pos>
+                  <gml:pos>10.2 11.2</gml:pos>
+                </gml:LinearRing>
+              </gml:exterior>
+              <gml:interior>
+                <gml:LinearRing>
+                  <gml:pos>16.2 17.2</gml:pos>
+                  <gml:pos>18.9 19.6</gml:pos>
+                  <gml:pos>11.45 87.75</gml:pos>
+                  <gml:pos>16.2 17.2</gml:pos>
+                </gml:LinearRing>
+              </gml:interior>
+            </gml:Polygon>
+          </gml:surfaceMembers>
+        </gml:MultiSurface>
+      </d:GeometryMultiPolygon>
+      <d:NullableDouble m:type="Double">1</d:NullableDouble>
+      <d:NullableSingle m:type="Single">1</d:NullableSingle>
+      <d:NullableBoolean m:type="Boolean">true</d:NullableBoolean>
+      <d:NullableByte m:type="Byte">1</d:NullableByte>
+      <d:NullableDateTimeOffset1 m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:NullableDateTimeOffset1>
+      <d:NullableDateTimeOffset2 m:type="DateTimeOffset">2010-10-10T10:10:10+01:00</d:NullableDateTimeOffset2>
+      <d:NullableDateTimeOffset3 m:type="DateTimeOffset">2010-10-10T10:10:10-08:00</d:NullableDateTimeOffset3>
+      <d:NullableDecimal m:type="Decimal">1</d:NullableDecimal>
+      <d:NullableGuid m:type="Guid">11111111-2222-3333-4444-555555555555</d:NullableGuid>
+      <d:NullableSByte m:type="SByte">1</d:NullableSByte>
+      <d:NullableInt16 m:type="Int16">1</d:NullableInt16>
+      <d:NullableInt32 m:type="Int32">1</d:NullableInt32>
+      <d:NullableInt64 m:type="Int64">1</d:NullableInt64>
+      <d:NullableString>1</d:NullableString>
+      <d:NullableDuration m:type="Duration">PT12M20.4S</d:NullableDuration>
+      <d:NullDouble m:null="true" />
+      <d:NullBinary m:null="true" />
+      <d:NullSingle m:null="true" />
+      <d:NullBoolean m:null="true" />
+      <d:NullByte m:null="true" />
+      <d:NullDateTimeOffset1 m:null="true" />
+      <d:NullDateTimeOffset2 m:null="true" />
+      <d:NullDateTimeOffset3 m:null="true" />
+      <d:NullDecimal m:null="true" />
+      <d:NullGuid m:null="true" />
+      <d:NullSByte m:null="true" />
+      <d:NullInt16 m:null="true" />
+      <d:NullInt32 m:null="true" />
+      <d:NullInt64 m:null="true" />
+      <d:NullString m:null="true" />
+      <d:NullDuration m:null="true" />
+      <d:NullGeography m:null="true" />
+      <d:NullGeographyPoint m:null="true" />
+      <d:NullGeographyLineString m:null="true" />
+      <d:NullGeographyPolygon m:null="true" />
+      <d:NullGeographyMultiPoint m:null="true" />
+      <d:NullGeographyMultiLineString m:null="true" />
+      <d:NullGeographyMultiPolygon m:null="true" />
+      <d:NullGeographyCollection m:null="true" />
+      <d:NullGeometry m:null="true" />
+      <d:NullGeometryPoint m:null="true" />
+      <d:NullGeometryLineString m:null="true" />
+      <d:NullGeometryPolygon m:null="true" />
+      <d:NullGeometryMultiPoint m:null="true" />
+      <d:NullGeometryMultiLineString m:null="true" />
+      <d:NullGeometryMultiPolygon m:null="true" />
+      <d:NullGeometryCollection m:null="true" />
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithOpenProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:ComplexAddress m:type="#My.AddressType">
+        <d:Street>One Redmond Way</d:Street>
+        <d:City xml:space="preserve"> Redmond</d:City>
+      </d:ComplexAddress>
+      <d:NestedComplex m:type="#My.NestedAddressType">
+        <d:Street m:type="#OtherTestNamespace.StreetType">
+          <d:StreetName>One Redmond Way</d:StreetName>
+          <d:Number m:type="Int32">1234</d:Number>
+        </d:Street>
+        <d:City xml:space="preserve">Redmond </d:City>
+      </d:NestedComplex>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithOpenProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:EmptyCollection m:type="#Collection(String)" />
+      <d:PrimitiveCollection m:type="#Collection(Int32)">
+        <m:element>0</m:element>
+        <m:element>1</m:element>
+        <m:element>2</m:element>
+        <m:element>3</m:element>
+        <m:element>4</m:element>
+        <m:element>5</m:element>
+        <m:element>6</m:element>
+        <m:element>7</m:element>
+        <m:element>8</m:element>
+        <m:element>9</m:element>
+      </d:PrimitiveCollection>
+      <d:IntCollectionNoTypeName m:type="#Collection(Int32)">
+        <m:element>0</m:element>
+        <m:element>1</m:element>
+        <m:element>2</m:element>
+      </d:IntCollectionNoTypeName>
+      <d:StringCollectionNoTypeName m:type="#Collection(String)">
+        <m:element>One</m:element>
+        <m:element>Two</m:element>
+        <m:element>Three</m:element>
+      </d:StringCollectionNoTypeName>
+      <d:GeographyCollectionNoTypeName m:type="#Collection(Geography)">
+        <m:element m:type="GeographyCollection">
+          <gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:geometryMembers>
+              <gml:Point>
+                <gml:pos>-19.99 -12</gml:pos>
+              </gml:Point>
+            </gml:geometryMembers>
+          </gml:MultiGeometry>
+        </m:element>
+        <m:element m:type="GeographyLineString">
+          <gml:LineString gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:pos>33.1 -110</gml:pos>
+            <gml:pos>35.97 -110</gml:pos>
+          </gml:LineString>
+        </m:element>
+        <m:element m:type="GeographyMultiLineString">
+          <gml:MultiCurve gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:curveMembers>
+              <gml:LineString>
+                <gml:pos>10.2 11.2</gml:pos>
+                <gml:pos>11.9 11.6</gml:pos>
+              </gml:LineString>
+              <gml:LineString>
+                <gml:pos>16.2 17.2</gml:pos>
+                <gml:pos>18.9 19.6</gml:pos>
+              </gml:LineString>
+            </gml:curveMembers>
+          </gml:MultiCurve>
+        </m:element>
+        <m:element m:type="GeographyMultiPoint">
+          <gml:MultiPoint gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:pointMembers>
+              <gml:Point>
+                <gml:pos>10.2 11.2</gml:pos>
+              </gml:Point>
+              <gml:Point>
+                <gml:pos>11.9 11.6</gml:pos>
+              </gml:Point>
+            </gml:pointMembers>
+          </gml:MultiPoint>
+        </m:element>
+        <m:element m:type="GeographyMultiPolygon">
+          <gml:MultiSurface gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:surfaceMembers>
+              <gml:Polygon>
+                <gml:exterior>
+                  <gml:LinearRing>
+                    <gml:pos>10.2 11.2</gml:pos>
+                    <gml:pos>11.9 11.6</gml:pos>
+                    <gml:pos>11.45 87.75</gml:pos>
+                    <gml:pos>10.2 11.2</gml:pos>
+                  </gml:LinearRing>
+                </gml:exterior>
+                <gml:interior>
+                  <gml:LinearRing>
+                    <gml:pos>16.2 17.2</gml:pos>
+                    <gml:pos>18.9 19.6</gml:pos>
+                    <gml:pos>11.45 87.75</gml:pos>
+                    <gml:pos>16.2 17.2</gml:pos>
+                  </gml:LinearRing>
+                </gml:interior>
+              </gml:Polygon>
+            </gml:surfaceMembers>
+          </gml:MultiSurface>
+        </m:element>
+        <m:element m:type="GeographyPoint">
+          <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:pos>33.1 -110</gml:pos>
+          </gml:Point>
+        </m:element>
+        <m:element m:type="GeographyPolygon">
+          <gml:Polygon gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:exterior>
+              <gml:LinearRing>
+                <gml:pos>33.1 -110</gml:pos>
+                <gml:pos>35.97 -110.15</gml:pos>
+                <gml:pos>11.45 87.75</gml:pos>
+                <gml:pos>33.1 -110</gml:pos>
+              </gml:LinearRing>
+            </gml:exterior>
+            <gml:interior>
+              <gml:LinearRing>
+                <gml:pos>35.97 -110</gml:pos>
+                <gml:pos>36.97 -110.15</gml:pos>
+                <gml:pos>45.23 23.18</gml:pos>
+                <gml:pos>35.97 -110</gml:pos>
+              </gml:LinearRing>
+            </gml:interior>
+          </gml:Polygon>
+        </m:element>
+        <m:element m:type="GeographyPoint">
+          <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:pos>32 -100</gml:pos>
+          </gml:Point>
+        </m:element>
+      </d:GeographyCollectionNoTypeName>
+      <d:ComplexCollection m:type="#Collection(My.AddressType)">
+        <m:element>
+          <d:Street>One Redmond Way</d:Street>
+          <d:City xml:space="preserve"> Redmond</d:City>
+        </m:element>
+        <m:element>
+          <d:Street>Am Euro Platz 3</d:Street>
+          <d:City xml:space="preserve">Vienna </d:City>
+        </m:element>
+      </d:ComplexCollection>
+      <d:ComplexCollectionWithoutTypeName>
+        <m:element m:type="#My.AddressType">
+          <d:Street>One Redmond Way</d:Street>
+          <d:City xml:space="preserve"> Redmond</d:City>
+        </m:element>
+        <m:element m:type="#My.AddressType">
+          <d:Street>Am Euro Platz 3</d:Street>
+          <d:City xml:space="preserve">Vienna </d:City>
+        </m:element>
+        <m:element m:type="#My.AddressType">
+          <d:City>Sammamish</d:City>
+        </m:element>
+      </d:ComplexCollectionWithoutTypeName>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithoutProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithoutProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithOpenProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Null m:null="true" />
+      <d:Double m:type="Double">1</d:Double>
+      <d:Binary m:type="Binary">AAEAAQ==</d:Binary>
+      <d:Single m:type="Single">1</d:Single>
+      <d:Boolean m:type="Boolean">true</d:Boolean>
+      <d:Byte m:type="Byte">1</d:Byte>
+      <d:DateTimeOffset1 m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:DateTimeOffset1>
+      <d:DateTimeOffset2 m:type="DateTimeOffset">2010-10-10T10:10:10+01:00</d:DateTimeOffset2>
+      <d:DateTimeOffset3 m:type="DateTimeOffset">2010-10-10T10:10:10-08:00</d:DateTimeOffset3>
+      <d:Decimal m:type="Decimal">1</d:Decimal>
+      <d:Guid m:type="Guid">11111111-2222-3333-4444-555555555555</d:Guid>
+      <d:SByte m:type="SByte">1</d:SByte>
+      <d:Int16 m:type="Int16">1</d:Int16>
+      <d:Int32 m:type="Int32">1</d:Int32>
+      <d:Int64 m:type="Int64">1</d:Int64>
+      <d:String>1</d:String>
+      <d:Duration m:type="Duration">PT12M20.4S</d:Duration>
+      <d:Geography m:type="GeographyPoint">
+        <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:pos>32 -100</gml:pos>
+        </gml:Point>
+      </d:Geography>
+      <d:GeographyPoint m:type="GeographyPoint">
+        <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:pos>33.1 -110</gml:pos>
+        </gml:Point>
+      </d:GeographyPoint>
+      <d:GeographyLineString m:type="GeographyLineString">
+        <gml:LineString gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:pos>33.1 -110</gml:pos>
+          <gml:pos>35.97 -110</gml:pos>
+        </gml:LineString>
+      </d:GeographyLineString>
+      <d:GeographyPolygon m:type="GeographyPolygon">
+        <gml:Polygon gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:exterior>
+            <gml:LinearRing>
+              <gml:pos>33.1 -110</gml:pos>
+              <gml:pos>35.97 -110.15</gml:pos>
+              <gml:pos>11.45 87.75</gml:pos>
+              <gml:pos>33.1 -110</gml:pos>
+            </gml:LinearRing>
+          </gml:exterior>
+          <gml:interior>
+            <gml:LinearRing>
+              <gml:pos>35.97 -110</gml:pos>
+              <gml:pos>36.97 -110.15</gml:pos>
+              <gml:pos>45.23 23.18</gml:pos>
+              <gml:pos>35.97 -110</gml:pos>
+            </gml:LinearRing>
+          </gml:interior>
+        </gml:Polygon>
+      </d:GeographyPolygon>
+      <d:GeographyCollection m:type="GeographyCollection">
+        <gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:geometryMembers>
+            <gml:Point>
+              <gml:pos>-19.99 -12</gml:pos>
+            </gml:Point>
+          </gml:geometryMembers>
+        </gml:MultiGeometry>
+      </d:GeographyCollection>
+      <d:GeographyMultiPoint m:type="GeographyMultiPoint">
+        <gml:MultiPoint gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:pointMembers>
+            <gml:Point>
+              <gml:pos>10.2 11.2</gml:pos>
+            </gml:Point>
+            <gml:Point>
+              <gml:pos>11.9 11.6</gml:pos>
+            </gml:Point>
+          </gml:pointMembers>
+        </gml:MultiPoint>
+      </d:GeographyMultiPoint>
+      <d:GeographyMultiLineString m:type="GeographyMultiLineString">
+        <gml:MultiCurve gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:curveMembers>
+            <gml:LineString>
+              <gml:pos>10.2 11.2</gml:pos>
+              <gml:pos>11.9 11.6</gml:pos>
+            </gml:LineString>
+            <gml:LineString>
+              <gml:pos>16.2 17.2</gml:pos>
+              <gml:pos>18.9 19.6</gml:pos>
+            </gml:LineString>
+          </gml:curveMembers>
+        </gml:MultiCurve>
+      </d:GeographyMultiLineString>
+      <d:GeographyMultiPolygon m:type="GeographyMultiPolygon">
+        <gml:MultiSurface gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:surfaceMembers>
+            <gml:Polygon>
+              <gml:exterior>
+                <gml:LinearRing>
+                  <gml:pos>10.2 11.2</gml:pos>
+                  <gml:pos>11.9 11.6</gml:pos>
+                  <gml:pos>11.45 87.75</gml:pos>
+                  <gml:pos>10.2 11.2</gml:pos>
+                </gml:LinearRing>
+              </gml:exterior>
+              <gml:interior>
+                <gml:LinearRing>
+                  <gml:pos>16.2 17.2</gml:pos>
+                  <gml:pos>18.9 19.6</gml:pos>
+                  <gml:pos>11.45 87.75</gml:pos>
+                  <gml:pos>16.2 17.2</gml:pos>
+                </gml:LinearRing>
+              </gml:interior>
+            </gml:Polygon>
+          </gml:surfaceMembers>
+        </gml:MultiSurface>
+      </d:GeographyMultiPolygon>
+      <d:Geometry m:type="GeometryPoint">
+        <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:pos>32 -10</gml:pos>
+        </gml:Point>
+      </d:Geometry>
+      <d:GeometryPoint m:type="GeometryPoint">
+        <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:pos>33.1 -11</gml:pos>
+        </gml:Point>
+      </d:GeometryPoint>
+      <d:GeometryLineString m:type="GeometryLineString">
+        <gml:LineString gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:pos>33.1 -11.5</gml:pos>
+          <gml:pos>35.97 -11</gml:pos>
+        </gml:LineString>
+      </d:GeometryLineString>
+      <d:GeometryPolygon m:type="GeometryPolygon">
+        <gml:Polygon gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:exterior>
+            <gml:LinearRing>
+              <gml:pos>33.1 -13.6</gml:pos>
+              <gml:pos>35.97 -11.15</gml:pos>
+              <gml:pos>11.45 87.75</gml:pos>
+              <gml:pos>33.1 -13.6</gml:pos>
+            </gml:LinearRing>
+          </gml:exterior>
+          <gml:interior>
+            <gml:LinearRing>
+              <gml:pos>35.97 -11</gml:pos>
+              <gml:pos>36.97 -11.15</gml:pos>
+              <gml:pos>45.23 23.18</gml:pos>
+              <gml:pos>35.97 -11</gml:pos>
+            </gml:LinearRing>
+          </gml:interior>
+        </gml:Polygon>
+      </d:GeometryPolygon>
+      <d:GeometryCollection m:type="GeometryCollection">
+        <gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:geometryMembers>
+            <gml:Point>
+              <gml:pos>-19.99 -12</gml:pos>
+            </gml:Point>
+          </gml:geometryMembers>
+        </gml:MultiGeometry>
+      </d:GeometryCollection>
+      <d:GeometryMultiPoint m:type="GeometryMultiPoint">
+        <gml:MultiPoint gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:pointMembers>
+            <gml:Point>
+              <gml:pos>10.2 11.2</gml:pos>
+            </gml:Point>
+            <gml:Point>
+              <gml:pos>11.9 11.6</gml:pos>
+            </gml:Point>
+          </gml:pointMembers>
+        </gml:MultiPoint>
+      </d:GeometryMultiPoint>
+      <d:GeometryMultiLineString m:type="GeometryMultiLineString">
+        <gml:MultiCurve gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:curveMembers>
+            <gml:LineString>
+              <gml:pos>10.2 11.2</gml:pos>
+              <gml:pos>11.9 11.6</gml:pos>
+            </gml:LineString>
+            <gml:LineString>
+              <gml:pos>16.2 17.2</gml:pos>
+              <gml:pos>18.9 19.6</gml:pos>
+            </gml:LineString>
+          </gml:curveMembers>
+        </gml:MultiCurve>
+      </d:GeometryMultiLineString>
+      <d:GeometryMultiPolygon m:type="GeometryMultiPolygon">
+        <gml:MultiSurface gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:surfaceMembers>
+            <gml:Polygon>
+              <gml:exterior>
+                <gml:LinearRing>
+                  <gml:pos>10.2 11.2</gml:pos>
+                  <gml:pos>11.9 11.6</gml:pos>
+                  <gml:pos>11.45 87.75</gml:pos>
+                  <gml:pos>10.2 11.2</gml:pos>
+                </gml:LinearRing>
+              </gml:exterior>
+              <gml:interior>
+                <gml:LinearRing>
+                  <gml:pos>16.2 17.2</gml:pos>
+                  <gml:pos>18.9 19.6</gml:pos>
+                  <gml:pos>11.45 87.75</gml:pos>
+                  <gml:pos>16.2 17.2</gml:pos>
+                </gml:LinearRing>
+              </gml:interior>
+            </gml:Polygon>
+          </gml:surfaceMembers>
+        </gml:MultiSurface>
+      </d:GeometryMultiPolygon>
+      <d:NullableDouble m:type="Double">1</d:NullableDouble>
+      <d:NullableSingle m:type="Single">1</d:NullableSingle>
+      <d:NullableBoolean m:type="Boolean">true</d:NullableBoolean>
+      <d:NullableByte m:type="Byte">1</d:NullableByte>
+      <d:NullableDateTimeOffset1 m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:NullableDateTimeOffset1>
+      <d:NullableDateTimeOffset2 m:type="DateTimeOffset">2010-10-10T10:10:10+01:00</d:NullableDateTimeOffset2>
+      <d:NullableDateTimeOffset3 m:type="DateTimeOffset">2010-10-10T10:10:10-08:00</d:NullableDateTimeOffset3>
+      <d:NullableDecimal m:type="Decimal">1</d:NullableDecimal>
+      <d:NullableGuid m:type="Guid">11111111-2222-3333-4444-555555555555</d:NullableGuid>
+      <d:NullableSByte m:type="SByte">1</d:NullableSByte>
+      <d:NullableInt16 m:type="Int16">1</d:NullableInt16>
+      <d:NullableInt32 m:type="Int32">1</d:NullableInt32>
+      <d:NullableInt64 m:type="Int64">1</d:NullableInt64>
+      <d:NullableString>1</d:NullableString>
+      <d:NullableDuration m:type="Duration">PT12M20.4S</d:NullableDuration>
+      <d:NullDouble m:null="true" />
+      <d:NullBinary m:null="true" />
+      <d:NullSingle m:null="true" />
+      <d:NullBoolean m:null="true" />
+      <d:NullByte m:null="true" />
+      <d:NullDateTimeOffset1 m:null="true" />
+      <d:NullDateTimeOffset2 m:null="true" />
+      <d:NullDateTimeOffset3 m:null="true" />
+      <d:NullDecimal m:null="true" />
+      <d:NullGuid m:null="true" />
+      <d:NullSByte m:null="true" />
+      <d:NullInt16 m:null="true" />
+      <d:NullInt32 m:null="true" />
+      <d:NullInt64 m:null="true" />
+      <d:NullString m:null="true" />
+      <d:NullDuration m:null="true" />
+      <d:NullGeography m:null="true" />
+      <d:NullGeographyPoint m:null="true" />
+      <d:NullGeographyLineString m:null="true" />
+      <d:NullGeographyPolygon m:null="true" />
+      <d:NullGeographyMultiPoint m:null="true" />
+      <d:NullGeographyMultiLineString m:null="true" />
+      <d:NullGeographyMultiPolygon m:null="true" />
+      <d:NullGeographyCollection m:null="true" />
+      <d:NullGeometry m:null="true" />
+      <d:NullGeometryPoint m:null="true" />
+      <d:NullGeometryLineString m:null="true" />
+      <d:NullGeometryPolygon m:null="true" />
+      <d:NullGeometryMultiPoint m:null="true" />
+      <d:NullGeometryMultiLineString m:null="true" />
+      <d:NullGeometryMultiPolygon m:null="true" />
+      <d:NullGeometryCollection m:null="true" />
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithOpenProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:ComplexAddress m:type="#My.AddressType">
+        <d:Street>One Redmond Way</d:Street>
+        <d:City xml:space="preserve"> Redmond</d:City>
+      </d:ComplexAddress>
+      <d:NestedComplex m:type="#My.NestedAddressType">
+        <d:Street m:type="#OtherTestNamespace.StreetType">
+          <d:StreetName>One Redmond Way</d:StreetName>
+          <d:Number m:type="Int32">1234</d:Number>
+        </d:Street>
+        <d:City xml:space="preserve">Redmond </d:City>
+      </d:NestedComplex>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithOpenProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:EmptyCollection m:type="#Collection(String)" />
+      <d:PrimitiveCollection m:type="#Collection(Int32)">
+        <m:element>0</m:element>
+        <m:element>1</m:element>
+        <m:element>2</m:element>
+        <m:element>3</m:element>
+        <m:element>4</m:element>
+        <m:element>5</m:element>
+        <m:element>6</m:element>
+        <m:element>7</m:element>
+        <m:element>8</m:element>
+        <m:element>9</m:element>
+      </d:PrimitiveCollection>
+      <d:IntCollectionNoTypeName m:type="#Collection(Int32)">
+        <m:element>0</m:element>
+        <m:element>1</m:element>
+        <m:element>2</m:element>
+      </d:IntCollectionNoTypeName>
+      <d:StringCollectionNoTypeName m:type="#Collection(String)">
+        <m:element>One</m:element>
+        <m:element>Two</m:element>
+        <m:element>Three</m:element>
+      </d:StringCollectionNoTypeName>
+      <d:GeographyCollectionNoTypeName m:type="#Collection(Geography)">
+        <m:element m:type="GeographyCollection">
+          <gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:geometryMembers>
+              <gml:Point>
+                <gml:pos>-19.99 -12</gml:pos>
+              </gml:Point>
+            </gml:geometryMembers>
+          </gml:MultiGeometry>
+        </m:element>
+        <m:element m:type="GeographyLineString">
+          <gml:LineString gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:pos>33.1 -110</gml:pos>
+            <gml:pos>35.97 -110</gml:pos>
+          </gml:LineString>
+        </m:element>
+        <m:element m:type="GeographyMultiLineString">
+          <gml:MultiCurve gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:curveMembers>
+              <gml:LineString>
+                <gml:pos>10.2 11.2</gml:pos>
+                <gml:pos>11.9 11.6</gml:pos>
+              </gml:LineString>
+              <gml:LineString>
+                <gml:pos>16.2 17.2</gml:pos>
+                <gml:pos>18.9 19.6</gml:pos>
+              </gml:LineString>
+            </gml:curveMembers>
+          </gml:MultiCurve>
+        </m:element>
+        <m:element m:type="GeographyMultiPoint">
+          <gml:MultiPoint gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:pointMembers>
+              <gml:Point>
+                <gml:pos>10.2 11.2</gml:pos>
+              </gml:Point>
+              <gml:Point>
+                <gml:pos>11.9 11.6</gml:pos>
+              </gml:Point>
+            </gml:pointMembers>
+          </gml:MultiPoint>
+        </m:element>
+        <m:element m:type="GeographyMultiPolygon">
+          <gml:MultiSurface gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:surfaceMembers>
+              <gml:Polygon>
+                <gml:exterior>
+                  <gml:LinearRing>
+                    <gml:pos>10.2 11.2</gml:pos>
+                    <gml:pos>11.9 11.6</gml:pos>
+                    <gml:pos>11.45 87.75</gml:pos>
+                    <gml:pos>10.2 11.2</gml:pos>
+                  </gml:LinearRing>
+                </gml:exterior>
+                <gml:interior>
+                  <gml:LinearRing>
+                    <gml:pos>16.2 17.2</gml:pos>
+                    <gml:pos>18.9 19.6</gml:pos>
+                    <gml:pos>11.45 87.75</gml:pos>
+                    <gml:pos>16.2 17.2</gml:pos>
+                  </gml:LinearRing>
+                </gml:interior>
+              </gml:Polygon>
+            </gml:surfaceMembers>
+          </gml:MultiSurface>
+        </m:element>
+        <m:element m:type="GeographyPoint">
+          <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:pos>33.1 -110</gml:pos>
+          </gml:Point>
+        </m:element>
+        <m:element m:type="GeographyPolygon">
+          <gml:Polygon gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:exterior>
+              <gml:LinearRing>
+                <gml:pos>33.1 -110</gml:pos>
+                <gml:pos>35.97 -110.15</gml:pos>
+                <gml:pos>11.45 87.75</gml:pos>
+                <gml:pos>33.1 -110</gml:pos>
+              </gml:LinearRing>
+            </gml:exterior>
+            <gml:interior>
+              <gml:LinearRing>
+                <gml:pos>35.97 -110</gml:pos>
+                <gml:pos>36.97 -110.15</gml:pos>
+                <gml:pos>45.23 23.18</gml:pos>
+                <gml:pos>35.97 -110</gml:pos>
+              </gml:LinearRing>
+            </gml:interior>
+          </gml:Polygon>
+        </m:element>
+        <m:element m:type="GeographyPoint">
+          <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:pos>32 -100</gml:pos>
+          </gml:Point>
+        </m:element>
+      </d:GeographyCollectionNoTypeName>
+      <d:ComplexCollection m:type="#Collection(My.AddressType)">
+        <m:element>
+          <d:Street>One Redmond Way</d:Street>
+          <d:City xml:space="preserve"> Redmond</d:City>
+        </m:element>
+        <m:element>
+          <d:Street>Am Euro Platz 3</d:Street>
+          <d:City xml:space="preserve">Vienna </d:City>
+        </m:element>
+      </d:ComplexCollection>
+      <d:ComplexCollectionWithoutTypeName>
+        <m:element m:type="#My.AddressType">
+          <d:Street>One Redmond Way</d:Street>
+          <d:City xml:space="preserve"> Redmond</d:City>
+        </m:element>
+        <m:element m:type="#My.AddressType">
+          <d:Street>Am Euro Platz 3</d:Street>
+          <d:City xml:space="preserve">Vienna </d:City>
+        </m:element>
+        <m:element m:type="#My.AddressType">
+          <d:City>Sammamish</d:City>
+        </m:element>
+      </d:ComplexCollectionWithoutTypeName>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithoutProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithoutProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithOpenProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Null m:null="true" />
+      <d:Double m:type="Double">1</d:Double>
+      <d:Binary m:type="Binary">AAEAAQ==</d:Binary>
+      <d:Single m:type="Single">1</d:Single>
+      <d:Boolean m:type="Boolean">true</d:Boolean>
+      <d:Byte m:type="Byte">1</d:Byte>
+      <d:DateTimeOffset1 m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:DateTimeOffset1>
+      <d:DateTimeOffset2 m:type="DateTimeOffset">2010-10-10T10:10:10+01:00</d:DateTimeOffset2>
+      <d:DateTimeOffset3 m:type="DateTimeOffset">2010-10-10T10:10:10-08:00</d:DateTimeOffset3>
+      <d:Decimal m:type="Decimal">1</d:Decimal>
+      <d:Guid m:type="Guid">11111111-2222-3333-4444-555555555555</d:Guid>
+      <d:SByte m:type="SByte">1</d:SByte>
+      <d:Int16 m:type="Int16">1</d:Int16>
+      <d:Int32 m:type="Int32">1</d:Int32>
+      <d:Int64 m:type="Int64">1</d:Int64>
+      <d:String>1</d:String>
+      <d:Duration m:type="Duration">PT12M20.4S</d:Duration>
+      <d:Geography m:type="GeographyPoint">
+        <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:pos>32 -100</gml:pos>
+        </gml:Point>
+      </d:Geography>
+      <d:GeographyPoint m:type="GeographyPoint">
+        <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:pos>33.1 -110</gml:pos>
+        </gml:Point>
+      </d:GeographyPoint>
+      <d:GeographyLineString m:type="GeographyLineString">
+        <gml:LineString gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:pos>33.1 -110</gml:pos>
+          <gml:pos>35.97 -110</gml:pos>
+        </gml:LineString>
+      </d:GeographyLineString>
+      <d:GeographyPolygon m:type="GeographyPolygon">
+        <gml:Polygon gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:exterior>
+            <gml:LinearRing>
+              <gml:pos>33.1 -110</gml:pos>
+              <gml:pos>35.97 -110.15</gml:pos>
+              <gml:pos>11.45 87.75</gml:pos>
+              <gml:pos>33.1 -110</gml:pos>
+            </gml:LinearRing>
+          </gml:exterior>
+          <gml:interior>
+            <gml:LinearRing>
+              <gml:pos>35.97 -110</gml:pos>
+              <gml:pos>36.97 -110.15</gml:pos>
+              <gml:pos>45.23 23.18</gml:pos>
+              <gml:pos>35.97 -110</gml:pos>
+            </gml:LinearRing>
+          </gml:interior>
+        </gml:Polygon>
+      </d:GeographyPolygon>
+      <d:GeographyCollection m:type="GeographyCollection">
+        <gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:geometryMembers>
+            <gml:Point>
+              <gml:pos>-19.99 -12</gml:pos>
+            </gml:Point>
+          </gml:geometryMembers>
+        </gml:MultiGeometry>
+      </d:GeographyCollection>
+      <d:GeographyMultiPoint m:type="GeographyMultiPoint">
+        <gml:MultiPoint gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:pointMembers>
+            <gml:Point>
+              <gml:pos>10.2 11.2</gml:pos>
+            </gml:Point>
+            <gml:Point>
+              <gml:pos>11.9 11.6</gml:pos>
+            </gml:Point>
+          </gml:pointMembers>
+        </gml:MultiPoint>
+      </d:GeographyMultiPoint>
+      <d:GeographyMultiLineString m:type="GeographyMultiLineString">
+        <gml:MultiCurve gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:curveMembers>
+            <gml:LineString>
+              <gml:pos>10.2 11.2</gml:pos>
+              <gml:pos>11.9 11.6</gml:pos>
+            </gml:LineString>
+            <gml:LineString>
+              <gml:pos>16.2 17.2</gml:pos>
+              <gml:pos>18.9 19.6</gml:pos>
+            </gml:LineString>
+          </gml:curveMembers>
+        </gml:MultiCurve>
+      </d:GeographyMultiLineString>
+      <d:GeographyMultiPolygon m:type="GeographyMultiPolygon">
+        <gml:MultiSurface gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+          <gml:surfaceMembers>
+            <gml:Polygon>
+              <gml:exterior>
+                <gml:LinearRing>
+                  <gml:pos>10.2 11.2</gml:pos>
+                  <gml:pos>11.9 11.6</gml:pos>
+                  <gml:pos>11.45 87.75</gml:pos>
+                  <gml:pos>10.2 11.2</gml:pos>
+                </gml:LinearRing>
+              </gml:exterior>
+              <gml:interior>
+                <gml:LinearRing>
+                  <gml:pos>16.2 17.2</gml:pos>
+                  <gml:pos>18.9 19.6</gml:pos>
+                  <gml:pos>11.45 87.75</gml:pos>
+                  <gml:pos>16.2 17.2</gml:pos>
+                </gml:LinearRing>
+              </gml:interior>
+            </gml:Polygon>
+          </gml:surfaceMembers>
+        </gml:MultiSurface>
+      </d:GeographyMultiPolygon>
+      <d:Geometry m:type="GeometryPoint">
+        <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:pos>32 -10</gml:pos>
+        </gml:Point>
+      </d:Geometry>
+      <d:GeometryPoint m:type="GeometryPoint">
+        <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:pos>33.1 -11</gml:pos>
+        </gml:Point>
+      </d:GeometryPoint>
+      <d:GeometryLineString m:type="GeometryLineString">
+        <gml:LineString gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:pos>33.1 -11.5</gml:pos>
+          <gml:pos>35.97 -11</gml:pos>
+        </gml:LineString>
+      </d:GeometryLineString>
+      <d:GeometryPolygon m:type="GeometryPolygon">
+        <gml:Polygon gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:exterior>
+            <gml:LinearRing>
+              <gml:pos>33.1 -13.6</gml:pos>
+              <gml:pos>35.97 -11.15</gml:pos>
+              <gml:pos>11.45 87.75</gml:pos>
+              <gml:pos>33.1 -13.6</gml:pos>
+            </gml:LinearRing>
+          </gml:exterior>
+          <gml:interior>
+            <gml:LinearRing>
+              <gml:pos>35.97 -11</gml:pos>
+              <gml:pos>36.97 -11.15</gml:pos>
+              <gml:pos>45.23 23.18</gml:pos>
+              <gml:pos>35.97 -11</gml:pos>
+            </gml:LinearRing>
+          </gml:interior>
+        </gml:Polygon>
+      </d:GeometryPolygon>
+      <d:GeometryCollection m:type="GeometryCollection">
+        <gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:geometryMembers>
+            <gml:Point>
+              <gml:pos>-19.99 -12</gml:pos>
+            </gml:Point>
+          </gml:geometryMembers>
+        </gml:MultiGeometry>
+      </d:GeometryCollection>
+      <d:GeometryMultiPoint m:type="GeometryMultiPoint">
+        <gml:MultiPoint gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:pointMembers>
+            <gml:Point>
+              <gml:pos>10.2 11.2</gml:pos>
+            </gml:Point>
+            <gml:Point>
+              <gml:pos>11.9 11.6</gml:pos>
+            </gml:Point>
+          </gml:pointMembers>
+        </gml:MultiPoint>
+      </d:GeometryMultiPoint>
+      <d:GeometryMultiLineString m:type="GeometryMultiLineString">
+        <gml:MultiCurve gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:curveMembers>
+            <gml:LineString>
+              <gml:pos>10.2 11.2</gml:pos>
+              <gml:pos>11.9 11.6</gml:pos>
+            </gml:LineString>
+            <gml:LineString>
+              <gml:pos>16.2 17.2</gml:pos>
+              <gml:pos>18.9 19.6</gml:pos>
+            </gml:LineString>
+          </gml:curveMembers>
+        </gml:MultiCurve>
+      </d:GeometryMultiLineString>
+      <d:GeometryMultiPolygon m:type="GeometryMultiPolygon">
+        <gml:MultiSurface gml:srsName="http://www.opengis.net/def/crs/EPSG/0/0">
+          <gml:surfaceMembers>
+            <gml:Polygon>
+              <gml:exterior>
+                <gml:LinearRing>
+                  <gml:pos>10.2 11.2</gml:pos>
+                  <gml:pos>11.9 11.6</gml:pos>
+                  <gml:pos>11.45 87.75</gml:pos>
+                  <gml:pos>10.2 11.2</gml:pos>
+                </gml:LinearRing>
+              </gml:exterior>
+              <gml:interior>
+                <gml:LinearRing>
+                  <gml:pos>16.2 17.2</gml:pos>
+                  <gml:pos>18.9 19.6</gml:pos>
+                  <gml:pos>11.45 87.75</gml:pos>
+                  <gml:pos>16.2 17.2</gml:pos>
+                </gml:LinearRing>
+              </gml:interior>
+            </gml:Polygon>
+          </gml:surfaceMembers>
+        </gml:MultiSurface>
+      </d:GeometryMultiPolygon>
+      <d:NullableDouble m:type="Double">1</d:NullableDouble>
+      <d:NullableSingle m:type="Single">1</d:NullableSingle>
+      <d:NullableBoolean m:type="Boolean">true</d:NullableBoolean>
+      <d:NullableByte m:type="Byte">1</d:NullableByte>
+      <d:NullableDateTimeOffset1 m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:NullableDateTimeOffset1>
+      <d:NullableDateTimeOffset2 m:type="DateTimeOffset">2010-10-10T10:10:10+01:00</d:NullableDateTimeOffset2>
+      <d:NullableDateTimeOffset3 m:type="DateTimeOffset">2010-10-10T10:10:10-08:00</d:NullableDateTimeOffset3>
+      <d:NullableDecimal m:type="Decimal">1</d:NullableDecimal>
+      <d:NullableGuid m:type="Guid">11111111-2222-3333-4444-555555555555</d:NullableGuid>
+      <d:NullableSByte m:type="SByte">1</d:NullableSByte>
+      <d:NullableInt16 m:type="Int16">1</d:NullableInt16>
+      <d:NullableInt32 m:type="Int32">1</d:NullableInt32>
+      <d:NullableInt64 m:type="Int64">1</d:NullableInt64>
+      <d:NullableString>1</d:NullableString>
+      <d:NullableDuration m:type="Duration">PT12M20.4S</d:NullableDuration>
+      <d:NullDouble m:null="true" />
+      <d:NullBinary m:null="true" />
+      <d:NullSingle m:null="true" />
+      <d:NullBoolean m:null="true" />
+      <d:NullByte m:null="true" />
+      <d:NullDateTimeOffset1 m:null="true" />
+      <d:NullDateTimeOffset2 m:null="true" />
+      <d:NullDateTimeOffset3 m:null="true" />
+      <d:NullDecimal m:null="true" />
+      <d:NullGuid m:null="true" />
+      <d:NullSByte m:null="true" />
+      <d:NullInt16 m:null="true" />
+      <d:NullInt32 m:null="true" />
+      <d:NullInt64 m:null="true" />
+      <d:NullString m:null="true" />
+      <d:NullDuration m:null="true" />
+      <d:NullGeography m:null="true" />
+      <d:NullGeographyPoint m:null="true" />
+      <d:NullGeographyLineString m:null="true" />
+      <d:NullGeographyPolygon m:null="true" />
+      <d:NullGeographyMultiPoint m:null="true" />
+      <d:NullGeographyMultiLineString m:null="true" />
+      <d:NullGeographyMultiPolygon m:null="true" />
+      <d:NullGeographyCollection m:null="true" />
+      <d:NullGeometry m:null="true" />
+      <d:NullGeometryPoint m:null="true" />
+      <d:NullGeometryLineString m:null="true" />
+      <d:NullGeometryPolygon m:null="true" />
+      <d:NullGeometryMultiPoint m:null="true" />
+      <d:NullGeometryMultiLineString m:null="true" />
+      <d:NullGeometryMultiPolygon m:null="true" />
+      <d:NullGeometryCollection m:null="true" />
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithOpenProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:ComplexAddress m:type="#My.AddressType">
+        <d:Street>One Redmond Way</d:Street>
+        <d:City xml:space="preserve"> Redmond</d:City>
+      </d:ComplexAddress>
+      <d:NestedComplex m:type="#My.NestedAddressType">
+        <d:Street m:type="#OtherTestNamespace.StreetType">
+          <d:StreetName>One Redmond Way</d:StreetName>
+          <d:Number m:type="Int32">1234</d:Number>
+        </d:Street>
+        <d:City xml:space="preserve">Redmond </d:City>
+      </d:NestedComplex>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#My.EntryWithOpenProperties" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:Id m:type="Int32">1</d:Id>
+      <d:EmptyCollection m:type="#Collection(String)" />
+      <d:PrimitiveCollection m:type="#Collection(Int32)">
+        <m:element>0</m:element>
+        <m:element>1</m:element>
+        <m:element>2</m:element>
+        <m:element>3</m:element>
+        <m:element>4</m:element>
+        <m:element>5</m:element>
+        <m:element>6</m:element>
+        <m:element>7</m:element>
+        <m:element>8</m:element>
+        <m:element>9</m:element>
+      </d:PrimitiveCollection>
+      <d:IntCollectionNoTypeName m:type="#Collection(Int32)">
+        <m:element>0</m:element>
+        <m:element>1</m:element>
+        <m:element>2</m:element>
+      </d:IntCollectionNoTypeName>
+      <d:StringCollectionNoTypeName m:type="#Collection(String)">
+        <m:element>One</m:element>
+        <m:element>Two</m:element>
+        <m:element>Three</m:element>
+      </d:StringCollectionNoTypeName>
+      <d:GeographyCollectionNoTypeName m:type="#Collection(Geography)">
+        <m:element m:type="GeographyCollection">
+          <gml:MultiGeometry gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:geometryMembers>
+              <gml:Point>
+                <gml:pos>-19.99 -12</gml:pos>
+              </gml:Point>
+            </gml:geometryMembers>
+          </gml:MultiGeometry>
+        </m:element>
+        <m:element m:type="GeographyLineString">
+          <gml:LineString gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:pos>33.1 -110</gml:pos>
+            <gml:pos>35.97 -110</gml:pos>
+          </gml:LineString>
+        </m:element>
+        <m:element m:type="GeographyMultiLineString">
+          <gml:MultiCurve gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:curveMembers>
+              <gml:LineString>
+                <gml:pos>10.2 11.2</gml:pos>
+                <gml:pos>11.9 11.6</gml:pos>
+              </gml:LineString>
+              <gml:LineString>
+                <gml:pos>16.2 17.2</gml:pos>
+                <gml:pos>18.9 19.6</gml:pos>
+              </gml:LineString>
+            </gml:curveMembers>
+          </gml:MultiCurve>
+        </m:element>
+        <m:element m:type="GeographyMultiPoint">
+          <gml:MultiPoint gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:pointMembers>
+              <gml:Point>
+                <gml:pos>10.2 11.2</gml:pos>
+              </gml:Point>
+              <gml:Point>
+                <gml:pos>11.9 11.6</gml:pos>
+              </gml:Point>
+            </gml:pointMembers>
+          </gml:MultiPoint>
+        </m:element>
+        <m:element m:type="GeographyMultiPolygon">
+          <gml:MultiSurface gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:surfaceMembers>
+              <gml:Polygon>
+                <gml:exterior>
+                  <gml:LinearRing>
+                    <gml:pos>10.2 11.2</gml:pos>
+                    <gml:pos>11.9 11.6</gml:pos>
+                    <gml:pos>11.45 87.75</gml:pos>
+                    <gml:pos>10.2 11.2</gml:pos>
+                  </gml:LinearRing>
+                </gml:exterior>
+                <gml:interior>
+                  <gml:LinearRing>
+                    <gml:pos>16.2 17.2</gml:pos>
+                    <gml:pos>18.9 19.6</gml:pos>
+                    <gml:pos>11.45 87.75</gml:pos>
+                    <gml:pos>16.2 17.2</gml:pos>
+                  </gml:LinearRing>
+                </gml:interior>
+              </gml:Polygon>
+            </gml:surfaceMembers>
+          </gml:MultiSurface>
+        </m:element>
+        <m:element m:type="GeographyPoint">
+          <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:pos>33.1 -110</gml:pos>
+          </gml:Point>
+        </m:element>
+        <m:element m:type="GeographyPolygon">
+          <gml:Polygon gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:exterior>
+              <gml:LinearRing>
+                <gml:pos>33.1 -110</gml:pos>
+                <gml:pos>35.97 -110.15</gml:pos>
+                <gml:pos>11.45 87.75</gml:pos>
+                <gml:pos>33.1 -110</gml:pos>
+              </gml:LinearRing>
+            </gml:exterior>
+            <gml:interior>
+              <gml:LinearRing>
+                <gml:pos>35.97 -110</gml:pos>
+                <gml:pos>36.97 -110.15</gml:pos>
+                <gml:pos>45.23 23.18</gml:pos>
+                <gml:pos>35.97 -110</gml:pos>
+              </gml:LinearRing>
+            </gml:interior>
+          </gml:Polygon>
+        </m:element>
+        <m:element m:type="GeographyPoint">
+          <gml:Point gml:srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:pos>32 -100</gml:pos>
+          </gml:Point>
+        </m:element>
+      </d:GeographyCollectionNoTypeName>
+      <d:ComplexCollection m:type="#Collection(My.AddressType)">
+        <m:element>
+          <d:Street>One Redmond Way</d:Street>
+          <d:City xml:space="preserve"> Redmond</d:City>
+        </m:element>
+        <m:element>
+          <d:Street>Am Euro Platz 3</d:Street>
+          <d:City xml:space="preserve">Vienna </d:City>
+        </m:element>
+      </d:ComplexCollection>
+      <d:ComplexCollectionWithoutTypeName>
+        <m:element m:type="#My.AddressType">
+          <d:Street>One Redmond Way</d:Street>
+          <d:City xml:space="preserve"> Redmond</d:City>
+        </m:element>
+        <m:element m:type="#My.AddressType">
+          <d:Street>Am Euro Platz 3</d:Street>
+          <d:City xml:space="preserve">Vienna </d:City>
+        </m:element>
+        <m:element m:type="#My.AddressType">
+          <d:City>Sammamish</d:City>
+        </m:element>
+      </d:ComplexCollectionWithoutTypeName>
+    </m:properties>
+  </content>
+</entry>
+

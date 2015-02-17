@@ -1,0 +1,1728 @@
+Combination: 1; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 3; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 5; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 6; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 7; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 8; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 9; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 11; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 13; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"232312"
+}
+
+Combination: 14; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"232312"
+}
+
+Combination: 15; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 16; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 17; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"232312"
+}
+
+Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"232312"
+}
+
+Combination: 19; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 21; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 22; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 23; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 24; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 25; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 26; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 27; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 28; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 29; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 30; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 31; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 32; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 33; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.Dimensions","@odata.type":"#DefaultNamespace.Dimensions","Depth@odata.type":"#Decimal","Depth":4.3,"Height@odata.type":"#Decimal","Height":4.3,"Width@odata.type":"#Decimal","Width":4.3
+}
+
+Combination: 34; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.Dimensions","Depth":4.3,"Height":4.3,"Width":4.3
+}
+
+Combination: 35; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 36; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 37; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 38; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 39; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 40; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 41; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 42; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 43; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":[
+    "Hello"
+  ]
+}
+
+Combination: 44; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":[
+    "Hello"
+  ]
+}
+
+Combination: 45; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.AuditInfo","@odata.type":"#DefaultNamespace.AuditInfo","Concurrency":{
+    "@odata.type":"#DefaultNamespace.ConcurrencyInfo","QueriedDateTime@odata.type":"#DateTimeOffset","QueriedDateTime":"2013-10-17T00:00:00+00:03","Token":"Hello"
+  },"ModifiedBy":"Hello","ModifiedDate@odata.type":"#DateTimeOffset","ModifiedDate":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 46; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.AuditInfo","Concurrency":{
+    "QueriedDateTime":"2013-10-17T00:00:00+00:03","Token":"Hello"
+  },"ModifiedBy":"Hello","ModifiedDate":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 47; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(DefaultNamespace.ContactDetails)","@odata.type":"#Collection(DefaultNamespace.ContactDetails)","value":[
+    {
+      "AlternativeNames@odata.type":"#Collection(String)","AlternativeNames":[
+        "Hello"
+      ],"ContactAlias":{
+        "@odata.type":"#DefaultNamespace.Aliases","AlternativeNames@odata.type":"#Collection(String)","AlternativeNames":[
+          "Hello"
+        ]
+      },"EmailBag@odata.type":"#Collection(String)","EmailBag":[
+        "Hello"
+      ],"HomePhone":{
+        "@odata.type":"#DefaultNamespace.Phone","Extension":"Hello","PhoneNumber":"Hello"
+      },"MobilePhoneBag@odata.type":"#Collection(DefaultNamespace.Phone)","MobilePhoneBag":[
+        {
+          "Extension":"Hello","PhoneNumber":"Hello"
+        }
+      ],"WorkPhone":{
+        "@odata.type":"#DefaultNamespace.Phone","Extension":"Hello","PhoneNumber":"Hello"
+      }
+    }
+  ]
+}
+
+Combination: 48; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(DefaultNamespace.ContactDetails)","value":[
+    {
+      "AlternativeNames":[
+        "Hello"
+      ],"ContactAlias":{
+        "AlternativeNames":[
+          "Hello"
+        ]
+      },"EmailBag":[
+        "Hello"
+      ],"HomePhone":{
+        "Extension":"Hello","PhoneNumber":"Hello"
+      },"MobilePhoneBag":[
+        {
+          "Extension":"Hello","PhoneNumber":"Hello"
+        }
+      ],"WorkPhone":{
+        "Extension":"Hello","PhoneNumber":"Hello"
+      }
+    }
+  ]
+}
+
+Combination: 49; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 50; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 51; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 52; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 53; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.ContactDetails","@odata.type":"#DefaultNamespace.ContactDetails","AlternativeNames@odata.type":"#Collection(String)","AlternativeNames":[
+    "Hello"
+  ],"ContactAlias":{
+    "@odata.type":"#DefaultNamespace.Aliases","AlternativeNames@odata.type":"#Collection(String)","AlternativeNames":[
+      "Hello"
+    ]
+  },"EmailBag@odata.type":"#Collection(String)","EmailBag":[
+    "Hello"
+  ],"HomePhone":{
+    "@odata.type":"#DefaultNamespace.Phone","Extension":"Hello","PhoneNumber":"Hello"
+  },"MobilePhoneBag@odata.type":"#Collection(DefaultNamespace.Phone)","MobilePhoneBag":[
+    {
+      "Extension":"Hello","PhoneNumber":"Hello"
+    }
+  ],"WorkPhone":{
+    "@odata.type":"#DefaultNamespace.Phone","Extension":"Hello","PhoneNumber":"Hello"
+  }
+}
+
+Combination: 54; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.ContactDetails","AlternativeNames":[
+    "Hello"
+  ],"ContactAlias":{
+    "AlternativeNames":[
+      "Hello"
+    ]
+  },"EmailBag":[
+    "Hello"
+  ],"HomePhone":{
+    "Extension":"Hello","PhoneNumber":"Hello"
+  },"MobilePhoneBag":[
+    {
+      "Extension":"Hello","PhoneNumber":"Hello"
+    }
+  ],"WorkPhone":{
+    "Extension":"Hello","PhoneNumber":"Hello"
+  }
+}
+
+Combination: 55; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"232312"
+}
+
+Combination: 56; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"232312"
+}
+
+Combination: 57; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"232312"
+}
+
+Combination: 58; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"232312"
+}
+
+Combination: 59; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 60; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 61; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 62; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 63; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 64; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 65; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 66; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 67; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 68; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 69; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 70; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 71; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 72; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 73; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 74; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 75; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.DateTimeOffset)","@odata.type":"#Collection(DateTimeOffset)","value":[
+    "2013-10-17T00:00:00+00:03"
+  ]
+}
+
+Combination: 76; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.DateTimeOffset)","value":[
+    "2013-10-17T00:00:00+00:03"
+  ]
+}
+
+Combination: 77; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 78; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 79; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 80; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 81; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 82; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 83; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 84; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 85; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 86; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 87; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 88; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 89; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 90; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 91; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 92; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 93; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 94; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 95; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 96; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 97; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Byte)","@odata.type":"#Collection(Byte)","value":[
+    1
+  ]
+}
+
+Combination: 98; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Byte)","value":[
+    1
+  ]
+}
+
+Combination: 99; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(DefaultNamespace.ComplexToCategory)","@odata.type":"#Collection(DefaultNamespace.ComplexToCategory)","value":[
+    {
+      "Label":"Hello","Scheme":"Hello","Term":"Hello"
+    }
+  ]
+}
+
+Combination: 100; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(DefaultNamespace.ComplexToCategory)","value":[
+    {
+      "Label":"Hello","Scheme":"Hello","Term":"Hello"
+    }
+  ]
+}
+
+Combination: 101; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Decimal)","@odata.type":"#Collection(Decimal)","value":[
+    4.3
+  ]
+}
+
+Combination: 102; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Decimal)","value":[
+    4.3
+  ]
+}
+
+Combination: 103; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Double)","@odata.type":"#Collection(Double)","value":[
+    54.3333333333333
+  ]
+}
+
+Combination: 104; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Double)","value":[
+    54.3333333333333
+  ]
+}
+
+Combination: 105; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Guid)","@odata.type":"#Collection(Guid)","value":[
+    "00005259-2341-5431-5432-234234234234"
+  ]
+}
+
+Combination: 106; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Guid)","value":[
+    "00005259-2341-5431-5432-234234234234"
+  ]
+}
+
+Combination: 107; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Int16)","@odata.type":"#Collection(Int16)","value":[
+    6
+  ]
+}
+
+Combination: 108; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Int16)","value":[
+    6
+  ]
+}
+
+Combination: 109; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[
+    12
+  ]
+}
+
+Combination: 110; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[
+    12
+  ]
+}
+
+Combination: 111; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Int64)","@odata.type":"#Collection(Int64)","value":[
+    18
+  ]
+}
+
+Combination: 112; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Int64)","value":[
+    18
+  ]
+}
+
+Combination: 113; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":[
+    "Hello"
+  ]
+}
+
+Combination: 114; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":[
+    "Hello"
+  ]
+}
+
+Combination: 115; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Single)","@odata.type":"#Collection(Single)","value":[
+    5.4
+  ]
+}
+
+Combination: 116; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Collection(Edm.Single)","value":[
+    5.4
+  ]
+}
+
+Combination: 117; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 118; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 119; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 120; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 121; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 122; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 123; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 124; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 125; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 126; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 127; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 128; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 129; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 130; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 131; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 132; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 133; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Boolean","value":false
+}
+
+Combination: 134; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Boolean","value":false
+}
+
+Combination: 135; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 136; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 137; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 138; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 139; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 140; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 141; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 142; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 143; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.ConcurrencyInfo","@odata.type":"#DefaultNamespace.ConcurrencyInfo","QueriedDateTime@odata.type":"#DateTimeOffset","QueriedDateTime":"2013-10-17T00:00:00+00:03","Token":"Hello"
+}
+
+Combination: 144; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.ConcurrencyInfo","QueriedDateTime":"2013-10-17T00:00:00+00:03","Token":"Hello"
+}
+
+Combination: 145; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 146; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 147; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 148; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 149; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 150; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 151; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 152; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 153; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"232312"
+}
+
+Combination: 154; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"232312"
+}
+
+Combination: 155; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 156; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 157; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 158; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 159; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 160; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 161; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 162; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 163; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 164; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 165; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 166; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 167; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 168; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 169; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 170; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 171; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 172; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 173; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 174; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 175; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 176; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 177; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 178; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 179; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 180; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 181; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 182; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 183; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 184; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 185; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 186; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 187; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 188; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 189; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 190; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 191; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 192; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 193; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 194; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 195; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 196; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 197; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 198; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 199; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.ConcurrencyInfo","@odata.type":"#DefaultNamespace.ConcurrencyInfo","QueriedDateTime@odata.type":"#DateTimeOffset","QueriedDateTime":"2013-10-17T00:00:00+00:03","Token":"Hello"
+}
+
+Combination: 200; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.ConcurrencyInfo","QueriedDateTime":"2013-10-17T00:00:00+00:03","Token":"Hello"
+}
+
+Combination: 201; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 202; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 203; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.Dimensions","@odata.type":"#DefaultNamespace.Dimensions","Depth@odata.type":"#Decimal","Depth":4.3,"Height@odata.type":"#Decimal","Height":4.3,"Width@odata.type":"#Decimal","Width":4.3
+}
+
+Combination: 204; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.Dimensions","Depth":4.3,"Height":4.3,"Width":4.3
+}
+
+Combination: 205; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.AuditInfo","@odata.type":"#DefaultNamespace.AuditInfo","Concurrency":{
+    "@odata.type":"#DefaultNamespace.ConcurrencyInfo","QueriedDateTime@odata.type":"#DateTimeOffset","QueriedDateTime":"2013-10-17T00:00:00+00:03","Token":"Hello"
+  },"ModifiedBy":"Hello","ModifiedDate@odata.type":"#DateTimeOffset","ModifiedDate":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 206; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#DefaultNamespace.AuditInfo","Concurrency":{
+    "QueriedDateTime":"2013-10-17T00:00:00+00:03","Token":"Hello"
+  },"ModifiedBy":"Hello","ModifiedDate":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 207; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"232312"
+}
+
+Combination: 208; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"232312"
+}
+
+Combination: 209; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 210; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 211; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 212; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 213; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 214; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 215; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":45
+}
+
+Combination: 216; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":45
+}
+
+Combination: 217; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 218; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 219; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 220; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 221; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 222; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 223; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 224; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 225; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 226; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 227; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 228; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 229; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 230; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 231; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 232; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 233; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 234; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 235; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 236; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 237; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 238; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 239; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 240; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 241; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 242; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 243; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 244; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 245; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 246; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 247; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 248; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2013-10-17T00:00:00+00:03"
+}
+
+Combination: 249; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 250; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 251; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 252; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 253; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 254; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 255; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 256; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 257; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 258; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 259; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":45
+}
+
+Combination: 260; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":45
+}
+
+Combination: 261; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 262; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 263; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 264; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.String","value":"Hello"
+}
+
+Combination: 265; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+
+Combination: 266; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: false
+{
+  "@odata.context":"http://odata.org/$metadata#Edm.Int32","value":12
+}
+

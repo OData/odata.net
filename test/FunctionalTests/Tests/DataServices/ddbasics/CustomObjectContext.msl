@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ModelNamespaceStoreContainer" CdmEntityContainer="CustomObjectContext">
+    <EntitySetMapping Name="Customers">
+      <EntityTypeMapping TypeName="IsTypeOf(ModelNamespace.Customer)">
+        <MappingFragment StoreEntitySet="Customers">
+          <ScalarProperty Name="BestFriendId" ColumnName="BestFriendId" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Concurrency" ColumnName="Concurrency" />
+          <ScalarProperty Name="EditTimeStamp" ColumnName="EditTimeStamp" />
+          <ScalarProperty Name="GuidValue" ColumnName="GuidValue" />
+          <ComplexProperty Name="Address" TypeName="ModelNamespace.Address">
+            <ScalarProperty Name="StreetAddress" ColumnName="Address_StreetAddress" />
+            <ScalarProperty Name="City" ColumnName="Address_City" />
+            <ScalarProperty Name="State" ColumnName="Address_State" />
+            <ScalarProperty Name="PostalCode" ColumnName="Address_PostalCode" />
+          </ComplexProperty>
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(ModelNamespace.CustomerWithBirthday)">
+        <MappingFragment StoreEntitySet="Customers_CustomerWithBirthday">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(ModelNamespace.CustomerBlob)">
+        <MappingFragment StoreEntitySet="Customers_CustomerBlob">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(ModelNamespace.CustomerBlobWithBirthday)">
+        <MappingFragment StoreEntitySet="Customers_CustomerBlobWithBirthday">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Orders">
+      <EntityTypeMapping TypeName="IsTypeOf(ModelNamespace.Order)">
+        <MappingFragment StoreEntitySet="Orders">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+          <ScalarProperty Name="DollarAmount" ColumnName="DollarAmount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Workers">
+      <EntityTypeMapping TypeName="IsTypeOf(ModelNamespace.Worker)">
+        <MappingFragment StoreEntitySet="Workers">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Offices">
+      <EntityTypeMapping TypeName="IsTypeOf(ModelNamespace.Office)">
+        <MappingFragment StoreEntitySet="Offices">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="OfficeNumber" ColumnName="OfficeNumber" />
+          <ScalarProperty Name="FloorNumber" ColumnName="FloorNumber" />
+          <ScalarProperty Name="BuildingName" ColumnName="BuildingName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

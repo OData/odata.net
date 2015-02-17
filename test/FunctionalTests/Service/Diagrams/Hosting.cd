@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Comment CommentText="The DataServiceHostFactory is referenced by users in their .svc file directives.">
+    <Position X="5.521" Y="3.01" Height="0.448" Width="2.742" />
+  </Comment>
+  <Class Name="Microsoft.OData.Service.DataServiceHostFactory">
+    <Position X="5.5" Y="1.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Microsoft\Data\Web\DataServiceHostFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.DataServiceHost">
+    <Position X="2.25" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Microsoft\Data\Web\DataServiceHost.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.ServiceModel.Web.WebServiceHost">
+    <Position X="2" Y="1.25" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

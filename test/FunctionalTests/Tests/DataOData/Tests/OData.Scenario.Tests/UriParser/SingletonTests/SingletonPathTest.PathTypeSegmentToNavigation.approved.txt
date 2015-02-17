@@ -1,0 +1,1 @@
+Path[(Singleton: SpecialPerson)/(Type: Microsoft.Test.Taupo.OData.WCFService.Customer)/(NavigationProperty: Orders)]

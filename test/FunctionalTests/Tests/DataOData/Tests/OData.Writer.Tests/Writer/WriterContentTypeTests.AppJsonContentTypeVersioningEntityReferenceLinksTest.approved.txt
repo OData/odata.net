@@ -1,0 +1,64 @@
+Combination: 3; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 7; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 11; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 15; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 19; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 20; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 23; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 27; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 28; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 31; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection($ref)","value":[{"@odata.id":"http://www.odata.org/1"},{"@odata.id":"http://www.odata.org/2"},{"@odata.id":"http://www.odata.org/3"}]}
+

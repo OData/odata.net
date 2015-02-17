@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6290F22D-823A-405F-9AED-1291BE7DDAFE}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Test.OData.Tests.Silverlight</RootNamespace>
+    <AssemblyName>Microsoft.Test.OData.Tests.Client.Portable.Silverlight</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>true</SilverlightApplication>
+    <SupportedCultures />
+    <XapOutputs>true</XapOutputs>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
+    <XapFilename>Microsoft.Test.OData.Tests.Client.Portable.Silverlight.xap</XapFilename>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
+    <SilverlightAppEntry>Microsoft.Test.OData.Tests.Silverlight.App</SilverlightAppEntry>
+    <TestPageFileName>EndToEndTestPage.html</TestPageFileName>
+    <CreateTestPage>true</CreateTestPage>
+    <EnableOutOfBrowser>false</EnableOutOfBrowser>
+    <UsePlatformExtensions>false</UsePlatformExtensions>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;</DefineConstants>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <!-- 	Ensure signing is completed before building this project -->
+    <ProjectReference Include="$(EnlistmentRoot)\_Buildcommon\Signing\SignBinaries.proj" Condition="'$(SubmitForSigning)' == 'true'">
+      <Project>{EDE15646-338A-4D40-8178-AED9D40E4D5A}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7d921888-fe03-4c3f-80fe-2f624505461c}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989a83cc-b864-4a75-8bf3-5eda99203a86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Web\Client.PortableLibrary\Microsoft.OData.Client.Portable.csproj">
+      <Project>{aed0dc9d-76e5-4145-af5e-9e2f856f4d18}</Project>
+      <Name>Microsoft.OData.Client.Portable</Name>
+    </ProjectReference>
+    <Reference Include="$(NugetPack)\Microsoft.Bcl.Async.1.0.165\lib\sl4\Microsoft.Threading.Tasks.dll">
+      <Name>Microsoft.Threading.Tasks</Name>
+    </Reference>
+    <Reference Include="$(NugetPack)\Microsoft.Bcl.Async.1.0.165\lib\sl4\Microsoft.Threading.Tasks.Extensions.dll">
+      <Name>Microsoft.Threading.Tasks.Extensions</Name>
+    </Reference>
+    <Reference Include="$(NugetPack)\Microsoft.Bcl.Async.1.0.165\lib\sl4\Microsoft.Threading.Tasks.Extensions.Silverlight.dll">
+      <Name>Microsoft.Threading.Tasks.Extensions.Silverlight</Name>
+    </Reference>
+    <Reference Include="$(NugetPack)\Microsoft.Bcl.1.1.6\lib\sl5\System.IO.dll">
+      <Name>System.IO</Name>
+    </Reference>
+    <Reference Include="$(NugetPack)\Microsoft.Bcl.1.1.6\lib\sl5\System.Runtime.dll">
+      <Name>System.Runtime</Name>
+    </Reference>
+    <Reference Include="$(NugetPack)\Microsoft.Bcl.1.1.6\lib\sl5\System.Threading.Tasks.dll">
+      <Name>System.Threading.Tasks</Name>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="mscorlib" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Windows.Browser" />
+    <Reference Include="$(NugetPack)\Silverlight.Toolkit.Corext.5.0.0.1\Testing\Microsoft.Silverlight.Testing.dll" />
+    <Reference Include="$(NugetPack)\Silverlight.Toolkit.Corext.5.0.0.1\Testing\Microsoft.VisualStudio.QualityTools.UnitTesting.Silverlight.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\test\EndToEndTests\Framework\Core\Build.PortableLibrary\Microsoft.Test.OData.Framework.Portable.csproj">
+      <Project>{134d2ad7-3c82-45c9-ac43-75f482081f8d}</Project>
+      <Name>Microsoft.Test.OData.Framework.Portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\EndToEndTests\Services\TestServices\Build.PortableLibrary\Microsoft.Test.OData.Services.TestServices.Portable.csproj">
+      <Project>{4382d649-1a86-48d0-9156-ac37c3d568c0}</Project>
+      <Name>Microsoft.Test.OData.Services.TestServices.Portable</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\AsynchronousTests\AsynchronousAttribute.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousQueryTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousSingletonClientTest.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousUpdateTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousTestsExtensionMethodsDesktop.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousTestsExtensionMethodsSilverlight.cs" />
+    <Compile Include="..\AsynchronousTests\AsyncMethodTests.cs" />
+    <Compile Include="..\BindingTests.cs" />
+    <Compile Include="..\Build.Silverlight\App.xaml.cs" />
+    <Compile Include="..\Build.Silverlight\SilverlightUriGenerator.cs" />
+    <Compile Include="..\EndToEndTestBase.cs" />
+    <Compile Include="..\ServiceGeneratorFactory.cs" />
+    <Content Include="Properties\AppManifest.xml" />
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DefaultValuesTest" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+  <EntityType Name="DefaultValueTestObject">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" DefaultValue="100" />
+    <Property Name="BinaryProperty" Type="Binary" Nullable="false" DefaultValue="0x1000102030405060708090a0b0c" />
+    <Property Name="BooleanProperty" Type="Boolean" Nullable="false" DefaultValue="true" />
+    <Property Name="ByteProperty" Type="Byte" Nullable="false" DefaultValue="10" />
+    <Property Name="DateTimeProperty" Type="DateTime" Nullable="false" DefaultValue="2006-04-12 13:04:00.000Z" />
+    <Property Name="DecimalProperty" Type="Decimal" Nullable="false" DefaultValue="1.0" />
+    <Property Name="DoubleProperty" Type="Double" Nullable="false" DefaultValue="1.1" />
+    <Property Name="SingleProperty" Type="Single" Nullable="false" DefaultValue="1.2" />
+    <Property Name="GuidProperty" Type="Guid" Nullable="false" DefaultValue="00000000-0001-0002-0003-000000000004" />
+    <Property Name="Int16Property" Type="Int16" Nullable="false" DefaultValue="1" />
+    <Property Name="Int32Property" Type="Int32" Nullable="false" DefaultValue="2" />
+    <Property Name="Int64Property" Type="Int64" Nullable="false" DefaultValue="3" />
+    <Property Name="StringProperty" Type="String" Nullable="false" DefaultValue="My Default String" />
+  </EntityType>
+  <EntityContainer Name="DefaultValueTestContainer">
+    <EntitySet EntityType="Self.DefaultValueTestObject" Name="TestEntities" />
+  </EntityContainer>
+</Schema>

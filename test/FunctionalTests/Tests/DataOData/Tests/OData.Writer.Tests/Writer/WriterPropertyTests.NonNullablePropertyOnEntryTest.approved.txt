@@ -1,0 +1,2436 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 5; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Boolean">true</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Boolean">true</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 7; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Boolean">true</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Boolean">true</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 9; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Byte">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 10; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Byte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 11; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Byte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Byte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 13; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 15; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 17; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Decimal">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 18; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Decimal">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 19; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Decimal">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 20; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Decimal">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 21; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Double">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 22; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Double">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 23; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Double">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Double">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 25; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 26; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 27; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 28; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 29; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Int16">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 30; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int16">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 31; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int16">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int16">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 33; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Int32">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 34; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int32">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 35; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int32">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 36; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int32">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 37; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Int64">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 38; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int64">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 39; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int64">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 40; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int64">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 41; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="SByte">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 42; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="SByte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 43; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="SByte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 44; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="SByte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 45; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Single">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 46; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Single">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 47; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Single">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 48; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Single">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 49; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty>1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 50; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty>1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 51; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty>1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 52; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty>1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 53; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 54; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 55; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 56; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 57; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 58; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 59; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 60; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 61; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Boolean">true</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 62; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Boolean">true</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 63; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Boolean">true</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 64; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Boolean">true</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 65; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Byte">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 66; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Byte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 67; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Byte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 68; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Byte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 69; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 70; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 71; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 72; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 73; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Decimal">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 74; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Decimal">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 75; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Decimal">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 76; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Decimal">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 77; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Double">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 78; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Double">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 79; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Double">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 80; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Double">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 81; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 82; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 83; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 84; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 85; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Int16">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 86; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int16">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 87; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int16">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 88; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int16">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 89; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Int32">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 90; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int32">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 91; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int32">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 92; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int32">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 93; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Int64">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 94; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int64">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 95; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int64">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 96; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int64">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 97; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="SByte">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 98; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="SByte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 99; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="SByte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 100; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="SByte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 101; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Single">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 102; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Single">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 103; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Single">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 104; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Single">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 105; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty>1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 106; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty>1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 107; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty>1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 108; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty>1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 109; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 110; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 111; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 112; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 113; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 114; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 115; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 116; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 117; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Boolean">true</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 118; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Boolean">true</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 119; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Boolean">true</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 120; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Boolean">true</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 121; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Byte">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 122; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Byte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 123; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Byte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 124; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Byte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 125; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 126; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 127; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 128; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 129; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Decimal">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 130; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Decimal">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 131; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Decimal">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 132; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Decimal">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 133; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Double">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 134; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Double">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 135; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Double">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 136; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Double">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 137; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 138; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 139; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 140; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 141; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Int16">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 142; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int16">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 143; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int16">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 144; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int16">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 145; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Int32">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 146; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int32">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 147; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int32">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 148; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int32">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 149; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Int64">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 150; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int64">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 151; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int64">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 152; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Int64">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 153; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="SByte">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 154; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="SByte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 155; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="SByte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 156; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="SByte">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 157; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Single">1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 158; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Single">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 159; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Single">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 160; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Single">1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 161; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty>1</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 162; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty>1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 163; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty>1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 164; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty>1</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 165; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml"><m:properties><d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty></m:properties></content></entry>
+
+Combination: 166; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 167; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 168; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <category term="#TestModel.EntityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <id />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty>
+    </m:properties>
+  </content>
+</entry>
+

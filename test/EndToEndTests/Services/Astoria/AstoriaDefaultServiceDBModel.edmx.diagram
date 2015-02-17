@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="d61aa523480e4c628dbe7132cc181cba" Name="Diagram1">
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFCar" Width="1.5" PointX="7.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFComputer" Width="1.5" PointX="9.75" PointY="11.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFComputerDetail" Width="1.5" PointX="12" PointY="11.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFCustomer" Width="1.5" PointX="0.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFCustomerInfo" Width="1.5" PointX="3" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFDriver" Width="1.5" PointX="9.75" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFLastLogin" Width="1.5" PointX="5.25" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFLicense" Width="1.5" PointX="12" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFLogin" Width="1.5" PointX="3" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFMappedEntityType" Width="1.5" PointX="14.75" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFMessage" Width="1.5" PointX="5.25" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFOrder" Width="1.5" PointX="5.25" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFOrderLine" Width="1.5" PointX="7.5" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFPageView" Width="1.5" PointX="5.25" PointY="16.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFPerson" Width="1.5" PointX="10" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFPersonMetadata" Width="1.5" PointX="12.25" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFProduct" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFProductDetail" Width="1.5" PointX="7.5" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFProductPhoto" Width="1.5" PointX="7.5" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFProductReview" Width="1.5" PointX="7.5" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AstoriaDefaultServiceDBModel.EFRSAToken" Width="1.5" PointX="5.25" PointY="20" IsExpanded="true" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.Person_SpecialEmployee_Car" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.Computer_ComputerDetail" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.Customer_CustomerInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.Login_Customer_Logins" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.Order_Customer_Orders" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.License_Driver_License" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.LastLogin_Login_LastLogin" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.Login_Orders" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.Login_RSAToken" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.Message_Login_ReceivedMessages" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.Message_Login_SentMessages" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.PageView_Login_PageViews" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.OrderLine_Order_OrderLines" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.OrderLine_Product_OrderLines" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.Person_Employee_Manager" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.PersonMetadata_Person_PersonMetadata" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.ProductDetail_Product_ProductDetail" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.ProductPhoto_Product_ProductPhoto" ManuallyRouted="false" />
+        <AssociationConnector Association="AstoriaDefaultServiceDBModel.ProductReview_Product_ProductReview" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

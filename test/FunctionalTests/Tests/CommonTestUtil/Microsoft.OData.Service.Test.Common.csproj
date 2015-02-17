@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{A7A080F5-2054-447F-B09C-4E7B8B1B1B4A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.OData.Service.Test.Common</RootNamespace>
+    <AssemblyName>Microsoft.OData.Service.Test.Common</AssemblyName>
+    <SignAssemblyAttribute>true</SignAssemblyAttribute>
+    <TransparentAssembly>true</TransparentAssembly>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <FileAlignment>512</FileAlignment>
+    <DefineConstants>$(DefineConstants);EFRTM</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5D921888-FE03-4C3F-40FE-2F624505461D}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Microsoft.Spatial\Utils\SpatialFactory.cs">
+      <Link>SpatialFactory.cs</Link>
+    </Compile>
+    <Compile Include="TestConstants.cs" />
+    <Compile Include="UrlConventionsConstants.cs" />
+    <Compile Include="ODataValueAssertions.cs" />
+    <Compile Include="ODataRequestMessageSimulator.cs" />
+    <Compile Include="ODataResponseMessageSimulator.cs" />
+    <Compile Include="FluentAssertionsExtensions.cs" />
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Microsoft.Spatial\Utils\PositionData.cs">
+      <Link>PositionData.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\\Microsoft.Spatial\Utils\SpatialTestUtils.cs">
+      <Link>SpatialTestUtils.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

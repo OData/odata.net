@@ -1,0 +1,260 @@
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataReflectionUpdateProvider.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
+{
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
+
+    public class ODataReflectionUpdateProvider : IODataUpdateProvider
+    {
+        private readonly List<Action> pendingChanges = new List<Action>();
+
+        public virtual object Create(string fullTypeName, object source)
+        {
+            if (string.IsNullOrEmpty(fullTypeName)) throw new ArgumentNullException("fullTypeName");
+            if (source == null) throw new ArgumentNullException("source");
+
+            var type = EdmClrTypeUtils.GetInstanceType(fullTypeName);
+            var instance = Utility.QuickCreateInstance(type);
+            this.pendingChanges.Add(() => ((IList)source).Add(instance));
+
+            return instance;
+        }
+
+        public virtual void CreateLink(object parent, string propertyName, object target)
+        {
+            if (parent == null) throw new ArgumentNullException("parent");
+            if (string.IsNullOrEmpty(propertyName)) throw new ArgumentNullException("propertyName");
+            if (target == null) throw new ArgumentNullException("target");
+
+            this.pendingChanges.Add(() =>
+            {
+                var collection = (IList)parent.GetType().GetProperty(propertyName).GetValue(parent, null);
+                collection.Add(target);
+            });
+        }
+
+        public virtual void Delete(object target)
+        {
+            if (target == null) throw new ArgumentNullException("target");
+
+            this.pendingChanges.Add(() => DeletionContext.Current.ExecuteAction(target));
+        }
+
+        public virtual void DeleteLink(object parent, string propertyName, object target)
+        {
+            if (parent == null) throw new ArgumentNullException("parent");
+            if (string.IsNullOrEmpty(propertyName)) throw new ArgumentNullException("propertyName");
+
+            if (target == null)
+            {
+                // single-valued navigation property
+                this.pendingChanges.Add(() => parent.GetType().GetProperty(propertyName).SetValue(parent, null, null));
+            }
+            else
+            {
+                // collection-valued navigation property
+                this.pendingChanges.Add(() =>
+                {
+                    var collection = (IList)parent.GetType().GetProperty(propertyName).GetValue(parent, null);
+                    collection.Remove(target);
+                });
+            }
+        }
+
+        public virtual void Update(object target, string propertyName, object propertyValue)
+        {
+            if (target == null) throw new ArgumentNullException("target");
+            if (string.IsNullOrEmpty(propertyName)) throw new ArgumentNullException("propertyName");
+
+            this.pendingChanges.Add(() => UpdateCore(target, propertyName, propertyValue));
+        }
+
+        public virtual void UpdateLink(object parent, string propertyName, object target)
+        {
+            if (parent == null) throw new ArgumentNullException("parent");
+            if (string.IsNullOrEmpty(propertyName)) throw new ArgumentNullException("propertyName");
+            if (target == null) throw new ArgumentNullException("target");
+
+            this.pendingChanges.Add(() => parent.GetType().GetProperty(propertyName).SetValue(parent, target, null));
+        }
+
+        public virtual void UpdateETagValue(object target)
+        {
+            if (target == null) throw new ArgumentNullException("target");
+
+            this.pendingChanges.Add(() =>
+            {
+                var propertyName = Utility.GetETagPropertyName(target);
+                var propertyInfo = target.GetType().GetProperty(propertyName);
+                // assumes the type of ETag field is Int64 (long)
+                var newValue = DateTime.UtcNow.Ticks;
+                propertyInfo.SetValue(target, newValue, null);
+            });
+        }
+
+        public virtual void SaveChanges()
+        {
+            foreach (var change in this.pendingChanges)
+            {
+                change();
+            }
+
+            this.pendingChanges.Clear();
+        }
+
+        public virtual void ClearChanges()
+        {
+            this.pendingChanges.Clear();
+        }
+
+        private static void UpdateCore(object target, string propertyName, object propertyValue)
+        {
+            var odataComplexValue = propertyValue as ODataComplexValue;
+            var odataCollectionValue = propertyValue as ODataCollectionValue;
+            var odataEnumValue = propertyValue as ODataEnumValue;
+            var odataPrimitiveValue = propertyValue as ODataPrimitiveValue;
+
+            if (odataComplexValue != null)
+            {
+                var property = target.GetType().GetProperty(propertyName);
+                if (property != null)
+                {
+                    var value = property.GetValue(target, null);
+                    if (value == null)
+                    {
+                        var valueType = EdmClrTypeUtils.GetInstanceType(odataComplexValue.TypeName);
+                        var propertyType = property.PropertyType;
+                        if (valueType.IsSubclassOf(propertyType) || valueType == propertyType)
+                        {
+                            value = Utility.QuickCreateInstance(valueType);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException(string.Format("{0} is not equal or derived from {1}", valueType, propertyType));
+                        }
+
+                        property.SetValue(target, value, null);
+                    }
+
+                    foreach (var p in odataComplexValue.Properties)
+                    {
+                        UpdateCore(value, p.Name, p.Value);
+                    }
+
+                    return;
+                }
+            }
+            else if (odataCollectionValue != null)
+            {
+                var property = target.GetType().GetProperty(propertyName);
+                if (property != null)
+                {
+                    var collection = Utility.QuickCreateInstance(property.PropertyType);
+
+                    foreach (var item in odataCollectionValue.Items)
+                    {
+                        var itemType = property.PropertyType.GetGenericArguments().Single();
+                        odataComplexValue = item as ODataComplexValue;
+                        odataCollectionValue = item as ODataCollectionValue;
+                        object collectionItem = null;
+                        if (odataComplexValue != null)
+                        {
+                            // TODO: call Create method to new instance instead
+                            collectionItem = Utility.QuickCreateInstance(itemType);
+                            foreach (var p in odataComplexValue.Properties)
+                            {
+                                UpdateCore(collectionItem, p.Name, p.Value);
+                            }
+                        }
+                        else if (odataCollectionValue != null)
+                        {
+                            // TODO, check should support this type or not
+                            throw new NotImplementedException();
+                        }
+                        else
+                        {
+                            collectionItem = ODataObjectModelConverter.ConvertPropertyValue(item, itemType);
+                        }
+
+                        property.PropertyType.GetMethod("Add").Invoke(collection, new object[] { collectionItem });
+                    }
+
+                    property.SetValue(target, collection, null);
+
+                    return;
+                }
+            }
+            else
+            {
+                var property = target.GetType().GetProperty(propertyName);
+                if (property != null)
+                {
+                    property.SetValue(target, ODataObjectModelConverter.ConvertPropertyValue(propertyValue, property.PropertyType), null);
+                    return;
+                }
+            }
+
+            var openClrObject = target as OpenClrObject;
+            if (openClrObject != null)
+            {
+                var structuredType = (IEdmStructuredType)EdmClrTypeUtils.GetEdmType(DataSourceManager.GetCurrentDataSource().Model, openClrObject);
+
+                //check if the edmType is an open type
+                if (structuredType.IsOpen)
+                {
+                    if (odataCollectionValue != null)
+                    {
+                        // Collection of Edm.String
+                        if (odataCollectionValue.TypeName == "Collection(Edm.String)")
+                        {
+                            var collection = new Collection<string>();
+                            foreach (var it in odataCollectionValue.Items)
+                            {
+                                collection.Add(it as string);
+                            }
+                            openClrObject.OpenProperties[propertyName] = collection;
+                        }
+                        else
+                        {
+                            // TODO: handle other types.
+                            throw new NotImplementedException();
+                        }
+                    }
+                    else if (odataComplexValue != null)
+                    {
+                        var type = EdmClrTypeUtils.GetInstanceType(odataComplexValue.TypeName);
+                        var value = Utility.QuickCreateInstance(type);
+                        foreach (var property in odataComplexValue.Properties)
+                        {
+                            UpdateCore(value, property.Name, property.Value);
+                        }
+                        openClrObject.OpenProperties[propertyName] = value;
+                    }
+                    else if (odataEnumValue != null)
+                    {
+                        var type = EdmClrTypeUtils.GetInstanceType(odataEnumValue.TypeName);
+                        openClrObject.OpenProperties[propertyName] = ODataObjectModelConverter.ConvertPropertyValue(propertyValue, type);
+                    }
+                    else if (odataPrimitiveValue != null)
+                    {
+                        openClrObject.OpenProperties[propertyName] = odataPrimitiveValue.Value;
+                    }
+                    else
+                    {
+                        openClrObject.OpenProperties[propertyName] = propertyValue;
+                    }
+                }
+            }
+        }
+    }
+}

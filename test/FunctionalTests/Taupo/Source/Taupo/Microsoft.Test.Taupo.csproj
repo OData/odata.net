@@ -1,0 +1,727 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <AssemblyName>Microsoft.Test.Taupo</AssemblyName>
+    <DefineConstants>TAUPO_CORE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <OutputType>Library</OutputType>
+    <ProjectGuid>{34010F3A-20CC-479C-83CF-EC99B1C90CD1}</ProjectGuid>
+    <DocumentationFile>obj\Microsoft.Test.Taupo.xml</DocumentationFile>
+    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
+    <RootNamespace>Microsoft.Test.Taupo</RootNamespace>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>1591</NoWarn>
+    <EnableStyleCop>true</EnableStyleCop>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Channels" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\External\TestShell\InputSpaceModeling\Microsoft.SqlServer.TestShell.InputSpaceModeling.csproj">
+      <Project>{EDC237AA-6875-4034-BA39-7F2A83533BFC}</Project>
+      <Name>Microsoft.SqlServer.TestShell.InputSpaceModeling</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\PlatformHelper.cs">
+      <Link>PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="AssemblyAttributes.cs" />
+    <Compile Include="Common\AssemblyHelpers.cs" />
+    <Compile Include="Common\AssertionFailedException.cs" />
+    <Compile Include="Common\AssertJustificationAttribute.cs" />
+    <Compile Include="Common\AsyncExecutionContext.cs" />
+    <Compile Include="Common\AsyncHelpers.cs" />
+    <Compile Include="Common\AuthenticationMode.cs" />
+    <Compile Include="Common\DataComparisonException.cs" />
+    <Compile Include="Common\DataUtilities.cs" />
+    <Compile Include="Common\DefaultLogLevelAttribute.cs" />
+    <Compile Include="Common\DelegateBasedDisposable.cs" />
+    <Compile Include="Common\DelegateBasedEqualityComparer`1.cs" />
+    <Compile Include="Common\ExceptionUtilities.cs" />
+    <Compile Include="Common\ExtensionMethods.cs" />
+    <Compile Include="Common\IAsyncContinuation.cs" />
+    <Compile Include="Common\IInitializable.cs" />
+    <Compile Include="Common\ImplementationNameAttribute.cs" />
+    <Compile Include="Common\ImplementationSelectorAttribute.cs" />
+    <Compile Include="Common\InjectDependencyAttribute.cs" />
+    <Compile Include="Common\InjectTestParameterAttribute.cs" />
+    <Compile Include="Common\Logger.cs" />
+    <Compile Include="Common\LogLevel.cs" />
+    <Compile Include="Common\ReferenceEqualityComparer.cs" />
+    <Compile Include="Common\SyncHelpers.cs" />
+    <Compile Include="Common\TaupoArgumentException.cs" />
+    <Compile Include="Common\TaupoArgumentNullException.cs" />
+    <Compile Include="Common\TaupoException.cs" />
+    <Compile Include="Common\TaupoInfrastructureException.cs" />
+    <Compile Include="Common\TaupoInvalidOperationException.cs" />
+    <Compile Include="Common\TaupoNotSupportedException.cs" />
+    <Compile Include="Common\TestFailedException.cs" />
+    <Compile Include="Common\TestInfrastructureException.cs" />
+    <Compile Include="Common\TestSkippedException.cs" />
+    <Compile Include="Contracts\AnnotatableExtensionMethods.cs" />
+    <Compile Include="Contracts\AssertionHandler.cs" />
+    <Compile Include="Contracts\CodeBuilder.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\Code.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeAnonymousArrayExpression.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeArrayInitializerExpression.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeAsExpression.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeCreateAndInitializeObjectExpression.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeExclusiveOrExpression.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeExpressionWithFreeVariables.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeFreeVariable.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeImplicitTypeReference.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeIsExpression.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeLambdaExpression.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeMemberAutoImplementedProperty.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeQueryExpression.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeTernaryExpression.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\CodeTypeOperationExpression.cs" />
+    <Compile Include="Contracts\CodeDomExtensions\ICustomInitializationCodeGenerator.cs" />
+    <Compile Include="Contracts\CodeDomTreeRewriter.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CodeDomTreeRewriter.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contracts\ConnectEntitiesCallback.cs" />
+    <Compile Include="Contracts\DatabaseModel\Annotation.cs" />
+    <Compile Include="Contracts\DatabaseModel\Column.cs" />
+    <Compile Include="Contracts\DatabaseModel\ColumnReference.cs" />
+    <Compile Include="Contracts\DatabaseModel\ColumnsConstraintBase.cs" />
+    <Compile Include="Contracts\DatabaseModel\ComputedColumnAnnotation.cs" />
+    <Compile Include="Contracts\DatabaseModel\DatabaseFunction.cs" />
+    <Compile Include="Contracts\DatabaseModel\DatabaseFunctionParameter.cs" />
+    <Compile Include="Contracts\DatabaseModel\DatabaseParameterMode.cs" />
+    <Compile Include="Contracts\DatabaseModel\DatabaseSchema.cs" />
+    <Compile Include="Contracts\DatabaseModel\DatabaseTableValuedFunctionGenerationInfoAnnotation.cs" />
+    <Compile Include="Contracts\DatabaseModel\Data\DatabaseData.cs" />
+    <Compile Include="Contracts\DatabaseModel\Data\RowData.cs" />
+    <Compile Include="Contracts\DatabaseModel\Data\TableData.cs" />
+    <Compile Include="Contracts\DatabaseModel\DeleteAction.cs" />
+    <Compile Include="Contracts\DatabaseModel\ForeignKey.cs" />
+    <Compile Include="Contracts\DatabaseModel\GlobalExtensionMethods.cs" />
+    <Compile Include="Contracts\DatabaseModel\IAnnotatedStoreItem.cs" />
+    <Compile Include="Contracts\DatabaseModel\IDatabaseFunctionBodyResolver.cs" />
+    <Compile Include="Contracts\DatabaseModel\IdentityColumnAnnotation.cs" />
+    <Compile Include="Contracts\DatabaseModel\PrimaryKey.cs" />
+    <Compile Include="Contracts\DatabaseModel\SchemaObject.cs" />
+    <Compile Include="Contracts\DatabaseModel\StoreDataGeneratorAnnotation.cs" />
+    <Compile Include="Contracts\DatabaseModel\StoredProcedure.cs" />
+    <Compile Include="Contracts\DatabaseModel\StoredProcedureReturnTypeAnnotation.cs" />
+    <Compile Include="Contracts\DatabaseModel\Table.cs" />
+    <Compile Include="Contracts\DatabaseModel\TableDataType.cs" />
+    <Compile Include="Contracts\DatabaseModel\TableReference.cs" />
+    <Compile Include="Contracts\DatabaseModel\UniqueConstraint.cs" />
+    <Compile Include="Contracts\DatabaseModel\View.cs" />
+    <Compile Include="Contracts\DataGeneration\AllNullsHint.cs" />
+    <Compile Include="Contracts\DataGeneration\AllUniqueHint.cs" />
+    <Compile Include="Contracts\DataGeneration\AnsiStringHint.cs" />
+    <Compile Include="Contracts\DataGeneration\CollectionMaxCountHint.cs" />
+    <Compile Include="Contracts\DataGeneration\CollectionMinCountHint.cs" />
+    <Compile Include="Contracts\DataGeneration\DataGenerationExtensions.cs" />
+    <Compile Include="Contracts\DataGeneration\DataGenerationHint.cs" />
+    <Compile Include="Contracts\DataGeneration\DataGenerationHints.cs" />
+    <Compile Include="Contracts\DataGeneration\DataGenerationHint`1.cs" />
+    <Compile Include="Contracts\DataGeneration\EnumMembersOnlyHint.cs" />
+    <Compile Include="Contracts\DataGeneration\FractionalDigitsHint.cs" />
+    <Compile Include="Contracts\DataGeneration\FractionalSecondsHint.cs" />
+    <Compile Include="Contracts\DataGeneration\IDataGenerator.cs" />
+    <Compile Include="Contracts\DataGeneration\IDataGenerator`1.cs" />
+    <Compile Include="Contracts\DataGeneration\IMemberDataGenerators.cs" />
+    <Compile Include="Contracts\DataGeneration\INamedValuesGenerator.cs" />
+    <Compile Include="Contracts\DataGeneration\InterestingValueHint`1.cs" />
+    <Compile Include="Contracts\DataGeneration\IRandomDataGeneratorResolver.cs" />
+    <Compile Include="Contracts\DataGeneration\IStructuralDataAdapter.cs" />
+    <Compile Include="Contracts\DataGeneration\IUniqueDataGeneratorResolver.cs" />
+    <Compile Include="Contracts\DataGeneration\MaxLengthHint.cs" />
+    <Compile Include="Contracts\DataGeneration\MaxValueHint`1.cs" />
+    <Compile Include="Contracts\DataGeneration\MinLengthHint.cs" />
+    <Compile Include="Contracts\DataGeneration\MinValueHint`1.cs" />
+    <Compile Include="Contracts\DataGeneration\NoNullsHint.cs" />
+    <Compile Include="Contracts\DataGeneration\NoRandomValuesHint.cs" />
+    <Compile Include="Contracts\DataGeneration\NoSecondsHint.cs" />
+    <Compile Include="Contracts\DataGeneration\NoTimeHint.cs" />
+    <Compile Include="Contracts\DataGeneration\NumericPrecisionHint.cs" />
+    <Compile Include="Contracts\DataGeneration\NumericScaleHint.cs" />
+    <Compile Include="Contracts\DataGeneration\SingletonDataGenerationHint.cs" />
+    <Compile Include="Contracts\DataGeneration\SpatialReferenceNumberHint.cs" />
+    <Compile Include="Contracts\DataGeneration\SpatialShapeKindHint.cs" />
+    <Compile Include="Contracts\DataGeneration\StringPrefixHint.cs" />
+    <Compile Include="Contracts\DataShuffler.cs" />
+    <Compile Include="Contracts\DependencyInjectionContainer.cs" />
+    <Compile Include="Contracts\DependencyResolutionOptions.cs" />
+    <Compile Include="Contracts\EmptyData.cs" />
+    <Compile Include="Contracts\EntityModelDataServicesExtensions.cs" />
+    <Compile Include="Contracts\EntityModelGoal.cs" />
+    <Compile Include="Contracts\EntityModel\AccessModifier.cs" />
+    <Compile Include="Contracts\EntityModel\AnnotatedItem.cs" />
+    <Compile Include="Contracts\EntityModel\Annotation.cs" />
+    <Compile Include="Contracts\EntityModel\AssociationEnd.cs" />
+    <Compile Include="Contracts\EntityModel\AssociationEndReference.cs" />
+    <Compile Include="Contracts\EntityModel\AssociationSet.cs" />
+    <Compile Include="Contracts\EntityModel\AssociationSetEnd.cs" />
+    <Compile Include="Contracts\EntityModel\AssociationSetEndReference.cs" />
+    <Compile Include="Contracts\EntityModel\AssociationSetReference.cs" />
+    <Compile Include="Contracts\EntityModel\AssociationType.cs" />
+    <Compile Include="Contracts\EntityModel\AssociationTypeReference.cs" />
+    <Compile Include="Contracts\EntityModel\ClrMethodAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\CodeAttributeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\CollectionKind.cs" />
+    <Compile Include="Contracts\EntityModel\CollectionKindAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\ComplexType.cs" />
+    <Compile Include="Contracts\EntityModel\ComplexTypeReference.cs" />
+    <Compile Include="Contracts\EntityModel\CompositeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\ConcurrencyTokenAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\DataGenerationHintsAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\DataGeneratorAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\Data\AssociationSetData.cs" />
+    <Compile Include="Contracts\EntityModel\Data\AssociationSetDataRow.cs" />
+    <Compile Include="Contracts\EntityModel\Data\EntityContainerData.cs" />
+    <Compile Include="Contracts\EntityModel\Data\EntityContainerDataExtensions.cs" />
+    <Compile Include="Contracts\EntityModel\Data\EntityDataKey.cs" />
+    <Compile Include="Contracts\EntityModel\Data\EntitySetData.cs" />
+    <Compile Include="Contracts\EntityModel\Data\EntitySetDataRow.cs" />
+    <Compile Include="Contracts\EntityModel\Data\IReferentialConstraintsResolver.cs" />
+    <Compile Include="Contracts\EntityModel\EdmUniqueConstraint.cs" />
+    <Compile Include="Contracts\EntityModel\Edm\AttributeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\Edm\DocumentationAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\Edm\EdmConstants.cs" />
+    <Compile Include="Contracts\EntityModel\Edm\EdmDataTypes.cs" />
+    <Compile Include="Contracts\EntityModel\Edm\EdmNamespaceFacet.cs" />
+    <Compile Include="Contracts\EntityModel\Edm\EdmTypeNameFacet.cs" />
+    <Compile Include="Contracts\EntityModel\Edm\EdmVersion.cs" />
+    <Compile Include="Contracts\EntityModel\Edm\ICsdlContentGenerator.cs" />
+    <Compile Include="Contracts\EntityModel\Edm\ICsdlDataTypeGenerator.cs" />
+    <Compile Include="Contracts\EntityModel\Edm\ICsdlParser.cs" />
+    <Compile Include="Contracts\EntityModel\Edm\IXsdlDataTypeGenerator.cs" />
+    <Compile Include="Contracts\EntityModel\Edm\NamespaceAliasManager.cs" />
+    <Compile Include="Contracts\EntityModel\Edm\StructuralAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\EndMultiplicity.cs" />
+    <Compile Include="Contracts\EntityModel\EntityContainer.cs" />
+    <Compile Include="Contracts\EntityModel\EntityContainerReference.cs" />
+    <Compile Include="Contracts\EntityModel\EntityModelSchema.cs" />
+    <Compile Include="Contracts\EntityModel\EntitySet.cs" />
+    <Compile Include="Contracts\EntityModel\EntitySetPathAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\EntitySetReference.cs" />
+    <Compile Include="Contracts\EntityModel\EntityType.cs" />
+    <Compile Include="Contracts\EntityModel\EntityTypeReference.cs" />
+    <Compile Include="Contracts\EntityModel\EnumMember.cs" />
+    <Compile Include="Contracts\EntityModel\EnumType.cs" />
+    <Compile Include="Contracts\EntityModel\EnumTypeReference.cs" />
+    <Compile Include="Contracts\EntityModel\Function.cs" />
+    <Compile Include="Contracts\EntityModel\FunctionHasOrderedResultsAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\FunctionImport.cs" />
+    <Compile Include="Contracts\EntityModel\FunctionImportReference.cs" />
+    <Compile Include="Contracts\EntityModel\FunctionImportReturnType.cs" />
+    <Compile Include="Contracts\EntityModel\FunctionInModelAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\FunctionParameter.cs" />
+    <Compile Include="Contracts\EntityModel\FunctionParameterMode.cs" />
+    <Compile Include="Contracts\EntityModel\FunctionParameterReference.cs" />
+    <Compile Include="Contracts\EntityModel\FunctionReference.cs" />
+    <Compile Include="Contracts\EntityModel\GenericArgument.cs" />
+    <Compile Include="Contracts\EntityModel\GenericArgumentsAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\GenericPropertyTypeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\GenericTypeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\GlobalExtensionMethods.cs" />
+    <Compile Include="Contracts\EntityModel\IAnnotatedItem.cs" />
+    <Compile Include="Contracts\EntityModel\ICustomAnnotationSerializer.cs" />
+    <Compile Include="Contracts\EntityModel\INamedItem.cs" />
+    <Compile Include="Contracts\EntityModel\MemberInSpatialTypeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\MemberProperty.cs" />
+    <Compile Include="Contracts\EntityModel\MemberPropertyReference.cs" />
+    <Compile Include="Contracts\EntityModel\MethodAccessModifierAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\MultiplicityPattern.cs" />
+    <Compile Include="Contracts\EntityModel\NamedItem.cs" />
+    <Compile Include="Contracts\EntityModel\NamedStructuralType.cs" />
+    <Compile Include="Contracts\EntityModel\NavigationProperty.cs" />
+    <Compile Include="Contracts\EntityModel\ObjectLayerOnlyAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\OperationAction.cs" />
+    <Compile Include="Contracts\EntityModel\PrincipalAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\PropertyAccessModifierAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\ReferentialConstraint.cs" />
+    <Compile Include="Contracts\EntityModel\RelationshipSide.cs" />
+    <Compile Include="Contracts\EntityModel\RelationshipType.cs" />
+    <Compile Include="Contracts\EntityModel\RelationshipTypeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\RowType.cs" />
+    <Compile Include="Contracts\EntityModel\SchemaNamespaceAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\SerializableAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\StoredProcedureReturnTypeFunctionAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\StoreFunctionBodyAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\StoreFunctionBodyGenerationInfoAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\StoreFunctionMetadataAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\StoreGeneratedPatternAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\StructuralType.cs" />
+    <Compile Include="Contracts\EntityModel\TagAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\TypeAccessModifierAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\TypeSpecificationAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\UseStoreFunctionCommandTextAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\VirtualAnnotation.cs" />
+    <Compile Include="Contracts\ExtendedCodeGenerator.cs" />
+    <Compile Include="Contracts\FileContents`1.cs" />
+    <Compile Include="Contracts\GeneratedCode.cs" />
+    <Compile Include="Contracts\IAnnotatable`1.cs" />
+    <Compile Include="Contracts\IAnonymousTypeBuilder.cs" />
+    <Compile Include="Contracts\IAnsiStringGenerator.cs" />
+    <Compile Include="Contracts\IAssemblyPathResolver.cs" />
+    <Compile Include="Contracts\IAttributeToPropertyMappingAnnotationConverter.cs" />
+    <Compile Include="Contracts\ICommandLineProcessRunner.cs" />
+    <Compile Include="Contracts\IComparableAnnotation.cs" />
+    <Compile Include="Contracts\IDatabaseReverseEngineer.cs" />
+    <Compile Include="Contracts\IDatabaseSchemaSerializer.cs" />
+    <Compile Include="Contracts\IDataTypeConstructorCodeGenerator.cs" />
+    <Compile Include="Contracts\IDeepCloneableAnnotation.cs" />
+    <Compile Include="Contracts\IDependencyInjector.cs" />
+    <Compile Include="Contracts\IEntityClassGenerator.cs" />
+    <Compile Include="Contracts\IEntityContainerDataPopulationDriver.cs" />
+    <Compile Include="Contracts\IEntityGraphCreator.cs" />
+    <Compile Include="Contracts\IEntityModelConceptualDataServices.cs" />
+    <Compile Include="Contracts\IEntityModelConceptualDataServicesFactory.cs" />
+    <Compile Include="Contracts\IEntityModelDataGenerationHintsResolver.cs" />
+    <Compile Include="Contracts\IEntityModelFixup.cs" />
+    <Compile Include="Contracts\IEntityModelFixupWithValidate.cs" />
+    <Compile Include="Contracts\IEntityModelIndividualizer.cs" />
+    <Compile Include="Contracts\IEntityModelObjectServices.cs" />
+    <Compile Include="Contracts\IEntityModelObjectServicesFactory.cs" />
+    <Compile Include="Contracts\IEntityModelPrimitiveTypeResolver.cs" />
+    <Compile Include="Contracts\IEntityModelSchemaComparer.cs" />
+    <Compile Include="Contracts\IEntityModelValidator.cs" />
+    <Compile Include="Contracts\IEntitySetData.cs" />
+    <Compile Include="Contracts\IEntityToDatabaseModelConverter.cs" />
+    <Compile Include="Contracts\IEnumMemberValuesCalculator.cs" />
+    <Compile Include="Contracts\IGlobalizationFixup.cs" />
+    <Compile Include="Contracts\IIdentifierGenerator.cs" />
+    <Compile Include="Contracts\IImplementationSelector.cs" />
+    <Compile Include="Contracts\ILogLevelResolver.cs" />
+    <Compile Include="Contracts\IModelGenerator.cs" />
+    <Compile Include="Contracts\IPrimitiveDataTypeRepository.cs" />
+    <Compile Include="Contracts\IPrimitiveDataTypeResolver.cs" />
+    <Compile Include="Contracts\IPrimitiveDataTypeToDataGenerationHintsResolver.cs" />
+    <Compile Include="Contracts\IProgrammingLanguageStrategy.cs" />
+    <Compile Include="Contracts\IPseudoLocalizer.cs" />
+    <Compile Include="Contracts\IRandomNumberGenerator.cs" />
+    <Compile Include="Contracts\IResourceLookup.cs" />
+    <Compile Include="Contracts\ISandboxObjectFactory.cs" />
+    <Compile Include="Contracts\ISqlStatementProcessor.cs" />
+    <Compile Include="Contracts\IStringGenerator.cs" />
+    <Compile Include="Contracts\IStringResourceVerifier.cs" />
+    <Compile Include="Contracts\ITestToProductAnnotationConverter.cs" />
+    <Compile Include="Contracts\ITextTemplateTransformation.cs" />
+    <Compile Include="Contracts\IWorkspaceBuilder.cs" />
+    <Compile Include="Contracts\IWorkspaceManager.cs" />
+    <Compile Include="Contracts\NamedValue.cs" />
+    <Compile Include="Contracts\Objects\GraphNode.cs" />
+    <Compile Include="Contracts\Objects\ObjectGraphData.cs" />
+    <Compile Include="Contracts\Objects\TypeUtilities.cs" />
+    <Compile Include="Contracts\ProcessOutput.cs" />
+    <Compile Include="Contracts\RandomExtensionMethods.cs" />
+    <Compile Include="Contracts\RunStability.cs" />
+    <Compile Include="Contracts\SafeCodeGeneratorOptions.cs" />
+    <Compile Include="Contracts\SafeIndentedTextWriter.cs" />
+    <Compile Include="Contracts\SchemaObjectSpecificationLevel.cs" />
+    <Compile Include="Contracts\Spatial\ISpatialClrTypeResolver.cs" />
+    <Compile Include="Contracts\Spatial\ISpatialDataGeneratorResolver.cs" />
+    <Compile Include="Contracts\Spatial\ISpatialDataTypeDefinitionResolver.cs" />
+    <Compile Include="Contracts\Spatial\ISpatialEqualityComparer.cs" />
+    <Compile Include="Contracts\Spatial\SpatialShapeFacets.cs" />
+    <Compile Include="Contracts\Spatial\SpatialShapeKind.cs" />
+    <Compile Include="Contracts\Spatial\SpatialShapeKindExtensions.cs" />
+    <Compile Include="Contracts\TestConfiguration\DimensionHelper.cs" />
+    <Compile Include="Contracts\TestConfiguration\ITestConfigurationExplorer.cs" />
+    <Compile Include="Contracts\TestConfiguration\ITestConfigurations.cs" />
+    <Compile Include="Contracts\TestConfiguration\PlatformType.cs" />
+    <Compile Include="Contracts\TestConfiguration\TestAssembly.cs" />
+    <Compile Include="Contracts\TestConfiguration\TestConfigurationMatrix.cs" />
+    <Compile Include="Contracts\TestConfiguration\TestConfigurationMatrixAnnotation.cs" />
+    <Compile Include="Contracts\TestConfiguration\TestDimension.cs" />
+    <Compile Include="Contracts\TestConfiguration\TestMatrixNamedValueAnnotation.cs" />
+    <Compile Include="Contracts\TestConfiguration\TestMatrixTagAnnotation.cs" />
+    <Compile Include="Contracts\TestConfiguration\TestPath.cs" />
+    <Compile Include="Contracts\TestConfiguration\TestPathType.cs" />
+    <Compile Include="Contracts\TestConfiguration\TestRow.cs" />
+    <Compile Include="Contracts\TestConfiguration\TestRunStrategy.cs" />
+    <Compile Include="Contracts\TrustLevel.cs" />
+    <Compile Include="Contracts\Types\BinaryDataType.cs" />
+    <Compile Include="Contracts\Types\BooleanDataType.cs" />
+    <Compile Include="Contracts\Types\CollectionDataType.cs" />
+    <Compile Include="Contracts\Types\ComplexDataType.cs" />
+    <Compile Include="Contracts\Types\DataType.cs" />
+    <Compile Include="Contracts\Types\DataTypes.cs" />
+    <Compile Include="Contracts\Types\DateTimeDataType.cs" />
+    <Compile Include="Contracts\Types\DebuggerDisplayFacet.cs" />
+    <Compile Include="Contracts\Types\EntityDataType.cs" />
+    <Compile Include="Contracts\Types\EnumDataType.cs" />
+    <Compile Include="Contracts\Types\ExtensionMethods.cs" />
+    <Compile Include="Contracts\Types\FixedPointDataType.cs" />
+    <Compile Include="Contracts\Types\FloatingPointDataType.cs" />
+    <Compile Include="Contracts\Types\GuidDataType.cs" />
+    <Compile Include="Contracts\Types\HasTimeZoneOffsetFacet.cs" />
+    <Compile Include="Contracts\Types\IDataTypeAnnotation.cs" />
+    <Compile Include="Contracts\Types\IDataTypeToCodeTypeReferenceResolver.cs" />
+    <Compile Include="Contracts\Types\IDataTypeVisitor`1.cs" />
+    <Compile Include="Contracts\Types\IntegerDataType.cs" />
+    <Compile Include="Contracts\Types\IPrimitiveDataTypeVisitor`1.cs" />
+    <Compile Include="Contracts\Types\IsUnicodeFacet.cs" />
+    <Compile Include="Contracts\Types\MaxLengthFacet.cs" />
+    <Compile Include="Contracts\Types\NumericPrecisionFacet.cs" />
+    <Compile Include="Contracts\Types\NumericScaleFacet.cs" />
+    <Compile Include="Contracts\Types\PrimitiveClrTypeFacet.cs" />
+    <Compile Include="Contracts\Types\PrimitiveDataType.cs" />
+    <Compile Include="Contracts\Types\PrimitiveDataTypeFacet.cs" />
+    <Compile Include="Contracts\Types\PrimitiveDataTypeFacet`1.cs" />
+    <Compile Include="Contracts\Types\QualifiedDatabaseTypeNameFacet.cs" />
+    <Compile Include="Contracts\Types\ReferenceDataType.cs" />
+    <Compile Include="Contracts\Types\RowDataType.cs" />
+    <Compile Include="Contracts\Types\SpatialDataType.cs" />
+    <Compile Include="Contracts\Types\SpatialShapeKindFacet.cs" />
+    <Compile Include="Contracts\Types\SridFacet.cs" />
+    <Compile Include="Contracts\Types\StreamDataType.cs" />
+    <Compile Include="Contracts\Types\StringDataType.cs" />
+    <Compile Include="Contracts\Types\TimeOfDayDataType.cs" />
+    <Compile Include="Contracts\Types\TimePrecisionFacet.cs" />
+    <Compile Include="Contracts\Types\TypeSizeFacet.cs" />
+    <Compile Include="Contracts\Types\UnqualifiedDatabaseTypeNameFacet.cs" />
+    <Compile Include="Contracts\UninitializedData.cs" />
+    <Compile Include="Contracts\ValueComparer.cs" />
+    <Compile Include="Contracts\Workspace.cs" />
+    <Compile Include="Contracts\WorkspaceEventArgs`1.cs" />
+    <Compile Include="Contracts\Wrappers\IProxyObject.cs" />
+    <Compile Include="Contracts\Wrappers\IWrappedObject.cs" />
+    <Compile Include="Contracts\Wrappers\IWrapperScope.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedArray.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedArray`1.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedEntityInstance.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedEnum.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedICollection.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedICollection`1.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedIDisposable.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedIEnumerable.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedIEnumerable`1.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedIEnumerable`1.Extensions.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedIEnumerator.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedIEnumerator.Extensions.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedIEnumerator`1.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedIEnumerator`1.Extensions.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedIList`1.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedIQueryable.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedIQueryable`1.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedIQueryProvider.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedObject.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedReadOnlyCollection`1.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedReadOnlyCollection`1.Extensions.cs" />
+    <Compile Include="Contracts\Wrappers\WrapperExtensionMethods.cs" />
+    <Compile Include="Contracts\WrapperUtilities.cs" />
+    <Compile Include="DatabaseModel\CSharpDatabaseSchemaSerializer.cs" />
+    <Compile Include="DatabaseModel\DatabaseModelFixupBase.cs" />
+    <Compile Include="DatabaseModel\EntityToDatabaseModelConverter.cs" />
+    <Compile Include="DatabaseModel\ResolveDatabaseModelReferencesFixup.cs" />
+    <Compile Include="DataGeneration\AlphabetFileParser.cs" />
+    <Compile Include="DataGeneration\AlphabetStringGeneratorBase.cs" />
+    <Compile Include="DataGeneration\ApiWordsAnsiStringGenerator.cs" />
+    <Compile Include="DataGeneration\ApiWordsStringGenerator.cs" />
+    <Compile Include="DataGeneration\CollectionStructuralDataGenerator.cs" />
+    <Compile Include="DataGeneration\CustomAlphabetStringGenerator.cs" />
+    <Compile Include="DataGeneration\DataGenerationUtilities.cs" />
+    <Compile Include="DataGeneration\DataGenerator`1.cs" />
+    <Compile Include="DataGeneration\DelegatedDataGenerator`1.cs" />
+    <Compile Include="DataGeneration\DelegatedRandomDataGenerator`1.cs" />
+    <Compile Include="DataGeneration\DelegatedSeededDataGenerator`1.cs" />
+    <Compile Include="DataGeneration\FixedSetDataGenerator`1.cs" />
+    <Compile Include="DataGeneration\FromSeedStrategies.cs" />
+    <Compile Include="DataGeneration\MemberValueGenerators.cs" />
+    <Compile Include="DataGeneration\ObjectStructuralDataAdapter.cs" />
+    <Compile Include="DataGeneration\PrimitiveGenerators.cs" />
+    <Compile Include="DataGeneration\RandomDataGeneratorResolver.cs" />
+    <Compile Include="DataGeneration\ResourceAlphabetStringGenerator.cs" />
+    <Compile Include="DataGeneration\ResourceAnsiAlphabetStringGenerator.cs" />
+    <Compile Include="DataGeneration\ResourceWordListStringGenerator.cs" />
+    <Compile Include="DataGeneration\SentenceStringGenerator.cs" />
+    <Compile Include="DataGeneration\StringGenerators.cs" />
+    <Compile Include="DataGeneration\StructuralDataGenerator`1.cs" />
+    <Compile Include="DataGeneration\TryGetNextSeedStrategies.cs" />
+    <Compile Include="DataGeneration\TryGetNextSeedStrategy.cs" />
+    <Compile Include="DataGeneration\UniqueDataGeneratorResolver.cs" />
+    <Compile Include="DataGeneration\WeightedStringGenerator.cs" />
+    <Compile Include="DependencyInjection\CustomResolutionStrategy.cs" />
+    <Compile Include="DependencyInjection\DependencyInjectionConfigurator.cs" />
+    <Compile Include="DependencyInjection\ImplementationInfo.cs" />
+    <Compile Include="DependencyInjection\ImplementationSelector.cs" />
+    <Compile Include="DependencyInjection\IResolutionStrategy.cs" />
+    <Compile Include="DependencyInjection\LightweightDependencyInjectionContainer.cs" />
+    <Compile Include="DependencyInjection\LogLevelResolver.cs" />
+    <Compile Include="DependencyInjection\RecursiveResolutionStrategy.cs" />
+    <Compile Include="DependencyInjection\ResolutionContext.cs" />
+    <Compile Include="DependencyInjection\SingletonResolutionStrategy.cs" />
+    <Compile Include="EntityModel\AddDefaultContainerFixup.cs" />
+    <Compile Include="EntityModel\AddMissingNamesFixup.cs" />
+    <Compile Include="EntityModel\AddMissingTypesFixup.cs" />
+    <Compile Include="EntityModel\AddNavigationPropertyFixup.cs" />
+    <Compile Include="EntityModel\ApplyDefaultNamespaceFixup.cs" />
+    <Compile Include="EntityModel\CapacityRange.cs" />
+    <Compile Include="EntityModel\CompositeEntityModelFixup.cs" />
+    <Compile Include="EntityModel\Data\ReferentialConstraintsResolver.cs" />
+    <Compile Include="EntityModel\DefaultConceptualModelGenerator.cs" />
+    <Compile Include="EntityModel\DefaultEntityModelIndividualizer.cs" />
+    <Compile Include="EntityModel\Edm\CsdlContentGenerator.cs" />
+    <Compile Include="EntityModel\Edm\CsdlDataTypeGenerator.cs" />
+    <Compile Include="EntityModel\Edm\CsdlParser.cs" />
+    <Compile Include="EntityModel\Edm\CustomAnnotationConverter.cs" />
+    <Compile Include="EntityModel\Edm\EdmDataTypeResolver.cs" />
+    <Compile Include="EntityModel\Edm\EdmTypeSemantics.cs" />
+    <Compile Include="EntityModel\Edm\EntityModelSchemaVisitor.cs" />
+    <Compile Include="EntityModel\Edm\InternalExtensionMethods.cs" />
+    <Compile Include="EntityModel\Edm\XsdlContentGeneratorBase.cs" />
+    <Compile Include="EntityModel\Edm\XsdlParserBase.cs" />
+    <Compile Include="EntityModel\EnsureNonNullablePrimaryKeysFixup.cs" />
+    <Compile Include="EntityModel\EntityContainerDataPopulationDriver.cs" />
+    <Compile Include="EntityModel\EntityGraphCreator.cs" />
+    <Compile Include="EntityModel\EntityModelConceptualDataServicesFactory.cs" />
+    <Compile Include="EntityModel\EntityModelDataGenerationHintsResolver.cs" />
+    <Compile Include="EntityModel\EntityModelDataServicesBase.cs" />
+    <Compile Include="EntityModel\EntityModelObjectServicesFactory.cs" />
+    <Compile Include="EntityModel\EntityModelPrimitiveTypeResolver.cs" />
+    <Compile Include="EntityModel\EntityModelSchemaComparer.cs" />
+    <Compile Include="EntityModel\EntitySetObjectData.cs" />
+    <Compile Include="EntityModel\EnumDataTypeResolver.cs" />
+    <Compile Include="EntityModel\EnumMemberValuesCalculator.cs" />
+    <Compile Include="EntityModel\EveryBaseEntityHasAKeyFixup.cs" />
+    <Compile Include="EntityModel\ExtensionMethods.cs" />
+    <Compile Include="EntityModel\FixupNoNavigationAnnotation.cs" />
+    <Compile Include="EntityModel\FixupNoSetAnnotation.cs" />
+    <Compile Include="EntityModel\Goals\NumberOfComplexPropertiesPerEntityGoal.cs" />
+    <Compile Include="EntityModel\Goals\NumberOfComplexTypesGoal.cs" />
+    <Compile Include="EntityModel\Goals\NumberOfEntitiesGoal.cs" />
+    <Compile Include="EntityModel\Goals\NumberOfInheritanceLevelsGoal.cs" />
+    <Compile Include="EntityModel\Goals\NumberOfInheritanceRootsGoal.cs" />
+    <Compile Include="EntityModel\Goals\NumberOfInheritanceSiblingsGoal.cs" />
+    <Compile Include="EntityModel\Goals\NumberOfKeysPerEntityGoal.cs" />
+    <Compile Include="EntityModel\Goals\NumberOfPropertiesPerComplexTypeGoal.cs" />
+    <Compile Include="EntityModel\Goals\NumberOfPropertiesPerEntityGoal.cs" />
+    <Compile Include="EntityModel\Internal\CapacityRangeSelector.cs" />
+    <Compile Include="EntityModel\Internal\EntitySetAndTypeSelector.cs" />
+    <Compile Include="EntityModel\Internal\RelationshipCandidate.cs" />
+    <Compile Include="EntityModel\Internal\RelationshipDescription.cs" />
+    <Compile Include="EntityModel\Internal\RelationshipGroupEnd.cs" />
+    <Compile Include="EntityModel\Internal\RelationshipSelector.cs" />
+    <Compile Include="EntityModel\ModelGenerator.cs" />
+    <Compile Include="EntityModel\NamedItemFixupBase.cs" />
+    <Compile Include="EntityModel\NullPrimitiveDataTypeResolver.cs" />
+    <Compile Include="EntityModel\OverrideNamespaceFixup.cs" />
+    <Compile Include="EntityModel\PocoAnnotator.cs" />
+    <Compile Include="EntityModel\PocoEntityClassGenerator.cs" />
+    <Compile Include="EntityModel\PocoOption.cs" />
+    <Compile Include="EntityModel\PseudoLocalizationFixup.cs" />
+    <Compile Include="EntityModel\RemoveObjectLayerOnlyPropertiesFixup.cs" />
+    <Compile Include="EntityModel\RemoveObjectLayerOnlyTypesFixup.cs" />
+    <Compile Include="EntityModel\ResolveReferencesFixup.cs" />
+    <Compile Include="Execution\BugAttribute.cs" />
+    <Compile Include="Execution\DefaultAssertionHandler.cs" />
+    <Compile Include="Execution\DefaultTestModuleLoader.cs" />
+    <Compile Include="Execution\Dev10BugAttribute.cs" />
+    <Compile Include="Execution\Dev11BugAttribute.cs" />
+    <Compile Include="Execution\BaseBugAttribute.cs" />
+    <Compile Include="Execution\HelpGenerator.cs" />
+    <Compile Include="Execution\IndexedKeyValuePairCollection.cs" />
+    <Compile Include="Execution\ITestModuleLoader.cs" />
+    <Compile Include="Execution\Ltm\Interop.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Execution\Ltm\LtmLogger.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Execution\Ltm\LtmTestCaseItem.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Execution\Ltm\LtmTestItem.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Execution\Ltm\LtmTestItems.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Execution\Ltm\LtmTestLoader.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Execution\Ltm\LtmTestLoaderBase.cs" />
+    <Compile Include="Execution\Ltm\LtmTestModuleItem.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Execution\Ltm\LtmTestProperties.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Execution\Ltm\LtmVariationTestItem.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Execution\SandboxObjectFactory.cs" />
+    <Compile Include="Execution\TestCase.cs" />
+    <Compile Include="Execution\TestCaseAttribute.cs" />
+    <Compile Include="Execution\TestItem.cs" />
+    <Compile Include="Execution\TestItemBaseAttribute.cs" />
+    <Compile Include="Execution\TestItemData.cs" />
+    <Compile Include="Execution\TestItemMetadata.cs" />
+    <Compile Include="Execution\TestItemWithParametersAttribute.cs" />
+    <Compile Include="Execution\TestMatrixAttribute.cs" />
+    <Compile Include="Execution\TestMatrixCombinationCallbackAttribute.cs" />
+    <Compile Include="Execution\TestMatrixConstraintAttribute.cs" />
+    <Compile Include="Execution\TestMatrixDimensionAttribute.cs" />
+    <Compile Include="Execution\TestMatrixExplorationKind.cs" />
+    <Compile Include="Execution\TestMatrixMethodBasedConstraint.cs" />
+    <Compile Include="Execution\TestModule.cs" />
+    <Compile Include="Execution\TestModuleAttribute.cs" />
+    <Compile Include="Execution\TestModuleData.cs" />
+    <Compile Include="Execution\TestParameterInfo.cs" />
+    <Compile Include="Execution\VariationAttribute.cs" />
+    <Compile Include="Execution\VariationTestItem.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Platforms\EnumExtensionMethods.cs" />
+    <Compile Include="Platforms\IEnumerableExtensionMethods.cs" />
+    <Compile Include="Platforms\MissingSystemTypes.cs" />
+    <Compile Include="ProgrammingLanguages\CSharpLanguageStrategy.cs" />
+    <Compile Include="ProgrammingLanguages\ExtendedCSharpCodeGenerator.cs" />
+    <Compile Include="ProgrammingLanguages\ExtendedVBCodeGenerator.cs" />
+    <Compile Include="ProgrammingLanguages\LanguageStrategyBase.cs" />
+    <Compile Include="ProgrammingLanguages\VisualBasicLanguageStrategy.cs" />
+    <Compile Include="Runners\AsynchronousTestModuleRunnerBase.cs" />
+    <Compile Include="Runners\CompositeTestLogWriter.cs" />
+    <Compile Include="Runners\DurationLogWriter.cs" />
+    <Compile Include="Runners\ExceptionDetails.cs" />
+    <Compile Include="Runners\ITestLogManagerStrategy.cs" />
+    <Compile Include="Runners\ITestLogWriter.cs" />
+    <Compile Include="Runners\ITestModuleRunner.cs" />
+    <Compile Include="Runners\LtmXmlLogWriter.cs" />
+    <Compile Include="Runners\ManagedTestLogManagerStrategy.cs" />
+    <Compile Include="Runners\NullTestLogWriter.cs" />
+    <Compile Include="Runners\PlaintextLogWriterBase.cs" />
+    <Compile Include="Runners\RunnerBridge.cs" />
+    <Compile Include="Runners\RunnerStrategy.cs" />
+    <Compile Include="Runners\RunStatistics.cs" />
+    <Compile Include="Runners\RunStatisticsUpdatedEventArgs.cs" />
+    <Compile Include="Runners\TestItemStatusChangedEventArgs.cs" />
+    <Compile Include="Runners\TestLoaderUtilities.cs" />
+    <Compile Include="Runners\TestResult.cs" />
+    <Compile Include="Runners\TestSuite.cs" />
+    <Compile Include="Runners\TestSuiteItem.cs" />
+    <Compile Include="Runners\TestSuiteUtilities.cs" />
+    <Compile Include="Runners\TextWriterLogWriter.cs" />
+    <Compile Include="TestConfiguration\TestConfigurationMatrixExplorer.cs" />
+    <Compile Include="Types\DataTypeToCodeTypeReferenceResolver.cs" />
+    <Compile Include="Types\PrimitiveDataTypeRepositoryBase.cs" />
+    <Compile Include="Types\PrimitiveDataTypeToDataGenerationHintsResolver.cs" />
+    <Compile Include="Utilities\AnonymousTypeHelpers.cs" />
+    <Compile Include="Utilities\ArgumentPropertyAttribute.cs" />
+    <Compile Include="Utilities\ArgumentPropertyType.cs" />
+    <Compile Include="Utilities\AssemblyPathResolver.cs" />
+    <Compile Include="Utilities\AssemblyResourceLookup.cs" />
+    <Compile Include="Utilities\BasicDataTypeConstructorCodeGenerator.cs" />
+    <Compile Include="Utilities\CabExtractor.cs" />
+    <Compile Include="Utilities\CommandLineProcessRunner.cs" />
+    <Compile Include="Utilities\CommandLineProcessRunnerBase.cs" />
+    <Compile Include="Utilities\CompositeLogger.cs" />
+    <Compile Include="Utilities\ConsecutiveIdentifierGenerator.cs" />
+    <Compile Include="Utilities\ConsoleLogger.cs" />
+    <Compile Include="Utilities\CSharpGenericTypeBuilder.cs" />
+    <Compile Include="Utilities\CSharpILGenAnonymousTypeBuilder.cs" />
+    <Compile Include="Utilities\DefaultCodeBuilder.cs" />
+    <Compile Include="Utilities\DefaultWorkspaceManager.cs" />
+    <Compile Include="Utilities\DictionaryResourceLookup.cs" />
+    <Compile Include="Utilities\EventBasedAssertionHandler.cs" />
+    <Compile Include="Utilities\ExpressionUtilities.cs" />
+    <Compile Include="Utilities\FileLocator.cs" />
+    <Compile Include="Utilities\FilteringLogger.cs" />
+    <Compile Include="Utilities\InitStringUtilities.cs" />
+    <Compile Include="Utilities\IOHelpers.cs" />
+    <Compile Include="Utilities\NullWrapperScope.cs" />
+    <Compile Include="Utilities\PseudoGlobalization.cs" />
+    <Compile Include="Utilities\PseudoLocalizer.cs" />
+    <Compile Include="Utilities\RandomDataShuffler.cs" />
+    <Compile Include="Utilities\RandomNumberGenerator.cs" />
+    <Compile Include="Utilities\ResourceDeployer.cs" />
+    <Compile Include="Utilities\ResourceUtilities.cs" />
+    <Compile Include="Utilities\SqlStatementPrinter.cs" />
+    <Compile Include="Utilities\StringCollectionLogger.cs" />
+    <Compile Include="Utilities\StringResourceVerifier.cs" />
+    <Compile Include="Utilities\TextTemplateTransformationRunner.cs" />
+    <Compile Include="Utilities\TextWriterLogger.cs" />
+    <Compile Include="Utilities\ToStringConverter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Service References\Contracts.WebServices.CompilerService.DotNet\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="CustomDictionary.xml" />
+    <Compile Include="$(AssemblyKeysCSharpFilePath)" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataGeneration\Alphabets\Chinese.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\ChineseTraditional.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\Cyrillic.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\English.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\German.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\Greek.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\Hebrew.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\Hindi.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\Japanese.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\Korean.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\Latin.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\Mongolian.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\NumbersOnly.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\Semigraphics.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\SurrogateCharacters.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\Thai.txt" />
+    <EmbeddedResource Include="DataGeneration\Alphabets\Turkish.txt" />
+    <EmbeddedResource Include="DataGeneration\WordLists\SqlInjections.txt" />
+    <EmbeddedResource Include="Resources\dpx.dll.gz" />
+    <EmbeddedResource Include="Resources\expand.exe.gz" />
+    <Content Include="Resources\README.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Contracts\CodeDomTreeRewriter.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CodeDomTreeRewriter.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\Contracts.WebServices.CompilerService.DotNet\Arrays.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.CompilerService.DotNet\configuration.svcinfo" />
+    <None Include="Service References\Contracts.WebServices.CompilerService.DotNet\configuration91.svcinfo" />
+    <None Include="Service References\Contracts.WebServices.CompilerService.DotNet\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\Contracts.WebServices.CompilerService.DotNet\service.wsdl" />
+    <None Include="Service References\Contracts.WebServices.CompilerService.DotNet\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.CompilerService.DotNet\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\Contracts.WebServices.CompilerService.DotNet\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,805 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectGuid>{854AF4E9-B78F-4994-B9C5-82B846604CBE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.Astoria</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.Astoria</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NoWarn>3005,3016</NoWarn>
+    <EnableStyleCop>true</EnableStyleCop>
+    <DefineConstants>TAUPO_ASTORIA</DefineConstants>
+    <AssemblyAttributeClsCompliant>true</AssemblyAttributeClsCompliant>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\PlatformHelper.cs">
+      <Link>PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="AnonymousAuthenticationProvider.cs" />
+    <Compile Include="AssemblyAttributes.cs" />
+    <Compile Include="AstoriaQueryDataSetBuilder.cs" />
+    <Compile Include="AstoriaQueryTypeLibraryBuilder.cs" />
+    <Compile Include="AstoriaTestCaseBase.cs" />
+    <Compile Include="AstoriaTestModule.cs" />
+    <Compile Include="AstoriaTestServices.cs" />
+    <Compile Include="AstoriaWorkspaceBuilder.cs" />
+    <Compile Include="Client\ClientExpectedErrorComparer.cs" />
+    <Compile Include="Client\ClientQueryCodeGenHelperMethods.cs" />
+    <Compile Include="Client\ClientQueryExpressionCodeExpressionConverter.cs" />
+    <Compile Include="Client\ClientQueryFreeVariableAssignmentsExtractingVisitor.cs" />
+    <Compile Include="Client\ClientQueryGenerator.cs" />
+    <Compile Include="Client\ClientQueryInvokeActionSingleVariationCodeBuilder.cs" />
+    <Compile Include="Client\ClientQueryMethodSyntaxCodeGenerator.cs" />
+    <Compile Include="Client\ClientQueryResultComparer.cs" />
+    <Compile Include="Client\ClientQuerySingleVariationCodeBuilder.cs" />
+    <Compile Include="Client\ClientQuerySingleVariationCodeBuilderBase.cs" />
+    <Compile Include="Client\ClientQuerySingleVariationCodeBuilderResolver.cs" />
+    <Compile Include="Client\ClientQuerySyntaxCodeGenerator.cs" />
+    <Compile Include="Client\ClientQueryVersionErrorCalculator.cs" />
+    <Compile Include="Client\ClientResponseQueryValueBuilder.cs" />
+    <Compile Include="Client\ClientResultComparerBase.cs" />
+    <Compile Include="Client\ClientSideProjectionReplacingVisitor.cs" />
+    <Compile Include="Client\DataServiceContextCreator.cs" />
+    <Compile Include="Client\DataServiceContextExtensions.cs" />
+    <Compile Include="Client\DataServiceContextHttpTracker.cs" />
+    <Compile Include="Client\DataServiceContextRequestsDefaultVerifier.cs" />
+    <Compile Include="Client\DataServiceContextTracker.cs" />
+    <Compile Include="Client\DataServiceContextTrackingScope.cs" />
+    <Compile Include="Client\DataServiceContextVerifier.cs" />
+    <Compile Include="Client\DataServiceExecuteVerifier.cs" />
+    <Compile Include="Client\DataServiceResponseDefaultVerifier.cs" />
+    <Compile Include="Client\DataServiceResponsePreferenceVerifier.cs" />
+    <Compile Include="Client\DefaultDataContextFormatApplier.cs" />
+    <Compile Include="Client\DescriptorExtensions.cs" />
+    <Compile Include="Client\EntityDescriptorDataDefaultChangeTracker.cs" />
+    <Compile Include="Client\EntityDescriptorValueCalculator.cs" />
+    <Compile Include="Client\EntityDescriptorVersionCalculator.cs" />
+    <Compile Include="Client\HttpDrivenSaveChangesVerifier.cs" />
+    <Compile Include="Client\JsonLightDataContextFormatApplier.cs" />
+    <Compile Include="Client\LinqResultComparerDataServiceContextAdapter.cs" />
+    <Compile Include="Client\PocoClientCodeLayerGenerator.cs" />
+    <Compile Include="Client\PocoDataBindingClientCodeLayerGenerator.cs" />
+    <Compile Include="Client\RemoteClientCodeLayerGenerator.cs" />
+    <Compile Include="Client\SaveChangesHttpValidatingEmulator.cs" />
+    <Compile Include="Client\SaveChangesRequestDefaultCalculator.cs" />
+    <Compile Include="Client\SaveChangesResponseDefaultCalculator.cs" />
+    <Compile Include="Client\SaveChangesServerStateVerifier.cs" />
+    <Compile Include="Client\SaveChangesSingleRequestCalculator.cs" />
+    <Compile Include="Client\SaveChangesVerifier.cs" />
+    <Compile Include="Client\SaveChangesVerifierBase.cs" />
+    <Compile Include="Client\SendingRequestEventVerifier.cs" />
+    <Compile Include="ClrMetadataProviderTypesStrategy.cs" />
+    <Compile Include="CollectionsModelFixup.cs" />
+    <Compile Include="Common\AstoriaPseudoLocalizationFixup.cs" />
+    <Compile Include="Common\AstoriaQueryDataSetBuilderBase.cs" />
+    <Compile Include="Common\AstoriaQueryRepositoryBuilderBase.cs" />
+    <Compile Include="Common\AstoriaWorkspaceBase.cs" />
+    <Compile Include="Common\AstoriaWorkspaceBuilderBase.cs" />
+    <Compile Include="Common\ClrTypeReferenceResolverBase.cs" />
+    <Compile Include="Common\EventLogger`1.cs" />
+    <Compile Include="Common\LoggingStreamProxy.cs" />
+    <Compile Include="Common\ObjectLayerCodeGeneratorBase.cs" />
+    <Compile Include="Common\ODataPayloadElementNormalizerBase.cs" />
+    <Compile Include="Common\ODataPayloadElementReplacingVisitor.cs" />
+    <Compile Include="Common\ODataPayloadElementVisitorBase.cs" />
+    <Compile Include="Common\PrimitiveConverter`1.cs" />
+    <Compile Include="Common\ReadWriteOnlyStreamProxy.cs" />
+    <Compile Include="Common\StreamHelpers.cs" />
+    <Compile Include="Common\StronglyTypedClrTypeReferenceResolver.cs" />
+    <Compile Include="Common\StronglyTypedObjectLayerCodeGenerator.cs" />
+    <Compile Include="Common\UriHelpers.cs" />
+    <Compile Include="Contracts\ActionOperationRights.cs" />
+    <Compile Include="Contracts\ArchType.cs" />
+    <Compile Include="Contracts\AstoriaMachineSearchCriteria.cs" />
+    <Compile Include="Contracts\AstoriaWorkspace.cs" />
+    <Compile Include="Contracts\AstoriaWorkspaceInfoConstants.cs" />
+    <Compile Include="Contracts\CallOrderUtilities.cs" />
+    <Compile Include="Contracts\Client\ChangeOperationResponseData.cs" />
+    <Compile Include="Contracts\Client\ClientQueryExtensionMethods.cs" />
+    <Compile Include="Contracts\Client\DataServiceContextData.cs" />
+    <Compile Include="Contracts\Client\DataServiceResponseData.cs" />
+    <Compile Include="Contracts\Client\DescriptorData.cs" />
+    <Compile Include="Contracts\Client\DescriptorDataExtensions.cs" />
+    <Compile Include="Contracts\Client\EntityDescriptorData.cs" />
+    <Compile Include="Contracts\Client\ExpectedClientErrorBaseline.cs" />
+    <Compile Include="Contracts\Client\ExpectedClientRequest.cs" />
+    <Compile Include="Contracts\Client\ExtensionMethods.cs" />
+    <Compile Include="Contracts\Client\IClientCodeLayerGenerator.cs" />
+    <Compile Include="Contracts\Client\IClientDataContextFormatApplier.cs" />
+    <Compile Include="Contracts\Client\IClientExpectedErrorComparer.cs" />
+    <Compile Include="Contracts\Client\IClientQueryCodeGenerator.cs" />
+    <Compile Include="Contracts\Client\IClientQueryExpressionCodeExpressionConverter.cs" />
+    <Compile Include="Contracts\Client\IClientQueryResultComparer.cs" />
+    <Compile Include="Contracts\Client\IClientQuerySingleVariationCodeBuilder.cs" />
+    <Compile Include="Contracts\Client\IClientQuerySingleVariationCodeBuilderResolver.cs" />
+    <Compile Include="Contracts\Client\IClientQueryVersionErrorCalculator.cs" />
+    <Compile Include="Contracts\Client\IClientResponseQueryValueBuilder.cs" />
+    <Compile Include="Contracts\Client\IClientSideProjectionReplacingVisitor.cs" />
+    <Compile Include="Contracts\Client\IDataServiceContextCreator.cs" />
+    <Compile Include="Contracts\Client\IDataServiceContextEventVerifier.cs" />
+    <Compile Include="Contracts\Client\IDataServiceContextHttpTracker.cs" />
+    <Compile Include="Contracts\Client\IDataServiceContextRequestsVerifier.cs" />
+    <Compile Include="Contracts\Client\IDataServiceContextTrackingScope.cs" />
+    <Compile Include="Contracts\Client\IDataServiceContextVerifier.cs" />
+    <Compile Include="Contracts\Client\IDataServiceResponsePreferenceVerifier.cs" />
+    <Compile Include="Contracts\Client\IDataServiceResponseVerifier.cs" />
+    <Compile Include="Contracts\Client\IEntityDescriptorDataChangeTracker.cs" />
+    <Compile Include="Contracts\Client\IEntityDescriptorValueCalculator.cs" />
+    <Compile Include="Contracts\Client\IEntityDescriptorVersionCalculator.cs" />
+    <Compile Include="Contracts\Client\ISaveChangesHttpValidatingEmulator.cs" />
+    <Compile Include="Contracts\Client\ISaveChangesRequestCalculator.cs" />
+    <Compile Include="Contracts\Client\ISaveChangesResponseCalculator.cs" />
+    <Compile Include="Contracts\Client\ISaveChangesServerStateVerifier.cs" />
+    <Compile Include="Contracts\Client\ISaveChangesSingleRequestCalculator.cs" />
+    <Compile Include="Contracts\Client\ISaveChangesVerifier.cs" />
+    <Compile Include="Contracts\Client\ISendingRequestEventVerifier.cs" />
+    <Compile Include="Contracts\Client\LinkDescriptorData.cs" />
+    <Compile Include="Contracts\Client\LinkInfoData.cs" />
+    <Compile Include="Contracts\Client\OperationDescriptorData.cs" />
+    <Compile Include="Contracts\Client\OperationResponseData.cs" />
+    <Compile Include="Contracts\Client\ProductExtensionMethods.cs" />
+    <Compile Include="Contracts\Client\SaveStreamData.cs" />
+    <Compile Include="Contracts\Client\StreamDescriptorData.cs" />
+    <Compile Include="Contracts\DataLayerProviderKind.cs" />
+    <Compile Include="Contracts\DataProviderSettings.cs" />
+    <Compile Include="Contracts\DataServiceHostDeploymentSettings.cs" />
+    <Compile Include="Contracts\DataServiceProtocolVersion.cs" />
+    <Compile Include="Contracts\DataServices\WebServerLocator.cs" />
+    <Compile Include="Contracts\DeploymentSettings.cs" />
+    <Compile Include="Contracts\EntityModel\ActionOperationRightsAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\ActionWithSingleParameterReturnedAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\AddRootServiceOperationsFixup.cs" />
+    <Compile Include="Contracts\EntityModel\AstoriaMetadataExtensions.cs" />
+    <Compile Include="Contracts\EntityModel\ClientMediaEntryAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\ClientTypeHasNoKeysAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\ClrAssociationsFixup.cs" />
+    <Compile Include="Contracts\EntityModel\ClrNullableDataTypesFixup.cs" />
+    <Compile Include="Contracts\EntityModel\CodeDomBodyAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\CodeGenerationTypeUsage.cs" />
+    <Compile Include="Contracts\EntityModel\CollectionContractTypeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\CollectionInstanceTypeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\CollectionTypeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\ConstantInterceptorAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\CreateODataWriterAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\DataServiceBehaviorAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\DataServiceConfigurationAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\DataServiceEntitySetAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\DataServiceMemberGeneratorAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\Data\EntitySetDataRowWithStreams.cs" />
+    <Compile Include="Contracts\EntityModel\Data\StreamData.cs" />
+    <Compile Include="Contracts\EntityModel\DictionaryResourcePropertyInstanceLink.cs" />
+    <Compile Include="Contracts\EntityModel\EditLinkReplacementAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\EditMediaLinkReplacementAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\EntitySetEndPointAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\EntitySetRightsAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\EntryAttributeReplacementAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\EntryIdReplacementAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\FeedAttributeReplacementAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\FunctionBodyAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\HasStreamAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\IClrToPrimitiveDataTypeConverter.cs" />
+    <Compile Include="Contracts\EntityModel\IncrementIntegerPropertyValueActionAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\LazyLoadedTypeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\LegacyServiceOperationAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\MakeNamesUniqueFixup.cs" />
+    <Compile Include="Contracts\EntityModel\MetadataDeclaredPropertyAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\MethodCodeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\MimeTypeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\NavigationLinkEndPointAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\PageSizeAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\PropertyMappingAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\RelationshipLinkEndPointAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\RemoveActionsFixup.cs" />
+    <Compile Include="Contracts\EntityModel\RemoveConcurrencyAnnotationFromDerivedTypesFixup.cs" />
+    <Compile Include="Contracts\EntityModel\RemoveConcurrencyTokensFromComplexTypesFixup.cs" />
+    <Compile Include="Contracts\EntityModel\RemoveDataServiceVersionInResponseAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\RemoveEditLinkAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\RemoveHigherVersionFeaturesFixup.cs" />
+    <Compile Include="Contracts\EntityModel\RemoveMultiValueFixup.cs" />
+    <Compile Include="Contracts\EntityModel\RemoveNamedStreamsFixup.cs" />
+    <Compile Include="Contracts\EntityModel\RemoveNavigationPropertiesFromDerivedTypesFixup.cs" />
+    <Compile Include="Contracts\EntityModel\RemoveSpatialFeatureFixup.cs" />
+    <Compile Include="Contracts\EntityModel\RemoveUnsupportedFeaturesForCodeFirstFixup.cs" />
+    <Compile Include="Contracts\EntityModel\ReplaceBinaryKeysFixup.cs" />
+    <Compile Include="Contracts\EntityModel\ReturnDefaultProcedureAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\ServiceOperationAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\ServiceOperationReturnTypeQualifier.cs" />
+    <Compile Include="Contracts\EntityModel\ServiceOperationRightsAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\SetActionDefaultEntitySetFixup.cs" />
+    <Compile Include="Contracts\EntityModel\SetDefaultCollectionTypesFixup.cs" />
+    <Compile Include="Contracts\EntityModel\SetDefaultDataServiceConfigurationBehaviors.cs" />
+    <Compile Include="Contracts\EntityModel\SupportedOperationsAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\ThrowDataServiceExceptionAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\ToggleBoolPropertyValueActionAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\TypeBackedAnnotation.cs" />
+    <Compile Include="Contracts\EntityModel\TypeNameReplacementAnnotation.cs" />
+    <Compile Include="Contracts\EntitySetRights.cs" />
+    <Compile Include="Contracts\ExistingDataServiceDataProviderSettings.cs" />
+    <Compile Include="Contracts\ExistingDataServiceDeploymentSettings.cs" />
+    <Compile Include="Contracts\ExpectedErrorExtensions.cs" />
+    <Compile Include="Contracts\ExpectedErrorMessage.cs" />
+    <Compile Include="Contracts\ExtensionMethods.cs" />
+    <Compile Include="Contracts\GeneralExtensionMethods.cs" />
+    <Compile Include="Contracts\HostType.cs" />
+    <Compile Include="Contracts\Http\FormatQueryOptions.cs" />
+    <Compile Include="Contracts\Http\HttpExtensionMethods.cs" />
+    <Compile Include="Contracts\Http\HttpHeaderCollection.cs" />
+    <Compile Include="Contracts\Http\HttpHeaders.cs" />
+    <Compile Include="Contracts\Http\HttpRequestData.cs" />
+    <Compile Include="Contracts\Http\HttpRequestData`2.cs" />
+    <Compile Include="Contracts\Http\HttpResponseBuilder.cs" />
+    <Compile Include="Contracts\Http\HttpResponseData.cs" />
+    <Compile Include="Contracts\Http\HttpUtilities.cs" />
+    <Compile Include="Contracts\Http\HttpVerb.cs" />
+    <Compile Include="Contracts\Http\IHttpImplementation.cs" />
+    <Compile Include="Contracts\Http\IHttpMessage.cs" />
+    <Compile Include="Contracts\Http\IHttpRequest.cs" />
+    <Compile Include="Contracts\Http\IMimePart.cs" />
+    <Compile Include="Contracts\Http\MimePartData`1.cs" />
+    <Compile Include="Contracts\Http\MimeTypes.cs" />
+    <Compile Include="Contracts\Http\MultipartMimeData`1.cs" />
+    <Compile Include="Contracts\IAstoriaGlobalizationFixup.cs" />
+    <Compile Include="Contracts\IAstoriaQueryRepositoryHelper.cs" />
+    <Compile Include="Contracts\IAstoriaServiceDescriptor.cs" />
+    <Compile Include="Contracts\IAstoriaStringResourceVerifiers.cs" />
+    <Compile Include="Contracts\IAstoriaWorkspaceBuilder.cs" />
+    <Compile Include="Contracts\IAsyncDataSynchronizer.cs" />
+    <Compile Include="Contracts\IAuthenticationProvider.cs" />
+    <Compile Include="Contracts\IClrTypeReferenceResolver.cs" />
+    <Compile Include="Contracts\ICodeGenerationVerifier.cs" />
+    <Compile Include="Contracts\IDataOracleResultConverter.cs" />
+    <Compile Include="Contracts\IDataServiceWebServerLocatorStrategy.cs" />
+    <Compile Include="Contracts\IEntityModelVersionCalculator.cs" />
+    <Compile Include="Contracts\IEntitySetResolver.cs" />
+    <Compile Include="Contracts\IisDeploymentSettings.cs" />
+    <Compile Include="Contracts\IMetadataProviderTypingStrategy.cs" />
+    <Compile Include="Contracts\INonClrCodeGenerator.cs" />
+    <Compile Include="Contracts\InProcessWebServiceHostDeploymentSettings.cs" />
+    <Compile Include="Contracts\InternetInformationServerMajorVersion.cs" />
+    <Compile Include="Contracts\IObjectLayerCodeGenerator.cs" />
+    <Compile Include="Contracts\IODataPayloadElementVersionCalculator.cs" />
+    <Compile Include="Contracts\IODataUriVersionCalculator.cs" />
+    <Compile Include="Contracts\IOracleBasedDataSynchronizer.cs" />
+    <Compile Include="Contracts\IPhpCodeExecutor.cs" />
+    <Compile Include="Contracts\IServiceDocumentParser.cs" />
+    <Compile Include="Contracts\IServiceMethodResolver.cs" />
+    <Compile Include="Contracts\ISpecificExceptionMessageVerifierFactory.cs" />
+    <Compile Include="Contracts\IStreamLogger.cs" />
+    <Compile Include="Contracts\IStreamsServices.cs" />
+    <Compile Include="Contracts\IWebServerLocator.cs" />
+    <Compile Include="Contracts\Json\IDictionaryToJsonObjectConverter.cs" />
+    <Compile Include="Contracts\Json\IJsonValueVisitor.cs" />
+    <Compile Include="Contracts\Json\IJsonValueVisitor`1.cs" />
+    <Compile Include="Contracts\Json\JsonAnnotation.cs" />
+    <Compile Include="Contracts\Json\JsonArray.cs" />
+    <Compile Include="Contracts\Json\JsonObject.cs" />
+    <Compile Include="Contracts\Json\JsonOriginalTextAnnotation.cs" />
+    <Compile Include="Contracts\Json\JsonPrimitiveValue.cs" />
+    <Compile Include="Contracts\Json\JsonProperty.cs" />
+    <Compile Include="Contracts\Json\JsonTextAnnotation.cs" />
+    <Compile Include="Contracts\Json\JsonTokenType.cs" />
+    <Compile Include="Contracts\Json\JsonValue.cs" />
+    <Compile Include="Contracts\Json\JsonValueType.cs" />
+    <Compile Include="Contracts\LabServerLanguage.cs" />
+    <Compile Include="Contracts\LabSkuType.cs" />
+    <Compile Include="Contracts\LinqToAstoria\AstoriaCanonicalFunctions.cs" />
+    <Compile Include="Contracts\LinqToAstoria\AstoriaQueryStreamType.cs" />
+    <Compile Include="Contracts\LinqToAstoria\AstoriaQueryStreamValue.cs" />
+    <Compile Include="Contracts\LinqToAstoria\IAstoriaQueryValueVisitor`1.cs" />
+    <Compile Include="Contracts\LinqToAstoria\IAstoriaQueryVerifierCapabilityInspector.cs" />
+    <Compile Include="Contracts\LinqToAstoria\IClrCanonicalFunctionEvaluator.cs" />
+    <Compile Include="Contracts\LinqToAstoria\ILinqToAstoriaExpressionEvaluator.cs" />
+    <Compile Include="Contracts\LinqToAstoria\ILinqToAstoriaExpressionVisitor`1.cs" />
+    <Compile Include="Contracts\LinqToAstoria\ILinqToAstoriaQueryEvaluationStrategy.cs" />
+    <Compile Include="Contracts\LinqToAstoria\ILinqToAstoriaQueryResolver.cs" />
+    <Compile Include="Contracts\LinqToAstoria\ILinqToAstoriaQuerySpanGenerator.cs" />
+    <Compile Include="Contracts\LinqToAstoria\IODataUriEvaluator.cs" />
+    <Compile Include="Contracts\LinqToAstoria\IQueryToODataPayloadConverter.cs" />
+    <Compile Include="Contracts\LinqToAstoria\IQueryToODataUriConverter.cs" />
+    <Compile Include="Contracts\LinqToAstoria\IQueryToUriStringConverter.cs" />
+    <Compile Include="Contracts\LinqToAstoria\IsDynamicPropertyValueAnnotation.cs" />
+    <Compile Include="Contracts\LinqToAstoria\LinqToAstoriaAddQueryOptionExpression.cs" />
+    <Compile Include="Contracts\LinqToAstoria\LinqToAstoriaConditionalExpression.cs" />
+    <Compile Include="Contracts\LinqToAstoria\LinqToAstoriaExpandExpression.cs" />
+    <Compile Include="Contracts\LinqToAstoria\LinqToAstoriaExpandLambdaExpression.cs" />
+    <Compile Include="Contracts\LinqToAstoria\LinqToAstoriaKeyExpression.cs" />
+    <Compile Include="Contracts\LinqToAstoria\LinqToAstoriaLinksExpression.cs" />
+    <Compile Include="Contracts\LinqToAstoria\LinqToAstoriaLinqBuilder.cs" />
+    <Compile Include="Contracts\LinqToAstoria\LinqToAstoriaQueryExpressionExtensions.cs" />
+    <Compile Include="Contracts\LinqToAstoria\LinqToAstoriaValueExpression.cs" />
+    <Compile Include="Contracts\LinqToAstoria\MaskedQueryStructuralValue.cs" />
+    <Compile Include="Contracts\LinqToAstoria\ODataCanonicalFunctionNameAnnotation.cs" />
+    <Compile Include="Contracts\LinqToAstoria\ODataUriEvaluatorExtensions.cs" />
+    <Compile Include="Contracts\LinqToAstoria\QueryBasedODataUri.cs" />
+    <Compile Include="Contracts\LinqToAstoria\QueryVoidType.cs" />
+    <Compile Include="Contracts\LiveDataServiceDataProviderSettings.cs" />
+    <Compile Include="Contracts\MachineSearchCriteria.cs" />
+    <Compile Include="Contracts\MajorAstoriaReleaseVersion.cs" />
+    <Compile Include="Contracts\MetadataExtensionMethods.cs" />
+    <Compile Include="Contracts\MultiValueType.cs" />
+    <Compile Include="Contracts\OData\BatchChangeset`1.cs" />
+    <Compile Include="Contracts\OData\BatchPayloadBuilder.cs" />
+    <Compile Include="Contracts\OData\BatchPayload`2.cs" />
+    <Compile Include="Contracts\OData\BatchRequestChangeset.cs" />
+    <Compile Include="Contracts\OData\BatchRequestPayload.cs" />
+    <Compile Include="Contracts\OData\BatchResponseChangeset.cs" />
+    <Compile Include="Contracts\OData\BatchResponsePayload.cs" />
+    <Compile Include="Contracts\OData\CollectionItemElementNameAnnotation.cs" />
+    <Compile Include="Contracts\OData\CollectionNameAnnotation.cs" />
+    <Compile Include="Contracts\OData\ComplexInstance.cs" />
+    <Compile Include="Contracts\OData\ComplexInstanceCollection.cs" />
+    <Compile Include="Contracts\OData\ComplexMultiValue.cs" />
+    <Compile Include="Contracts\OData\ComplexMultiValueProperty.cs" />
+    <Compile Include="Contracts\OData\ComplexProperty.cs" />
+    <Compile Include="Contracts\OData\ContentTypeAnnotation.cs" />
+    <Compile Include="Contracts\OData\DataTypeAnnotation.cs" />
+    <Compile Include="Contracts\OData\DeferredLink.cs" />
+    <Compile Include="Contracts\OData\EmptyCollectionProperty.cs" />
+    <Compile Include="Contracts\OData\EmptyPayload.cs" />
+    <Compile Include="Contracts\OData\EmptyUntypedCollection.cs" />
+    <Compile Include="Contracts\OData\Endpoints.cs" />
+    <Compile Include="Contracts\OData\EntityInstance.cs" />
+    <Compile Include="Contracts\OData\EntitySetAnnotation.cs" />
+    <Compile Include="Contracts\OData\EntitySetInstance.cs" />
+    <Compile Include="Contracts\OData\EntitySetSegment.cs" />
+    <Compile Include="Contracts\OData\EntityTypeSegment.cs" />
+    <Compile Include="Contracts\OData\ExpandedLink.cs" />
+    <Compile Include="Contracts\OData\ExpectedPayloadElementTypeAnnotation.cs" />
+    <Compile Include="Contracts\OData\FunctionAnnotation.cs" />
+    <Compile Include="Contracts\OData\FunctionSegment.cs" />
+    <Compile Include="Contracts\OData\HtmlErrorPayload.cs" />
+    <Compile Include="Contracts\OData\IActionPayloadElementToQueryValuesConverter.cs" />
+    <Compile Include="Contracts\OData\IBatchPayloadComparer.cs" />
+    <Compile Include="Contracts\OData\IBatchPayloadDeserializer.cs" />
+    <Compile Include="Contracts\OData\IBatchPayloadSerializer.cs" />
+    <Compile Include="Contracts\OData\IJsonPrimitiveConverter.cs" />
+    <Compile Include="Contracts\OData\IJsonToPayloadElementConverter.cs" />
+    <Compile Include="Contracts\OData\IODataConventionBasedLinkGenerator.cs" />
+    <Compile Include="Contracts\OData\IODataLiteralConverter.cs" />
+    <Compile Include="Contracts\OData\IODataPayloadBuilder.cs" />
+    <Compile Include="Contracts\OData\IODataPayloadElementComparer.cs" />
+    <Compile Include="Contracts\OData\IODataPayloadElementMetadataResolver.cs" />
+    <Compile Include="Contracts\OData\IODataPayloadElementNormalizer.cs" />
+    <Compile Include="Contracts\OData\IODataPayloadElementVisitor.cs" />
+    <Compile Include="Contracts\OData\IODataPayloadElementVisitor`1.cs" />
+    <Compile Include="Contracts\OData\IODataRequestManager.cs" />
+    <Compile Include="Contracts\OData\IODataRequestVersionResourceErrorCalculator.cs" />
+    <Compile Include="Contracts\OData\IODataUriMinimumVersionRequiredCalculator.cs" />
+    <Compile Include="Contracts\OData\IODataUriToStringConverter.cs" />
+    <Compile Include="Contracts\OData\IPayloadDeserializer.cs" />
+    <Compile Include="Contracts\OData\IPayloadElementToJsonConverter.cs" />
+    <Compile Include="Contracts\OData\IPayloadElementToJsonLightConverter.cs" />
+    <Compile Include="Contracts\OData\IPayloadElementToNamedValuesConverter.cs" />
+    <Compile Include="Contracts\OData\IPayloadElementToQueryValueConverter.cs" />
+    <Compile Include="Contracts\OData\IPayloadElementToXmlConverter.cs" />
+    <Compile Include="Contracts\OData\IPayloadErrorDeserializer.cs" />
+    <Compile Include="Contracts\OData\IPayloadSerializer.cs" />
+    <Compile Include="Contracts\OData\IPayloadTransformationScope.cs" />
+    <Compile Include="Contracts\OData\IPayloadTransformFactory.cs" />
+    <Compile Include="Contracts\OData\IPayloadTransform`1.cs" />
+    <Compile Include="Contracts\OData\IProtocolFormatStrategy.cs" />
+    <Compile Include="Contracts\OData\IProtocolFormatStrategySelector.cs" />
+    <Compile Include="Contracts\OData\IProtocolImplementationDetails.cs" />
+    <Compile Include="Contracts\OData\IQueryToODataUriExpressionConverter.cs" />
+    <Compile Include="Contracts\OData\IsMediaLinkEntryAnnotation.cs" />
+    <Compile Include="Contracts\OData\ISpatialPrimitiveToODataJsonValueConverter.cs" />
+    <Compile Include="Contracts\OData\ITypedValue.cs" />
+    <Compile Include="Contracts\OData\IXmlPrimitiveConverter.cs" />
+    <Compile Include="Contracts\OData\IXmlToPayloadElementConverter.cs" />
+    <Compile Include="Contracts\OData\JsonCollectionResultWrapperAnnotation.cs" />
+    <Compile Include="Contracts\OData\KeyExpressionSegment.cs" />
+    <Compile Include="Contracts\OData\Link.cs" />
+    <Compile Include="Contracts\OData\LinkCollection.cs" />
+    <Compile Include="Contracts\OData\MemberPropertyAnnotation.cs" />
+    <Compile Include="Contracts\OData\MetadataPayloadElement.cs" />
+    <Compile Include="Contracts\OData\NamedStreamInstance.cs" />
+    <Compile Include="Contracts\OData\NamedStreamSegment.cs" />
+    <Compile Include="Contracts\OData\NavigationPropertyAnnotation.cs" />
+    <Compile Include="Contracts\OData\NavigationPropertyInstance.cs" />
+    <Compile Include="Contracts\OData\NavigationSegment.cs" />
+    <Compile Include="Contracts\OData\NullPropertyInstance.cs" />
+    <Compile Include="Contracts\OData\ODataAnnotations.cs" />
+    <Compile Include="Contracts\OData\ODataConstants.cs" />
+    <Compile Include="Contracts\OData\ODataErrorPayload.cs" />
+    <Compile Include="Contracts\OData\ODataExtensions.cs" />
+    <Compile Include="Contracts\OData\ODataInternalExceptionPayload.cs" />
+    <Compile Include="Contracts\OData\ODataPayloadBody.cs" />
+    <Compile Include="Contracts\OData\ODataPayloadContext.cs" />
+    <Compile Include="Contracts\OData\ODataPayloadElement.cs" />
+    <Compile Include="Contracts\OData\ODataPayloadElementAnnotation.cs" />
+    <Compile Include="Contracts\OData\ODataPayloadElementCollection.cs" />
+    <Compile Include="Contracts\OData\ODataPayloadElementCollection`1.cs" />
+    <Compile Include="Contracts\OData\ODataPayloadElementEquatableAnnotation.cs" />
+    <Compile Include="Contracts\OData\ODataPayloadElementType.cs" />
+    <Compile Include="Contracts\OData\ODataPayloadOptions.cs" />
+    <Compile Include="Contracts\OData\ODataRequest.cs" />
+    <Compile Include="Contracts\OData\ODataRequestExtensions.cs" />
+    <Compile Include="Contracts\OData\ODataResponse.cs" />
+    <Compile Include="Contracts\OData\ODataUri.cs" />
+    <Compile Include="Contracts\OData\ODataUriBuilder.cs" />
+    <Compile Include="Contracts\OData\ODataUriExtensions.cs" />
+    <Compile Include="Contracts\OData\ODataUriParser.cs" />
+    <Compile Include="Contracts\OData\ODataUriSegment.cs" />
+    <Compile Include="Contracts\OData\ODataUriSegmentPathCollection.cs" />
+    <Compile Include="Contracts\OData\ODataUriSegmentType.cs" />
+    <Compile Include="Contracts\OData\ODataUtilities.cs" />
+    <Compile Include="Contracts\OData\ParametersExpressionSegment.cs" />
+    <Compile Include="Contracts\OData\PayloadTransformationFluentExtensions.cs" />
+    <Compile Include="Contracts\OData\PrimitiveCollection.cs" />
+    <Compile Include="Contracts\OData\PrimitiveMultiValue.cs" />
+    <Compile Include="Contracts\OData\PrimitiveMultiValueProperty.cs" />
+    <Compile Include="Contracts\OData\PrimitiveProperty.cs" />
+    <Compile Include="Contracts\OData\PrimitiveValue.cs" />
+    <Compile Include="Contracts\OData\PropertyInstance.cs" />
+    <Compile Include="Contracts\OData\PropertySegment.cs" />
+    <Compile Include="Contracts\OData\QueryOptions.cs" />
+    <Compile Include="Contracts\OData\RawTextPayloadElementRepresentationAnnotation.cs" />
+    <Compile Include="Contracts\OData\ReplacedElementAnnotation.cs" />
+    <Compile Include="Contracts\OData\ResourceCollectionInstance.cs" />
+    <Compile Include="Contracts\OData\SelfLinkAnnotation.cs" />
+    <Compile Include="Contracts\OData\SerializationEncodingNameAnnotation.cs" />
+    <Compile Include="Contracts\OData\ServiceDocumentInstance.cs" />
+    <Compile Include="Contracts\OData\ServiceOperationDescriptor.cs" />
+    <Compile Include="Contracts\OData\ServiceRootSegment.cs" />
+    <Compile Include="Contracts\OData\SystemSegment.cs" />
+    <Compile Include="Contracts\OData\TitleAnnotation.cs" />
+    <Compile Include="Contracts\OData\TypedProperty`1.cs" />
+    <Compile Include="Contracts\OData\TypedValue.cs" />
+    <Compile Include="Contracts\OData\TypedValueCollection`1.cs" />
+    <Compile Include="Contracts\OData\UnrecognizedSegment.cs" />
+    <Compile Include="Contracts\OData\UseMetadataNamespaceAnnotation.cs" />
+    <Compile Include="Contracts\OData\WorkspaceInstance.cs" />
+    <Compile Include="Contracts\OData\XmlBaseAnnotation.cs" />
+    <Compile Include="Contracts\OData\XmlPayloadElementRepresentationAnnotation.cs" />
+    <Compile Include="Contracts\OData\XmlRewriteElementAnnotation.cs" />
+    <Compile Include="Contracts\OData\XmlTreeAnnotation.cs" />
+    <Compile Include="Contracts\OperationParameterBindingKind.cs" />
+    <Compile Include="Contracts\OutOfProcessWebServiceHostDeploymentSettings.cs" />
+    <Compile Include="Contracts\PredefinedModel.cs" />
+    <Compile Include="Contracts\Product\DataServiceResponsePreference.cs" />
+    <Compile Include="Contracts\Product\EntityStates.cs" />
+    <Compile Include="Contracts\Product\MergeOption.cs" />
+    <Compile Include="Contracts\Product\SaveChangesOptions.cs" />
+    <Compile Include="Contracts\ProtocolTestServices.cs" />
+    <Compile Include="Contracts\QueryExpressionToTypedValueExtensionMethods.cs" />
+    <Compile Include="Contracts\QueryValueExtensionMethods.cs" />
+    <Compile Include="Contracts\ResponseVerification\INextLinkExpectationGenerator.cs" />
+    <Compile Include="Contracts\ResponseVerification\IODataJsonDateTimeFormattingValidator.cs" />
+    <Compile Include="Contracts\ResponseVerification\IODataPayloadElementValidator.cs" />
+    <Compile Include="Contracts\ResponseVerification\IResponseVerificationContext.cs" />
+    <Compile Include="Contracts\ResponseVerification\IResponseVerificationServices.cs" />
+    <Compile Include="Contracts\ResponseVerification\IResponseVerifier.cs" />
+    <Compile Include="Contracts\ResponseVerification\IResponseVerifierFactory.cs" />
+    <Compile Include="Contracts\ResponseVerification\ISelectiveResponseVerifier.cs" />
+    <Compile Include="Contracts\ResponseVerification\IVerifyServiceActionQueryResult.cs" />
+    <Compile Include="Contracts\ServiceBuilderSettingsBase.cs" />
+    <Compile Include="Contracts\ServiceOperationRights.cs" />
+    <Compile Include="Contracts\ServiceReferences\IServiceReferenceFactory.cs" />
+    <Compile Include="Contracts\ServiceReferences\ServiceReferenceExtensions.cs" />
+    <Compile Include="Contracts\StackBasedAssertionHandler.cs" />
+    <Compile Include="Contracts\SyndicationItemProperty.cs" />
+    <Compile Include="Contracts\SyndicationTextContentKind.cs" />
+    <Compile Include="Contracts\VersionCalculationType.cs" />
+    <Compile Include="Contracts\VersionHelper.cs" />
+    <Compile Include="Contracts\VersioningExtensionMethods.cs" />
+    <Compile Include="Contracts\WebServerLocatorCompleteEventArgs.cs" />
+    <Compile Include="Contracts\Wrappers\AstoriaWrapperUtilities.cs" />
+    <Compile Include="Contracts\Wrappers\EnumerableProxy.cs" />
+    <Compile Include="Contracts\Wrappers\EnumerableProxy`1.cs" />
+    <Compile Include="Contracts\Wrappers\EnumeratorProxy.cs" />
+    <Compile Include="Contracts\Wrappers\EnumeratorProxy`1.cs" />
+    <Compile Include="Contracts\Wrappers\OrderedQueryableProxy.cs" />
+    <Compile Include="Contracts\Wrappers\OrderedQueryableProxy`1.cs" />
+    <Compile Include="Contracts\Wrappers\ProxyFactory.cs" />
+    <Compile Include="Contracts\Wrappers\QueryableProxy.cs" />
+    <Compile Include="Contracts\Wrappers\QueryableProxy`1.cs" />
+    <Compile Include="Contracts\Wrappers\QueryProviderProxy.cs" />
+    <Compile Include="Contracts\Wrappers\StreamProxy.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedActionDescriptor.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedBodyOperationParameter.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedDataServiceCollection`1.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedDataServiceContext.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedDataServiceQuery.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedDataServiceQueryContinuation.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedDataServiceQueryContinuation`1.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedDataServiceQuery`1.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedDataServiceQuery`1.Extensions.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedDataServiceRequest.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedDataServiceRequest`1.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedDataServiceResponse.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedDataServiceStreamLink.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedDataServiceStreamResponse.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedDescriptor.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedEntityDescriptor.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedFunctionDescriptor.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedLinkDescriptor.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedLinkInfo.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedOperationDescriptor.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedOperationParameter.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedQueryOperationResponse.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedQueryOperationResponse`1.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedStreamDescriptor.cs" />
+    <Compile Include="Contracts\Wrappers\WrappedUriOperationParameter.cs" />
+    <Compile Include="Contracts\Wrappers\WrapperExtensionMethods.cs" />
+    <Compile Include="DataOracleResultConverter.cs" />
+    <Compile Include="DefaultAstoriaQueryRepositoryHelper.cs" />
+    <Compile Include="DefaultEntitySetResolver.cs" />
+    <Compile Include="DefaultStackBasedAssertionHandler.cs" />
+    <Compile Include="DictionaryDataProviderSettings.cs" />
+    <Compile Include="DictionaryProviderServiceMethodResolver.cs" />
+    <Compile Include="EntityFrameworkDataProviderSettings.cs" />
+    <Compile Include="EntityModelVersionCalculator.cs" />
+    <Compile Include="EntityModel\ActionsModelGenerator.cs" />
+    <Compile Include="EntityModel\AstoriaAttributeToPropertyMappingAnnotationConverter.cs" />
+    <Compile Include="EntityModel\AstoriaDefaultModelGenerator.cs" />
+    <Compile Include="EntityModel\AstoriaPhoneModelGenerator.cs" />
+    <Compile Include="EntityModel\AstoriaProductAnnotationConverter.cs" />
+    <Compile Include="EntityModel\ClrToPrimitiveDataTypeConverter.cs" />
+    <Compile Include="EntityModel\KatmaiTypesModelGenerator.cs" />
+    <Compile Include="EntityModel\NetflixModelGenerator.cs" />
+    <Compile Include="EntityModel\OpenTypesComplexPropertiesModelGenerator.cs" />
+    <Compile Include="EntityModel\PreexistingModelGenerator.cs" />
+    <Compile Include="EntityModel\SpatialClientModelGenerator.cs" />
+    <Compile Include="EntityModel\SpatialModelGenerator.cs" />
+    <Compile Include="EntityModel\StreamsModelGenerator.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Http\SystemNetHttpImplementation.cs" />
+    <Compile Include="Json\DictionaryToJsonObjectConverter.cs" />
+    <Compile Include="Json\JsonParser.cs" />
+    <Compile Include="Json\JsonTokenizer.cs" />
+    <Compile Include="Json\JsonUtilities.cs" />
+    <Compile Include="Json\JsonValueWriter.cs" />
+    <Compile Include="Json\JsonWriter.cs" />
+    <Compile Include="LazyMetadataProviderTypesStrategy.cs" />
+    <Compile Include="LinqToAstoria\AstoriaQueryValueDeepCopyingVisitor.cs" />
+    <Compile Include="LinqToAstoria\AstoriaQueryVerifierCapabilityInspector.cs" />
+    <Compile Include="LinqToAstoria\ClrCanonicalFunctionEvaluator.cs" />
+    <Compile Include="LinqToAstoria\DataServiceQueryVerifier.cs" />
+    <Compile Include="LinqToAstoria\LinqToAstoriaClrQueryEvaluationStrategy.cs" />
+    <Compile Include="LinqToAstoria\LinqToAstoriaCustomFunctionResolutionVisitor.cs" />
+    <Compile Include="LinqToAstoria\LinqToAstoriaEvaluator.cs" />
+    <Compile Include="LinqToAstoria\LinqToAstoriaExpressionReplacingVisitor.cs" />
+    <Compile Include="LinqToAstoria\LinqToAstoriaParameterNameResolutionVisitor.cs" />
+    <Compile Include="LinqToAstoria\LinqToAstoriaQueryResolver.cs" />
+    <Compile Include="LinqToAstoria\LinqToAstoriaQuerySpanGenerator.cs" />
+    <Compile Include="LinqToAstoria\LinqToAstoriaReplaceFunctionParameterReferenceVisitor.cs" />
+    <Compile Include="LinqToAstoria\LinqToAstoriaTypeResolutionVisitor.cs" />
+    <Compile Include="LinqToAstoria\ODataUriEvaluator.cs" />
+    <Compile Include="LinqToAstoria\ODataUriQueryVisitor.cs" />
+    <Compile Include="LinqToAstoria\ParameterReplacingVisitor.cs" />
+    <Compile Include="LinqToAstoria\QueryDataSetSynchronizer.cs" />
+    <Compile Include="LinqToAstoria\QueryToODataPayloadConverter.cs" />
+    <Compile Include="LinqToAstoria\QueryToODataUriExpressionConverter.cs" />
+    <Compile Include="LinqToAstoria\UriQueryVisitor.cs" />
+    <Compile Include="LinqToAstoria\UriQueryVisitorBase.cs" />
+    <Compile Include="ODataPayloadElementVersionCalculator.cs" />
+    <Compile Include="ODataQueryTestCase.cs" />
+    <Compile Include="ODataServiceDocumentParser.cs" />
+    <Compile Include="ODataUriVersionCalculator.cs" />
+    <Compile Include="OData\ActionPayloadElementToQueryValuesConverter.cs" />
+    <Compile Include="OData\AddXmlCommentsPayloadTransform.cs" />
+    <Compile Include="OData\BatchPayloadComparer.cs" />
+    <Compile Include="OData\BatchPayloadDeserializer.cs" />
+    <Compile Include="OData\BatchPayloadSerializer.cs" />
+    <Compile Include="OData\BinaryValueProtocolFormatStrategy.cs" />
+    <Compile Include="OData\ChangeXmlNamespaceTransform.cs" />
+    <Compile Include="OData\CompositePayloadTransform`1.cs" />
+    <Compile Include="OData\CountProtocolFormatStrategy.cs" />
+    <Compile Include="OData\DataServicesProtocolImplementationDetails.cs" />
+    <Compile Include="OData\DefaultPayloadTransformFactory.cs" />
+    <Compile Include="OData\DefaultProtocolFormatStrategySelector.cs" />
+    <Compile Include="OData\HtmlFormProtocolFormatStrategy.cs" />
+    <Compile Include="OData\HtmlPayloadErrorDeserializer.cs" />
+    <Compile Include="OData\JsonPayloadDeserializer.cs" />
+    <Compile Include="OData\JsonPayloadErrorDeserializer.cs" />
+    <Compile Include="OData\JsonPayloadNormalizer.cs" />
+    <Compile Include="OData\JsonPayloadSerializer.cs" />
+    <Compile Include="OData\JsonPrimitiveConverter.cs" />
+    <Compile Include="OData\JsonPrimitiveValueComparer.cs" />
+    <Compile Include="OData\JsonProtocolFormatStrategy.cs" />
+    <Compile Include="OData\JsonToPayloadElementConverter.cs" />
+    <Compile Include="OData\KeyExpressionParser.cs" />
+    <Compile Include="OData\ODataConventionBasedLinkGenerator.cs" />
+    <Compile Include="OData\ODataJsonLightResponseOrderIgnoringPayloadElementComparer.cs" />
+    <Compile Include="OData\ODataJsonLightResponsePayloadElementComparer.cs" />
+    <Compile Include="OData\ODataLiteralConverter.cs" />
+    <Compile Include="OData\ODataOrderIgnoringPayloadElementComparer.cs" />
+    <Compile Include="OData\ODataPayloadBuilder.cs" />
+    <Compile Include="OData\ODataPayloadElementComparer.cs" />
+    <Compile Include="OData\ODataPayloadElementMetadataResolver.cs" />
+    <Compile Include="OData\ODataRequestManager.cs" />
+    <Compile Include="OData\ODataRequestVersionResourceErrorCalculator.cs" />
+    <Compile Include="OData\ODataUriMinimumVersionRequiredCalculator.cs" />
+    <Compile Include="OData\ODataUriToStringConverterBase.cs" />
+    <Compile Include="OData\PayloadElementToJsonConverter.cs" />
+    <Compile Include="OData\PayloadElementToNamedValuesConverter.cs" />
+    <Compile Include="OData\PayloadElementToQueryValueConverter.cs" />
+    <Compile Include="OData\PayloadElementToXmlConverter.cs" />
+    <Compile Include="OData\SimpleProtocolFormatStrategyBase.cs" />
+    <Compile Include="OData\SpatialPrimitiveToODataJsonValueConverter.cs" />
+    <Compile Include="OData\StrictlyOrderedODataUriToStringConverter.cs" />
+    <Compile Include="OData\TextValueProtocolFormatStrategy.cs" />
+    <Compile Include="OData\XmlPayloadDeserializer.cs" />
+    <Compile Include="OData\XmlPayloadErrorDeserializer.cs" />
+    <Compile Include="OData\XmlPayloadNormalizer.cs" />
+    <Compile Include="OData\XmlPayloadSerializer.cs" />
+    <Compile Include="OData\XmlPrimitiveConverter.cs" />
+    <Compile Include="OData\XmlProtocolFormatStrategy.cs" />
+    <Compile Include="OData\XmlToPayloadElementConverter.cs" />
+    <Compile Include="OpenMetadataProviderTypesStrategy.cs" />
+    <Compile Include="OracleBasedAsyncDataSynchronizer.cs" />
+    <Compile Include="Php\PhpClientQueryVerifier.cs" />
+    <Compile Include="Php\PhpCodeExecutor.cs" />
+    <Compile Include="Php\PhpCodeGenerator.cs" />
+    <Compile Include="Php\PhpConstants.cs" />
+    <Compile Include="Php\PhpQueryOptions.cs" />
+    <Compile Include="Php\QueryExpressionToPhpOptionsConverter.cs" />
+    <Compile Include="RandomMetadataProviderTypingStrategy.cs" />
+    <Compile Include="ReflectionDataProviderSettings.cs" />
+    <Compile Include="ResponseVerification\ActionResponseVerifier.cs" />
+    <Compile Include="ResponseVerification\CompositeResponseVerifier.cs" />
+    <Compile Include="ResponseVerification\ContentTypeHeaderVerifier.cs" />
+    <Compile Include="ResponseVerification\DataServiceVersionVerifier.cs" />
+    <Compile Include="ResponseVerification\DelegateBasedResponseVerifier.cs" />
+    <Compile Include="ResponseVerification\DeleteResponseVerifier.cs" />
+    <Compile Include="ResponseVerification\ErrorResponseVerifier.cs" />
+    <Compile Include="ResponseVerification\ETagHeaderVerifier.cs" />
+    <Compile Include="ResponseVerification\ExpectedPayloadTypeResponseVerifier.cs" />
+    <Compile Include="ResponseVerification\JsonDateTimeFormattingResponseVerifier.cs" />
+    <Compile Include="ResponseVerification\JsonProtocolQueryVerifier.cs" />
+    <Compile Include="ResponseVerification\NextLinkResponseVerifier.cs" />
+    <Compile Include="ResponseVerification\NoSniffHeaderVerifier.cs" />
+    <Compile Include="ResponseVerification\ODataJsonDateTimeFormattingValidator.cs" />
+    <Compile Include="ResponseVerification\ODataPayloadElementDataValidator.cs" />
+    <Compile Include="ResponseVerification\ODataPayloadElementEntityGraphPrettyPrinter.cs" />
+    <Compile Include="ResponseVerification\ODataQueryValueEntityGraphPrettyPrinter.cs" />
+    <Compile Include="ResponseVerification\PreferHeaderVerifier.cs" />
+    <Compile Include="ResponseVerification\ProtocolQueryVerifier.cs" />
+    <Compile Include="ResponseVerification\QueryBasedNextLinkGenerator.cs" />
+    <Compile Include="ResponseVerification\QueryResponseVerifier.cs" />
+    <Compile Include="ResponseVerification\RelationshipLinkVerifier.cs" />
+    <Compile Include="ResponseVerification\ResponseVerificationContext.cs" />
+    <Compile Include="ResponseVerification\ResponseVerificationException.cs" />
+    <Compile Include="ResponseVerification\ResponseVerificationServices.cs" />
+    <Compile Include="ResponseVerification\ResponseVerifierBase.cs" />
+    <Compile Include="ResponseVerification\ResponseVerifierFactory.cs" />
+    <Compile Include="ResponseVerification\ServiceOperationDescriptorVerifier.cs" />
+    <Compile Include="ResponseVerification\StatusCodeVerifier.cs" />
+    <Compile Include="ResponseVerification\UpdateResponseVerifier.cs" />
+    <Compile Include="ResponseVerification\XmlProtocolQueryVerifier.cs" />
+    <Compile Include="ServiceCreation\DataServiceWebServerLocator.cs" />
+    <Compile Include="ServiceCreation\DataServiceWebServerLocatorStrategy.cs" />
+    <Compile Include="ServiceCreation\FakeAsyncResult.cs" />
+    <Compile Include="ServiceCreation\FakeDataServiceWebServerLocatorStrategy.cs" />
+    <Compile Include="ServiceDocumentBasedEntitySetResolver.cs" />
+    <Compile Include="ServiceMethodResolver.cs" />
+    <Compile Include="ServiceReferences\ServiceReferenceFactory.cs" />
+    <Compile Include="SpecificExceptionMessageVerifierFactory.cs" />
+    <Compile Include="StreamServices.cs" />
+    <Compile Include="WindowsAuthenticationProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(AssemblyKeysCSharpFilePath)" />
+    <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Service References\Contracts.WebServices.DataOracleService.DotNet\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\Contracts.WebServices.DataServiceBuilderService.DotNet\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="CustomDictionary.xml">
+      <SubType>Designer</SubType>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Taupo.Query\Microsoft.Test.Taupo.Query.csproj">
+      <Project>{29236BBA-852B-46B2-A39B-09DB47A7F6EB}</Project>
+      <Name>Microsoft.Test.Taupo.Query</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Taupo.Spatial\Microsoft.Test.Taupo.Spatial.csproj">
+      <Project>{7FF7E0D4-B00C-4C08-80F1-C7EFF617597D}</Project>
+      <Name>Microsoft.Test.Taupo.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj">
+      <Project>{34010F3A-20CC-479C-83CF-EC99B1C90CD1}</Project>
+      <Name>Microsoft.Test.Taupo</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Service References\Contracts.WebServices.DataOracleService.DotNet\entitycontainerdata.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataOracleService.DotNet\Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet.SerializableContainer.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataOracleService.DotNet\Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet.SerializableEntity.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataOracleService.DotNet\service.wsdl" />
+    <None Include="Service References\Contracts.WebServices.DataOracleService.DotNet\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataOracleService.DotNet\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.DotNet\Arrays.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.DotNet\Microsoft.Test.Taupo.WebServices.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.DotNet\service.wsdl" />
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.DotNet\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.DotNet\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\Contracts.WebServices.DataOracleService.DotNet\" />
+    <WCFMetadataStorage Include="Service References\Contracts.WebServices.DataServiceBuilderService.DotNet\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.DotNet\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.DotNet\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.DotNet\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Contracts.WebServices.DataOracleService.DotNet\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Contracts.WebServices.DataOracleService.DotNet\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\Contracts.WebServices.DataOracleService.DotNet\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

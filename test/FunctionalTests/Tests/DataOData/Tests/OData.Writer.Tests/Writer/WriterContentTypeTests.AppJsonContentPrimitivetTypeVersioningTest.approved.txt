@@ -1,0 +1,64 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 3; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 5; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 7; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 9; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 10; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 11; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 13; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 15; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Collection(TestCollectionType)","value":[41,42,43]}
+

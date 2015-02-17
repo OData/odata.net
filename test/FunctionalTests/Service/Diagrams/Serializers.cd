@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Comment CommentText="BinarySerializer and TextSerializer are used to handle $value requests and have no specific MIME type associated.">
+    <Position X="9.5" Y="3.5" Height="0.708" Width="2.45" />
+  </Comment>
+  <Comment CommentText="There are three serializers that can deal with compound/complex resources: SyndicationSerializer (used for entity content), PlainXmlSerializer (used for non-entity content) and JsonSerializer (used for entity and non-entity content).">
+    <Position X="3.042" Y="3.344" Height="0.917" Width="4.252" />
+  </Comment>
+  <Class Name="Microsoft.OData.Service.Serializers.Atom10FormatterFactory" Collapsed="true">
+    <Position X="1.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAQAAAAAAAAAAgAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\Atom10FormatterFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.XmlDocumentSerializer" Collapsed="true">
+    <Position X="8.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAQAAAAEBAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\XmlDocumentSerializer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.AtomServiceDocumentSerializer" Collapsed="true">
+    <Position X="7" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAgAAAAAAAAAAAAAAAAAAAAICAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\AtomServiceDocumentSerializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.BatchWriter" Collapsed="true">
+    <Position X="10.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAIABAAAAAAAAAAIAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\BatchWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.Deserializer" Collapsed="true">
+    <Position X="4" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEUIAABAgDQAAAAQKBAAAwQwACAQQAEAAEQBCAAFIAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\Deserializer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.DictionaryContent" Collapsed="true">
+    <Position X="8.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAEAwBAAIAAAAAAAAAAQAAAAAAADA=</HashCode>
+      <FileName>System\Data\Services\Serializers\DictionaryContent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.JsonDeserializer">
+    <Position X="6.25" Y="8" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAgDAAAAEAAAAAAQgQBAACAgAgAAAAAAAEAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\JsonDeserializer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="jsonReader" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.JsonReader" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QEAAABJAACAAAAEAAAAgAAAgACAQAQQAAAAAgAASIAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\JsonReader.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.JsonSerializer" Collapsed="true">
+    <Position X="4.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAADABCAAIABIAABAAAAAAACACAAAAQAAABEJCAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\JsonSerializer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="writer" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.JsonServiceDocumentSerializer" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAQAAAAAAEAAAAAAAAAAAAAAAAAAAQAAAAABAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\JsonServiceDocumentSerializer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="writer" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.JsonWriter" Collapsed="true">
+    <Position X="7" Y="2.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Microsoft.OData.Service.Serializers.JsonWriter.ScopeType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>System\Data\Services\Serializers\JsonWriter.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Class Name="Microsoft.OData.Service.Serializers.JsonWriter.Scope" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>System\Data\Services\Serializers\JsonWriter.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAEBAgAAQAAAAAAIJAAQAAEQAINAo=</HashCode>
+      <FileName>System\Data\Services\Serializers\JsonWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.MetadataSerializer" Collapsed="true">
+    <Position X="9.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\MetadataSerializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.PlainXmlDeserializer" Collapsed="true">
+    <Position X="1.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAADAAAAIAAAAAAQAQAAAAAAAhACBAACAAAIA=</HashCode>
+      <FileName>System\Data\Services\Serializers\PlainXmlDeserializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.PlainXmlSerializer" Collapsed="true">
+    <Position X="3" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAABAACAAIAAIAAAAAAAAAACAKACAAQAAAAAJCAQ=</HashCode>
+      <FileName>System\Data\Services\Serializers\PlainXmlSerializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.Serializer" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BQBQIAQAQRAGIAAIgAGAACCAgAgACIIAgAAQAAAPSAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\Serializer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.SyndicationDeserializer" Collapsed="true">
+    <Position X="4" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAIAADEgQAAAABAAAQAYEAAAAgAAADAAQAAAAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\SyndicationDeserializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.SyndicationFormatterFactory" Collapsed="true">
+    <Position X="1.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAQAAAAAAAAAAgAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\SyndicationFormatterFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.SyndicationSerializer">
+    <Position X="1" Y="2.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Microsoft.OData.Service.Serializers.SyndicationSerializer.InlineAtomItem" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>System\Data\Services\Serializers\SyndicationSerializer.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="Microsoft.OData.Service.Serializers.SyndicationSerializer.InlineAtomFeed" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>System\Data\Services\Serializers\SyndicationSerializer.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>kgAAAAEAADAkIABIACAAAAQABAAACCAAAQiAQAAJiAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\SyndicationSerializer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="factory" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Microsoft.OData.Client.BatchStream" Collapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Microsoft.OData.Client.BatchStream.StreamWithDelimiter" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>c:\dev\DP_DataSvcV1_1\src\ndp\fx\src\DataWeb\Client\System\Data\Services\Client\BatchStream.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="Microsoft.OData.Client.BatchStream.StreamWithLength" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>c:\dev\DP_DataSvcV1_1\src\ndp\fx\src\DataWeb\Client\System\Data\Services\Client\BatchStream.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>CABETBAEACACRAQgGAQAAIBigAAAFUgAoQVEDDEYQCs=</HashCode>
+      <FileName>c:\dev\DP_DataSvcV1_1\src\ndp\fx\src\DataWeb\Client\System\Data\Services\Client\BatchStream.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Microsoft.OData.Service.Serializers.BinarySerializer" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\BinarySerializer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Struct>
+  <Struct Name="Microsoft.OData.Service.Serializers.TextSerializer" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAABAAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\TextSerializer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

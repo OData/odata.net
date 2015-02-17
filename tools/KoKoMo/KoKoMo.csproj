@@ -1,0 +1,40 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <RootNamespace>Microsoft.Test.KoKoMo</RootNamespace>
+    <NoWarn>;1699;1570;1572;1573;1591;3005;3003;3008;3016;3001;3002;3009;0618;0168;0169;1684</NoWarn>
+    <AssemblyName>Microsoft.Test.KoKoMo</AssemblyName>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <ProjectGuid>{EB4C9641-0452-4E7F-AA38-3EBD871914A3}</ProjectGuid>
+    <SignAssemblyAttribute>false</SignAssemblyAttribute>
+    <KeyOriginatorFile>kokomo.snk</KeyOriginatorFile>
+    <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model.cs" />
+    <Compile Include="ModelAction.cs" />
+    <Compile Include="ModelEngine.cs" />
+    <Compile Include="ModelEngineOptions.cs" />
+    <Compile Include="ModelException.cs" />
+    <Compile Include="ModelExpression.cs" />
+    <Compile Include="ModelItem.cs" />
+    <Compile Include="ModelItems.cs" />
+    <Compile Include="ModelParameter.cs" />
+    <Compile Include="ModelRange.cs" />
+    <Compile Include="ModelRequirement.cs" />
+    <Compile Include="ModelTrace.cs" />
+    <Compile Include="ModelValue.cs" />
+    <Compile Include="ModelVariable.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Kokomo.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

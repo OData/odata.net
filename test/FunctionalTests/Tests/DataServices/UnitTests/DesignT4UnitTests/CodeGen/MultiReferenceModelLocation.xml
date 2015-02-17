@@ -1,0 +1,18 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="http://odatae2etest.azurewebsites.net/demo/ModelRefService/DeviceModelTerms.csdl">
+    <edmx:Include Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1" Alias="IoTDeviceModel"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Location" Alias="Self">
+      <ComplexType Name="GeoLocation">
+        <Property Name="Lat" Type="Edm.Double"/>
+        <Property Name="Long" Type="Edm.Double"/>
+      </ComplexType>
+      <ComplexType Name="OutsideGeoFenceAlarmType">
+        <Annotation Term="IoTDeviceModel.IsAlarm" Bool="true"/>
+        <Property Name="Severity" Type="Edm.Int32"/>
+        <Property Name="Location" Type="Self.GeoLocation"/>
+      </ComplexType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

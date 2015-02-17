@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssemblyName>Microsoft.OData.Service</AssemblyName>
+    <OutputType>Library</OutputType>
+    <TransparentAssembly>true</TransparentAssembly>
+    <SecurityMigration>false</SecurityMigration>
+    <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
+    <DefineConstants>$(DefineConstants);ASTORIA_SERVER;ASTORIA_OPEN_OBJECT;EFRTM</DefineConstants>
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <RootNamespace>System</RootNamespace>
+    <ProjectGuid>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</ProjectGuid>
+    <EnableLocalization>false</EnableLocalization>
+    <SigningType>Product</SigningType>
+    <SigningScenario>Delay</SigningScenario>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Data.Entity" />
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Generated files -->
+  <ItemGroup>
+    <TextStringResource Include="Microsoft.OData.Service.txt">
+      <ResFile>Microsoft.OData.Service</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.OData.Service.TextRes</FullClassName>
+    </TextStringResource>
+  </ItemGroup>
+  <!-- Source files -->
+  <ItemGroup>
+    <!-- Files references from the client library. -->
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs">
+      <Link>Microsoft\OData\Service\EdmValueParser.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs">
+      <Link>Microsoft\OData\Service\EdmValueWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\ExpressionLexerUtils.cs">
+      <Link>Microsoft\OData\Service\Parsing\ExpressionLexerUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Visitors\PathSegmentToStringTranslator.cs">
+      <Link>Microsoft\OData\Service\Serializers\PathSegmentToStringTranslator.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SemanticAst\SelectExpandClauseExtensions.cs">
+      <Link>Microsoft\OData\Service\Serializers\SelectExpandClauseExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Json\JsonSharedUtils.cs">
+      <Link>Microsoft\OData\Service\Serializers\JsonSharedUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\ODataValueUtils.cs">
+      <Link>Microsoft\OData\Service\ODataValueUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\SimpleLazy.cs">
+      <Link>Microsoft\OData\Service\SimpleLazy.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\PlatformHelper.cs">
+      <Link>Microsoft\OData\Service\PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ALinq\ALinqExpressionVisitor.cs">
+      <Link>ALinq\ExpressionVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ALinq\ParameterReplacerVisitor.cs">
+      <Link>ALinq\ParameterReplacerVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ReferenceEqualityComparer.cs">
+      <Link>Microsoft\OData\Service\ReferenceEqualityComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\UriUtil.cs">
+      <Link>Microsoft\OData\Service\UriUtil.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Common.cs">
+      <Link>Common.cs</Link>
+    </Compile>
+    <!-- Main server files. -->
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Atom\AtomConstants.cs">
+      <Link>Microsoft\OData\Service\AtomConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\ErrorUtils.cs">
+      <Link>Microsoft\OData\Service\ErrorUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Metadata\EdmLibraryExtensions.cs">
+      <Link>Microsoft\OData\Service\EdmLibraryExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\InternalErrorCodesCommon.cs">
+      <Link>Microsoft\OData\Service\InternalErrorCodesCommon.cs</Link>
+    </Compile>
+    <Compile Include="Microsoft\OData\Service\DataServiceStaticConfiguration.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\MessageSettingsHelper.cs">
+      <Link>Microsoft\OData\Service\MessageSettingsHelper.cs</Link>
+    </Compile>
+    <Compile Include="Microsoft\OData\Service\ODataPathToSegmentInfoConverter.cs" />
+    <Compile Include="Microsoft\OData\Service\OpenTypeMethodCallDetector.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\SkipTokenExpressionBuilder.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\TokenToQueryNodeTranslator.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\NodeToExpressionTranslator.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\FunctionExpressionBinder.cs" />
+    <Compile Include="Microsoft\OData\Service\LinqExtensions.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\ExpressionGenerator.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\RequestExpressionParser.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\DataServiceProviderArgs.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\DataServiceProviderBehavior.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Metadata\EdmComplexTypeWithDelayLoadedProperties.cs">
+      <Link>Microsoft\OData\Service\Providers\EdmComplexTypeWithDelayLoadedProperties.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Metadata\EdmEntityTypeWithDelayLoadedProperties.cs">
+      <Link>Microsoft\OData\Service\Providers\EdmEntityTypeWithDelayLoadedProperties.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Metadata\EdmEnumTypeWithDelayLoadedMembers.cs">
+      <Link>Microsoft\OData\Service\Providers\EdmEnumTypeWithDelayLoadedMembers.cs</Link>
+    </Compile>
+    <Compile Include="Microsoft\OData\Service\Providers\EntityFrameworkDataServiceProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IResourcePropertyBasedEdmProperty.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IResourceSetBasedEdmEntitySet.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IResourceTypeBasedEdmType.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmAction.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmActionImport.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmCollectionType.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmFunction.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmFunctionImport.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmModelMode.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServiceActionResolver.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServiceEntityFrameworkProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServiceInternalProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServiceProviderBehavior.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmOperation.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmStructuralProperty.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\OperationCache.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ReflectionDataServiceProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\SelectedOperationsCache.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ServiceOperationProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\OperationLinkBuilder.cs" />
+    <Compile Include="Microsoft\OData\Service\VocabularyAnnotationCache.cs" />
+    <Compile Include="Microsoft\OData\Service\CallbackQueryOptionHandler.cs" />
+    <Compile Include="Microsoft\OData\Service\ClientPreference.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\CommonUtil.cs">
+      <Link>Microsoft\OData\Service\CommonUtil.cs</Link>
+    </Compile>
+    <Compile Include="Microsoft\OData\Service\Configuration\DataServicesConfigurationConstants.cs" />
+    <Compile Include="Microsoft\OData\Service\Configuration\DataServicesFeaturesSection.cs" />
+    <Compile Include="Microsoft\OData\Service\Configuration\DataServicesReplaceFeature.cs" />
+    <Compile Include="Microsoft\OData\Service\Configuration\DataServicesSectionGroup.cs" />
+    <Compile Include="Microsoft\OData\Service\AcceptableContentTypeSelector.cs" />
+    <Compile Include="Microsoft\OData\Service\DataServiceODataWriter.cs" />
+    <Compile Include="Microsoft\OData\Service\DataServiceODataWriterEntryArgs.cs" />
+    <Compile Include="Microsoft\OData\Service\DataServiceODataWriterFeedArgs.cs" />
+    <Compile Include="Microsoft\OData\Service\DataServiceODataWriterNavigationLinkArgs.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\LiteralParser.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\WellKnownTextParser.cs" />
+    <Compile Include="Microsoft\OData\Service\PartiallyWrittenStreamMessage.cs" />
+    <Compile Include="Microsoft\OData\Service\MessageWriterBuilder.cs" />
+    <Compile Include="Microsoft\OData\Service\ODataFormatWithParameters.cs" />
+    <Compile Include="Microsoft\OData\Service\ODataMessageExtensionMethods.cs" />
+    <Compile Include="Microsoft\OData\Service\HttpVerbs.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\LiteralFormatter.cs">
+      <Link>Microsoft\OData\Service\Parsing\LiteralFormatter.cs</Link>
+    </Compile>
+    <Compile Include="Microsoft\OData\Service\Parsing\UnicodeCategoryEqualityComparer.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmEntitySet.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmSilentNavigationProperty.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\OperationParameterBindingKind.cs" />
+    <Compile Include="Microsoft\OData\Service\QueryResultInfo.cs" />
+    <Compile Include="Microsoft\OData\Service\ResponseContentTypeNegotiator.cs" />
+    <Compile Include="Microsoft\OData\Service\ExpandAndSelectParseResult.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\EntityToSerialize.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\KeySerializer.cs">
+      <Link>Microsoft\OData\Service\Serializers\KeySerializer.cs</Link>
+    </Compile>
+    <Compile Include="Microsoft\OData\Service\Serializers\LazySerializedEntityKey.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\PayloadMetadataParameterInterpreter.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\OperationSerializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\PayloadMetadataPropertyManager.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\PayloadMetadataKind.cs" />
+    <Compile Include="Microsoft\OData\Service\RequestQueryCountOption.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\SerializedEntityKey.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\UrlConvention.cs">
+      <Link>Microsoft\OData\Service\UrlConvention.cs</Link>
+    </Compile>
+    <Compile Include="Microsoft\OData\Service\ServiceActionRights.cs" />
+    <Compile Include="Microsoft\OData\Service\DataServiceOperationContext.cs" />
+    <Compile Include="Microsoft\OData\Service\BatchServiceHost.cs" />
+    <Compile Include="Microsoft\OData\Service\ChangeInterceptorAttribute.cs" />
+    <Compile Include="Microsoft\OData\Service\DataService.cs" />
+    <Compile Include="Microsoft\OData\Service\DataServiceBehavior.cs" />
+    <Compile Include="Microsoft\OData\Service\DataServiceConfiguration.cs" />
+    <Compile Include="Microsoft\OData\Service\DataServiceException.cs" />
+    <Compile Include="Microsoft\OData\Service\DataServiceHost.cs" />
+    <Compile Include="Microsoft\OData\Service\DataServiceHostFactory.cs" />
+    <Compile Include="Microsoft\OData\Service\DataServiceProcessingPipelineEventArgs.cs" />
+    <Compile Include="Microsoft\OData\Service\DataServiceProcessingPipeline.cs" />
+    <Compile Include="Microsoft\OData\Service\DelegateBodyWriter.cs" />
+    <Compile Include="Microsoft\OData\Service\ETagAttribute.cs" />
+    <Compile Include="Microsoft\OData\Service\Error.cs" />
+    <Compile Include="Microsoft\OData\Service\ErrorHandler.cs" />
+    <Compile Include="Microsoft\OData\Service\ExpandSegment.cs" />
+    <Compile Include="Microsoft\OData\Service\ExpandSegmentCollection.cs" />
+    <Compile Include="Microsoft\OData\Service\HandleExceptionArgs.cs" />
+    <Compile Include="Microsoft\OData\Service\HttpContextServiceHost.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ContentTypeUtil.cs">
+      <Link>Microsoft\OData\Service\ContentTypeUtil.cs</Link>
+    </Compile>
+    <Compile Include="Microsoft\OData\Service\IDataService.cs" />
+    <Compile Include="Microsoft\OData\Service\IDataServiceConfiguration.cs" />
+    <Compile Include="Microsoft\OData\Service\IDataServiceHost.cs" />
+    <Compile Include="Microsoft\OData\Service\IExpandProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\IExpandedResult.cs" />
+    <Compile Include="Microsoft\OData\Service\Internal\ProjectedWrapper.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Microsoft\OData\Service\Internal\PropertyAccessVisitor.cs" />
+    <Compile Include="Microsoft\OData\Service\IRequestHandler.cs" />
+    <Compile Include="Microsoft\OData\Service\IProjectedResult.cs" />
+    <Compile Include="Microsoft\OData\Service\IUpdatable.cs" />
+    <Compile Include="Microsoft\OData\Service\IgnorePropertiesAttribute.cs" />
+    <Compile Include="Microsoft\OData\Service\Int32EqualityComparer.cs" />
+    <Compile Include="Microsoft\OData\Service\Internal\ExpandedWrapper.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Microsoft\OData\Service\SkipTokenAndETagParser.cs" />
+    <Compile Include="Microsoft\OData\Service\MimeTypeAttribute.cs" />
+    <Compile Include="Microsoft\OData\Service\Internal\NeedSkipTokenVisitor.cs" />
+    <Compile Include="Microsoft\OData\Service\AstoriaRequestMessage.cs" />
+    <Compile Include="Microsoft\OData\Service\OpenTypes\OpenTypeMethods.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\ExpressionUtils.cs" />
+    <Compile Include="Microsoft\OData\Service\ProcessRequestArgs.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ServiceActionParameter.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\OperationParameter.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ServiceOperation.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\DataServiceActionProviderWrapper.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServiceInvokable.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServiceActionProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServiceUpdateProvider2.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\DataServiceExecutionProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderState.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\DataServiceExecutionProviderMethods.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ExpressionEvaluator.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\DataServiceExecutionProviderWrapper.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmNavigationProperty.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServiceExecutionProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmComplexType.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmEntityType.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmOperationImport.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmEntityContainer.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderUtils.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\CollectionResourceType.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\DataServicePagingProviderWrapper.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\DbContextHelper.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\DataServiceStreamProviderWrapper.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ExpandedProjectionNode.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServiceMetadataProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServicePagingProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServiceQueryProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServiceStreamProvider2.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServiceUpdateProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IProjectionProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IProviderType.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IProviderMember.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IProviderMetadata.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ProjectionNode.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ResourceAssociationType.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\DataServiceProviderMethods.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\DataServiceProviderWrapper.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\EdmUtil.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\OrderingExpression.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\OrderingInfo.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\IDataServiceStreamProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ResourceAssociationSetEnd.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ResourceAssociationSet.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ResourceAssociationTypeEnd.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ResourceSet.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ResourceSetWrapper.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\RootProjectionNode.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\OperationWrapper.cs" />
+    <Compile Include="Microsoft\OData\Service\QueryInterceptorAttribute.cs" />
+    <Compile Include="Microsoft\OData\Service\RequestDescription.cs" />
+    <Compile Include="Microsoft\OData\Service\RequestQueryProcessor.cs" />
+    <Compile Include="Microsoft\OData\Service\RequestTargetKind.cs" />
+    <Compile Include="Microsoft\OData\Service\RequestTargetSource.cs" />
+    <Compile Include="Microsoft\OData\Service\RequestUriProcessor.cs" />
+    <Compile Include="Microsoft\OData\Service\ResourceActions.cs" />
+    <Compile Include="Microsoft\OData\Service\EntitySetRights.cs" />
+    <Compile Include="Microsoft\OData\Service\ResponseBodyWriter.cs" />
+    <Compile Include="Microsoft\OData\Service\SegmentInfo.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\EntityDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\ParameterDeserializer.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Serialization\DataStringEscapeBuilder.cs">
+      <Link>Microsoft\OData\Service\Serializers\DataStringEscapeBuilder.cs</Link>
+    </Compile>
+    <Compile Include="Microsoft\OData\Service\Serializers\EntityReferenceLinkDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\MediaResourceDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\CollectionPropertyValueEnumerable.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\ODataMessageReaderDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\PropertyDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\RawValueDeserializer.cs" />
+    <Compile Include="Microsoft\OData\Service\ServiceOperationRights.cs" />
+    <Compile Include="Microsoft\OData\Service\SingleResultAttribute.cs" />
+    <Compile Include="Microsoft\OData\Service\UpdatableWrapper.cs" />
+    <Compile Include="Microsoft\OData\Service\UpdateTracker.cs" />
+    <Compile Include="Microsoft\OData\Service\VersionUtil.cs" />
+    <Compile Include="Microsoft\OData\Service\WebUtil.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\XmlConstants.cs">
+      <Link>Microsoft\OData\Service\XmlConstants.cs</Link>
+    </Compile>
+    <Compile Include="Microsoft\OData\Service\Caching\MetadataCache.cs" />
+    <Compile Include="Microsoft\OData\Service\Caching\ProviderMetadataCacheItem.cs" />
+    <Compile Include="Microsoft\OData\Service\Caching\DataServiceCacheItem.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\ExpressionConstants.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\ExpressionLexer.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\FunctionDescription.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\OperationSignatures.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\RequestQueryParser.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\ExpressionToken.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\ExpressionTokenKind.cs" />
+    <Compile Include="Microsoft\OData\Service\Parsing\WebConvert.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\BaseServiceProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\BasicExpandProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ObjectContextServiceProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ObjectContextType.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ObjectContextMember.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ObjectContextMetadata.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ReflectionServiceProvider.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ResourceProperty.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ResourcePropertyKind.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ResourceType.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ResourceTypeKeyKind.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ResourceTypeKind.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\Operation.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ServiceOperationParameter.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ServiceOperationResultKind.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\BinarySerializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\Deserializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\MetadataSerializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\NonEntitySerializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\Serializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\ServiceDocumentSerializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\EntitySerializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Serializers\TextSerializer.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\PrimitiveResourceTypeMap.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\MetadataProviderEdmModel.cs" />
+    <Compile Include="Microsoft\OData\Service\AstoriaResponseMessage.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\EntityCollectionResourceType.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\OperationKind.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ResourceSetPathExpression.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ServiceAction.cs" />
+    <Compile Include="Microsoft\OData\Service\ObjectContextSpatialUtil.cs" />
+    <Compile Include="Microsoft\OData\Service\Providers\ResourceReferentialConstraint.cs" />
+    <!-- Code Analysis suppressions. -->
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Microsoft\OData\Service\XmlUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(EnlistmentRoot)\src\CodeGen\InternalsVisibleTo.cs">
+      <Link>InternalsVisibleTo.cs</Link>
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+    <Compile Include="$(AssemblyKeysCSharpFilePath)">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+  </ItemGroup>
+  <!-- Class Diagrams -->
+  <ItemGroup>
+    <None Include="Diagrams\Authorization.cd" />
+    <None Include="Diagrams\ErrorHandling.cd" />
+    <None Include="Diagrams\Hosting.cd" />
+    <None Include="Diagrams\Providers.cd" />
+    <None Include="Diagrams\QueryParser.cd" />
+    <None Include="Diagrams\RequestUriProcessor.cd" />
+    <None Include="Diagrams\Serializers.cd" />
+    <None Include="Diagrams\ServiceDiagram.cd" />
+    <None Include="Diagrams\Updating.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Microsoft.OData.Service.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Microsoft.OData.Service.cs</LastGenOutput>
+    </None>
+    <Compile Include="Microsoft.OData.Service.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Microsoft.OData.Service.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <None Include="Parameterized.Microsoft.OData.Service.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Parameterized.Microsoft.OData.Service.cs</LastGenOutput>
+    </None>
+    <Compile Include="Parameterized.Microsoft.OData.Service.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Parameterized.Microsoft.OData.Service.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+  <!--
+  Setting CodeAnalysisDependentAssemblyPaths explicitly, otherwise dependencies won't
+  be found in the correct order and the FxCop failure will produce a build error.
+  -->
+  <ItemGroup>
+    <CodeAnalysisDependentAssemblyPaths Include="$(SdkRefPath)" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

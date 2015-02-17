@@ -1,0 +1,58 @@
+<Schema Namespace="TestModel" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <ComplexType Name="Address">
+    <Property Name="Street" Type="Edm.String" />
+    <Property Name="Zip" Type="Edm.Int32" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="CityOpenType" BaseType="TestModel.CityType" OpenType="true" />
+  <EntityType Name="CityType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+    <Property Name="MetroLanes" Type="Collection(Edm.String)" />
+    <Property Name="Name" Type="Edm.String" />
+    <Property Name="Skyline" Type="Edm.Stream" Nullable="false" />
+    <NavigationProperty Name="CityHall" Type="Collection(TestModel.OfficeType)" />
+    <NavigationProperty Name="DOL" Type="Collection(TestModel.OfficeType)" />
+    <NavigationProperty Name="PoliceStation" Type="TestModel.OfficeType" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CityWithMapType" BaseType="TestModel.CityType" />
+  <EntityType Name="Employee" BaseType="TestModel.Person">
+    <Property Name="CompanyName" Type="Edm.String" />
+  </EntityType>
+  <EntityType Name="Manager" BaseType="TestModel.Employee">
+    <Property Name="Level" Type="Edm.Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OfficeType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Address" Type="TestModel.Address" Nullable="false" />
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+    <NavigationProperty Name="Friend" Type="Collection(TestModel.Person)" />
+  </EntityType>
+  <Action Name="ServiceOperation1">
+    <Parameter Name="a" Type="Edm.Int32" />
+    <Parameter Name="b" Type="Edm.String" />
+    <ReturnType Type="Edm.Int32" />
+  </Action>
+  <EntityContainer Name="DefaultContainer">
+    <EntitySet Name="OfficeType" EntityType="TestModel.OfficeType" />
+    <EntitySet Name="CityType" EntityType="TestModel.CityType">
+      <NavigationPropertyBinding Path="CityHall" Target="OfficeType" />
+      <NavigationPropertyBinding Path="DOL" Target="OfficeType" />
+      <NavigationPropertyBinding Path="PoliceStation" Target="OfficeType" />
+    </EntitySet>
+    <EntitySet Name="Person" EntityType="TestModel.Person">
+      <NavigationPropertyBinding Path="Friend" Target="Person" />
+    </EntitySet>
+    <ActionImport Name="ServiceOperation1" Action="TestModel.ServiceOperation1" />
+  </EntityContainer>
+</Schema>
+

@@ -1,0 +1,13 @@
+This file contains alphabet entries for NumbersOnly string generator.
+One entry per line. Only entries starting with single quote are used, everything else is a comment.
+
+'0'              DIGIT ZERO
+'1'              DIGIT ONE
+'2'              DIGIT TWO
+'3'              DIGIT THREE
+'4'              DIGIT FOUR
+'5'              DIGIT FIVE
+'6'              DIGIT SIX
+'7'              DIGIT SEVEN
+'8'              DIGIT EIGHT
+'9'              DIGIT NINE

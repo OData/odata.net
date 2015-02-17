@@ -1,0 +1,7 @@
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+
+GET Orders(1001) HTTP/1.1
+
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b--

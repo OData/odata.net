@@ -1,0 +1,23 @@
+<Schema Namespace="MyNamespace" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="MyEntityType">
+    <Key>
+      <PropertyRef Name="Property1" />
+    </Key>
+    <Property Name="Property1" Type="Edm.String" Nullable="false" />
+  </EntityType>
+  <ComplexType Name="MyComplexType">
+    <Property Name="Property1" Type="Edm.String" />
+  </ComplexType>
+  <Function Name="MyFunction">
+    <Parameter Name="P1" Type="Collection(MyNamespace.MyEntityType)" />
+    <Parameter Name="P3" Type="Collection(MyNamespace.MyEntityType)" />
+    <Parameter Name="P4" Type="Collection(Edm.Binary)" />
+    <Parameter Name="P5" Type="Collection(MyNamespace.MyEntityType)" />
+    <ReturnType Type="Collection(MyNamespace.MyEntityType)" />
+  </Function>
+  <Function Name="MyFunction">
+    <Parameter Name="P1" Type="Collection(Edm.Binary)" />
+    <ReturnType Type="Collection(MyNamespace.MyEntityType)" />
+  </Function>
+</Schema>
+

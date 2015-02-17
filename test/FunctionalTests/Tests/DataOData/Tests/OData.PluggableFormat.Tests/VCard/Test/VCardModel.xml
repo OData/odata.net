@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="VCard21" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <ComplexType Name="VCard" OpenType="true">
+      </ComplexType>
+      <ComplexType Name="VCardItem" OpenType="true">
+      </ComplexType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

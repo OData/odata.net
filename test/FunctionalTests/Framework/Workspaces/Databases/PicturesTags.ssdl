@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PT.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
+  <EntityContainer Name="PTStoreContainer">
+    <EntitySet Name="DummyPictureNonMLEs" EntityType="PT.Store.DummyPictureNonMLEs" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ExternalPictures" EntityType="PT.Store.ExternalPictures" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="FileStorage" EntityType="PT.Store.FileStorage" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="InternalPictures" EntityType="PT.Store.InternalPictures" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="LogEntries" EntityType="PT.Store.LogEntries" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="LogEntryHeaders" EntityType="PT.Store.LogEntryHeaders" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Pictures" EntityType="PT.Store.Pictures" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PictureTag" EntityType="PT.Store.PictureTag" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Tags" EntityType="PT.Store.Tags" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TestOperations" EntityType="PT.Store.TestOperations" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_DummyPictureNonMLEs_Pictures" Association="PT.Store.FK_DummyPictureNonMLEs_Pictures">
+      <End Role="Pictures" EntitySet="Pictures" />
+      <End Role="DummyPictureNonMLEs" EntitySet="DummyPictureNonMLEs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ExternalPictures_Pictures" Association="PT.Store.FK_ExternalPictures_Pictures">
+      <End Role="Pictures" EntitySet="Pictures" />
+      <End Role="ExternalPictures" EntitySet="ExternalPictures" />
+    </AssociationSet>
+    <AssociationSet Name="FK_FileStorage_InternalPictures" Association="PT.Store.FK_FileStorage_InternalPictures">
+      <End Role="InternalPictures" EntitySet="InternalPictures" />
+      <End Role="FileStorage" EntitySet="FileStorage" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InternalPictures_Pictures" Association="PT.Store.FK_InternalPictures_Pictures">
+      <End Role="Pictures" EntitySet="Pictures" />
+      <End Role="InternalPictures" EntitySet="InternalPictures" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LogEntry_TestOperation" Association="PT.Store.FK_LogEntry_TestOperation">
+      <End Role="TestOperations" EntitySet="TestOperations" />
+      <End Role="LogEntries" EntitySet="LogEntries" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LogEntryHeaders_LogEntry1" Association="PT.Store.FK_LogEntryHeaders_LogEntry1">
+      <End Role="LogEntries" EntitySet="LogEntries" />
+      <End Role="LogEntryHeaders" EntitySet="LogEntryHeaders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PictureTag_Pictures" Association="PT.Store.FK_PictureTag_Pictures">
+      <End Role="Pictures" EntitySet="Pictures" />
+      <End Role="PictureTag" EntitySet="PictureTag" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PictureTag_Tags" Association="PT.Store.FK_PictureTag_Tags">
+      <End Role="Tags" EntitySet="Tags" />
+      <End Role="PictureTag" EntitySet="PictureTag" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="DummyPictureNonMLEs">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="DummyMessage" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="ExternalPictures">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="URL" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ContentType" Type="nvarchar" MaxLength="50" />
+    <Property Name="BlobETag" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="FileStorage">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Location" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ContentType" Type="nvarchar" MaxLength="50" />
+    <Property Name="ContentDisposition" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="InternalPictures">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Exif" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="LogEntries">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Verb" Type="nvarchar" Nullable="false" MaxLength="10" />
+    <Property Name="URI" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Operation" Type="int" />
+  </EntityType>
+  <EntityType Name="LogEntryHeaders">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Header" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="Value" Type="nvarchar(max)" />
+    <Property Name="LogEntry" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Pictures">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Date" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="PictureTag">
+    <Key>
+      <PropertyRef Name="PictureId" />
+      <PropertyRef Name="TagId" />
+    </Key>
+    <Property Name="PictureId" Type="int" Nullable="false" />
+    <Property Name="TagId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Tags">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="TagName" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TestOperations">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Date" Type="datetime" />
+  </EntityType>
+  <Association Name="FK_DummyPictureNonMLEs_Pictures">
+    <End Role="Pictures" Type="PT.Store.Pictures" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="DummyPictureNonMLEs" Type="PT.Store.DummyPictureNonMLEs" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Pictures">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DummyPictureNonMLEs">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ExternalPictures_Pictures">
+    <End Role="Pictures" Type="PT.Store.Pictures" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ExternalPictures" Type="PT.Store.ExternalPictures" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Pictures">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ExternalPictures">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_FileStorage_InternalPictures">
+    <End Role="InternalPictures" Type="PT.Store.InternalPictures" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="FileStorage" Type="PT.Store.FileStorage" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="InternalPictures">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="FileStorage">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InternalPictures_Pictures">
+    <End Role="Pictures" Type="PT.Store.Pictures" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="InternalPictures" Type="PT.Store.InternalPictures" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Pictures">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="InternalPictures">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LogEntry_TestOperation">
+    <End Role="TestOperations" Type="PT.Store.TestOperations" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="LogEntries" Type="PT.Store.LogEntries" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TestOperations">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="LogEntries">
+        <PropertyRef Name="Operation" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LogEntryHeaders_LogEntry1">
+    <End Role="LogEntries" Type="PT.Store.LogEntries" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="LogEntryHeaders" Type="PT.Store.LogEntryHeaders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LogEntries">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="LogEntryHeaders">
+        <PropertyRef Name="LogEntry" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PictureTag_Pictures">
+    <End Role="Pictures" Type="PT.Store.Pictures" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="PictureTag" Type="PT.Store.PictureTag" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Pictures">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PictureTag">
+        <PropertyRef Name="PictureId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PictureTag_Tags">
+    <End Role="Tags" Type="PT.Store.Tags" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="PictureTag" Type="PT.Store.PictureTag" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tags">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PictureTag">
+        <PropertyRef Name="TagId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

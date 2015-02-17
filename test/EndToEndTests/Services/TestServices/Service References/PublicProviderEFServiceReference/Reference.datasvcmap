@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="8f0d56a5-f46d-484e-a066-36cfa93edaa3" xmlns="urn:schemas-microsoft-com:xml-dataservicemap">
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:6630/PublicProviderEFService.svc/" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.edmx" MetadataType="Edmx" ID="96bc0989-2be0-4a8d-899d-4394bb9b3a3c" SourceId="1" SourceUrl="http://localhost:6630/PublicProviderEFService.svc/" />
+  </Metadata>
+  <Extensions />
+  <Parameters>
+    <Parameter Name="ClientAssemblyReference" Value="C:\Program Files (x86)\Microsoft WCF Data Services\Current\bin\.NETFramework\Microsoft.OData.Client.dll" />
+    <Parameter Name="SpatialAssemblyReference" Value="C:\Program Files (x86)\Microsoft WCF Data Services\Current\bin\.NETFramework\Microsoft.Spatial.dll" />
+    <Parameter Name="ODataLibraryAssemblyReference" Value="C:\Program Files (x86)\Microsoft WCF Data Services\Current\bin\.NETFramework\Microsoft.OData.Core.dll" />
+    <Parameter Name="EdmLibraryAssemblyReference" Value="C:\Program Files (x86)\Microsoft WCF Data Services\Current\bin\.NETFramework\Microsoft.OData.Edm.dll" />
+    <Parameter Name="UseDataServiceCollection" Value="true" />
+    <Parameter Name="Version" Value="3.0" />
+  </Parameters>
+</ReferenceGroup>

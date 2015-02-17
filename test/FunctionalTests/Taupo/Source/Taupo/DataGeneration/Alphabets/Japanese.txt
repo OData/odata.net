@@ -1,0 +1,68 @@
+This file contains alphabet entries for Japanese string generator.
+One entry per line. Only entries starting with single quote are used, everything else is a comment.
+
+'\u042f'         CYRILLIC CAPITAL LETTER YA
+'\u044f'         CYRILLIC SMALL LETTER YA
+'\u0451'         CYRILLIC SMALL LETTER IO
+'\u3041'         HIRAGANA LETTER SMALL A
+'\u3042'         HIRAGANA LETTER A
+'\u305b'         HIRAGANA LETTER SE
+'\u305c'         HIRAGANA LETTER ZE
+'\u305d'         HIRAGANA LETTER SO
+'\u305e'         HIRAGANA LETTER ZO
+'\u305f'         HIRAGANA LETTER TA
+'\u3072'         HIRAGANA LETTER HI
+'\u3073'         HIRAGANA LETTER BI
+'\u3074'         HIRAGANA LETTER PI
+'\u3079'         HIRAGANA LETTER BE
+'\u307a'         HIRAGANA LETTER PE
+'\u307b'         HIRAGANA LETTER HO
+'\u307c'         HIRAGANA LETTER BO
+'\u307d'         HIRAGANA LETTER PO
+'\u307e'         HIRAGANA LETTER MA
+'\u3092'         HIRAGANA LETTER WO
+'\u3093'         HIRAGANA LETTER N
+'\u30a1'         KATAKANA LETTER SMALL A
+'\u30a1'         KATAKANA LETTER SMALL A
+'\u30af'         KATAKANA LETTER KU
+'\u30b0'         KATAKANA LETTER GU
+'\u30bc'         KATAKANA LETTER ZE
+'\u30bc'         KATAKANA LETTER ZE
+'\u30bc'         KATAKANA LETTER ZE
+'\u30bd'         KATAKANA LETTER SO
+'\u30bd'         KATAKANA LETTER SO
+'\u30bd'         KATAKANA LETTER SO
+'\u30be'         KATAKANA LETTER ZO
+'\u30be'         KATAKANA LETTER ZO
+'\u30bf'         KATAKANA LETTER TA
+'\u30bf'         KATAKANA LETTER TA
+'\u30c0'         KATAKANA LETTER DA
+'\u30c1'         KATAKANA LETTER TI
+'\u30c1'         KATAKANA LETTER TI
+'\u30cf'         KATAKANA LETTER HA
+'\u30d0'         KATAKANA LETTER BA
+'\u30dc'         KATAKANA LETTER BO
+'\u30dc'         KATAKANA LETTER BO
+'\u30dd'         KATAKANA LETTER PO
+'\u30dd'         KATAKANA LETTER PO
+'\u30de'         KATAKANA LETTER MA
+'\u30de'         KATAKANA LETTER MA
+'\u30df'         KATAKANA LETTER MI
+'\u30df'         KATAKANA LETTER MI
+'\u4e5d'         CJK UNIFIED IDEOGRAPH-#
+'\u4e9c'         CJK UNIFIED IDEOGRAPH-#
+'\u531a'         CJK UNIFIED IDEOGRAPH-#
+'\u5f0c'         CJK UNIFIED IDEOGRAPH-#
+'\u66a6'         CJK UNIFIED IDEOGRAPH-#
+'\u6b32'         CJK UNIFIED IDEOGRAPH-#
+'\u6b79'         CJK UNIFIED IDEOGRAPH-#
+'\u73f1'         CJK UNIFIED IDEOGRAPH-#
+'\u755a'         CJK UNIFIED IDEOGRAPH-#
+'\u7e37'         CJK UNIFIED IDEOGRAPH-#
+'\u88f9'         CJK UNIFIED IDEOGRAPH-#
+'\u9ed1'         CJK UNIFIED IDEOGRAPH-#
+'\uff41'         FULLWIDTH LATIN SMALL LETTER A
+'\uff5a'         FULLWIDTH LATIN SMALL LETTER Z
+'\uff66'         HALFWIDTH KATAKANA LETTER WO
+'\uff88'         HALFWIDTH KATAKANA LETTER NE
+'\uff9d'         HALFWIDTH KATAKANA LETTER N

@@ -1,0 +1,10 @@
+$search = mountain bike
+
+
+SearchQueryOption
+	Expression = 
+		SearchTermNode
+			Text = mountain
+	And
+		SearchTermNode
+			Text = bike

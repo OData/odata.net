@@ -1,0 +1,51 @@
+﻿//---------------------------------------------------------------------
+// <copyright file="CapabilitiesVocabularyModel.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using System.Xml;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
+
+namespace Microsoft.OData.Edm.Vocabularies.V1
+{
+    using System.Diagnostics.CodeAnalysis;
+
+    /// <summary>
+    /// Representing Capabilities Vocabulary Model.
+    /// </summary>
+    internal class CapabilitiesVocabularyModel
+    {
+        /// <summary>
+        /// The EDM model with capabilities vocabularies.
+        /// </summary>
+        public static readonly IEdmModel Instance;
+
+        /// <summary>
+        /// The change tracking term.
+        /// </summary>
+        public static readonly IEdmValueTerm ChangeTrackingTerm;
+
+        /// <summary>
+        /// Parse Capabilities Vocabulary Model from CapabilitiesVocabularies.xml
+        /// </summary>
+        static CapabilitiesVocabularyModel()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+
+            using (Stream stream = assembly.GetManifestResourceStream("CapabilitiesVocabularies.xml"))
+            {
+                IEnumerable<EdmError> errors;
+                Debug.Assert(stream != null, "CapabilitiesVocabularies.xml: stream!=null");
+                CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
+            }
+
+            ChangeTrackingTerm = Instance.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.ChangeTracking);
+        }
+    }
+}

@@ -1,0 +1,27 @@
+$filter = totalseconds(Id) eq 9.8
+
+
+FilterQueryOption
+	ItemType = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
+	Parameter = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = DurationInKeys
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
+	Expression = 
+		SingleValueFunctionCallNode
+			Name = totalseconds
+			Return Type = [Edm.Decimal Nullable=False Scale=0]
+			Function = 
+			Arguments = 
+				SingleValuePropertyAccessNode
+					Property = Id
+					TypeReference = [Edm.Duration Nullable=False Precision=0]
+					Source = 
+					EntityRangeVariableReferenceNode
+						Name = $it
+						NavigationSource = DurationInKeys
+						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
+						Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+	Equal
+		9.8(Type: [Edm.Decimal Nullable=False Scale=0])

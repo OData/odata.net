@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="Microsoft.Test.Taupo.OData.WCFService.ODataService" CodeBehind="ODataService.svc.cs" %>

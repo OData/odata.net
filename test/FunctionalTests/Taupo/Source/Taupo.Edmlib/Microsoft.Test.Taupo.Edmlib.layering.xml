@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LayeringRules ModuleName="Microsoft.Test.Taupo.Edmlib">
+  <CommonDependencies>
+    <DependsOn Namespace="Microsoft.Test.Taupo.Common" />
+  </CommonDependencies>
+  <ContractsDependencies>
+    <Namespace Name="Microsoft.Test.Taupo.Edmlib">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel.Edm" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.Types" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Edmlib.Contracts">
+      <DependsOn Namespace="Microsoft.Test.Taupo.Contracts.EntityModel" />
+    </Namespace>
+  </ContractsDependencies>
+  <ImplementationDependencies>
+    <Namespace Name="Microsoft.Test.Taupo.Edmlib">
+      <DependsOn Namespace="Microsoft.OData.Edm.Csdl" />
+      <DependsOn Namespace="Microsoft.OData.Edm.Expressions" />
+      <DependsOn Namespace="Microsoft.OData.Edm.Library" />
+      <DependsOn Namespace="Microsoft.OData.Edm.Validation" />
+      <DependsOn Namespace="Microsoft.OData.Edm.Values" />
+      <DependsOn Namespace="Microsoft.Test.Taupo.EntityModel.Edm" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Edmlib.Contracts">
+      <DependsOn Namespace="Microsoft.OData.Edm" />
+    </Namespace>
+    <Namespace Name="Microsoft.Test.Taupo.Edmlib.StubEdm">
+      <DependsOn Namespace="Microsoft.OData.Edm.Annotations" />
+      <DependsOn Namespace="Microsoft.OData.Edm.Expressions" />
+      <DependsOn Namespace="Microsoft.OData.Edm.Library.Annotations" />
+      <DependsOn Namespace="Microsoft.OData.Edm.Values" />
+    </Namespace>
+  </ImplementationDependencies>
+</LayeringRules>

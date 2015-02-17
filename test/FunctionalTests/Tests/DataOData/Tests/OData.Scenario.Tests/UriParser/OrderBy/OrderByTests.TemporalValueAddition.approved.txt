@@ -1,0 +1,30 @@
+$orderby = now() add (Id add duration'PT130S')
+
+
+OrderByClause
+	Item Type = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
+	Direction = Ascending
+	Range Variable = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = DurationInKeys
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
+	Expression = 
+		SingleValueFunctionCallNode
+			Name = now
+			Return Type = [Edm.DateTimeOffset Nullable=False Precision=0]
+			Function = 
+			Arguments = 
+	Add
+			SingleValuePropertyAccessNode
+				Property = Id
+				TypeReference = [Edm.Duration Nullable=False Precision=0]
+				Source = 
+				EntityRangeVariableReferenceNode
+					Name = $it
+					NavigationSource = DurationInKeys
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
+					Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+		Add
+			00:02:10(Type: [Edm.Duration Nullable=False Precision=0])
+	Then By = 

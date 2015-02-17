@@ -1,0 +1,25 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <ComplexType Name="Complex">
+    <Property Name="EnumProperty0" Type="NS1.Direction" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="EnumProperty0" />
+    </Key>
+    <Property Name="EnumProperty0" Type="NS1.Direction" Nullable="false" />
+  </EntityType>
+  <EnumType Name="Direction" UnderlyingType="Edm.Int64" IsFlags="true">
+    <Member Name="East" Value="0" />
+    <Member Name="West" Value="1" />
+    <Member Name="South" Value="2" />
+    <Member Name="North" Value="3" />
+  </EnumType>
+  <Function Name="Function0">
+    <Parameter Name="Param0" Type="NS1.Direction" Nullable="false" />
+    <ReturnType Type="NS1.Direction" Nullable="false" />
+  </Function>
+  <EntityContainer Name="MyContainer">
+    <FunctionImport Name="Function0" Function="NS1.Function0" />
+  </EntityContainer>
+</Schema>
+

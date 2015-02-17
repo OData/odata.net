@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{DF028E55-CE75-4F32-822E-F9EC9C756AE2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ODataSamples.Services.Core</RootNamespace>
+    <AssemblyName>ODataSamples.Services.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssemblyAttribute>true</SignAssemblyAttribute>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7d921888-fe03-4c3f-80fe-2f624505461c}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989a83cc-b864-4a75-8bf3-5eda99203a86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AsyncTask.cs" />
+    <Compile Include="BuiltInFunctionHelper\GeoFunctionHelper.cs" />
+    <Compile Include="BuiltInFunctionHelper\TypeFunctionHelper.cs" />
+    <Compile Include="DataSource\DataSourceManager.cs" />
+    <Compile Include="DataSource\DeletionContext.cs" />
+    <Compile Include="DataSource\InMemoryCLRTypes.cs" />
+    <Compile Include="DataSource\IODataStreamProvider.cs" />
+    <Compile Include="DataSource\ODataReflectionDataSource.cs" />
+    <Compile Include="DataSource\ODataReflectionStreamProvider.cs" />
+    <Compile Include="DeltaContext.cs" />
+    <Compile Include="DeltaSnapshot.cs" />
+    <Compile Include="EdmClrTypeUtils.cs" />
+    <Compile Include="ETagFieldAttribute.cs" />
+    <Compile Include="ExpandSelectItemHandler.cs" />
+    <Compile Include="Extensions\ExtensionManager.cs" />
+    <Compile Include="Handlers\BatchHandler.cs" />
+    <Compile Include="Handlers\CreateHandler.cs" />
+    <Compile Include="Handlers\DeleteHandler.cs" />
+    <Compile Include="Handlers\DeltaHandler.cs" />
+    <Compile Include="Handlers\DeltaLinkHandler.cs" />
+    <Compile Include="Handlers\ErrorHandler.cs" />
+    <Compile Include="Handlers\MetadataDocumentHandler.cs" />
+    <Compile Include="Handlers\OperationHandler.cs" />
+    <Compile Include="Handlers\QueryHandler.cs" />
+    <Compile Include="Handlers\RequestHandler.cs" />
+    <Compile Include="Handlers\RootRequestHandler.cs" />
+    <Compile Include="Handlers\ServiceDocumentHandler.cs" />
+    <Compile Include="Handlers\StatusMonitorRequestHandler.cs" />
+    <Compile Include="Handlers\MediaStreamHandler.cs" />
+    <Compile Include="Handlers\UpdateHandler.cs" />
+    <Compile Include="HttpMethod.cs" />
+    <Compile Include="InMemoryMessage.cs" />
+    <Compile Include="ReadOnlyFieldAttribute.cs" />
+    <Compile Include="DataSource\IODataDataSource.cs" />
+    <Compile Include="DataSource\IODataOperationProvider.cs" />
+    <Compile Include="DataSource\IODataQueryProvider.cs" />
+    <Compile Include="DataSource\IODataUpdateProvider.cs" />
+    <Compile Include="MediaEntity.cs" />
+    <Compile Include="Models\InstanceAnnotationType.cs" />
+    <Compile Include="NodeToExpressionTranslator.cs" />
+    <Compile Include="NonClosingStream.cs" />
+    <Compile Include="ODataAnnotationUriBuilder.cs" />
+    <Compile Include="ODataObjectModelConverter.cs" />
+    <Compile Include="ODataRequestMessage.cs" />
+    <Compile Include="ODataResponseMessage.cs" />
+    <Compile Include="ODataServiceErrorException.cs" />
+    <Compile Include="PathSegmentToExpressionTranslator.cs" />
+    <Compile Include="PreferenceContext.cs" />
+    <Compile Include="QueryContext.cs" />
+    <Compile Include="DataSource\ODataReflectionOperationProvider.cs" />
+    <Compile Include="DataSource\ODataReflectionQueryProvider.cs" />
+    <Compile Include="DataSource\ODataReflectionUpdateProvider.cs" />
+    <Compile Include="ResponseWriter.cs" />
+    <Compile Include="SearchFieldAttribute.cs" />
+    <Compile Include="SearchHelper.cs" />
+    <Compile Include="ServiceConstants.cs" />
+    <Compile Include="Services\IODataService.cs" />
+    <Compile Include="Services\IODataServiceDescriptor.cs" />
+    <Compile Include="Services\ODataService.cs" />
+    <Compile Include="ODataSessionIdManager.cs" />
+    <Compile Include="StreamPipe.cs" />
+    <Compile Include="UriHandlers\PathSegmentToResourcePathTranslator.cs" />
+    <Compile Include="UriHandlers\QueryOptionExtensions.cs" />
+    <Compile Include="UriHandlers\QueryTarget.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="Vocabularies\CapabilitiesConformanceLevelType.cs" />
+    <Compile Include="Vocabularies\CapabilitiesHelpers.cs" />
+    <Compile Include="Vocabularies\CapabilitiesNavigationType.cs" />
+    <Compile Include="Vocabularies\CapabilitiesSearchExpressions.cs" />
+    <Compile Include="Vocabularies\CoreHelpers.cs" />
+    <Compile Include="Vocabularies\CorePermission.cs" />
+    <Compile Include="Vocabularies\MeasuresHelpers.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Vocabularies\CoreVocabularies.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Vocabularies\CapabilitiesVocabularies.xml" />
+    <EmbeddedResource Include="Vocabularies\MeasuresVocabularies.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

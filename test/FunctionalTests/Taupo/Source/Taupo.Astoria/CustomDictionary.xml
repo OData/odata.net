@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Dictionary>
+  <Words>
+    <Recognized>
+      <Word>taupo</Word>
+      <Word>edm</Word>
+      <Word>northwind</Word>
+      <Word>amd</Word>
+      <Word>csdl</Word>
+      <Word>deployer</Word>
+      <Word>untyped</Word>
+      <Word>php</Word>
+      <Word>deserializer</Word>
+      <Word>changeset</Word>
+      <Word>poco</Word>
+      <Word>edmx</Word>
+      <Word>epm</Word>
+      <Word>rel</Word>
+      <Word>normalizer</Word>
+      <Word>deserializers</Word>
+      <Word>charset</Word>
+      <Word>infos</Word>
+      <Word>etag</Word>
+      <Word>composable</Word>
+      <Word>multi</Word> <!--Note: this will not actually be honored, as it is explicitly blocked in the system-wide custom dictionary-->
+      <Word>tokenizer</Word>
+    </Recognized>
+    <Deprecated>
+      <Term PreferredAlternate="MultiValue">bag</Term>
+    </Deprecated>
+    <Compound>
+      <Term CompoundAlternate="MultiValue">multivalue</Term>
+      <Term CompoundAlternate="ETag">etag</Term>
+    </Compound>
+  </Words>
+</Dictionary>

@@ -1,0 +1,28 @@
+<?xml version="1.0" standalone="yes" ?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Multiplicity" xmlns:d="http://docs.oasis-open.org/odata/ns/data"
+            xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"
+            xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Customer">
+        <Key>
+          <PropertyRef Name="CustomerId" />
+        </Key>
+        <Property Name="CustomerId" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Info" Nullable="false" Type="Test.CustomerInfo" ContainsTarget="true" />
+      </EntityType>
+      <EntityType Name="CustomerInfo">
+        <Key>
+          <PropertyRef Name="CustomerInfoId" />
+        </Key>
+        <Property Name="CustomerInfoId" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+      <EntityContainer Name="DefaultContainer">
+        <EntitySet Name="Customer" EntityType="Test.Customer">
+          <NavigationPropertyBinding Path="Info" Target="CustomerInfos" />
+        </EntitySet>
+        <EntitySet Name="CustomerInfos" EntityType="Test.CustomerInfo" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

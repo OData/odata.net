@@ -1,0 +1,7 @@
+<Schema Namespace="TestModel" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <ComplexType Name="EntityTypeWithCollection">
+    <Property Name="Cities" Type="Collection(Edm.String)" />
+  </ComplexType>
+  <EntityContainer Name="DefaultContainer" />
+</Schema>
+

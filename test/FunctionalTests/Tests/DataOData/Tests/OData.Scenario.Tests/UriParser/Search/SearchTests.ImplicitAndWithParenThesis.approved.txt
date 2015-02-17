@@ -1,0 +1,18 @@
+$search = (mountain car) (bike NOT P)
+
+
+SearchQueryOption
+	Expression = 
+			SearchTermNode
+				Text = mountain
+		And
+			SearchTermNode
+				Text = car
+	And
+			SearchTermNode
+				Text = bike
+		And
+			Not(
+				SearchTermNode
+					Text = P
+			)

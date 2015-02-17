@@ -1,0 +1,33 @@
+$select = 
+$expand = Orders($filter=Microsoft.Test.Taupo.OData.WCFService.GetNextOrder()/Microsoft.Test.Taupo.OData.WCFService.GetNextOrder()/Microsoft.Test.Taupo.OData.WCFService.GetNextOrder()/CustomerID eq 3)
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: Orders)]
+			FilterQueryOption
+				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+				Parameter = 
+				EntityRangeVariable
+					Name = $it
+					NavigationSource = Orders
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+				Expression = 
+					SingleValuePropertyAccessNode
+						Property = CustomerID
+						TypeReference = [Edm.Int32 Nullable=False]
+						Source = 
+						SingleEntityFunctionCallNode
+							NavigationSource = Orders
+							Type Reference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+							Name = Microsoft.Test.Taupo.OData.WCFService.GetNextOrder
+							Function = 
+								Entity GetNextOrder([Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False],)
+							Arguments = 
+				Equal
+					3(Type: [Edm.Int32 Nullable=False])
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems(Empty List)

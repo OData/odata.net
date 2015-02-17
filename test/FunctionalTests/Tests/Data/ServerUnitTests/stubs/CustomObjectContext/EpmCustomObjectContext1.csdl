@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AstoriaUnitTests.ObjectContextStubs.Types" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm" xmlns:epm="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+  <EntityType Name="EpmCustomer">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" epm:FC_TargetPath="customer/id" epm:FC_NsPrefix="c" epm:FC_NsUri="http://www.customer.org" epm:FC_KeepInContent="false" />
+    <Property Name="Name" Type="String" epm:FC_TargetPath="SyndicationAuthorName" epm:FC_ContentKind="text" epm:FC_KeepInContent="false"/>
+    <Property Name="Address" Type="AstoriaUnitTests.ObjectContextStubs.Types.EpmAddress" Nullable="false" epm:FC_SourcePath="City" epm:FC_TargetPath="address/city" epm:FC_NsPrefix="ad" epm:FC_NsUri="http://www.address.org" epm:FC_KeepInContent="false" epm:FC_SourcePath_1="PostalCode" epm:FC_TargetPath_1="address/postalcode" epm:FC_NsPrefix_1="ad" epm:FC_NsUri_1="http://www.address.org" epm:FC_KeepInContent_1="false"/>
+    <NavigationProperty Name="Orders" Relationship="AstoriaUnitTests.ObjectContextStubs.Types.FK__EpmOrders__EpmCustomer__00551192" FromRole="Customers" ToRole="Orders" />
+  </EntityType>
+  <EntityType Name="EpmOrder">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="DollarAmount" Type="Double" Nullable="false"/>
+    <NavigationProperty Name="Customers" Relationship="AstoriaUnitTests.ObjectContextStubs.Types.FK__EpmOrders__EpmCustomer__00551192" FromRole="Orders" ToRole="Customers" />
+  </EntityType>
+  <EntityType Name="EpmProduct">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="ProductName" Type="String" Nullable="false" epm:FC_TargetPath="Product/Element0/FieldName_ProductName" epm:FC_NsPrefix="geoRss" epm:FC_NsUri="http://www.GeoRss.org156" epm:FC_KeepInContent="false" />
+    <Property Name="QuantityPerUnit" Type="String" Nullable="true" epm:FC_TargetPath="Product/@Attribute0_QuantityPerUnit" epm:FC_NsPrefix="geoRss" epm:FC_NsUri="http://www.GeoRss.org455" epm:FC_KeepInContent="false" />
+    <Property Name="UnitPrice" Type="Decimal" Nullable="true" epm:FC_TargetPath="Product/Element0/FieldName_UnitPrice" epm:FC_NsPrefix="geoRss" epm:FC_NsUri="http://www.GeoRss.org395" epm:FC_KeepInContent="false" />
+    <Property Name="UnitsInStock" Type="Int16" Nullable="true" epm:FC_TargetPath="Product/@Attribute0_UnitsInStock" epm:FC_NsPrefix="geoRss" epm:FC_NsUri="http://www.GeoRss.org83" epm:FC_KeepInContent="false" />
+    <Property Name="UnitsOnOrder" Type="Int16" Nullable="true" epm:FC_TargetPath="Product/@Attribute0_UnitsOnOrder" epm:FC_NsPrefix="geoRss" epm:FC_NsUri="http://www.GeoRss.org456" epm:FC_KeepInContent="false" />
+    <Property Name="ReorderLevel" Type="Int16" Nullable="true" epm:FC_TargetPath="Product/@Attribute0_ReorderLevel" epm:FC_NsPrefix="geoRss" epm:FC_NsUri="http://www.GeoRss.org271" epm:FC_KeepInContent="false" />
+    <Property Name="Discontinued" Type="Boolean" Nullable="false" epm:FC_TargetPath="Product/Element0/FieldName_Discontinued" epm:FC_NsPrefix="geoRss" epm:FC_NsUri="http://www.GeoRss.org459" epm:FC_KeepInContent="false" />
+  </EntityType>
+  <Association Name="FK__EpmOrders__EpmCustomer__00551192">
+    <End Role="Customers" Type="AstoriaUnitTests.ObjectContextStubs.Types.EpmCustomer" Multiplicity="0..1" />
+    <End Role="Orders" Type="AstoriaUnitTests.ObjectContextStubs.Types.EpmOrder" Multiplicity="*" />
+  </Association>
+  <EntityType Name="EpmCustomerWithBirthday" BaseType="AstoriaUnitTests.ObjectContextStubs.Types.EpmCustomer" epm:FC_SourcePath="Address" epm:FC_TargetPath="address" epm:FC_NsUri="http://www.address.org" epm:FC_KeepInContent="false">
+    <Property Name="Birthday" Type="DateTime" Nullable="false" DefaultValue="1979-02-15 12:00:00.000Z" epm:FC_TargetPath="SyndicationPublished" epm:FC_KeepInContent="false"/>
+  </EntityType>
+  <ComplexType Name="EpmAddress">
+    <Property Name="StreetAddress" Type="String" />
+    <Property Name="City" Type="String" />
+    <Property Name="State" Type="String" />
+    <Property Name="PostalCode" Type="String" />
+  </ComplexType>
+</Schema>

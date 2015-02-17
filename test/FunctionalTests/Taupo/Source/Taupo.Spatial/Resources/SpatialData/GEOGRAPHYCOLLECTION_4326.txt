@@ -1,0 +1,4 @@
+﻿### This file contains valid data in geography well kown text format. Various geography objects are defined. Comments are lines starting with # ###
+GEOMETRYCOLLECTION EMPTY
+GEOMETRYCOLLECTION (POINT (4 6), LINESTRING (4 6,7 10))
+GEOMETRYCOLLECTION (GEOMETRYCOLLECTION EMPTY, GEOMETRYCOLLECTION (POINT (1 2)))

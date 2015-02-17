@@ -1,0 +1,47 @@
+<Schema Namespace="MyNamespace" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="MyEntityType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+  </EntityType>
+  <ComplexType Name="MyComplexType">
+    <Property Name="Data" Type="Edm.String" />
+  </ComplexType>
+  <Function Name="MyFunction">
+    <Parameter Name="P1">
+      <RowType>
+        <Property Name="Prop5" Type="Collection(MyNamespace.MyComplexType)" />
+        <Property Name="Prop6" Type="Ref(MyNamespace.MyEntityType)" />
+      </RowType>
+    </Parameter>
+    <Parameter Name="P2">
+      <RowType>
+        <Property Name="Prop4" Type="Ref(MyNamespace.MyEntityType)" />
+      </RowType>
+    </Parameter>
+    <Parameter Name="P3">
+      <CollectionType>
+        <RowType>
+          <Property Name="Prop2">
+            <RowType>
+              <Property Name="Prop1" Type="MyNamespace.MyEntityType" />
+            </RowType>
+          </Property>
+          <Property Name="Prop3" Type="Collection(MyNamespace.MyComplexType)" />
+        </RowType>
+      </CollectionType>
+    </Parameter>
+    <Parameter Name="P4">
+      <RowType>
+        <Property Name="Prop1" Type="Edm.String" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType>
+      <RowType>
+        <Property Name="Prop1" Type="MyNamespace.MyEntityType" />
+      </RowType>
+    </ReturnType>
+  </Function>
+</Schema>
+

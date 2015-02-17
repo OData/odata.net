@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/Microsoft.Test.Taupo.WebServices" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Microsoft.Test.Taupo.WebServices" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="ArrayOfServiceBuilderParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ServiceBuilderParameter" nillable="true" type="tns:ServiceBuilderParameter" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfServiceBuilderParameter" nillable="true" type="tns:ArrayOfServiceBuilderParameter" />
+  <xs:complexType name="ServiceBuilderParameter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ServiceBuilderParameter" nillable="true" type="tns:ServiceBuilderParameter" />
+  <xs:complexType name="AstoriaWorkspaceInfo">
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="AdditionalProviderInfo" nillable="true" type="q1:ArrayOfKeyValueOfstringstring" />
+      <xs:element minOccurs="0" name="ServiceUri" nillable="true" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute ref="ser:Id" />
+    <xs:attribute ref="ser:Ref" />
+  </xs:complexType>
+  <xs:element name="AstoriaWorkspaceInfo" nillable="true" type="tns:AstoriaWorkspaceInfo" />
+</xs:schema>

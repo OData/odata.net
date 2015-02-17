@@ -1,0 +1,47 @@
+$filter = fractionalseconds(OrderDate) lt 0.1 and totaloffsetminutes(OrderDate) gt 5.1
+
+
+FilterQueryOption
+	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+	Parameter = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = Orders
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+	Expression = 
+			SingleValueFunctionCallNode
+				Name = fractionalseconds
+				Return Type = [Edm.Decimal Nullable=False Scale=0]
+				Function = 
+				Arguments = 
+					SingleValuePropertyAccessNode
+						Property = OrderDate
+						TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
+						Source = 
+						EntityRangeVariableReferenceNode
+							Name = $it
+							NavigationSource = Orders
+							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+		LessThan
+			0.1(Type: [Edm.Decimal Nullable=False Scale=0])
+	And
+			ConvertNode
+				TypeReference = [Edm.Single Nullable=False]
+				Source = 
+				SingleValueFunctionCallNode
+					Name = totaloffsetminutes
+					Return Type = [Edm.Int32 Nullable=False]
+					Function = 
+					Arguments = 
+						SingleValuePropertyAccessNode
+							Property = OrderDate
+							TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
+							Source = 
+							EntityRangeVariableReferenceNode
+								Name = $it
+								NavigationSource = Orders
+								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+		GreaterThan
+			5.1(Type: [Edm.Single Nullable=False])

@@ -1,0 +1,11 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Map" Alias="Self">
+      <ComplexType Name="MapType">
+        <Property Name="ProviderName" Type="Edm.String"/>
+        <Property Name="Uri" Type="Edm.String"/>
+        <Property Name="MBytesDownloaded" Type="Edm.Double"/>
+      </ComplexType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
+    <AssemblyName>Microsoft.SqlServer.TestShell.InputSpaceModeling</AssemblyName>
+    <OutputType>Library</OutputType>
+    <ProjectGuid>{EDC237AA-6875-4034-BA39-7F2A83533BFC}</ProjectGuid>
+    <DocumentationFile>obj\Microsoft.SqlServer.TestShell.InputSpaceModeling.xml</DocumentationFile>
+    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
+    <RootNamespace>Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling</RootNamespace>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>1574;1591</NoWarn>
+    <EnableStyleCop>false</EnableStyleCop>
+    <TransparentAssembly>true</TransparentAssembly>
+    <DefineConstants>TAUPO_TESTSHELL</DefineConstants>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="System.Core" />
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\Source\PlatformHelper.cs">
+      <Link>PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="AllCombinationsStrategy.cs" />
+    <Compile Include="CategoricalStrategy.cs" />
+    <Compile Include="Category.cs" />
+    <Compile Include="CombinatorialStrategy.cs" />
+    <Compile Include="ConcatStrategy.cs" />
+    <Compile Include="Constraint.cs" />
+    <Compile Include="Dimension.cs" />
+    <Compile Include="DimensionValuePair.cs" />
+    <Compile Include="EqualsImplementationUtils.cs" />
+    <Compile Include="ExceptionUtilities.cs" />
+    <Compile Include="ExhaustiveCombinatorialStrategy.cs" />
+    <Compile Include="ExhaustiveEnumStrategy.cs" />
+    <Compile Include="ExhaustiveIEnumerableStrategy.cs" />
+    <Compile Include="ExplorationHelpers\CombinatorialUtilities.cs" />
+    <Compile Include="ExplorationHelpers\CompositeDimensionIndexCombinationGenerator.cs" />
+    <Compile Include="ExplorationHelpers\DimensionIndexCombinationGenerator.cs" />
+    <Compile Include="ExplorationHelpers\DimensionValueIndexCombination.cs" />
+    <Compile Include="ExplorationHelpers\DimensionWithValues.cs" />
+    <Compile Include="ExplorationHelpers\FilteredDimensionIndexCombinationGenerator.cs" />
+    <Compile Include="ExplorationHelpers\PartialVectorConstraintChecker.cs" />
+    <Compile Include="ExplorationHelpers\PrimitiveDimensionIndexCombinationGenerator.cs" />
+    <Compile Include="ExplorationHelpers\TranslatedDimensionIndexCombinationGenerator.cs" />
+    <Compile Include="ExplorationStrategy.cs" />
+    <Compile Include="FilterStrategy.cs" />
+    <Compile Include="FirstNStrategy.cs" />
+    <Compile Include="GroupByStrategy.cs" />
+    <Compile Include="IntegerRangeStrategy.cs" />
+    <Compile Include="LimitCoverageStrategy.cs" />
+    <Compile Include="MakeDeterministicStrategy.cs" />
+    <Compile Include="Matrix.cs" />
+    <Compile Include="MatrixConstraint.cs" />
+    <Compile Include="NullableRangeCategory.cs" />
+    <Compile Include="OneDimensionalConstraint.cs" />
+    <Compile Include="PairwiseStrategy.cs" />
+    <Compile Include="ParseableCollection.cs" />
+    <Compile Include="PointCategory.cs" />
+    <Compile Include="QualifiedDimension.cs" />
+    <Compile Include="RandomEnumStrategy.cs" />
+    <Compile Include="RandomIEnumerableStrategy.cs" />
+    <Compile Include="RandomIntegerRangeStrategy.cs" />
+    <Compile Include="RandomStrategyFromCategory.cs" />
+    <Compile Include="RandomUtilities.cs" />
+    <Compile Include="RangeCategory.cs" />
+    <Compile Include="RepeatStrategy.cs" />
+    <Compile Include="RestrictCombinationsStrategy.cs" />
+    <Compile Include="ShuffleStrategy.cs" />
+    <Compile Include="Strategies.cs" />
+    <Compile Include="SymbolicConstraint.cs" />
+    <Compile Include="ThreeDimensionalConstraint.cs" />
+    <Compile Include="TwoDimensionalConstraint.cs" />
+    <Compile Include="TypeConversion.cs" />
+    <Compile Include="UnionStrategy.cs" />
+    <Compile Include="Utilities.cs" />
+    <Compile Include="ValueFactory.cs" />
+    <Compile Include="ValueFactoryWithOptionalConcreteValue.cs" />
+    <Compile Include="Vector.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

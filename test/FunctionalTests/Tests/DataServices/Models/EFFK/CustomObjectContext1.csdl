@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AstoriaUnitTests.ObjectContextStubs.Types" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:annotations="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" />
+    <Property Name="Concurrency" Type="String" ConcurrencyMode="Fixed" />
+    <Property Name="EditTimeStamp" Nullable="false" Type="Binary" MaxLength="8" FixedLength="true" ConcurrencyMode="Fixed" annotations:StoreGeneratedPattern="Computed" />
+    <Property Name="GuidValue" Type="Guid" />
+    <Property Name="Address" Type="AstoriaUnitTests.ObjectContextStubs.Types.Address" Nullable="false" />
+    <NavigationProperty Name="Orders" Relationship="AstoriaUnitTests.ObjectContextStubs.Types.FK__Orders__Customer__00551192" FromRole="Customers" ToRole="Orders" />
+    <NavigationProperty Name="BestFriend" Relationship="AstoriaUnitTests.ObjectContextStubs.Types.CustomersBestFriend" FromRole="CustomersWhoConsiderMeTheirBestFriend" ToRole="BestFriend" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="CustomerId" Type="Int32" Nullable="true" />
+    <Property Name="DollarAmount" Type="Double" Nullable="false"/>
+    <NavigationProperty Name="Customers" Relationship="AstoriaUnitTests.ObjectContextStubs.Types.FK__Orders__Customer__00551192" FromRole="Orders" ToRole="Customers" />
+    <NavigationProperty Name="OrderDetails" Relationship="AstoriaUnitTests.ObjectContextStubs.Types.FK_Order_Details_Orders" FromRole="Orders" ToRole="OrderDetails" />
+  </EntityType>
+  <EntityType Name="OrderDetail">
+    <Key>
+      <PropertyRef Name="OrderID" />
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="OrderID" Type="Int32" Nullable="false" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="UnitPrice" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="Quantity" Type="Int16" Nullable="false" />
+    <Property Name="Discount" Type="Single" Nullable="false" />
+    <NavigationProperty Name="Order" Relationship="AstoriaUnitTests.ObjectContextStubs.Types.FK_Order_Details_Orders" FromRole="OrderDetails" ToRole="Orders" />
+  </EntityType>
+  <Association Name="FK__Orders__Customer__00551192">
+    <End Role="Customers" Type="AstoriaUnitTests.ObjectContextStubs.Types.Customer" Multiplicity="0..1" />
+    <End Role="Orders" Type="AstoriaUnitTests.ObjectContextStubs.Types.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CustomersBestFriend">
+    <End Role="BestFriend" Type="AstoriaUnitTests.ObjectContextStubs.Types.Customer" Multiplicity="0..1"/>
+    <End Role="CustomersWhoConsiderMeTheirBestFriend" Type="AstoriaUnitTests.ObjectContextStubs.Types.Customer" Multiplicity="*"/>
+  </Association>
+  <Association Name="FK_Order_Details_Orders">
+    <End Role="Orders" Type="AstoriaUnitTests.ObjectContextStubs.Types.Order" Multiplicity="1" />
+    <End Role="OrderDetails" Type="AstoriaUnitTests.ObjectContextStubs.Types.OrderDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Orders">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="OrderDetails">
+        <PropertyRef Name="OrderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="CustomerWithBirthday" BaseType="AstoriaUnitTests.ObjectContextStubs.Types.Customer">
+    <Property Name="Birthday" Type="DateTime" Nullable="false" DefaultValue="1979-02-15 12:00:00.000Z" />
+  </EntityType>
+  <ComplexType Name="Address">
+    <Property Name="StreetAddress" Type="String" />
+    <Property Name="City" Type="String" />
+    <Property Name="State" Type="String" />
+    <Property Name="PostalCode" Type="String" />
+  </ComplexType>
+
+  <EntityType Name="Worker">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="LastName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="MiddleName" Type="String" MaxLength="30" Nullable="true" />
+    <NavigationProperty Name="Office" Relationship="AstoriaUnitTests.ObjectContextStubs.Types.FK_Worker_Office" FromRole="Worker" ToRole="Office" />
+  </EntityType>
+  <EntityType Name="Office">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="OfficeNumber" Type="Int32" Nullable="false" />
+    <Property Name="FloorNumber" Type="Int16" Nullable="false"/>
+    <Property Name="BuildingName" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="Worker" Relationship="AstoriaUnitTests.ObjectContextStubs.Types.FK_Worker_Office" FromRole="Office" ToRole="Worker" />
+  </EntityType>
+  <Association Name="FK_Worker_Office">
+    <End Role="Worker" Type="AstoriaUnitTests.ObjectContextStubs.Types.Worker" Multiplicity="0..1" />
+    <End Role="Office" Type="AstoriaUnitTests.ObjectContextStubs.Types.Office" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Office">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Worker">
+        <PropertyRef Name="ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

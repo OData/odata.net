@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{D93149FD-0D7F-41AB-AFCF-62270E7FD613}</ProjectGuid>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
+    <SignAssemblyAttribute>false</SignAssemblyAttribute>
+    <AssemblyName>Astoria.Northwind</AssemblyName>
+    <OutputType>Library</OutputType>
+    <CreateMetaAssembly>false</CreateMetaAssembly>
+    <DefineConstants>$(DefineConstants);MICROSOFT_ASTORIA</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <RootNamespace>NorthwindModel</RootNamespace>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Northwind.ObjectLayer.cs" />
+    <Compile Include="Northwind.ObjectLayerPartial.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

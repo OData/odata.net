@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="NameAndType">
+  <Comment CommentText="When a request is receive to update an Astoria server, the DataService handles it in an appropriate method, invoking the Deserializer class as appropriate to read and modify resources. The actual subclass of Deserializer depends on the incoming format. Access rights are checked through the WebServiceConfiguration class, and notifications are queued up through the UpdateTracker class. Changes are pushed to the store through the IUpdatable interface implemented by the provider.">
+    <Position X="4.997" Y="0.563" Height="1.537" Width="4.346" />
+  </Comment>
+  <Class Name="Microsoft.OData.Service.UpdateTracker">
+    <Position X="9.75" Y="5.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>YAAAAAQAAAQAAAAAAAgAAAAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>Microsoft\Data\Web\UpdateTracker.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.DataServiceConfiguration" BaseTypeListCollapsed="true">
+    <Position X="9.75" Y="0.5" Width="3.75" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EGAAABRCAASAAAArAEAkAAACgBQAABQgAAMACAABBQA=</HashCode>
+      <FileName>Microsoft\Data\Web\WebDataServiceConfiguration.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.Deserializer">
+    <Position X="1.25" Y="0.5" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AEUIAABAgDQAAAAQIBAAAAQwACAQQAEAAEQBAAAHIAA=</HashCode>
+      <FileName>Microsoft\Data\Web\Serializers\Deserializer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.JsonDeserializer">
+    <Position X="3.75" Y="9" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+      <Compartment Name="Protected" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="jsonReader" Type="Microsoft.OData.Service.Serializers.JsonReader">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-1.211" Y="0.308" Height="0.182" Width="1.029" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAgDAAAAEAAAAAAAgQBAgAAgAAAAAAAAAEAAA=</HashCode>
+      <FileName>Microsoft\Data\Web\Serializers\JsonDeserializer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="jsonReader" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Microsoft.OData.Service.DataService&lt;T&gt;">
+    <Position X="5" Y="2.75" Width="3.75" />
+    <Members>
+      <Method Name="CompareETagAndWriteResponse" Hidden="true" />
+      <Field Name="configuration" Hidden="true" />
+      <Method Name="CreateConfiguration" Hidden="true" />
+      <Method Name="CreateDataSource" Hidden="true" />
+      <Method Name="CreateMessage" Hidden="true" />
+      <Method Name="CreateProvider" Hidden="true" />
+      <Method Name="GetRequestAcceptEncoding" Hidden="true" />
+      <Method Name="HandleInternalResources" Hidden="true" />
+      <Field Name="host" Hidden="true" />
+      <Property Name="IDataService.Configuration" Hidden="true" />
+      <Property Name="IDataService.Host" Hidden="true" />
+      <Property Name="IDataService.Provider" Hidden="true" />
+      <Field Name="provider" Hidden="true" />
+      <Method Name="ResolveUnknownFormat" Hidden="true" />
+      <Method Name="SelectPrimitiveContentType" Hidden="true" />
+      <Method Name="SelectResponseFormat" Hidden="true" />
+      <Method Name="SelectResponseFormatForType" Hidden="true" />
+      <Method Name="SerializeResponseBody" Hidden="true" />
+      <Method Name="ValidateRequest" Hidden="true" />
+      <Method Name="WriteETagValueInResponseHeader" Hidden="true" />
+      <Method Name="WriteSingleElementResponse" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Public" Collapsed="true" />
+      <Compartment Name="Protected" Collapsed="true" />
+      <Compartment Name="Internal" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Microsoft.OData.Service.DataService&lt;T&gt;.BatchDataService" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\WebDataService.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="Microsoft.OData.Service.DataService&lt;T&gt;.Int32EqualityComparer" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\WebDataService.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ACoAAASGhOCSEARICBBSAQgEBGGSAADEBIwAIACAEAA=</HashCode>
+      <FileName>Microsoft\Data\Web\WebDataService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.SyndicationDeserializer">
+    <Position X="0.5" Y="9" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Protected" Collapsed="true" />
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAQAIAADAgAAAAABAAAAAYGCAAAgAAADAAQAAAAAA=</HashCode>
+      <FileName>Microsoft\Data\Web\Serializers\SyndicationDeserializer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="factory" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.PlainXmlDeserializer">
+    <Position X="6.75" Y="9" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Protected" Collapsed="true" />
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="xmlReader" Type="System.Xml.XmlReader">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.252" Y="0.1" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AACAQAAAADAAAAIAAAAAAAAQAAAAAAAhACBAACAAAIA=</HashCode>
+      <FileName>Microsoft\Data\Web\Serializers\PlainXmlDeserializer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="xmlReader" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.SyndicationFormatterFactory" Collapsed="true">
+    <Position X="0.5" Y="11.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AQAAAQAAAAAAAAAAgAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Microsoft\Data\Web\Serializers\SyndicationFormatterFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.JsonReader" Collapsed="true">
+    <Position X="3.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QEAAABJAACAAAAEAAAAgAAAgACAQAQQAAAAAgAASIAA=</HashCode>
+      <FileName>Microsoft\Data\Web\Serializers\JsonReader.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Xml.XmlReader" Collapsed="true">
+    <Position X="7" Y="11.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Microsoft.OData.Service.IUpdatable">
+    <Position X="9.75" Y="8" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>gAAIgAAAIABAAgAAAAAAAAAAAAAAABAgAABAKgAAAAA=</HashCode>
+      <FileName>Microsoft\Data\Web\IUpdatable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Microsoft.OData.Service.UpdateOperations">
+    <Position X="12" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAEAAAABAAAAAAAAAAAAAAAEAACAAAAAAAAEAAAA=</HashCode>
+      <FileName>Microsoft\Data\Web\ResourceActions.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Microsoft.OData.Service.EntitySetRights">
+    <Position X="13.75" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAABAAAAAAABABAAAABAAAAAAAACIAAEAEAAAA=</HashCode>
+      <FileName>Microsoft\Data\Web\ResourceContainerRights.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

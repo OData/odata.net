@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
+    <ProjectGuid>{65C0C702-8A6D-4CDE-A387-0D0C1893E4BC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Test.Taupo.Edmlib</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.Edmlib</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TransparentAssembly>true</TransparentAssembly>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <EnableStyleCop>true</EnableStyleCop>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Contracts\IEdmToTaupoModelConverter.cs" />
+    <Compile Include="Contracts\ITaupoToEdmModelConverter.cs" />
+    <Compile Include="EdmToTaupoModelConverter.cs" />
+    <Compile Include="EdmToTaupoPrimitiveDataTypeConverter.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="StubEdm\StubEdmComplexType.cs" />
+    <Compile Include="StubEdm\StubEdmDirectValueAnnotationBinding.cs" />
+    <Compile Include="StubEdm\StubEdmElement.cs" />
+    <Compile Include="StubEdm\StubEdmEntityContainer.cs" />
+    <Compile Include="StubEdm\StubEdmEntitySet.cs" />
+    <Compile Include="StubEdm\StubEdmEntitySetReferenceExpression.cs" />
+    <Compile Include="StubEdm\StubEdmEntityType.cs" />
+    <Compile Include="StubEdm\StubEdmEnumMember.cs" />
+    <Compile Include="StubEdm\StubEdmEnumType.cs" />
+    <Compile Include="StubEdm\StubEdmOperation.cs" />
+    <Compile Include="StubEdm\StubEdmOperationParameter.cs" />
+    <Compile Include="StubEdm\StubEdmModel.cs" />
+    <Compile Include="StubEdm\StubEdmNavigationProperty.cs" />
+    <Compile Include="StubEdm\StubEdmStringConstant.cs" />
+    <Compile Include="StubEdm\StubEdmStructuralProperty.cs" />
+    <Compile Include="StubEdm\StubEdmType.cs" />
+    <Compile Include="StubEdm\StubEdmTypeReference.cs" />
+    <Compile Include="TaupoModelComparer.cs" />
+    <Compile Include="TaupoToEdmDataTypeConverter.cs" />
+    <Compile Include="TaupoToEdmModelConverterUsingParser.cs" />
+    <Compile Include="TaupoToEdmPrimitiveDataTypeConverter.cs" />
+    <Compile Include="TypeReferenceFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="CustomDictionary.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj">
+      <Project>{34010F3A-20CC-479C-83CF-EC99B1C90CD1}</Project>
+      <Name>Microsoft.Test.Taupo</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Microsoft.Test.Taupo.Edmlib.layering.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,466 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>;1699;1570;1572;1573;1591;3005;3006;3003;3008;3016;3001;3002;3009;0618;0168;0169;1684</NoWarn>
+    <AssemblyName>AstoriaTestFramework</AssemblyName>
+    <OutputType>Library</OutputType>
+    <CreateMetaAssembly>false</CreateMetaAssembly>
+    <AssemblyKeyType>ECMA</AssemblyKeyType>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
+    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DefineConstants>$(DefineConstants);CODE_ANALYSIS_BASELINE;MICROSOFT_ASTORIA;ClientFramework</DefineConstants>
+    <RootNamespace>Microsoft.Data.Test</RootNamespace>
+    <ProjectGuid>{F3EE82F0-8DDD-45EE-BD9C-47AC3A3AF4BB}</ProjectGuid>
+    <SignAssemblyAttribute>false</SignAssemblyAttribute>
+    <DocumentationFile>AstoriaTestFramework.xml</DocumentationFile>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="CustomMarshalers" />
+    <Reference Include="Microsoft.JScript" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Entity.Design" />
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
+      <Name>Microsoft.OData.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="System.Data.Linq" />
+    <ProjectReference Include="$(EnlistmentRoot)\tools\KoKoMo\KoKoMo.csproj">
+      <Project>{EB4C9641-0452-4E7F-AA38-3EBD871914A3}</Project>
+      <Name>KoKoMo</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\tools\ModuleCore\src\ModuleCore.csproj">
+      <Project>{5E46C9E2-8B2F-4961-8C26-EFA9DF6CD68D}</Project>
+      <Name>ModuleCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools\CustomData.ObjectContext\CustomData.ObjectContext.csproj">
+      <Project>{6762001D-60F0-4E70-A816-C15897C39B7F}</Project>
+      <Name>CustomData.ObjectContext</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools\Commander.Common\Commander.Common.csproj">
+      <Project>{39F660EC-A5D8-4753-B3F2-28117EB3224B}</Project>
+      <Name>Commander.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework.FullTrust\AstoriaTestFramework.FullTrust.csproj">
+      <Project>{B01915F6-37E4-4E7E-9A45-8722829E49F1}</Project>
+      <Name>AstoriaTestFramework.FullTrust</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs" />
+    <Compile Include="Features\Expressions\PatternSimpleProjection.cs" />
+    <Compile Include="Features\Expressions\PatternSelectSingleEntity.cs" />
+    <Compile Include="Features\Expressions\PatternSetBase.cs" />
+    <Compile Include="Features\Expressions\DynamicExpressionUtils.cs" />
+    <Compile Include="Features\Expressions\PatternTopSkipOrderBy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Features\Expressions\QueryTreeInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Features\NamedStreams\KeyBasedEqualityComparerBase.cs" />
+    <Compile Include="Features\NamedStreams\ReferenceEqualityComparer.cs" />
+    <Compile Include="Features\NamedStreams\NamedStreamResourceAttribute.cs" />
+    <Compile Include="Features\NamedStreams\InMemoryStreamProvider.cs" />
+    <Compile Include="Net\XmlHttpClassComWrapper.cs" />
+    <Compile Include="Data\IStringIdentifierSupport.cs" />
+    <Compile Include="Data\StringData.cs" />
+    <Compile Include="Data\TextScriptData.cs" />
+    <Compile Include="Data\TypeData.cs" />
+    <Compile Include="Data\XmlData.cs" />
+    <Compile Include="Models\ExpressionModel.cs" />
+    <Compile Include="Models\PredicateModel.cs" />
+    <Compile Include="Models\ProjectionModel.cs" />
+    <Compile Include="Models\QueriesModel.cs" />
+    <Compile Include="Models\QueryModel.cs" />
+    <Compile Include="Models\ScanModel.cs" />
+    <Compile Include="Resources\SystemDataEntityResourceIdentifiers.cs" />
+    <Compile Include="TestExecutionLayer\AstoriaDatabase.cs" />
+    <Compile Include="TestExecutionLayer\AstoriaTestModule.cs" />
+    <Compile Include="TestExecutionLayer\AstoriaTestPropertyEnums.cs" />
+    <Compile Include="TestExecutionLayer\AstoriaTestVariation.cs" />
+    <Compile Include="TestExecutionLayer\AstoriaWebDataService.cs" />
+    <Compile Include="Tree\Astoria\LinqQueryBuilder.cs" />
+    <Compile Include="Tree\Update\UpdatePayloadBuilder.cs" />
+    <Compile Include="Tree\Update\PayloadSyntaxError.cs" />
+    <Compile Include="Tree\Update\UpdateTree.cs" />
+    <Compile Include="Util\NativeMethods.cs" />
+    <Compile Include="Util\OsCompatibility.cs" />
+    <Compile Include="Verification\CommonPayload.cs" />
+    <Compile Include="Verification\PayloadNamedStream.cs" />
+    <Compile Include="Verification\JSONPayload.cs" />
+    <Compile Include="Verification\PayloadObject.cs" />
+    <Compile Include="Verification\PayloadProperty.cs" />
+    <Compile Include="Verification\XMLPayload.cs" />
+    <Compile Include="Tree\Astoria\Resource.cs" />
+    <Compile Include="Tree\Astoria\ResouceNode.cs" />
+    <Compile Include="Tree\Astoria\ResourceType.cs" />
+    <Compile Include="Tree\Astoria\UriQueryBuilder.cs" />
+    <Compile Include="Types\Clr\Clr.cs" />
+    <Compile Include="Types\Clr\ClrTypes.cs" />
+    <Compile Include="Types\Clr\SqlTypes.cs" />
+    <Compile Include="Net\MimeType.cs" />
+    <Compile Include="Workspaces\EdmWorkspaces\EdmWorkspace.cs" />
+    <Compile Include="Workspaces\TestDataWebService.cs" />
+    <Compile Include="Workspaces\LinqToSqlWorkspaces\LinqToSqlWorkspace.cs" />
+    <EmbeddedResource Include="Workspaces\LinqToSqlWorkspaces\Northwind\Northwind.LinqToSql.ObjectLayer.cs" />
+    <Compile Include="Workspaces\LinqToSqlWorkspaces\Northwind\Northwind.LinqToSql.Workspace.cs" />
+    <EmbeddedResource Include="Workspaces\LinqToSqlWorkspaces\Aruba\Aruba.LinqToSql.ObjectLayer.cs" />
+    <Compile Include="Workspaces\LinqToSqlWorkspaces\Aruba\Aruba.LinqToSql.Workspace.cs" />
+    <Compile Include="Workspaces\Workspace.cs" />
+    <Compile Include="Tree\diff\NodeComparer.cs" />
+    <Compile Include="Tree\diff\NodeDiff.cs" />
+    <Compile Include="Tree\diff\NodeExecutor.cs" />
+    <Compile Include="Tree\diff\NodeFinder.cs" />
+    <Compile Include="Tree\diff\NodePrinter.cs" />
+    <Compile Include="Tree\diff\NodeVerifier.cs" />
+    <Compile Include="Tree\diff\nodes\Node.cs" />
+    <Compile Include="Tree\diff\nodes\NodeFacets.cs" />
+    <Compile Include="Tree\diff\nodes\NodeProperty.cs" />
+    <Compile Include="Tree\diff\nodes\NodeRelation.cs" />
+    <Compile Include="Tree\diff\nodes\NodeTypes.cs" />
+    <Compile Include="Tree\diff\nodes\NodeValue.cs" />
+    <Compile Include="Tree\diff\NodeVisitor.cs" />
+    <Compile Include="Tree\Query\Exp.cs" />
+    <Compile Include="Tree\Query\ExpNode.cs" />
+    <Compile Include="Tree\Query\Query.cs" />
+    <Compile Include="Tree\Query\QueryBuilder.cs" />
+    <Compile Include="TestExecutionLayer\AstoriaTestCase.cs" />
+    <Compile Include="TestExecutionLayer\AstoriaTestProperties.cs" />
+    <Compile Include="Util\CombinatorialEngine.cs" />
+    <Compile Include="Util\CompactUtil.cs" />
+    <Compile Include="Util\CompressionUtility.cs" />
+    <Compile Include="Util\DataUtil.cs" />
+    <Compile Include="Util\DisposeUtil.cs" />
+    <Compile Include="Util\EdmGenUtil.cs" />
+    <Compile Include="Util\fxBase.cs" />
+    <Compile Include="Util\fxHashTable.cs" />
+    <Compile Include="Util\fxList.cs" />
+    <Compile Include="Util\IOUtil.cs" />
+    <Compile Include="Util\JsonPrimitiveTypesUtil.cs" />
+    <Compile Include="Util\MetadataUtil.cs" />
+    <Compile Include="Util\NetworkUtil.cs" />
+    <Compile Include="Util\ServiceUtil.cs" />
+    <Compile Include="Util\ShellUtil.cs" />
+    <Compile Include="Util\SqlMetalUtil.cs" />
+    <Compile Include="Util\FrameworkUtil.cs" />
+    <Compile Include="Util\TestUtil.cs" />
+    <Compile Include="Util\XmlUtil.cs" />
+    <Compile Include="Util\Accounts.cs" />
+    <Compile Include="Util\CodeCompilerHelper.cs" />
+    <Compile Include="Util\CSDLUtility.cs" />
+    <Compile Include="Util\ExecutableWrapper.cs" />
+    <Compile Include="Util\fxBits.cs" />
+    <Compile Include="Util\fxEnumerable.cs" />
+    <Compile Include="TestExecutionLayer\AstoriaTestLog.cs" />
+    <Compile Include="Workspaces\Workspaces.cs" />
+    <Compile Include="Workspaces\WorkspaceLibrary\GraphBasedDataGenerator.cs" />
+    <Compile Include="Workspaces\WorkspaceLibrary\IDataGenerator.cs" />
+    <Compile Include="Workspaces\WorkspaceLibrary\SocketExceptionHandler.cs" />
+    <Compile Include="Workspaces\WorkspaceLibrary\WorkspaceLibrary.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Workspaces\Databases\Northwind.csdl" />
+    <EmbeddedResource Include="Workspaces\Databases\Northwind.msl" />
+    <EmbeddedResource Include="Workspaces\Databases\Northwind.ssdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Workspaces\CreateVDir.vbs" />
+    <EmbeddedResource Include="Workspaces\DeleteVDir.vbs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Workspaces\Databases\aruba.ldf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Workspaces\Databases\aruba.mdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Workspaces\Databases\northwind.ldf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Workspaces\Databases\northwind.mdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <DataFile Include="AstoriaClientTest_MediumTrustPermissionSet.xml" />
+    <EmbeddedResource Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\stubs\ExpressionTreeTests\ExpressionTreeTestBaseVisitor.cs">
+      <Link>Features\Expressions\Resources\ExpressionTreeTestBaseVisitor.cs</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\stubs\ExpressionTreeTests\ExpressionTreeToXmlSerializer.cs">
+      <Link>Features\Expressions\Resources\ExpressionTreeToXmlSerializer.cs</Link>
+    </EmbeddedResource>
+    <Compile Include="Client\CLWrappers\KeyAttWrapper.cs" />
+    <Compile Include="Client\CLWrappers\OpenObjectWrapper.cs" />
+    <Compile Include="Client\CLWrappers\ServerDrivenPagingClientWrapper.cs" />
+    <Compile Include="Client\CLWrappers\WebDataContextWrapper.cs" />
+    <Compile Include="Client\CLWrappers\WebDataQueryWrapper.cs" />
+    <Compile Include="Client\Models\AdventureWorksClientModel.cs" />
+    <Compile Include="Client\Models\ArubaClientModel.cs" />
+    <Compile Include="Client\Models\ArubaLTSClientModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Client\Models\LiveClientModel.cs" />
+    <Compile Include="Client\Models\NorthwindClientModel.cs" />
+    <Compile Include="Client\Models\PicturesTagsClient.cs" />
+    <Compile Include="Client\Models\PicturesTagsClient4V1.cs" />
+    <Compile Include="Client\Models\PicturesTagsClientPOCO.cs" />
+    <Compile Include="Features\Batching\BatchRequest.cs" />
+    <Compile Include="Features\Batching\BatchRequestQueue.cs" />
+    <Compile Include="Features\Batching\BatchResponse.cs" />
+    <Compile Include="Features\Batching\BatchReader.cs" />
+    <Compile Include="Features\Batching\BatchWriter.cs" />
+    <Compile Include="Features\Blobs\Server\Utils\BlobsAccess.cs" />
+    <Compile Include="Features\Blobs\Server\Utils\BlobsBatch.cs" />
+    <Compile Include="Features\Blobs\Server\Utils\BlobsETag.cs" />
+    <Compile Include="Features\Blobs\Server\Utils\BlobsPayload.cs" />
+    <Compile Include="Features\Blobs\Server\Utils\BlobsRequest.cs" />
+    <EmbeddedResource Include="Features\Blobs\Client\Resources\PicturesTagsEdm.res.cs" />
+    <Compile Include="Features\Blobs\Client\PicturesTagsWorkspaces.cs" />
+    <EmbeddedResource Include="Features\Blobs\Client\Resources\PicturesTagsHelperService.svc.cs" />
+    <EmbeddedResource Include="Features\Blobs\Client\Resources\PicturesTagsHelperService.svc" />
+    <Compile Include="Features\Concurrency\ConcurrencyAttribute.cs" />
+    <Compile Include="Features\Concurrency\ConcurrencyUtil.cs" />
+    <Compile Include="Features\Concurrency\ConcurrencyWorkspaces.cs" />
+    <Compile Include="Features\Containment\ContainmentUtil.cs" />
+    <Compile Include="Features\Containment\ContainmentAttribute.cs" />
+    <Compile Include="Features\Containment\ContainmentQuery.cs" />
+    <Compile Include="Features\Containment\ContainmentWorkspaces.cs" />
+    <Compile Include="Features\Expressions\ExpressionsWorkspaces.cs" />
+    <EmbeddedResource Include="Features\Expressions\ExpressionHook.cs" />
+    <Compile Include="Features\FeatureTestCase.cs" />
+    <Compile Include="Features\FeatureWorkspaces.cs" />
+    <Compile Include="Features\Blobs\Server\BlobsAttribute.cs" />
+    <Compile Include="Features\Blobs\Server\BlobsWorkspaces.cs" />
+    <Compile Include="Features\OpenTypes\OpenTypeResourceAttribute.cs" />
+    <Compile Include="Features\OpenTypes\OpenTypesUtil.cs" />
+    <Compile Include="Features\OpenTypes\OpenTypesWorkspace.cs" />
+    <Compile Include="Features\Pipeline\PipelineWorkspaces.cs" />
+    <Compile Include="Features\Query\QueryWorkspaces.cs" />
+    <EmbeddedResource Include="Features\Query\SimpleDataStreamProvider.cs" />
+    <Compile Include="Net\AstoriaRequest.cs" />
+    <Compile Include="Net\AstoriaResponse.cs" />
+    <Compile Include="Net\AstoriaRequestResponseBase.cs" />
+    <Compile Include="Net\AstoriaRequestSender.cs" />
+    <Compile Include="Net\StandardRequests.cs" />
+    <Compile Include="Net\XmlHttpRequestSender.cs" />
+    <Compile Include="Net\HttpRequestSender.cs" />
+    <Compile Include="Net\RequestUtil.cs" />
+    <Compile Include="ReflectionCodeGeneration\CodeLayerBuilderBase.cs" />
+    <Compile Include="ReflectionCodeGeneration\ProviderWrapperGenerator.cs" />
+    <Compile Include="ReflectionCodeGeneration\TemplateFile.cs" />
+    <Compile Include="ReflectionCodeGeneration\ConstructedFile.cs" />
+    <Compile Include="ReflectionCodeGeneration\ConstructedInterfaces.cs" />
+    <Compile Include="Models\SortModel.cs" />
+    <Compile Include="Models\UpdateModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ReflectionCodeGeneration\CSharpCodeLanguageHelper.cs" />
+    <EmbeddedResource Include="ReflectionCodeGeneration\Templates\NonClrContextTemplate.cs" />
+    <Compile Include="ReflectionCodeGeneration\NonClrContextTemplateFile.cs" />
+    <Compile Include="ReflectionCodeGeneration\StronglyTypedCodeLayerBuilder.cs" />
+    <Compile Include="Resources\MicrosoftDataWebClientResourceIdentifiers.cs" />
+    <Compile Include="Resources\SystemResourceIdentifiers.cs" />
+    <Compile Include="Resources\MicrosoftDataWebResourceIdentifiers.cs" />
+    <Compile Include="Resources\ResourceUtil.cs" />
+    <Compile Include="TestExecutionLayer\AstoriaClientTestCase.cs" />
+    <Compile Include="TestExecutionLayer\AstoriaWebDataServiceBase.cs" />
+    <Compile Include="TestExecutionLayer\dptestmoduleattribute.cs" />
+    <Compile Include="TestExecutionLayer\MatrixVariation.cs" />
+    <Compile Include="TestExecutionLayer\PairWiseMatrixVariation.cs" />
+    <Compile Include="Tree\Astoria\ResourceAttribute.cs" />
+    <Compile Include="Tree\Update\AtomUpdatePayloadBuilder.cs" />
+    <Compile Include="Tree\Update\JsonUpdatePayloadBuilder.cs" />
+    <Compile Include="Tree\Update\ResourceInstanceUtil.cs" />
+    <Compile Include="Util\fxLanguages.cs" />
+    <Compile Include="Util\IISHelper.cs" />
+    <Compile Include="Util\ProcessHelper.cs" />
+    <Compile Include="Verification\APICallLogBuilder.cs" />
+    <Compile Include="Verification\APICallLogVerifier.cs" />
+    <Compile Include="Verification\DeleteVerifier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Verification\PayloadVerifier.cs" />
+    <Compile Include="Verification\UpdateVerifier.cs" />
+    <Compile Include="Verification\FormatVerification.cs" />
+    <Compile Include="Verification\InsertVerifier.cs" />
+    <Compile Include="Verification\ResponseVerification.cs" />
+    <Compile Include="Versioning\Oracles\OracleClient.cs" />
+    <Compile Include="Versioning\Oracles\OracleDesign.cs" />
+    <Compile Include="Versioning\Oracles\OracleServer.cs" />
+    <Compile Include="Workspaces\APICallLog.cs" />
+    <Compile Include="Workspaces\ProviderWrappers.cs" />
+    <Compile Include="Workspaces\CustomServiceHost\AstoriaCustomServiceHost.cs" />
+    <Compile Include="Workspaces\CustomServiceHost\HttpListenerHost.cs" />
+    <Compile Include="Workspaces\CustomServiceHost\TestServiceHostCustom.cs" />
+    <Compile Include="Workspaces\CustomServiceHost\BaseTestWebRequest.cs" />
+    <EmbeddedResource Include="Workspaces\Silverlight\App.g.cs" />
+    <EmbeddedResource Include="Workspaces\Silverlight\App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workspaces\Silverlight\AstoriaTestSilverlightService.cs" />
+    <EmbeddedResource Include="Workspaces\Silverlight\CommonTypes.cs" />
+    <EmbeddedResource Include="Workspaces\Silverlight\Page.g.cs" />
+    <EmbeddedResource Include="Workspaces\Silverlight\Page.xaml.cs">
+      <DependentUpon>Page.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workspaces\Silverlight\RemoteClient.cs" />
+    <Compile Include="Workspaces\NonClrWorkspaces\Aruba.NonClr.Workspace.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Workspaces\NonClrWorkspaces\LateBound\DSPMethodsImplementation.cs" />
+    <Compile Include="Workspaces\NonClrWorkspaces\LateBound\LateBoundBaseExpressionVisitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Workspaces\NonClrWorkspaces\LateBound\LateBoundExpressionVisitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Workspaces\NonClrWorkspaces\LateBound\LateBoundToClrConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Workspaces\NonClrWorkspaces\LateBound\OpenTypeMethodsImplementation.cs" />
+    <Compile Include="Workspaces\NonClrWorkspaces\NonClrService\NonClrContext.cs" />
+    <Compile Include="Workspaces\NonClrWorkspaces\NonClrService\NonClrDataService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Workspaces\NonClrWorkspaces\NonClrService\NonClrEntitySetDictionary.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Workspaces\NonClrWorkspaces\NonClrService\NonClrExpressionTreeToXmlSerializer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Workspaces\NonClrWorkspaces\NonClrService\NonClrQueryable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Workspaces\NonClrWorkspaces\NonClrWorkspace.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Workspaces\NonClrWorkspaces\Northwind.NonClr.Workspace.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="Workspaces\ServiceHost\IDataServiceHostRunner.cs" />
+    <Compile Include="Workspaces\WebConfig.cs" />
+    <Compile Include="Workspaces\WorkspaceAttributes.cs" />
+    <Compile Include="Workspaces\InMemoryWorkspaces\AdoGuy\AdoGuy.InMemory.Workspace.cs" />
+    <Compile Include="Workspaces\InMemoryWorkspaces\InMemoryDataService.cs" />
+    <Compile Include="Workspaces\InMemoryWorkspaces\InMemoryContext.cs" />
+    <Compile Include="Workspaces\InMemoryWorkspaces\InMemoryEntitySetDictionary.cs" />
+    <Compile Include="Workspaces\InMemoryWorkspaces\InMemoryWorkspace.cs" />
+    <Compile Include="Resources\ResourceManagerUtil.cs" />
+    <Compile Include="Workspaces\LinqToSqlWorkspaces\LinqToSqlTypes.cs" />
+    <Compile Include="Workspaces\ServiceHost\AstoriaServiceHost.cs" />
+    <Compile Include="Workspaces\WorkspaceLibrary\BatchedDataInserter.cs" />
+    <Compile Include="Workspaces\WorkspaceLibrary\IDataInserter.cs" />
+    <Compile Include="Workspaces\WorkspaceLibrary\CodeGeneratingDataInserter.cs" />
+    <EmbeddedResource Include="Workspaces\ServiceHost\TestServiceHost.cs" />
+    <None Include="AstoriaFramework.snk" />
+    <DataFile Include="Workspaces\Databases\Aruba.LDF" />
+    <DataFile Include="Workspaces\Databases\Aruba.mdf" />
+    <DataFile Include="Workspaces\Databases\northwind.ldf" />
+    <DataFile Include="Workspaces\Databases\northwind.mdf" />
+    <DataFile Include="Workspaces\Databases\PicturesTags.ldf" />
+    <DataFile Include="Workspaces\Databases\PicturesTags.mdf" />
+    <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\CallerAnyDomain.xml" />
+    <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\CallerDifferentDomain.xml" />
+    <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\HeadersBlocked.xml" />
+    <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\OnlyServiceRequestAllowed.xml" />
+    <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\SubPathsNotallowed.xml" />
+    <Content Include="Workspaces\Silverlight\SilverlightAstoriaTestUI.csproj.user" />
+    <Content Include="Workspaces\Silverlight\VBDispatch.vbproj.user" />
+    <EmbeddedResource Include="Workspaces\Silverlight\AppManifest.xml" />
+    <EmbeddedResource Include="Workspaces\Silverlight\AstoriaTestSilverlight.svc" />
+    <EmbeddedResource Include="Workspaces\Silverlight\CommonTypes.csproj" />
+    <Content Include="Workspaces\Silverlight\SilverlightAstoriaTestPage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Workspaces\Silverlight\SilverlightAstoriaTestUI.csproj" />
+    <EmbeddedResource Include="Workspaces\Silverlight\VBDispatch.vbproj" />
+    <EmbeddedResource Include="Workspaces\Databases\Aruba.csdl" />
+    <EmbeddedResource Include="Workspaces\Databases\Aruba.msl" />
+    <EmbeddedResource Include="Workspaces\Databases\Aruba.ssdl" />
+    <EmbeddedResource Include="Workspaces\ServiceHost\TestServiceHost.exe.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Diagrams\Nodes.cd" />
+    <None Include="Diagrams\Updates.cd" />
+    <EmbeddedResource Include="Versioning\Remoting\design.bat" />
+    <EmbeddedResource Include="Versioning\Remoting\client.bat" />
+    <None Include="Workspaces\Databases\Aruba.OneEntitySetPerTypeHierarchy.csdl" />
+    <EmbeddedResource Include="Workspaces\Databases\PicturesTags.csdl" />
+    <EmbeddedResource Include="Workspaces\Databases\PicturesTags.msl" />
+    <EmbeddedResource Include="Workspaces\Databases\PicturesTags.ssdl" />
+    <EmbeddedResource Include="Workspaces\Generic.Web.config" />
+    <EmbeddedResource Include="Workspaces\app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Workspaces\Silverlight\App.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workspaces\Silverlight\AppManifest.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workspaces\Silverlight\Page.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <NorthwindMetadata Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\Northwind\Northwind.csdl;$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\Northwind\Northwind.msl;$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\Northwind\Northwind.ssdl" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PrepareForRunDependsOn>$(PrepareForRunDependsOn);CopyMetadataFiles</PrepareForRunDependsOn>
+  </PropertyGroup>
+  <Target Name="CopyMetadataFiles">
+    <Copy SourceFiles="@(NorthwindMetadata)" DestinationFolder="$(OutDir)" />
+  </Target>
+</Project>

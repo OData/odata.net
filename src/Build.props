@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BuildInOSS Condition="'$(BuildInOSS)' == '' and !Exists('$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.root))\_BuildCommon')">true</BuildInOSS>
+  </PropertyGroup>
+
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.root))\tools\CustomMSBuild\TargetFrameworkPath.props" Condition="'$(BuildInOSS)' == 'true'"/>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.root))\_BuildCommon\Extensions\TargetFrameworkPath.props" Condition="'$(BuildInOSS)' != 'true'"/>
+  
+  <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' == 'Silverlight' and '$(TargetFrameworkProfile)' == 'WindowsPhone71'">
+    <GenerateTargetFrameworkAttribute Condition="'$(GenerateTargetFrameworkAttribute)' == ''">true</GenerateTargetFrameworkAttribute>
+    <ShouldGenerateAssemblyAttributeFile Condition="'$(ShouldGenerateAssemblyAttributeFile)' == ''">false</ShouldGenerateAssemblyAttributeFile>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <RelativeOutputPath>Product\$(RelativeOutputPath)</RelativeOutputPath>
+    <EnableStyleCop>true</EnableStyleCop>
+    <StyleCopOverrideSettingsFile Condition="'$(StyleCopOverrideSettingsFile)' == ''">$(MSBuildThisFileDirectory)Common.StyleCop</StyleCopOverrideSettingsFile>
+    <SigningScenario Condition="'$(SigningScenario)' == '' and '$(Configuration)' == 'Release'">$(SigningScenarioForRelease)</SigningScenario>
+    <SigningScenario Condition="'$(SigningScenario)' == '' and '$(TargetFrameworkIdentifier)' != 'Silverlight'">Delay</SigningScenario>
+    <SigningType Condition="'$(SigningType)' == ''">Product</SigningType>
+    <ShouldGenerateAssemblyAttributeFile Condition="'$(ShouldGenerateAssemblyAttributeFile)' == '' and '$(MSBuildProjectExtension)' != '.nuproj' and '$(MSBuildProjectExtension)' != '.wixproj'">true</ShouldGenerateAssemblyAttributeFile>
+    <CodeAnalysisUseAdditionalODataRules Condition="'$(CodeAnalysisUseAdditionalODataRules)' == ''">true</CodeAnalysisUseAdditionalODataRules>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(CodeAnalysisUseAdditionalODataRules)' == 'true'">
+    <!-- The DataWebRules ruleset also pulls in the SDL 6.0 rules, so we remain in SDL compliance -->
+    <CodeAnalysisRuleSet>DataWebRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="$(MSBuildThisFileDirectory)CommonCustomDictionary.xml"/>
+  </ItemGroup>
+  
+  <Import Project="..\Build.props" />
+
+  <!-- This PropertyGroup should always be after the import of Build.props because it's extending the value of NugetPackOptions which is defined in Nuget.props which is included using Build.props -->
+  <PropertyGroup>
+    <!-- Overrides the value of NugetPackOptions in Nuget.props in CBT to add -Symbols option -->
+    <NugetPackOptions>$(NugetPackOptions) -Symbols</NugetPackOptions>
+    <NugetPackProperties>$(NugetPackProperties);SourcesRoot=$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.root))</NugetPackProperties>
+  </PropertyGroup>
+</Project>

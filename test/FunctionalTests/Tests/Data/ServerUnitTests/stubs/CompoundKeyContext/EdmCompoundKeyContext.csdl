@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="EdmCompoundKeyContext" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+    <EntityContainer Name="EdmCompoundKeyContext" annotation:LazyLoadingEnabled="true">
+        <EntitySet Name="Customers" EntityType="EdmCompoundKeyContext.Customer" />
+        <EntitySet Name="Orders" EntityType="EdmCompoundKeyContext.Order" />
+        <AssociationSet Name="CustomerOrder" Association="EdmCompoundKeyContext.CustomerOrder">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Order" EntitySet="Orders" />
+        </AssociationSet>
+    </EntityContainer>
+    <EntityType Name="Customer">
+        <Key>
+            <PropertyRef Name="Id" />
+        </Key>
+        <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        <NavigationProperty Name="Orders" Relationship="EdmCompoundKeyContext.CustomerOrder" FromRole="Customer" ToRole="Order" />
+    </EntityType>
+    <EntityType Name="Order" >
+        <Key>
+            <PropertyRef Name="bKey" />
+            <PropertyRef Name="AKey" />
+        </Key>
+        <Property Type="Int32" Name="bKey" Nullable="false" />
+        <Property Type="Int32" Name="AKey" Nullable="false" />
+        <NavigationProperty Name="Customer" Relationship="EdmCompoundKeyContext.CustomerOrder" FromRole="Order" ToRole="Customer" />
+    </EntityType>
+    <Association Name="CustomerOrder">
+        <End Type="EdmCompoundKeyContext.Customer" Role="Customer" Multiplicity="1" />
+        <End Type="EdmCompoundKeyContext.Order" Role="Order" Multiplicity="*" />
+    </Association>
+</Schema>

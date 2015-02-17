@@ -1,0 +1,13 @@
+<Schema Namespace="TestModel" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="NamedStreamEntityType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+    <Property Name="NamedStream" Type="Edm.Stream" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="DefaultContainer">
+    <EntitySet Name="NamedStreamEntityType" EntityType="TestModel.NamedStreamEntityType" />
+  </EntityContainer>
+</Schema>
+

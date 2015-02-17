@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6290F22D-823A-405F-9AED-1291BE7DDAFF}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DSClient.SL.Delta.UnitTests</RootNamespace>
+    <AssemblyName>DSClient.SL.Delta.UnitTests</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>true</SilverlightApplication>
+    <SupportedCultures />
+    <XapOutputs>true</XapOutputs>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
+    <XapFilename>DSClient.Portable.Silverlight.xap</XapFilename>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
+    <SilverlightAppEntry>DSClient.SL.Delta.UnitTests.App</SilverlightAppEntry>
+    <TestPageFileName>EndToEndTestPage.html</TestPageFileName>
+    <CreateTestPage>true</CreateTestPage>
+    <EnableOutOfBrowser>false</EnableOutOfBrowser>
+    <UsePlatformExtensions>false</UsePlatformExtensions>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;SILVERLIGHT</DefineConstants>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <!-- 	Ensure signing is completed before building this project -->
+    <ProjectReference Include="$(EnlistmentRoot)\_Buildcommon\Signing\SignBinaries.proj" Condition="'$(SubmitForSigning)' == 'true'">
+      <Project>{EDE15646-338A-4D40-8178-AED9D40E4D5A}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7d921888-fe03-4c3f-80fe-2f624505461c}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989a83cc-b864-4a75-8bf3-5eda99203a86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Web\Client.PortableLibrary\Microsoft.OData.Client.Portable.csproj">
+      <Project>{aed0dc9d-76e5-4145-af5e-9e2f856f4d18}</Project>
+      <Name>Microsoft.OData.Client.Portable</Name>
+    </ProjectReference>
+    <Reference Include="System.Windows" />
+    <Reference Include="mscorlib" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Xml" />
+    <Reference Include="$(MSBuildProgramFiles32)\Microsoft SDKs\Silverlight\v4.0\Libraries\Client\System.Xml.Linq.dll">
+      <SpecificVersion>true</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Windows.Browser" />
+    <Reference Include="$(NugetPack)\Silverlight.Toolkit.Corext.5.0.0.1\Testing\Microsoft.Silverlight.Testing.dll" />
+    <Reference Include="$(NugetPack)\Silverlight.Toolkit.Corext.5.0.0.1\Testing\Microsoft.VisualStudio.QualityTools.UnitTesting.Silverlight.dll" />
+    <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\sl4\FluentAssertions.Silverlight.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\Tests\HttpWebRequestUnitTests.cs" />
+    <Compile Include="..\..\..\Tests\PlatformHelperTests.cs" />
+    <Compile Include="..\..\..\Tests\DataServiceContextTests.cs" />
+    <Compile Include="App.xaml.cs" />
+    <Content Include="Properties\AppManifest.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

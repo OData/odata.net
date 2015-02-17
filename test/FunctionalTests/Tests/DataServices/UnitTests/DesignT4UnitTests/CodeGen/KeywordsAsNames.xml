@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Namespace1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Event">
+        <Key>
+          <PropertyRef Name="String" />
+        </Key>
+        <Property Name="String" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityContainer Name="New">
+        <EntitySet Name="Double" EntityType="Namespace1.Event" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

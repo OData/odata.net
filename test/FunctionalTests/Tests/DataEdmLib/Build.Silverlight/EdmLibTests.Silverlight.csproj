@@ -1,0 +1,468 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{75B881FF-81EC-4533-8EC3-DFA8B337C526}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <RootNamespace>EdmLibTests</RootNamespace>
+    <AssemblyName>EdmLibTests.SL</AssemblyName>
+    <OutputType>Library</OutputType>
+    <DefineConstants>$(DefineConstants);SILVERLIGHT</DefineConstants>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>true</SilverlightApplication>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <EdmLibCrossTargettingSourcePath>..</EdmLibCrossTargettingSourcePath>
+    <XapOutputs>true</XapOutputs>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
+    <XapFilename>EdmLibTests.SL.xap</XapFilename>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
+    <SilverlightAppEntry>EdmLibTests.App</SilverlightAppEntry>
+    <TestPageFileName>EdmLibTestPage.html</TestPageFileName>
+    <CreateTestPage>true</CreateTestPage>
+    <EnableOutOfBrowser>false</EnableOutOfBrowser>
+    <UsePlatformExtensions>false</UsePlatformExtensions>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Xml" />
+    <Reference Include="$(SilverlightClientLibraries)\System.Xml.Linq.dll">
+      <SpecificVersion>true</SpecificVersion>
+    </Reference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\TestUtils\Common.Silverlight\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj">
+      <Project>{DE0EEB4B-5E35-488A-8D72-04D0DE5963EE}</Project>
+      <Name>Microsoft.Test.OData.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\EndToEndTests\Framework\Core\Build.Silverlight\Microsoft.Test.OData.Framework.SL.csproj">
+      <Project>{56231424-7245-4B2C-898C-F9D6718E9459}</Project>
+      <Name>Microsoft.Test.OData.Framework.SL</Name>
+    </ProjectReference>
+    <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll">
+      <Name>FluentAssertions</Name>
+    </Reference>
+    <Reference Include="$(NugetPack)\Silverlight.Toolkit.Corext.5.0.0.1\Testing\Microsoft.Silverlight.Testing.dll" />
+    <Reference Include="$(NugetPack)\Silverlight.Toolkit.Corext.5.0.0.1\Testing\Microsoft.VisualStudio.QualityTools.UnitTesting.Silverlight.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <XTargetOutputFile Include="$(MSBuildThisFile)">
+      <SourceProject>$(EnlistmentRoot)\test\FunctionalTests\Tests\Edm\EdmLibTests.csproj</SourceProject>
+      <TargetPathPrefixName>EdmLibCrossTargettingSourcePath</TargetPathPrefixName>
+    </XTargetOutputFile>
+  </ItemGroup>
+  <!--
+  This ItemGroup is generated automatically.
+  
+  !!!! DO NOT MODIFY THIS ItemGroup MANUALLY !!!!
+  -->
+  <ItemGroup>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\EdmLibTestCaseBase.cs">
+      <Link>EdmLibTestCaseBase.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\AmbiguousTypeTests.cs">
+      <Link>FunctionalTests\AmbiguousTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\AnnotatableTests.cs">
+      <Link>FunctionalTests\AnnotatableTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\AnnotationsOnNonRepresentedElementTests.cs">
+      <Link>FunctionalTests\AnnotationsOnNonRepresentedElementTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\CodeCoverageBoostingTests.cs">
+      <Link>FunctionalTests\CodeCoverageBoostingTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ConstantExpressionRoundTripTests.cs">
+      <Link>FunctionalTests\ConstantExpressionRoundTripTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ConstantExpressionValidationTests.cs">
+      <Link>FunctionalTests\ConstantExpressionValidationTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ConstructibleModelErrorCases.cs">
+      <Link>FunctionalTests\ConstructibleModelErrorCases.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ConstructibleExpressionsTests.cs">
+      <Link>FunctionalTests\ConstructibleExpressionsTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ConstructibleVocabularyAnnotationsTests.cs">
+      <Link>FunctionalTests\ConstructibleVocabularyAnnotationsTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\EdmToClrConversion.cs">
+      <Link>FunctionalTests\EdmToClrConversion.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\EdmValueKindTests.cs">
+      <Link>FunctionalTests\EdmValueKindTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\EdmVersionTests.cs">
+      <Link>FunctionalTests\EdmVersionTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\EdmxRoundTripTests.cs">
+      <Link>FunctionalTests\EdmxRoundTripTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\EvaluationTests.cs">
+      <Link>FunctionalTests\EvaluationTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ExpressionEvaluationTests.cs">
+      <Link>FunctionalTests\ExpressionEvaluationTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ExpressionRoundTripTests.cs">
+      <Link>FunctionalTests\ExpressionRoundTripTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ExpressionSemanticValidationTest.cs">
+      <Link>FunctionalTests\ExpressionSemanticValidationTest.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ExpressionSerializationTests.cs">
+      <Link>FunctionalTests\ExpressionSerializationTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\InterfaceCriticalTests.cs">
+      <Link>FunctionalTests\InterfaceCriticalTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\NavigationParsingTests.cs">
+      <Link>FunctionalTests\NavigationParsingTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\NavigationSerializingTests.cs">
+      <Link>FunctionalTests\NavigationSerializingTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\NavigationValidationTests.cs">
+      <Link>FunctionalTests\NavigationValidationTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ODataScenarioTests.cs">
+      <Link>FunctionalTests\ODataScenarioTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\RoundtripTests.cs">
+      <Link>FunctionalTests\RoundtripTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\SemanticValidationTests.cs">
+      <Link>FunctionalTests\SemanticValidationTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ConstructibleModelRemoveMethodsTests.cs">
+      <Link>FunctionalTests\ConstructibleModelRemoveMethodsTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ConstructibleModelTestsUsingConverter.cs">
+      <Link>FunctionalTests\ConstructibleModelTestsUsingConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ConstructibleModelTests.cs">
+      <Link>FunctionalTests\ConstructibleModelTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\CsdlLocationTests.cs">
+      <Link>FunctionalTests\CsdlLocationTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\CsdlParsingTests.cs">
+      <Link>FunctionalTests\CsdlParsingTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ParsingValidation.cs">
+      <Link>FunctionalTests\ParsingValidation.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\CsdlSerializingTests.cs">
+      <Link>FunctionalTests\CsdlSerializingTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ExtensionMethodsTests.cs">
+      <Link>FunctionalTests\ExtensionMethodsTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\EdmxParsingTests.cs">
+      <Link>FunctionalTests\EdmxParsingTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\EdmxSerializingTests.cs">
+      <Link>FunctionalTests\EdmxSerializingTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\FindMethodTests.cs">
+      <Link>FunctionalTests\FindMethodTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\OperationModelTests.cs">
+      <Link>FunctionalTests\OperationModelTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ParserTests.cs">
+      <Link>FunctionalTests\ParserTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\SerializerSchemaCustomizationTests.cs">
+      <Link>FunctionalTests\SerializerSchemaCustomizationTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\SerializerTests.cs">
+      <Link>FunctionalTests\SerializerTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\TermAttributeTests.cs">
+      <Link>FunctionalTests\TermAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ToStringTests.cs">
+      <Link>FunctionalTests\ToStringTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\TypeSemanticsUnitTests.cs">
+      <Link>FunctionalTests\TypeSemanticsUnitTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\VersioningDictionaryTests.cs">
+      <Link>FunctionalTests\VersioningDictionaryTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\VersioningListTests.cs">
+      <Link>FunctionalTests\VersioningListTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\VersioningTreeTests.cs">
+      <Link>FunctionalTests\VersioningTreeTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\VocabularyInterfaceTests.cs">
+      <Link>FunctionalTests\VocabularyInterfaceTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\VocabularyParsingTests.cs">
+      <Link>FunctionalTests\VocabularyParsingTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\VocabularyRoundTripTests.cs">
+      <Link>FunctionalTests\VocabularyRoundTripTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\VocabularySerializingTests.cs">
+      <Link>FunctionalTests\VocabularySerializingTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ConstructibleVocabularyTestsUsingConverter.cs">
+      <Link>FunctionalTests\ConstructibleVocabularyTestsUsingConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\EdmLibCsdlSchemaCompliantTests.cs">
+      <Link>FunctionalTests\EdmLibCsdlSchemaCompliantTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\ClrTypeMappingTests.cs">
+      <Link>FunctionalTests\ClrTypeMappingTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\VocabularyValidationTests.cs">
+      <Link>FunctionalTests\VocabularyValidationTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalTests\XElementAnnotationTest.cs">
+      <Link>FunctionalTests\XElementAnnotationTest.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\ClrTypeMappingTestModelBuilder.cs">
+      <Link>FunctionalUtilities\ClrTypeMappingTestModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\ConstantExpressionModelBuilder.cs">
+      <Link>FunctionalUtilities\ConstantExpressionModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\CustomConsistentValidationTestAttribute.cs">
+      <Link>FunctionalUtilities\CustomConsistentValidationTestAttribute.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\InterfaceCriticalModelBuilder.cs">
+      <Link>FunctionalUtilities\InterfaceCriticalModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\ModelWithRemovableElements.cs">
+      <Link>FunctionalUtilities\ModelWithRemovableElements.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\NavigationTestModelBuilder.cs">
+      <Link>FunctionalUtilities\NavigationTestModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\CustomConstructibleVocabularyTestAttribute.cs">
+      <Link>FunctionalUtilities\CustomConstructibleVocabularyTestAttribute.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\CustomVocabularySerializerTestAttribute.cs">
+      <Link>FunctionalUtilities\CustomVocabularySerializerTestAttribute.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities.UnitTests\AssertHelper.cs">
+      <Link>FunctionalUtilities.UnitTests\AssertHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities.UnitTests\CsdlElementExtractorTests.cs">
+      <Link>FunctionalUtilities.UnitTests\CsdlElementExtractorTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities.UnitTests\CsdlXElementComparerTests.cs">
+      <Link>FunctionalUtilities.UnitTests\CsdlXElementComparerTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities.UnitTests\CsdlXElementSorterTests.cs">
+      <Link>FunctionalUtilities.UnitTests\CsdlXElementSorterTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities.UnitTests\VocabularyApplicationCsdlGeneratorTests.cs">
+      <Link>FunctionalUtilities.UnitTests\VocabularyApplicationCsdlGeneratorTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities.UnitTests\VocabularyDefinitionCsdlGeneratorTests.cs">
+      <Link>FunctionalUtilities.UnitTests\VocabularyDefinitionCsdlGeneratorTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities.UnitTests\VocabularyModelComparerTests.cs">
+      <Link>FunctionalUtilities.UnitTests\VocabularyModelComparerTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities.UnitTests\EdmLibTestModelExtractorTests.cs">
+      <Link>FunctionalUtilities.UnitTests\EdmLibTestModelExtractorTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\AnnotationDocumentationModels.cs">
+      <Link>FunctionalUtilities\AnnotationDocumentationModels.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\ConstructiveApiCsdlXElementComparer.cs">
+      <Link>FunctionalUtilities\ConstructiveApiCsdlXElementComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\EdmxModelBuilder.cs">
+      <Link>FunctionalUtilities\EdmxModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\ExpectedEdmError.cs">
+      <Link>FunctionalUtilities\ExpectedEdmError.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\ExpectedEdmErrors.cs">
+      <Link>FunctionalUtilities\ExpectedEdmErrors.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\EdmLibTestModelExtractor.cs">
+      <Link>FunctionalUtilities\EdmLibTestModelExtractor.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\ExpressionValidationTestModelBuilder.cs">
+      <Link>FunctionalUtilities\ExpressionValidationTestModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\ValidationTestInvalidModelAttribute.cs">
+      <Link>FunctionalUtilities\ValidationTestInvalidModelAttribute.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\ValidationTestModelBuilder.cs">
+      <Link>FunctionalUtilities\ValidationTestModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\CsdlElementExtractor.cs">
+      <Link>FunctionalUtilities\CsdlElementExtractor.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\CsdlFacetsOutputLevel.cs">
+      <Link>FunctionalUtilities\CsdlFacetsOutputLevel.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\CsdlTypeOutputFormat.cs">
+      <Link>FunctionalUtilities\CsdlTypeOutputFormat.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\CsdlXElementComparer.cs">
+      <Link>FunctionalUtilities\CsdlXElementComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\CsdlXElementSorter.cs">
+      <Link>FunctionalUtilities\CsdlXElementSorter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\EdmLibCsdlContentGenerator.cs">
+      <Link>FunctionalUtilities\EdmLibCsdlContentGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\EdmLibCsdlSchemaEnvelope.cs">
+      <Link>FunctionalUtilities\EdmLibCsdlSchemaEnvelope.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\FindMethodsTestModelBuilder.cs">
+      <Link>FunctionalUtilities\FindMethodsTestModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\OperationTestModelBuilder.cs">
+      <Link>FunctionalUtilities\OperationTestModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\ModelBuilder.cs">
+      <Link>FunctionalUtilities\ModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\ModelBuilderHelpers.cs">
+      <Link>FunctionalUtilities\ModelBuilderHelpers.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\SerializerResultVerifierUsingXml.cs">
+      <Link>FunctionalUtilities\SerializerResultVerifierUsingXml.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\ValidationVerificationHelper.cs">
+      <Link>FunctionalUtilities\ValidationVerificationHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\VocabularyApplicationCsdlGenerator.cs">
+      <Link>FunctionalUtilities\VocabularyApplicationCsdlGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\VocabularyDefinitionCsdlGenerator.cs">
+      <Link>FunctionalUtilities\VocabularyDefinitionCsdlGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\VocabularyModelComparer.cs">
+      <Link>FunctionalUtilities\VocabularyModelComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\VocabularyTestModelBuilder.cs">
+      <Link>FunctionalUtilities\VocabularyTestModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\CustomCsdlSchemaCompliantTestAttribute.cs">
+      <Link>FunctionalUtilities\CustomCsdlSchemaCompliantTestAttribute.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\XElementAnnotationModelBuilder.cs">
+      <Link>FunctionalUtilities\XElementAnnotationModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\SampleTests.cs">
+      <Link>SampleTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\FunctionalUtilities\ODataTestModelBuilder.cs">
+      <Link>FunctionalUtilities\ODataTestModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\UnitTests\ComplexTypeTests.cs">
+      <Link>UnitTests\ComplexTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\UnitTests\ExtensionMethodsTests.cs">
+      <Link>UnitTests\ExtensionMethodsTests.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\VocabularyStubs\StubNonAnnotatedElement.cs">
+      <Link>VocabularyStubs\StubNonAnnotatedElement.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\VocabularyStubs\StubPropertyConstructor.cs">
+      <Link>VocabularyStubs\StubPropertyConstructor.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\VocabularyStubs\StubPropertyValueBinding.cs">
+      <Link>VocabularyStubs\StubPropertyValueBinding.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\VocabularyStubs\StubRecordExpression.cs">
+      <Link>VocabularyStubs\StubRecordExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\VocabularyStubs\StubStringConstantExpression.cs">
+      <Link>VocabularyStubs\StubStringConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\VocabularyStubs\StubTypeTerm.cs">
+      <Link>VocabularyStubs\StubTypeTerm.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\VocabularyStubs\StubValueAnnotation.cs">
+      <Link>VocabularyStubs\StubValueAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\VocabularyStubs\StubValueTerm.cs">
+      <Link>VocabularyStubs\StubValueTerm.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmComplexType.cs">
+      <Link>StubEdm\StubEdmComplexType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmDirectValueAnnotationBinding.cs">
+      <Link>StubEdm\StubEdmDirectValueAnnotationBinding.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmElement.cs">
+      <Link>StubEdm\StubEdmElement.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmEntityContainer.cs">
+      <Link>StubEdm\StubEdmEntityContainer.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmEntitySet.cs">
+      <Link>StubEdm\StubEdmEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmEntitySetReferenceExpression.cs">
+      <Link>StubEdm\StubEdmEntitySetReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmEntityType.cs">
+      <Link>StubEdm\StubEdmEntityType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmEnumMember.cs">
+      <Link>StubEdm\StubEdmEnumMember.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmEnumType.cs">
+      <Link>StubEdm\StubEdmEnumType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmModel.cs">
+      <Link>StubEdm\StubEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmNavigationProperty.cs">
+      <Link>StubEdm\StubEdmNavigationProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmOperation.cs">
+      <Link>StubEdm\StubEdmOperation.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmOperationParameter.cs">
+      <Link>StubEdm\StubEdmOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmStringConstant.cs">
+      <Link>StubEdm\StubEdmStringConstant.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmStructuralProperty.cs">
+      <Link>StubEdm\StubEdmStructuralProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmType.cs">
+      <Link>StubEdm\StubEdmType.cs</Link>
+    </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\StubEdm\StubEdmTypeReference.cs">
+      <Link>StubEdm\StubEdmTypeReference.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs" />
+    <Content Include="Properties\AppManifest.xml" />
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

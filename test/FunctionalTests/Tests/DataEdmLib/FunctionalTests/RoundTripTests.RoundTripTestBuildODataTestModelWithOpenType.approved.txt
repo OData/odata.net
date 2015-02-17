@@ -1,0 +1,12 @@
+<Schema Namespace="TestModel" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="OpenEntityType" OpenType="true">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="DefaultContainer">
+    <EntitySet Name="OpenEntityType" EntityType="TestModel.OpenEntityType" />
+  </EntityContainer>
+</Schema>
+

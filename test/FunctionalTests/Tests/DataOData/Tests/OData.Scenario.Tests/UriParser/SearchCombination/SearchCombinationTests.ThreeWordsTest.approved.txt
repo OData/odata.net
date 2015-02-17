@@ -1,0 +1,913 @@
+Combination #1: $search=A AND B AND C
+Match:ABC, ABCD;
+Unmatch:, A, B, AB, C, AC, BC, D, AD, BD, ABD, CD, ACD, BCD;
+
+Combination #2: $search=A NOT (B AND C)
+Match:A, AB, AC, AD, ABD, ACD;
+Unmatch:, B, C, BC, ABC, D, BD, CD, BCD, ABCD;
+
+Combination #3: $search=NOT A AND B AND C
+Match:BC, BCD;
+Unmatch:, A, B, AB, C, AC, ABC, D, AD, BD, ABD, CD, ACD, ABCD;
+
+Combination #4: $search=NOT A NOT (B AND C)
+Match:, B, C, D, BD, CD;
+Unmatch:A, AB, AC, BC, ABC, AD, ABD, ACD, BCD, ABCD;
+
+Combination #5: $search=A( OR B AND C
+Exception:Syntax error: character '(' is not valid at position 1 in 'A( OR B AND C'.
+
+Combination #6: $search=A AND OR NOT (B AND C)
+Exception:Expression expected at position 6 in 'A AND OR NOT (B AND C)'.
+
+Combination #7: $search=NOT A OR B AND C
+Match:, B, C, BC, ABC, D, BD, CD, BCD, ABCD;
+Unmatch:A, AB, AC, AD, ABD, ACD;
+
+Combination #8: $search=NOT A OR NOT (B AND C)
+Match:, A, B, AB, C, AC, BC, D, AD, BD, ABD, CD, ACD, BCD;
+Unmatch:ABC, ABCD;
+
+Combination #9: $search=A AND B NOT C
+Match:AB, ABD;
+Unmatch:, A, B, C, AC, BC, ABC, D, AD, BD, CD, ACD, BCD, ABCD;
+
+Combination #10: $search=A NOT (B NOT C)
+Match:A, AC, ABC, AD, ACD, ABCD;
+Unmatch:, B, AB, C, BC, D, BD, ABD, CD, BCD;
+
+Combination #11: $search=NOT A AND B NOT C
+Match:B, BD;
+Unmatch:, A, AB, C, AC, BC, ABC, D, AD, ABD, CD, ACD, BCD, ABCD;
+
+Combination #12: $search=NOT A( NOT (B NOT C)
+Exception:Syntax error: character '(' is not valid at position 5 in 'NOT A( NOT (B NOT C)'.
+
+Combination #13: $search=A AND OR B NOT C
+Exception:Expression expected at position 6 in 'A AND OR B NOT C'.
+
+Combination #14: $search=A OR NOT (B NOT C)
+Match:, A, AB, C, AC, BC, ABC, D, AD, ABD, CD, ACD, BCD, ABCD;
+Unmatch:B, BD;
+
+Combination #15: $search=NOT A OR B NOT C
+Match:, B, AB, C, BC, D, BD, ABD, CD, BCD;
+Unmatch:A, AC, ABC, AD, ACD, ABCD;
+
+Combination #16: $search=NOT A OR NOT (B NOT C)
+Match:, A, B, C, AC, BC, ABC, D, AD, BD, CD, ACD, BCD, ABCD;
+Unmatch:AB, ABD;
+
+Combination #17: $search=A AND NOT B AND C
+Match:AC, ACD;
+Unmatch:, A, B, AB, C, BC, ABC, D, AD, BD, ABD, CD, BCD, ABCD;
+
+Combination #18: $search=A NOT (NOT B AND C)
+Match:A, AB, ABC, AD, ABD, ABCD;
+Unmatch:, B, C, AC, BC, D, BD, CD, ACD, BCD;
+
+Combination #19: $search=NOT A( AND NOT B AND C
+Exception:Syntax error: character '(' is not valid at position 5 in 'NOT A( AND NOT B AND C'.
+
+Combination #20: $search=NOT A AND NOT (NOT B AND C)
+Match:, B, BC, D, BD, BCD;
+Unmatch:A, AB, C, AC, ABC, AD, ABD, CD, ACD, ABCD;
+
+Combination #21: $search=A OR NOT B AND C
+Match:A, AB, C, AC, ABC, AD, ABD, CD, ACD, ABCD;
+Unmatch:, B, BC, D, BD, BCD;
+
+Combination #22: $search=A OR NOT (NOT B AND C)
+Match:, A, B, AB, AC, BC, ABC, D, AD, BD, ABD, ACD, BCD, ABCD;
+Unmatch:C, CD;
+
+Combination #23: $search=NOT A OR NOT B AND C
+Match:, B, C, AC, BC, D, BD, CD, ACD, BCD;
+Unmatch:A, AB, ABC, AD, ABD, ABCD;
+
+Combination #24: $search=NOT A OR NOT (NOT B AND C)
+Match:, A, B, AB, C, BC, ABC, D, AD, BD, ABD, CD, BCD, ABCD;
+Unmatch:AC, ACD;
+
+Combination #25: $search=A AND NOT B NOT C
+Match:A, AD;
+Unmatch:, B, AB, C, AC, BC, ABC, D, BD, ABD, CD, ACD, BCD, ABCD;
+
+Combination #26: $search=A( NOT (NOT B NOT C)
+Exception:Syntax error: character '(' is not valid at position 1 in 'A( NOT (NOT B NOT C)'.
+
+Combination #27: $search=NOT A AND AND NOT B NOT C
+Exception:Expression expected at position 10 in 'NOT A AND AND NOT B NOT C'.
+
+Combination #28: $search=NOT A NOT (NOT B NOT C)
+Match:B, C, BC, BD, CD, BCD;
+Unmatch:, A, AB, AC, ABC, D, AD, ABD, ACD, ABCD;
+
+Combination #29: $search=A OR NOT B NOT C
+Match:, A, AB, AC, ABC, D, AD, ABD, ACD, ABCD;
+Unmatch:B, C, BC, BD, CD, BCD;
+
+Combination #30: $search=A OR NOT (NOT B NOT C)
+Match:A, B, AB, C, AC, BC, ABC, AD, BD, ABD, CD, ACD, BCD, ABCD;
+Unmatch:, D;
+
+Combination #31: $search=NOT A OR NOT B NOT C
+Match:, A, B, C, BC, D, AD, BD, CD, BCD;
+Unmatch:AB, AC, ABC, ABD, ACD, ABCD;
+
+Combination #32: $search=NOT A OR NOT (NOT B NOT C)
+Match:, B, AB, C, AC, BC, ABC, D, BD, ABD, CD, ACD, BCD, ABCD;
+Unmatch:A, AD;
+
+Combination #33: $search=A( AND (B( OR C)
+Exception:Syntax error: character '(' is not valid at position 1 in 'A( AND (B( OR C)'.
+
+Combination #34: $search=A AND NOT (B( OR C)
+Exception:Syntax error: character '(' is not valid at position 12 in 'A AND NOT (B( OR C)'.
+
+Combination #35: $search=NOT A AND (B( OR C)
+Exception:Syntax error: character '(' is not valid at position 12 in 'NOT A AND (B( OR C)'.
+
+Combination #36: $search=NOT A NOT (B( OR C)
+Exception:Syntax error: character '(' is not valid at position 12 in 'NOT A NOT (B( OR C)'.
+
+Combination #37: $search=A OR B( OR C
+Exception:Syntax error: character '(' is not valid at position 6 in 'A OR B( OR C'.
+
+Combination #38: $search=A OR NOT (B( OR C)
+Exception:Syntax error: character '(' is not valid at position 11 in 'A OR NOT (B( OR C)'.
+
+Combination #39: $search=NOT A OR B( OR C
+Exception:Syntax error: character '(' is not valid at position 10 in 'NOT A OR B( OR C'.
+
+Combination #40: $search=NOT A( OR NOT (B( OR C)
+Exception:Syntax error: character '(' is not valid at position 5 in 'NOT A( OR NOT (B( OR C)'.
+
+Combination #41: $search=A AND AND (B AND OR NOT C)
+Exception:Expression expected at position 6 in 'A AND AND (B AND OR NOT C)'.
+
+Combination #42: $search=A NOT (B AND OR NOT C)
+Exception:Expression expected at position 13 in 'A NOT (B AND OR NOT C)'.
+
+Combination #43: $search=NOT A AND (B AND OR NOT C)
+Exception:Expression expected at position 17 in 'NOT A AND (B AND OR NOT C)'.
+
+Combination #44: $search=NOT A NOT (B AND OR NOT C)
+Exception:Expression expected at position 17 in 'NOT A NOT (B AND OR NOT C)'.
+
+Combination #45: $search=A OR B AND OR NOT C
+Exception:Expression expected at position 11 in 'A OR B AND OR NOT C'.
+
+Combination #46: $search=A OR NOT (B AND OR NOT C)
+Exception:Expression expected at position 16 in 'A OR NOT (B AND OR NOT C)'.
+
+Combination #47: $search=NOT A( OR B AND OR NOT C
+Exception:Syntax error: character '(' is not valid at position 5 in 'NOT A( OR B AND OR NOT C'.
+
+Combination #48: $search=NOT A AND OR NOT (B AND OR NOT C)
+Exception:Expression expected at position 10 in 'NOT A AND OR NOT (B AND OR NOT C)'.
+
+Combination #49: $search=A AND (NOT B OR C)
+Match:A, AC, ABC, AD, ACD, ABCD;
+Unmatch:, B, AB, C, BC, D, BD, ABD, CD, BCD;
+
+Combination #50: $search=A NOT (NOT B OR C)
+Match:AB, ABD;
+Unmatch:, A, B, C, AC, BC, ABC, D, AD, BD, CD, ACD, BCD, ABCD;
+
+Combination #51: $search=NOT A AND (NOT B OR C)
+Match:, C, BC, D, CD, BCD;
+Unmatch:A, B, AB, AC, ABC, AD, BD, ABD, ACD, ABCD;
+
+Combination #52: $search=NOT A NOT (NOT B OR C)
+Match:B, BD;
+Unmatch:, A, AB, C, AC, BC, ABC, D, AD, ABD, CD, ACD, BCD, ABCD;
+
+Combination #53: $search=A OR NOT B OR C
+Match:, A, AB, C, AC, BC, ABC, D, AD, ABD, CD, ACD, BCD, ABCD;
+Unmatch:B, BD;
+
+Combination #54: $search=A( OR NOT (NOT B OR C)
+Exception:Syntax error: character '(' is not valid at position 1 in 'A( OR NOT (NOT B OR C)'.
+
+Combination #55: $search=NOT A AND OR NOT B OR C
+Exception:Expression expected at position 10 in 'NOT A AND OR NOT B OR C'.
+
+Combination #56: $search=NOT A OR NOT (NOT B OR C)
+Match:, B, AB, C, BC, D, BD, ABD, CD, BCD;
+Unmatch:A, AC, ABC, AD, ACD, ABCD;
+
+Combination #57: $search=A AND (NOT B OR NOT C)
+Match:A, AB, AC, AD, ABD, ACD;
+Unmatch:, B, C, BC, ABC, D, BD, CD, BCD, ABCD;
+
+Combination #58: $search=A NOT (NOT B OR NOT C)
+Match:ABC, ABCD;
+Unmatch:, A, B, AB, C, AC, BC, D, AD, BD, ABD, CD, ACD, BCD;
+
+Combination #59: $search=NOT A AND (NOT B OR NOT C)
+Match:, B, C, D, BD, CD;
+Unmatch:A, AB, AC, BC, ABC, AD, ABD, ACD, BCD, ABCD;
+
+Combination #60: $search=NOT A NOT (NOT B OR NOT C)
+Match:BC, BCD;
+Unmatch:, A, B, AB, C, AC, ABC, D, AD, BD, ABD, CD, ACD, ABCD;
+
+Combination #61: $search=A( OR NOT B OR NOT C
+Exception:Syntax error: character '(' is not valid at position 1 in 'A( OR NOT B OR NOT C'.
+
+Combination #62: $search=A AND OR NOT (NOT B OR NOT C)
+Exception:Expression expected at position 6 in 'A AND OR NOT (NOT B OR NOT C)'.
+
+Combination #63: $search=NOT A OR NOT B OR NOT C
+Match:, A, B, AB, C, AC, BC, D, AD, BD, ABD, CD, ACD, BCD;
+Unmatch:ABC, ABCD;
+
+Combination #64: $search=NOT A OR NOT (NOT B OR NOT C)
+Match:, B, C, BC, ABC, D, BD, CD, BCD, ABCD;
+Unmatch:A, AB, AC, AD, ABD, ACD;
+
+Combination #65: $search=NOT A AND B AND C
+Match:BC, BCD;
+Unmatch:, A, B, AB, C, AC, ABC, D, AD, BD, ABD, CD, ACD, ABCD;
+
+Combination #66: $search=NOT A NOT (B AND C)
+Match:, B, C, D, BD, CD;
+Unmatch:A, AB, AC, BC, ABC, AD, ABD, ACD, BCD, ABCD;
+
+Combination #67: $search=NOT NOT A AND B AND C
+Match:ABC, ABCD;
+Unmatch:, A, B, AB, C, AC, BC, D, AD, BD, ABD, CD, ACD, BCD;
+
+Combination #68: $search=NOT NOT A( NOT (B AND C)
+Exception:Syntax error: character '(' is not valid at position 9 in 'NOT NOT A( NOT (B AND C)'.
+
+Combination #69: $search=NOT A AND OR B AND C
+Exception:Expression expected at position 10 in 'NOT A AND OR B AND C'.
+
+Combination #70: $search=NOT A OR NOT (B AND C)
+Match:, A, B, AB, C, AC, BC, D, AD, BD, ABD, CD, ACD, BCD;
+Unmatch:ABC, ABCD;
+
+Combination #71: $search=NOT NOT A OR B AND C
+Match:A, AB, AC, BC, ABC, AD, ABD, ACD, BCD, ABCD;
+Unmatch:, B, C, D, BD, CD;
+
+Combination #72: $search=NOT NOT A OR NOT (B AND C)
+Match:, A, B, AB, C, AC, ABC, D, AD, BD, ABD, CD, ACD, ABCD;
+Unmatch:BC, BCD;
+
+Combination #73: $search=NOT A AND B NOT C
+Match:B, BD;
+Unmatch:, A, AB, C, AC, BC, ABC, D, AD, ABD, CD, ACD, BCD, ABCD;
+
+Combination #74: $search=NOT A NOT (B NOT C)
+Match:, C, BC, D, CD, BCD;
+Unmatch:A, B, AB, AC, ABC, AD, BD, ABD, ACD, ABCD;
+
+Combination #75: $search=NOT NOT A( AND B NOT C
+Exception:Syntax error: character '(' is not valid at position 9 in 'NOT NOT A( AND B NOT C'.
+
+Combination #76: $search=NOT NOT A AND NOT (B NOT C)
+Match:A, AC, ABC, AD, ACD, ABCD;
+Unmatch:, B, AB, C, BC, D, BD, ABD, CD, BCD;
+
+Combination #77: $search=NOT A OR B NOT C
+Match:, B, AB, C, BC, D, BD, ABD, CD, BCD;
+Unmatch:A, AC, ABC, AD, ACD, ABCD;
+
+Combination #78: $search=NOT A OR NOT (B NOT C)
+Match:, A, B, C, AC, BC, ABC, D, AD, BD, CD, ACD, BCD, ABCD;
+Unmatch:AB, ABD;
+
+Combination #79: $search=NOT NOT A OR B NOT C
+Match:A, B, AB, AC, ABC, AD, BD, ABD, ACD, ABCD;
+Unmatch:, C, BC, D, CD, BCD;
+
+Combination #80: $search=NOT NOT A OR NOT (B NOT C)
+Match:, A, AB, C, AC, BC, ABC, D, AD, ABD, CD, ACD, BCD, ABCD;
+Unmatch:B, BD;
+
+Combination #81: $search=NOT A AND NOT B AND C
+Match:C, CD;
+Unmatch:, A, B, AB, AC, BC, ABC, D, AD, BD, ABD, ACD, BCD, ABCD;
+
+Combination #82: $search=NOT A( NOT (NOT B AND C)
+Exception:Syntax error: character '(' is not valid at position 5 in 'NOT A( NOT (NOT B AND C)'.
+
+Combination #83: $search=NOT NOT A AND AND NOT B AND C
+Exception:Expression expected at position 14 in 'NOT NOT A AND AND NOT B AND C'.
+
+Combination #84: $search=NOT NOT A NOT (NOT B AND C)
+Match:A, AB, ABC, AD, ABD, ABCD;
+Unmatch:, B, C, AC, BC, D, BD, CD, ACD, BCD;
+
+Combination #85: $search=NOT A OR NOT B AND C
+Match:, B, C, AC, BC, D, BD, CD, ACD, BCD;
+Unmatch:A, AB, ABC, AD, ABD, ABCD;
+
+Combination #86: $search=NOT A OR NOT (NOT B AND C)
+Match:, A, B, AB, C, BC, ABC, D, AD, BD, ABD, CD, BCD, ABCD;
+Unmatch:AC, ACD;
+
+Combination #87: $search=NOT NOT A OR NOT B AND C
+Match:A, AB, C, AC, ABC, AD, ABD, CD, ACD, ABCD;
+Unmatch:, B, BC, D, BD, BCD;
+
+Combination #88: $search=NOT NOT A OR NOT (NOT B AND C)
+Match:, A, B, AB, AC, BC, ABC, D, AD, BD, ABD, ACD, BCD, ABCD;
+Unmatch:C, CD;
+
+Combination #89: $search=NOT A( AND NOT B NOT C
+Exception:Syntax error: character '(' is not valid at position 5 in 'NOT A( AND NOT B NOT C'.
+
+Combination #90: $search=NOT A AND NOT (NOT B NOT C)
+Match:B, C, BC, BD, CD, BCD;
+Unmatch:, A, AB, AC, ABC, D, AD, ABD, ACD, ABCD;
+
+Combination #91: $search=NOT NOT A AND NOT B NOT C
+Match:A, AD;
+Unmatch:, B, AB, C, AC, BC, ABC, D, BD, ABD, CD, ACD, BCD, ABCD;
+
+Combination #92: $search=NOT NOT A NOT (NOT B NOT C)
+Match:AB, AC, ABC, ABD, ACD, ABCD;
+Unmatch:, A, B, C, BC, D, AD, BD, CD, BCD;
+
+Combination #93: $search=NOT A OR NOT B NOT C
+Match:, A, B, C, BC, D, AD, BD, CD, BCD;
+Unmatch:AB, AC, ABC, ABD, ACD, ABCD;
+
+Combination #94: $search=NOT A OR NOT (NOT B NOT C)
+Match:, B, AB, C, AC, BC, ABC, D, BD, ABD, CD, ACD, BCD, ABCD;
+Unmatch:A, AD;
+
+Combination #95: $search=NOT NOT A OR NOT B NOT C
+Match:, A, AB, AC, ABC, D, AD, ABD, ACD, ABCD;
+Unmatch:B, C, BC, BD, CD, BCD;
+
+Combination #96: $search=NOT NOT A( OR NOT (NOT B NOT C)
+Exception:Syntax error: character '(' is not valid at position 9 in 'NOT NOT A( OR NOT (NOT B NOT C)'.
+
+Combination #97: $search=NOT A AND AND (B( OR C)
+Exception:Expression expected at position 10 in 'NOT A AND AND (B( OR C)'.
+
+Combination #98: $search=NOT A NOT (B( OR C)
+Exception:Syntax error: character '(' is not valid at position 12 in 'NOT A NOT (B( OR C)'.
+
+Combination #99: $search=NOT NOT A AND (B( OR C)
+Exception:Syntax error: character '(' is not valid at position 16 in 'NOT NOT A AND (B( OR C)'.
+
+Combination #100: $search=NOT NOT A NOT (B( OR C)
+Exception:Syntax error: character '(' is not valid at position 16 in 'NOT NOT A NOT (B( OR C)'.
+
+Combination #101: $search=NOT A OR B( OR C
+Exception:Syntax error: character '(' is not valid at position 10 in 'NOT A OR B( OR C'.
+
+Combination #102: $search=NOT A OR NOT (B( OR C)
+Exception:Syntax error: character '(' is not valid at position 15 in 'NOT A OR NOT (B( OR C)'.
+
+Combination #103: $search=NOT NOT A( OR B( OR C
+Exception:Syntax error: character '(' is not valid at position 9 in 'NOT NOT A( OR B( OR C'.
+
+Combination #104: $search=NOT NOT A AND OR NOT (B( OR C)
+Exception:Expression expected at position 14 in 'NOT NOT A AND OR NOT (B( OR C)'.
+
+Combination #105: $search=NOT A AND (B AND OR NOT C)
+Exception:Expression expected at position 17 in 'NOT A AND (B AND OR NOT C)'.
+
+Combination #106: $search=NOT A NOT (B AND OR NOT C)
+Exception:Expression expected at position 17 in 'NOT A NOT (B AND OR NOT C)'.
+
+Combination #107: $search=NOT NOT A AND (B AND OR NOT C)
+Exception:Expression expected at position 21 in 'NOT NOT A AND (B AND OR NOT C)'.
+
+Combination #108: $search=NOT NOT A NOT (B AND OR NOT C)
+Exception:Expression expected at position 21 in 'NOT NOT A NOT (B AND OR NOT C)'.
+
+Combination #109: $search=NOT A OR B AND OR NOT C
+Exception:Expression expected at position 15 in 'NOT A OR B AND OR NOT C'.
+
+Combination #110: $search=NOT A( OR NOT (B AND OR NOT C)
+Exception:Syntax error: character '(' is not valid at position 5 in 'NOT A( OR NOT (B AND OR NOT C)'.
+
+Combination #111: $search=NOT NOT A AND OR B AND OR NOT C
+Exception:Expression expected at position 14 in 'NOT NOT A AND OR B AND OR NOT C'.
+
+Combination #112: $search=NOT NOT A OR NOT (B AND OR NOT C)
+Exception:Expression expected at position 24 in 'NOT NOT A OR NOT (B AND OR NOT C)'.
+
+Combination #113: $search=NOT A AND (NOT B OR C)
+Match:, C, BC, D, CD, BCD;
+Unmatch:A, B, AB, AC, ABC, AD, BD, ABD, ACD, ABCD;
+
+Combination #114: $search=NOT A NOT (NOT B OR C)
+Match:B, BD;
+Unmatch:, A, AB, C, AC, BC, ABC, D, AD, ABD, CD, ACD, BCD, ABCD;
+
+Combination #115: $search=NOT NOT A AND (NOT B OR C)
+Match:A, AC, ABC, AD, ACD, ABCD;
+Unmatch:, B, AB, C, BC, D, BD, ABD, CD, BCD;
+
+Combination #116: $search=NOT NOT A NOT (NOT B OR C)
+Match:AB, ABD;
+Unmatch:, A, B, C, AC, BC, ABC, D, AD, BD, CD, ACD, BCD, ABCD;
+
+Combination #117: $search=NOT A( OR NOT B OR C
+Exception:Syntax error: character '(' is not valid at position 5 in 'NOT A( OR NOT B OR C'.
+
+Combination #118: $search=NOT A AND OR NOT (NOT B OR C)
+Exception:Expression expected at position 10 in 'NOT A AND OR NOT (NOT B OR C)'.
+
+Combination #119: $search=NOT NOT A OR NOT B OR C
+Match:, A, AB, C, AC, BC, ABC, D, AD, ABD, CD, ACD, BCD, ABCD;
+Unmatch:B, BD;
+
+Combination #120: $search=NOT NOT A OR NOT (NOT B OR C)
+Match:A, B, AB, AC, ABC, AD, BD, ABD, ACD, ABCD;
+Unmatch:, C, BC, D, CD, BCD;
+
+Combination #121: $search=NOT A AND (NOT B OR NOT C)
+Match:, B, C, D, BD, CD;
+Unmatch:A, AB, AC, BC, ABC, AD, ABD, ACD, BCD, ABCD;
+
+Combination #122: $search=NOT A NOT (NOT B OR NOT C)
+Match:BC, BCD;
+Unmatch:, A, B, AB, C, AC, ABC, D, AD, BD, ABD, CD, ACD, ABCD;
+
+Combination #123: $search=NOT NOT A AND (NOT B OR NOT C)
+Match:A, AB, AC, AD, ABD, ACD;
+Unmatch:, B, C, BC, ABC, D, BD, CD, BCD, ABCD;
+
+Combination #124: $search=NOT NOT A( NOT (NOT B OR NOT C)
+Exception:Syntax error: character '(' is not valid at position 9 in 'NOT NOT A( NOT (NOT B OR NOT C)'.
+
+Combination #125: $search=NOT A AND OR NOT B OR NOT C
+Exception:Expression expected at position 10 in 'NOT A AND OR NOT B OR NOT C'.
+
+Combination #126: $search=NOT A OR NOT (NOT B OR NOT C)
+Match:, B, C, BC, ABC, D, BD, CD, BCD, ABCD;
+Unmatch:A, AB, AC, AD, ABD, ACD;
+
+Combination #127: $search=NOT NOT A OR NOT B OR NOT C
+Match:, A, B, AB, C, AC, ABC, D, AD, BD, ABD, CD, ACD, ABCD;
+Unmatch:BC, BCD;
+
+Combination #128: $search=NOT NOT A OR NOT (NOT B OR NOT C)
+Match:A, AB, AC, BC, ABC, AD, ABD, ACD, BCD, ABCD;
+Unmatch:, B, C, D, BD, CD;
+
+Combination #129: $search=A AND B AND C
+Match:ABC, ABCD;
+Unmatch:, A, B, AB, C, AC, BC, D, AD, BD, ABD, CD, ACD, BCD;
+
+Combination #130: $search=A AND B NOT C
+Match:AB, ABD;
+Unmatch:, A, B, C, AC, BC, ABC, D, AD, BD, CD, ACD, BCD, ABCD;
+
+Combination #131: $search=NOT (A AND B) AND C
+Match:C, AC, BC, CD, ACD, BCD;
+Unmatch:, A, B, AB, ABC, D, AD, BD, ABD, ABCD;
+
+Combination #132: $search=NOT (A AND B) NOT C
+Match:, A, B, D, AD, BD;
+Unmatch:AB, C, AC, BC, ABC, ABD, CD, ACD, BCD, ABCD;
+
+Combination #133: $search=A AND B( OR C
+Exception:Syntax error: character '(' is not valid at position 7 in 'A AND B( OR C'.
+
+Combination #134: $search=A AND B AND OR NOT C
+Exception:Expression expected at position 12 in 'A AND B AND OR NOT C'.
+
+Combination #135: $search=NOT (A AND B) OR C
+Match:, A, B, C, AC, BC, ABC, D, AD, BD, CD, ACD, BCD, ABCD;
+Unmatch:AB, ABD;
+
+Combination #136: $search=NOT (A AND B) OR NOT C
+Match:, A, B, AB, C, AC, BC, D, AD, BD, ABD, CD, ACD, BCD;
+Unmatch:ABC, ABCD;
+
+Combination #137: $search=A AND B AND NOT C
+Match:AB, ABD;
+Unmatch:, A, B, C, AC, BC, ABC, D, AD, BD, CD, ACD, BCD, ABCD;
+
+Combination #138: $search=A AND B NOT NOT C
+Match:ABC, ABCD;
+Unmatch:, A, B, AB, C, AC, BC, D, AD, BD, ABD, CD, ACD, BCD;
+
+Combination #139: $search=NOT (A AND B) AND NOT C
+Match:, A, B, D, AD, BD;
+Unmatch:AB, C, AC, BC, ABC, ABD, CD, ACD, BCD, ABCD;
+
+Combination #140: $search=NOT (A AND B)( NOT NOT C
+Exception:')' or operator expected at position 24 in 'NOT (A AND B)( NOT NOT C'.
+
+Combination #141: $search=A AND B AND OR NOT C
+Exception:Expression expected at position 12 in 'A AND B AND OR NOT C'.
+
+Combination #142: $search=A AND B OR NOT NOT C
+Match:AB, C, AC, BC, ABC, ABD, CD, ACD, BCD, ABCD;
+Unmatch:, A, B, D, AD, BD;
+
+Combination #143: $search=NOT (A AND B) OR NOT C
+Match:, A, B, AB, C, AC, BC, D, AD, BD, ABD, CD, ACD, BCD;
+Unmatch:ABC, ABCD;
+
+Combination #144: $search=NOT (A AND B) OR NOT NOT C
+Match:, A, B, C, AC, BC, ABC, D, AD, BD, CD, ACD, BCD, ABCD;
+Unmatch:AB, ABD;
+
+Combination #145: $search=A NOT B AND C
+Match:AC, ACD;
+Unmatch:, A, B, AB, C, BC, ABC, D, AD, BD, ABD, CD, BCD, ABCD;
+
+Combination #146: $search=A NOT B NOT C
+Match:A, AD;
+Unmatch:, B, AB, C, AC, BC, ABC, D, BD, ABD, CD, ACD, BCD, ABCD;
+
+Combination #147: $search=NOT (A NOT B)( AND C
+Exception:Expression expected at position 15 in 'NOT (A NOT B)( AND C'.
+
+Combination #148: $search=NOT (A NOT B) AND NOT C
+Match:, B, AB, D, BD, ABD;
+Unmatch:A, C, AC, BC, ABC, AD, CD, ACD, BCD, ABCD;
+
+Combination #149: $search=A NOT B OR C
+Match:A, C, AC, BC, ABC, AD, CD, ACD, BCD, ABCD;
+Unmatch:, B, AB, D, BD, ABD;
+
+Combination #150: $search=A NOT B OR NOT C
+Match:, A, B, AB, AC, D, AD, BD, ABD, ACD;
+Unmatch:C, BC, ABC, CD, BCD, ABCD;
+
+Combination #151: $search=NOT (A NOT B) OR C
+Match:, B, AB, C, AC, BC, ABC, D, BD, ABD, CD, ACD, BCD, ABCD;
+Unmatch:A, AD;
+
+Combination #152: $search=NOT (A NOT B) OR NOT C
+Match:, A, B, AB, C, BC, ABC, D, AD, BD, ABD, CD, BCD, ABCD;
+Unmatch:AC, ACD;
+
+Combination #153: $search=A NOT B AND NOT C
+Match:A, AD;
+Unmatch:, B, AB, C, AC, BC, ABC, D, BD, ABD, CD, ACD, BCD, ABCD;
+
+Combination #154: $search=A NOT B( NOT NOT C
+Exception:Syntax error: character '(' is not valid at position 7 in 'A NOT B( NOT NOT C'.
+
+Combination #155: $search=NOT (A NOT B) AND AND NOT C
+Exception:Expression expected at position 18 in 'NOT (A NOT B) AND AND NOT C'.
+
+Combination #156: $search=NOT (A NOT B) NOT NOT C
+Match:C, BC, ABC, CD, BCD, ABCD;
+Unmatch:, A, B, AB, AC, D, AD, BD, ABD, ACD;
+
+Combination #157: $search=A NOT B OR NOT C
+Match:, A, B, AB, AC, D, AD, BD, ABD, ACD;
+Unmatch:C, BC, ABC, CD, BCD, ABCD;
+
+Combination #158: $search=A NOT B OR NOT NOT C
+Match:A, C, AC, BC, ABC, AD, CD, ACD, BCD, ABCD;
+Unmatch:, B, AB, D, BD, ABD;
+
+Combination #159: $search=NOT (A NOT B) OR NOT C
+Match:, A, B, AB, C, BC, ABC, D, AD, BD, ABD, CD, BCD, ABCD;
+Unmatch:AC, ACD;
+
+Combination #160: $search=NOT (A NOT B) OR NOT NOT C
+Match:, B, AB, C, AC, BC, ABC, D, BD, ABD, CD, ACD, BCD, ABCD;
+Unmatch:A, AD;
+
+Combination #161: $search=NOT A AND B( AND C
+Exception:Syntax error: character '(' is not valid at position 11 in 'NOT A AND B( AND C'.
+
+Combination #162: $search=NOT A AND B AND NOT C
+Match:B, BD;
+Unmatch:, A, AB, C, AC, BC, ABC, D, AD, ABD, CD, ACD, BCD, ABCD;
+
+Combination #163: $search=NOT (NOT A AND B) AND C
+Match:C, AC, ABC, CD, ACD, ABCD;
+Unmatch:, A, B, AB, BC, D, AD, BD, ABD, BCD;
+
+Combination #164: $search=NOT (NOT A AND B) NOT C
+Match:, A, AB, D, AD, ABD;
+Unmatch:B, C, AC, BC, ABC, BD, CD, ACD, BCD, ABCD;
+
+Combination #165: $search=NOT A AND B OR C
+Match:B, C, AC, BC, ABC, BD, CD, ACD, BCD, ABCD;
+Unmatch:, A, AB, D, AD, ABD;
+
+Combination #166: $search=NOT A AND B OR NOT C
+Match:, A, B, AB, BC, D, AD, BD, ABD, BCD;
+Unmatch:C, AC, ABC, CD, ACD, ABCD;
+
+Combination #167: $search=NOT (NOT A AND B) OR C
+Match:, A, AB, C, AC, BC, ABC, D, AD, ABD, CD, ACD, BCD, ABCD;
+Unmatch:B, BD;
+
+Combination #168: $search=NOT (NOT A AND B)( OR NOT C
+Exception:Expression expected at position 19 in 'NOT (NOT A AND B)( OR NOT C'.
+
+Combination #169: $search=NOT A AND B AND AND NOT C
+Exception:Expression expected at position 16 in 'NOT A AND B AND AND NOT C'.
+
+Combination #170: $search=NOT A AND B NOT NOT C
+Match:BC, BCD;
+Unmatch:, A, B, AB, C, AC, ABC, D, AD, BD, ABD, CD, ACD, ABCD;
+
+Combination #171: $search=NOT (NOT A AND B) AND NOT C
+Match:, A, AB, D, AD, ABD;
+Unmatch:B, C, AC, BC, ABC, BD, CD, ACD, BCD, ABCD;
+
+Combination #172: $search=NOT (NOT A AND B) NOT NOT C
+Match:C, AC, ABC, CD, ACD, ABCD;
+Unmatch:, A, B, AB, BC, D, AD, BD, ABD, BCD;
+
+Combination #173: $search=NOT A AND B OR NOT C
+Match:, A, B, AB, BC, D, AD, BD, ABD, BCD;
+Unmatch:C, AC, ABC, CD, ACD, ABCD;
+
+Combination #174: $search=NOT A AND B OR NOT NOT C
+Match:B, C, AC, BC, ABC, BD, CD, ACD, BCD, ABCD;
+Unmatch:, A, AB, D, AD, ABD;
+
+Combination #175: $search=NOT (NOT A AND B)( OR NOT C
+Exception:Expression expected at position 19 in 'NOT (NOT A AND B)( OR NOT C'.
+
+Combination #176: $search=NOT (NOT A AND B) AND OR NOT NOT C
+Exception:Expression expected at position 22 in 'NOT (NOT A AND B) AND OR NOT NOT C'.
+
+Combination #177: $search=NOT A NOT B AND C
+Match:C, CD;
+Unmatch:, A, B, AB, AC, BC, ABC, D, AD, BD, ABD, ACD, BCD, ABCD;
+
+Combination #178: $search=NOT A NOT B NOT C
+Match:, D;
+Unmatch:A, B, AB, C, AC, BC, ABC, AD, BD, ABD, CD, ACD, BCD, ABCD;
+
+Combination #179: $search=NOT (NOT A NOT B) AND C
+Match:AC, BC, ABC, ACD, BCD, ABCD;
+Unmatch:, A, B, AB, C, D, AD, BD, ABD, CD;
+
+Combination #180: $search=NOT (NOT A NOT B) NOT C
+Match:A, B, AB, AD, BD, ABD;
+Unmatch:, C, AC, BC, ABC, D, CD, ACD, BCD, ABCD;
+
+Combination #181: $search=NOT A NOT B OR C
+Match:, C, AC, BC, ABC, D, CD, ACD, BCD, ABCD;
+Unmatch:A, B, AB, AD, BD, ABD;
+
+Combination #182: $search=NOT A NOT B( OR NOT C
+Exception:Syntax error: character '(' is not valid at position 11 in 'NOT A NOT B( OR NOT C'.
+
+Combination #183: $search=NOT (NOT A NOT B) AND OR C
+Exception:Expression expected at position 22 in 'NOT (NOT A NOT B) AND OR C'.
+
+Combination #184: $search=NOT (NOT A NOT B) OR NOT C
+Match:, A, B, AB, AC, BC, ABC, D, AD, BD, ABD, ACD, BCD, ABCD;
+Unmatch:C, CD;
+
+Combination #185: $search=NOT A NOT B AND NOT C
+Match:, D;
+Unmatch:A, B, AB, C, AC, BC, ABC, AD, BD, ABD, CD, ACD, BCD, ABCD;
+
+Combination #186: $search=NOT A NOT B NOT NOT C
+Match:C, CD;
+Unmatch:, A, B, AB, AC, BC, ABC, D, AD, BD, ABD, ACD, BCD, ABCD;
+
+Combination #187: $search=NOT (NOT A NOT B) AND NOT C
+Match:A, B, AB, AD, BD, ABD;
+Unmatch:, C, AC, BC, ABC, D, CD, ACD, BCD, ABCD;
+
+Combination #188: $search=NOT (NOT A NOT B) NOT NOT C
+Match:AC, BC, ABC, ACD, BCD, ABCD;
+Unmatch:, A, B, AB, C, D, AD, BD, ABD, CD;
+
+Combination #189: $search=NOT A NOT B( OR NOT C
+Exception:Syntax error: character '(' is not valid at position 11 in 'NOT A NOT B( OR NOT C'.
+
+Combination #190: $search=NOT A NOT B AND OR NOT NOT C
+Exception:Expression expected at position 16 in 'NOT A NOT B AND OR NOT NOT C'.
+
+Combination #191: $search=NOT (NOT A NOT B) OR NOT C
+Match:, A, B, AB, AC, BC, ABC, D, AD, BD, ABD, ACD, BCD, ABCD;
+Unmatch:C, CD;
+
+Combination #192: $search=NOT (NOT A NOT B) OR NOT NOT C
+Match:A, B, AB, C, AC, BC, ABC, AD, BD, ABD, CD, ACD, BCD, ABCD;
+Unmatch:, D;
+
+Combination #193: $search=(A( OR B) AND C
+Exception:Syntax error: character '(' is not valid at position 2 in '(A( OR B) AND C'.
+
+Combination #194: $search=(A( OR B) NOT C
+Exception:Syntax error: character '(' is not valid at position 2 in '(A( OR B) NOT C'.
+
+Combination #195: $search=NOT (A( OR B) AND C
+Exception:Syntax error: character '(' is not valid at position 6 in 'NOT (A( OR B) AND C'.
+
+Combination #196: $search=NOT (A( OR B)( NOT C
+Exception:Syntax error: character '(' is not valid at position 6 in 'NOT (A( OR B)( NOT C'.
+
+Combination #197: $search=A( OR B AND OR C
+Exception:Syntax error: character '(' is not valid at position 1 in 'A( OR B AND OR C'.
+
+Combination #198: $search=A( OR B OR NOT C
+Exception:Syntax error: character '(' is not valid at position 1 in 'A( OR B OR NOT C'.
+
+Combination #199: $search=NOT (A( OR B) OR C
+Exception:Syntax error: character '(' is not valid at position 6 in 'NOT (A( OR B) OR C'.
+
+Combination #200: $search=NOT (A( OR B) OR NOT C
+Exception:Syntax error: character '(' is not valid at position 6 in 'NOT (A( OR B) OR NOT C'.
+
+Combination #201: $search=(A( OR B) AND NOT C
+Exception:Syntax error: character '(' is not valid at position 2 in '(A( OR B) AND NOT C'.
+
+Combination #202: $search=(A( OR B) NOT NOT C
+Exception:Syntax error: character '(' is not valid at position 2 in '(A( OR B) NOT NOT C'.
+
+Combination #203: $search=NOT (A( OR B)( AND NOT C
+Exception:Syntax error: character '(' is not valid at position 6 in 'NOT (A( OR B)( AND NOT C'.
+
+Combination #204: $search=NOT (A( OR B) AND NOT NOT C
+Exception:Syntax error: character '(' is not valid at position 6 in 'NOT (A( OR B) AND NOT NOT C'.
+
+Combination #205: $search=A( OR B OR NOT C
+Exception:Syntax error: character '(' is not valid at position 1 in 'A( OR B OR NOT C'.
+
+Combination #206: $search=A( OR B OR NOT NOT C
+Exception:Syntax error: character '(' is not valid at position 1 in 'A( OR B OR NOT NOT C'.
+
+Combination #207: $search=NOT (A( OR B) OR NOT C
+Exception:Syntax error: character '(' is not valid at position 6 in 'NOT (A( OR B) OR NOT C'.
+
+Combination #208: $search=NOT (A( OR B) OR NOT NOT C
+Exception:Syntax error: character '(' is not valid at position 6 in 'NOT (A( OR B) OR NOT NOT C'.
+
+Combination #209: $search=(A AND OR NOT B) AND C
+Exception:Expression expected at position 7 in '(A AND OR NOT B) AND C'.
+
+Combination #210: $search=(A AND OR NOT B)( NOT C
+Exception:Expression expected at position 7 in '(A AND OR NOT B)( NOT C'.
+
+Combination #211: $search=NOT (A AND OR NOT B) AND AND C
+Exception:Expression expected at position 11 in 'NOT (A AND OR NOT B) AND AND C'.
+
+Combination #212: $search=NOT (A AND OR NOT B) NOT C
+Exception:Expression expected at position 11 in 'NOT (A AND OR NOT B) NOT C'.
+
+Combination #213: $search=A AND OR NOT B OR C
+Exception:Expression expected at position 6 in 'A AND OR NOT B OR C'.
+
+Combination #214: $search=A AND OR NOT B OR NOT C
+Exception:Expression expected at position 6 in 'A AND OR NOT B OR NOT C'.
+
+Combination #215: $search=NOT (A AND OR NOT B) OR C
+Exception:Expression expected at position 11 in 'NOT (A AND OR NOT B) OR C'.
+
+Combination #216: $search=NOT (A AND OR NOT B) OR NOT C
+Exception:Expression expected at position 11 in 'NOT (A AND OR NOT B) OR NOT C'.
+
+Combination #217: $search=(A AND OR NOT B)( AND NOT C
+Exception:Expression expected at position 7 in '(A AND OR NOT B)( AND NOT C'.
+
+Combination #218: $search=(A AND OR NOT B) AND NOT NOT C
+Exception:Expression expected at position 7 in '(A AND OR NOT B) AND NOT NOT C'.
+
+Combination #219: $search=NOT (A AND OR NOT B) AND NOT C
+Exception:Expression expected at position 11 in 'NOT (A AND OR NOT B) AND NOT C'.
+
+Combination #220: $search=NOT (A AND OR NOT B) NOT NOT C
+Exception:Expression expected at position 11 in 'NOT (A AND OR NOT B) NOT NOT C'.
+
+Combination #221: $search=A AND OR NOT B OR NOT C
+Exception:Expression expected at position 6 in 'A AND OR NOT B OR NOT C'.
+
+Combination #222: $search=A AND OR NOT B OR NOT NOT C
+Exception:Expression expected at position 6 in 'A AND OR NOT B OR NOT NOT C'.
+
+Combination #223: $search=NOT (A AND OR NOT B) OR NOT C
+Exception:Expression expected at position 11 in 'NOT (A AND OR NOT B) OR NOT C'.
+
+Combination #224: $search=NOT (A AND OR NOT B)( OR NOT NOT C
+Exception:Expression expected at position 11 in 'NOT (A AND OR NOT B)( OR NOT NOT C'.
+
+Combination #225: $search=(NOT A OR B) AND AND C
+Exception:Expression expected at position 17 in '(NOT A OR B) AND AND C'.
+
+Combination #226: $search=(NOT A OR B) NOT C
+Match:, B, AB, D, BD, ABD;
+Unmatch:A, C, AC, BC, ABC, AD, CD, ACD, BCD, ABCD;
+
+Combination #227: $search=NOT (NOT A OR B) AND C
+Match:AC, ACD;
+Unmatch:, A, B, AB, C, BC, ABC, D, AD, BD, ABD, CD, BCD, ABCD;
+
+Combination #228: $search=NOT (NOT A OR B) NOT C
+Match:A, AD;
+Unmatch:, B, AB, C, AC, BC, ABC, D, BD, ABD, CD, ACD, BCD, ABCD;
+
+Combination #229: $search=NOT A OR B OR C
+Match:, B, AB, C, AC, BC, ABC, D, BD, ABD, CD, ACD, BCD, ABCD;
+Unmatch:A, AD;
+
+Combination #230: $search=NOT A OR B OR NOT C
+Match:, A, B, AB, C, BC, ABC, D, AD, BD, ABD, CD, BCD, ABCD;
+Unmatch:AC, ACD;
+
+Combination #231: $search=NOT (NOT A OR B)( OR C
+Exception:Expression expected at position 18 in 'NOT (NOT A OR B)( OR C'.
+
+Combination #232: $search=NOT (NOT A OR B) AND OR NOT C
+Exception:Expression expected at position 21 in 'NOT (NOT A OR B) AND OR NOT C'.
+
+Combination #233: $search=(NOT A OR B) AND NOT C
+Match:, B, AB, D, BD, ABD;
+Unmatch:A, C, AC, BC, ABC, AD, CD, ACD, BCD, ABCD;
+
+Combination #234: $search=(NOT A OR B) NOT NOT C
+Match:C, BC, ABC, CD, BCD, ABCD;
+Unmatch:, A, B, AB, AC, D, AD, BD, ABD, ACD;
+
+Combination #235: $search=NOT (NOT A OR B) AND NOT C
+Match:A, AD;
+Unmatch:, B, AB, C, AC, BC, ABC, D, BD, ABD, CD, ACD, BCD, ABCD;
+
+Combination #236: $search=NOT (NOT A OR B) NOT NOT C
+Match:AC, ACD;
+Unmatch:, A, B, AB, C, BC, ABC, D, AD, BD, ABD, CD, BCD, ABCD;
+
+Combination #237: $search=NOT A OR B OR NOT C
+Match:, A, B, AB, C, BC, ABC, D, AD, BD, ABD, CD, BCD, ABCD;
+Unmatch:AC, ACD;
+
+Combination #238: $search=NOT A OR B( OR NOT NOT C
+Exception:Syntax error: character '(' is not valid at position 10 in 'NOT A OR B( OR NOT NOT C'.
+
+Combination #239: $search=NOT (NOT A OR B) AND OR NOT C
+Exception:Expression expected at position 21 in 'NOT (NOT A OR B) AND OR NOT C'.
+
+Combination #240: $search=NOT (NOT A OR B) OR NOT NOT C
+Match:A, C, AC, BC, ABC, AD, CD, ACD, BCD, ABCD;
+Unmatch:, B, AB, D, BD, ABD;
+
+Combination #241: $search=(NOT A OR NOT B) AND C
+Match:C, AC, BC, CD, ACD, BCD;
+Unmatch:, A, B, AB, ABC, D, AD, BD, ABD, ABCD;
+
+Combination #242: $search=(NOT A OR NOT B) NOT C
+Match:, A, B, D, AD, BD;
+Unmatch:AB, C, AC, BC, ABC, ABD, CD, ACD, BCD, ABCD;
+
+Combination #243: $search=NOT (NOT A OR NOT B) AND C
+Match:ABC, ABCD;
+Unmatch:, A, B, AB, C, AC, BC, D, AD, BD, ABD, CD, ACD, BCD;
+
+Combination #244: $search=NOT (NOT A OR NOT B) NOT C
+Match:AB, ABD;
+Unmatch:, A, B, C, AC, BC, ABC, D, AD, BD, CD, ACD, BCD, ABCD;
+
+Combination #245: $search=NOT A OR NOT B( OR C
+Exception:Syntax error: character '(' is not valid at position 14 in 'NOT A OR NOT B( OR C'.
+
+Combination #246: $search=NOT A OR NOT B AND OR NOT C
+Exception:Expression expected at position 19 in 'NOT A OR NOT B AND OR NOT C'.
+
+Combination #247: $search=NOT (NOT A OR NOT B) OR C
+Match:AB, C, AC, BC, ABC, ABD, CD, ACD, BCD, ABCD;
+Unmatch:, A, B, D, AD, BD;
+
+Combination #248: $search=NOT (NOT A OR NOT B) OR NOT C
+Match:, A, B, AB, ABC, D, AD, BD, ABD, ABCD;
+Unmatch:C, AC, BC, CD, ACD, BCD;
+
+Combination #249: $search=(NOT A OR NOT B) AND NOT C
+Match:, A, B, D, AD, BD;
+Unmatch:AB, C, AC, BC, ABC, ABD, CD, ACD, BCD, ABCD;
+
+Combination #250: $search=(NOT A OR NOT B) NOT NOT C
+Match:C, AC, BC, CD, ACD, BCD;
+Unmatch:, A, B, AB, ABC, D, AD, BD, ABD, ABCD;
+
+Combination #251: $search=NOT (NOT A OR NOT B) AND NOT C
+Match:AB, ABD;
+Unmatch:, A, B, C, AC, BC, ABC, D, AD, BD, CD, ACD, BCD, ABCD;
+
+Combination #252: $search=NOT (NOT A OR NOT B)( NOT NOT C
+Exception:')' or operator expected at position 31 in 'NOT (NOT A OR NOT B)( NOT NOT C'.
+
+Combination #253: $search=NOT A OR NOT B AND OR NOT C
+Exception:Expression expected at position 19 in 'NOT A OR NOT B AND OR NOT C'.
+
+Combination #254: $search=NOT A OR NOT B OR NOT NOT C
+Match:, A, B, C, AC, BC, ABC, D, AD, BD, CD, ACD, BCD, ABCD;
+Unmatch:AB, ABD;
+
+Combination #255: $search=NOT (NOT A OR NOT B) OR NOT C
+Match:, A, B, AB, ABC, D, AD, BD, ABD, ABCD;
+Unmatch:C, AC, BC, CD, ACD, BCD;
+
+Combination #256: $search=NOT (NOT A OR NOT B) OR NOT NOT C
+Match:AB, C, AC, BC, ABC, ABD, CD, ACD, BCD, ABCD;
+Unmatch:, A, B, D, AD, BD;
+

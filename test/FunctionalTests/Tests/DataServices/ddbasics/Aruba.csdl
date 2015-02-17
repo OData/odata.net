@@ -1,0 +1,1776 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Schema Namespace="Aruba" Alias="Self" 
+        xmlns="http://schemas.microsoft.com/ado/2006/04/edm"
+        xmlns:c="http://christro.test/metadata"
+        xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"
+        >
+  <EntityContainer Name="ArubaContainer">
+    <EntitySet Name="BugDefectTrackingSet" EntityType="Aruba.DefectBug" />
+    <EntitySet Name="TaskSet" EntityType="Aruba.Task" />
+    <EntitySet Name="TestScenarioSet" EntityType="Aruba.Scenario" />
+    <EntitySet Name="NonDefaultMappingsSet" EntityType="Self.NonDefaultMappings" />
+    <EntitySet Name="ProjectSet" EntityType="Aruba.Project" />
+    <EntitySet Name="RunSet" EntityType="Aruba.Run" />
+    <EntitySet Name="OwnerDetailSet" EntityType="Aruba.OwnerDetail" />
+    <EntitySet Name="DeploymentScenarioSet" EntityType="Aruba.Scenario" />
+    <EntitySet Name="OwnerSet" EntityType="Aruba.Owner" />
+    <EntitySet Name="ConfigSet" EntityType="Aruba.Config" />
+    <EntitySet Name="AllTypesSet" EntityType="Aruba.AllTypes" />
+    <EntitySet Name="OwnerContactInfoSet" EntityType="Aruba.OwnerContactInfo" />
+    <EntitySet Name="BugProjectTrackingSet" EntityType="Aruba.ProjectBug" />
+    <EntitySet Name="FailureSet" EntityType="Self.Failure" />
+    <EntitySet Name="AllTypesComplexEntitySet" EntityType="Aruba.AllTypesComplexEntity" />
+    <EntitySet Name="NonDefaultFacetsSet" EntityType="Aruba.NonDefaultFacets" />
+
+    <EntitySet Name="DataKey_BigInt" EntityType="Aruba.DataKey_BigInt" />
+    <EntitySet Name="DataKey_Bit" EntityType="Aruba.DataKey_Bit" />
+    <EntitySet Name="DataKey_DateTime" EntityType="Aruba.DataKey_DateTime" />
+    <EntitySet Name="DataKey_Decimal" EntityType="Aruba.DataKey_Decimal" />
+    <EntitySet Name="DataKey_Float" EntityType="Aruba.DataKey_Float" />
+    <EntitySet Name="DataKey_GUID" EntityType="Aruba.DataKey_GUID" />
+    <EntitySet Name="DataKey_Money" EntityType="Aruba.DataKey_Money" />
+    <EntitySet Name="DataKey_Numeric" EntityType="Aruba.DataKey_Numeric" />
+    <EntitySet Name="DataKey_Real" EntityType="Aruba.DataKey_Real" />
+    <EntitySet Name="DataKey_SmallDateTime" EntityType="Aruba.DataKey_SmallDateTime" />
+    <EntitySet Name="DataKey_SmallMoney" EntityType="Aruba.DataKey_SmallMoney" />
+    <EntitySet Name="DataKey_TinyInt" EntityType="Aruba.DataKey_TinyInt" />
+    <EntitySet Name="DataKey_VarChar50" EntityType="Aruba.DataKey_VarChar50" />
+    <EntitySet Name="ThirteenNavigations" EntityType="Aruba.ThirteenNavigations" />
+
+    <EntitySet Name="People" EntityType="Aruba.Person" />
+    <EntitySet Name="Vehicles" EntityType="Aruba.Vehicle" />
+    <EntitySet Name="Colleges" EntityType="Aruba.College" />
+    <EntitySet Name="Students" EntityType="Aruba.Student" />
+    <EntitySet Name="Computers" EntityType="Aruba.Computer" />
+    <EntitySet Name="ComputerDetails" EntityType="Aruba.ComputerDetails" />
+    <EntitySet Name="Workers" EntityType="Aruba.Worker" />
+    <EntitySet Name="Offices" EntityType="Aruba.Office" />
+
+    <EntitySet Name="DeepInheritanceSet" EntityType="Aruba.DeepTree_A" />
+    <EntitySet Name="WideInheritanceSet" EntityType="Aruba.WideTree_A" />
+
+    <EntitySet Name="Albums" EntityType="Aruba.Albums" />
+    <EntitySet Name="Albums2" EntityType="Aruba.Albums2" />
+    <EntitySet Name="Albums3" EntityType="Aruba.Albums3" />
+    <EntitySet Name="Artists" EntityType="Aruba.Artists" />
+    <EntitySet Name="Artists2" EntityType="Aruba.Artists2" />
+    <EntitySet Name="Artists3" EntityType="Aruba.Artists3" />
+    <EntitySet Name="Builds" EntityType="Aruba.Builds" /> <!--m:TopLevelAccess="true"/>-->
+    <EntitySet Name="LabIssues" EntityType="Aruba.LabIssues" />
+    <EntitySet Name="LabOwners" EntityType="Aruba.LabOwners" />
+    <EntitySet Name="Recordings" EntityType="Aruba.Recordings" />
+    <EntitySet Name="Recordings2" EntityType="Aruba.Recordings2" />
+    <EntitySet Name="Recordings3" EntityType="Aruba.Recordings3" />
+    <EntitySet Name="Run1s" EntityType="Aruba.Run1s" /> <!--m:TopLevelAccess="true"/>-->
+    <EntitySet Name="Run2s" EntityType="Aruba.Run2s" /> <!--m:TopLevelAccess="true"/>-->
+    <EntitySet Name="Run3s" EntityType="Aruba.Run3s" /> <!--m:TopLevelAccess="false"/>-->
+    <EntitySet Name="Songs" EntityType="Aruba.Songs" />
+    <EntitySet Name="Songs2" EntityType="Aruba.Songs2" />
+    <EntitySet Name="Songs3" EntityType="Aruba.Songs3" />
+    <EntitySet Name="Test1s" EntityType="Aruba.Test1s" /> <!--m:TopLevelAccess="true"/>-->
+    <EntitySet Name="Test2s" EntityType="Aruba.Test2s" /> <!--m:TopLevelAccess="true"/>-->
+    <EntitySet Name="Test3s" EntityType="Aruba.Test3s" /> <!--m:TopLevelAccess="true"/>-->
+    <EntitySet Name="Test4s" EntityType="Aruba.Test4s" /> <!--m:TopLevelAccess="true"/>-->
+    <EntitySet Name="Test5s" EntityType="Aruba.Test5s" /> <!--m:TopLevelAccess="true"/>-->
+    <EntitySet Name="Test6s" EntityType="Aruba.Test6s" /> <!--m:TopLevelAccess="false"/>-->
+    <EntitySet Name="Test7s" EntityType="Aruba.Test7s" /> <!--m:TopLevelAccess="true"/>-->
+    <EntitySet Name="Test8s" EntityType="Aruba.Test8s" /> <!--m:TopLevelAccess="true"/>-->
+    <EntitySet Name="Test9s" EntityType="Aruba.Test9s" /> <!--m:TopLevelAccess="false"/>-->
+    
+    <AssociationSet Name="FailureConfigSet" Association="Aruba.FailureConfig">
+      <End Role="Failure" EntitySet="FailureSet" />
+      <End Role="Config" EntitySet="ConfigSet" />
+    </AssociationSet>
+    <AssociationSet Name="RunTasksSet" Association="Aruba.RunTasks">
+      <End Role="Task" EntitySet="TaskSet" />
+      <End Role="Run" EntitySet="RunSet" />
+    </AssociationSet>
+    
+    <AssociationSet Name="OwnerBugsDefect_AssignedToSet" Association="Aruba.OwnerBugsDefect_AssignedTo">
+      <End Role="DefectBug" EntitySet="BugDefectTrackingSet" />
+      <End Role="Owner" EntitySet="OwnerSet" />
+    </AssociationSet>
+    <AssociationSet Name="OwnerBugsDefect_ResolvedBySet" Association="Aruba.OwnerBugsDefect_ResolvedBy">
+      <End Role="DefectBug" EntitySet="BugDefectTrackingSet" />
+      <End Role="Owner" EntitySet="OwnerSet" />
+    </AssociationSet>
+
+    <AssociationSet Name="OwnerBugsProject_AssignedToSet" Association="Aruba.OwnerBugsProject_AssignedTo">
+      <End Role="ProjectBug" EntitySet="BugProjectTrackingSet" />
+      <End Role="Owner" EntitySet="OwnerSet" />
+    </AssociationSet>
+    <AssociationSet Name="OwnerBugsProject_ResolvedBySet" Association="Aruba.OwnerBugsProject_ResolvedBy">
+      <End Role="ProjectBug" EntitySet="BugProjectTrackingSet" />
+      <End Role="Owner" EntitySet="OwnerSet" />
+    </AssociationSet>
+
+    <AssociationSet Name="FailureBugDefectTrackingSet" Association="Aruba.FailureBugDefectTracking">
+      <End Role="DefectBug" EntitySet="BugDefectTrackingSet" />
+      <End Role="Failure" EntitySet="FailureSet" />
+    </AssociationSet>
+    <AssociationSet Name="FailureBugProjectTrackingSet" Association="Aruba.FailureBugProjectTracking">
+      <End Role="ProjectBug" EntitySet="BugProjectTrackingSet" />
+      <End Role="Failure" EntitySet="FailureSet" />
+    </AssociationSet>
+
+    <AssociationSet Name="OwnerRunsSet" Association="Aruba.OwnerRuns">
+      <End Role="Run" EntitySet="RunSet" />
+      <End Role="Owner" EntitySet="OwnerSet" />
+    </AssociationSet>
+    <AssociationSet Name="OwnerOwnerDetailsSet" Association="Aruba.OwnerOwnerDetails">
+      <End Role="OwnerDetail" EntitySet="OwnerDetailSet" />
+      <End Role="Owner" EntitySet="OwnerSet" />
+    </AssociationSet>
+    <AssociationSet Name="ProjectTestScenarioSet" Association="Aruba.ProjectTestScenario">
+      <End Role="Scenario" EntitySet="TestScenarioSet" />
+      <End Role="Project" EntitySet="ProjectSet" />
+    </AssociationSet>
+    <AssociationSet Name="ProjectDeploymentScenarioSet" Association="Aruba.ProjectDeploymentScenario">
+      <End Role="Scenario" EntitySet="DeploymentScenarioSet" />
+      <End Role="Project" EntitySet="ProjectSet" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_BigInt" Association="Aruba.FK_ThirteenNavigations_DataKey_BigInt">
+      <End Role="DataKey_BigInt" EntitySet="DataKey_BigInt" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_Bit" Association="Aruba.FK_ThirteenNavigations_DataKey_Bit">
+      <End Role="DataKey_Bit" EntitySet="DataKey_Bit" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_DateTime" Association="Aruba.FK_ThirteenNavigations_DataKey_DateTime">
+      <End Role="DataKey_DateTime" EntitySet="DataKey_DateTime" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_Decimal" Association="Aruba.FK_ThirteenNavigations_DataKey_Decimal">
+      <End Role="DataKey_Decimal" EntitySet="DataKey_Decimal" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_Float" Association="Aruba.FK_ThirteenNavigations_DataKey_Float">
+      <End Role="DataKey_Float" EntitySet="DataKey_Float" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_GUID" Association="Aruba.FK_ThirteenNavigations_DataKey_GUID">
+      <End Role="DataKey_GUID" EntitySet="DataKey_GUID" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_Money" Association="Aruba.FK_ThirteenNavigations_DataKey_Money">
+      <End Role="DataKey_Money" EntitySet="DataKey_Money" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_Numeric" Association="Aruba.FK_ThirteenNavigations_DataKey_Numeric">
+      <End Role="DataKey_Numeric" EntitySet="DataKey_Numeric" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_Real" Association="Aruba.FK_ThirteenNavigations_DataKey_Real">
+      <End Role="DataKey_Real" EntitySet="DataKey_Real" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_SmallDateTime" Association="Aruba.FK_ThirteenNavigations_DataKey_SmallDateTime">
+      <End Role="DataKey_SmallDateTime" EntitySet="DataKey_SmallDateTime" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_SmallMoney" Association="Aruba.FK_ThirteenNavigations_DataKey_SmallMoney">
+      <End Role="DataKey_SmallMoney" EntitySet="DataKey_SmallMoney" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_TinyInt" Association="Aruba.FK_ThirteenNavigations_DataKey_TinyInt">
+      <End Role="DataKey_TinyInt" EntitySet="DataKey_TinyInt" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_VarChar50" Association="Aruba.FK_ThirteenNavigations_DataKey_VarChar50">
+      <End Role="DataKey_VarChar50" EntitySet="DataKey_VarChar50" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+
+    <AssociationSet Name="FK_Person_Vehicle" Association="Aruba.FK_Person_Vehicle">
+      <End Role="Person" EntitySet="People" />
+      <End Role="Vehicle" EntitySet="Vehicles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Person_OldVehicles" Association="Aruba.FK_Person_OldVehicles">
+      <End Role="Person" EntitySet="People" />
+      <End Role="OldVehicles" EntitySet="Vehicles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Computer_ComputerDetails" Association="Aruba.FK_Computer_ComputerDetails">
+      <End Role="Computer" EntitySet="Computers" />
+      <End Role="ComputerDetails" EntitySet="ComputerDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_College" Association="Aruba.FK_Students_College">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="College" EntitySet="Colleges" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Worker_Office" Association="Aruba.FK_Worker_Office">
+      <End Role="Worker" EntitySet="Workers" />
+      <End Role="Office" EntitySet="Offices" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Worker_Mentor" Association="Aruba.FK_Worker_Mentor">
+      <End Role="Worker" EntitySet="Workers" />
+      <End Role="Mentor" EntitySet="Workers" />
+    </AssociationSet>
+
+    <AssociationSet Name="FK_Recordings_Artists" Association="Aruba.FK_Recordings_Artists">
+      <End Role="Artists" EntitySet="Artists" />
+      <End Role="Recordings" EntitySet="Recordings" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Recordings2_Artists" Association="Aruba.FK_Recordings2_Artists">
+      <End Role="Artists2" EntitySet="Artists2" />
+      <End Role="Recordings2" EntitySet="Recordings2" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Recordings3_Artists3" Association="Aruba.FK_Recordings3_Artists3">
+      <End Role="Artists3" EntitySet="Artists3" />
+      <End Role="Recordings3" EntitySet="Recordings3" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Builds_LabOwners" Association="Aruba.FK_Builds_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="Builds" EntitySet="Builds" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Run1s_Builds" Association="Aruba.FK_Run1s_Builds">
+      <End Role="Builds" EntitySet="Builds" />
+      <End Role="Run1s" EntitySet="Run1s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Run2s_Builds" Association="Aruba.FK_Run2s_Builds">
+      <End Role="Builds" EntitySet="Builds" />
+      <End Role="Run2s" EntitySet="Run2s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Run3s_Builds" Association="Aruba.FK_Run3s_Builds">
+      <End Role="Builds" EntitySet="Builds" />
+      <End Role="Run3s" EntitySet="Run3s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LabIssues_LabOwners" Association="Aruba.FK_LabIssues_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="LabIssues" EntitySet="LabIssues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Run1s_LabOwners" Association="Aruba.FK_Run1s_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="Run1s" EntitySet="Run1s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Run2s_LabOwners" Association="Aruba.FK_Run2s_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="Run2s" EntitySet="Run2s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Run3s_LabOwners" Association="Aruba.FK_Run3s_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="Run3s" EntitySet="Run3s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test1s_LabOwners" Association="Aruba.FK_Test1s_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="Test1s" EntitySet="Test1s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test2s_LabOwners" Association="Aruba.FK_Test2s_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="Test2s" EntitySet="Test2s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test3s_LabOwners" Association="Aruba.FK_Test3s_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="Test3s" EntitySet="Test3s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test4s_LabOwners" Association="Aruba.FK_Test4s_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="Test4s" EntitySet="Test4s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test5s_LabOwners" Association="Aruba.FK_Test5s_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="Test5s" EntitySet="Test5s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test6s_LabOwners" Association="Aruba.FK_Test6s_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="Test6s" EntitySet="Test6s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test7s_LabOwners" Association="Aruba.FK_Test7s_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="Test7s" EntitySet="Test7s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test8s_LabOwners" Association="Aruba.FK_Test8s_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="Test8s" EntitySet="Test8s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test9s_LabOwners" Association="Aruba.FK_Test9s_LabOwners">
+      <End Role="LabOwners" EntitySet="LabOwners" />
+      <End Role="Test9s" EntitySet="Test9s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Recordings_Songs" Association="Aruba.FK_Recordings_Songs">
+      <End Role="Songs" EntitySet="Songs" />
+      <End Role="Recordings" EntitySet="Recordings" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Recordings2_Recordings2" Association="Aruba.FK_Recordings2_Recordings2">
+      <End Role="Recordings2" EntitySet="Recordings2" />
+      <End Role="Recordings21" EntitySet="Recordings2" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Recordings2_Songs2" Association="Aruba.FK_Recordings2_Songs2">
+      <End Role="Songs2" EntitySet="Songs2" />
+      <End Role="Recordings2" EntitySet="Recordings2" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Recordings3_Songs3" Association="Aruba.FK_Recordings3_Songs3">
+      <End Role="Songs3" EntitySet="Songs3" />
+      <End Role="Recordings3" EntitySet="Recordings3" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test1s_Run1s" Association="Aruba.FK_Test1s_Run1s">
+      <End Role="Run1s" EntitySet="Run1s" />
+      <End Role="Test1s" EntitySet="Test1s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test2s_Run1s" Association="Aruba.FK_Test2s_Run1s">
+      <End Role="Run1s" EntitySet="Run1s" />
+      <End Role="Test2s" EntitySet="Test2s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test3s_Run1s" Association="Aruba.FK_Test3s_Run1s">
+      <End Role="Run1s" EntitySet="Run1s" />
+      <End Role="Test3s" EntitySet="Test3s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test4s_Run2s" Association="Aruba.FK_Test4s_Run2s">
+      <End Role="Run2s" EntitySet="Run2s" />
+      <End Role="Test4s" EntitySet="Test4s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test5s_Run2s" Association="Aruba.FK_Test5s_Run2s">
+      <End Role="Run2s" EntitySet="Run2s" />
+      <End Role="Test5s" EntitySet="Test5s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test7s_Run3s" Association="Aruba.FK_Test7s_Run3s">
+      <End Role="Run3s" EntitySet="Run3s" />
+      <End Role="Test7s" EntitySet="Test7s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test8s_Run3s" Association="Aruba.FK_Test8s_Run3s">
+      <End Role="Run3s" EntitySet="Run3s" />
+      <End Role="Test8s" EntitySet="Test8s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test9s_Run3s" Association="Aruba.FK_Test9s_Run3s">
+      <End Role="Run3s" EntitySet="Run3s" />
+      <End Role="Test9s" EntitySet="Test9s" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test6s_Run2s" Association="Aruba.FK_Test6s_Run2s">
+      <End Role="Run2s" EntitySet="Run2s" />
+      <End Role="Test6s" EntitySet="Test6s" />
+    </AssociationSet>
+    <AssociationSet Name="RecordingAlbumsLinkTable" Association="Aruba.RecordingAlbumsLinkTable">
+      <End Role="Albums" EntitySet="Albums" />
+      <End Role="Recordings" EntitySet="Recordings" />
+    </AssociationSet>
+    <AssociationSet Name="RecordingAlbumsLinkTable2" Association="Aruba.RecordingAlbumsLinkTable2">
+      <End Role="Albums2" EntitySet="Albums2" />
+      <End Role="Recordings2" EntitySet="Recordings2" />
+    </AssociationSet>
+    <AssociationSet Name="RecordingAlbumsLinkTable3" Association="Aruba.RecordingAlbumsLinkTable3">
+      <End Role="Albums3" EntitySet="Albums3" />
+      <End Role="Recordings3" EntitySet="Recordings3" />
+    </AssociationSet>
+
+    <FunctionImport Name="SelectFromOwnerSet" EntitySet="OwnerSet" ReturnType="Collection(Aruba.Owner)" />
+    <FunctionImport Name="SelectFromAllTypesSet" EntitySet="AllTypesSet" ReturnType="Collection(Aruba.AllTypes)">
+      <Parameter Name="c25_intP" Type="Int32" Mode="In" />
+      <Parameter Name="c26_smallintP" Type="Int16" Mode="In" />
+      <Parameter Name="c27_tinyintP" Type="Byte" Mode="In" />
+      <Parameter Name="c28_bitP" Type="Boolean" Mode="In" />
+      <Parameter Name="c29_datetimeP" Type="DateTime" Mode="In" />
+      <Parameter Name="c30_smalldatetimeP" Type="DateTime" Mode="In" />
+      <Parameter Name="c31_decimal_28_4_P" Type="Decimal" Mode="In" />
+      <Parameter Name="c32_numeric_28_4_P" Type="Decimal" Mode="In" />
+      <Parameter Name="c33_realP" Type="Single" Mode="In" />
+      <Parameter Name="c34_floatP" Type="Double" Mode="In" />
+      <Parameter Name="c35_moneyP" Type="Decimal" Mode="In" />
+      <Parameter Name="c36_smallmoneyP" Type="Decimal" Mode="In" />
+      <Parameter Name="c37_varchar_512_P" Type="String" Mode="In" />
+      <Parameter Name="c38_char_512_P" Type="String" Mode="In" />
+      <Parameter Name="c39_textP" Type="String" Mode="In" />
+      <Parameter Name="c40_binary_512_P" Type="Binary" Mode="In" />
+      <Parameter Name="c41_varbinary_512_P" Type="Binary" Mode="In" />
+      <Parameter Name="c42_imageP" Type="Binary" Mode="In" />
+      <Parameter Name="c43_nvarchar_512_P" Type="String" Mode="In" />
+      <Parameter Name="c44_nchar_512_P" Type="String" Mode="In" />
+      <Parameter Name="c45_ntextP" Type="String" Mode="In" />
+      <Parameter Name="c46_uniqueidentifierP" Type="Guid" Mode="In" />
+      <Parameter Name="c47_bigintP" Type="Int64" Mode="In" />
+    </FunctionImport>
+    <FunctionImport Name="SelectBugs" EntitySet="BugDefectTrackingSet" ReturnType="Collection(Aruba.DefectBug)">
+      <Parameter Name="IdP" Type="Int32" Mode="In" />
+      <Parameter Name="param2_int" Type="Int32" Mode="InOut" />
+      <Parameter Name="param3_int" Type="Int32" Mode="InOut" />
+      <Parameter Name="NumberP" Type="Int32" Mode="In" />
+      <Parameter Name="param5_int" Type="Int32" Mode="InOut" />
+      <Parameter Name="param6_int" Type="Int32" Mode="InOut" />
+      <Parameter Name="CommentP" Type="String" Mode="In" />
+      <Parameter Name="param8_varchar_512_" Type="String" Mode="InOut" />
+      <Parameter Name="param9_varchar_512_" Type="String" Mode="InOut" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="AllTypesComplexType">
+    <Property Name="c1_int" Nullable="false" Type="Int32"  />
+    <Property Name="c2_smallint" Nullable="false" Type="Int16"  />
+    <Property Name="c3_tinyint" Nullable="false" Type="Byte"  />
+    <Property Name="c4_bit" Nullable="false" Type="Boolean"  />
+    <Property Name="c5_datetime" Nullable="false" Type="DateTime"  />
+    <Property Name="c6_smalldatetime" Nullable="false" Type="DateTime"  />
+    <Property Name="c7_decimal_28_4_" Nullable="false" Type="Decimal"  />
+    <Property Name="c8_numeric_28_4_" Nullable="false" Type="Decimal"  />
+    <Property Name="c9_real" Nullable="false" Type="Single"  />
+    <Property Name="c10_float" Nullable="false" Type="Double"  />
+    <Property Name="c11_money" Nullable="false" Type="Decimal"  />
+    <Property Name="c12_smallmoney" Nullable="false" Type="Decimal"  />
+    <Property Name="c13_varchar_512_" Nullable="false" Type="String"  />
+    <Property Name="c14_char_512_" Nullable="false" Type="String"  />
+    <Property Name="c15_text" Nullable="false" Type="String" />
+    <Property Name="c16_binary_512_" Nullable="false" Type="Binary"  />
+    <Property Name="c17_varbinary_512_" Nullable="false" Type="Binary"  />
+    <Property Name="c18_image" Nullable="false" Type="Binary" />
+    <Property Name="c19_nvarchar_512_" Nullable="false" Type="String"  />
+    <Property Name="c20_nchar_512_" Nullable="false" Type="String"  />
+    <Property Name="c21_ntext" Nullable="false" Type="String" />
+    <Property Name="c22_uniqueidentifier" Nullable="false" Type="Guid"  />
+    <Property Name="c23_bigint" Nullable="false" Type="Int64"  />
+  </ComplexType>
+  <ComplexType Name="ZipCode">
+    <Property Name="MainZip" Type="String" />
+    <Property Name="ExtendedZip" Type="String" />
+  </ComplexType>
+  <ComplexType Name="AddressInfo">
+    <Property Name="StreetAddress" Type="String" />
+    <Property Name="City" Type="String" />
+    <Property Name="State" Type="String" />
+    <Property Name="ZipCode" Nullable="false" Type="Aruba.ZipCode" />
+  </ComplexType>
+  <ComplexType Name="ContactInfo">
+    <Property Name="Email" Type="String" />
+    <Property Name="WorkPhone" Type="String" />
+    <Property Name="AddressInfo" Nullable="false" Type="Self.AddressInfo" />
+  </ComplexType>
+  <ComplexType Name="StatusInfo">
+    <Property Name="Started" Type="DateTime" />
+    <Property Name="StartedBy" Type="String" />
+    <Property Name="Completed" Type="DateTime" />
+  </ComplexType>
+
+
+  <EntityType Name="AllTypesComplexEntity">
+    <Key>
+      <PropertyRef Name="c1_int" />
+    </Key>
+    <Property Name="c1_int" Nullable="false" Type="Int32"  />
+    <Property Name="MemberAllTypesComplex" Nullable="false" Type="Aruba.AllTypesComplexType" />
+  </EntityType>
+  <EntityType Name="AllTypes">
+    <Key>
+      <PropertyRef Name="c1_int" />
+    </Key>
+    <Property Name="c1_int" Nullable="false" Type="Int32"  />
+    <Property Name="c2_int" Nullable="false" Type="Int32" c:PassThroughAttribute="true" />
+    <Property Name="c3_smallint" Nullable="false" Type="Int16"  />
+    <Property Name="c4_tinyint" Nullable="false" Type="Byte"  />
+    <Property Name="c5_bit" Nullable="false" Type="Boolean"  />
+    <Property Name="c6_datetime" Nullable="false" Type="DateTime"  />
+    <Property Name="c7_smalldatetime" Nullable="false" Type="DateTime"  />
+    <Property Name="c8_decimal_28_4_" Nullable="false" Type="Decimal"  />
+    <Property Name="c9_numeric_28_4_" Nullable="false" Type="Decimal"  />
+    <Property Name="c10_real" Nullable="false" Type="Single"  />
+    <Property Name="c11_float" Nullable="false" Type="Double"  />
+    <Property Name="c12_money" Nullable="false" Type="Decimal"  />
+    <Property Name="c13_smallmoney" Nullable="false" Type="Decimal"  />
+    <Property Name="c14_varchar_512_" Nullable="false" Type="String"  />
+    <Property Name="c15_char_512_" Nullable="false" Type="String"  />
+    <Property Name="c16_text" Nullable="false" Type="String" />
+    <Property Name="c17_binary_512_" Nullable="false" Type="Binary"  />
+    <Property Name="c18_varbinary_512_" Nullable="false" Type="Binary"  />
+    <Property Name="c19_image" Nullable="false" Type="Binary" />
+    <Property Name="c20_nvarchar_512_" Nullable="false" Type="String"  />
+    <Property Name="c21_nchar_512_" Nullable="false" Type="String"  />
+    <Property Name="c22_ntext" Nullable="false" Type="String" />
+    <Property Name="c23_uniqueidentifier" Nullable="false" Type="Guid"  />
+    <Property Name="c24_bigint" Nullable="false" Type="Int64"  />
+    <Property Name="c25_int" Type="Int32"  />
+    <Property Name="c26_smallint" Type="Int16"  />
+    <Property Name="c27_tinyint" Type="Byte"  />
+    <Property Name="c28_bit" Type="Boolean"  />
+    <Property Name="c29_datetime" Type="DateTime"  />
+    <Property Name="c30_smalldatetime" Type="DateTime"  />
+    <Property Name="c31_decimal_28_4_" Type="Decimal"  />
+    <Property Name="c32_numeric_28_4_" Type="Decimal"  />
+    <Property Name="c33_real" Type="Single"  />
+    <Property Name="c34_float" Type="Double"  />
+    <Property Name="c35_money" Type="Decimal"  />
+    <Property Name="c36_smallmoney" Type="Decimal"  />
+    <Property Name="c37_varchar_512_" Type="String"  />
+    <Property Name="c38_char_512_" Type="String"  />
+    <Property Name="c39_text" Type="String" />
+    <Property Name="c40_binary_512_" Type="Binary"  />
+    <Property Name="c41_varbinary_512_" Type="Binary"  />
+    <Property Name="c42_image" Type="Binary" />
+    <Property Name="c43_nvarchar_512_" Type="String"  />
+    <Property Name="c44_nchar_512_" Type="String"  />
+    <Property Name="c45_ntext" Type="String" />
+    <Property Name="c46_uniqueidentifier" Type="Guid"  />
+    <Property Name="c47_bigint" Type="Int64"  />
+  </EntityType>
+  
+  <EntityType Name="DefectBug">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="Number" Nullable="false" Type="Int32"  />
+    <Property Name="Comment" Type="String" />
+    <NavigationProperty Name="AssignedToOwnerBugsDefect" Relationship="Aruba.OwnerBugsDefect_AssignedTo" FromRole="DefectBug" ToRole="Owner" />
+    <NavigationProperty Name="ResolvedOwnerBugsDefect" Relationship="Aruba.OwnerBugsDefect_ResolvedBy" FromRole="DefectBug" ToRole="Owner" />
+  </EntityType>
+
+  <EntityType Name="ProjectBug">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="Number" Nullable="false" Type="Int32"  />
+    <Property Name="Comment" Type="String" />
+    <NavigationProperty Name="AssignedToOwnerBugsProject" Relationship="Aruba.OwnerBugsProject_AssignedTo" FromRole="ProjectBug" ToRole="Owner" />
+    <NavigationProperty Name="ResolvedOwnerBugsProject" Relationship="Aruba.OwnerBugsProject_ResolvedBy" FromRole="ProjectBug" ToRole="Owner" />
+  </EntityType>
+
+  <EntityType Name="Baseline" BaseType="Aruba.Failure">
+    <Property Name="Comment" Type="String" />
+  </EntityType>
+    <EntityType Name="ConfigBase" Abstract="true">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="OS" Type="String"  />
+    <Property Name="Lang" Type="String" />
+  </EntityType>
+  <EntityType Name="Failure">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="TestId" Nullable="false" Type="Int32" />
+    <Property Name="TestCase" Type="String" />
+    <Property Name="Variation" Type="Int32" />
+    <Property Name="Changed" Nullable="false" Type="DateTime" />
+    <Property Name="Log" Type="String" />
+    <NavigationProperty Name="BugsDefect" Relationship="Aruba.FailureBugDefectTracking" FromRole="Failure" ToRole="DefectBug" />
+    <NavigationProperty Name="Configs" Relationship="Aruba.FailureConfig" FromRole="Failure" ToRole="Config" />
+    <NavigationProperty Name="BugsProject" Relationship="Aruba.FailureBugProjectTracking" FromRole="Failure" ToRole="ProjectBug" />
+  </EntityType>
+  <EntityType Name="NonDefaultMappings">
+    <Key>
+      <PropertyRef Name="c1_int" />
+    </Key>
+    <Property Name="c1_int" Nullable="false" Type="Int32"  />
+    <Property Name="c_int_AS_decimal" Nullable="false" Type="Int32"  />
+    <Property Name="c_int_AS_numeric" Type="Int32"  />
+    <Property Name="c_int_AS_float" Nullable="false" Type="Int32"  />
+    <Property Name="c_int_AS_money" Type="Int32"  />
+    <Property Name="c_int_AS_bigint" Nullable="false" Type="Int32"  />
+    <Property Name="c_smallint_AS_int" Type="Int16"  />
+    <Property Name="c_smallint_AS_decimal" Nullable="false" Type="Int16"  />
+    <Property Name="c_smallint_AS_numeric" Type="Int16"  />
+    <Property Name="c_smallint_AS_real" Nullable="false" Type="Int16"  />
+    <Property Name="c_smallint_AS_float" Type="Int16"  />
+    <Property Name="c_smallint_AS_money" Nullable="false" Type="Int16"  />
+    <Property Name="c_smallint_AS_smallmoney" Type="Int16"  />
+    <Property Name="c_smallint_AS_bigint" Nullable="false" Type="Int16"  />
+    <Property Name="c_tinyint_AS_int" Type="Byte"  />
+    <Property Name="c_tinyint_AS_smallint" Nullable="false" Type="Byte"  />
+    <Property Name="c_tinyint_AS_decimal" Type="Byte"  />
+    <Property Name="c_tinyint_AS_numeric" Nullable="false" Type="Byte"  />
+    <Property Name="c_tinyint_AS_real" Type="Byte"  />
+    <Property Name="c_tinyint_AS_float" Nullable="false" Type="Byte"  />
+    <Property Name="c_tinyint_AS_money" Type="Byte"  />
+    <Property Name="c_tinyint_AS_smallmoney" Nullable="false" Type="Byte"  />
+    <Property Name="c_tinyint_AS_bigint" Type="Byte"  />
+    <Property Name="c_smalldatetime_AS_datetime" Nullable="false" Type="DateTime"  />
+    <Property Name="c_varchar_AS_nvarchar" Type="String"  />
+    <Property Name="c_char_AS_nchar" Nullable="false" Type="String"  />
+    <!--Property Name="c_nvarchar_AS_ntext" Type="String" /-->
+    <Property Name="c_bigint_AS_decimal" Nullable="false" Type="Int64"  />
+    <Property Name="c_bigint_AS_numeric" Type="Int64"  />
+  </EntityType>
+  
+  <EntityType Name="NonDefaultFacets">
+    <Key>
+      <PropertyRef Name="c1_int" />
+    </Key>
+    <Property Name="c1_int" Nullable="false" Type="Int32"  />
+    <Property Name="c_decimal27_3_AS_decimal28_4" Type="Decimal"  />
+    <Property Name="c_decimal24_0_AS_decimal26_2" Type="Decimal"  />
+    <Property Name="c_numeric24_0_AS_numeric28_4" Type="Decimal"  />
+    <Property Name="c_numeric24_0_AS_numeric25_1" Type="Decimal"  />
+    <Property Name="c_varchar230_AS_varchar512" Type="String"  />
+    <Property Name="c_varchar17_AS_varchar98" Type="String"  />
+    <Property Name="c_varbinary60_AS_varbinary512" Type="Binary"  />
+    <Property Name="c_varbinary31_AS_varbinary365" Type="Binary"  />
+    <Property Name="c_varchar80_AS_nvarchar512" Type="String"  />
+    <Property Name="c_varchar185_AS_nvarchar285" Type="String"  />
+  </EntityType>
+  
+  <EntityType Name="Owner">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="FirstName" Type="String" />
+    <Property Name="LastName" Type="Int32" />
+    <Property Name="Alias" Nullable="false" Type="String" />
+    <NavigationProperty Name="Runs" Relationship="Aruba.OwnerRuns" FromRole="Owner" ToRole="Run" />
+    <NavigationProperty Name="AssignedToBugsDefect" Relationship="Aruba.OwnerBugsDefect_AssignedTo" FromRole="Owner" ToRole="DefectBug" />
+    <NavigationProperty Name="ResolvedBugsDefect" Relationship="Aruba.OwnerBugsDefect_ResolvedBy" FromRole="Owner" ToRole="DefectBug" />
+    <NavigationProperty Name="OwnerDetail" Relationship="Aruba.OwnerOwnerDetails" FromRole="Owner" ToRole="OwnerDetail" />
+    <NavigationProperty Name="AssignedToBugsProject" Relationship="Aruba.OwnerBugsProject_AssignedTo" FromRole="Owner" ToRole="ProjectBug" />
+    <NavigationProperty Name="ResolvedBugsProject" Relationship="Aruba.OwnerBugsProject_ResolvedBy" FromRole="Owner" ToRole="ProjectBug" />
+  </EntityType>
+  
+  <EntityType Name="OwnerContactInfo">
+    <Key>
+      <PropertyRef Name="ContactInfoId" />
+    </Key>
+    <Property Name="ContactInfoId" Nullable="false" Type="Int32" />
+    <Property Name="ContactInfo" Nullable="false" Type="Aruba.ContactInfo" />
+  </EntityType>
+  
+  <EntityType Name="OwnerDetail">
+    <Key>
+      <PropertyRef Name="DetailId" />
+    </Key>
+    <Property Name="DetailId" Nullable="false" Type="Int32" />
+    <Property Name="Level" Type="Int32" />
+    <Property Name="HomeAddress1" Type="String" />
+    <Property Name="HomeAddress2" Type="String" />
+    <NavigationProperty Name="Owner" Relationship="Aruba.OwnerOwnerDetails" FromRole="OwnerDetail" ToRole="Owner" />
+  </EntityType>
+
+  <EntityType Name="Project">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="Name" Type="String" />
+    <NavigationProperty Name="TestScenario" Relationship="Self.ProjectTestScenario" FromRole="Project" ToRole="Scenario" />
+    <NavigationProperty Name="DeploymentScenario" Relationship="Aruba.ProjectDeploymentScenario" FromRole="Project" ToRole="Scenario" />
+  </EntityType>
+  <EntityType Name="Run">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="Name" Nullable="false" Type="String" />
+    <Property Name="Purpose" Type="Int32" />
+    <Property Name="StatusInfo" Nullable="false" Type="Aruba.StatusInfo" />
+    <Property Name="RequestStatusInfo" Nullable="false" Type="Aruba.StatusInfo" />
+    <NavigationProperty Name="Tasks" Relationship="Aruba.RunTasks" FromRole="Run" ToRole="Task" />
+    <NavigationProperty Name="Owner" Relationship="Aruba.OwnerRuns" FromRole="Run" ToRole="Owner" />
+  </EntityType>
+  <EntityType Name="Uninvestigated" BaseType="Aruba.Failure" />
+  <EntityType Name="Scenario">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="Name" Type="String" />
+  </EntityType>
+  <EntityType Name="Task">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="Deleted" Type="Boolean" />
+    <Property Name="StatusInfo" Nullable="false" Type="Aruba.StatusInfo" />
+    <Property Name="Passed" Type="Int64" />
+    <Property Name="Failed" Type="Int64" />
+    <Property Name="Investigates" Type="Int64" />
+    <Property Name="Improvements" Type="Int64" />
+    <NavigationProperty Name="Run" Relationship="Aruba.RunTasks" FromRole="Task" ToRole="Run" />
+  </EntityType>
+
+  <EntityType Name="DataKey_BigInt">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" />
+    <Property Name="DataColumn" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_BigInt" FromRole="DataKey_BigInt" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_Bit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Boolean" Nullable="false" />
+    <Property Name="DataColumn" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Bit" FromRole="DataKey_Bit" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_DateTime">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="DateTime" Nullable="false" />
+    <Property Name="DataColumn" Type="Binary" MaxLength="50" FixedLength="true" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_DateTime" FromRole="DataKey_DateTime" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_Decimal">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Decimal" Nullable="false" Precision="16" Scale="2" />
+    <Property Name="DataColumn" Type="String" MaxLength="10" Unicode="false" FixedLength="true" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Decimal" FromRole="DataKey_Decimal" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_Float">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Double" Nullable="false" />
+    <Property Name="DataColumn" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Float" FromRole="DataKey_Float" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_GUID">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Guid" Nullable="false" />
+    <Property Name="DataColumn" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_GUID" FromRole="DataKey_GUID" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_Money">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="DataColumn" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Money" FromRole="DataKey_Money" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_Numeric">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="DataColumn" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Numeric" FromRole="DataKey_Numeric" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_Real">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Single" Nullable="false" />
+    <Property Name="DataColumn" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Real" FromRole="DataKey_Real" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_SmallDateTime">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="DateTime" Nullable="false" />
+    <Property Name="DataColumn" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_SmallDateTime" FromRole="DataKey_SmallDateTime" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_SmallMoney">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="4" />
+    <Property Name="DataColumn" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_SmallMoney" FromRole="DataKey_SmallMoney" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_TinyInt">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Byte" Nullable="false" />
+    <Property Name="DataColumn" Type="Guid" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_TinyInt" FromRole="DataKey_TinyInt" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_VarChar50">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+    <Property Name="DataColumn" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_VarChar50" FromRole="DataKey_VarChar50" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="ThirteenNavigations">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="DataColumn" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+    <NavigationProperty Name="DataKey_BigInt" Relationship="Aruba.FK_ThirteenNavigations_DataKey_BigInt" FromRole="ThirteenNavigations" ToRole="DataKey_BigInt" />
+    <NavigationProperty Name="DataKey_Bit" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Bit" FromRole="ThirteenNavigations" ToRole="DataKey_Bit" />
+    <NavigationProperty Name="DataKey_DateTime" Relationship="Aruba.FK_ThirteenNavigations_DataKey_DateTime" FromRole="ThirteenNavigations" ToRole="DataKey_DateTime" />
+    <NavigationProperty Name="DataKey_Decimal" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Decimal" FromRole="ThirteenNavigations" ToRole="DataKey_Decimal" />
+    <NavigationProperty Name="DataKey_Float" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Float" FromRole="ThirteenNavigations" ToRole="DataKey_Float" />
+    <NavigationProperty Name="DataKey_GUID" Relationship="Aruba.FK_ThirteenNavigations_DataKey_GUID" FromRole="ThirteenNavigations" ToRole="DataKey_GUID" />
+    <NavigationProperty Name="DataKey_Money" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Money" FromRole="ThirteenNavigations" ToRole="DataKey_Money" />
+    <NavigationProperty Name="DataKey_Numeric" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Numeric" FromRole="ThirteenNavigations" ToRole="DataKey_Numeric" />
+    <NavigationProperty Name="DataKey_Real" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Real" FromRole="ThirteenNavigations" ToRole="DataKey_Real" />
+    <NavigationProperty Name="DataKey_SmallDateTime" Relationship="Aruba.FK_ThirteenNavigations_DataKey_SmallDateTime" FromRole="ThirteenNavigations" ToRole="DataKey_SmallDateTime" />
+    <NavigationProperty Name="DataKey_SmallMoney" Relationship="Aruba.FK_ThirteenNavigations_DataKey_SmallMoney" FromRole="ThirteenNavigations" ToRole="DataKey_SmallMoney" />
+    <NavigationProperty Name="DataKey_TinyInt" Relationship="Aruba.FK_ThirteenNavigations_DataKey_TinyInt" FromRole="ThirteenNavigations" ToRole="DataKey_TinyInt" />
+    <NavigationProperty Name="DataKey_VarChar50" Relationship="Aruba.FK_ThirteenNavigations_DataKey_VarChar50" FromRole="ThirteenNavigations" ToRole="DataKey_VarChar50" />
+  </EntityType>
+  
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="FirstName"/>
+      <PropertyRef Name="LastName" />
+      <PropertyRef Name="MiddleName"/>
+    </Key>
+    <Property Name="FirstName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="LastName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="MiddleName" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="PrimaryVehicle" Relationship="Aruba.FK_Person_Vehicle" FromRole="Person" ToRole="Vehicle" />
+    <NavigationProperty Name="OldVehicles" Relationship="Aruba.FK_Person_OldVehicles" FromRole="Person" ToRole="OldVehicles" />
+  </EntityType>
+  <EntityType Name="PropertyOwner" BaseType="Aruba.Person" >
+    <Property Name="PropertyValue" Type="Decimal"/>
+  </EntityType>
+  <EntityType Name="Vehicle">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Make" Type="String" Nullable="false" />
+    <Property Name="Model" Type="String" Nullable="false" />
+    <Property Name="Year" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="PrimaryDriver" Relationship="Aruba.FK_Person_Vehicle" FromRole="Vehicle" ToRole="Person" />
+    <NavigationProperty Name="OldDrivers" Relationship="Aruba.FK_Person_OldVehicles" FromRole="OldVehicles" ToRole="Person" />
+  </EntityType>
+  <EntityType Name="Car" BaseType="Aruba.Vehicle" >
+  </EntityType>
+  <EntityType Name="Suv" BaseType="Aruba.Vehicle" >
+  </EntityType>
+  <EntityType Name="Truck" BaseType="Aruba.Vehicle" >
+  </EntityType>
+
+  <EntityType Name="Computer">
+    <Key>
+      <PropertyRef Name="MachineName" />
+    </Key>
+    <Property Name="MachineName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="Manufacturer" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="Model" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="ExtraDetails" Relationship="Aruba.FK_Computer_ComputerDetails" FromRole="Computer" ToRole="ComputerDetails" />
+  </EntityType>
+  <EntityType Name="ComputerDetails">
+    <Key>
+      <PropertyRef Name="MachineName" />
+    </Key>
+    <Property Name="MachineName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="OperatingSystem" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="OperatingSystemVersion" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="Status" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="MainRecord" Relationship="Aruba.FK_Computer_ComputerDetails" FromRole="ComputerDetails" ToRole="Computer" />
+  </EntityType>
+
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="50" Nullable="false" />
+    <Property Name="LastName" Type="String" MaxLength="50" Nullable="false" />
+    <Property Name="MiddleName" Type="String" MaxLength="50" Nullable="false" />
+    <Property Name="Major" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="College" Relationship="Aruba.FK_Students_College" FromRole="Students" ToRole="College" />
+  </EntityType>
+  <EntityType Name="GradStudent" BaseType="Aruba.Student">
+  </EntityType>
+  <EntityType Name="College">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="City" Type="String" MaxLength="30" Nullable="false"/>
+    <Property Name="State" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="Students" Relationship="Aruba.FK_Students_College" FromRole="College" ToRole="Students" />
+  </EntityType>
+  <EntityType Name="University" BaseType="Aruba.College">
+  </EntityType>
+
+  <EntityType Name="Worker">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="LastName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="MiddleName" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="Mentor" Relationship="Aruba.FK_Worker_Mentor" FromRole="Worker" ToRole="Mentor" />
+    <NavigationProperty Name="Office" Relationship="Aruba.FK_Worker_Office" FromRole="Worker" ToRole="Office" />
+  </EntityType>
+  <EntityType Name="Office">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="OfficeNumber" Type="Int32" Nullable="false" />
+    <Property Name="FloorNumber" Type="Int16" Nullable="false"/>
+    <Property Name="BuildingName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="City" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="State" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="IsWindowOffice" Type="Boolean" Nullable="false" />
+  </EntityType>
+
+
+  <EntityType Name="DeepTree_A">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_B" BaseType="Aruba.DeepTree_A">
+    <Property Name="B_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_C" BaseType="Aruba.DeepTree_B">
+    <Property Name="C_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_D" BaseType="Aruba.DeepTree_C">
+    <Property Name="D_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_E" BaseType="Aruba.DeepTree_D">
+    <Property Name="E_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_F" BaseType="Aruba.DeepTree_E">
+    <Property Name="F_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_G" BaseType="Aruba.DeepTree_F">
+    <Property Name="G_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_H" BaseType="Aruba.DeepTree_G">
+    <Property Name="H_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_I" BaseType="Aruba.DeepTree_H">
+    <Property Name="I_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_J" BaseType="Aruba.DeepTree_I">
+    <Property Name="J_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_K" BaseType="Aruba.DeepTree_J">
+    <Property Name="K_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_L" BaseType="Aruba.DeepTree_K">
+    <Property Name="L_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_M" BaseType="Aruba.DeepTree_L">
+    <Property Name="M_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_N" BaseType="Aruba.DeepTree_M">
+    <Property Name="N_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+
+  <EntityType Name="WideTree_A">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_B" BaseType="Aruba.WideTree_A">
+    <Property Name="B_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_C" BaseType="Aruba.WideTree_A">
+    <Property Name="C_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_D" BaseType="Aruba.WideTree_A">
+    <Property Name="D_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_E" BaseType="Aruba.WideTree_A">
+    <Property Name="E_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_F" BaseType="Aruba.WideTree_A">
+    <Property Name="F_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_G" BaseType="Aruba.WideTree_A">
+    <Property Name="G_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_H" BaseType="Aruba.WideTree_A">
+    <Property Name="H_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_I" BaseType="Aruba.WideTree_A">
+    <Property Name="I_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_J" BaseType="Aruba.WideTree_A">
+    <Property Name="J_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_K" BaseType="Aruba.WideTree_A">
+    <Property Name="K_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_L" BaseType="Aruba.WideTree_A">
+    <Property Name="L_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_M" BaseType="Aruba.WideTree_A">
+    <Property Name="M_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_N" BaseType="Aruba.WideTree_A">
+    <Property Name="N_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+
+  <EntityType Name="Config" BaseType="Aruba.ConfigBase">
+    <Property Name="Arch" Type="String" />
+    <NavigationProperty Name="Failures" Relationship="Aruba.FailureConfig" FromRole="Config" ToRole="Failure" />
+  </EntityType>
+
+  <EntityType Name="TestFailure" BaseType="Aruba.Baseline" />
+  <EntityType Name="MachineConfig" BaseType="Aruba.Config">
+    <Property Name="Host" Type="String" />
+    <Property Name="Address" Type="Guid" />
+  </EntityType>
+
+  <EntityType Name="Albums">
+    <Key>
+      <PropertyRef Name="albumId" />
+    </Key>
+    <Property Name="albumId" Type="Int32" Nullable="false" />
+    <Property Name="AlbumName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Recordings" Relationship="Aruba.RecordingAlbumsLinkTable" FromRole="Albums" ToRole="Recordings" />
+  </EntityType>
+  <EntityType Name="Albums2">
+    <Key>
+      <PropertyRef Name="albumId" />
+    </Key>
+    <Property Name="albumId" Type="Int32" Nullable="false" />
+    <Property Name="AlbumName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Recordings2" Relationship="Aruba.RecordingAlbumsLinkTable2" FromRole="Albums2" ToRole="Recordings2" />
+  </EntityType>
+  <EntityType Name="Albums3">
+    <Key>
+      <PropertyRef Name="albumId" />
+    </Key>
+    <Property Name="albumId" Type="Int32" Nullable="false" />
+    <Property Name="AlbumName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Recordings3" Relationship="Aruba.RecordingAlbumsLinkTable3" FromRole="Albums3" ToRole="Recordings3" />
+  </EntityType>
+  <EntityType Name="Artists">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="ArtistName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Recordings" Relationship="Aruba.FK_Recordings_Artists" FromRole="Artists" ToRole="Recordings" />
+  </EntityType>
+  <EntityType Name="Artists2">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="ArtistName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Recordings2" Relationship="Aruba.FK_Recordings2_Artists" FromRole="Artists2" ToRole="Recordings2" />
+  </EntityType>
+  <EntityType Name="Artists3">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="ArtistName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Recordings3" Relationship="Aruba.FK_Recordings3_Artists3" FromRole="Artists3" ToRole="Recordings3" />
+  </EntityType>
+  <EntityType Name="Builds">
+    <Key>
+      <PropertyRef Name="BuildId" />
+    </Key>
+    <Property Name="BuildId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_Builds_LabOwners" FromRole="Builds" ToRole="LabOwners" />
+    <NavigationProperty Name="Run1s" Relationship="Aruba.FK_Run1s_Builds" FromRole="Builds" ToRole="Run1s" /> <!--m:AccessPath="Canonical"/>-->
+    <NavigationProperty Name="Run2s" Relationship="Aruba.FK_Run2s_Builds" FromRole="Builds" ToRole="Run2s" /> <!--m:AccessPath="NonCanonical"/>-->
+    <NavigationProperty Name="Run3s" Relationship="Aruba.FK_Run3s_Builds" FromRole="Builds" ToRole="Run3s" /> <!--m:AccessPath="Canonical"/>-->
+  </EntityType>
+  <EntityType Name="LabIssues">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="IssueType" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="Description" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_LabIssues_LabOwners" FromRole="LabIssues" ToRole="LabOwners" />
+  </EntityType>
+  <EntityType Name="LabOwners">
+    <Key>
+      <PropertyRef Name="ownerAlias" />
+    </Key>
+    <Property Name="ownerAlias" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+    <Property Name="FirstName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="LastName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="Changed" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" />
+    <NavigationProperty Name="Builds" Relationship="Aruba.FK_Builds_LabOwners" FromRole="LabOwners" ToRole="Builds" />
+    <NavigationProperty Name="LabIssues" Relationship="Aruba.FK_LabIssues_LabOwners" FromRole="LabOwners" ToRole="LabIssues" />
+    <NavigationProperty Name="Run1s" Relationship="Aruba.FK_Run1s_LabOwners" FromRole="LabOwners" ToRole="Run1s" />
+    <NavigationProperty Name="Run2s" Relationship="Aruba.FK_Run2s_LabOwners" FromRole="LabOwners" ToRole="Run2s" />
+    <NavigationProperty Name="Run3s" Relationship="Aruba.FK_Run3s_LabOwners" FromRole="LabOwners" ToRole="Run3s" />
+    <NavigationProperty Name="Test1s" Relationship="Aruba.FK_Test1s_LabOwners" FromRole="LabOwners" ToRole="Test1s" />
+    <NavigationProperty Name="Test2s" Relationship="Aruba.FK_Test2s_LabOwners" FromRole="LabOwners" ToRole="Test2s" />
+    <NavigationProperty Name="Test3s" Relationship="Aruba.FK_Test3s_LabOwners" FromRole="LabOwners" ToRole="Test3s" />
+    <NavigationProperty Name="Test4s" Relationship="Aruba.FK_Test4s_LabOwners" FromRole="LabOwners" ToRole="Test4s" />
+    <NavigationProperty Name="Test5s" Relationship="Aruba.FK_Test5s_LabOwners" FromRole="LabOwners" ToRole="Test5s" />
+    <NavigationProperty Name="Test6s" Relationship="Aruba.FK_Test6s_LabOwners" FromRole="LabOwners" ToRole="Test6s" />
+    <NavigationProperty Name="Test7s" Relationship="Aruba.FK_Test7s_LabOwners" FromRole="LabOwners" ToRole="Test7s" />
+    <NavigationProperty Name="Test8s" Relationship="Aruba.FK_Test8s_LabOwners" FromRole="LabOwners" ToRole="Test8s" />
+    <NavigationProperty Name="Test9s" Relationship="Aruba.FK_Test9s_LabOwners" FromRole="LabOwners" ToRole="Test9s" />
+  </EntityType>
+  <EntityType Name="Recordings">
+    <Key>
+      <PropertyRef Name="SongId" />
+      <PropertyRef Name="ArtistId" />
+    </Key>
+    <Property Name="SongId" Type="Int32" Nullable="false" />
+    <Property Name="ArtistId" Type="Int32" Nullable="false" />
+    <Property Name="DateOccurred" Type="DateTime" Nullable="false" />
+    <Property Name="OriginalSongId" Type="Int32" />
+    <Property Name="OriginalArtistId" Type="Int32" />
+    <NavigationProperty Name="Artists" Relationship="Aruba.FK_Recordings_Artists" FromRole="Recordings" ToRole="Artists" />
+    <NavigationProperty Name="Songs" Relationship="Aruba.FK_Recordings_Songs" FromRole="Recordings" ToRole="Songs" />
+    <NavigationProperty Name="Albums" Relationship="Aruba.RecordingAlbumsLinkTable" FromRole="Recordings" ToRole="Albums" />
+  </EntityType>
+  <EntityType Name="Recordings2">
+    <Key>
+      <PropertyRef Name="SongId" />
+      <PropertyRef Name="ArtistId" />
+    </Key>
+    <Property Name="SongId" Type="Int32" Nullable="false" />
+    <Property Name="ArtistId" Type="Int32" Nullable="false" />
+    <Property Name="DateOccurred" Type="DateTime" Nullable="false" />
+    <NavigationProperty Name="Artists2" Relationship="Aruba.FK_Recordings2_Artists" FromRole="Recordings2" ToRole="Artists2" />
+    <NavigationProperty Name="Recordings21" Relationship="Aruba.FK_Recordings2_Recordings2" FromRole="Recordings2" ToRole="Recordings21" />
+    <NavigationProperty Name="Recordings22" Relationship="Aruba.FK_Recordings2_Recordings2" FromRole="Recordings21" ToRole="Recordings2" />
+    <NavigationProperty Name="Songs2" Relationship="Aruba.FK_Recordings2_Songs2" FromRole="Recordings2" ToRole="Songs2" />
+    <NavigationProperty Name="Albums2" Relationship="Aruba.RecordingAlbumsLinkTable2" FromRole="Recordings2" ToRole="Albums2" />
+  </EntityType>
+  <EntityType Name="Recordings3">
+    <Key>
+      <PropertyRef Name="SongId" />
+      <PropertyRef Name="ArtistId" />
+    </Key>
+    <Property Name="SongId" Type="Int32" Nullable="false" />
+    <Property Name="ArtistId" Type="Int32" Nullable="false" />
+    <Property Name="DateOccurred" Type="DateTime" Nullable="false" />
+    <Property Name="OriginalSongId" Type="Int32" />
+    <Property Name="OriginalArtistId" Type="Int32" />
+    <NavigationProperty Name="Artists3" Relationship="Aruba.FK_Recordings3_Artists3" FromRole="Recordings3" ToRole="Artists3" />
+    <NavigationProperty Name="Songs3" Relationship="Aruba.FK_Recordings3_Songs3" FromRole="Recordings3" ToRole="Songs3" />
+    <NavigationProperty Name="Albums3" Relationship="Aruba.RecordingAlbumsLinkTable3" FromRole="Recordings3" ToRole="Albums3" />
+  </EntityType>
+  <EntityType Name="Run1s">
+    <Key>
+      <PropertyRef Name="RunId1" />
+      <PropertyRef Name="BuildID" />
+    </Key>
+    <Property Name="RunId1" Type="Int32" Nullable="false" />
+    <Property Name="BuildID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Builds" Relationship="Aruba.FK_Run1s_Builds" FromRole="Run1s" ToRole="Builds" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_Run1s_LabOwners" FromRole="Run1s" ToRole="LabOwners" />
+    <NavigationProperty Name="Test1s" Relationship="Aruba.FK_Test1s_Run1s" FromRole="Run1s" ToRole="Test1s" /> <!--m:AccessPath="Canonical"/>-->
+    <NavigationProperty Name="Test2s" Relationship="Aruba.FK_Test2s_Run1s" FromRole="Run1s" ToRole="Test2s" /> <!--m:AccessPath="NonCanonical"/>-->
+    <NavigationProperty Name="Test3s" Relationship="Aruba.FK_Test3s_Run1s" FromRole="Run1s" ToRole="Test3s" /> <!--m:AccessPath="NonCanonical"/>-->
+  </EntityType>
+  <EntityType Name="Run2s">
+    <Key>
+      <PropertyRef Name="RunId2" />
+      <PropertyRef Name="BuildId" />
+    </Key>
+    <Property Name="RunId2" Type="Int32" Nullable="false" />
+    <Property Name="BuildId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Builds" Relationship="Aruba.FK_Run2s_Builds" FromRole="Run2s" ToRole="Builds" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_Run2s_LabOwners" FromRole="Run2s" ToRole="LabOwners" />
+    <NavigationProperty Name="Test4s" Relationship="Aruba.FK_Test4s_Run2s" FromRole="Run2s" ToRole="Test4s" /> <!--m:AccessPath="Canonical"/>-->
+    <NavigationProperty Name="Test5s" Relationship="Aruba.FK_Test5s_Run2s" FromRole="Run2s" ToRole="Test5s" /> <!--m:AccessPath="NonCanonical"/>-->
+    <NavigationProperty Name="Test6s" Relationship="Aruba.FK_Test6s_Run2s" FromRole="Run2s" ToRole="Test6s" /> <!--m:AccessPath="Canonical"/>-->
+  </EntityType>
+  <EntityType Name="Run3s">
+    <Key>
+      <PropertyRef Name="RunId3" />
+      <PropertyRef Name="BuildId" />
+    </Key>
+    <Property Name="RunId3" Type="Int32" Nullable="false" />
+    <Property Name="BuildId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Builds" Relationship="Aruba.FK_Run3s_Builds" FromRole="Run3s" ToRole="Builds" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_Run3s_LabOwners" FromRole="Run3s" ToRole="LabOwners" />
+    <NavigationProperty Name="Test7s" Relationship="Aruba.FK_Test7s_Run3s" FromRole="Run3s" ToRole="Test7s" /> <!--m:AccessPath="Canonical"/>-->
+    <NavigationProperty Name="Test8s" Relationship="Aruba.FK_Test8s_Run3s" FromRole="Run3s" ToRole="Test8s" /> <!--m:AccessPath="NonCanonical"/>-->
+    <NavigationProperty Name="Test9s" Relationship="Aruba.FK_Test9s_Run3s" FromRole="Run3s" ToRole="Test9s" /> <!--m:AccessPath="Canonical"/>-->
+  </EntityType>
+  <EntityType Name="Songs">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="SongName" Type="String" MaxLength="300" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Recordings" Relationship="Aruba.FK_Recordings_Songs" FromRole="Songs" ToRole="Recordings" />
+  </EntityType>
+  <EntityType Name="Songs2">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="SongName" Type="String" MaxLength="300" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Recordings2" Relationship="Aruba.FK_Recordings2_Songs2" FromRole="Songs2" ToRole="Recordings2" />
+  </EntityType>
+  <EntityType Name="Songs3">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="SongName" Type="String" MaxLength="300" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Recordings3" Relationship="Aruba.FK_Recordings3_Songs3" FromRole="Songs3" ToRole="Recordings3" />
+  </EntityType>
+  <EntityType Name="Test1s">
+    <Key>
+      <PropertyRef Name="TestId1" />
+      <PropertyRef Name="RunId1" />
+      <PropertyRef Name="BuildId" />
+    </Key>
+    <Property Name="TestId1" Type="Int32" Nullable="false" />
+    <Property Name="RunId1" Type="Int32" Nullable="false" />
+    <Property Name="BuildId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_Test1s_LabOwners" FromRole="Test1s" ToRole="LabOwners" />
+    <NavigationProperty Name="Run1s" Relationship="Aruba.FK_Test1s_Run1s" FromRole="Test1s" ToRole="Run1s" />
+  </EntityType>
+  <EntityType Name="Test2s">
+    <Key>
+      <PropertyRef Name="TestId2" />
+      <PropertyRef Name="RunId1" />
+      <PropertyRef Name="BuildId" />
+    </Key>
+    <Property Name="TestId2" Type="Int32" Nullable="false" />
+    <Property Name="RunId1" Type="Int32" Nullable="false" />
+    <Property Name="BuildId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_Test2s_LabOwners" FromRole="Test2s" ToRole="LabOwners" />
+    <NavigationProperty Name="Run1s" Relationship="Aruba.FK_Test2s_Run1s" FromRole="Test2s" ToRole="Run1s" />
+  </EntityType>
+  <EntityType Name="Test3s">
+    <Key>
+      <PropertyRef Name="TestId3" />
+      <PropertyRef Name="RunId1" />
+      <PropertyRef Name="BuildId" />
+    </Key>
+    <Property Name="TestId3" Type="Int32" Nullable="false" />
+    <Property Name="RunId1" Type="Int32" Nullable="false" />
+    <Property Name="BuildId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_Test3s_LabOwners" FromRole="Test3s" ToRole="LabOwners" />
+    <NavigationProperty Name="Run1s" Relationship="Aruba.FK_Test3s_Run1s" FromRole="Test3s" ToRole="Run1s" />
+  </EntityType>
+  <EntityType Name="Test4s">
+    <Key>
+      <PropertyRef Name="TestId4" />
+      <PropertyRef Name="RunId2" />
+      <PropertyRef Name="BuildId" />
+    </Key>
+    <Property Name="TestId4" Type="Int32" Nullable="false" />
+    <Property Name="RunId2" Type="Int32" Nullable="false" />
+    <Property Name="BuildId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_Test4s_LabOwners" FromRole="Test4s" ToRole="LabOwners" />
+    <NavigationProperty Name="Run2s" Relationship="Aruba.FK_Test4s_Run2s" FromRole="Test4s" ToRole="Run2s" />
+  </EntityType>
+  <EntityType Name="Test5s">
+    <Key>
+      <PropertyRef Name="TestId5" />
+      <PropertyRef Name="RunId2" />
+      <PropertyRef Name="BuildId" />
+    </Key>
+    <Property Name="TestId5" Type="Int32" Nullable="false" />
+    <Property Name="RunId2" Type="Int32" Nullable="false" />
+    <Property Name="BuildId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_Test5s_LabOwners" FromRole="Test5s" ToRole="LabOwners" />
+    <NavigationProperty Name="Run2s" Relationship="Aruba.FK_Test5s_Run2s" FromRole="Test5s" ToRole="Run2s" />
+  </EntityType>
+  <EntityType Name="Test6s">
+    <Key>
+      <PropertyRef Name="TestId6" />
+      <PropertyRef Name="RunId2" />
+      <PropertyRef Name="BuildId" />
+    </Key>
+    <Property Name="TestId6" Type="Int32" Nullable="false" />
+    <Property Name="RunId2" Type="Int32" Nullable="false" />
+    <Property Name="BuildId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_Test6s_LabOwners" FromRole="Test6s" ToRole="LabOwners" />
+    <NavigationProperty Name="Run2s" Relationship="Aruba.FK_Test6s_Run2s" FromRole="Test6s" ToRole="Run2s" />
+  </EntityType>
+  <EntityType Name="Test7s">
+    <Key>
+      <PropertyRef Name="TestId7" />
+      <PropertyRef Name="RunId3" />
+      <PropertyRef Name="BuildId" />
+    </Key>
+    <Property Name="TestId7" Type="Int32" Nullable="false" />
+    <Property Name="RunId3" Type="Int32" Nullable="false" />
+    <Property Name="BuildId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_Test7s_LabOwners" FromRole="Test7s" ToRole="LabOwners" />
+    <NavigationProperty Name="Run3s" Relationship="Aruba.FK_Test7s_Run3s" FromRole="Test7s" ToRole="Run3s" />
+  </EntityType>
+  <EntityType Name="Test8s">
+    <Key>
+      <PropertyRef Name="TestId8" />
+      <PropertyRef Name="RunId3" />
+      <PropertyRef Name="BuildId" />
+    </Key>
+    <Property Name="TestId8" Type="Int32" Nullable="false" />
+    <Property Name="RunId3" Type="Int32" Nullable="false" />
+    <Property Name="BuildId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_Test8s_LabOwners" FromRole="Test8s" ToRole="LabOwners" />
+    <NavigationProperty Name="Run3s" Relationship="Aruba.FK_Test8s_Run3s" FromRole="Test8s" ToRole="Run3s" />
+  </EntityType>
+  <EntityType Name="Test9s">
+    <Key>
+      <PropertyRef Name="TestId9" />
+      <PropertyRef Name="RunId3" />
+      <PropertyRef Name="BuildId" />
+    </Key>
+    <Property Name="TestId9" Type="Int32" Nullable="false" />
+    <Property Name="RunId3" Type="Int32" Nullable="false" />
+    <Property Name="BuildId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="LabOwners" Relationship="Aruba.FK_Test9s_LabOwners" FromRole="Test9s" ToRole="LabOwners" />
+    <NavigationProperty Name="Run3s" Relationship="Aruba.FK_Test9s_Run3s" FromRole="Test9s" ToRole="Run3s" />
+  </EntityType>
+
+
+  <Association Name="OwnerBugsDefect_AssignedTo">
+    <End Role="DefectBug" Type="Aruba.DefectBug" Multiplicity="*" />
+    <End Role="Owner" Type="Aruba.Owner" Multiplicity="1" />
+  </Association>
+  <Association Name="OwnerBugsDefect_ResolvedBy">
+    <End Role="DefectBug" Type="Aruba.DefectBug" Multiplicity="*" />
+    <End Role="Owner" Type="Aruba.Owner" Multiplicity="0..1" />
+  </Association>
+
+  <Association Name="OwnerBugsProject_AssignedTo">
+    <End Role="ProjectBug" Type="Aruba.ProjectBug" Multiplicity="*" />
+    <End Role="Owner" Type="Aruba.Owner" Multiplicity="1" />
+  </Association>
+  <Association Name="OwnerBugsProject_ResolvedBy">
+    <End Role="ProjectBug" Type="Aruba.ProjectBug" Multiplicity="*" />
+    <End Role="Owner" Type="Aruba.Owner" Multiplicity="0..1" />
+  </Association>
+
+  <Association Name="ProjectTestScenario">
+    <End Role="Scenario" Type="Aruba.Scenario" Multiplicity="*" />
+    <End Role="Project" Type="Aruba.Project" Multiplicity="0..1" />
+  </Association>
+  
+  <Association Name="FailureBugProjectTracking">
+    <End Role="ProjectBug" Type="Aruba.ProjectBug" Multiplicity="*" />
+    <End Role="Failure" Type="Aruba.Failure" Multiplicity="0..1" />
+  </Association>
+  
+  <Association Name="FailureBugDefectTracking">
+    <End Role="DefectBug" Type="Aruba.DefectBug" Multiplicity="*" />
+    <End Role="Failure" Type="Aruba.Failure" Multiplicity="0..1" />
+  </Association>
+
+  <Association Name="ProjectDeploymentScenario">
+    <End Role="Scenario" Type="Aruba.Scenario" Multiplicity="*" />
+    <End Role="Project" Type="Aruba.Project" Multiplicity="0..1" />
+  </Association>
+
+  <Association Name="OwnerRuns">
+    <End Role="Run" Type="Aruba.Run" Multiplicity="*" />
+    <End Role="Owner" Type="Aruba.Owner" Multiplicity="1" />
+  </Association>
+  <Association Name="OwnerOwnerDetails">
+    <End Role="OwnerDetail" Type="Aruba.OwnerDetail" Multiplicity="0..1" />
+    <End Role="Owner" Type="Aruba.Owner" Multiplicity="1" />
+  </Association>
+  <Association Name="FailureConfig">
+    <End Role="Failure" Type="Aruba.Failure" Multiplicity="*" />
+    <End Role="Config" Type="Aruba.Config" Multiplicity="*" />
+  </Association>
+  <Association Name="RunTasks">
+    <End Role="Task" Type="Aruba.Task" Multiplicity="*" />
+    <End Role="Run" Type="Aruba.Run" Multiplicity="1" />
+  </Association>
+
+  <Association Name="FK_ThirteenNavigations_DataKey_BigInt">
+    <End Role="DataKey_BigInt" Type="Aruba.DataKey_BigInt" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_Bit">
+    <End Role="DataKey_Bit" Type="Aruba.DataKey_Bit" Multiplicity="1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_DateTime">
+    <End Role="DataKey_DateTime" Type="Aruba.DataKey_DateTime" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_Decimal">
+    <End Role="DataKey_Decimal" Type="Aruba.DataKey_Decimal" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_Float">
+    <End Role="DataKey_Float" Type="Aruba.DataKey_Float" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_GUID">
+    <End Role="DataKey_GUID" Type="Aruba.DataKey_GUID" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_Money">
+    <End Role="DataKey_Money" Type="Aruba.DataKey_Money" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_Numeric">
+    <End Role="DataKey_Numeric" Type="Aruba.DataKey_Numeric" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_Real">
+    <End Role="DataKey_Real" Type="Aruba.DataKey_Real" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_SmallDateTime">
+    <End Role="DataKey_SmallDateTime" Type="Aruba.DataKey_SmallDateTime" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_SmallMoney">
+    <End Role="DataKey_SmallMoney" Type="Aruba.DataKey_SmallMoney" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_TinyInt">
+    <End Role="DataKey_TinyInt" Type="Aruba.DataKey_TinyInt" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_VarChar50">
+    <End Role="DataKey_VarChar50" Type="Aruba.DataKey_VarChar50" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+
+
+  <Association Name="FK_Person_Vehicle">
+    <End Role="Person" Type="Aruba.Person" Multiplicity="0..1" />
+    <End Role="Vehicle" Type="Aruba.Vehicle" Multiplicity="1" />
+  </Association>
+  <Association Name="FK_Person_OldVehicles">
+    <End Role="Person" Type="Aruba.Person" Multiplicity="0..1" />
+    <End Role="OldVehicles" Type="Aruba.Vehicle" Multiplicity="*" />
+  </Association>
+  
+  <Association Name="FK_Computer_ComputerDetails">
+    <End Role="Computer" Type="Aruba.Computer" Multiplicity="1" />
+    <End Role="ComputerDetails" Type="Aruba.ComputerDetails" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Computer">
+        <PropertyRef Name="MachineName" />
+      </Principal>
+      <Dependent Role="ComputerDetails">
+        <PropertyRef Name="MachineName" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_College">
+    <End Role="Students" Type="Aruba.Student" Multiplicity="*" />
+    <End Role="College" Type="Aruba.College" Multiplicity="1" />
+  </Association>
+  <Association Name="FK_Worker_Office">
+    <End Role="Worker" Type="Aruba.Worker" Multiplicity="0..1" />
+    <End Role="Office" Type="Aruba.Office" Multiplicity="0..1" />
+  </Association>
+  <Association Name="FK_Worker_Mentor">
+    <End Role="Worker" Type="Aruba.Worker" Multiplicity="0..1" />
+    <End Role="Mentor" Type="Aruba.Worker" Multiplicity="1" />
+  </Association>
+
+  <Association Name="FK_Recordings_Artists">
+    <End Role="Artists" Type="Aruba.Artists" Multiplicity="1" />
+    <End Role="Recordings" Type="Aruba.Recordings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Artists">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Recordings">
+        <PropertyRef Name="ArtistId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Recordings2_Artists">
+    <End Role="Artists2" Type="Aruba.Artists2" Multiplicity="1" />
+    <End Role="Recordings2" Type="Aruba.Recordings2" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Artists2">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Recordings2">
+        <PropertyRef Name="ArtistId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Recordings3_Artists3">
+    <End Role="Artists3" Type="Aruba.Artists3" Multiplicity="1" />
+    <End Role="Recordings3" Type="Aruba.Recordings3" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Artists3">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Recordings3">
+        <PropertyRef Name="ArtistId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Builds_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="Builds" Type="Aruba.Builds" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Run1s_Builds">
+    <End Role="Builds" Type="Aruba.Builds" Multiplicity="1" />
+    <End Role="Run1s" Type="Aruba.Run1s" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Builds">
+        <PropertyRef Name="BuildId" />
+      </Principal>
+      <Dependent Role="Run1s">
+        <PropertyRef Name="BuildID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Run2s_Builds">
+    <End Role="Builds" Type="Aruba.Builds" Multiplicity="1" />
+    <End Role="Run2s" Type="Aruba.Run2s" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Builds">
+        <PropertyRef Name="BuildId" />
+      </Principal>
+      <Dependent Role="Run2s">
+        <PropertyRef Name="BuildId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Run3s_Builds">
+    <End Role="Builds" Type="Aruba.Builds" Multiplicity="1" />
+    <End Role="Run3s" Type="Aruba.Run3s" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Builds">
+        <PropertyRef Name="BuildId" />
+      </Principal>
+      <Dependent Role="Run3s">
+        <PropertyRef Name="BuildId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LabIssues_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="LabIssues" Type="Aruba.LabIssues" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Run1s_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="Run1s" Type="Aruba.Run1s" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Run2s_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="Run2s" Type="Aruba.Run2s" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Run3s_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="Run3s" Type="Aruba.Run3s" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Test1s_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="Test1s" Type="Aruba.Test1s" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Test2s_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="Test2s" Type="Aruba.Test2s" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Test3s_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="Test3s" Type="Aruba.Test3s" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Test4s_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="Test4s" Type="Aruba.Test4s" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Test5s_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="Test5s" Type="Aruba.Test5s" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Test6s_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="Test6s" Type="Aruba.Test6s" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Test7s_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="Test7s" Type="Aruba.Test7s" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Test8s_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="Test8s" Type="Aruba.Test8s" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Test9s_LabOwners">
+    <End Role="LabOwners" Type="Aruba.LabOwners" Multiplicity="1" />
+    <End Role="Test9s" Type="Aruba.Test9s" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Recordings_Songs">
+    <End Role="Songs" Type="Aruba.Songs" Multiplicity="1" />
+    <End Role="Recordings" Type="Aruba.Recordings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Songs">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Recordings">
+        <PropertyRef Name="SongId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Recordings2_Recordings2">
+    <End Role="Recordings2" Type="Aruba.Recordings2" Multiplicity="0..1" />
+    <End Role="Recordings21" Type="Aruba.Recordings2" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_Recordings2_Songs2">
+    <End Role="Songs2" Type="Aruba.Songs2" Multiplicity="1" />
+    <End Role="Recordings2" Type="Aruba.Recordings2" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Songs2">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Recordings2">
+        <PropertyRef Name="SongId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Recordings3_Songs3">
+    <End Role="Songs3" Type="Aruba.Songs3" Multiplicity="1" />
+    <End Role="Recordings3" Type="Aruba.Recordings3" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Songs3">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Recordings3">
+        <PropertyRef Name="SongId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test1s_Run1s">
+    <End Role="Run1s" Type="Aruba.Run1s" Multiplicity="1" />
+    <End Role="Test1s" Type="Aruba.Test1s" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Run1s">
+        <PropertyRef Name="RunId1" />
+        <PropertyRef Name="BuildID" />
+      </Principal>
+      <Dependent Role="Test1s">
+        <PropertyRef Name="RunId1" />
+        <PropertyRef Name="BuildId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test2s_Run1s">
+    <End Role="Run1s" Type="Aruba.Run1s" Multiplicity="1" />
+    <End Role="Test2s" Type="Aruba.Test2s" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Run1s">
+        <PropertyRef Name="RunId1" />
+        <PropertyRef Name="BuildID" />
+      </Principal>
+      <Dependent Role="Test2s">
+        <PropertyRef Name="RunId1" />
+        <PropertyRef Name="BuildId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test3s_Run1s">
+    <End Role="Run1s" Type="Aruba.Run1s" Multiplicity="1" />
+    <End Role="Test3s" Type="Aruba.Test3s" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Run1s">
+        <PropertyRef Name="RunId1" />
+        <PropertyRef Name="BuildID" />
+      </Principal>
+      <Dependent Role="Test3s">
+        <PropertyRef Name="RunId1" />
+        <PropertyRef Name="BuildId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test4s_Run2s">
+    <End Role="Run2s" Type="Aruba.Run2s" Multiplicity="1" />
+    <End Role="Test4s" Type="Aruba.Test4s" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Run2s">
+        <PropertyRef Name="RunId2" />
+        <PropertyRef Name="BuildId" />
+      </Principal>
+      <Dependent Role="Test4s">
+        <PropertyRef Name="RunId2" />
+        <PropertyRef Name="BuildId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test5s_Run2s">
+    <End Role="Run2s" Type="Aruba.Run2s" Multiplicity="1" />
+    <End Role="Test5s" Type="Aruba.Test5s" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Run2s">
+        <PropertyRef Name="RunId2" />
+        <PropertyRef Name="BuildId" />
+      </Principal>
+      <Dependent Role="Test5s">
+        <PropertyRef Name="RunId2" />
+        <PropertyRef Name="BuildId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test7s_Run3s">
+    <End Role="Run3s" Type="Aruba.Run3s" Multiplicity="1" />
+    <End Role="Test7s" Type="Aruba.Test7s" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Run3s">
+        <PropertyRef Name="RunId3" />
+        <PropertyRef Name="BuildId" />
+      </Principal>
+      <Dependent Role="Test7s">
+        <PropertyRef Name="RunId3" />
+        <PropertyRef Name="BuildId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test8s_Run3s">
+    <End Role="Run3s" Type="Aruba.Run3s" Multiplicity="1" />
+    <End Role="Test8s" Type="Aruba.Test8s" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Run3s">
+        <PropertyRef Name="RunId3" />
+        <PropertyRef Name="BuildId" />
+      </Principal>
+      <Dependent Role="Test8s">
+        <PropertyRef Name="RunId3" />
+        <PropertyRef Name="BuildId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test9s_Run3s">
+    <End Role="Run3s" Type="Aruba.Run3s" Multiplicity="1" />
+    <End Role="Test9s" Type="Aruba.Test9s" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Run3s">
+        <PropertyRef Name="RunId3" />
+        <PropertyRef Name="BuildId" />
+      </Principal>
+      <Dependent Role="Test9s">
+        <PropertyRef Name="RunId3" />
+        <PropertyRef Name="BuildId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test6s_Run2s">
+    <End Role="Run2s" Type="Aruba.Run2s" Multiplicity="1" />
+    <End Role="Test6s" Type="Aruba.Test6s" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Run2s">
+        <PropertyRef Name="RunId2" />
+        <PropertyRef Name="BuildId" />
+      </Principal>      
+      <Dependent Role="Test6s">
+        <PropertyRef Name="RunId2" />
+        <PropertyRef Name="BuildId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="RecordingAlbumsLinkTable">
+    <End Role="Albums" Type="Aruba.Albums" Multiplicity="*" />
+    <End Role="Recordings" Type="Aruba.Recordings" Multiplicity="*" />
+  </Association>
+  <Association Name="RecordingAlbumsLinkTable2">
+    <End Role="Albums2" Type="Aruba.Albums2" Multiplicity="*" />
+    <End Role="Recordings2" Type="Aruba.Recordings2" Multiplicity="*" />
+  </Association>
+  <Association Name="RecordingAlbumsLinkTable3">
+    <End Role="Albums3" Type="Aruba.Albums3" Multiplicity="*" />
+    <End Role="Recordings3" Type="Aruba.Recordings3" Multiplicity="*" />
+  </Association>
+</Schema>

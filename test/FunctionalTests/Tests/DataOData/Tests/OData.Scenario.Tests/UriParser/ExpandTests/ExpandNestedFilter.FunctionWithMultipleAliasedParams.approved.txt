@@ -1,0 +1,38 @@
+$select = 
+$expand = CustomerForOrder($filter=Microsoft.Test.Taupo.OData.WCFService.Within(Location=@a, Distance=@b))
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: CustomerForOrder)]
+			FilterQueryOption
+				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+				Parameter = 
+				EntityRangeVariable
+					Name = $it
+					NavigationSource = CustomerForOrder
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+				Expression = 
+				SingleValueFunctionCallNode
+					Name = Microsoft.Test.Taupo.OData.WCFService.Within
+					Return Type = [Edm.Boolean Nullable=False]
+					Function = 
+						Primitive Within([Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False],[Microsoft.Test.Taupo.OData.WCFService.Address Nullable=False],[Edm.Int32 Nullable=False],)
+					Arguments = 
+						NamedFunctionParameterNode
+							Parameter Name = Location
+							Value = 
+							ParameterAliasNode
+								Parameter Name = @a
+								Type = 
+						NamedFunctionParameterNode
+							Parameter Name = Distance
+							Value = 
+							ParameterAliasNode
+								Parameter Name = @b
+								Type = 
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems(Empty List)

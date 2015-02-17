@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="MergedFunctionalTest" >
+      <EntityType Name="Customer" OpenType="true">
+        <Key>
+          <PropertyRef Name="CustomerId" />
+        </Key>
+        <Property Name="CustomerId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="Addresses" Type="Collection(MergedFunctionalTest.Address)" Nullable="true" />
+        <Property Name="Thumbnail" Type="Edm.Stream" Nullable="false" />
+        <Property Name="Video" Type="Edm.Stream" Nullable="false" />
+        <NavigationProperty Name="Info" Nullable="false" Type="MergedFunctionalTest.CustomerInfo" ContainsTarget="true" />
+        <NavigationProperty Name="Company" Type="MergedFunctionalTest.Company"  ContainsTarget="true" />
+        <NavigationProperty Name="Orders" Type="Collection(MergedFunctionalTest.Order)" Partner="Customer" />
+      </EntityType>
+      <!-- comment here -->
+      <EntityType Name="GoodCustomer" BaseType="MergedFunctionalTest.Customer" OpenType="true" />
+      <EntityType Name="BadCustomer" BaseType="MergedFunctionalTest.Customer" OpenType="true" />
+      <EntityType Name="CustomerInfo">
+        <Key>
+          <PropertyRef Name="CustomerInfoId" />
+        </Key>
+        <Property Name="CustomerInfoId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Information" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="Order">
+        <Key>
+          <PropertyRef Name="OrderId" />
+        </Key>
+        <Property Name="OrderId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CustomerId" Type="Edm.Int32" />
+        <NavigationProperty Name="Customer" Type="MergedFunctionalTest.Customer" Partner="Orders" />
+      </EntityType>
+      <EntityType Name="Company">
+        <Key>
+          <PropertyRef Name="CompanyId" />
+        </Key>
+        <Property Name="CompanyId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CompanyInformation" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="Product">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.String" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="Colors" Type="Collection(MergedFunctionalTest.Color)" Nullable="false" />
+        <NavigationProperty Name="Detail" Type="MergedFunctionalTest.ProductDetail" Partner="Product" />
+      </EntityType>
+      <EntityType Name="ProductDetail">
+        <Key>
+          <PropertyRef Name="ProductId" />
+        </Key>
+        <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Details" Type="Edm.String" />
+        <NavigationProperty Name="Product" Type="MergedFunctionalTest.Product" Partner="Detail" />
+      </EntityType>
+      <EntityType Name="SpecialTypeWithPrecisionFacet">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="TimeSpan" Type="Edm.Duration" Precision="14" />
+      </EntityType>
+      <EntityType Name="BlobType"  HasStream="true">
+        <Key>
+          <PropertyRef Name="KeyProp" />
+        </Key>
+        <Property Name="KeyProp" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ValueProp" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityType Name="Child" BaseType="MergedFunctionalTest.Person">
+        <Property Name="Description" Type="Edm.String" ConcurrencyMode="Fixed" />
+      </EntityType>
+      <EntityType Name="Person">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" ConcurrencyMode="Fixed" />
+      </EntityType>
+      <EntityType Name="TestType">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="ColorProp" Type="MergedFunctionalTest.Color" Nullable="false" />
+
+        <Property Name="NonNullableBinaryProp" Type="Edm.Binary" Nullable="false"/>
+        <Property Name="ExplicitlyNullableBinaryProp" Type="Edm.Binary" Nullable="true"/>
+        <Property Name="NullableBinaryProp" Type="Edm.Binary"/>
+
+        <Property Name="NonNullableBooleanProp" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="ExplicitlyNullableBooleanProp" Type="Edm.Boolean" Nullable="true" />
+        <Property Name="NullableBooleanProp" Type="Edm.Boolean" />
+
+        <Property Name="NonNullableByteProp" Type="Edm.Byte" Nullable="false" />
+        <Property Name="ExplicitlyNullableByteProp" Type="Edm.Byte" Nullable="true" />
+        <Property Name="NullableByteProp" Type="Edm.Byte" />
+
+        <Property Name="NonNullableDecimalProp" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="ExplicitlyNullableDecimalProp" Type="Edm.Decimal" Nullable="true" />
+        <Property Name="NullableDecimalProp" Type="Edm.Decimal" />
+
+        <Property Name="NonNullableDoubleProp" Type="Edm.Double" Nullable="false" />
+        <Property Name="ExplicitlyNullableDoubleProp" Type="Edm.Double" Nullable="true" />
+        <Property Name="NullableDoubleProp" Type="Edm.Double" />
+
+        <Property Name="NonNullableSingleProp" Type="Edm.Single" Nullable="false" />
+        <Property Name="ExplicitlyNullableSingleProp" Type="Edm.Single" Nullable="true" />
+        <Property Name="NullableSingleProp" Type="Edm.Single" />
+
+        <Property Name="NonNullableInt16Prop" Type="Edm.Int16" Nullable="false" />
+        <Property Name="ExplicitlyNullableInt16Prop" Type="Edm.Int16" Nullable="true" />
+        <Property Name="NullableInt16Prop" Type="Edm.Int16" />
+
+        <Property Name="NonNullableInt32Prop" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ExplicitlyNullableInt32Prop" Type="Edm.Int32" Nullable="true" />
+        <Property Name="NullableInt32Prop" Type="Edm.Int32" />
+
+        <Property Name="NonNullableInt64Prop" Type="Edm.Int64" Nullable="false" />
+        <Property Name="ExplicitlyNullableInt64Prop" Type="Edm.Int64" Nullable="true" />
+        <Property Name="NullableInt64Prop" Type="Edm.Int64" />
+
+        <Property Name="NonNullableGuidProp" Type="Edm.Guid" Nullable="false" />
+        <Property Name="ExplicitlyNullableGuidProp" Type="Edm.Guid" Nullable="true" />
+        <Property Name="NullableGuidProp" Type="Edm.Guid"/>
+
+        <Property Name="NonNullableStringProp" Type="Edm.String" Nullable="false" />
+        <Property Name="ExplicitlyNullableStringProp" Type="Edm.String" Nullable="true" />
+        <Property Name="NullableStringProp" Type="Edm.String" />
+
+        <Property Name="NonNullableDurationProp" Type="Edm.Duration" Nullable="false" />
+        <Property Name="ExplicitlyNullableDurationProp" Type="Edm.Duration" Nullable="true" />
+        <Property Name="NullableDurationProp" Type="Edm.Duration" />
+
+        <Property Name="NonNullableDateTimeOffsetProp" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="ExplicitlyNullableDateTimeOffsetProp" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="NullableDateTimeOffsetProp" Type="Edm.DateTimeOffset" />
+
+        <Property Name="NonNullableDateProp" Type="Edm.Date" Nullable="false" />
+        <Property Name="ExplicitlyNullableDateProp" Type="Edm.Date" Nullable="true" />
+        <Property Name="NullableDateProp" Type="Edm.Date" />
+
+        <Property Name="NonNullableTimeOfDayProp" Type="Edm.TimeOfDay" Nullable="false" />
+        <Property Name="ExplicitlyNullableTimeOfDayProp" Type="Edm.TimeOfDay" Nullable="true" />
+        <Property Name="NullableTimeOfDayProp" Type="Edm.TimeOfDay" />
+
+        <Property Name="NonNullableStreamProp" Type="Edm.Stream" Nullable="false" />
+        <Property Name="ExplicitlyNullableStreamProp" Type="Edm.Stream" Nullable="true" />
+        <Property Name="NullableStreamProp" Type="Edm.Stream" />
+
+        <Property Name="NonNullableSByteProp" Type="Edm.SByte" Nullable="false" />
+        <Property Name="ExplicitlyNullableSByteProp" Type="Edm.SByte" Nullable="true" />
+        <Property Name="NullableSByteProp" Type="Edm.SByte" />
+
+        <Property Name="NonNullableGeography" Type="Edm.Geography" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeography" Type="Edm.Geography" Nullable="true" />
+        <Property Name="NullableGeography" Type="Edm.Geography"/>
+
+        <Property Name="NonNullableGeographyPoint" Type="Edm.GeographyPoint" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeographyPoint" Type="Edm.GeographyPoint" Nullable="true" />
+        <Property Name="NullableGeographyPoint" Type="Edm.GeographyPoint"/>
+
+        <Property Name="NonNullableGeographyLineString" Type="Edm.GeographyLineString" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeographyLineString" Type="Edm.GeographyLineString" Nullable="true" />
+        <Property Name="NullableGeographyLineString" Type="Edm.GeographyLineString"/>
+
+        <Property Name="NonNullableGeographyPolygon" Type="Edm.GeographyPolygon" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeographyPolygon" Type="Edm.GeographyPolygon" Nullable="true" />
+        <Property Name="NullableGeographyPolygon" Type="Edm.GeographyPolygon"/>
+
+        <Property Name="NonNullableGeographyMultiPoint" Type="Edm.GeographyMultiPoint" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeographyMultiPoint" Type="Edm.GeographyMultiPoint" Nullable="true" />
+        <Property Name="NullableGeographyMultiPoint" Type="Edm.GeographyMultiPoint"/>
+
+        <Property Name="NonNullableGeographyMultiLineString" Type="Edm.GeographyMultiLineString" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeographyMultiLineString" Type="Edm.GeographyMultiLineString" Nullable="true" />
+        <Property Name="NullableGeographyMultiLineString" Type="Edm.GeographyMultiLineString"/>
+
+        <Property Name="NonNullableGeographyMultiPolygon" Type="Edm.GeographyMultiPolygon" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeographyMultiPolygon" Type="Edm.GeographyMultiPolygon" Nullable="true" />
+        <Property Name="NullableGeographyMultiPolygon" Type="Edm.GeographyMultiPolygon"/>
+
+        <Property Name="NonNullableGeographyCollection" Type="Edm.GeographyCollection" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeographyCollection" Type="Edm.GeographyCollection" Nullable="true" />
+        <Property Name="NullableGeographyCollection" Type="Edm.GeographyCollection"/>
+
+        <Property Name="NonNullableGeometry" Type="Edm.Geometry" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeometry" Type="Edm.Geometry" Nullable="true" />
+        <Property Name="NullableGeometry" Type="Edm.Geometry"/>
+
+        <Property Name="NonNullableGeometryPoint" Type="Edm.GeometryPoint" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeometryPoint" Type="Edm.GeometryPoint" Nullable="true" />
+        <Property Name="NullableGeometryPoint" Type="Edm.GeometryPoint"/>
+
+        <Property Name="NonNullableGeometryLineString" Type="Edm.GeometryLineString" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeometryLineString" Type="Edm.GeometryLineString" Nullable="true" />
+        <Property Name="NullableGeometryLineString" Type="Edm.GeometryLineString"/>
+
+        <Property Name="NonNullableGeometryPolygon" Type="Edm.GeometryPolygon" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeometryPolygon" Type="Edm.GeometryPolygon" Nullable="true" />
+        <Property Name="NullableGeometryPolygon" Type="Edm.GeometryPolygon"/>
+
+        <Property Name="NonNullableGeometryMultiPoint" Type="Edm.GeometryMultiPoint" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeometryMultiPoint" Type="Edm.GeometryMultiPoint" Nullable="true" />
+        <Property Name="NullableGeometryMultiPoint" Type="Edm.GeometryMultiPoint"/>
+
+        <Property Name="NonNullableGeometryMultiLineString" Type="Edm.GeometryMultiLineString" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeometryMultiLineString" Type="Edm.GeometryMultiLineString" Nullable="true" />
+        <Property Name="NullableGeometryMultiLineString" Type="Edm.GeometryMultiLineString"/>
+
+        <Property Name="NonNullableGeometryMultiPolygon" Type="Edm.GeometryMultiPolygon" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeometryMultiPolygon" Type="Edm.GeometryMultiPolygon" Nullable="true" />
+        <Property Name="NullableGeometryMultiPolygon" Type="Edm.GeometryMultiPolygon"/>
+
+        <Property Name="NonNullableGeometryCollection" Type="Edm.GeometryCollection" Nullable="false" />
+        <Property Name="ExplicitlyNullableGeometryCollection" Type="Edm.GeometryCollection" Nullable="true" />
+        <Property Name="NullableGeometryCollection" Type="Edm.GeometryCollection"/>
+
+        <Property Name="ComplexNonNull" Type="MergedFunctionalTest.TestComplexType" Nullable="false"/>
+        <Property Name="ComplexNullExplicit" Type="MergedFunctionalTest.TestComplexType" Nullable="true"/>
+        <Property Name="ComplexNull" Type="MergedFunctionalTest.TestComplexType"/>
+      </EntityType>
+      <EntityType Name="TestCollectionType">
+        <Key>
+          <PropertyRef Name="KeyProp" />
+        </Key>
+        <Property Name="KeyProp" Type="Edm.Int32" Nullable="false" />
+        <Property Name="BagOfDecimals" Type="Collection(Edm.Decimal)" />
+        <Property Name="BagOfDoubles" Type="Collection(Edm.Double)" Nullable="false" />
+        <Property Name="BagOfSingles" Type="Collection(Edm.Single)" />
+        <Property Name="BagOfBytes" Type="Collection(Edm.Byte)" Nullable="false" />
+        <Property Name="BagOfInt16s" Type="Collection(Edm.Int16)" />
+        <Property Name="BagOfInt32s" Type="Collection(Edm.Int32)" Nullable="false" />
+        <Property Name="BagOfInt64s" Type="Collection(Edm.Int64)" Nullable="false" />
+        <Property Name="BagOfGuids" Type="Collection(Edm.Guid)" />
+        <Property Name="BagOfDateTime" Type="Collection(Edm.DateTimeOffset)" Nullable="false" />
+        <Property Name="BagOfStrings" Type="Collection(Edm.String)" />
+        <Property Name="BagOfBinarys" Type="Collection(Edm.Binary)" Nullable="false" />
+        <Property Name="BagOfBooleans" Type="Collection(Edm.Boolean)" Nullable="false" />
+        <Property Name="BagOfDuration" Type="Collection(Edm.Duration)" Nullable="false" />
+        <Property Name="BagOfDate" Type="Collection(Edm.Date)" Nullable="false" />
+        <Property Name="BagOfTimeOfDay" Type="Collection(Edm.TimeOfDay)" Nullable="false" />
+        <Property Name="BagOfStream" Type="Collection(Edm.Stream)" Nullable="false" />
+        <Property Name="BagOfSByte" Type="Collection(Edm.SByte)" Nullable="false" />
+        <Property Name="Geography" Type="Collection(Edm.Geography)" SRID="Variable" Nullable="false" />
+        <Property Name="GeographyPoint" Type="Collection(Edm.GeographyPoint)" SRID="Variable" Nullable="false" />
+        <Property Name="GeographyLineString" Type="Collection(Edm.GeographyLineString)" SRID="Variable" Nullable="false" />
+        <Property Name="GeographyPolygon" Type="Collection(Edm.GeographyPolygon)" SRID="Variable" Nullable="false" />
+        <Property Name="GeographyMultiPoint" Type="Collection(Edm.GeographyMultiPoint)" SRID="Variable" Nullable="false" />
+        <Property Name="GeographyMultiLineString" Type="Collection(Edm.GeographyMultiLineString)" SRID="Variable" Nullable="false" />
+        <Property Name="GeographyMultiPolygon" Type="Collection(Edm.GeographyMultiPolygon)" SRID="Variable" Nullable="false" />
+        <Property Name="GeographyCollection" Type="Collection(Edm.GeographyCollection)" SRID="Variable" Nullable="false" />
+        <Property Name="Geometry" Type="Collection(Edm.Geometry)" SRID="Variable" Nullable="false" />
+        <Property Name="GeometryPoint" Type="Collection(Edm.GeometryPoint)" SRID="Variable" />
+        <Property Name="GeometryLineString" Type="Collection(Edm.GeometryLineString)" SRID="Variable" Nullable="false" />
+        <Property Name="GeometryPolygon" Type="Collection(Edm.GeometryPolygon)" SRID="Variable" Nullable="false" />
+        <Property Name="GeometryMultiPoint" Type="Collection(Edm.GeometryMultiPoint)" SRID="Variable" Nullable="false" />
+        <Property Name="GeometryMultiLineString" Type="Collection(Edm.GeometryMultiLineString)" SRID="Variable" Nullable="false" />
+        <Property Name="GeometryMultiPolygon" Type="Collection(Edm.GeometryMultiPolygon)" SRID="Variable" Nullable="false" />
+        <Property Name="GeometryCollection" Type="Collection(Edm.GeometryCollection)" SRID="Variable" Nullable="false" />
+        <Property Name="CollectionOfComplexNotNullExplictly" Type="Collection(MergedFunctionalTest.TestComplexType)" Nullable="false" />
+        <Property Name="CollectionOfComplexNullExplictly" Type="Collection(MergedFunctionalTest.TestComplexType)" Nullable="true" />
+        <Property Name="CollectionOfComplex" Type="Collection(MergedFunctionalTest.TestComplexType)" />
+      </EntityType>
+      <EntityType Name="DefaultValueTestType">
+        <Key>
+          <PropertyRef Name="KeyProp" />
+        </Key>
+        <Property Name="KeyProp" Type="Edm.Int32" Nullable="false" DefaultValue="-1"/>
+        <Property Name="BinaryProp" Type="Edm.Binary" Nullable="false" DefaultValue="123AD234F"/>
+        <Property Name="StringProp" Type="Edm.String" Nullable="false" DefaultValue="defaultstring"/>
+        <Property Name="DecimalProp" Type="Edm.Decimal" Nullable="false" DefaultValue="79228162514264337593543950335"/>
+        <Property Name="ShortProp" Type="Edm.Int16" Nullable="false" DefaultValue="123"/>
+        <Property Name="FloatProp" Type="Edm.Single" Nullable="false" DefaultValue="-3.60274515E+37"/>
+        <Property Name="BooleanProp" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+        <Property Name="DoubleProp" Type="Edm.Double" Nullable="false" DefaultValue="3434.121"/>
+        <Property Name="GuidProp" Type="Edm.Guid" Nullable="false" DefaultValue="00000000-0000-0000-0000-000000000000"/>
+        <Property Name="ByteProp" Type="Edm.Byte" Nullable="false" DefaultValue="234"/>
+        <Property Name="LongProp" Type="Edm.Int64" Nullable="false" DefaultValue="13121"/>
+        <Property Name="SByteProp" Type="Edm.SByte" Nullable="false" DefaultValue="13"/>
+        <Property Name="DurationProp" Type="Edm.Duration" Nullable="false" DefaultValue="P104DT7H50M13.133759S"/>
+        <Property Name="DateTimeOffsetProp" Type="Edm.DateTimeOffset" Nullable="false" DefaultValue="2000-12-12T12:00Z"/>
+        <Property Name="DateProp" Type="Edm.Date" Nullable="false" DefaultValue="2014-10-08"/>
+        <Property Name="TimeOfDayProp" Type="Edm.TimeOfDay" Nullable="false" DefaultValue="12:34:56"/>
+        <Property Name="GeographyProp" Type="Edm.Geography" SRID="4326" DefaultValue="SRID=4326;POINT (10.22 10)"/>
+        <Property Name="GeographyPointProp" Type="Edm.GeographyPoint" SRID="4326" DefaultValue="SRID=4326;POINT (10.22 10)"/>
+        <Property Name="GeographyLineStringProp" Type="Edm.GeographyLineString" SRID="4326" DefaultValue="SRID=4326;LINESTRING (-140.4 49.98, -177.6 77)"/>
+        <Property Name="GeographyPolygonProp" Type="Edm.GeographyPolygon" SRID="4326" DefaultValue="SRID=4326;POLYGON ((-110 33.1, -110.15 35.97, 87.75 11.45, -110 33.1), (-110 35.97, -110.15 36.97, 23.18 45.23, -110 35.97))"/>
+        <Property Name="GeographyCollectionProp" Type="Edm.GeographyCollection" SRID="4326" DefaultValue="SRID=4326;GEOMETRYCOLLECTION (POINT (-12 -19.99))"/>
+        <Property Name="GeographyMultiPolygonProp" Type="Edm.GeographyMultiPolygon" SRID="4326" DefaultValue="SRID=4326;MULTIPOLYGON (((11.2 10.2, 11.6 11.9, 87.75 11.45, 11.2 10.2), (17.2 16.2, 19.6 18.9, 87.75 11.45, 17.2 16.2)))"/>
+        <Property Name="GeographyMultiLineStringProp" Type="Edm.GeographyMultiLineString" SRID="4326" DefaultValue="SRID=4326;MULTILINESTRING ((11.2 10.2, 11.6 11.9), (17.2 16.2, 19.6 18.9))"/>
+        <Property Name="GeographyMultiPointProp" Type="Edm.GeographyMultiPoint" SRID="4326" DefaultValue="SRID=4326;MULTIPOINT ((11.2 10.2), (11.6 11.9))"/>
+        <Property Name="GeometryProp" Type="Edm.Geometry" SRID="0" DefaultValue="SRID=0;POINT (10 10.22)"/>
+        <Property Name="GeometryPointProp" Type="Edm.GeometryPoint" SRID="0" DefaultValue="SRID=0;POINT (10 10.22)"/>
+        <Property Name="GeometryLineStringProp" Type="Edm.GeometryLineString" SRID="0" DefaultValue="SRID=0;LINESTRING (49.98 -140.4, 77 -177.6)"/>
+        <Property Name="GeometryPolygonProp" Type="Edm.GeometryPolygon" SRID="0" DefaultValue="SRID=0;POLYGON ((33.1 -110, 35.97 -110.15, 11.45 87.75, 33.1 -110), (35.97 -110, 36.97 -110.15, 45.23 23.18, 35.97 -110))"/>
+        <Property Name="GeometryCollectionProp" Type="Edm.GeometryCollection" SRID="0" DefaultValue="SRID=0;GEOMETRYCOLLECTION (POINT (-19.99 -12))"/>
+        <Property Name="GeometryMultiPolygonProp" Type="Edm.GeometryMultiPolygon" SRID="0" DefaultValue="SRID=0;MULTIPOLYGON (((10.2 11.2, 11.9 11.6, 11.45 87.75, 10.2 11.2), (16.2 17.2, 18.9 19.6, 11.45 87.75, 16.2 17.2)))"/>
+        <Property Name="GeometryMultiLineStringProp" Type="Edm.GeometryMultiLineString" SRID="0" DefaultValue="SRID=0;MULTILINESTRING ((10.2 11.2, 11.9 11.6), (16.2 17.2, 18.9 19.6))"/>
+        <Property Name="GeometryMultiPointProp" Type="Edm.GeometryMultiPoint" SRID="0" DefaultValue="SRID=0;MULTIPOINT ((10.2 11.2), (11.9 11.6))"/>
+        <Property Name="UserAccess" DefaultValue="1" Type="MergedFunctionalTest.AccessLevel"/>
+        <Property Name="SkinColor" Nullable="false" DefaultValue="MergedFunctionalTest.Color'White'" Type="MergedFunctionalTest.Color"/>
+        <Property Name="SkinColor2" Nullable="false" DefaultValue="White, Red" Type="MergedFunctionalTest.Color"/>
+        <Property Name="SkinColor3" Nullable="false" DefaultValue="0,1" Type="MergedFunctionalTest.Color"/>
+      </EntityType>
+      <EntityType Name="MultiKeyTestType">
+        <Key>
+          <PropertyRef Name="Int64Id" />
+          <PropertyRef Name="StringId" />
+          <PropertyRef Name="DateTimeOffsetId" />
+          <PropertyRef Name="GuidId" />
+        </Key>
+        <Property Name="Int64Id" Type="Edm.Int64" Nullable="false" />
+        <Property Name="StringId" Type="Edm.String" Nullable="false" />
+        <Property Name="DateTimeOffsetId" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="GuidId" Type="Edm.Guid" Nullable="false" />
+      </EntityType>
+      <EntityType Name="BaseType">
+        <Key>
+          <PropertyRef Name="KeyProp" />
+        </Key>
+        <Property Name="KeyProp" Type="Edm.Int64" Nullable="false" />
+      </EntityType>
+      <EntityType Name="KatmaiType">
+        <Key>
+          <PropertyRef Name="KeyProp" />
+        </Key>
+        <Property Name="KeyProp" Type="Edm.Int32" Nullable="false" />
+        <Property Name="DateTimeOffset" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="TimeSpan" Type="Edm.Duration" Nullable="false" />
+        <Property Name="NullableDateTimeOffset" Type="Edm.DateTimeOffset" Nullable="true" />
+        <Property Name="NullableTimeSpan" Type="Edm.Duration" Nullable="true" />
+      </EntityType>
+      <EntityType Name="Level0" Abstract="true">
+        <Key>
+          <PropertyRef Name="Level0Prop" />
+        </Key>
+        <Property Name="Level0Prop" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityType Name="Level1" BaseType="MergedFunctionalTest.Level0">
+        <Key>
+          <PropertyRef Name="Level1Id" />
+        </Key>
+        <Property Name="Level1Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Level1Prop" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityType Name="Level2" BaseType="MergedFunctionalTest.Level1">
+        <Property Name="Level2Prop" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityType Name="SingleType">
+        <Key>
+          <PropertyRef Name="KeyProp" />
+        </Key>
+        <Property Name="KeyProp" Type="Edm.GeographyPoint" Nullable="false" />
+        <NavigationProperty Name="BaseSet" Type="Collection(MergedFunctionalTest.TestType)" />
+      </EntityType>
+      <EntityType Name="Group" OpenType="true">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="IsHiddenInUI" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="LoginName" Type="Edm.String" />
+        <NavigationProperty Name="Good" Type="Collection(MergedFunctionalTest.GoodCustomer)" />
+        <NavigationProperty Name="Bad" Type="MergedFunctionalTest.BadCustomer" />
+      </EntityType>
+      <EntityType Name="Principal">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="IsHiddenInUI" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="LoginName" Type="Edm.String" />
+        <Property Name="Title" Type="Edm.String" />
+        <Property Name="PrincipalType" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+      <ComplexType Name="ComplextLevel0" Abstract="true">
+        <Property Name="ComplextLevel0Prop" Type="Edm.String" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="ComplextLevel1" BaseType="MergedFunctionalTest.ComplextLevel0">
+        <Property Name="ComplextLevel1Prop" Type="Edm.Int64" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="Address" >
+        <Property Name="Street" Type="Edm.String" Nullable="true" />
+      </ComplexType>
+      <ComplexType Name="TestComplexType">
+        <Property Name="BinaryProp" Type="Edm.Binary" Nullable="true" />
+        <Property Name="BooleanProp" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="ByteProp" Type="Edm.Byte" />
+        <Property Name="DecimalProp" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="DoubleProp" Type="Edm.Double" Nullable="false" />
+        <Property Name="SingleProp" Type="Edm.Single" Nullable="false" />
+        <Property Name="GuidProp" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Int64Prop" Type="Edm.Int64" />
+        <Property Name="StringProp" Type="Edm.String" Nullable="true" />
+        <Property Name="DurationProp" Type="Edm.Duration" Nullable="false" />
+        <Property Name="DateTimeOffsetProp" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="StreamProp" Type="Edm.Stream" Nullable="false" />
+        <Property Name="SByteProp" Type="Edm.SByte" Nullable="false" />
+        <Property Name="GeogPointProp" Type="Edm.GeographyPoint" SRID="Variable" />
+        <Property Name="GeomPointProp" Type="Edm.GeometryPoint" SRID="Variable" />
+        <Property Name="ColorProp" Type="MergedFunctionalTest.Color" Nullable="false" />
+        <Property Name="Colors" Type="Collection(MergedFunctionalTest.Color)" Nullable="false" />
+      </ComplexType>
+      <EnumType Name="Color" UnderlyingType="Edm.Int32" IsFlags="true">
+        <Member Name="Red"/>
+        <Member Name="White"/>
+        <Member Name="Blue"/>
+      </EnumType>
+      <EnumType Name="AccessLevel">
+        <Member Name="None" Value="0"/>
+        <Member Name="Read" Value="1"/>
+        <Member Name="Write" Value="2"/>
+      </EnumType>
+      <Function Name="MyGroupFunc">
+        <Parameter Name="this" Type="MergedFunctionalTest.Principal" />
+        <Parameter Name="taskKey" Type="Edm.Int32" Nullable="false" />
+        <Parameter Name="attribute" Type="Edm.String" />
+        <ReturnType Nullable="false" Type="Collection(MergedFunctionalTest.Group)"/>
+      </Function>
+      <Function Name="MyGroupFunc">
+        <Parameter Name="this" Type="MergedFunctionalTest.Principal" />
+        <Parameter Name="taskKey" Type="Edm.Int32" Nullable="false" />
+        <ReturnType Nullable="false" Type="Collection(MergedFunctionalTest.Group)"/>
+      </Function>
+      <Term Name="Term1" Type="Edm.Boolean" />
+      <Annotations Target="MergedFunctionalTest.Customer">
+        <Annotation Term="MergedFunctionalTest.Term1" Bool="true" />
+      </Annotations>
+      <Function Name="GetPeople">
+        <ReturnType Type="Collection(MergedFunctionalTest.Person)"/>
+      </Function>
+      <Function Name="foo1">
+        <Parameter Name="p1" Type="Collection(MergedFunctionalTest.Customer)" />
+        <ReturnType Type="Edm.String" />
+      </Function>
+      <Function Name="foo2" IsBound="true">
+        <Parameter Name="p1" Type="MergedFunctionalTest.Customer" />
+        <Parameter Name="p2" Type="Edm.Int32" Nullable="false" />
+        <ReturnType Type="Edm.String" />
+      </Function>
+      <Action Name="foo3">
+        <Parameter Name="p1" Type="Collection(MergedFunctionalTest.Customer)" />
+        <ReturnType Type="Edm.String" />
+      </Action>
+      <Function Name="foo6">
+        <Parameter Name="p1" Type="Edm.Int32" Nullable="true" />
+        <Parameter Name="p2" Type="MergedFunctionalTest.Customer" Nullable="true" />
+        <ReturnType Type="MergedFunctionalTest.Address" />
+      </Function>
+      <Function Name="foo7" IsBound="true">
+        <Parameter Name="p0" Type="MergedFunctionalTest.Customer" />
+        <Parameter Name="p1" Type="Collection(Edm.Int32)" />
+        <Parameter Name="p2" Type="MergedFunctionalTest.Address" Nullable="true" />
+        <ReturnType Type="Edm.Int32" Nullable="true" />
+      </Function>
+      <Function Name="foo7" IsBound="true">
+        <Parameter Name="p0" Type="MergedFunctionalTest.Customer" />
+        <Parameter Name="p1" Type="MergedFunctionalTest.Address" Nullable="true" />
+        <ReturnType Type="MergedFunctionalTest.Customer" Nullable="true" />
+      </Function>
+      <Function Name="foo7" IsBound="true">
+        <Parameter Name="p0" Type="MergedFunctionalTest.Product" />
+        <Parameter Name="p1" Type="MergedFunctionalTest.Address" Nullable="true" />
+        <ReturnType Type="MergedFunctionalTest.Customer" />
+      </Function>
+      <Function Name="foo7" IsBound="true">
+        <Parameter Name="p0" Type="MergedFunctionalTest.Product" />
+        <ReturnType Type="Collection(MergedFunctionalTest.Customer)" />
+      </Function>
+      <Function Name="foo12" IsBound="true">
+        <Parameter Name="p0" Type="Collection(MergedFunctionalTest.Product)" />
+        <ReturnType Type="Collection(MergedFunctionalTest.Customer)" />
+      </Function>
+      <Function Name="foo12" IsBound="true">
+        <Parameter Name="p0" Type="Collection(MergedFunctionalTest.Product)" />
+        <Parameter Name="p1" Type="MergedFunctionalTest.Address" Nullable="true" />
+        <ReturnType Type="Collection(MergedFunctionalTest.Customer)" />
+      </Function>
+      <Action Name="foo8">
+        <Parameter Name="event" Type="MergedFunctionalTest.Address" />
+        <Parameter Name="string" Type="Edm.Int32" />
+      </Action>
+      <Action Name="foo9" IsBound="true">
+        <Parameter Name="p1" Type="MergedFunctionalTest.Customer" />
+        <Parameter Name="p2" Type="Collection(MergedFunctionalTest.Address)" />
+        <ReturnType Type="Collection(MergedFunctionalTest.Address)" Nullable="true" />
+      </Action>
+      <Action Name="foo10" IsBound="true">
+        <Parameter Name="p1" Type="Collection(MergedFunctionalTest.Customer)" />
+      </Action>
+      <Action Name="foo10" IsBound="true">
+        <Parameter Name="p1" Type="MergedFunctionalTest.Customer" />
+        <ReturnType Type="MergedFunctionalTest.Address" Nullable="true" />
+      </Action>
+      <Action Name="foo11">
+        <Parameter Name="p1" Type="MergedFunctionalTest.Customer" Nullable="true" />
+        <ReturnType Type="Collection(Edm.Int32)" />
+      </Action>
+      <EntityContainer Name="TestContainer">
+        <EntitySet Name="Customers" EntityType="MergedFunctionalTest.Customer">
+          <NavigationPropertyBinding Path="Info" Target="CustomerInfo" />
+          <NavigationPropertyBinding Path="Company" Target="Company" />
+          <NavigationPropertyBinding Path="Orders" Target="Order" />
+        </EntitySet>
+        <EntitySet Name="Orders" EntityType="MergedFunctionalTest.Order">
+          <NavigationPropertyBinding Path="Customer" Target="Customer" />
+        </EntitySet>
+        <EntitySet Name="CustomerInfo" EntityType="MergedFunctionalTest.CustomerInfo" />
+        <EntitySet Name="Company" EntityType="MergedFunctionalTest.Company" />
+        <EntitySet Name="TestSet" EntityType="MergedFunctionalTest.SpecialTypeWithPrecisionFacet" />
+        <EntitySet Name="BlobEntities" EntityType="MergedFunctionalTest.BlobType"/>
+        <EntitySet Name="People" EntityType="MergedFunctionalTest.Person" />
+        <EntitySet Name="TestTypeSet1" EntityType="MergedFunctionalTest.TestType"/>
+        <EntitySet Name="TestTypeSet2" EntityType="MergedFunctionalTest.TestType"/>
+        <EntitySet Name="SpatialCollectionEntities" EntityType="MergedFunctionalTest.TestCollectionType"/>
+        <EntitySet Name='KatMaiSet' EntityType='MergedFunctionalTest.KatmaiType' />
+        <EntitySet Name="GoodCustomers" EntityType="MergedFunctionalTest.GoodCustomer" />
+        <EntitySet Name="BadCustomers" EntityType="MergedFunctionalTest.BadCustomer" />
+        <EntitySet Name="GroupSet" EntityType="MergedFunctionalTest.Group">
+          <NavigationPropertyBinding Path="Good" Target="GoodCustomers" />
+          <NavigationPropertyBinding Path="Bad" Target="BadCustomers" />
+        </EntitySet>
+        <EntitySet Name="Product" EntityType="MergedFunctionalTest.Product">
+          <NavigationPropertyBinding Path="Detail" Target="ProductDetail" />
+        </EntitySet>
+        <EntitySet Name="ProductDetail" EntityType="MergedFunctionalTest.ProductDetail">
+          <NavigationPropertyBinding Path="Product" Target="Product" />
+        </EntitySet>
+        <Singleton Name="SuperType" Type="MergedFunctionalTest.TestType" />
+        <Singleton Name="Single" Type="MergedFunctionalTest.SingleType" />
+        <FunctionImport Name="GetPeople" IncludeInServiceDocument="true" Function="MergedFunctionalTest.GetPeople"  EntitySet="People"/>
+        <FunctionImport Name="foo1" Function="MergedFunctionalTest.foo1"/>
+        <FunctionImport Name="MyGroupFunc"  IncludeInServiceDocument="true" Function="MergedFunctionalTest.MyGroupFunc" EntitySet="Groups" />
+        <ActionImport Name="foo3" Action="MergedFunctionalTest.foo3" />
+        <FunctionImport Name="foo6" Function="MergedFunctionalTest.foo6"/>
+        <ActionImport Name="foo8" Action="MergedFunctionalTest.foo8" />
+        <ActionImport Name="foo11" Action="MergedFunctionalTest.foo11" />
+      </EntityContainer>
+      <Annotations Target="MergedFunctionalTest.TestContainer">
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record>
+            <PropertyValue Property="NonUpdatableProperties">
+              <Collection>
+                <PropertyPath>CreatedAt</PropertyPath>
+                <PropertyPath>ChangedAt</PropertyPath>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="MergedFunctionalTest.TestContainer">
+        <Annotation Term="Com.Microsoft.OData.Service.Conventions.V1.UrlConventions" String="KeyAsSegment" />
+      </Annotations>
+    </Schema>
+    <Schema Namespace="MergedFunctionalTest1" xmlns="http://docs.oasis-open.org/odata/ns/edm" >
+      <EntityType Name="DerivedType" BaseType="MergedFunctionalTest.BaseType">
+        <Property Name="DerivedProperty" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="Customer" OpenType="true">
+        <Key>
+          <PropertyRef Name="CustomerId" />
+        </Key>
+        <Property Name="CustomerId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="Address" Type="MergedFunctionalTest1.Address" Nullable="true" />
+      </EntityType>
+      <ComplexType Name="Address" >
+        <Property Name="Street" Type="Edm.String" Nullable="true" />
+      </ComplexType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

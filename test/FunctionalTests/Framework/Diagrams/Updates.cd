@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="System.Data.Test.Astoria.UpdateTreeNode">
+    <Position X="15" Y="12" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tree\Update\UpdateTree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.ComplexResourceInstance">
+    <Position X="14.25" Y="13.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Tree\Update\UpdateTree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.KeyedResourceInstance">
+    <Position X="14.25" Y="16.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAhABAAAAEAAAAAAAAAAAAAAAAEAAAAAAQAAAAAAE=</HashCode>
+      <FileName>Tree\Update\UpdateTree.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ResourceInstanceKey" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.AssociationResourceInstance">
+    <Position X="14.5" Y="19.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Tree\Update\UpdateTree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.NamedNode">
+    <Position X="17.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Tree\Update\UpdateTree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.ExpNode">
+    <Position X="17.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAABA=</HashCode>
+      <FileName>Tree\Query\ExpNode.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.Node">
+    <Position X="11.5" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AABAIAAAAAAAAAQEACAAQAQQAAAAIQAAAAAAQAAACBA=</HashCode>
+      <FileName>Tree\diff\nodes\Node.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_facets" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Data.Test.Astoria.fxBase">
+    <Position X="11.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Util\fxBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.NodeFacets">
+    <Position X="8" Y="26" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABABAAIAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Tree\diff\nodes\NodeFacets.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.Nodes&lt;T&gt;">
+    <Position X="8" Y="22.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAECAAABAAQAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Tree\diff\nodes\Node.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Data.Test.Astoria.fxList&lt;T&gt;">
+    <Position X="7" Y="17.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AEYAAEAAAAAAABAQCgAABAQAIAAAAAAASAAAAABQIQA=</HashCode>
+      <FileName>Util\fxList.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Data.Test.Astoria.NodeType">
+    <Position X="5.5" Y="7.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>ABIAAIAAAAAAAAAEAAAQIIAIAACAAAAAAAJgAAAAABA=</HashCode>
+      <FileName>Tree\diff\nodes\NodeTypes.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Default" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Data.Test.Astoria.ComplexType">
+    <Position X="3.5" Y="12" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAEAAAAAIAAIAAAAgAAAAIAABAAAACABA=</HashCode>
+      <FileName>Tree\diff\nodes\NodeTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.CollectionType">
+    <Position X="9.25" Y="12" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAABA=</HashCode>
+      <FileName>Tree\diff\nodes\NodeTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.ResourceType">
+    <Position X="2" Y="16" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAQAAABAAAQAAAAAAAEAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Tree\Astoria\ResourceType.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Key" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Associations" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.ClrClass">
+    <Position X="6.75" Y="16" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Types\Clr\ClrNodes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.ResourceCollection">
+    <Position X="9" Y="14.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Tree\Astoria\ResouceNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.ResourceInstanceKey">
+    <Position X="18.25" Y="12" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>CAEAgABAACAEAAAAgAAAAAAAAAAAEIAAAAAQAAAAAAA=</HashCode>
+      <FileName>Tree\Update\UpdateTree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.NodeValue">
+    <Position X="12" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QBAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAQAAAAAAABA=</HashCode>
+      <FileName>Tree\diff\nodes\NodeValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.PrimaryKey">
+    <Position X="1" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Tree\diff\nodes\NodeRelation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.NodeRelation">
+    <Position X="2.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tree\diff\nodes\NodeRelation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Data.Test.Astoria.ResourceAssociation">
+    <Position X="3.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAEAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tree\Astoria\ResouceNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

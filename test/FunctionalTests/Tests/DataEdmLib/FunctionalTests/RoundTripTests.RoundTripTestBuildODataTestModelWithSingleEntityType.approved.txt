@@ -1,0 +1,13 @@
+<Schema Namespace="TestModel" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="SingletonEntityType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Name" Type="Edm.String" />
+  </EntityType>
+  <EntityContainer Name="DefaultContainer">
+    <EntitySet Name="SingletonEntityType" EntityType="TestModel.SingletonEntityType" />
+  </EntityContainer>
+</Schema>
+

@@ -1,0 +1,10 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Microsoft.OData.SampleService.Models.ModelRefDemo.Core.V1" Alias="Core">
+      <Term Name="Description" Type="Edm.String">
+        <Annotation Term="Core.Description" String="A brief description of a model element"/>
+        <Annotation Term="Core.IsLanguageDependent" Bool="true"/>
+      </Term>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

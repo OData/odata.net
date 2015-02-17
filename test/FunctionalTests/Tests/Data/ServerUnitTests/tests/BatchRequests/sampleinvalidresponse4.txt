@@ -1,0 +1,43 @@
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: multipart/mixed; boundary=changesetresponse_00000001-0000-0000-0000-000000000000
+
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+HTTP/1.1 400 Bad Request
+X-Content-Type-Options: nosniff
+OData-Version: 4.0
+Content-Type: application/xml;charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?><m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><m:code /><m:message>An error occurred while processing this request.</m:message><m:innererror><m:message>Data at the root level is invalid. Line 15, position 1.</m:message><m:type>System.Xml.XmlException</m:type>
+--changesetresponse_00000001-0000-0000-0000-000000000000--
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: multipart/mixed; boundary=changesetresponse_00000002-0000-0000-0000-000000000000
+
+--changesetresponse_00000002-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 3
+
+HTTP/1.1 405 Method Not Allowed
+X-Content-Type-Options: nosniff
+OData-Version: 4.0
+Content-Type: application/xml;charset=utf-8
+Allow: GET, POST
+
+<?xml version="1.0" encoding="utf-8"?><m:error xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"><m:code /><m:message>The URI '$(BaseUri)Orders' is not valid for PUT operation. The URI must point to a single resource for PUT operations.</m:message></m:error>
+--changesetresponse_00000002-0000-0000-0000-000000000000--
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+
+{"@odata.context":"$(BaseUri)$metadata#Orders/$entity","ID":1,"DollarAmount":20.1,"CurrencyAmount":null}
+--batchresponse_00000000-0000-0000-0000-000000000000--

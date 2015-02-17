@@ -1,0 +1,70 @@
+$select = 
+$expand = ProductOrdered($filter=not endswith(Name,'milk') and startswith(Name, 'word') or length(QuantityPerUnit) eq 15)
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: ProductOrdered)]
+			FilterQueryOption
+				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+				Parameter = 
+				EntityRangeVariable
+					Name = $it
+					NavigationSource = Products
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+				Expression = 
+						Not(
+							SingleValueFunctionCallNode
+								Name = endswith
+								Return Type = [Edm.Boolean Nullable=False]
+								Function = 
+								Arguments = 
+									SingleValuePropertyAccessNode
+										Property = Name
+										TypeReference = [Edm.String Nullable=True Unicode=True]
+										Source = 
+										EntityRangeVariableReferenceNode
+											Name = $it
+											NavigationSource = Products
+											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+											Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+									milk(Type: [Edm.String Nullable=True Unicode=True])
+						)
+					And
+						SingleValueFunctionCallNode
+							Name = startswith
+							Return Type = [Edm.Boolean Nullable=False]
+							Function = 
+							Arguments = 
+								SingleValuePropertyAccessNode
+									Property = Name
+									TypeReference = [Edm.String Nullable=True Unicode=True]
+									Source = 
+									EntityRangeVariableReferenceNode
+										Name = $it
+										NavigationSource = Products
+										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+										Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+								word(Type: [Edm.String Nullable=True Unicode=True])
+				Or
+						SingleValueFunctionCallNode
+							Name = length
+							Return Type = [Edm.Int32 Nullable=False]
+							Function = 
+							Arguments = 
+								SingleValuePropertyAccessNode
+									Property = QuantityPerUnit
+									TypeReference = [Edm.String Nullable=True Unicode=True]
+									Source = 
+									EntityRangeVariableReferenceNode
+										Name = $it
+										NavigationSource = Products
+										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
+										Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Equal
+						15(Type: [Edm.Int32 Nullable=False])
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems(Empty List)

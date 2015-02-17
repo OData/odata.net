@@ -1,0 +1,14 @@
+﻿--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: mUltIpArt/mIxEd; bOUndAry=changeset_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-lEngth: 100
+
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 1
+
+GET Customers HTTP/1.1
+cOntEnt-lEngth: 0
+
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b--

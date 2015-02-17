@@ -1,0 +1,26 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" />
+    <Property Name="prop_0" Type="Edm.Binary" Nullable="false" />
+    <Property Name="prop_1" Type="Edm.Boolean" Nullable="false" />
+    <Property Name="prop_2" Type="Edm.Byte" Nullable="false" />
+    <Property Name="prop_3" Type="Edm.DateTimeOffset" Nullable="false" />
+    <Property Name="prop_4" Type="Edm.Decimal" Nullable="false" />
+    <Property Name="prop_5" Type="Edm.Double" Nullable="false" />
+    <Property Name="prop_6" Type="Edm.Guid" Nullable="false" />
+    <Property Name="prop_7" Type="Edm.Int16" Nullable="false" />
+    <Property Name="prop_8" Type="Edm.Int32" Nullable="false" />
+    <Property Name="prop_9" Type="Edm.Int64" Nullable="false" />
+    <Property Name="prop_10" Type="Edm.SByte" Nullable="false" />
+    <Property Name="prop_11" Type="Edm.Single" Nullable="false" />
+    <Property Name="prop_12" Type="Edm.Stream" Nullable="false" />
+    <Property Name="prop_13" Type="Edm.String" Nullable="false" />
+    <Property Name="prop_14" Type="Edm.Duration" Nullable="false" />
+    <Property Name="prop_15" Type="Edm.Date" Nullable="false" />
+    <Property Name="prop_16" Type="Edm.TimeOfDay" Nullable="false" />
+  </EntityType>
+</Schema>
+

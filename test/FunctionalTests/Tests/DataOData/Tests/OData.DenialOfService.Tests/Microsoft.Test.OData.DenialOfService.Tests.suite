@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<suite>
+  <desktop>
+    <assembly name="Microsoft.Test.OData.DenialOfService.Tests" />
+  </desktop>
+  <include name="." />
+</suite>

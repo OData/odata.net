@@ -1,0 +1,979 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Schema Namespace="Aruba" Alias="Self" 
+        xmlns="http://schemas.microsoft.com/ado/2006/04/edm"
+        xmlns:c="http://christro.test/metadata">
+  <EntityContainer Name="ArubaContainer">
+    <EntitySet Name="BugDefectTrackingSet" EntityType="Aruba.DefectBug" />
+    <EntitySet Name="TaskSet" EntityType="Aruba.Task" />
+    <EntitySet Name="NonDefaultMappingsSet" EntityType="Self.NonDefaultMappings" />
+    <EntitySet Name="ProjectSet" EntityType="Aruba.Project" />
+    <EntitySet Name="RunSet" EntityType="Aruba.Run" />
+    <EntitySet Name="OwnerDetailSet" EntityType="Aruba.OwnerDetail" />
+    <EntitySet Name="DeploymentScenarioSet" EntityType="Aruba.Scenario" />
+    <EntitySet Name="OwnerSet" EntityType="Aruba.Owner" />
+    <EntitySet Name="ConfigSet" EntityType="Aruba.Config" />
+    <EntitySet Name="AllTypesSet" EntityType="Aruba.AllTypes" />
+    <EntitySet Name="OwnerContactInfoSet" EntityType="Aruba.OwnerContactInfo" />
+    <EntitySet Name="BugProjectTrackingSet" EntityType="Aruba.ProjectBug" />
+    <EntitySet Name="FailureSet" EntityType="Self.Failure" />
+    <EntitySet Name="AllTypesComplexEntitySet" EntityType="Aruba.AllTypesComplexEntity" />
+    <EntitySet Name="NonDefaultFacetsSet" EntityType="Aruba.NonDefaultFacets" />
+
+    <EntitySet Name="DataKey_BigInt" EntityType="Aruba.DataKey_BigInt" />
+    <EntitySet Name="DataKey_Bit" EntityType="Aruba.DataKey_Bit" />
+    <EntitySet Name="DataKey_DateTime" EntityType="Aruba.DataKey_DateTime" />
+    <EntitySet Name="DataKey_Decimal" EntityType="Aruba.DataKey_Decimal" />
+    <EntitySet Name="DataKey_Float" EntityType="Aruba.DataKey_Float" />
+    <EntitySet Name="DataKey_GUID" EntityType="Aruba.DataKey_GUID" />
+    <EntitySet Name="DataKey_Money" EntityType="Aruba.DataKey_Money" />
+    <EntitySet Name="DataKey_Numeric" EntityType="Aruba.DataKey_Numeric" />
+    <EntitySet Name="DataKey_Real" EntityType="Aruba.DataKey_Real" />
+    <EntitySet Name="DataKey_SmallDateTime" EntityType="Aruba.DataKey_SmallDateTime" />
+    <EntitySet Name="DataKey_SmallMoney" EntityType="Aruba.DataKey_SmallMoney" />
+    <EntitySet Name="DataKey_TinyInt" EntityType="Aruba.DataKey_TinyInt" />
+    <EntitySet Name="DataKey_VarChar50" EntityType="Aruba.DataKey_VarChar50" />
+    <EntitySet Name="ThirteenNavigations" EntityType="Aruba.ThirteenNavigations" />
+
+    <EntitySet Name="People" EntityType="Aruba.Person" />
+    <EntitySet Name="Vehicles" EntityType="Aruba.Vehicle" />
+    <EntitySet Name="Colleges" EntityType="Aruba.College" />
+    <EntitySet Name="Students" EntityType="Aruba.Student" />
+    <EntitySet Name="Computers" EntityType="Aruba.Computer" />
+    <EntitySet Name="ComputerDetails" EntityType="Aruba.ComputerDetails" />
+    <EntitySet Name="Workers" EntityType="Aruba.Worker" />
+    <EntitySet Name="Offices" EntityType="Aruba.Office" />
+
+    <EntitySet Name="DeepInheritanceSet" EntityType="Aruba.DeepTree_A" />
+    <EntitySet Name="WideInheritanceSet" EntityType="Aruba.WideTree_A" />
+    
+    <AssociationSet Name="FailureConfigSet" Association="Aruba.FailureConfig">
+      <End Role="Failure" EntitySet="FailureSet" />
+      <End Role="Config" EntitySet="ConfigSet" />
+    </AssociationSet>
+    <AssociationSet Name="RunTasksSet" Association="Aruba.RunTasks">
+      <End Role="Task" EntitySet="TaskSet" />
+      <End Role="Run" EntitySet="RunSet" />
+    </AssociationSet>
+    
+    <AssociationSet Name="OwnerBugsDefect_AssignedToSet" Association="Aruba.OwnerBugsDefect_AssignedTo">
+      <End Role="DefectBug" EntitySet="BugDefectTrackingSet" />
+      <End Role="Owner" EntitySet="OwnerSet" />
+    </AssociationSet>
+    <AssociationSet Name="OwnerBugsDefect_ResolvedBySet" Association="Aruba.OwnerBugsDefect_ResolvedBy">
+      <End Role="DefectBug" EntitySet="BugDefectTrackingSet" />
+      <End Role="Owner" EntitySet="OwnerSet" />
+    </AssociationSet>
+
+    <AssociationSet Name="OwnerBugsProject_AssignedToSet" Association="Aruba.OwnerBugsProject_AssignedTo">
+      <End Role="ProjectBug" EntitySet="BugProjectTrackingSet" />
+      <End Role="Owner" EntitySet="OwnerSet" />
+    </AssociationSet>
+    <AssociationSet Name="OwnerBugsProject_ResolvedBySet" Association="Aruba.OwnerBugsProject_ResolvedBy">
+      <End Role="ProjectBug" EntitySet="BugProjectTrackingSet" />
+      <End Role="Owner" EntitySet="OwnerSet" />
+    </AssociationSet>
+
+    <AssociationSet Name="FailureBugDefectTrackingSet" Association="Aruba.FailureBugDefectTracking">
+      <End Role="DefectBug" EntitySet="BugDefectTrackingSet" />
+      <End Role="Failure" EntitySet="FailureSet" />
+    </AssociationSet>
+    <AssociationSet Name="FailureBugProjectTrackingSet" Association="Aruba.FailureBugProjectTracking">
+      <End Role="ProjectBug" EntitySet="BugProjectTrackingSet" />
+      <End Role="Failure" EntitySet="FailureSet" />
+    </AssociationSet>
+
+    <AssociationSet Name="OwnerRunsSet" Association="Aruba.OwnerRuns">
+      <End Role="Run" EntitySet="RunSet" />
+      <End Role="Owner" EntitySet="OwnerSet" />
+    </AssociationSet>
+    <AssociationSet Name="OwnerOwnerDetailsSet" Association="Aruba.OwnerOwnerDetails">
+      <End Role="OwnerDetail" EntitySet="OwnerDetailSet" />
+      <End Role="Owner" EntitySet="OwnerSet" />
+    </AssociationSet>
+    <AssociationSet Name="ProjectTestScenarioSet" Association="Aruba.ProjectTestScenario">
+      <End Role="Scenario" EntitySet="DeploymentScenarioSet" />
+      <End Role="Project" EntitySet="ProjectSet" />
+    </AssociationSet>
+    <AssociationSet Name="ProjectDeploymentScenarioSet" Association="Aruba.ProjectDeploymentScenario">
+      <End Role="Scenario" EntitySet="DeploymentScenarioSet" />
+      <End Role="Project" EntitySet="ProjectSet" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_BigInt" Association="Aruba.FK_ThirteenNavigations_DataKey_BigInt">
+      <End Role="DataKey_BigInt" EntitySet="DataKey_BigInt" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_Bit" Association="Aruba.FK_ThirteenNavigations_DataKey_Bit">
+      <End Role="DataKey_Bit" EntitySet="DataKey_Bit" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_DateTime" Association="Aruba.FK_ThirteenNavigations_DataKey_DateTime">
+      <End Role="DataKey_DateTime" EntitySet="DataKey_DateTime" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_Decimal" Association="Aruba.FK_ThirteenNavigations_DataKey_Decimal">
+      <End Role="DataKey_Decimal" EntitySet="DataKey_Decimal" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_Float" Association="Aruba.FK_ThirteenNavigations_DataKey_Float">
+      <End Role="DataKey_Float" EntitySet="DataKey_Float" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_GUID" Association="Aruba.FK_ThirteenNavigations_DataKey_GUID">
+      <End Role="DataKey_GUID" EntitySet="DataKey_GUID" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_Money" Association="Aruba.FK_ThirteenNavigations_DataKey_Money">
+      <End Role="DataKey_Money" EntitySet="DataKey_Money" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_Numeric" Association="Aruba.FK_ThirteenNavigations_DataKey_Numeric">
+      <End Role="DataKey_Numeric" EntitySet="DataKey_Numeric" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_Real" Association="Aruba.FK_ThirteenNavigations_DataKey_Real">
+      <End Role="DataKey_Real" EntitySet="DataKey_Real" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_SmallDateTime" Association="Aruba.FK_ThirteenNavigations_DataKey_SmallDateTime">
+      <End Role="DataKey_SmallDateTime" EntitySet="DataKey_SmallDateTime" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_SmallMoney" Association="Aruba.FK_ThirteenNavigations_DataKey_SmallMoney">
+      <End Role="DataKey_SmallMoney" EntitySet="DataKey_SmallMoney" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_TinyInt" Association="Aruba.FK_ThirteenNavigations_DataKey_TinyInt">
+      <End Role="DataKey_TinyInt" EntitySet="DataKey_TinyInt" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ThirteenNavigations_DataKey_VarChar50" Association="Aruba.FK_ThirteenNavigations_DataKey_VarChar50">
+      <End Role="DataKey_VarChar50" EntitySet="DataKey_VarChar50" />
+      <End Role="ThirteenNavigations" EntitySet="ThirteenNavigations" />
+    </AssociationSet>
+
+    <AssociationSet Name="FK_Person_Vehicle" Association="Aruba.FK_Person_Vehicle">
+      <End Role="Person" EntitySet="People" />
+      <End Role="Vehicle" EntitySet="Vehicles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Person_OldVehicles" Association="Aruba.FK_Person_OldVehicles">
+      <End Role="Person" EntitySet="People" />
+      <End Role="OldVehicles" EntitySet="Vehicles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Computer_ComputerDetails" Association="Aruba.FK_Computer_ComputerDetails">
+      <End Role="Computer" EntitySet="Computers" />
+      <End Role="ComputerDetails" EntitySet="ComputerDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Students_College" Association="Aruba.FK_Students_College">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="College" EntitySet="Colleges" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Worker_Office" Association="Aruba.FK_Worker_Office">
+      <End Role="Worker" EntitySet="Workers" />
+      <End Role="Office" EntitySet="Offices" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Worker_Mentor" Association="Aruba.FK_Worker_Mentor">
+      <End Role="Worker" EntitySet="Workers" />
+      <End Role="Mentor" EntitySet="Workers" />
+    </AssociationSet>
+    
+    
+    <FunctionImport Name="SelectFromOwnerSet" EntitySet="OwnerSet" ReturnType="Collection(Aruba.Owner)" />
+    <FunctionImport Name="SelectFromAllTypesSet" EntitySet="AllTypesSet" ReturnType="Collection(Aruba.AllTypes)">
+      <Parameter Name="c25_intP" Type="Int32" Mode="In" />
+      <Parameter Name="c26_smallintP" Type="Int16" Mode="In" />
+      <Parameter Name="c27_tinyintP" Type="Byte" Mode="In" />
+      <Parameter Name="c28_bitP" Type="Boolean" Mode="In" />
+      <Parameter Name="c29_datetimeP" Type="DateTime" Mode="In" />
+      <Parameter Name="c30_smalldatetimeP" Type="DateTime" Mode="In" />
+      <Parameter Name="c31_decimal_28_4_P" Type="Decimal" Mode="In" />
+      <Parameter Name="c32_numeric_28_4_P" Type="Decimal" Mode="In" />
+      <Parameter Name="c33_realP" Type="Single" Mode="In" />
+      <Parameter Name="c34_floatP" Type="Double" Mode="In" />
+      <Parameter Name="c35_moneyP" Type="Decimal" Mode="In" />
+      <Parameter Name="c36_smallmoneyP" Type="Decimal" Mode="In" />
+      <Parameter Name="c37_varchar_512_P" Type="String" Mode="In" />
+      <Parameter Name="c38_char_512_P" Type="String" Mode="In" />
+      <Parameter Name="c39_textP" Type="String" Mode="In" />
+      <Parameter Name="c40_binary_512_P" Type="Binary" Mode="In" />
+      <Parameter Name="c41_varbinary_512_P" Type="Binary" Mode="In" />
+      <Parameter Name="c42_imageP" Type="Binary" Mode="In" />
+      <Parameter Name="c43_nvarchar_512_P" Type="String" Mode="In" />
+      <Parameter Name="c44_nchar_512_P" Type="String" Mode="In" />
+      <Parameter Name="c45_ntextP" Type="String" Mode="In" />
+      <Parameter Name="c46_uniqueidentifierP" Type="Guid" Mode="In" />
+      <Parameter Name="c47_bigintP" Type="Int64" Mode="In" />
+    </FunctionImport>
+    <FunctionImport Name="SelectBugs" EntitySet="BugDefectTrackingSet" ReturnType="Collection(Aruba.DefectBug)">
+      <Parameter Name="IdP" Type="Int32" Mode="In" />
+      <Parameter Name="param2_int" Type="Int32" Mode="InOut" />
+      <Parameter Name="param3_int" Type="Int32" Mode="InOut" />
+      <Parameter Name="NumberP" Type="Int32" Mode="In" />
+      <Parameter Name="param5_int" Type="Int32" Mode="InOut" />
+      <Parameter Name="param6_int" Type="Int32" Mode="InOut" />
+      <Parameter Name="CommentP" Type="String" Mode="In" />
+      <Parameter Name="param8_varchar_512_" Type="String" Mode="InOut" />
+      <Parameter Name="param9_varchar_512_" Type="String" Mode="InOut" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="AllTypesComplexType">
+    <Property Name="c1_int" Nullable="false" Type="Int32"  />
+    <Property Name="c2_smallint" Nullable="false" Type="Int16"  />
+    <Property Name="c3_tinyint" Nullable="false" Type="Byte"  />
+    <Property Name="c4_bit" Nullable="false" Type="Boolean"  />
+    <Property Name="c5_datetime" Nullable="false" Type="DateTime"  />
+    <Property Name="c6_smalldatetime" Nullable="false" Type="DateTime"  />
+    <Property Name="c7_decimal_28_4_" Nullable="false" Type="Decimal"  />
+    <Property Name="c8_numeric_28_4_" Nullable="false" Type="Decimal"  />
+    <Property Name="c9_real" Nullable="false" Type="Single"  />
+    <Property Name="c10_float" Nullable="false" Type="Double"  />
+    <Property Name="c11_money" Nullable="false" Type="Decimal"  />
+    <Property Name="c12_smallmoney" Nullable="false" Type="Decimal"  />
+    <Property Name="c13_varchar_512_" Nullable="false" Type="String"  />
+    <Property Name="c14_char_512_" Nullable="false" Type="String"  />
+    <Property Name="c15_text" Nullable="false" Type="String" />
+    <Property Name="c16_binary_512_" Nullable="false" Type="Binary"  />
+    <Property Name="c17_varbinary_512_" Nullable="false" Type="Binary"  />
+    <Property Name="c18_image" Nullable="false" Type="Binary" />
+    <Property Name="c19_nvarchar_512_" Nullable="false" Type="String"  />
+    <Property Name="c20_nchar_512_" Nullable="false" Type="String"  />
+    <Property Name="c21_ntext" Nullable="false" Type="String" />
+    <Property Name="c22_uniqueidentifier" Nullable="false" Type="Guid"  />
+    <Property Name="c23_bigint" Nullable="false" Type="Int64"  />
+  </ComplexType>
+  <ComplexType Name="ZipCode">
+    <Property Name="MainZip" Type="String" />
+    <Property Name="ExtendedZip" Type="String" />
+  </ComplexType>
+  <ComplexType Name="AddressInfo">
+    <Property Name="StreetAddress" Type="String" />
+    <Property Name="City" Type="String" />
+    <Property Name="State" Type="String" />
+    <Property Name="ZipCode" Nullable="false" Type="Aruba.ZipCode" />
+  </ComplexType>
+  <ComplexType Name="ContactInfo">
+    <Property Name="Email" Type="String" />
+    <Property Name="WorkPhone" Type="String" />
+    <Property Name="AddressInfo" Nullable="false" Type="Self.AddressInfo" />
+  </ComplexType>
+  <ComplexType Name="StatusInfo">
+    <Property Name="Started" Type="DateTime" />
+    <Property Name="StartedBy" Type="String" />
+    <Property Name="Completed" Type="DateTime" />
+  </ComplexType>
+
+
+  <EntityType Name="AllTypesComplexEntity">
+    <Key>
+      <PropertyRef Name="c1_int" />
+    </Key>
+    <Property Name="c1_int" Nullable="false" Type="Int32"  />
+    <Property Name="MemberAllTypesComplex" Nullable="false" Type="Aruba.AllTypesComplexType" />
+  </EntityType>
+  <EntityType Name="AllTypes">
+    <Key>
+      <PropertyRef Name="c1_int" />
+    </Key>
+    <Property Name="c1_int" Nullable="false" Type="Int32"  />
+    <Property Name="c2_int" Nullable="false" Type="Int32" c:PassThroughAttribute="true" />
+    <Property Name="c3_smallint" Nullable="false" Type="Int16"  />
+    <Property Name="c4_tinyint" Nullable="false" Type="Byte"  />
+    <Property Name="c5_bit" Nullable="false" Type="Boolean"  />
+    <Property Name="c6_datetime" Nullable="false" Type="DateTime"  />
+    <Property Name="c7_smalldatetime" Nullable="false" Type="DateTime"  />
+    <Property Name="c8_decimal_28_4_" Nullable="false" Type="Decimal"  />
+    <Property Name="c9_numeric_28_4_" Nullable="false" Type="Decimal"  />
+    <Property Name="c10_real" Nullable="false" Type="Single"  />
+    <Property Name="c11_float" Nullable="false" Type="Double"  />
+    <Property Name="c12_money" Nullable="false" Type="Decimal"  />
+    <Property Name="c13_smallmoney" Nullable="false" Type="Decimal"  />
+    <Property Name="c14_varchar_512_" Nullable="false" Type="String"  />
+    <Property Name="c15_char_512_" Nullable="false" Type="String"  />
+    <Property Name="c16_text" Nullable="false" Type="String" />
+    <Property Name="c17_binary_512_" Nullable="false" Type="Binary"  />
+    <Property Name="c18_varbinary_512_" Nullable="false" Type="Binary"  />
+    <Property Name="c19_image" Nullable="false" Type="Binary" />
+    <Property Name="c20_nvarchar_512_" Nullable="false" Type="String"  />
+    <Property Name="c21_nchar_512_" Nullable="false" Type="String"  />
+    <Property Name="c22_ntext" Nullable="false" Type="String" />
+    <Property Name="c23_uniqueidentifier" Nullable="false" Type="Guid"  />
+    <Property Name="c24_bigint" Nullable="false" Type="Int64"  />
+    <Property Name="c25_int" Type="Int32"  />
+    <Property Name="c26_smallint" Type="Int16"  />
+    <Property Name="c27_tinyint" Type="Byte"  />
+    <Property Name="c28_bit" Type="Boolean"  />
+    <Property Name="c29_datetime" Type="DateTime"  />
+    <Property Name="c30_smalldatetime" Type="DateTime"  />
+    <Property Name="c31_decimal_28_4_" Type="Decimal"  />
+    <Property Name="c32_numeric_28_4_" Type="Decimal"  />
+    <Property Name="c33_real" Type="Single"  />
+    <Property Name="c34_float" Type="Double"  />
+    <Property Name="c35_money" Type="Decimal"  />
+    <Property Name="c36_smallmoney" Type="Decimal"  />
+    <Property Name="c37_varchar_512_" Type="String"  />
+    <Property Name="c38_char_512_" Type="String"  />
+    <Property Name="c39_text" Type="String" />
+    <Property Name="c40_binary_512_" Type="Binary"  />
+    <Property Name="c41_varbinary_512_" Type="Binary"  />
+    <Property Name="c42_image" Type="Binary" />
+    <Property Name="c43_nvarchar_512_" Type="String"  />
+    <Property Name="c44_nchar_512_" Type="String"  />
+    <Property Name="c45_ntext" Type="String" />
+    <Property Name="c46_uniqueidentifier" Type="Guid"  />
+    <Property Name="c47_bigint" Type="Int64"  />
+  </EntityType>
+  
+  <EntityType Name="DefectBug">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="Number" Nullable="false" Type="Int32"  />
+    <Property Name="Comment" Type="String" />
+    <NavigationProperty Name="AssignedToOwnerBugsDefect" Relationship="Aruba.OwnerBugsDefect_AssignedTo" FromRole="DefectBug" ToRole="Owner" />
+    <NavigationProperty Name="ResolvedOwnerBugsDefect" Relationship="Aruba.OwnerBugsDefect_ResolvedBy" FromRole="DefectBug" ToRole="Owner" />
+  </EntityType>
+
+  <EntityType Name="ProjectBug">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="Number" Nullable="false" Type="Int32"  />
+    <Property Name="Comment" Type="String" />
+    <NavigationProperty Name="AssignedToOwnerBugsProject" Relationship="Aruba.OwnerBugsProject_AssignedTo" FromRole="ProjectBug" ToRole="Owner" />
+    <NavigationProperty Name="ResolvedOwnerBugsProject" Relationship="Aruba.OwnerBugsProject_ResolvedBy" FromRole="ProjectBug" ToRole="Owner" />
+  </EntityType>
+
+  <EntityType Name="Baseline" BaseType="Aruba.Failure">
+    <Property Name="Comment" Type="String" />
+  </EntityType>
+    <EntityType Name="ConfigBase" Abstract="true">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="OS" Type="String"  />
+    <Property Name="Lang" Type="String" />
+  </EntityType>
+  <EntityType Name="Failure">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="TestId" Nullable="false" Type="Int32" />
+    <Property Name="TestCase" Type="String" />
+    <Property Name="Variation" Type="Int32" />
+    <Property Name="Changed" Nullable="false" Type="DateTime" />
+    <Property Name="Log" Type="String" />
+    <NavigationProperty Name="BugsDefect" Relationship="Aruba.FailureBugDefectTracking" FromRole="Failure" ToRole="DefectBug" />
+    <NavigationProperty Name="Configs" Relationship="Aruba.FailureConfig" FromRole="Failure" ToRole="Config" />
+    <NavigationProperty Name="BugsProject" Relationship="Aruba.FailureBugProjectTracking" FromRole="Failure" ToRole="ProjectBug" />
+  </EntityType>
+  <EntityType Name="NonDefaultMappings">
+    <Key>
+      <PropertyRef Name="c1_int" />
+    </Key>
+    <Property Name="c1_int" Nullable="false" Type="Int32"  />
+    <Property Name="c_int_AS_decimal" Nullable="false" Type="Int32"  />
+    <Property Name="c_int_AS_numeric" Type="Int32"  />
+    <Property Name="c_int_AS_float" Nullable="false" Type="Int32"  />
+    <Property Name="c_int_AS_money" Type="Int32"  />
+    <Property Name="c_int_AS_bigint" Nullable="false" Type="Int32"  />
+    <Property Name="c_smallint_AS_int" Type="Int16"  />
+    <Property Name="c_smallint_AS_decimal" Nullable="false" Type="Int16"  />
+    <Property Name="c_smallint_AS_numeric" Type="Int16"  />
+    <Property Name="c_smallint_AS_real" Nullable="false" Type="Int16"  />
+    <Property Name="c_smallint_AS_float" Type="Int16"  />
+    <Property Name="c_smallint_AS_money" Nullable="false" Type="Int16"  />
+    <Property Name="c_smallint_AS_smallmoney" Type="Int16"  />
+    <Property Name="c_smallint_AS_bigint" Nullable="false" Type="Int16"  />
+    <Property Name="c_tinyint_AS_int" Type="Byte"  />
+    <Property Name="c_tinyint_AS_smallint" Nullable="false" Type="Byte"  />
+    <Property Name="c_tinyint_AS_decimal" Type="Byte"  />
+    <Property Name="c_tinyint_AS_numeric" Nullable="false" Type="Byte"  />
+    <Property Name="c_tinyint_AS_real" Type="Byte"  />
+    <Property Name="c_tinyint_AS_float" Nullable="false" Type="Byte"  />
+    <Property Name="c_tinyint_AS_money" Type="Byte"  />
+    <Property Name="c_tinyint_AS_smallmoney" Nullable="false" Type="Byte"  />
+    <Property Name="c_tinyint_AS_bigint" Type="Byte"  />
+    <Property Name="c_smalldatetime_AS_datetime" Nullable="false" Type="DateTime"  />
+    <Property Name="c_varchar_AS_nvarchar" Type="String"  />
+    <Property Name="c_char_AS_nchar" Nullable="false" Type="String"  />
+    <!--Property Name="c_nvarchar_AS_ntext" Type="String" /-->
+    <Property Name="c_bigint_AS_decimal" Nullable="false" Type="Int64"  />
+    <Property Name="c_bigint_AS_numeric" Type="Int64"  />
+  </EntityType>
+  
+  <EntityType Name="NonDefaultFacets">
+    <Key>
+      <PropertyRef Name="c1_int" />
+    </Key>
+    <Property Name="c1_int" Nullable="false" Type="Int32"  />
+    <Property Name="c_decimal27_3_AS_decimal28_4" Type="Decimal"  />
+    <Property Name="c_decimal24_0_AS_decimal26_2" Type="Decimal"  />
+    <Property Name="c_numeric24_0_AS_numeric28_4" Type="Decimal"  />
+    <Property Name="c_numeric24_0_AS_numeric25_1" Type="Decimal"  />
+    <Property Name="c_varchar230_AS_varchar512" Type="String"  />
+    <Property Name="c_varchar17_AS_varchar98" Type="String"  />
+    <Property Name="c_varbinary60_AS_varbinary512" Type="Binary"  />
+    <Property Name="c_varbinary31_AS_varbinary365" Type="Binary"  />
+    <Property Name="c_varchar80_AS_nvarchar512" Type="String"  />
+    <Property Name="c_varchar185_AS_nvarchar285" Type="String"  />
+  </EntityType>
+  
+  <EntityType Name="Owner">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="FirstName" Type="String" />
+    <Property Name="LastName" Type="Int32" />
+    <Property Name="Alias" Nullable="false" Type="String" />
+    <NavigationProperty Name="Runs" Relationship="Aruba.OwnerRuns" FromRole="Owner" ToRole="Run" />
+    <NavigationProperty Name="AssignedToBugsDefect" Relationship="Aruba.OwnerBugsDefect_AssignedTo" FromRole="Owner" ToRole="DefectBug" />
+    <NavigationProperty Name="ResolvedBugsDefect" Relationship="Aruba.OwnerBugsDefect_ResolvedBy" FromRole="Owner" ToRole="DefectBug" />
+    <NavigationProperty Name="OwnerDetail" Relationship="Aruba.OwnerOwnerDetails" FromRole="Owner" ToRole="OwnerDetail" />
+    <NavigationProperty Name="AssignedToBugsProject" Relationship="Aruba.OwnerBugsProject_AssignedTo" FromRole="Owner" ToRole="ProjectBug" />
+    <NavigationProperty Name="ResolvedBugsProject" Relationship="Aruba.OwnerBugsProject_ResolvedBy" FromRole="Owner" ToRole="ProjectBug" />
+  </EntityType>
+  
+  <EntityType Name="OwnerContactInfo">
+    <Key>
+      <PropertyRef Name="ContactInfoId" />
+    </Key>
+    <Property Name="ContactInfoId" Nullable="false" Type="Int32" />
+    <Property Name="ContactInfo" Nullable="false" Type="Aruba.ContactInfo" />
+  </EntityType>
+  
+  <EntityType Name="OwnerDetail">
+    <Key>
+      <PropertyRef Name="DetailId" />
+    </Key>
+    <Property Name="DetailId" Nullable="false" Type="Int32" />
+    <Property Name="Level" Type="Int32" />
+    <Property Name="HomeAddress1" Type="String" />
+    <Property Name="HomeAddress2" Type="String" />
+    <NavigationProperty Name="Owner" Relationship="Aruba.OwnerOwnerDetails" FromRole="OwnerDetail" ToRole="Owner" />
+  </EntityType>
+
+  <EntityType Name="Project">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="Name" Type="String" />
+    <NavigationProperty Name="TestScenario" Relationship="Self.ProjectTestScenario" FromRole="Project" ToRole="Scenario" />
+    <NavigationProperty Name="DeploymentScenario" Relationship="Aruba.ProjectDeploymentScenario" FromRole="Project" ToRole="Scenario" />
+  </EntityType>
+  <EntityType Name="Run">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="Name" Nullable="false" Type="String" />
+    <Property Name="Purpose" Type="Int32" />
+    <Property Name="StatusInfo" Nullable="false" Type="Aruba.StatusInfo" />
+    <Property Name="RequestStatusInfo" Nullable="false" Type="Aruba.StatusInfo" />
+    <NavigationProperty Name="Tasks" Relationship="Aruba.RunTasks" FromRole="Run" ToRole="Task" />
+    <NavigationProperty Name="Owner" Relationship="Aruba.OwnerRuns" FromRole="Run" ToRole="Owner" />
+  </EntityType>
+  <EntityType Name="Uninvestigated" BaseType="Aruba.Failure" />
+  <EntityType Name="Scenario">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="Name" Type="String" />
+  </EntityType>
+  <EntityType Name="Task">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="Deleted" Type="Boolean" />
+    <Property Name="StatusInfo" Nullable="false" Type="Aruba.StatusInfo" />
+    <Property Name="Passed" Type="Int64" />
+    <Property Name="Failed" Type="Int64" />
+    <Property Name="Investigates" Type="Int64" />
+    <Property Name="Improvements" Type="Int64" />
+    <NavigationProperty Name="Run" Relationship="Aruba.RunTasks" FromRole="Task" ToRole="Run" />
+  </EntityType>
+
+  <EntityType Name="DataKey_BigInt">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" />
+    <Property Name="DataColumn" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_BigInt" FromRole="DataKey_BigInt" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_Bit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Boolean" Nullable="false" />
+    <Property Name="DataColumn" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Bit" FromRole="DataKey_Bit" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_DateTime">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="DateTime" Nullable="false" />
+    <Property Name="DataColumn" Type="Binary" MaxLength="50" FixedLength="true" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_DateTime" FromRole="DataKey_DateTime" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_Decimal">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Decimal" Nullable="false" Precision="16" Scale="2" />
+    <Property Name="DataColumn" Type="String" MaxLength="10" Unicode="false" FixedLength="true" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Decimal" FromRole="DataKey_Decimal" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_Float">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Double" Nullable="false" />
+    <Property Name="DataColumn" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Float" FromRole="DataKey_Float" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_GUID">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Guid" Nullable="false" />
+    <Property Name="DataColumn" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_GUID" FromRole="DataKey_GUID" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_Money">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="DataColumn" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Money" FromRole="DataKey_Money" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_Numeric">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="DataColumn" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Numeric" FromRole="DataKey_Numeric" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_Real">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Single" Nullable="false" />
+    <Property Name="DataColumn" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Real" FromRole="DataKey_Real" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_SmallDateTime">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="DateTime" Nullable="false" />
+    <Property Name="DataColumn" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_SmallDateTime" FromRole="DataKey_SmallDateTime" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_SmallMoney">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Decimal" Nullable="false" Precision="10" Scale="4" />
+    <Property Name="DataColumn" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_SmallMoney" FromRole="DataKey_SmallMoney" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_TinyInt">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Byte" Nullable="false" />
+    <Property Name="DataColumn" Type="Guid" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_TinyInt" FromRole="DataKey_TinyInt" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="DataKey_VarChar50">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+    <Property Name="DataColumn" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="ThirteenNavigations" Relationship="Aruba.FK_ThirteenNavigations_DataKey_VarChar50" FromRole="DataKey_VarChar50" ToRole="ThirteenNavigations" />
+  </EntityType>
+  <EntityType Name="ThirteenNavigations">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="DataColumn" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+    <NavigationProperty Name="DataKey_BigInt" Relationship="Aruba.FK_ThirteenNavigations_DataKey_BigInt" FromRole="ThirteenNavigations" ToRole="DataKey_BigInt" />
+    <NavigationProperty Name="DataKey_Bit" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Bit" FromRole="ThirteenNavigations" ToRole="DataKey_Bit" />
+    <NavigationProperty Name="DataKey_DateTime" Relationship="Aruba.FK_ThirteenNavigations_DataKey_DateTime" FromRole="ThirteenNavigations" ToRole="DataKey_DateTime" />
+    <NavigationProperty Name="DataKey_Decimal" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Decimal" FromRole="ThirteenNavigations" ToRole="DataKey_Decimal" />
+    <NavigationProperty Name="DataKey_Float" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Float" FromRole="ThirteenNavigations" ToRole="DataKey_Float" />
+    <NavigationProperty Name="DataKey_GUID" Relationship="Aruba.FK_ThirteenNavigations_DataKey_GUID" FromRole="ThirteenNavigations" ToRole="DataKey_GUID" />
+    <NavigationProperty Name="DataKey_Money" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Money" FromRole="ThirteenNavigations" ToRole="DataKey_Money" />
+    <NavigationProperty Name="DataKey_Numeric" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Numeric" FromRole="ThirteenNavigations" ToRole="DataKey_Numeric" />
+    <NavigationProperty Name="DataKey_Real" Relationship="Aruba.FK_ThirteenNavigations_DataKey_Real" FromRole="ThirteenNavigations" ToRole="DataKey_Real" />
+    <NavigationProperty Name="DataKey_SmallDateTime" Relationship="Aruba.FK_ThirteenNavigations_DataKey_SmallDateTime" FromRole="ThirteenNavigations" ToRole="DataKey_SmallDateTime" />
+    <NavigationProperty Name="DataKey_SmallMoney" Relationship="Aruba.FK_ThirteenNavigations_DataKey_SmallMoney" FromRole="ThirteenNavigations" ToRole="DataKey_SmallMoney" />
+    <NavigationProperty Name="DataKey_TinyInt" Relationship="Aruba.FK_ThirteenNavigations_DataKey_TinyInt" FromRole="ThirteenNavigations" ToRole="DataKey_TinyInt" />
+    <NavigationProperty Name="DataKey_VarChar50" Relationship="Aruba.FK_ThirteenNavigations_DataKey_VarChar50" FromRole="ThirteenNavigations" ToRole="DataKey_VarChar50" />
+  </EntityType>
+  
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="FirstName"/>
+      <PropertyRef Name="LastName" />
+      <PropertyRef Name="MiddleName"/>
+    </Key>
+    <Property Name="FirstName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="LastName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="MiddleName" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="PrimaryVehicle" Relationship="Aruba.FK_Person_Vehicle" FromRole="Person" ToRole="Vehicle" />
+    <NavigationProperty Name="OldVehicles" Relationship="Aruba.FK_Person_OldVehicles" FromRole="Person" ToRole="OldVehicles" />
+  </EntityType>
+  <EntityType Name="PropertyOwner" BaseType="Aruba.Person" >
+    <Property Name="PropertyValue" Type="Decimal"/>
+  </EntityType>
+  <EntityType Name="Vehicle">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Make" Type="String" Nullable="false" />
+    <Property Name="Model" Type="String" Nullable="false" />
+    <Property Name="Year" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="PrimaryDriver" Relationship="Aruba.FK_Person_Vehicle" FromRole="Vehicle" ToRole="Person" />
+    <NavigationProperty Name="OldDrivers" Relationship="Aruba.FK_Person_OldVehicles" FromRole="OldVehicles" ToRole="Person" />
+  </EntityType>
+  <EntityType Name="Car" BaseType="Aruba.Vehicle" >
+  </EntityType>
+  <EntityType Name="Suv" BaseType="Aruba.Vehicle" >
+  </EntityType>
+  <EntityType Name="Truck" BaseType="Aruba.Vehicle" >
+  </EntityType>
+
+  <EntityType Name="Computer">
+    <Key>
+      <PropertyRef Name="MachineName" />
+    </Key>
+    <Property Name="MachineName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="Manufacturer" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="Model" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="ExtraDetails" Relationship="Aruba.FK_Computer_ComputerDetails" FromRole="Computer" ToRole="ComputerDetails" />
+  </EntityType>
+  <EntityType Name="ComputerDetails">
+    <Key>
+      <PropertyRef Name="MachineName" />
+    </Key>
+    <Property Name="MachineName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="OperatingSystem" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="OperatingSystemVersion" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="Status" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="MainRecord" Relationship="Aruba.FK_Computer_ComputerDetails" FromRole="ComputerDetails" ToRole="Computer" />
+  </EntityType>
+
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="50" Nullable="false" />
+    <Property Name="LastName" Type="String" MaxLength="50" Nullable="false" />
+    <Property Name="MiddleName" Type="String" MaxLength="50" Nullable="false" />
+    <Property Name="Major" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="College" Relationship="Aruba.FK_Students_College" FromRole="Students" ToRole="College" />
+  </EntityType>
+  <EntityType Name="GradStudent" BaseType="Aruba.Student">
+  </EntityType>
+  <EntityType Name="College">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="City" Type="String" MaxLength="30" Nullable="false"/>
+    <Property Name="State" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="Country" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="Students" Relationship="Aruba.FK_Students_College" FromRole="College" ToRole="Students" />
+  </EntityType>
+  <EntityType Name="University" BaseType="Aruba.College">
+  </EntityType>
+
+  <EntityType Name="Worker">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="LastName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="MiddleName" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="Mentor" Relationship="Aruba.FK_Worker_Mentor" FromRole="Worker" ToRole="Mentor" />
+    <NavigationProperty Name="Office" Relationship="Aruba.FK_Worker_Office" FromRole="Worker" ToRole="Office" />
+  </EntityType>
+  <EntityType Name="Office">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="OfficeNumber" Type="Int32" Nullable="false" />
+    <Property Name="FloorNumber" Type="Int16" Nullable="false"/>
+    <Property Name="BuildingName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="City" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="State" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="IsWindowOffice" Type="Boolean" Nullable="false" />
+  </EntityType>
+
+
+  <EntityType Name="DeepTree_A">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_B" BaseType="Aruba.DeepTree_A">
+    <Property Name="B_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_C" BaseType="Aruba.DeepTree_B">
+    <Property Name="C_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_D" BaseType="Aruba.DeepTree_C">
+    <Property Name="D_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_E" BaseType="Aruba.DeepTree_D">
+    <Property Name="E_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_F" BaseType="Aruba.DeepTree_E">
+    <Property Name="F_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_G" BaseType="Aruba.DeepTree_F">
+    <Property Name="G_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_H" BaseType="Aruba.DeepTree_G">
+    <Property Name="H_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_I" BaseType="Aruba.DeepTree_H">
+    <Property Name="I_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_J" BaseType="Aruba.DeepTree_I">
+    <Property Name="J_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_K" BaseType="Aruba.DeepTree_J">
+    <Property Name="K_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_L" BaseType="Aruba.DeepTree_K">
+    <Property Name="L_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_M" BaseType="Aruba.DeepTree_L">
+    <Property Name="M_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DeepTree_N" BaseType="Aruba.DeepTree_M">
+    <Property Name="N_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+
+  <EntityType Name="WideTree_A">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_B" BaseType="Aruba.WideTree_A">
+    <Property Name="B_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_C" BaseType="Aruba.WideTree_A">
+    <Property Name="C_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_D" BaseType="Aruba.WideTree_A">
+    <Property Name="D_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_E" BaseType="Aruba.WideTree_A">
+    <Property Name="E_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_F" BaseType="Aruba.WideTree_A">
+    <Property Name="F_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_G" BaseType="Aruba.WideTree_A">
+    <Property Name="G_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_H" BaseType="Aruba.WideTree_A">
+    <Property Name="H_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_I" BaseType="Aruba.WideTree_A">
+    <Property Name="I_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_J" BaseType="Aruba.WideTree_A">
+    <Property Name="J_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_K" BaseType="Aruba.WideTree_A">
+    <Property Name="K_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_L" BaseType="Aruba.WideTree_A">
+    <Property Name="L_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_M" BaseType="Aruba.WideTree_A">
+    <Property Name="M_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WideTree_N" BaseType="Aruba.WideTree_A">
+    <Property Name="N_Int" Type="Int32" Nullable="false" />
+  </EntityType>
+
+  <EntityType Name="Config" BaseType="Aruba.ConfigBase">
+    <Property Name="Arch" Type="String" />
+    <NavigationProperty Name="Failures" Relationship="Aruba.FailureConfig" FromRole="Config" ToRole="Failure" />
+  </EntityType>
+
+  <EntityType Name="TestFailure" BaseType="Aruba.Baseline" />
+  <EntityType Name="MachineConfig" BaseType="Aruba.Config">
+    <Property Name="Host" Type="String" />
+    <Property Name="Address" Type="Guid" />
+  </EntityType>
+
+  <Association Name="OwnerBugsDefect_AssignedTo">
+    <End Role="DefectBug" Type="Aruba.DefectBug" Multiplicity="*" />
+    <End Role="Owner" Type="Aruba.Owner" Multiplicity="1" />
+  </Association>
+  <Association Name="OwnerBugsDefect_ResolvedBy">
+    <End Role="DefectBug" Type="Aruba.DefectBug" Multiplicity="*" />
+    <End Role="Owner" Type="Aruba.Owner" Multiplicity="0..1" />
+  </Association>
+
+  <Association Name="OwnerBugsProject_AssignedTo">
+    <End Role="ProjectBug" Type="Aruba.ProjectBug" Multiplicity="*" />
+    <End Role="Owner" Type="Aruba.Owner" Multiplicity="1" />
+  </Association>
+  <Association Name="OwnerBugsProject_ResolvedBy">
+    <End Role="ProjectBug" Type="Aruba.ProjectBug" Multiplicity="*" />
+    <End Role="Owner" Type="Aruba.Owner" Multiplicity="0..1" />
+  </Association>
+
+  <Association Name="ProjectTestScenario">
+    <End Role="Scenario" Type="Aruba.Scenario" Multiplicity="*" />
+    <End Role="Project" Type="Aruba.Project" Multiplicity="0..1" />
+  </Association>
+  
+  <Association Name="FailureBugProjectTracking">
+    <End Role="ProjectBug" Type="Aruba.ProjectBug" Multiplicity="*" />
+    <End Role="Failure" Type="Aruba.Failure" Multiplicity="0..1" />
+  </Association>
+  
+  <Association Name="FailureBugDefectTracking">
+    <End Role="DefectBug" Type="Aruba.DefectBug" Multiplicity="*" />
+    <End Role="Failure" Type="Aruba.Failure" Multiplicity="0..1" />
+  </Association>
+
+  <Association Name="ProjectDeploymentScenario">
+    <End Role="Scenario" Type="Aruba.Scenario" Multiplicity="*" />
+    <End Role="Project" Type="Aruba.Project" Multiplicity="0..1" />
+  </Association>
+
+  <Association Name="OwnerRuns">
+    <End Role="Run" Type="Aruba.Run" Multiplicity="*" />
+    <End Role="Owner" Type="Aruba.Owner" Multiplicity="1" />
+  </Association>
+  <Association Name="OwnerOwnerDetails">
+    <End Role="OwnerDetail" Type="Aruba.OwnerDetail" Multiplicity="0..1" />
+    <End Role="Owner" Type="Aruba.Owner" Multiplicity="1" />
+  </Association>
+  <Association Name="FailureConfig">
+    <End Role="Failure" Type="Aruba.Failure" Multiplicity="*" />
+    <End Role="Config" Type="Aruba.Config" Multiplicity="*" />
+  </Association>
+  <Association Name="RunTasks">
+    <End Role="Task" Type="Aruba.Task" Multiplicity="*" />
+    <End Role="Run" Type="Aruba.Run" Multiplicity="1" />
+  </Association>
+
+  <Association Name="FK_ThirteenNavigations_DataKey_BigInt">
+    <End Role="DataKey_BigInt" Type="Aruba.DataKey_BigInt" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_Bit">
+    <End Role="DataKey_Bit" Type="Aruba.DataKey_Bit" Multiplicity="1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_DateTime">
+    <End Role="DataKey_DateTime" Type="Aruba.DataKey_DateTime" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_Decimal">
+    <End Role="DataKey_Decimal" Type="Aruba.DataKey_Decimal" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_Float">
+    <End Role="DataKey_Float" Type="Aruba.DataKey_Float" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_GUID">
+    <End Role="DataKey_GUID" Type="Aruba.DataKey_GUID" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_Money">
+    <End Role="DataKey_Money" Type="Aruba.DataKey_Money" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_Numeric">
+    <End Role="DataKey_Numeric" Type="Aruba.DataKey_Numeric" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_Real">
+    <End Role="DataKey_Real" Type="Aruba.DataKey_Real" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_SmallDateTime">
+    <End Role="DataKey_SmallDateTime" Type="Aruba.DataKey_SmallDateTime" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_SmallMoney">
+    <End Role="DataKey_SmallMoney" Type="Aruba.DataKey_SmallMoney" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_TinyInt">
+    <End Role="DataKey_TinyInt" Type="Aruba.DataKey_TinyInt" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+  <Association Name="FK_ThirteenNavigations_DataKey_VarChar50">
+    <End Role="DataKey_VarChar50" Type="Aruba.DataKey_VarChar50" Multiplicity="0..1" />
+    <End Role="ThirteenNavigations" Type="Aruba.ThirteenNavigations" Multiplicity="*" />
+  </Association>
+
+
+  <Association Name="FK_Person_Vehicle">
+    <End Role="Person" Type="Aruba.Person" Multiplicity="0..1" />
+    <End Role="Vehicle" Type="Aruba.Vehicle" Multiplicity="1" />
+  </Association>
+  <Association Name="FK_Person_OldVehicles">
+    <End Role="Person" Type="Aruba.Person" Multiplicity="0..1" />
+    <End Role="OldVehicles" Type="Aruba.Vehicle" Multiplicity="*" />
+  </Association>
+  
+  <Association Name="FK_Computer_ComputerDetails">
+    <End Role="Computer" Type="Aruba.Computer" Multiplicity="1" />
+    <End Role="ComputerDetails" Type="Aruba.ComputerDetails" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Computer">
+        <PropertyRef Name="MachineName" />
+      </Principal>
+      <Dependent Role="ComputerDetails">
+        <PropertyRef Name="MachineName" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Students_College">
+    <End Role="Students" Type="Aruba.Student" Multiplicity="*" />
+    <End Role="College" Type="Aruba.College" Multiplicity="1" />
+  </Association>
+  <Association Name="FK_Worker_Office">
+    <End Role="Worker" Type="Aruba.Worker" Multiplicity="0..1" />
+    <End Role="Office" Type="Aruba.Office" Multiplicity="0..1" />
+  </Association>
+  <Association Name="FK_Worker_Mentor">
+    <End Role="Worker" Type="Aruba.Worker" Multiplicity="0..1" />
+    <End Role="Mentor" Type="Aruba.Worker" Multiplicity="1" />
+  </Association>
+  
+  
+</Schema>

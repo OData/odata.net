@@ -1,0 +1,624 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectGuid>{62D87E3D-923B-468B-82CA-5F6E65298C58}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.Query</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.Query.SL</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <TaupoCrossTargettingSourcePath>..\Taupo.Query</TaupoCrossTargettingSourcePath>
+    <DefineConstants>TAUPO_QUERY</DefineConstants>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <XTargetOutputFile Include="$(MSBuildThisFile)">
+      <SourceProject>$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Query\Microsoft.Test.Taupo.Query.csproj</SourceProject>
+      <TargetPathPrefixName>TaupoCrossTargettingSourcePath</TargetPathPrefixName>
+    </XTargetOutputFile>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+  <!--
+  This ItemGroup is generated automatically.
+  
+  !!!! DO NOT MODIFY THIS ItemGroup MANUALLY !!!!
+  -->
+  <ItemGroup>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\..\PlatformHelper.cs">
+      <Link>PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ArithmeticEvaluationHelper.cs">
+      <Link>ArithmeticEvaluationHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\AssemblyAttributes.cs">
+      <Link>AssemblyAttributes.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ClrQueryEvaluationStrategy.cs">
+      <Link>ClrQueryEvaluationStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\CommonExpressionEvaluatingVisitor.cs">
+      <Link>Common\CommonExpressionEvaluatingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\CommonExpressionReplacingVisitor.cs">
+      <Link>Common\CommonExpressionReplacingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\CommonExpressionTypeResolutionVisitor.cs">
+      <Link>Common\CommonExpressionTypeResolutionVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\CommonQueryBuilder.cs">
+      <Link>Common\CommonQueryBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\ComparisonResult.cs">
+      <Link>Common\ComparisonResult.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\MissingPlatformFeatures.cs">
+      <Link>Common\MissingPlatformFeatures.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\QueryScalarValueToClrValueComparerBase.cs">
+      <Link>Common\QueryScalarValueToClrValueComparerBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ActualQueryError.cs">
+      <Link>Contracts\ActualQueryError.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\AnnotatedQueryItem.cs">
+      <Link>Contracts\AnnotatedQueryItem.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryAddExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryAddExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryAndExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryAndExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryAsExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryAsExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryBinaryExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryBinaryExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryCastExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryCastExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryConstantExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryConstantExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryCustomFunctionCallExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryCustomFunctionCallExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryDivideExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryDivideExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryEqualToExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryEqualToExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryFunctionImportCallExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryFunctionImportCallExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryFunctionParameterReferenceExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryFunctionParameterReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryGreaterThanExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryGreaterThanExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryGreaterThanOrEqualToExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryGreaterThanOrEqualToExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryIsNotNullExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryIsNotNullExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryIsNullExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryIsNullExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryIsOfExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryIsOfExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryLessThanExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryLessThanExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryLessThanOrEqualToExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryLessThanOrEqualToExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryModuloExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryModuloExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryMultiplyExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryMultiplyExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryNotEqualToExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryNotEqualToExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryNotExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryNotExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryNullExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryNullExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryOfTypeExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryOfTypeExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryOrExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryOrExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryPropertyExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryPropertyExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryRootExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryRootExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QuerySubtractExpression.cs">
+      <Link>Contracts\CommonExpressions\QuerySubtractExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CommonExpressions\QueryTypeOperationExpression.cs">
+      <Link>Contracts\CommonExpressions\QueryTypeOperationExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\DummyQueryEvaluationStrategy.cs">
+      <Link>Contracts\DummyQueryEvaluationStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ExpectedExceptions.cs">
+      <Link>Contracts\ExpectedExceptions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ExpectedExceptionsComparer.cs">
+      <Link>Contracts\ExpectedExceptionsComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ExpectedExceptionTypeMessageVerifier`1.cs">
+      <Link>Contracts\ExpectedExceptionTypeMessageVerifier`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ExpectedExceptionVerifier.cs">
+      <Link>Contracts\ExpectedExceptionVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ExtensionMethods.cs">
+      <Link>Contracts\ExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\FunctionEvaluatorAnnotation.cs">
+      <Link>Contracts\FunctionEvaluatorAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ICommonExpressionVisitor`1.cs">
+      <Link>Contracts\ICommonExpressionVisitor`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\INamedValueToQueryValueConverter.cs">
+      <Link>Contracts\INamedValueToQueryValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\INamedValueToQueryValueUpdater.cs">
+      <Link>Contracts\INamedValueToQueryValueUpdater.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IObjectToQueryValueConverter.cs">
+      <Link>Contracts\IObjectToQueryValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryClrType.cs">
+      <Link>Contracts\IQueryClrType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryDataSet.cs">
+      <Link>Contracts\IQueryDataSet.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryDataSetBuilder.cs">
+      <Link>Contracts\IQueryDataSetBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryEvaluationStrategy.cs">
+      <Link>Contracts\IQueryEvaluationStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryExpressionEvaluator.cs">
+      <Link>Contracts\IQueryExpressionEvaluator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryExpressionReplacingVisitor.cs">
+      <Link>Contracts\IQueryExpressionReplacingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryRepositoryBuilder.cs">
+      <Link>Contracts\IQueryRepositoryBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryResultReferenceTrimmer.cs">
+      <Link>Contracts\IQueryResultReferenceTrimmer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryScalarValueToClrValueComparer.cs">
+      <Link>Contracts\IQueryScalarValueToClrValueComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryStructuralValueToNamedValueComparer.cs">
+      <Link>Contracts\IQueryStructuralValueToNamedValueComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryTypeLibraryBuilder.cs">
+      <Link>Contracts\IQueryTypeLibraryBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryTypeVisitor`1.cs">
+      <Link>Contracts\IQueryTypeVisitor`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryTypeWithMethods.cs">
+      <Link>Contracts\IQueryTypeWithMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryTypeWithProperties.cs">
+      <Link>Contracts\IQueryTypeWithProperties.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryValueDeepCopyingVisitor.cs">
+      <Link>Contracts\IQueryValueDeepCopyingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryValueVisitor`1.cs">
+      <Link>Contracts\IQueryValueVisitor`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IQueryVerifier.cs">
+      <Link>Contracts\IQueryVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqAllExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqAllExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqAnyExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqAnyExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqAsEnumerableExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqAsEnumerableExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqBitwiseAndExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqBitwiseAndExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqBitwiseOrExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqBitwiseOrExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqBuiltInFunctionCallExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqBuiltInFunctionCallExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqCastExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqCastExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqConcatExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqConcatExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqContainsExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqContainsExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqCountExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqCountExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqDefaultIfEmptyExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqDefaultIfEmptyExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqDistinctExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqDistinctExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqExceptExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqExceptExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqExclusiveOrExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqExclusiveOrExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqFirstExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqFirstExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqFirstOrDefaultExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqFirstOrDefaultExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqFreeVariableExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqFreeVariableExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqGroupByExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqGroupByExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqGroupJoinExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqGroupJoinExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqJoinExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqJoinExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqJoinExpressionBase.cs">
+      <Link>Contracts\Linq\Expressions\LinqJoinExpressionBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqLambdaExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqLambdaExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqLengthPropertyExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqLengthPropertyExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqLongCountExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqLongCountExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqMaxExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqMaxExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqMemberMethodExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqMemberMethodExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqMinExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqMinExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqNewArrayExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqNewArrayExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqNewExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqNewExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqNewInstanceExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqNewInstanceExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqOrderByExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqOrderByExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqParameterExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqParameterExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqQueryMethodExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqQueryMethodExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqQueryMethodWithLambdaExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqQueryMethodWithLambdaExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqSelectExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqSelectExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqSelectManyExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqSelectManyExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqSetOperationExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqSetOperationExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqSingleExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqSingleExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqSingleOrDefaultExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqSingleOrDefaultExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqSkipExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqSkipExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqTakeExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqTakeExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqUnionExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqUnionExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\Expressions\LinqWhereExpression.cs">
+      <Link>Contracts\Linq\Expressions\LinqWhereExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\ILinqExpressionVisitor`1.cs">
+      <Link>Contracts\Linq\ILinqExpressionVisitor`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\ILinqQueryCodeGenerator.cs">
+      <Link>Contracts\Linq\ILinqQueryCodeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\ILinqQueryGenerator.cs">
+      <Link>Contracts\Linq\ILinqQueryGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\ILinqResultComparerContextAdapter.cs">
+      <Link>Contracts\Linq\ILinqResultComparerContextAdapter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\LinqBuilder.cs">
+      <Link>Contracts\Linq\LinqBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\LinqBuiltInFunction.cs">
+      <Link>Contracts\Linq\LinqBuiltInFunction.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\LinqBuiltInFunctionKind.cs">
+      <Link>Contracts\Linq\LinqBuiltInFunctionKind.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\LinqLambdaType.cs">
+      <Link>Contracts\Linq\LinqLambdaType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Linq\LinqTypes.cs">
+      <Link>Contracts\Linq\LinqTypes.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryAnnotation.cs">
+      <Link>Contracts\QueryAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryAnonymousStructuralType.cs">
+      <Link>Contracts\QueryAnonymousStructuralType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryBinaryOperation.cs">
+      <Link>Contracts\QueryBinaryOperation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryBuiltInFunction.cs">
+      <Link>Contracts\QueryBuiltInFunction.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryClrCollectionTypeFactory.cs">
+      <Link>Contracts\QueryClrCollectionTypeFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryClrCollectionType`1.cs">
+      <Link>Contracts\QueryClrCollectionType`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryClrEnumType.cs">
+      <Link>Contracts\QueryClrEnumType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryClrPrimitiveType.cs">
+      <Link>Contracts\QueryClrPrimitiveType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryClrSpatialType.cs">
+      <Link>Contracts\QueryClrSpatialType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryCollectionType.cs">
+      <Link>Contracts\QueryCollectionType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryCollectionType`1.cs">
+      <Link>Contracts\QueryCollectionType`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryCollectionValue.cs">
+      <Link>Contracts\QueryCollectionValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryComplexType.cs">
+      <Link>Contracts\QueryComplexType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryEntityType.cs">
+      <Link>Contracts\QueryEntityType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryEntityValue.cs">
+      <Link>Contracts\QueryEntityValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryError.cs">
+      <Link>Contracts\QueryError.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryExpression.cs">
+      <Link>Contracts\QueryExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryGroupingType.cs">
+      <Link>Contracts\QueryGroupingType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryKeyStructuralValue.cs">
+      <Link>Contracts\QueryKeyStructuralValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryMappedScalarType.cs">
+      <Link>Contracts\QueryMappedScalarType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryMappedScalarTypeWithStructure.cs">
+      <Link>Contracts\QueryMappedScalarTypeWithStructure.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryOrdering.cs">
+      <Link>Contracts\QueryOrdering.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryProperty.cs">
+      <Link>Contracts\QueryProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryProperty`1.cs">
+      <Link>Contracts\QueryProperty`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryRecordType.cs">
+      <Link>Contracts\QueryRecordType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryRecordValue.cs">
+      <Link>Contracts\QueryRecordValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryReferenceType.cs">
+      <Link>Contracts\QueryReferenceType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryReferenceValue.cs">
+      <Link>Contracts\QueryReferenceValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryRepository.cs">
+      <Link>Contracts\QueryRepository.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryScalarType.cs">
+      <Link>Contracts\QueryScalarType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryScalarValue.cs">
+      <Link>Contracts\QueryScalarValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryStreamType.cs">
+      <Link>Contracts\QueryStreamType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryStructuralType.cs">
+      <Link>Contracts\QueryStructuralType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryStructuralValue.cs">
+      <Link>Contracts\QueryStructuralValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryTestCase.cs">
+      <Link>Contracts\QueryTestCase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryType.cs">
+      <Link>Contracts\QueryType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryTypeLibrary.cs">
+      <Link>Contracts\QueryTypeLibrary.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryUnaryOperation.cs">
+      <Link>Contracts\QueryUnaryOperation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryUnresolvedCollectionType.cs">
+      <Link>Contracts\QueryUnresolvedCollectionType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryUnresolvedScalarType.cs">
+      <Link>Contracts\QueryUnresolvedScalarType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryUnresolvedType.cs">
+      <Link>Contracts\QueryUnresolvedType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryUnspecifiedType.cs">
+      <Link>Contracts\QueryUnspecifiedType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryValue.cs">
+      <Link>Contracts\QueryValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\TypedQueryExpression`1.cs">
+      <Link>Contracts\TypedQueryExpression`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Linq\LinqCommonSyntaxCodeGenerationVisitor.cs">
+      <Link>Linq\LinqCommonSyntaxCodeGenerationVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Linq\LinqEvaluatingVisitor.cs">
+      <Link>Linq\LinqEvaluatingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Linq\LinqExpressionReplacingVisitor.cs">
+      <Link>Linq\LinqExpressionReplacingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Linq\LinqMethodSyntaxCodeGenerationVisitor.cs">
+      <Link>Linq\LinqMethodSyntaxCodeGenerationVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Linq\LinqParameterNameResolutionVisitorHelper.cs">
+      <Link>Linq\LinqParameterNameResolutionVisitorHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Linq\LinqQueryGenerationVisitor.cs">
+      <Link>Linq\LinqQueryGenerationVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Linq\LinqQuerySyntaxCodeGenerationVisitor.cs">
+      <Link>Linq\LinqQuerySyntaxCodeGenerationVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Linq\LinqResultComparerBase.cs">
+      <Link>Linq\LinqResultComparerBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Linq\LinqTypeResolutionVisitor.cs">
+      <Link>Linq\LinqTypeResolutionVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Linq\LinqTypeSemantics.cs">
+      <Link>Linq\LinqTypeSemantics.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\NamedValueToQueryValueConverter.cs">
+      <Link>NamedValueToQueryValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\NamedValueToQueryValueUpdater.cs">
+      <Link>NamedValueToQueryValueUpdater.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ObjectToQueryValueConverter.cs">
+      <Link>ObjectToQueryValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\QueryDataSet.cs">
+      <Link>QueryDataSet.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\QueryDataSetBuilderBase.cs">
+      <Link>QueryDataSetBuilderBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\QueryRepositoryBuilderBase.cs">
+      <Link>QueryRepositoryBuilderBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\QueryResultReferenceTrimmerBase.cs">
+      <Link>QueryResultReferenceTrimmerBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\QueryScalarValueToClrValueComparer.cs">
+      <Link>QueryScalarValueToClrValueComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\QueryStructuralValueToNamedValueComparer.cs">
+      <Link>QueryStructuralValueToNamedValueComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\QueryTypeLibraryBuilderBase.cs">
+      <Link>QueryTypeLibraryBuilderBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\QueryValueDeepCopyingVisitor.cs">
+      <Link>QueryValueDeepCopyingVisitor.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\Taupo.Query\CustomDictionary.xml" />
+    <Compile Include="$(AssemblyKeysCSharpFilePath)">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\External\System.CodeDom.SL\System.CodeDom.SL.csproj">
+      <Project>{93850EF2-5F47-404F-8988-812043FB83E9}</Project>
+      <Name>System.CodeDom.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Taupo.SL\Microsoft.Test.Taupo.SL.csproj">
+      <Project>{E88DCBA1-8E6F-4BB7-8017-7CD5A213107A}</Project>
+      <Name>Microsoft.Test.Taupo.SL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

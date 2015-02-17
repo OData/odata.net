@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://microsoft.com/taupo/entitycontainerdata" />
+  <xs:element name="GetEntitySet">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="entitySetName" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetEntitySetResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://microsoft.com/taupo/entitycontainerdata" minOccurs="0" name="GetEntitySetResult" nillable="true" type="q1:ArrayOfSerializableEntity" />
+        <xs:element minOccurs="0" name="errorMessage" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetEntity">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="entitySetName" nillable="true" type="xs:string" />
+        <xs:element xmlns:q2="http://microsoft.com/taupo/entitycontainerdata" minOccurs="0" name="keys" nillable="true" type="q2:ArrayOfSerializableNamedValue" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetEntityResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://microsoft.com/taupo/entitycontainerdata" minOccurs="0" name="GetEntityResult" nillable="true" type="q3:SerializableEntity" />
+        <xs:element minOccurs="0" name="errorMessage" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetContainerData">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetContainerDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://microsoft.com/taupo/entitycontainerdata" minOccurs="0" name="GetContainerDataResult" nillable="true" type="q4:SerializableContainer" />
+        <xs:element minOccurs="0" name="errorMessage" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

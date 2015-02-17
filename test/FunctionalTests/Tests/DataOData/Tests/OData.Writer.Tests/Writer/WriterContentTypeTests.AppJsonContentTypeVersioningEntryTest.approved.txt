@@ -1,0 +1,128 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 2; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 3; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 5; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 6; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 7; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 9; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 10; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 11; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 13; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 14; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 15; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 17; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 18; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 19; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 20; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 21; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 22; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 23; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 25; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 26; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 27; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 28; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 29; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 30; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 31; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Customers/$entity","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
+

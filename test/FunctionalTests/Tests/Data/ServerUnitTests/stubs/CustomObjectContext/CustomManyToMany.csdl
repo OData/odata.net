@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AstoriaUnitTests.ObjectContextStubs" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+  <EntityContainer Name="CustomManyToManyContainer">
+    <EntitySet Name="Persons" EntityType="AstoriaUnitTests.ObjectContextStubs.Person" />
+    <EntitySet Name="Homes" EntityType="AstoriaUnitTests.ObjectContextStubs.Home" />
+    <AssociationSet Name="Person_Home_Ownership" Association="AstoriaUnitTests.ObjectContextStubs.Person_Home_Ownership">
+      <End Role="Persons" EntitySet="Persons" />
+      <End Role="Homes" EntitySet="Homes" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Homes" Relationship="AstoriaUnitTests.ObjectContextStubs.Person_Home_Ownership" FromRole="Persons" ToRole="Homes" />
+  </EntityType>
+  <EntityType Name="Home">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Address" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Persons" Relationship="AstoriaUnitTests.ObjectContextStubs.Person_Home_Ownership" FromRole="Homes" ToRole="Persons" />
+  </EntityType>
+  <Association Name="Person_Home_Ownership">
+    <End Role="Persons" Type="AstoriaUnitTests.ObjectContextStubs.Person" Multiplicity="*" />
+    <End Role="Homes" Type="AstoriaUnitTests.ObjectContextStubs.Home" Multiplicity="*" />
+  </Association>
+</Schema>

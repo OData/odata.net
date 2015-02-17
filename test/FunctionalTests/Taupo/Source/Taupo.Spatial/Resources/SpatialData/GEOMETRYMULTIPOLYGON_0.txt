@@ -1,0 +1,5 @@
+﻿### This file contains valid MULTIPOLYGON data in geometry well kown text format. Comments are lines starting with # ###
+### wikipedia sample data ###
+MULTIPOLYGON EMPTY
+MULTIPOLYGON (((30 20, 10 40, 45 40, 30 20)), ((15 5, 40 10, 10 20, 5 10, 15 5)))
+MULTIPOLYGON (((40 40, 20 45, 45 30, 40 40)), ((20 35, 45 20, 30 5, 10 10, 10 30, 20 35), (30 20, 20 25, 20 15, 30 20)))

@@ -1,0 +1,90 @@
+<Schema Namespace="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesComplex.first" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="validEntityType1">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" />
+    <Property Name="Property0" Type="Edm.Binary" Nullable="false" />
+    <Property Name="Property1" Type="Edm.Boolean" Nullable="false" />
+    <Property Name="Property2" Type="Edm.Byte" Nullable="false" />
+    <Property Name="Property3" Type="Edm.DateTime" Nullable="false" Precision="7" />
+    <Property Name="Property4" Type="Edm.DateTimeOffset" Nullable="false" Precision="7" />
+    <Property Name="Property5" Type="Edm.Decimal" Nullable="false" Precision="7" Scale="7" />
+    <Property Name="Property6" Type="Edm.Double" Nullable="false" />
+    <Property Name="Property7" Type="Edm.Guid" Nullable="false" />
+    <Property Name="Property8" Type="Edm.Int16" Nullable="false" />
+    <Property Name="Property9" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Property10" Type="Edm.Int64" Nullable="false" />
+    <Property Name="Property11" Type="Edm.SByte" Nullable="false" />
+    <Property Name="Property12" Type="Edm.Single" Nullable="false" />
+    <Property Name="Property13" Type="Edm.Stream" Nullable="false" />
+    <Property Name="Property14" Type="Edm.String" Nullable="false" />
+    <Property Name="Property15" Type="Edm.Duration" Nullable="false" />
+    <Property Name="Property16" Type="Edm.Geography" Nullable="false" SRID="4326" />
+    <Property Name="Property17" Type="Edm.GeographyPoint" Nullable="false" SRID="4326" />
+    <Property Name="Property18" Type="Edm.GeographyPolygon" Nullable="false" SRID="4326" />
+    <Property Name="Property19" Type="Edm.GeographyLineString" Nullable="false" SRID="4326" />
+    <Property Name="Property20" Type="Edm.GeographyCollection" Nullable="false" SRID="4326" />
+    <Property Name="Property21" Type="Edm.GeographyMultiPolygon" Nullable="false" SRID="4326" />
+    <Property Name="Property22" Type="Edm.GeographyMultiLineString" Nullable="false" SRID="4326" />
+    <Property Name="Property23" Type="Edm.GeographyMultiPoint" Nullable="false" SRID="4326" />
+    <Property Name="Property24" Type="Edm.Geometry" Nullable="false" SRID="0" />
+    <Property Name="Property25" Type="Edm.GeometryPoint" Nullable="false" SRID="0" />
+    <Property Name="Property26" Type="Edm.GeometryPolygon" Nullable="false" SRID="0" />
+    <Property Name="Property27" Type="Edm.GeometryLineString" Nullable="false" SRID="0" />
+    <Property Name="Property28" Type="Edm.GeometryCollection" Nullable="false" SRID="0" />
+    <Property Name="Property29" Type="Edm.GeometryMultiPolygon" Nullable="false" SRID="0" />
+    <Property Name="Property30" Type="Edm.GeometryMultiLineString" Nullable="false" SRID="0" />
+    <Property Name="Property31" Type="Edm.GeometryMultiPoint" Nullable="false" SRID="0" />
+  </EntityType>
+  <EntityType Name="validEntityType2" BaseType="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesComplex.first.validEntityType1" />
+  <ComplexType Name="V1alidcomplexType">
+    <Property Name="Property0" Type="Edm.Binary" Nullable="false" />
+    <Property Name="Property1" Type="Edm.Boolean" Nullable="false" />
+    <Property Name="Property2" Type="Edm.Byte" Nullable="false" />
+    <Property Name="Property3" Type="Edm.DateTime" Nullable="false" Precision="7" />
+    <Property Name="Property4" Type="Edm.DateTimeOffset" Nullable="false" Precision="7" />
+    <Property Name="Property5" Type="Edm.Decimal" Nullable="false" Precision="7" Scale="7" />
+    <Property Name="Property6" Type="Edm.Double" Nullable="false" />
+    <Property Name="Property7" Type="Edm.Guid" Nullable="false" />
+    <Property Name="Property8" Type="Edm.Int16" Nullable="false" />
+    <Property Name="Property9" Type="Edm.Int32" Nullable="false" />
+    <Property Name="Property10" Type="Edm.Int64" Nullable="false" />
+    <Property Name="Property11" Type="Edm.SByte" Nullable="false" />
+    <Property Name="Property12" Type="Edm.Single" Nullable="false" />
+    <Property Name="Property13" Type="Edm.Stream" Nullable="false" />
+    <Property Name="Property14" Type="Edm.String" Nullable="false" />
+    <Property Name="Property15" Type="Edm.Duration" Nullable="false" />
+    <Property Name="Property16" Type="Edm.Geography" Nullable="false" SRID="4326" />
+    <Property Name="Property17" Type="Edm.GeographyPoint" Nullable="false" SRID="4326" />
+    <Property Name="Property18" Type="Edm.GeographyPolygon" Nullable="false" SRID="4326" />
+    <Property Name="Property19" Type="Edm.GeographyLineString" Nullable="false" SRID="4326" />
+    <Property Name="Property20" Type="Edm.GeographyCollection" Nullable="false" SRID="4326" />
+    <Property Name="Property21" Type="Edm.GeographyMultiPolygon" Nullable="false" SRID="4326" />
+    <Property Name="Property22" Type="Edm.GeographyMultiLineString" Nullable="false" SRID="4326" />
+    <Property Name="Property23" Type="Edm.GeographyMultiPoint" Nullable="false" SRID="4326" />
+    <Property Name="Property24" Type="Edm.Geometry" Nullable="false" SRID="0" />
+    <Property Name="Property25" Type="Edm.GeometryPoint" Nullable="false" SRID="0" />
+    <Property Name="Property26" Type="Edm.GeometryPolygon" Nullable="false" SRID="0" />
+    <Property Name="Property27" Type="Edm.GeometryLineString" Nullable="false" SRID="0" />
+    <Property Name="Property28" Type="Edm.GeometryCollection" Nullable="false" SRID="0" />
+    <Property Name="Property29" Type="Edm.GeometryMultiPolygon" Nullable="false" SRID="0" />
+    <Property Name="Property30" Type="Edm.GeometryMultiLineString" Nullable="false" SRID="0" />
+    <Property Name="Property31" Type="Edm.GeometryMultiPoint" Nullable="false" SRID="0" />
+  </ComplexType>
+</Schema>
+<Schema Namespace="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesComplex.second" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="VALIDenTITYtYPE2" BaseType="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesComplex.first.validEntityType1" />
+  <EntityType Name="VALIDenTITYtYPE2" BaseType="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesComplex.first.validEntityType1" />
+  <EntityType Name="VALIDenTITYtYPE1" BaseType="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesComplex.second.VALIDenTITYtYPE2" />
+  <ComplexType Name="V1alidcomplexType">
+    <Property Name="aPropertyOne" Type="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesComplex.first.V1alidcomplexType" Nullable="false" />
+  </ComplexType>
+</Schema>
+<Schema Namespace="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesComplex.third" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="VALIDenTITYtYPE1" BaseType="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesComplex.second.VALIDenTITYtYPE1" />
+  <ComplexType Name="V1alidcomplexType">
+    <Property Name="aPropertyOne" Type="FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesComplex.second.V1alidcomplexType" Nullable="false" />
+  </ComplexType>
+</Schema>
+

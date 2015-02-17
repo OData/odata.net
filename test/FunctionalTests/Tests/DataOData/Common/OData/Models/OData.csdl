@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="OData" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+
+  <!-- Value terms for template expansion. -->
+  <Term Name="BaseUri" Type="Edm.String" />
+  <Term Name="EntitySetUri" Type="Edm.String" />
+  <Term Name="EntitySetUriSuffix" Type="Edm.String" />
+  <Term Name="EntityInstanceUri" Type="Edm.String" />
+  <Term Name="ETag" Type="Edm.String" />
+  <Term Name="Id" Type="Edm.String" />
+  <Term Name="NavigationLinkUri" Type="Edm.String" />
+  <Term Name="AssociationLinkUri" Type="Edm.String" />
+  <Term Name="StreamReadLinkUri" Type="Edm.String" />
+  <Term Name="StreamEditLinkUri" Type="Edm.String" />
+  <Term Name="StreamContentType" Type="Edm.String" />
+  <Term Name="StreamETag" Type="Edm.String" />
+  <Term Name="OperationTargetUri" Type="Edm.String" />
+  <Term Name="OperationTitle" Type="Edm.String" />
+
+  <!-- Function declarations for usage in templates -->
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Binary" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Boolean" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Byte" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.DateTime" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.DateTimeOffset" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Decimal" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Double" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Guid" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Int16" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Int32" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Int64" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.SByte" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Single" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.String" />
+  </Function>
+  <Function Name="ToUriLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Duration" />
+  </Function>
+  <!-- TODO: Support for spatial types? -->
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Binary" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Boolean" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Byte" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.DateTime" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.DateTimeOffset" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Decimal" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Double" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Guid" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Int16" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Int32" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Int64" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.SByte" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Single" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.String" />
+  </Function>
+  <Function Name="ToRawLiteral">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="value" Type="Edm.Duration" />
+  </Function>
+  <!-- TODO: Support for spatial types? -->
+  <!-- TODO: If EDM will define built-in string concat this should be removed. -->
+  <Function Name="StringConcat">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="StringA" Type="Edm.String" />
+    <Parameter Name="StringB" Type="Edm.String" />
+  </Function>
+  <Function Name="StringConcat">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="StringA" Type="Edm.String" />
+    <Parameter Name="StringB" Type="Edm.String" />
+    <Parameter Name="StringC" Type="Edm.String" />
+  </Function>
+  <Function Name="StringConcat">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="StringA" Type="Edm.String" />
+    <Parameter Name="StringB" Type="Edm.String" />
+    <Parameter Name="StringC" Type="Edm.String" />
+    <Parameter Name="StringD" Type="Edm.String" />
+  </Function>
+  <Function Name="StringConcat">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="StringA" Type="Edm.String" />
+    <Parameter Name="StringB" Type="Edm.String" />
+    <Parameter Name="StringC" Type="Edm.String" />
+    <Parameter Name="StringD" Type="Edm.String" />
+    <Parameter Name="StringE" Type="Edm.String" />
+  </Function>
+  <Function Name="StringConcat">
+    <ReturnType Type="Edm.String"/>
+    <Parameter Name="Strings">
+      <CollectionType ElementType="Edm.String" />
+    </Parameter>
+  </Function>
+</Schema>

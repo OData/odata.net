@@ -1,0 +1,28 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <ComplexType Name="Complex">
+    <Property Name="EnumProperty0" Type="NS1.Color" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="EnumProperty0" />
+    </Key>
+    <Property Name="EnumProperty0" Type="NS1.Color" Nullable="false" />
+  </EntityType>
+  <EnumType Name="Color">
+    <Member Name="Red" Value="0" />
+    <Member Name="Orange" Value="1" />
+    <Member Name="Yellow" Value="2" />
+    <Member Name="Green" Value="3" />
+    <Member Name="Cyan" Value="4" />
+    <Member Name="Blue" Value="5" />
+    <Member Name="Purple" Value="6" />
+  </EnumType>
+  <Function Name="Function0">
+    <Parameter Name="Param0" Type="NS1.Color" Nullable="false" />
+    <ReturnType Type="NS1.Color" Nullable="false" />
+  </Function>
+  <EntityContainer Name="MyContainer">
+    <FunctionImport Name="Function0" Function="NS1.Function0" />
+  </EntityContainer>
+</Schema>
+

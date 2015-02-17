@@ -1,0 +1,1 @@
+Path[(Singleton: VipCustomer)/(Operation: Within(Location = ConstantNode(Type = , Value = Complex Value(Type Name = Microsoft.Test.Taupo.OData.WCFService.Address, Properties = (Street: 1 Microsoft Way, City: Redmond, PostalCode: 98052))), Distance = ConstantNode(Type = [Edm.Int32 Nullable=False], Value = 10)))]

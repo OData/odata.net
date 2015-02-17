@@ -1,0 +1,58 @@
+﻿//---------------------------------------------------------------------
+// <copyright file="GlobalSuppressions.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+// This file is used by Code Analysis to maintain SuppressMessage
+// attributes that are applied to this project. Project-level
+// suppressions either have no target or are given a specific target
+// and scoped to a namespace, type, member, etc.
+//
+// To add a suppression to this file, right-click the message in the
+// Error List, point to "Suppress Message(s)", and click "In Project
+// Suppression File". You do not need to add suppressions to this
+// file manually.
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedEnum", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedICollection", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedICollection.#.cctor()", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedICollection`1.#.cctor()", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedIDisposable.#.cctor()", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedIEnumerable.#.cctor()", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedIEnumerable`1", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedIEnumerable`1.#.cctor()", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedIEnumerator.#.cctor()", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Scope = "type", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedIEnumerator`1", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedIEnumerator`1.#.cctor()", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedIList`1", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedIList`1.#.cctor()", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedIQueryable.#.cctor()", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedIQueryable`1", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedIQueryProvider.#.cctor()", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix", Scope = "type", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedReadOnlyCollection`1", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Wrappers.WrappedReadOnlyCollection`1.#.cctor()", Justification = "Code is generated")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "srid", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Types.SpatialDataType.#WithSrid(System.String)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "srid", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Types.SridFacet.#.ctor(System.String)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1714:FlagsEnumsShouldHavePluralNames", Scope = "type", Target = "Microsoft.Test.Taupo.Contracts.RunStability")]
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Api", Scope = "type", Target = "Microsoft.Test.Taupo.DataGeneration.ApiWordsAnsiStringGenerator")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Api", Scope = "type", Target = "Microsoft.Test.Taupo.DataGeneration.ApiWordsStringGenerator")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Div", Scope = "type", Target = "Microsoft.Test.Taupo.Execution.BaseBugAttribute")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.EntityModel.Edm.EdmDataTypes.#GeographyMultiPolygon")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.EntityModel.Edm.EdmDataTypes.#GeographyMultiLineString")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.EntityModel.Edm.EdmDataTypes.#GeographyMultiPoint")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.EntityModel.Edm.EdmDataTypes.#GeometryMultiPolygon")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.EntityModel.Edm.EdmDataTypes.#GeometryMultiLineString")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.EntityModel.Edm.EdmDataTypes.#GeometryMultiPoint")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Scope = "member", Target = "Microsoft.Test.Taupo.EntityModel.EntityGraphCreator.#CreateGraphWithRequiredRelationships(System.String,System.Object,System.Action`1<Microsoft.Test.Taupo.Contracts.IEntitySetData>,Microsoft.Test.Taupo.Contracts.ConnectEntitiesCallback)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "ToRun", Scope = "member", Target = "Microsoft.Test.Taupo.Runners.ITestModuleRunner.#Run(Microsoft.Test.Taupo.Execution.TestModuleData,Microsoft.Test.Taupo.Runners.ITestLogWriter,System.Collections.Generic.IEnumerable`1<Microsoft.Test.Taupo.Execution.TestItemData>,System.Collections.Generic.IDictionary`2<System.String,System.String>)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2151:FieldsWithCriticalTypesShouldBeCriticalFxCopRule", Scope = "member", Target = "Microsoft.Test.Taupo.Execution.Ltm.LtmLogger.#testLog")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Spatial.SpatialShapeKind.#GeographyMultiLineString")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Spatial.SpatialShapeKind.#GeographyMultiPoint")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Spatial.SpatialShapeKind.#GeographyMultiPolygon")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Spatial.SpatialShapeKind.#GeometryMultiLineString")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Spatial.SpatialShapeKind.#GeometryMultiPoint")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.Test.Taupo.Contracts.Spatial.SpatialShapeKind.#GeometryMultiPolygon")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Api", Scope = "member", Target = "Microsoft.Test.Taupo.DataGeneration.StringGenerators.#ApiWords")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Scope = "type", Target = "Microsoft.Test.Taupo.EntityModel.Edm.XsdlContentGeneratorBase")]

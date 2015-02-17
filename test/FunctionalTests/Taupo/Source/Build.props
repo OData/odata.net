@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <!-- 
+    This is where you place settings that should apply to all projects under this folder.  See 
+    $(EnlistmentRoot)\Build.props for examples. 
+  -->
+
+  <Import Project="..\Build.props" />
+
+  <ItemGroup Condition="Exists('$(AssemblyName).layering.xml')">
+    <LayeringFile Include="$(MSBuildProjectDirectory)\$(AssemblyName).layering.xml" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <AfterBuildDependsOn>
+      CopyLayeringFile;
+      $(AfterBuildDependsOn);
+    </AfterBuildDependsOn>
+  </PropertyGroup>
+
+  <Target Name="CopyLayeringFile">
+    <Copy SourceFiles="@(LayeringFile)" DestinationFolder="$(OutputPath)\$(AssemblyName).Tests" />
+  </Target>
+
+</Project>

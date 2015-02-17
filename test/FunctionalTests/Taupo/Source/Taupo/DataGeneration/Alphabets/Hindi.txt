@@ -1,0 +1,23 @@
+This file contains alphabet entries for Hindi string generator.
+One entry per line. Only entries starting with single quote are used, everything else is a comment.
+
+'\u0901'         DEVANAGARI SIGN CANDRABINDU
+'\u090f'         DEVANAGARI LETTER E
+'\u0910'         DEVANAGARI LETTER AI
+'\u091f'         DEVANAGARI LETTER TTA
+'\u092f'         DEVANAGARI LETTER YA
+'\u093f'         DEVANAGARI VOWEL SIGN I
+'\u094d'         DEVANAGARI SIGN VIRAMA
+'\u0950'         DEVANAGARI OM
+'\u095f'         DEVANAGARI LETTER YYA
+'\u096f'         DEVANAGARI DIGIT NINE
+'\u0970'         DEVANAGARI ABBREVIATION SIGN
+'\u200c'         ZERO WIDTH NON-JOINER
+'\u200d'         ZERO WIDTH JOINER
+'\u2013'         EN DASH
+'\u2014'         EM DASH
+'\u2018'         LEFT SINGLE QUOTATION MARK
+'\u2019'         RIGHT SINGLE QUOTATION MARK
+'\u2026'         HORIZONTAL ELLIPSIS
+'\u2212'         MINUS SIGN
+'\u25cc'         DOTTED CIRCLE

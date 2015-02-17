@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{2560BD0F-D2A5-4DB1-B260-7C07DF506E11}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AstoriaClientUnitTests</RootNamespace>
+    <AssemblyName>AstoriaClientUnitTests</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG,TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <SignAssemblyAttribute>false</SignAssemblyAttribute>
+    <NoWarn>40000,40008</NoWarn>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="CustomMarshalers" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="$(NugetPack)\EntityFramework.4.3.1\lib\net40\EntityFramework.dll" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="System.Data.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
+      <Name>Microsoft.OData.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj">
+      <Project>{F3EE82F0-8DDD-45EE-BD9C-47AC3A3AF4BB}</Project>
+      <Name>AstoriaTestFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\tools\KoKoMo\KoKoMo.csproj">
+      <Project>{EB4C9641-0452-4E7F-AA38-3EBD871914A3}</Project>
+      <Name>KoKoMo</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\tools\ModuleCore\src\ModuleCore.csproj">
+      <Project>{5E46C9E2-8B2F-4961-8C26-EFA9DF6CD68D}</Project>
+      <Name>ModuleCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Models\northwind\Astoria.Northwind.csproj">
+      <Project>{D93149FD-0D7F-41AB-AFCF-62270E7FD613}</Project>
+      <Name>Astoria.Northwind</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj">
+      <Project>{BB7D22CB-7003-4AF6-9035-B369B00EA95E}</Project>
+      <Name>Microsoft.Data.Web.UnitTests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj">
+      <Project>{99C025F4-3FA8-4078-BC9F-46774450B574}</Project>
+      <Name>Microsoft.Data.ServerUnitTests1.UnitTests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj">
+      <Project>{9B78C515-20E7-49FF-B8A1-90F3D585E88D}</Project>
+      <Name>Microsoft.Data.WebClientCSharp.UnitTests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClientExtensions\Microsoft.Data.ClientExtensions.UnitTests.csproj">
+      <Project>{A5AB5A4F-3FDB-4BF0-BA8C-22C7EA438D67}</Project>
+      <Name>Microsoft.Data.ClientExtensions.UnitTests</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ArubaLinqToSqlMetadata.csdl" />
+    <EmbeddedResource Include="NorthwindLinqToSqlMetadata.csdl" />
+    <EmbeddedResource Include="samplebatch.txt" />
+    <EmbeddedResource Include="samplebatch2.txt" />
+    <Compile Include="$(DataFxIncPath)\AssemblyRefs.vb" />
+    <Compile Include="LinqAnyAllTests.vb" />
+    <Compile Include="ClientProjections.vb" />
+    <Compile Include="ClientRegressionTests.vb" />
+    <Compile Include="EntitySetResolverTests.vb" />
+    <Compile Include="Models\CustomDataContextBinding.vb" />
+    <Compile Include="CustomRequests.vb" />
+    <Compile Include="DataBinding.vb" />
+    <Compile Include="MaterializationTest.vb" />
+    <Compile Include="MaterializeFromXmlUnitTest.vb" />
+    <Compile Include="MediaLinkEntries.vb" />
+    <Compile Include="MediaStreaming.vb" />
+    <Compile Include="Models\Customers.vb" />
+    <Compile Include="Models\NorthwindSimple.vb" />
+    <Compile Include="Models\NorthwindBinding.vb" />
+    <Compile Include="NamedStreams_Projections.vb" />
+    <Compile Include="OpenObjectTests.vb" />
+    <Compile Include="PublicPlaces.vb" />
+    <Compile Include="SelfEditLinksTests.vb" />
+    <Compile Include="ServerDrivenPaging.vb" />
+    <Compile Include="SpacePhotos.vb" />
+    <Compile Include="StateChange.vb" />
+    <Compile Include="StateManagementTests.vb" />
+    <Compile Include="TypeResolving.vb" />
+    <Compile Include="UpdateTests.vb" />
+    <Compile Include="Util.vb" />
+    <Compile Include="VersionedRequests.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="samplebatch3.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="samplebatch4.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="samplebatch5.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="samplebatch6.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SampleException.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+</Project>

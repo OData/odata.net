@@ -1,0 +1,137 @@
+<Schema Namespace="DefaultNamespace" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType1">
+    <ReturnType Type="Edm.Binary" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType2">
+    <ReturnType Type="Edm.Boolean" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType3">
+    <ReturnType Type="Edm.Byte" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType4">
+    <ReturnType Type="Edm.DateTimeOffset" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType5">
+    <ReturnType Type="Edm.Decimal" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType6">
+    <ReturnType Type="Edm.Double" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType7">
+    <ReturnType Type="Edm.Guid" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType8">
+    <ReturnType Type="Edm.Int16" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType9">
+    <ReturnType Type="Edm.Int32" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType10">
+    <ReturnType Type="Edm.Int64" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType11">
+    <ReturnType Type="Edm.SByte" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType12">
+    <ReturnType Type="Edm.Single" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType13">
+    <ReturnType Type="Edm.Stream" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType14">
+    <ReturnType Type="Edm.String" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType15">
+    <ReturnType Type="Edm.Duration" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType16">
+    <ReturnType Type="Edm.Date" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType17">
+    <ReturnType Type="Edm.TimeOfDay" Nullable="false" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType18">
+    <ReturnType Type="Edm.Geography" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType19">
+    <ReturnType Type="Edm.GeographyPoint" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType20">
+    <ReturnType Type="Edm.GeographyPolygon" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType21">
+    <ReturnType Type="Edm.GeographyLineString" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType22">
+    <ReturnType Type="Edm.GeographyCollection" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType23">
+    <ReturnType Type="Edm.GeographyMultiPolygon" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType24">
+    <ReturnType Type="Edm.GeographyMultiLineString" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType25">
+    <ReturnType Type="Edm.GeographyMultiPoint" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType26">
+    <ReturnType Type="Edm.Geometry" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType27">
+    <ReturnType Type="Edm.GeometryPoint" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType28">
+    <ReturnType Type="Edm.GeometryPolygon" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType29">
+    <ReturnType Type="Edm.GeometryLineString" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType30">
+    <ReturnType Type="Edm.GeometryCollection" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType31">
+    <ReturnType Type="Edm.GeometryMultiPolygon" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType32">
+    <ReturnType Type="Edm.GeometryMultiLineString" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionsWithReturnTypePrimitiveDataType33">
+    <ReturnType Type="Edm.GeometryMultiPoint" Nullable="false" SRID="0" />
+  </Function>
+  <EntityContainer Name="DefaultContainer">
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType1" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType1" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType2" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType2" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType3" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType3" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType4" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType4" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType5" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType5" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType6" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType6" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType7" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType7" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType8" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType8" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType9" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType9" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType10" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType10" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType11" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType11" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType12" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType12" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType13" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType13" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType14" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType14" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType15" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType15" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType16" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType16" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType17" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType17" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType18" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType18" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType19" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType19" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType20" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType20" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType21" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType21" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType22" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType22" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType23" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType23" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType24" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType24" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType25" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType25" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType26" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType26" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType27" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType27" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType28" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType28" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType29" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType29" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType30" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType30" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType31" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType31" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType32" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType32" />
+    <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType33" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType33" />
+  </EntityContainer>
+</Schema>
+

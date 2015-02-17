@@ -1,0 +1,8 @@
+$select = FirstName
+$expand = 
+
+
+SelectExpandQueryOption
+	AllSelected = False
+	SelectedItems
+		Path[(Property: FirstName)]

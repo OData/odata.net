@@ -1,0 +1,1 @@
+Path[(EntitySet: Customers)/(Operation: InCity(City = ParameterAliasNode(Type Name = , Alias Name = @a)))]

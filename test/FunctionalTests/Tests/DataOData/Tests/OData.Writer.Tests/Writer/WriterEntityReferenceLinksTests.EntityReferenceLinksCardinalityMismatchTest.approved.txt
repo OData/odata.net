@@ -1,0 +1,46 @@
+Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#Collection($ref)","value":[
+    {
+      "@odata.id":"http://odata.org/link1"
+    },{
+      "@odata.id":"http://odata.org/link2"
+    },{
+      "@odata.id":"http://odata.org/link3"
+    }
+  ]
+}
+
+Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#Collection($ref)","value":[
+    {
+      "@odata.id":"http://odata.org/link1"
+    },{
+      "@odata.id":"http://odata.org/link2"
+    },{
+      "@odata.id":"http://odata.org/link3"
+    }
+  ]
+}
+
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata#Collection($ref)" xmlns="http://www.w3.org/2005/Atom">
+  <m:ref id="http://odata.org/link1" />
+  <m:ref id="http://odata.org/link2" />
+  <m:ref id="http://odata.org/link3" />
+</feed>
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata#Collection($ref)" xmlns="http://www.w3.org/2005/Atom">
+  <m:ref id="http://odata.org/link1" />
+  <m:ref id="http://odata.org/link2" />
+  <m:ref id="http://odata.org/link3" />
+</feed>
+

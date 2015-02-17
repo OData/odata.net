@@ -1,0 +1,43 @@
+$select = 
+$expand = OrderDetails($filter=UnitPrice lt 93 and UnitPrice ge 3.14)
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: OrderDetails)]
+			FilterQueryOption
+				ItemType = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=False]
+				Parameter = 
+				EntityRangeVariable
+					Name = $it
+					NavigationSource = OrderDetails
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=False]
+				Expression = 
+						SingleValuePropertyAccessNode
+							Property = UnitPrice
+							TypeReference = [Edm.Single Nullable=False]
+							Source = 
+							EntityRangeVariableReferenceNode
+								Name = $it
+								NavigationSource = OrderDetails
+								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=False]
+								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					LessThan
+						93(Type: [Edm.Single Nullable=False])
+				And
+						SingleValuePropertyAccessNode
+							Property = UnitPrice
+							TypeReference = [Edm.Single Nullable=False]
+							Source = 
+							EntityRangeVariableReferenceNode
+								Name = $it
+								NavigationSource = OrderDetails
+								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=False]
+								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					GreaterThanOrEqual
+						3.14(Type: [Edm.Single Nullable=False])
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems(Empty List)

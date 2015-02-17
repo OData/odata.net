@@ -1,0 +1,1496 @@
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    
+  ]
+}
+
+Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    
+  ]
+}
+
+Combination: 22; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+  </workspace>
+</service>
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+  </workspace>
+</service>
+
+Combination: 26; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    
+  ]
+}
+
+Combination: 28; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata","value":[
+    
+  ]
+}
+
+Combination: 30; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+  </workspace>
+</service>
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+  </workspace>
+</service>
+
+Combination: 38; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 40; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 46; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 48; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 54; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 56; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 62; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 64; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 70; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 72; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 78; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 80; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 86; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 88; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 94; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 96; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 102; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 104; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 110; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 112; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 118; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 120; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 126; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 128; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 134; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 136; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 142; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 144; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 150; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 152; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 158; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 160; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 166; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 168; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 174; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 176; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 182; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 184; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 190; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 192; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 198; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 200; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 206; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 208; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 214; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 216; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 222; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 224; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 230; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 232; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 238; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 240; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 246; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 248; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 254; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 256; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 262; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 264; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 270; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 272; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 278; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 280; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 286; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 288; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 294; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 296; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+    <collection href="Additional1">
+      <atom:title type="text">Additional1</atom:title>
+    </collection>
+    <collection href="Additional2">
+      <atom:title type="text">Additional2</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 302; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 304; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+    <collection href="Additional1">
+      <atom:title />
+    </collection>
+    <collection href="Additional2">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 310; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 312; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title type="text">EntitySet3</atom:title>
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title type="text">EntitySet2</atom:title>
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title type="text">EntitySet1</atom:title>
+    </collection>
+  </workspace>
+</service>
+
+Combination: 318; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+
+Combination: 320; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
+  <workspace>
+    <atom:title type="text">Default</atom:title>
+    <collection href="EntitySet3">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet2">
+      <atom:title />
+    </collection>
+    <collection href="EntitySet1">
+      <atom:title />
+    </collection>
+  </workspace>
+</service>
+

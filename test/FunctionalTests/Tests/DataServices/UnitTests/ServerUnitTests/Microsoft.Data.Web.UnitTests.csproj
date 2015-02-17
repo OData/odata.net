@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <ProjectGuid>{BB7D22CB-7003-4AF6-9035-B369B00EA95E}</ProjectGuid>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AstoriaUnitTests</RootNamespace>
+    <AssemblyName>AstoriaUnitTests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <DefineConstants>ASTORIA_OPEN_OBJECT;EFRTM</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <SignAssemblyAttribute>false</SignAssemblyAttribute>
+    <OutputType>Library</OutputType>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="CustomMarshalers" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="$(NugetPack)\EntityFramework.4.3.1\lib\net40\EntityFramework.dll" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
+      <Name>Microsoft.OData.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj">
+      <Project>{F3EE82F0-8DDD-45EE-BD9C-47AC3A3AF4BB}</Project>
+      <Name>AstoriaTestFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\tools\KoKoMo\KoKoMo.csproj">
+      <Project>{EB4C9641-0452-4E7F-AA38-3EBD871914A3}</Project>
+      <Name>KoKoMo</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\tools\ModuleCore\src\ModuleCore.csproj">
+      <Project>{5E46C9E2-8B2F-4961-8C26-EFA9DF6CD68D}</Project>
+      <Name>ModuleCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\Models\EFFK\Astoria.EFFKModel.csproj">
+      <Project>{3C8CB60D-D2C0-495E-A8D2-C8B1B244F27B}</Project>
+      <Name>Astoria.EFFKModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\Models\northwind\Astoria.Northwind.csproj">
+      <Project>{D93149FD-0D7F-41AB-AFCF-62270E7FD613}</Project>
+      <Name>Astoria.Northwind</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Tools\CustomData.ObjectContext\CustomData.ObjectContext.csproj">
+      <Project>{6762001D-60F0-4E70-A816-C15897C39B7F}</Project>
+      <Name>CustomData.ObjectContext</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs" />
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\Common\UnitTestCodeGen.cs">
+      <Link>Data\UnitTestCodeGen.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\ddbasics\util\DataServiceContextTestUtil.cs">
+      <Link>Util\DataServiceContextTestUtil.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\ddbasics\util\StaticCallbackManager.cs">
+      <Link>Util\StaticCallbackManager.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\ddbasics\util\Utils.cs">
+      <Link>Util\Utils.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\ddbasics\Util\TestConstants.cs">
+      <Link>Util\TestConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\ddbasics\ExpressionVisitor.cs">
+      <Link>OpenTypes\ExpressionVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\ddbasics\OpenReflectionDataContext.cs">
+      <Link>OpenTypes\OpenReflectionDataContext.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\ddbasics\OpenTypeQueryProvider.cs">
+      <Link>OpenTypes\OpenTypeQueryProvider.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\ddbasics\OpenTypeToClrConverter.cs">
+      <Link>OpenTypes\OpenTypeToClrConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\ddbasics\RuntimeEvaluator.cs">
+      <Link>OpenTypes\RuntimeEvaluator.cs</Link>
+    </Compile>
+    <Compile Include="Data\CollectionTypeData.cs" />
+    <Compile Include="Data\EncodingData.cs" />
+    <Compile Include="Data\EntityStateData.cs" />
+    <Compile Include="Data\FormatStringData.cs" />
+    <Compile Include="Data\MergeOptionData.cs" />
+    <Compile Include="Data\SerializationFormatData.cs" />
+    <Compile Include="Data\ServiceModelData.cs" />
+    <Compile Include="Stubs\AdHocModel.cs" />
+    <Compile Include="Stubs\BatchWebRequest.cs" />
+    <Compile Include="Stubs\BLOBSupport.cs" />
+    <Compile Include="Stubs\CompoundKeyContext\CompoundKeyContext.cs" />
+    <Compile Include="Stubs\CompoundKeyContext\EdmCompoundKeyContext.cs" />
+    <Compile Include="Stubs\CompoundKeyContext\ReflectionCompoundKeyContext.cs" />
+    <Compile Include="Stubs\DataServiceHostRequestMessage.cs" />
+    <Compile Include="Stubs\DataServiceHostResponseMessage.cs" />
+    <Compile Include="Stubs\EmptyOpenTypesContext.cs" />
+    <Compile Include="Stubs\CustomDataContext.cs" />
+    <Compile Include="Stubs\CustomDataContextSetup.cs" />
+    <Compile Include="Stubs\CustomObjectContext\CustomBlobWithInheritance.cs" />
+    <Compile Include="Stubs\CustomObjectContext\CustomManyToMany.cs" />
+    <Compile Include="Stubs\CustomObjectContext\CustomManyToMany.views.cs" />
+    <Compile Include="Stubs\CustomObjectContext\CustomObjectContext.cs" />
+    <Compile Include="Stubs\CustomObjectContext\CustomObjectContext_partial.cs" />
+    <Compile Include="Stubs\CustomObjectContext\CustomObjectContext.IDataServiceStreamProvider.cs" />
+    <Compile Include="Stubs\CustomObjectContext\CustomObjectContext1.cs" />
+    <Compile Include="Stubs\CustomObjectContext\EpmCustomObjectContext.cs" />
+    <Compile Include="Stubs\CustomObjectContext\EpmCustomObjectContext1.cs" />
+    <Compile Include="Stubs\CustomObjectContext\NonPublicPropertiesContext.cs" />
+    <Compile Include="Stubs\CustomObjectContext\PopulateData.cs" />
+    <Compile Include="Stubs\CustomRowBasedContext.cs" />
+    <Compile Include="Stubs\CustomRowBasedOpenTypesContext.cs" />
+    <Compile Include="Stubs\DataServiceProvider\BaseStreamProvider2.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPActionAttribute.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPActionProvider.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPContext.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPDataService.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPExpandProvider.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPLinqQuery.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPLinqQueryProvider.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPMediaResource.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPMediaResourceStorage.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPMetadata.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPMethodTranslatingVisitor.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPResource.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPResourceQueryProvider.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPResourceType.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPResourceSerializer.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPStreamProvider.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPStreamProvider2.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPTestUtils.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPUnitTestServiceDefinition.cs" />
+    <Compile Include="Stubs\DataServiceProvider\DSPUpdateProvider.cs" />
+    <Compile Include="Stubs\DataServiceProvider\ResourcePropertyAnnotation.cs" />
+    <Compile Include="Stubs\DataServiceProvider\ResourceTypeAnnotation.cs" />
+    <Compile Include="Stubs\DataServiceProvider\TypedCustomStreamProvider2.cs" />
+    <Compile Include="Stubs\DataServiceProvider\TypeSystem.cs" />
+    <Compile Include="Stubs\DataServiceStreamProvider.cs" />
+    <Compile Include="Stubs\DataTypesContext\DataTypesContext.cs" />
+    <Compile Include="Stubs\DataTypesContext\EdmDataTypesContext.cs" />
+    <Compile Include="Stubs\DataTypesContext\SqlDataTypesContext.cs" />
+    <Compile Include="Stubs\DerivedPhoto.cs" />
+    <Compile Include="Stubs\EmptyComplexTypesContext.cs" />
+    <Compile Include="Stubs\ExpressionTreeTests\ExpressionTreeTestBaseVisitor.cs" />
+    <Compile Include="Stubs\ExpressionTreeTests\ExpressionTreeTestService.cs" />
+    <Compile Include="Stubs\ExpressionTreeTests\ExpressionTreeToXmlSerializer.cs" />
+    <Compile Include="Stubs\Folder.cs" />
+    <Compile Include="Stubs\InMemoryWebRequest.cs" />
+    <Compile Include="Stubs\Item.cs" />
+    <Compile Include="Stubs\LinqTestContext.cs" />
+    <Compile Include="Stubs\OpenWebDataService.cs" />
+    <Compile Include="Stubs\Photo.cs" />
+    <Compile Include="Stubs\PlaybackService.cs" />
+    <Compile Include="Stubs\RequestDescriptionFramework.cs" />
+    <Compile Include="Stubs\RequestInfoContext.cs" />
+    <Compile Include="Stubs\StreamingService.cs" />
+    <Compile Include="Stubs\TempDbDataService\TempDbDataService.cs" />
+    <Compile Include="Stubs\TestServiceDefinition.cs" />
+    <Compile Include="Stubs\TestWebRequest.cs" />
+    <Compile Include="Stubs\Sql\SqlNorthwind.cs" />
+    <Compile Include="Stubs\Sql\SqlNorthwind.Partial.cs" />
+    <Compile Include="Stubs\VirtualPropertyContext.cs" />
+    <Compile Include="Tests\AnyAllFilterTests.cs" />
+    <Compile Include="Tests\AuthorizationTest.cs" />
+    <Compile Include="Tests\UriParserIntegrationTests.cs" />
+    <Compile Include="Tests\NonEntityFilterTests.cs" />
+    <Compile Include="Tests\UseDefaultNamespaceForRootElementsLongSpanIntegrationTests.cs" />
+    <Compile Include="Tests\RequestUriCustomizationIntegrationTests.cs" />
+    <Compile Include="Tests\MultipleTypeSegmentsIntegrationTests.cs" />
+    <Compile Include="Tests\KeyAsSegmentLongSpanIntegrationTests.cs" />
+    <Compile Include="Tests\JsonLightIntegrationTests.cs" />
+    <Compile Include="Tests\CreateODataWriterTests.cs" />
+    <Compile Include="Tests\Dev10TypeTests.cs" />
+    <Compile Include="Tests\ErrorHandlerTest.cs" />
+    <Compile Include="Tests\ETagTests.cs" />
+    <Compile Include="Tests\ExpressionTreeTests.cs" />
+    <Compile Include="Tests\HttpContextServiceHostTest.cs" />
+    <Compile Include="Tests\MaterializationTest.cs" />
+    <Compile Include="Tests\MetadataDocumentTests.cs" />
+    <Compile Include="Tests\OpenTypes.cs" />
+    <Compile Include="Tests\ParameterReplacerVisitor.cs" />
+    <Compile Include="Tests\ProviderTests.cs" />
+    <Compile Include="Tests\QueryTest.cs" />
+    <Compile Include="Tests\RelationshipLinkTests.cs" />
+    <Compile Include="Tests\RequestQueryParserTest.cs" />
+    <Compile Include="Tests\RequestUriProcessorTest.cs" />
+    <Compile Include="Tests\SecurityTest.cs" />
+    <Compile Include="Tests\SelectTest.cs" />
+    <Compile Include="Tests\SelectWithQueryOptionsTest.cs" />
+    <Compile Include="Tests\ServiceOperationsTest.cs" />
+    <Compile Include="Tests\SpecificNegativeTests.cs" />
+    <Compile Include="Tests\WebDataServiceTest.cs" />
+    <Compile Include="Utils\BatchTestUtil.cs" />
+    <Compile Include="Utils\BatchRequestWritingUtils.cs" />
+    <Compile Include="Utils\UnitTestPayloadGenerator.cs" />
+    <Compile Include="Utils\CustomObjectContextWithPaging.cs" />
+    <Compile Include="Utils\DataWebObjectContext.cs" />
+    <Compile Include="Utils\JsonToAtomUtil.cs" />
+    <Compile Include="Utils\JsonValidator.cs" />
+    <Compile Include="Utils\LargeStream.cs" />
+    <Compile Include="Utils\LocalWebServerHelper.cs" />
+    <Compile Include="Utils\PayloadGenerator.cs" />
+    <Compile Include="Utils\ReflectionUtility.cs" />
+    <Compile Include="Utils\SystemNetUtility.cs" />
+    <Compile Include="Utils\UnitTestsUtil.cs" />
+    <Compile Include="Utils\UntypedCollection.cs" />
+    <Compile Include="Utils\VersioningUtil.cs" />
+    <Compile Include="Utils\XmlUtils.cs" />
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Microsoft.Spatial\Utils\SpatialFactory.cs">
+      <Link>Utils\SpatialFactory.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <!-- Class Diagrams -->
+  <ItemGroup>
+    <None Include="Diagrams\CustomDataContext.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\RequestWithKeyAfterCrossReference.txt">
+      <Link>Tests\BatchRequests\RequestWithKeyAfterCrossReference.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\ResponseWithKeyAfterCrossReference.txt">
+      <Link>Tests\BatchRequests\ResponseWithKeyAfterCrossReference.txt</Link>
+    </Content>
+    <EmbeddedResource Include="Tests\json2atom.xslt" />
+    <EmbeddedResource Include="Tests\atom2json.xslt" />
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\ModificationOutsideChangesetbatch.txt">
+      <Link>Tests\BatchRequests\ModificationOutsideChangesetbatch.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\ModificationOutsideChangesetresponse.txt">
+      <Link>Tests\BatchRequests\ModificationOutsideChangesetresponse.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\BlobCustomersResponse.txt">
+      <Link>Tests\BatchRequests\BlobCustomersResponse.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\BlobCustomersStreamedResponse.txt">
+      <Link>Tests\BatchRequests\BlobCustomersStreamedResponse.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\BlobItemsResponse.txt">
+      <Link>Tests\BatchRequests\BlobItemsResponse.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\BlobItemsStreamedResponse.txt">
+      <Link>Tests\BatchRequests\BlobItemsStreamedResponse.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\crossreferencebatch.txt">
+      <Link>Tests\BatchRequests\crossreferencebatch.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\crossreferenceresponse.txt">
+      <Link>Tests\BatchRequests\crossreferenceresponse.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\NamedStreamRequest.txt">
+      <Link>Tests\BatchRequests\NamedStreamRequest.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\NamedStreamResponse.txt">
+      <Link>Tests\BatchRequests\NamedStreamResponse.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\samplebatch.txt">
+      <Link>Tests\BatchRequests\samplebatch.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\samplebatch2.txt">
+      <Link>Tests\BatchRequests\samplebatch2.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\samplejsonbatch.txt">
+      <Link>Tests\BatchRequests\samplejsonbatch.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidbatch.txt">
+      <Link>Tests\BatchRequests\sampleinvalidbatch.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidbatch1.txt">
+      <Link>Tests\BatchRequests\sampleinvalidbatch1.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidbatch2.txt">
+      <Link>Tests\BatchRequests\sampleinvalidbatch2.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidbatch3.txt">
+      <Link>Tests\BatchRequests\sampleinvalidbatch3.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidbatch4.txt">
+      <Link>Tests\BatchRequests\sampleinvalidbatch4.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidbatch5.txt">
+      <Link>Tests\BatchRequests\sampleinvalidbatch5.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidbatch6.txt">
+      <Link>Tests\BatchRequests\sampleinvalidbatch6.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidresponse.txt">
+      <Link>Tests\BatchRequests\sampleinvalidresponse.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidresponse1.txt">
+      <Link>Tests\BatchRequests\sampleinvalidresponse1.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidresponse2.txt">
+      <Link>Tests\BatchRequests\sampleinvalidresponse2.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidresponse3.txt">
+      <Link>Tests\BatchRequests\sampleinvalidresponse3.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidresponse4.txt">
+      <Link>Tests\BatchRequests\sampleinvalidresponse4.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidresponse5.txt">
+      <Link>Tests\BatchRequests\sampleinvalidresponse5.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleinvalidresponse6.txt">
+      <Link>Tests\BatchRequests\sampleinvalidresponse6.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\samplejsonresponse.txt">
+      <Link>Tests\BatchRequests\samplejsonresponse.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleresponse.txt">
+      <Link>Tests\BatchRequests\sampleresponse.txt</Link>
+    </Content>
+    <Content Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\ServerUnitTests\Tests\BatchRequests\sampleresponse2.txt">
+      <Link>Tests\BatchRequests\sampleresponse2.txt</Link>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

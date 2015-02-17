@@ -1,0 +1,52 @@
+$filter = Brother/any(d:d/Microsoft.Test.Taupo.OData.WCFService.Customer/City ne 'Shanghai')
+
+
+FilterQueryOption
+	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
+	Parameter = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = People
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
+	Expression = 
+	AnyNode
+		TypeReference = [Edm.Boolean Nullable=True]
+		Body = 
+			SingleValuePropertyAccessNode
+				Property = City
+				TypeReference = [Edm.String Nullable=True Unicode=True]
+				Source = 
+				SingleEntityCastNode
+					Type Reference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+					NavigationSource = Brother
+					Entity Type Reference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+					Source = 
+					EntityRangeVariableReferenceNode
+						Name = d
+						NavigationSource = Brother
+						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=True]
+						Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+		NotEqual
+			Shanghai(Type: [Edm.String Nullable=True Unicode=True])
+		Source = 
+		CollectionNavigationNode
+			ItemType = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=True]
+			Entity Item Type = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=True]
+			NavigationSource = Brother
+			Multiplicity = Many
+			Navigation Property = Brother
+			Source = 
+			EntityRangeVariableReferenceNode
+				Name = $it
+				NavigationSource = People
+				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
+				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+		Parameters = 
+		EntityRangeVariable
+			Name = d
+			NavigationSource = Brother
+			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=True]
+		EntityRangeVariable
+			Name = $it
+			NavigationSource = People
+			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]

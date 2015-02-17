@@ -1,0 +1,61 @@
+$orderby = endswith(substring(toupper(concat(FirstName, LastName)), 7), 'r') and contains('H','Hello')
+
+
+OrderByClause
+	Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+	Direction = Ascending
+	Range Variable = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = VipCustomer
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+	Expression = 
+		SingleValueFunctionCallNode
+			Name = endswith
+			Return Type = [Edm.Boolean Nullable=False]
+			Function = 
+			Arguments = 
+				SingleValueFunctionCallNode
+					Name = substring
+					Return Type = [Edm.String Nullable=True Unicode=True]
+					Function = 
+					Arguments = 
+						SingleValueFunctionCallNode
+							Name = toupper
+							Return Type = [Edm.String Nullable=True Unicode=True]
+							Function = 
+							Arguments = 
+								SingleValueFunctionCallNode
+									Name = concat
+									Return Type = [Edm.String Nullable=True Unicode=True]
+									Function = 
+									Arguments = 
+										SingleValuePropertyAccessNode
+											Property = FirstName
+											TypeReference = [Edm.String Nullable=True Unicode=True]
+											Source = 
+											EntityRangeVariableReferenceNode
+												Name = $it
+												NavigationSource = VipCustomer
+												TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+												Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+										SingleValuePropertyAccessNode
+											Property = LastName
+											TypeReference = [Edm.String Nullable=True Unicode=True]
+											Source = 
+											EntityRangeVariableReferenceNode
+												Name = $it
+												NavigationSource = VipCustomer
+												TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+												Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+						7(Type: [Edm.Int32 Nullable=False])
+				r(Type: [Edm.String Nullable=True Unicode=True])
+	And
+		SingleValueFunctionCallNode
+			Name = contains
+			Return Type = [Edm.Boolean Nullable=False]
+			Function = 
+			Arguments = 
+				H(Type: [Edm.String Nullable=True Unicode=True])
+				Hello(Type: [Edm.String Nullable=True Unicode=True])
+	Then By = 

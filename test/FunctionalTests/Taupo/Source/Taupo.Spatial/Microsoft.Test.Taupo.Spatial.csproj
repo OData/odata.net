@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectGuid>{7FF7E0D4-B00C-4C08-80F1-C7EFF617597D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Test.Taupo.Spatial</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.Spatial</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TransparentAssembly>true</TransparentAssembly>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <EnableStyleCop>true</EnableStyleCop>
+    <DefineConstants>TAUPO_SPATIAL</DefineConstants>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5D921888-FE03-4C3F-40FE-2F624505461D}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\PlatformHelper.cs">
+      <Link>PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="AssemblyAttributes.cs" />
+    <Compile Include="Common\PseudoDistanceImplementation.cs" />
+    <Compile Include="Common\SpatialPrimitiveFormatterBase`3.cs" />
+    <Compile Include="Contracts\IGeoJsonSpatialFormatter.cs" />
+    <Compile Include="Contracts\IGeometryToGeographyConverter.cs" />
+    <Compile Include="Contracts\IGmlSpatialFormatter.cs" />
+    <Compile Include="Contracts\ISpatialPrimitiveFormatter`1.cs" />
+    <Compile Include="Contracts\ISpatialRegistrationManager.cs" />
+    <Compile Include="Contracts\IWellKnownTextSpatialFormatter.cs" />
+    <Compile Include="Contracts\SpatialConstants.cs" />
+    <Compile Include="Contracts\SpatialExtensions.cs" />
+    <Compile Include="Contracts\SpatialTypeKind.cs" />
+    <Compile Include="Contracts\SpatialUtilities.cs" />
+    <Compile Include="DataGeneration\SpatialDataGeneratorResolver.cs" />
+    <Compile Include="DefaultSpatialCodeGenerator.cs" />
+    <Compile Include="EntityModel\SpatialClrTypeResolver.cs" />
+    <Compile Include="EntityModel\SpatialDataTypeDefinitionResolver.cs" />
+    <Compile Include="GeoJsonSpatialFormatter.cs" />
+    <Compile Include="GeometryToGeographyConverter.cs" />
+    <Compile Include="GmlSpatialFormatter.cs" />
+    <Compile Include="MinimalSpatialRegistrationManager.cs" />
+    <Compile Include="WellKnownTextSpatialEqualityComparer.cs" />
+    <Compile Include="WellKnownTextSpatialFormatter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="CustomDictionary.xml" />
+    <Compile Include="$(AssemblyKeysCSharpFilePath)" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj">
+      <Project>{34010F3A-20CC-479C-83CF-EC99B1C90CD1}</Project>
+      <Name>Microsoft.Test.Taupo</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Microsoft.Test.Taupo.Spatial.layering.xml" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOGRAPHYCOLLECTION_4326.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOGRAPHYLINESTRING_4326.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOGRAPHYMULTILINESTRING_4326.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOGRAPHYMULTIPOINT_4326.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOGRAPHYMULTIPOLYGON_4326.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOGRAPHYPOINT_4326.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOGRAPHYPOLYGON_4326.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOGRAPHY_4326.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOMETRYCOLLECTION_0.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOMETRYLINESTRING_0.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOMETRYMULTILINESTRING_0.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOMETRYMULTIPOINT_0.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOMETRYMULTIPOLYGON_0.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOMETRYPOINT_0.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOMETRYPOLYGON_0.txt" />
+    <EmbeddedResource Include="Resources\SpatialData\GEOMETRY_0.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

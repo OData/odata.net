@@ -1,0 +1,1108 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.OfficeType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.OfficeType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 9; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.OfficeType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 11; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.OfficeType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 17; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.OfficeType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 19; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.OfficeType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 25; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.OfficeType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 27; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <category term="#TestModel.OfficeType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 193; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 195; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 201; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 203; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 209; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 211; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 217; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 219; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 225; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 227; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 233; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 235; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 241; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 243; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 249; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 251; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 257; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 259; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 265; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 267; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 273; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 275; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 281; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 283; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 289; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 291; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 297; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 299; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 305; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 307; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 313; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 315; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 321; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 323; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 329; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 331; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 337; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 339; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 345; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 347; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 353; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 355; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 361; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 363; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 369; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 371; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 377; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 379; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 385; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 387; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 393; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 395; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 401; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 403; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 409; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 411; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 417; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 419; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 425; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 427; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 433; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 435; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 441; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 443; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=entry" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/CityHall" type="application/atom+xml;type=feed" title="CityHall" href="http://odata.org/navlink">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+

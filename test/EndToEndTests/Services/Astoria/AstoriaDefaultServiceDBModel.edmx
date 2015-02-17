@@ -1,0 +1,1538 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="AstoriaDefaultServiceDBModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="AstoriaDefaultServiceDBModelStoreContainer">
+          <EntitySet Name="EFCar" EntityType="AstoriaDefaultServiceDBModel.Store.EFCar" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFComputer" EntityType="AstoriaDefaultServiceDBModel.Store.EFComputer" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFComputerDetail" EntityType="AstoriaDefaultServiceDBModel.Store.EFComputerDetail" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFCustomer" EntityType="AstoriaDefaultServiceDBModel.Store.EFCustomer" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFCustomerInfo" EntityType="AstoriaDefaultServiceDBModel.Store.EFCustomerInfo" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFDriver" EntityType="AstoriaDefaultServiceDBModel.Store.EFDriver" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFLastLogin" EntityType="AstoriaDefaultServiceDBModel.Store.EFLastLogin" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFLicense" EntityType="AstoriaDefaultServiceDBModel.Store.EFLicense" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFLogin" EntityType="AstoriaDefaultServiceDBModel.Store.EFLogin" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFMappedEntityType" EntityType="AstoriaDefaultServiceDBModel.Store.EFMappedEntityType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFMessage" EntityType="AstoriaDefaultServiceDBModel.Store.EFMessage" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFOrder" EntityType="AstoriaDefaultServiceDBModel.Store.EFOrder" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFOrderLine" EntityType="AstoriaDefaultServiceDBModel.Store.EFOrderLine" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFPageView" EntityType="AstoriaDefaultServiceDBModel.Store.EFPageView" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFPerson" EntityType="AstoriaDefaultServiceDBModel.Store.EFPerson" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFPersonMetadata" EntityType="AstoriaDefaultServiceDBModel.Store.EFPersonMetadata" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFProduct" EntityType="AstoriaDefaultServiceDBModel.Store.EFProduct" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFProductDetail" EntityType="AstoriaDefaultServiceDBModel.Store.EFProductDetail" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFProductPhoto" EntityType="AstoriaDefaultServiceDBModel.Store.EFProductPhoto" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFProductReview" EntityType="AstoriaDefaultServiceDBModel.Store.EFProductReview" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EFRSAToken" EntityType="AstoriaDefaultServiceDBModel.Store.EFRSAToken" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="Computer_ComputerDetail" Association="AstoriaDefaultServiceDBModel.Store.Computer_ComputerDetail">
+            <End Role="EFComputer" EntitySet="EFComputer" />
+            <End Role="EFComputerDetail" EntitySet="EFComputerDetail" />
+          </AssociationSet>
+          <AssociationSet Name="Customer_CustomerInfo" Association="AstoriaDefaultServiceDBModel.Store.Customer_CustomerInfo">
+            <End Role="EFCustomer" EntitySet="EFCustomer" />
+            <End Role="EFCustomerInfo" EntitySet="EFCustomerInfo" />
+          </AssociationSet>
+          <AssociationSet Name="LastLogin_Login_LastLogin" Association="AstoriaDefaultServiceDBModel.Store.LastLogin_Login_LastLogin">
+            <End Role="EFLogin" EntitySet="EFLogin" />
+            <End Role="EFLastLogin" EntitySet="EFLastLogin" />
+          </AssociationSet>
+          <AssociationSet Name="License_Driver_License" Association="AstoriaDefaultServiceDBModel.Store.License_Driver_License">
+            <End Role="EFDriver" EntitySet="EFDriver" />
+            <End Role="EFLicense" EntitySet="EFLicense" />
+          </AssociationSet>
+          <AssociationSet Name="Login_Customer_Logins" Association="AstoriaDefaultServiceDBModel.Store.Login_Customer_Logins">
+            <End Role="EFCustomer" EntitySet="EFCustomer" />
+            <End Role="EFLogin" EntitySet="EFLogin" />
+          </AssociationSet>
+          <AssociationSet Name="Login_Orders" Association="AstoriaDefaultServiceDBModel.Store.Login_Orders">
+            <End Role="EFLogin" EntitySet="EFLogin" />
+            <End Role="EFOrder" EntitySet="EFOrder" />
+          </AssociationSet>
+          <AssociationSet Name="Login_RSAToken" Association="AstoriaDefaultServiceDBModel.Store.Login_RSAToken">
+            <End Role="EFLogin" EntitySet="EFLogin" />
+            <End Role="EFRSAToken" EntitySet="EFRSAToken" />
+          </AssociationSet>
+          <AssociationSet Name="Message_Login_ReceivedMessages" Association="AstoriaDefaultServiceDBModel.Store.Message_Login_ReceivedMessages">
+            <End Role="EFLogin" EntitySet="EFLogin" />
+            <End Role="EFMessage" EntitySet="EFMessage" />
+          </AssociationSet>
+          <AssociationSet Name="Message_Login_SentMessages" Association="AstoriaDefaultServiceDBModel.Store.Message_Login_SentMessages">
+            <End Role="EFLogin" EntitySet="EFLogin" />
+            <End Role="EFMessage" EntitySet="EFMessage" />
+          </AssociationSet>
+          <AssociationSet Name="Order_Customer_Orders" Association="AstoriaDefaultServiceDBModel.Store.Order_Customer_Orders">
+            <End Role="EFCustomer" EntitySet="EFCustomer" />
+            <End Role="EFOrder" EntitySet="EFOrder" />
+          </AssociationSet>
+          <AssociationSet Name="OrderLine_Order_OrderLines" Association="AstoriaDefaultServiceDBModel.Store.OrderLine_Order_OrderLines">
+            <End Role="EFOrder" EntitySet="EFOrder" />
+            <End Role="EFOrderLine" EntitySet="EFOrderLine" />
+          </AssociationSet>
+          <AssociationSet Name="OrderLine_Product_OrderLines" Association="AstoriaDefaultServiceDBModel.Store.OrderLine_Product_OrderLines">
+            <End Role="EFProduct" EntitySet="EFProduct" />
+            <End Role="EFOrderLine" EntitySet="EFOrderLine" />
+          </AssociationSet>
+          <AssociationSet Name="PageView_Login_PageViews" Association="AstoriaDefaultServiceDBModel.Store.PageView_Login_PageViews">
+            <End Role="EFLogin" EntitySet="EFLogin" />
+            <End Role="EFPageView" EntitySet="EFPageView" />
+          </AssociationSet>
+          <AssociationSet Name="Person_Employee_Manager" Association="AstoriaDefaultServiceDBModel.Store.Person_Employee_Manager">
+            <End Role="EFPerson" EntitySet="EFPerson" />
+            <End Role="EFPerson1" EntitySet="EFPerson" />
+          </AssociationSet>
+          <AssociationSet Name="Person_SpecialEmployee_Car" Association="AstoriaDefaultServiceDBModel.Store.Person_SpecialEmployee_Car">
+            <End Role="EFCar" EntitySet="EFCar" />
+            <End Role="EFPerson" EntitySet="EFPerson" />
+          </AssociationSet>
+          <AssociationSet Name="PersonMetadata_Person_PersonMetadata" Association="AstoriaDefaultServiceDBModel.Store.PersonMetadata_Person_PersonMetadata">
+            <End Role="EFPerson" EntitySet="EFPerson" />
+            <End Role="EFPersonMetadata" EntitySet="EFPersonMetadata" />
+          </AssociationSet>
+          <AssociationSet Name="ProductDetail_Product_ProductDetail" Association="AstoriaDefaultServiceDBModel.Store.ProductDetail_Product_ProductDetail">
+            <End Role="EFProduct" EntitySet="EFProduct" />
+            <End Role="EFProductDetail" EntitySet="EFProductDetail" />
+          </AssociationSet>
+          <AssociationSet Name="ProductPhoto_Product_ProductPhoto" Association="AstoriaDefaultServiceDBModel.Store.ProductPhoto_Product_ProductPhoto">
+            <End Role="EFProduct" EntitySet="EFProduct" />
+            <End Role="EFProductPhoto" EntitySet="EFProductPhoto" />
+          </AssociationSet>
+          <AssociationSet Name="ProductReview_Product_ProductReview" Association="AstoriaDefaultServiceDBModel.Store.ProductReview_Product_ProductReview">
+            <End Role="EFProduct" EntitySet="EFProduct" />
+            <End Role="EFProductReview" EntitySet="EFProductReview" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="EFCar">
+          <Key>
+            <PropertyRef Name="VIN" />
+          </Key>
+          <Property Name="VIN" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="EFComputer">
+          <Key>
+            <PropertyRef Name="ComputerId" />
+          </Key>
+          <Property Name="ComputerId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EFComputerDetail">
+          <Key>
+            <PropertyRef Name="ComputerDetailId" />
+          </Key>
+          <Property Name="ComputerDetailId" Type="int" Nullable="false" />
+          <Property Name="Manufacturer" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Model" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Serial" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="SpecificationsBag" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PurchaseDate" Type="datetime2" Nullable="false" />
+          <Property Name="Dimensions_Width" Type="decimal" Nullable="false" Precision="10" Scale="3" />
+          <Property Name="Dimensions_Height" Type="decimal" Nullable="false" Precision="10" Scale="3" />
+          <Property Name="Dimensions_Depth" Type="decimal" Nullable="false" Precision="10" Scale="3" />
+          <Property Name="Computer_ComputerDetail_ComputerId" Type="int" />
+        </EntityType>
+        <EntityType Name="EFCustomer">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="PrimaryContactInfo_EmailBag" Type="nvarchar" Nullable="false" MaxLength="32" />
+          <Property Name="PrimaryContactInfo_AlternativeNames" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="PrimaryContactInfo_ContactAlias_AlternativeNames" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="PrimaryContactInfo_HomePhone_PhoneNumber" Type="nvarchar" Nullable="false" MaxLength="16" />
+          <Property Name="PrimaryContactInfo_HomePhone_Extension" Type="nvarchar" MaxLength="16" />
+          <Property Name="PrimaryContactInfo_WorkPhone_PhoneNumber" Type="nvarchar" Nullable="false" MaxLength="16" />
+          <Property Name="PrimaryContactInfo_WorkPhone_Extension" Type="nvarchar" MaxLength="16" />
+          <Property Name="PrimaryContactInfo_MobilePhoneBag_PhoneNumber" Type="nvarchar" Nullable="false" MaxLength="16" />
+          <Property Name="PrimaryContactInfo_MobilePhoneBag_Extension" Type="nvarchar" MaxLength="16" />
+          <Property Name="BackupContactInfo_EmailBag" Type="nvarchar" Nullable="false" MaxLength="32" />
+          <Property Name="BackupContactInfo_AlternativeNames" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="BackupContactInfo_ContactAlias_AlternativeNames" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="BackupContactInfo_HomePhone_PhoneNumber" Type="nvarchar" Nullable="false" MaxLength="16" />
+          <Property Name="BackupContactInfo_HomePhone_Extension" Type="nvarchar" MaxLength="16" />
+          <Property Name="BackupContactInfo_WorkPhone_PhoneNumber" Type="nvarchar" Nullable="false" MaxLength="16" />
+          <Property Name="BackupContactInfo_WorkPhone_Extension" Type="nvarchar" MaxLength="16" />
+          <Property Name="BackupContactInfo_MobilePhoneBag_PhoneNumber" Type="nvarchar" Nullable="false" MaxLength="16" />
+          <Property Name="BackupContactInfo_MobilePhoneBag_Extension" Type="nvarchar" MaxLength="16" />
+          <Property Name="Auditing_ModifiedDate" Type="datetime2" Nullable="false" />
+          <Property Name="Auditing_ModifiedBy" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Auditing_Concurrency_Token" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="Auditing_Concurrency_QueriedDateTime" Type="datetime2" />
+          <Property Name="Husband_Wife_CustomerId" Type="int" />
+        </EntityType>
+        <EntityType Name="EFCustomerInfo">
+          <Key>
+            <PropertyRef Name="CustomerInfoId" />
+          </Key>
+          <Property Name="CustomerInfoId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Information" Type="nvarchar(max)" />
+          <Property Name="Customer_CustomerInfo_CustomerId" Type="int" />
+        </EntityType>
+        <EntityType Name="EFDriver">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="BirthDate" Type="datetime2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EFLastLogin">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Username" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="LoggedIn" Type="datetime2" Nullable="false" />
+          <Property Name="LoggedOut" Type="datetime2" />
+          <Property Name="Duration" Type="time" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EFLicense">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="LicenseNumber" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="LicenseClass" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Restrictions" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ExpirationDate" Type="datetime2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EFLogin">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Username" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EFMappedEntityType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Href" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="HrefLang" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Length" Type="int" Nullable="false" />
+          <Property Name="BagOfPrimitiveToLinks" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Logo" Type="varbinary" Nullable="false" MaxLength="500" />
+          <Property Name="BagOfDecimals" Type="decimal" Nullable="false" Precision="28" Scale="4" />
+          <Property Name="BagOfDoubles" Type="float" Nullable="false" />
+          <Property Name="BagOfSingles" Type="real" Nullable="false" />
+          <Property Name="BagOfBytes" Type="tinyint" Nullable="false" />
+          <Property Name="BagOfInt16s" Type="smallint" Nullable="false" />
+          <Property Name="BagOfInt32s" Type="int" Nullable="false" />
+          <Property Name="BagOfInt64s" Type="bigint" Nullable="false" />
+          <Property Name="BagOfGuids" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BagOfDateTime" Type="datetime2" Nullable="false" />
+          <Property Name="BagOfComplexToCategories_Term" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="BagOfComplexToCategories_Scheme" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="BagOfComplexToCategories_Label" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ComplexPhone_PhoneNumber" Type="nvarchar" Nullable="false" MaxLength="16" />
+          <Property Name="ComplexPhone_Extension" Type="nvarchar" MaxLength="16" />
+          <Property Name="ComplexContactDetails_EmailBag" Type="nvarchar" Nullable="false" MaxLength="32" />
+          <Property Name="ComplexContactDetails_AlternativeNames" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="ComplexContactDetails_ContactAlias_AlternativeNames" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="ComplexContactDetails_HomePhone_PhoneNumber" Type="nvarchar" Nullable="false" MaxLength="16" />
+          <Property Name="ComplexContactDetails_HomePhone_Extension" Type="nvarchar" MaxLength="16" />
+          <Property Name="ComplexContactDetails_WorkPhone_PhoneNumber" Type="nvarchar" Nullable="false" MaxLength="16" />
+          <Property Name="ComplexContactDetails_WorkPhone_Extension" Type="nvarchar" MaxLength="16" />
+          <Property Name="ComplexContactDetails_MobilePhoneBag_PhoneNumber" Type="nvarchar" Nullable="false" MaxLength="16" />
+          <Property Name="ComplexContactDetails_MobilePhoneBag_Extension" Type="nvarchar" MaxLength="16" />
+        </EntityType>
+        <EntityType Name="EFMessage">
+          <Key>
+            <PropertyRef Name="MessageId" />
+            <PropertyRef Name="FromUsername" />
+          </Key>
+          <Property Name="MessageId" Type="int" Nullable="false" />
+          <Property Name="FromUsername" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="ToUsername" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Sent" Type="datetimeoffset" Nullable="false" />
+          <Property Name="Subject" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Body" Type="nvarchar(max)" />
+          <Property Name="IsRead" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EFOrder">
+          <Key>
+            <PropertyRef Name="OrderId" />
+          </Key>
+          <Property Name="OrderId" Type="int" Nullable="false" />
+          <Property Name="CustomerId" Type="int" />
+          <Property Name="Concurrency_Token" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="Concurrency_QueriedDateTime" Type="datetime2" />
+          <Property Name="Login_Orders_Username" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="EFOrderLine">
+          <Key>
+            <PropertyRef Name="OrderId" />
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="OrderId" Type="int" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="ConcurrencyToken" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="_Discriminator" Type="nvarchar" Nullable="false" MaxLength="14" />
+        </EntityType>
+        <EntityType Name="EFPageView">
+          <Key>
+            <PropertyRef Name="PageViewId" />
+          </Key>
+          <Property Name="PageViewId" Type="int" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Viewed" Type="datetimeoffset" Nullable="false" />
+          <Property Name="TimeSpentOnPage" Type="time" Nullable="false" />
+          <Property Name="PageUrl" Type="nvarchar" Nullable="false" MaxLength="500" />
+          <Property Name="_Discriminator" Type="nvarchar" Nullable="false" MaxLength="15" />
+          <Property Name="ProductId" Type="int" />
+          <Property Name="ConcurrencyToken" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="EFPerson">
+          <Key>
+            <PropertyRef Name="PersonId" />
+          </Key>
+          <Property Name="PersonId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="_Discriminator" Type="nvarchar" Nullable="false" MaxLength="15" />
+          <Property Name="ManagersPersonId" Type="int" />
+          <Property Name="Salary" Type="int" />
+          <Property Name="Title" Type="nvarchar(max)" />
+          <Property Name="CarsVIN" Type="int" />
+          <Property Name="Bonus" Type="int" />
+          <Property Name="IsFullyVested" Type="bit" />
+        </EntityType>
+        <EntityType Name="EFPersonMetadata">
+          <Key>
+            <PropertyRef Name="PersonMetadataId" />
+          </Key>
+          <Property Name="PersonMetadataId" Type="int" Nullable="false" />
+          <Property Name="PersonId" Type="int" Nullable="false" />
+          <Property Name="PropertyName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PropertyValue" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EFProduct">
+          <Key>
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Dimensions_Width" Type="decimal" Nullable="false" Precision="10" Scale="3" />
+          <Property Name="Dimensions_Height" Type="decimal" Nullable="false" Precision="10" Scale="3" />
+          <Property Name="Dimensions_Depth" Type="decimal" Nullable="false" Precision="10" Scale="3" />
+          <Property Name="BaseConcurrency" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ComplexConcurrency_Token" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="ComplexConcurrency_QueriedDateTime" Type="datetime2" />
+          <Property Name="NestedComplexConcurrency_ModifiedDate" Type="datetime2" Nullable="false" />
+          <Property Name="NestedComplexConcurrency_ModifiedBy" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="NestedComplexConcurrency_Concurrency_Token" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="NestedComplexConcurrency_Concurrency_QueriedDateTime" Type="datetime2" />
+          <Property Name="_Discriminator" Type="nvarchar" Nullable="false" MaxLength="19" />
+          <Property Name="Discontinued" Type="datetime2" />
+          <Property Name="ReplacementProductId" Type="int" />
+          <Property Name="DiscontinuedPhone_PhoneNumber" Type="nvarchar" MaxLength="16" />
+          <Property Name="DiscontinuedPhone_Extension" Type="nvarchar" MaxLength="16" />
+          <Property Name="ChildConcurrencyToken" Type="nvarchar(max)" />
+          <Property Name="Products_RelatedProducts_ProductId" Type="int" />
+        </EntityType>
+        <EntityType Name="EFProductDetail">
+          <Key>
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="Details" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EFProductPhoto">
+          <Key>
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="PhotoId" />
+          </Key>
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="PhotoId" Type="int" Nullable="false" />
+          <Property Name="Photo" Type="varbinary" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EFProductReview">
+          <Key>
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="ReviewId" />
+          </Key>
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="ReviewId" Type="int" Nullable="false" />
+          <Property Name="Review" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EFRSAToken">
+          <Key>
+            <PropertyRef Name="Serial" />
+          </Key>
+          <Property Name="Serial" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="Issued" Type="datetime2" Nullable="false" />
+          <Property Name="Login_RSAToken_Username" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="Computer_ComputerDetail">
+          <End Role="EFComputer" Type="AstoriaDefaultServiceDBModel.Store.EFComputer" Multiplicity="0..1" />
+          <End Role="EFComputerDetail" Type="AstoriaDefaultServiceDBModel.Store.EFComputerDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFComputer">
+              <PropertyRef Name="ComputerId" />
+            </Principal>
+            <Dependent Role="EFComputerDetail">
+              <PropertyRef Name="Computer_ComputerDetail_ComputerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Customer_CustomerInfo">
+          <End Role="EFCustomer" Type="AstoriaDefaultServiceDBModel.Store.EFCustomer" Multiplicity="0..1" />
+          <End Role="EFCustomerInfo" Type="AstoriaDefaultServiceDBModel.Store.EFCustomerInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFCustomer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="EFCustomerInfo">
+              <PropertyRef Name="Customer_CustomerInfo_CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="LastLogin_Login_LastLogin">
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.Store.EFLogin" Multiplicity="1" />
+          <End Role="EFLastLogin" Type="AstoriaDefaultServiceDBModel.Store.EFLastLogin" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="EFLogin">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="EFLastLogin">
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="License_Driver_License">
+          <End Role="EFDriver" Type="AstoriaDefaultServiceDBModel.Store.EFDriver" Multiplicity="1" />
+          <End Role="EFLicense" Type="AstoriaDefaultServiceDBModel.Store.EFLicense" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="EFDriver">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="EFLicense">
+              <PropertyRef Name="Name" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Login_Customer_Logins">
+          <End Role="EFCustomer" Type="AstoriaDefaultServiceDBModel.Store.EFCustomer" Multiplicity="1" />
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.Store.EFLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFCustomer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="EFLogin">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Login_Orders">
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.Store.EFLogin" Multiplicity="0..1" />
+          <End Role="EFOrder" Type="AstoriaDefaultServiceDBModel.Store.EFOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFLogin">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="EFOrder">
+              <PropertyRef Name="Login_Orders_Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Login_RSAToken">
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.Store.EFLogin" Multiplicity="0..1" />
+          <End Role="EFRSAToken" Type="AstoriaDefaultServiceDBModel.Store.EFRSAToken" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFLogin">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="EFRSAToken">
+              <PropertyRef Name="Login_RSAToken_Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Message_Login_ReceivedMessages">
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.Store.EFLogin" Multiplicity="1" />
+          <End Role="EFMessage" Type="AstoriaDefaultServiceDBModel.Store.EFMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFLogin">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="EFMessage">
+              <PropertyRef Name="ToUsername" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Message_Login_SentMessages">
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.Store.EFLogin" Multiplicity="1" />
+          <End Role="EFMessage" Type="AstoriaDefaultServiceDBModel.Store.EFMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFLogin">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="EFMessage">
+              <PropertyRef Name="FromUsername" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Order_Customer_Orders">
+          <End Role="EFCustomer" Type="AstoriaDefaultServiceDBModel.Store.EFCustomer" Multiplicity="0..1" />
+          <End Role="EFOrder" Type="AstoriaDefaultServiceDBModel.Store.EFOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFCustomer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="EFOrder">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="OrderLine_Order_OrderLines">
+          <End Role="EFOrder" Type="AstoriaDefaultServiceDBModel.Store.EFOrder" Multiplicity="1" />
+          <End Role="EFOrderLine" Type="AstoriaDefaultServiceDBModel.Store.EFOrderLine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFOrder">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="EFOrderLine">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="OrderLine_Product_OrderLines">
+          <End Role="EFProduct" Type="AstoriaDefaultServiceDBModel.Store.EFProduct" Multiplicity="1" />
+          <End Role="EFOrderLine" Type="AstoriaDefaultServiceDBModel.Store.EFOrderLine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFProduct">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="EFOrderLine">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PageView_Login_PageViews">
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.Store.EFLogin" Multiplicity="1" />
+          <End Role="EFPageView" Type="AstoriaDefaultServiceDBModel.Store.EFPageView" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFLogin">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="EFPageView">
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Person_Employee_Manager">
+          <End Role="EFPerson" Type="AstoriaDefaultServiceDBModel.Store.EFPerson" Multiplicity="0..1" />
+          <End Role="EFPerson1" Type="AstoriaDefaultServiceDBModel.Store.EFPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFPerson">
+              <PropertyRef Name="PersonId" />
+            </Principal>
+            <Dependent Role="EFPerson1">
+              <PropertyRef Name="ManagersPersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Person_SpecialEmployee_Car">
+          <End Role="EFCar" Type="AstoriaDefaultServiceDBModel.Store.EFCar" Multiplicity="0..1" />
+          <End Role="EFPerson" Type="AstoriaDefaultServiceDBModel.Store.EFPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFCar">
+              <PropertyRef Name="VIN" />
+            </Principal>
+            <Dependent Role="EFPerson">
+              <PropertyRef Name="CarsVIN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PersonMetadata_Person_PersonMetadata">
+          <End Role="EFPerson" Type="AstoriaDefaultServiceDBModel.Store.EFPerson" Multiplicity="1" />
+          <End Role="EFPersonMetadata" Type="AstoriaDefaultServiceDBModel.Store.EFPersonMetadata" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFPerson">
+              <PropertyRef Name="PersonId" />
+            </Principal>
+            <Dependent Role="EFPersonMetadata">
+              <PropertyRef Name="PersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductDetail_Product_ProductDetail">
+          <End Role="EFProduct" Type="AstoriaDefaultServiceDBModel.Store.EFProduct" Multiplicity="1" />
+          <End Role="EFProductDetail" Type="AstoriaDefaultServiceDBModel.Store.EFProductDetail" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="EFProduct">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="EFProductDetail">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductPhoto_Product_ProductPhoto">
+          <End Role="EFProduct" Type="AstoriaDefaultServiceDBModel.Store.EFProduct" Multiplicity="1" />
+          <End Role="EFProductPhoto" Type="AstoriaDefaultServiceDBModel.Store.EFProductPhoto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFProduct">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="EFProductPhoto">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductReview_Product_ProductReview">
+          <End Role="EFProduct" Type="AstoriaDefaultServiceDBModel.Store.EFProduct" Multiplicity="1" />
+          <End Role="EFProductReview" Type="AstoriaDefaultServiceDBModel.Store.EFProductReview" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFProduct">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="EFProductReview">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AstoriaDefaultServiceDBModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="AstoriaDefaultServiceDBEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="EFCars" EntityType="AstoriaDefaultServiceDBModel.EFCar" />
+          <EntitySet Name="EFComputers" EntityType="AstoriaDefaultServiceDBModel.EFComputer" />
+          <EntitySet Name="EFComputerDetails" EntityType="AstoriaDefaultServiceDBModel.EFComputerDetail" />
+          <EntitySet Name="EFCustomers" EntityType="AstoriaDefaultServiceDBModel.EFCustomer" />
+          <EntitySet Name="EFCustomerInfoes" EntityType="AstoriaDefaultServiceDBModel.EFCustomerInfo" />
+          <EntitySet Name="EFDrivers" EntityType="AstoriaDefaultServiceDBModel.EFDriver" />
+          <EntitySet Name="EFLastLogins" EntityType="AstoriaDefaultServiceDBModel.EFLastLogin" />
+          <EntitySet Name="EFLicenses" EntityType="AstoriaDefaultServiceDBModel.EFLicense" />
+          <EntitySet Name="EFLogins" EntityType="AstoriaDefaultServiceDBModel.EFLogin" />
+          <EntitySet Name="EFMappedEntityTypes" EntityType="AstoriaDefaultServiceDBModel.EFMappedEntityType" />
+          <EntitySet Name="EFMessages" EntityType="AstoriaDefaultServiceDBModel.EFMessage" />
+          <EntitySet Name="EFOrders" EntityType="AstoriaDefaultServiceDBModel.EFOrder" />
+          <EntitySet Name="EFOrderLines" EntityType="AstoriaDefaultServiceDBModel.EFOrderLine" />
+          <EntitySet Name="EFPageViews" EntityType="AstoriaDefaultServiceDBModel.EFPageView" />
+          <EntitySet Name="EFPersons" EntityType="AstoriaDefaultServiceDBModel.EFPerson" />
+          <EntitySet Name="EFPersonMetadatas" EntityType="AstoriaDefaultServiceDBModel.EFPersonMetadata" />
+          <EntitySet Name="EFProducts" EntityType="AstoriaDefaultServiceDBModel.EFProduct" />
+          <EntitySet Name="EFProductDetails" EntityType="AstoriaDefaultServiceDBModel.EFProductDetail" />
+          <EntitySet Name="EFProductPhotoes" EntityType="AstoriaDefaultServiceDBModel.EFProductPhoto" />
+          <EntitySet Name="EFProductReviews" EntityType="AstoriaDefaultServiceDBModel.EFProductReview" />
+          <EntitySet Name="EFRSATokens" EntityType="AstoriaDefaultServiceDBModel.EFRSAToken" />
+          <AssociationSet Name="Person_SpecialEmployee_Car" Association="AstoriaDefaultServiceDBModel.Person_SpecialEmployee_Car">
+            <End Role="EFCar" EntitySet="EFCars" />
+            <End Role="EFPerson" EntitySet="EFPersons" />
+          </AssociationSet>
+          <AssociationSet Name="Computer_ComputerDetail" Association="AstoriaDefaultServiceDBModel.Computer_ComputerDetail">
+            <End Role="EFComputer" EntitySet="EFComputers" />
+            <End Role="EFComputerDetail" EntitySet="EFComputerDetails" />
+          </AssociationSet>
+          <AssociationSet Name="Customer_CustomerInfo" Association="AstoriaDefaultServiceDBModel.Customer_CustomerInfo">
+            <End Role="EFCustomer" EntitySet="EFCustomers" />
+            <End Role="EFCustomerInfo" EntitySet="EFCustomerInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="Login_Customer_Logins" Association="AstoriaDefaultServiceDBModel.Login_Customer_Logins">
+            <End Role="EFCustomer" EntitySet="EFCustomers" />
+            <End Role="EFLogin" EntitySet="EFLogins" />
+          </AssociationSet>
+          <AssociationSet Name="Order_Customer_Orders" Association="AstoriaDefaultServiceDBModel.Order_Customer_Orders">
+            <End Role="EFCustomer" EntitySet="EFCustomers" />
+            <End Role="EFOrder" EntitySet="EFOrders" />
+          </AssociationSet>
+          <AssociationSet Name="License_Driver_License" Association="AstoriaDefaultServiceDBModel.License_Driver_License">
+            <End Role="EFDriver" EntitySet="EFDrivers" />
+            <End Role="EFLicense" EntitySet="EFLicenses" />
+          </AssociationSet>
+          <AssociationSet Name="LastLogin_Login_LastLogin" Association="AstoriaDefaultServiceDBModel.LastLogin_Login_LastLogin">
+            <End Role="EFLogin" EntitySet="EFLogins" />
+            <End Role="EFLastLogin" EntitySet="EFLastLogins" />
+          </AssociationSet>
+          <AssociationSet Name="Login_Orders" Association="AstoriaDefaultServiceDBModel.Login_Orders">
+            <End Role="EFLogin" EntitySet="EFLogins" />
+            <End Role="EFOrder" EntitySet="EFOrders" />
+          </AssociationSet>
+          <AssociationSet Name="Login_RSAToken" Association="AstoriaDefaultServiceDBModel.Login_RSAToken">
+            <End Role="EFLogin" EntitySet="EFLogins" />
+            <End Role="EFRSAToken" EntitySet="EFRSATokens" />
+          </AssociationSet>
+          <AssociationSet Name="Message_Login_ReceivedMessages" Association="AstoriaDefaultServiceDBModel.Message_Login_ReceivedMessages">
+            <End Role="EFLogin" EntitySet="EFLogins" />
+            <End Role="EFMessage" EntitySet="EFMessages" />
+          </AssociationSet>
+          <AssociationSet Name="Message_Login_SentMessages" Association="AstoriaDefaultServiceDBModel.Message_Login_SentMessages">
+            <End Role="EFLogin" EntitySet="EFLogins" />
+            <End Role="EFMessage" EntitySet="EFMessages" />
+          </AssociationSet>
+          <AssociationSet Name="PageView_Login_PageViews" Association="AstoriaDefaultServiceDBModel.PageView_Login_PageViews">
+            <End Role="EFLogin" EntitySet="EFLogins" />
+            <End Role="EFPageView" EntitySet="EFPageViews" />
+          </AssociationSet>
+          <AssociationSet Name="OrderLine_Order_OrderLines" Association="AstoriaDefaultServiceDBModel.OrderLine_Order_OrderLines">
+            <End Role="EFOrder" EntitySet="EFOrders" />
+            <End Role="EFOrderLine" EntitySet="EFOrderLines" />
+          </AssociationSet>
+          <AssociationSet Name="OrderLine_Product_OrderLines" Association="AstoriaDefaultServiceDBModel.OrderLine_Product_OrderLines">
+            <End Role="EFProduct" EntitySet="EFProducts" />
+            <End Role="EFOrderLine" EntitySet="EFOrderLines" />
+          </AssociationSet>
+          <AssociationSet Name="Person_Employee_Manager" Association="AstoriaDefaultServiceDBModel.Person_Employee_Manager">
+            <End Role="EFPerson" EntitySet="EFPersons" />
+            <End Role="EFPerson1" EntitySet="EFPersons" />
+          </AssociationSet>
+          <AssociationSet Name="PersonMetadata_Person_PersonMetadata" Association="AstoriaDefaultServiceDBModel.PersonMetadata_Person_PersonMetadata">
+            <End Role="EFPerson" EntitySet="EFPersons" />
+            <End Role="EFPersonMetadata" EntitySet="EFPersonMetadatas" />
+          </AssociationSet>
+          <AssociationSet Name="ProductDetail_Product_ProductDetail" Association="AstoriaDefaultServiceDBModel.ProductDetail_Product_ProductDetail">
+            <End Role="EFProduct" EntitySet="EFProducts" />
+            <End Role="EFProductDetail" EntitySet="EFProductDetails" />
+          </AssociationSet>
+          <AssociationSet Name="ProductPhoto_Product_ProductPhoto" Association="AstoriaDefaultServiceDBModel.ProductPhoto_Product_ProductPhoto">
+            <End Role="EFProduct" EntitySet="EFProducts" />
+            <End Role="EFProductPhoto" EntitySet="EFProductPhotoes" />
+          </AssociationSet>
+          <AssociationSet Name="ProductReview_Product_ProductReview" Association="AstoriaDefaultServiceDBModel.ProductReview_Product_ProductReview">
+            <End Role="EFProduct" EntitySet="EFProducts" />
+            <End Role="EFProductReview" EntitySet="EFProductReviews" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="EFCar">
+          <Key>
+            <PropertyRef Name="VIN" />
+          </Key>
+          <Property Name="VIN" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="EFPersons" Relationship="AstoriaDefaultServiceDBModel.Person_SpecialEmployee_Car" FromRole="EFCar" ToRole="EFPerson" />
+        </EntityType>
+        <EntityType Name="EFComputer">
+          <Key>
+            <PropertyRef Name="ComputerId" />
+          </Key>
+          <Property Name="ComputerId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="EFComputerDetails" Relationship="AstoriaDefaultServiceDBModel.Computer_ComputerDetail" FromRole="EFComputer" ToRole="EFComputerDetail" />
+        </EntityType>
+        <EntityType Name="EFComputerDetail">
+          <Key>
+            <PropertyRef Name="ComputerDetailId" />
+          </Key>
+          <Property Name="ComputerDetailId" Type="Int32" Nullable="false" />
+          <Property Name="Manufacturer" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Model" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Serial" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="SpecificationsBag" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="PurchaseDate" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="Dimensions_Width" Type="Decimal" Nullable="false" Precision="10" Scale="3" />
+          <Property Name="Dimensions_Height" Type="Decimal" Nullable="false" Precision="10" Scale="3" />
+          <Property Name="Dimensions_Depth" Type="Decimal" Nullable="false" Precision="10" Scale="3" />
+          <Property Name="Computer_ComputerDetail_ComputerId" Type="Int32" />
+          <NavigationProperty Name="EFComputer" Relationship="AstoriaDefaultServiceDBModel.Computer_ComputerDetail" FromRole="EFComputerDetail" ToRole="EFComputer" />
+        </EntityType>
+        <EntityType Name="EFCustomer">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="PrimaryContactInfo_EmailBag" Type="String" Nullable="false" MaxLength="32" Unicode="true" FixedLength="false" />
+          <Property Name="PrimaryContactInfo_AlternativeNames" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="PrimaryContactInfo_ContactAlias_AlternativeNames" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="PrimaryContactInfo_HomePhone_PhoneNumber" Type="String" Nullable="false" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="PrimaryContactInfo_HomePhone_Extension" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="PrimaryContactInfo_WorkPhone_PhoneNumber" Type="String" Nullable="false" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="PrimaryContactInfo_WorkPhone_Extension" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="PrimaryContactInfo_MobilePhoneBag_PhoneNumber" Type="String" Nullable="false" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="PrimaryContactInfo_MobilePhoneBag_Extension" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="BackupContactInfo_EmailBag" Type="String" Nullable="false" MaxLength="32" Unicode="true" FixedLength="false" />
+          <Property Name="BackupContactInfo_AlternativeNames" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="BackupContactInfo_ContactAlias_AlternativeNames" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="BackupContactInfo_HomePhone_PhoneNumber" Type="String" Nullable="false" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="BackupContactInfo_HomePhone_Extension" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="BackupContactInfo_WorkPhone_PhoneNumber" Type="String" Nullable="false" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="BackupContactInfo_WorkPhone_Extension" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="BackupContactInfo_MobilePhoneBag_PhoneNumber" Type="String" Nullable="false" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="BackupContactInfo_MobilePhoneBag_Extension" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="Auditing_ModifiedDate" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="Auditing_ModifiedBy" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Auditing_Concurrency_Token" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="Auditing_Concurrency_QueriedDateTime" Type="DateTime" Precision="7" />
+          <Property Name="Husband_Wife_CustomerId" Type="Int32" />
+          <NavigationProperty Name="EFCustomerInfoes" Relationship="AstoriaDefaultServiceDBModel.Customer_CustomerInfo" FromRole="EFCustomer" ToRole="EFCustomerInfo" />
+          <NavigationProperty Name="EFLogins" Relationship="AstoriaDefaultServiceDBModel.Login_Customer_Logins" FromRole="EFCustomer" ToRole="EFLogin" />
+          <NavigationProperty Name="EFOrders" Relationship="AstoriaDefaultServiceDBModel.Order_Customer_Orders" FromRole="EFCustomer" ToRole="EFOrder" />
+        </EntityType>
+        <EntityType Name="EFCustomerInfo">
+          <Key>
+            <PropertyRef Name="CustomerInfoId" />
+          </Key>
+          <Property Name="CustomerInfoId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Information" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Customer_CustomerInfo_CustomerId" Type="Int32" />
+          <NavigationProperty Name="EFCustomer" Relationship="AstoriaDefaultServiceDBModel.Customer_CustomerInfo" FromRole="EFCustomerInfo" ToRole="EFCustomer" />
+        </EntityType>
+        <EntityType Name="EFDriver">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="EFLicense" Relationship="AstoriaDefaultServiceDBModel.License_Driver_License" FromRole="EFDriver" ToRole="EFLicense" />
+        </EntityType>
+        <EntityType Name="EFLastLogin">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="LoggedIn" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="LoggedOut" Type="DateTime" Precision="7" />
+          <Property Name="Duration" Type="Time" Nullable="false" Precision="7" />
+          <NavigationProperty Name="EFLogin" Relationship="AstoriaDefaultServiceDBModel.LastLogin_Login_LastLogin" FromRole="EFLastLogin" ToRole="EFLogin" />
+        </EntityType>
+        <EntityType Name="EFLicense">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="LicenseNumber" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="LicenseClass" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Restrictions" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="ExpirationDate" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="EFDriver" Relationship="AstoriaDefaultServiceDBModel.License_Driver_License" FromRole="EFLicense" ToRole="EFDriver" />
+        </EntityType>
+        <EntityType Name="EFLogin">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="EFCustomer" Relationship="AstoriaDefaultServiceDBModel.Login_Customer_Logins" FromRole="EFLogin" ToRole="EFCustomer" />
+          <NavigationProperty Name="EFLastLogin" Relationship="AstoriaDefaultServiceDBModel.LastLogin_Login_LastLogin" FromRole="EFLogin" ToRole="EFLastLogin" />
+          <NavigationProperty Name="EFOrders" Relationship="AstoriaDefaultServiceDBModel.Login_Orders" FromRole="EFLogin" ToRole="EFOrder" />
+          <NavigationProperty Name="EFRSATokens" Relationship="AstoriaDefaultServiceDBModel.Login_RSAToken" FromRole="EFLogin" ToRole="EFRSAToken" />
+          <NavigationProperty Name="EFMessages" Relationship="AstoriaDefaultServiceDBModel.Message_Login_ReceivedMessages" FromRole="EFLogin" ToRole="EFMessage" />
+          <NavigationProperty Name="EFMessages1" Relationship="AstoriaDefaultServiceDBModel.Message_Login_SentMessages" FromRole="EFLogin" ToRole="EFMessage" />
+          <NavigationProperty Name="EFPageViews" Relationship="AstoriaDefaultServiceDBModel.PageView_Login_PageViews" FromRole="EFLogin" ToRole="EFPageView" />
+        </EntityType>
+        <EntityType Name="EFMappedEntityType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Href" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="HrefLang" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Length" Type="Int32" Nullable="false" />
+          <Property Name="BagOfPrimitiveToLinks" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Logo" Type="Binary" Nullable="false" MaxLength="500" FixedLength="false" />
+          <Property Name="BagOfDecimals" Type="Decimal" Nullable="false" Precision="28" Scale="4" />
+          <Property Name="BagOfDoubles" Type="Double" Nullable="false" />
+          <Property Name="BagOfSingles" Type="Single" Nullable="false" />
+          <Property Name="BagOfBytes" Type="Byte" Nullable="false" />
+          <Property Name="BagOfInt16s" Type="Int16" Nullable="false" />
+          <Property Name="BagOfInt32s" Type="Int32" Nullable="false" />
+          <Property Name="BagOfInt64s" Type="Int64" Nullable="false" />
+          <Property Name="BagOfGuids" Type="Guid" Nullable="false" />
+          <Property Name="BagOfDateTime" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="BagOfComplexToCategories_Term" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="BagOfComplexToCategories_Scheme" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="BagOfComplexToCategories_Label" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="ComplexPhone_PhoneNumber" Type="String" Nullable="false" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="ComplexPhone_Extension" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="ComplexContactDetails_EmailBag" Type="String" Nullable="false" MaxLength="32" Unicode="true" FixedLength="false" />
+          <Property Name="ComplexContactDetails_AlternativeNames" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="ComplexContactDetails_ContactAlias_AlternativeNames" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="ComplexContactDetails_HomePhone_PhoneNumber" Type="String" Nullable="false" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="ComplexContactDetails_HomePhone_Extension" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="ComplexContactDetails_WorkPhone_PhoneNumber" Type="String" Nullable="false" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="ComplexContactDetails_WorkPhone_Extension" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="ComplexContactDetails_MobilePhoneBag_PhoneNumber" Type="String" Nullable="false" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="ComplexContactDetails_MobilePhoneBag_Extension" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="EFMessage">
+          <Key>
+            <PropertyRef Name="MessageId" />
+            <PropertyRef Name="FromUsername" />
+          </Key>
+          <Property Name="MessageId" Type="Int32" Nullable="false" />
+          <Property Name="FromUsername" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="ToUsername" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Sent" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="Subject" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Body" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="IsRead" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="EFLogin" Relationship="AstoriaDefaultServiceDBModel.Message_Login_ReceivedMessages" FromRole="EFMessage" ToRole="EFLogin" />
+          <NavigationProperty Name="EFLogin1" Relationship="AstoriaDefaultServiceDBModel.Message_Login_SentMessages" FromRole="EFMessage" ToRole="EFLogin" />
+        </EntityType>
+        <EntityType Name="EFOrder">
+          <Key>
+            <PropertyRef Name="OrderId" />
+          </Key>
+          <Property Name="OrderId" Type="Int32" Nullable="false" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="Concurrency_Token" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="Concurrency_QueriedDateTime" Type="DateTime" Precision="7" />
+          <Property Name="Login_Orders_Username" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="EFCustomer" Relationship="AstoriaDefaultServiceDBModel.Order_Customer_Orders" FromRole="EFOrder" ToRole="EFCustomer" />
+          <NavigationProperty Name="EFLogin" Relationship="AstoriaDefaultServiceDBModel.Login_Orders" FromRole="EFOrder" ToRole="EFLogin" />
+          <NavigationProperty Name="EFOrderLines" Relationship="AstoriaDefaultServiceDBModel.OrderLine_Order_OrderLines" FromRole="EFOrder" ToRole="EFOrderLine" />
+        </EntityType>
+        <EntityType Name="EFOrderLine">
+          <Key>
+            <PropertyRef Name="OrderId" />
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="OrderId" Type="Int32" Nullable="false" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="ConcurrencyToken" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="C_Discriminator" Type="String" Nullable="false" MaxLength="14" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="EFOrder" Relationship="AstoriaDefaultServiceDBModel.OrderLine_Order_OrderLines" FromRole="EFOrderLine" ToRole="EFOrder" />
+          <NavigationProperty Name="EFProduct" Relationship="AstoriaDefaultServiceDBModel.OrderLine_Product_OrderLines" FromRole="EFOrderLine" ToRole="EFProduct" />
+        </EntityType>
+        <EntityType Name="EFPageView">
+          <Key>
+            <PropertyRef Name="PageViewId" />
+          </Key>
+          <Property Name="PageViewId" Type="Int32" Nullable="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Viewed" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="TimeSpentOnPage" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="PageUrl" Type="String" Nullable="false" MaxLength="500" Unicode="true" FixedLength="false" />
+          <Property Name="C_Discriminator" Type="String" Nullable="false" MaxLength="15" Unicode="true" FixedLength="false" />
+          <Property Name="ProductId" Type="Int32" />
+          <Property Name="ConcurrencyToken" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="EFLogin" Relationship="AstoriaDefaultServiceDBModel.PageView_Login_PageViews" FromRole="EFPageView" ToRole="EFLogin" />
+        </EntityType>
+        <EntityType Name="EFPerson">
+          <Key>
+            <PropertyRef Name="PersonId" />
+          </Key>
+          <Property Name="PersonId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="C_Discriminator" Type="String" Nullable="false" MaxLength="15" Unicode="true" FixedLength="false" />
+          <Property Name="ManagersPersonId" Type="Int32" />
+          <Property Name="Salary" Type="Int32" />
+          <Property Name="Title" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="CarsVIN" Type="Int32" />
+          <Property Name="Bonus" Type="Int32" />
+          <Property Name="IsFullyVested" Type="Boolean" />
+          <NavigationProperty Name="EFCar" Relationship="AstoriaDefaultServiceDBModel.Person_SpecialEmployee_Car" FromRole="EFPerson" ToRole="EFCar" />
+          <NavigationProperty Name="EFPerson1" Relationship="AstoriaDefaultServiceDBModel.Person_Employee_Manager" FromRole="EFPerson" ToRole="EFPerson1" />
+          <NavigationProperty Name="EFPerson2" Relationship="AstoriaDefaultServiceDBModel.Person_Employee_Manager" FromRole="EFPerson1" ToRole="EFPerson" />
+          <NavigationProperty Name="EFPersonMetadatas" Relationship="AstoriaDefaultServiceDBModel.PersonMetadata_Person_PersonMetadata" FromRole="EFPerson" ToRole="EFPersonMetadata" />
+        </EntityType>
+        <EntityType Name="EFPersonMetadata">
+          <Key>
+            <PropertyRef Name="PersonMetadataId" />
+          </Key>
+          <Property Name="PersonMetadataId" Type="Int32" Nullable="false" />
+          <Property Name="PersonId" Type="Int32" Nullable="false" />
+          <Property Name="PropertyName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="PropertyValue" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="EFPerson" Relationship="AstoriaDefaultServiceDBModel.PersonMetadata_Person_PersonMetadata" FromRole="EFPersonMetadata" ToRole="EFPerson" />
+        </EntityType>
+        <EntityType Name="EFProduct">
+          <Key>
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="1000" Unicode="true" FixedLength="false" />
+          <Property Name="Dimensions_Width" Type="Decimal" Nullable="false" Precision="10" Scale="3" />
+          <Property Name="Dimensions_Height" Type="Decimal" Nullable="false" Precision="10" Scale="3" />
+          <Property Name="Dimensions_Depth" Type="Decimal" Nullable="false" Precision="10" Scale="3" />
+          <Property Name="BaseConcurrency" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="ComplexConcurrency_Token" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="ComplexConcurrency_QueriedDateTime" Type="DateTime" Precision="7" />
+          <Property Name="NestedComplexConcurrency_ModifiedDate" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="NestedComplexConcurrency_ModifiedBy" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="NestedComplexConcurrency_Concurrency_Token" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NestedComplexConcurrency_Concurrency_QueriedDateTime" Type="DateTime" Precision="7" />
+          <Property Name="C_Discriminator" Type="String" Nullable="false" MaxLength="19" Unicode="true" FixedLength="false" />
+          <Property Name="Discontinued" Type="DateTime" Precision="7" />
+          <Property Name="ReplacementProductId" Type="Int32" />
+          <Property Name="DiscontinuedPhone_PhoneNumber" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="DiscontinuedPhone_Extension" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+          <Property Name="ChildConcurrencyToken" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Products_RelatedProducts_ProductId" Type="Int32" />
+          <NavigationProperty Name="EFOrderLines" Relationship="AstoriaDefaultServiceDBModel.OrderLine_Product_OrderLines" FromRole="EFProduct" ToRole="EFOrderLine" />
+          <NavigationProperty Name="EFProductDetail" Relationship="AstoriaDefaultServiceDBModel.ProductDetail_Product_ProductDetail" FromRole="EFProduct" ToRole="EFProductDetail" />
+          <NavigationProperty Name="EFProductPhotoes" Relationship="AstoriaDefaultServiceDBModel.ProductPhoto_Product_ProductPhoto" FromRole="EFProduct" ToRole="EFProductPhoto" />
+          <NavigationProperty Name="EFProductReviews" Relationship="AstoriaDefaultServiceDBModel.ProductReview_Product_ProductReview" FromRole="EFProduct" ToRole="EFProductReview" />
+        </EntityType>
+        <EntityType Name="EFProductDetail">
+          <Key>
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="Details" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="EFProduct" Relationship="AstoriaDefaultServiceDBModel.ProductDetail_Product_ProductDetail" FromRole="EFProductDetail" ToRole="EFProduct" />
+        </EntityType>
+        <EntityType Name="EFProductPhoto">
+          <Key>
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="PhotoId" />
+          </Key>
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="PhotoId" Type="Int32" Nullable="false" />
+          <Property Name="Photo" Type="Binary" Nullable="false" MaxLength="8000" FixedLength="false" />
+          <NavigationProperty Name="EFProduct" Relationship="AstoriaDefaultServiceDBModel.ProductPhoto_Product_ProductPhoto" FromRole="EFProductPhoto" ToRole="EFProduct" />
+        </EntityType>
+        <EntityType Name="EFProductReview">
+          <Key>
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="ReviewId" />
+          </Key>
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="ReviewId" Type="Int32" Nullable="false" />
+          <Property Name="Review" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="EFProduct" Relationship="AstoriaDefaultServiceDBModel.ProductReview_Product_ProductReview" FromRole="EFProductReview" ToRole="EFProduct" />
+        </EntityType>
+        <EntityType Name="EFRSAToken">
+          <Key>
+            <PropertyRef Name="Serial" />
+          </Key>
+          <Property Name="Serial" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="Issued" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="Login_RSAToken_Username" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="EFLogin" Relationship="AstoriaDefaultServiceDBModel.Login_RSAToken" FromRole="EFRSAToken" ToRole="EFLogin" />
+        </EntityType>
+        <Association Name="Person_SpecialEmployee_Car">
+          <End Role="EFCar" Type="AstoriaDefaultServiceDBModel.EFCar" Multiplicity="0..1" />
+          <End Role="EFPerson" Type="AstoriaDefaultServiceDBModel.EFPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFCar">
+              <PropertyRef Name="VIN" />
+            </Principal>
+            <Dependent Role="EFPerson">
+              <PropertyRef Name="CarsVIN" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Computer_ComputerDetail">
+          <End Role="EFComputer" Type="AstoriaDefaultServiceDBModel.EFComputer" Multiplicity="0..1" />
+          <End Role="EFComputerDetail" Type="AstoriaDefaultServiceDBModel.EFComputerDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFComputer">
+              <PropertyRef Name="ComputerId" />
+            </Principal>
+            <Dependent Role="EFComputerDetail">
+              <PropertyRef Name="Computer_ComputerDetail_ComputerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Customer_CustomerInfo">
+          <End Role="EFCustomer" Type="AstoriaDefaultServiceDBModel.EFCustomer" Multiplicity="0..1" />
+          <End Role="EFCustomerInfo" Type="AstoriaDefaultServiceDBModel.EFCustomerInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFCustomer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="EFCustomerInfo">
+              <PropertyRef Name="Customer_CustomerInfo_CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Login_Customer_Logins">
+          <End Role="EFCustomer" Type="AstoriaDefaultServiceDBModel.EFCustomer" Multiplicity="1" />
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.EFLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFCustomer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="EFLogin">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Order_Customer_Orders">
+          <End Role="EFCustomer" Type="AstoriaDefaultServiceDBModel.EFCustomer" Multiplicity="0..1" />
+          <End Role="EFOrder" Type="AstoriaDefaultServiceDBModel.EFOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFCustomer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="EFOrder">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="License_Driver_License">
+          <End Role="EFDriver" Type="AstoriaDefaultServiceDBModel.EFDriver" Multiplicity="1" />
+          <End Role="EFLicense" Type="AstoriaDefaultServiceDBModel.EFLicense" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="EFDriver">
+              <PropertyRef Name="Name" />
+            </Principal>
+            <Dependent Role="EFLicense">
+              <PropertyRef Name="Name" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="LastLogin_Login_LastLogin">
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.EFLogin" Multiplicity="1" />
+          <End Role="EFLastLogin" Type="AstoriaDefaultServiceDBModel.EFLastLogin" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="EFLogin">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="EFLastLogin">
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Login_Orders">
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.EFLogin" Multiplicity="0..1" />
+          <End Role="EFOrder" Type="AstoriaDefaultServiceDBModel.EFOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFLogin">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="EFOrder">
+              <PropertyRef Name="Login_Orders_Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Login_RSAToken">
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.EFLogin" Multiplicity="0..1" />
+          <End Role="EFRSAToken" Type="AstoriaDefaultServiceDBModel.EFRSAToken" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFLogin">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="EFRSAToken">
+              <PropertyRef Name="Login_RSAToken_Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Message_Login_ReceivedMessages">
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.EFLogin" Multiplicity="1" />
+          <End Role="EFMessage" Type="AstoriaDefaultServiceDBModel.EFMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFLogin">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="EFMessage">
+              <PropertyRef Name="ToUsername" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Message_Login_SentMessages">
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.EFLogin" Multiplicity="1" />
+          <End Role="EFMessage" Type="AstoriaDefaultServiceDBModel.EFMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFLogin">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="EFMessage">
+              <PropertyRef Name="FromUsername" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PageView_Login_PageViews">
+          <End Role="EFLogin" Type="AstoriaDefaultServiceDBModel.EFLogin" Multiplicity="1" />
+          <End Role="EFPageView" Type="AstoriaDefaultServiceDBModel.EFPageView" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFLogin">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="EFPageView">
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="OrderLine_Order_OrderLines">
+          <End Role="EFOrder" Type="AstoriaDefaultServiceDBModel.EFOrder" Multiplicity="1" />
+          <End Role="EFOrderLine" Type="AstoriaDefaultServiceDBModel.EFOrderLine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFOrder">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="EFOrderLine">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="OrderLine_Product_OrderLines">
+          <End Role="EFProduct" Type="AstoriaDefaultServiceDBModel.EFProduct" Multiplicity="1" />
+          <End Role="EFOrderLine" Type="AstoriaDefaultServiceDBModel.EFOrderLine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFProduct">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="EFOrderLine">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Person_Employee_Manager">
+          <End Role="EFPerson" Type="AstoriaDefaultServiceDBModel.EFPerson" Multiplicity="0..1" />
+          <End Role="EFPerson1" Type="AstoriaDefaultServiceDBModel.EFPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFPerson">
+              <PropertyRef Name="PersonId" />
+            </Principal>
+            <Dependent Role="EFPerson1">
+              <PropertyRef Name="ManagersPersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PersonMetadata_Person_PersonMetadata">
+          <End Role="EFPerson" Type="AstoriaDefaultServiceDBModel.EFPerson" Multiplicity="1" />
+          <End Role="EFPersonMetadata" Type="AstoriaDefaultServiceDBModel.EFPersonMetadata" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFPerson">
+              <PropertyRef Name="PersonId" />
+            </Principal>
+            <Dependent Role="EFPersonMetadata">
+              <PropertyRef Name="PersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductDetail_Product_ProductDetail">
+          <End Role="EFProduct" Type="AstoriaDefaultServiceDBModel.EFProduct" Multiplicity="1" />
+          <End Role="EFProductDetail" Type="AstoriaDefaultServiceDBModel.EFProductDetail" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="EFProduct">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="EFProductDetail">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductPhoto_Product_ProductPhoto">
+          <End Role="EFProduct" Type="AstoriaDefaultServiceDBModel.EFProduct" Multiplicity="1" />
+          <End Role="EFProductPhoto" Type="AstoriaDefaultServiceDBModel.EFProductPhoto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFProduct">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="EFProductPhoto">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductReview_Product_ProductReview">
+          <End Role="EFProduct" Type="AstoriaDefaultServiceDBModel.EFProduct" Multiplicity="1" />
+          <End Role="EFProductReview" Type="AstoriaDefaultServiceDBModel.EFProductReview" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EFProduct">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="EFProductReview">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AstoriaDefaultServiceDBModelStoreContainer" CdmEntityContainer="AstoriaDefaultServiceDBEntities">
+          <EntitySetMapping Name="EFCars">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFCar">
+              <MappingFragment StoreEntitySet="EFCar">
+                <ScalarProperty Name="VIN" ColumnName="VIN" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFComputers">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFComputer">
+              <MappingFragment StoreEntitySet="EFComputer">
+                <ScalarProperty Name="ComputerId" ColumnName="ComputerId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFComputerDetails">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFComputerDetail">
+              <MappingFragment StoreEntitySet="EFComputerDetail">
+                <ScalarProperty Name="ComputerDetailId" ColumnName="ComputerDetailId" />
+                <ScalarProperty Name="Manufacturer" ColumnName="Manufacturer" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="Serial" ColumnName="Serial" />
+                <ScalarProperty Name="SpecificationsBag" ColumnName="SpecificationsBag" />
+                <ScalarProperty Name="PurchaseDate" ColumnName="PurchaseDate" />
+                <ScalarProperty Name="Dimensions_Width" ColumnName="Dimensions_Width" />
+                <ScalarProperty Name="Dimensions_Height" ColumnName="Dimensions_Height" />
+                <ScalarProperty Name="Dimensions_Depth" ColumnName="Dimensions_Depth" />
+                <ScalarProperty Name="Computer_ComputerDetail_ComputerId" ColumnName="Computer_ComputerDetail_ComputerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFCustomers">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFCustomer">
+              <MappingFragment StoreEntitySet="EFCustomer">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PrimaryContactInfo_EmailBag" ColumnName="PrimaryContactInfo_EmailBag" />
+                <ScalarProperty Name="PrimaryContactInfo_AlternativeNames" ColumnName="PrimaryContactInfo_AlternativeNames" />
+                <ScalarProperty Name="PrimaryContactInfo_ContactAlias_AlternativeNames" ColumnName="PrimaryContactInfo_ContactAlias_AlternativeNames" />
+                <ScalarProperty Name="PrimaryContactInfo_HomePhone_PhoneNumber" ColumnName="PrimaryContactInfo_HomePhone_PhoneNumber" />
+                <ScalarProperty Name="PrimaryContactInfo_HomePhone_Extension" ColumnName="PrimaryContactInfo_HomePhone_Extension" />
+                <ScalarProperty Name="PrimaryContactInfo_WorkPhone_PhoneNumber" ColumnName="PrimaryContactInfo_WorkPhone_PhoneNumber" />
+                <ScalarProperty Name="PrimaryContactInfo_WorkPhone_Extension" ColumnName="PrimaryContactInfo_WorkPhone_Extension" />
+                <ScalarProperty Name="PrimaryContactInfo_MobilePhoneBag_PhoneNumber" ColumnName="PrimaryContactInfo_MobilePhoneBag_PhoneNumber" />
+                <ScalarProperty Name="PrimaryContactInfo_MobilePhoneBag_Extension" ColumnName="PrimaryContactInfo_MobilePhoneBag_Extension" />
+                <ScalarProperty Name="BackupContactInfo_EmailBag" ColumnName="BackupContactInfo_EmailBag" />
+                <ScalarProperty Name="BackupContactInfo_AlternativeNames" ColumnName="BackupContactInfo_AlternativeNames" />
+                <ScalarProperty Name="BackupContactInfo_ContactAlias_AlternativeNames" ColumnName="BackupContactInfo_ContactAlias_AlternativeNames" />
+                <ScalarProperty Name="BackupContactInfo_HomePhone_PhoneNumber" ColumnName="BackupContactInfo_HomePhone_PhoneNumber" />
+                <ScalarProperty Name="BackupContactInfo_HomePhone_Extension" ColumnName="BackupContactInfo_HomePhone_Extension" />
+                <ScalarProperty Name="BackupContactInfo_WorkPhone_PhoneNumber" ColumnName="BackupContactInfo_WorkPhone_PhoneNumber" />
+                <ScalarProperty Name="BackupContactInfo_WorkPhone_Extension" ColumnName="BackupContactInfo_WorkPhone_Extension" />
+                <ScalarProperty Name="BackupContactInfo_MobilePhoneBag_PhoneNumber" ColumnName="BackupContactInfo_MobilePhoneBag_PhoneNumber" />
+                <ScalarProperty Name="BackupContactInfo_MobilePhoneBag_Extension" ColumnName="BackupContactInfo_MobilePhoneBag_Extension" />
+                <ScalarProperty Name="Auditing_ModifiedDate" ColumnName="Auditing_ModifiedDate" />
+                <ScalarProperty Name="Auditing_ModifiedBy" ColumnName="Auditing_ModifiedBy" />
+                <ScalarProperty Name="Auditing_Concurrency_Token" ColumnName="Auditing_Concurrency_Token" />
+                <ScalarProperty Name="Auditing_Concurrency_QueriedDateTime" ColumnName="Auditing_Concurrency_QueriedDateTime" />
+                <ScalarProperty Name="Husband_Wife_CustomerId" ColumnName="Husband_Wife_CustomerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFCustomerInfoes">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFCustomerInfo">
+              <MappingFragment StoreEntitySet="EFCustomerInfo">
+                <ScalarProperty Name="CustomerInfoId" ColumnName="CustomerInfoId" />
+                <ScalarProperty Name="Information" ColumnName="Information" />
+                <ScalarProperty Name="Customer_CustomerInfo_CustomerId" ColumnName="Customer_CustomerInfo_CustomerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFDrivers">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFDriver">
+              <MappingFragment StoreEntitySet="EFDriver">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFLastLogins">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFLastLogin">
+              <MappingFragment StoreEntitySet="EFLastLogin">
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="LoggedIn" ColumnName="LoggedIn" />
+                <ScalarProperty Name="LoggedOut" ColumnName="LoggedOut" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFLicenses">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFLicense">
+              <MappingFragment StoreEntitySet="EFLicense">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="LicenseNumber" ColumnName="LicenseNumber" />
+                <ScalarProperty Name="LicenseClass" ColumnName="LicenseClass" />
+                <ScalarProperty Name="Restrictions" ColumnName="Restrictions" />
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFLogins">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFLogin">
+              <MappingFragment StoreEntitySet="EFLogin">
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFMappedEntityTypes">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFMappedEntityType">
+              <MappingFragment StoreEntitySet="EFMappedEntityType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Href" ColumnName="Href" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="HrefLang" ColumnName="HrefLang" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Length" ColumnName="Length" />
+                <ScalarProperty Name="BagOfPrimitiveToLinks" ColumnName="BagOfPrimitiveToLinks" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+                <ScalarProperty Name="BagOfDecimals" ColumnName="BagOfDecimals" />
+                <ScalarProperty Name="BagOfDoubles" ColumnName="BagOfDoubles" />
+                <ScalarProperty Name="BagOfSingles" ColumnName="BagOfSingles" />
+                <ScalarProperty Name="BagOfBytes" ColumnName="BagOfBytes" />
+                <ScalarProperty Name="BagOfInt16s" ColumnName="BagOfInt16s" />
+                <ScalarProperty Name="BagOfInt32s" ColumnName="BagOfInt32s" />
+                <ScalarProperty Name="BagOfInt64s" ColumnName="BagOfInt64s" />
+                <ScalarProperty Name="BagOfGuids" ColumnName="BagOfGuids" />
+                <ScalarProperty Name="BagOfDateTime" ColumnName="BagOfDateTime" />
+                <ScalarProperty Name="BagOfComplexToCategories_Term" ColumnName="BagOfComplexToCategories_Term" />
+                <ScalarProperty Name="BagOfComplexToCategories_Scheme" ColumnName="BagOfComplexToCategories_Scheme" />
+                <ScalarProperty Name="BagOfComplexToCategories_Label" ColumnName="BagOfComplexToCategories_Label" />
+                <ScalarProperty Name="ComplexPhone_PhoneNumber" ColumnName="ComplexPhone_PhoneNumber" />
+                <ScalarProperty Name="ComplexPhone_Extension" ColumnName="ComplexPhone_Extension" />
+                <ScalarProperty Name="ComplexContactDetails_EmailBag" ColumnName="ComplexContactDetails_EmailBag" />
+                <ScalarProperty Name="ComplexContactDetails_AlternativeNames" ColumnName="ComplexContactDetails_AlternativeNames" />
+                <ScalarProperty Name="ComplexContactDetails_ContactAlias_AlternativeNames" ColumnName="ComplexContactDetails_ContactAlias_AlternativeNames" />
+                <ScalarProperty Name="ComplexContactDetails_HomePhone_PhoneNumber" ColumnName="ComplexContactDetails_HomePhone_PhoneNumber" />
+                <ScalarProperty Name="ComplexContactDetails_HomePhone_Extension" ColumnName="ComplexContactDetails_HomePhone_Extension" />
+                <ScalarProperty Name="ComplexContactDetails_WorkPhone_PhoneNumber" ColumnName="ComplexContactDetails_WorkPhone_PhoneNumber" />
+                <ScalarProperty Name="ComplexContactDetails_WorkPhone_Extension" ColumnName="ComplexContactDetails_WorkPhone_Extension" />
+                <ScalarProperty Name="ComplexContactDetails_MobilePhoneBag_PhoneNumber" ColumnName="ComplexContactDetails_MobilePhoneBag_PhoneNumber" />
+                <ScalarProperty Name="ComplexContactDetails_MobilePhoneBag_Extension" ColumnName="ComplexContactDetails_MobilePhoneBag_Extension" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFMessages">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFMessage">
+              <MappingFragment StoreEntitySet="EFMessage">
+                <ScalarProperty Name="MessageId" ColumnName="MessageId" />
+                <ScalarProperty Name="FromUsername" ColumnName="FromUsername" />
+                <ScalarProperty Name="ToUsername" ColumnName="ToUsername" />
+                <ScalarProperty Name="Sent" ColumnName="Sent" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Body" ColumnName="Body" />
+                <ScalarProperty Name="IsRead" ColumnName="IsRead" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFOrders">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFOrder">
+              <MappingFragment StoreEntitySet="EFOrder">
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="Concurrency_Token" ColumnName="Concurrency_Token" />
+                <ScalarProperty Name="Concurrency_QueriedDateTime" ColumnName="Concurrency_QueriedDateTime" />
+                <ScalarProperty Name="Login_Orders_Username" ColumnName="Login_Orders_Username" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFOrderLines">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFOrderLine">
+              <MappingFragment StoreEntitySet="EFOrderLine">
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ConcurrencyToken" ColumnName="ConcurrencyToken" />
+                <ScalarProperty Name="C_Discriminator" ColumnName="_Discriminator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFPageViews">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFPageView">
+              <MappingFragment StoreEntitySet="EFPageView">
+                <ScalarProperty Name="PageViewId" ColumnName="PageViewId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Viewed" ColumnName="Viewed" />
+                <ScalarProperty Name="TimeSpentOnPage" ColumnName="TimeSpentOnPage" />
+                <ScalarProperty Name="PageUrl" ColumnName="PageUrl" />
+                <ScalarProperty Name="C_Discriminator" ColumnName="_Discriminator" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ConcurrencyToken" ColumnName="ConcurrencyToken" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFPersons">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFPerson">
+              <MappingFragment StoreEntitySet="EFPerson">
+                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="C_Discriminator" ColumnName="_Discriminator" />
+                <ScalarProperty Name="ManagersPersonId" ColumnName="ManagersPersonId" />
+                <ScalarProperty Name="Salary" ColumnName="Salary" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="CarsVIN" ColumnName="CarsVIN" />
+                <ScalarProperty Name="Bonus" ColumnName="Bonus" />
+                <ScalarProperty Name="IsFullyVested" ColumnName="IsFullyVested" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFPersonMetadatas">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFPersonMetadata">
+              <MappingFragment StoreEntitySet="EFPersonMetadata">
+                <ScalarProperty Name="PersonMetadataId" ColumnName="PersonMetadataId" />
+                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+                <ScalarProperty Name="PropertyName" ColumnName="PropertyName" />
+                <ScalarProperty Name="PropertyValue" ColumnName="PropertyValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFProducts">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFProduct">
+              <MappingFragment StoreEntitySet="EFProduct">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Dimensions_Width" ColumnName="Dimensions_Width" />
+                <ScalarProperty Name="Dimensions_Height" ColumnName="Dimensions_Height" />
+                <ScalarProperty Name="Dimensions_Depth" ColumnName="Dimensions_Depth" />
+                <ScalarProperty Name="BaseConcurrency" ColumnName="BaseConcurrency" />
+                <ScalarProperty Name="ComplexConcurrency_Token" ColumnName="ComplexConcurrency_Token" />
+                <ScalarProperty Name="ComplexConcurrency_QueriedDateTime" ColumnName="ComplexConcurrency_QueriedDateTime" />
+                <ScalarProperty Name="NestedComplexConcurrency_ModifiedDate" ColumnName="NestedComplexConcurrency_ModifiedDate" />
+                <ScalarProperty Name="NestedComplexConcurrency_ModifiedBy" ColumnName="NestedComplexConcurrency_ModifiedBy" />
+                <ScalarProperty Name="NestedComplexConcurrency_Concurrency_Token" ColumnName="NestedComplexConcurrency_Concurrency_Token" />
+                <ScalarProperty Name="NestedComplexConcurrency_Concurrency_QueriedDateTime" ColumnName="NestedComplexConcurrency_Concurrency_QueriedDateTime" />
+                <ScalarProperty Name="C_Discriminator" ColumnName="_Discriminator" />
+                <ScalarProperty Name="Discontinued" ColumnName="Discontinued" />
+                <ScalarProperty Name="ReplacementProductId" ColumnName="ReplacementProductId" />
+                <ScalarProperty Name="DiscontinuedPhone_PhoneNumber" ColumnName="DiscontinuedPhone_PhoneNumber" />
+                <ScalarProperty Name="DiscontinuedPhone_Extension" ColumnName="DiscontinuedPhone_Extension" />
+                <ScalarProperty Name="ChildConcurrencyToken" ColumnName="ChildConcurrencyToken" />
+                <ScalarProperty Name="Products_RelatedProducts_ProductId" ColumnName="Products_RelatedProducts_ProductId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFProductDetails">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFProductDetail">
+              <MappingFragment StoreEntitySet="EFProductDetail">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Details" ColumnName="Details" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFProductPhotoes">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFProductPhoto">
+              <MappingFragment StoreEntitySet="EFProductPhoto">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="PhotoId" ColumnName="PhotoId" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFProductReviews">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFProductReview">
+              <MappingFragment StoreEntitySet="EFProductReview">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ReviewId" ColumnName="ReviewId" />
+                <ScalarProperty Name="Review" ColumnName="Review" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EFRSATokens">
+            <EntityTypeMapping TypeName="AstoriaDefaultServiceDBModel.EFRSAToken">
+              <MappingFragment StoreEntitySet="EFRSAToken">
+                <ScalarProperty Name="Serial" ColumnName="Serial" />
+                <ScalarProperty Name="Issued" ColumnName="Issued" />
+                <ScalarProperty Name="Login_RSAToken_Username" ColumnName="Login_RSAToken_Username" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

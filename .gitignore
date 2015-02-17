@@ -1,10 +1,47 @@
-[Dd]ebug/
-[Bb]in
-[Oo]bj
-[Tt]est[Rr]esults
+# Build output
+bin/
+obj/
+
+# VS files
 *.suo
-*.exe
-*.dll
-*.sdf
-*.opensdf
-*.vsp
+*.DotSettings
+*.user
+*.vstemplate
+!src/CodeGen/ODataT4CodeGenerator.vstemplate
+
+# TFS files
+*.vspscc
+
+# Test results
+sln/TestResults/
+
+# VS2015 IDE generated files
+sln/*.ide/
+
+# StyleCop files
+StyleCop.Cache
+
+# Localization files
+src/Microsoft.OData.Edm/Microsoft.OData.Edm.xml
+src/Microsoft.OData.Core/Microsoft.OData.Core.xml
+src/Microsoft.Spatial/Microsoft.Spatial.xml
+src/Microsoft.OData.Client/Microsoft.OData.Client.xml
+test/FunctionalTests/Service/Microsoft.OData.Service.xml
+src/Microsoft.OData.Edm/Build.Orcas/Microsoft.OData.Edm.NetFX35.xml
+src/Microsoft.OData.Core/Build.Orcas/Microsoft.OData.Core.NetFX35.xml
+src/Microsoft.Spatial/Build.Orcas/Microsoft.Spatial.NetFX35.xml
+src/Microsoft.OData.Client/Build.Portable/Microsoft.OData.Client.xml
+src/CodeGen/Microsoft.OData.Service.Design.T4.xml
+src/Web/GenExe/DataSvcUtil.xml
+src/Web/ODataAdoNetProvider/DataFeedClient.35/Microsoft.Data.DataFeedClient.xml
+src/Web/ODataAdoNetProvider/DataFeedClient.40/Microsoft.Data.DataFeedClient.xml
+src/Web/Providers/EF6/Microsoft.OData.EntityFrameworkProvider.xml
+test/FunctionalTests/Tools/Commander.Common/CsdlToWorkspaceGenerator.xml
+test/FunctionalTests/Framework/AstoriaTestFramework.xml
+
+# Downloaded Nuget packages
+sln/packages/
+
+# Test artifacts
+test/FunctionalTests/Tests/Data/Northwind/Northwind.csdl1.csdl
+test/FunctionalTests/Tests/Data/Northwind/Northwind.csdl2.csdl

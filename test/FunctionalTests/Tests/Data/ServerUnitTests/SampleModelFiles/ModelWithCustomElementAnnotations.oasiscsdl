@@ -1,0 +1,65 @@
+<Schema Alias="Wave4" Namespace="Wave4" xmlns:edm="http://docs.oasis-open.org/odata/ns/edm" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:o1="http://other.fake.com/schema" xmlns:o2="http://other.bogus.com/schema">
+  <EntityContainer Name="Wave4_AdventureWorksModel" o1:EntityContainerAttribute="AdventureWorksModel">
+    <EntitySet Name="Orders" EntityType="Wave4.SalesOrder" o1:EntitySetAttribute="Orders" o2:EntitySet2Attribute="Orders">
+      <o2:EntitySetAnnotation Anything="bogus1" />
+    </EntitySet>
+    <edm:EntitySet xmlns="http://SmallerScope/Other" Name="SalesPeople" EntityType="Wave4.SalesPerson">
+      <NavigationPropertyBinding Path="Orders" Target="SalesPersonOrders" />
+    </edm:EntitySet>
+    <o2:EntityContainerAnnotation Anything="bogus1" />
+    <o2:Value1 Anything="bogus1" />
+    <o2:Value2 Anything="bogus2">
+      <o2:Annotation Name="NestedAnnotation" />
+    </o2:Value2>
+  </EntityContainer>
+  <!-- Sales Order Type Hierarchy-->
+  <EntityType Name="SalesOrder" o1:EntityTypeAttribute="Fake">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="PersonID" Type="Int32" Nullable="false" />
+    <Property Name="OrderDate" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Status" Type="Byte" Nullable="true" />
+    <Property Name="AccountNumber" Type="String" Nullable="true" />
+    <Property Name="TotalDue" Type="Decimal" Nullable="true" o2:EntityTypePropertyAttribute="TotalDue" o1:EntityTypeProperty1Attribute="TotalDue">
+      <o2:EntityTypePropertyAnnotation Anything="bogus1" o2:EntityTypePropertyAttribute="FooBaz" />
+    </Property>
+    <o2:EntityTypeAnnotation Anything="bogus1" o2:EntityTypeAttribute="SalesOrder" />
+  </EntityType>
+  <EntityType Name="StoreSalesOrder" BaseType="Wave4.SalesOrder">
+    <Property Name="Tax" Type="Decimal" Nullable="true" />
+  </EntityType>
+  <!-- Person EntityType -->
+  <EntityType Name="SalesPerson">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <!-- Properties from SalesPerson table-->
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="SalesQuota" Type="Decimal" />
+    <Property Name="Bonus" Type="Decimal" />
+    <Property Name="SalesYTD" Type="Decimal" />
+    <!-- Properties from Employee table-->
+    <Property Name="ContactID" Type="Int32" Nullable="true" />
+    <Property Name="NationalIDNumber" Type="String" Nullable="true" />
+    <Property Name="BirthDate" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="Title" Type="String" Nullable="true" />
+    <!-- Properties from the contact table-->
+    <Property Name="FirstName" Type="String" Nullable="true" />
+    <Property Name="MiddleName" Type="String" Nullable="true" />
+    <Property Name="LastName" Type="String" Nullable="true" />
+    <Property Name="ContactInformation" Type="Wave4.ContactInfo" Nullable="false" />
+    <NavigationProperty Name="Orders" o1:NavigationPropertyAttribute="Bogus" Type="Collection(Wave4.SalesOrder)">
+      <o2:NavigationPropertyAnnotation Anything="bogus1" />
+    </NavigationProperty>
+  </EntityType>
+  <ComplexType Name="ContactInfo" o2:ComplexTypeAttribute="Complex">
+    <Property Name="EmailAddress" Type="String" Nullable="true" o1:ComplexTypePropertyAttribute="Fake">
+      <o2:ComplexTypePropertyAnnotation Anything="bogus1" />
+    </Property>
+    <Property Name="Phone" Type="String" Nullable="true" />
+    <o2:ComplexTypeAnnotation Anything="bogus1" />
+  </ComplexType>
+  <o2:SchemaAnnotation Anything="bogus1" />
+</Schema>

@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="The main flow of servicing a request is as follows: (1) The data service creates an instance of the data provider. (2) The Uri processor creates a description of the request, interacting with the host to learn about the request and with the data provider to understand the schema. (3) The data service picks the response information appropriate for the response given the host's description of the request. (4) The data service asks the serializer it picks to send the request results to the client.">
+    <Position X="7.219" Y="6.034" Height="1.886" Width="3.346" />
+  </Comment>
+  <Class Name="Microsoft.OData.Service.DataService&lt;T&gt;">
+    <Position X="4.25" Y="0.75" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Microsoft.OData.Service.DataService&lt;T&gt;.BatchDataService" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Microsoft\Data\Web\WebDataService.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>ACoAAASChOCykAXICBBSAQgEBGGSAADEBIwAIACAAAA=</HashCode>
+      <FileName>System\Data\Services\DataService.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="host" />
+      <Field Name="provider" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.OData.Service.RequestUriProcessor">
+    <Position X="0.5" Y="8" Width="2.25" />
+    <Members>
+      <Method Name="ComposeQuery" Hidden="true" />
+      <Method Name="EnumerateSegments" Hidden="true" />
+      <Method Name="ExtractKeyValues" Hidden="true" />
+      <Method Name="ExtractSegmentIdentifier" Hidden="true" />
+      <Method Name="InvokeSelect" Hidden="true" />
+      <Method Name="InvokeSelectMany" Hidden="true" />
+      <Method Name="InvokeWhere" Hidden="true" />
+      <Method Name="SelectElement" Hidden="true" />
+      <Method Name="SelectMultiple" Hidden="true" />
+      <Method Name="SelectResourceByKey" Hidden="true" />
+      <Method Name="TargetKindFromType" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AEAKAIAAAAEMEAAIIiAAUAAAsAEAAAAQAAIIARYABiA=</HashCode>
+      <FileName>System\Data\Services\RequestUriProcessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.OData.Service.Serializers.Serializer" Collapsed="true">
+    <Position X="0.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BQBQIAQAQRAGIAAIgAGAACCAgAgACIIAgAAQAAAPSAA=</HashCode>
+      <FileName>System\Data\Services\Serializers\Serializer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.OData.Service.RequestDescription" Collapsed="true">
+    <Position X="0.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAQCBAAACAAQABCBEQAQAAAAEAQAAgCAgQQACAgA=</HashCode>
+      <FileName>System\Data\Services\RequestDescription.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Microsoft.OData.Service.IDataServiceHost">
+    <Position X="7.75" Y="0.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AACAAKAAAAAIAgQAwAEAwACAAABJBGAAAIAAAAAAIAA=</HashCode>
+      <FileName>System\Data\Services\IDataServiceHost.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Microsoft.OData.Service.Providers.IDataServiceProvider">
+    <Position X="0.5" Y="0.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAgAEAACgAIQAAAAEAAAAEAEACAQgAAQAhkQAA=</HashCode>
+      <FileName>System\Data\Services\Providers\IDataServiceProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

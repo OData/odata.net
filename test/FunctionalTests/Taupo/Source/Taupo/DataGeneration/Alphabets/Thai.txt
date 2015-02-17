@@ -1,0 +1,20 @@
+This file contains alphabet entries for Thai string generator.
+One entry per line. Only entries starting with single quote are used, everything else is a comment.
+
+'\u0e01'         THAI CHARACTER KO KAI
+'\u0e0a'         THAI CHARACTER CHO CHANG
+'\u0e0f'         THAI CHARACTER TO PATAK
+'\u0e10'         THAI CHARACTER THO THAN
+'\u0e16'         THAI CHARACTER THO THUNG
+'\u0e1f'         THAI CHARACTER FO FAN
+'\u0e20'         THAI CHARACTER PHO SAMPHAO
+'\u0e2d'         THAI CHARACTER O ANG
+'\u0e2f'         THAI CHARACTER PAIYANNOI
+'\u0e30'         THAI CHARACTER SARA A
+'\u0e3f'         THAI CURRENCY SYMBOL BAHT
+'\u0e40'         THAI CHARACTER SARA E
+'\u0e49'         THAI CHARACTER MAI THO
+'\u0e4a'         THAI CHARACTER MAI TRI
+'\u0e4f'         THAI CHARACTER FONGMAN
+'\u0e50'         THAI DIGIT ZERO
+'\u0e5b'         THAI CHARACTER KHOMUT

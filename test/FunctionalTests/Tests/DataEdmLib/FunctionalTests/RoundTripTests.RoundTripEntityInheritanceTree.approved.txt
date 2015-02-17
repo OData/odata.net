@@ -1,0 +1,23 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="Root">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" />
+    <NavigationProperty Name="RootDerivedLevel1_2" Type="Collection(NS1.DerivedLevel1_2)" />
+  </EntityType>
+  <EntityType Name="DerivedLevel1_1" BaseType="NS1.Root">
+    <Property Name="PropertyLevel1" Type="Edm.Int32" />
+  </EntityType>
+  <EntityType Name="DerivedLevel1_2" BaseType="NS1.Root" />
+  <EntityType Name="DerivedLevel2_1" BaseType="NS1.DerivedLevel1_1">
+    <Property Name="PropertyLevel2" Type="Edm.Int32" />
+  </EntityType>
+  <EntityType Name="DerivedLevel2_2" BaseType="NS1.DerivedLevel1_2">
+    <Property Name="PropertyLevel2" Type="Edm.Int32" />
+  </EntityType>
+  <EntityType Name="DerivedLevel2_3" BaseType="NS1.DerivedLevel1_2">
+    <Property Name="PropertyLevel2" Type="Edm.Int32" />
+  </EntityType>
+</Schema>
+

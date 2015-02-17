@@ -1,0 +1,26 @@
+$select = 
+$expand = AssociatedOrder($expand=CustomerForOrder($select=City)),AssociatedOrder,AssociatedOrder($select=*),AssociatedOrder($select=OrderDate),AssociatedOrder($expand=CustomerForOrder($expand=Orders($select=Microsoft.Test.Taupo.OData.WCFService.OrdersWithMoreThanTwoItems)))
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: AssociatedOrder)]
+			SelectExpandQueryOption
+				AllSelected = False
+				SelectedItems
+					Expanded Navigation Property
+						Path[(NavigationProperty: CustomerForOrder)]
+						SelectExpandQueryOption
+							AllSelected = False
+							SelectedItems
+								Expanded Navigation Property
+									Path[(NavigationProperty: Orders)]
+									SelectExpandQueryOption
+										AllSelected = False
+										SelectedItems
+											Path]
+								Path[(Property: City)]
+								Path[(NavigationProperty: Orders)]
+					(Wildcard)

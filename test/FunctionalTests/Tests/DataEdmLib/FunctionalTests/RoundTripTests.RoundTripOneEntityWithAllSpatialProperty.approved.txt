@@ -1,0 +1,25 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="Foo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" />
+    <Property Name="prop_0" Type="Edm.Geography" Nullable="false" SRID="4326" />
+    <Property Name="prop_1" Type="Edm.GeographyPoint" Nullable="false" SRID="4326" />
+    <Property Name="prop_2" Type="Edm.GeographyPolygon" Nullable="false" SRID="4326" />
+    <Property Name="prop_3" Type="Edm.GeographyLineString" Nullable="false" SRID="4326" />
+    <Property Name="prop_4" Type="Edm.GeographyCollection" Nullable="false" SRID="4326" />
+    <Property Name="prop_5" Type="Edm.GeographyMultiPolygon" Nullable="false" SRID="4326" />
+    <Property Name="prop_6" Type="Edm.GeographyMultiLineString" Nullable="false" SRID="4326" />
+    <Property Name="prop_7" Type="Edm.GeographyMultiPoint" Nullable="false" SRID="4326" />
+    <Property Name="prop_8" Type="Edm.Geometry" Nullable="false" SRID="0" />
+    <Property Name="prop_9" Type="Edm.GeometryPoint" Nullable="false" SRID="0" />
+    <Property Name="prop_10" Type="Edm.GeometryPolygon" Nullable="false" SRID="0" />
+    <Property Name="prop_11" Type="Edm.GeometryLineString" Nullable="false" SRID="0" />
+    <Property Name="prop_12" Type="Edm.GeometryCollection" Nullable="false" SRID="0" />
+    <Property Name="prop_13" Type="Edm.GeometryMultiPolygon" Nullable="false" SRID="0" />
+    <Property Name="prop_14" Type="Edm.GeometryMultiLineString" Nullable="false" SRID="0" />
+    <Property Name="prop_15" Type="Edm.GeometryMultiPoint" Nullable="false" SRID="0" />
+  </EntityType>
+</Schema>
+

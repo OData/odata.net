@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FF3A48FB-3697-4C3B-89D1-64CB84DBCCBE}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.OData.Services.Astoria</RootNamespace>
+    <AssemblyName>Microsoft.Test.OData.Services.Astoria</AssemblyName>
+    <DefineConstants>$(DefineConstants);TEST_ODATA_SERVICES_ASTORIA_NOPUBLICPROVIDER</DefineConstants>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Web\Server\Microsoft.OData.Service.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
+      <Name>Microsoft.OData.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\TestProviders\Microsoft.Test.OData.Framework.TestProviders.csproj">
+      <Project>{1211B700-008A-4646-8F5F-25BC96EBC138}</Project>
+      <Name>Microsoft.Test.OData.Framework.TestProviders</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="clientaccesspolicy.xml">
+      <BrowseToURL>/clientaccesspolicy.xml</BrowseToURL>
+    </Content>
+    <Content Include="Default.htm" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Astoria.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="ActionOverloading\ActionOverloadingTestActionProvider.cs" />
+    <Compile Include="Default\AstoriaDefaultActionProvider.cs" />
+    <Compile Include="Default\DefaultContainer.cs" />
+    <Compile Include="Default\Entities.cs" />
+    <Compile Include="ODataWriter\ODataWriterServiceBase.cs" />
+    <Compile Include="OpenTypes\DefaultContainer.cs" />
+    <Compile Include="OpenTypes\DefaultContainerMetadata.cs" />
+    <Compile Include="PrimitiveKeys\AllTypes.cs" />
+    <Compile Include="PrimitiveKeys\Folder.cs" />
+    <Compile Include="PrimitiveKeys\TestContext.cs" />
+    <Content Include="DefaultService.svc" />
+    <Compile Include="DefaultService.svc.cs">
+      <DependentUpon>DefaultService.svc</DependentUpon>
+    </Compile>
+    <Content Include="ActionOverloadingService.svc" />
+    <Compile Include="ActionOverloadingService.svc.cs">
+      <DependentUpon>ActionOverloadingService.svc</DependentUpon>
+    </Compile>
+    <Content Include="KeyAsSegmentService.svc" />
+    <Compile Include="KeyAsSegmentService.svc.cs">
+      <DependentUpon>KeyAsSegmentService.svc</DependentUpon>
+    </Compile>
+    <Content Include="ODataWriterDefaultService.svc" />
+    <Compile Include="ODataWriterDefaultService.svc.cs">
+      <DependentUpon>ODataWriterDefaultService.svc</DependentUpon>
+    </Compile>
+    <Content Include="OpenTypeService.svc" />
+    <Compile Include="OpenTypeService.svc.cs">
+      <DependentUpon>OpenTypeService.svc</DependentUpon>
+    </Compile>
+    <Content Include="PrimitiveKeys.svc" />
+    <Compile Include="PrimitiveKeys.svc.cs">
+      <DependentUpon>PrimitiveKeys.svc</DependentUpon>
+    </Compile>
+    <Content Include="UrlModifyingService.svc" />
+    <Compile Include="UrlModifyingService.svc.cs">
+      <DependentUpon>UrlModifyingService.svc</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>6630</DevelopmentServerPort>
+          <DevelopmentServerVPath>/AstoriaDefault</DevelopmentServerVPath>
+          <IISUrl>http://localhost:6630/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(BuildExtensionsPath)\CSharp.WebApplication.targets" />
+  <!-- Trick VS into not converting project upon load -->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+</Project>

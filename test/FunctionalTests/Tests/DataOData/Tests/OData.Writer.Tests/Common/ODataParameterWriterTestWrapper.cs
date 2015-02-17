@@ -1,0 +1,262 @@
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataParameterWriterTestWrapper.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
+{
+    #region Namespaces
+    using System;
+#if !WINDOWS_PHONE
+    using System.Threading.Tasks;
+#endif
+    using Microsoft.OData.Core;
+    using Microsoft.Test.Taupo.Common;
+    using Microsoft.Test.Taupo.OData.Common;
+    #endregion Namespaces
+
+    /// <summary>
+    /// Wrapper for the ODataParameterWriter which allows for transparent monitoring and changing
+    /// of the writer behavior.
+    /// </summary>
+    public sealed class ODataParameterWriterTestWrapper : ODataParameterWriter
+    {
+        /// <summary>
+        /// The underlying writer to wrap.
+        /// </summary>
+        private readonly ODataParameterWriter parameterWriter;
+
+        /// <summary>
+        /// Test configuration to use.
+        /// </summary>
+        private readonly WriterTestConfiguration testConfiguration;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="parameterWriter">The writer to wrap.</param>
+        /// <param name="testConfiguration">The test configuration to use.</param>
+        public ODataParameterWriterTestWrapper(ODataParameterWriter parameterWriter, WriterTestConfiguration testConfiguration)
+        {
+            ExceptionUtilities.CheckArgumentNotNull(parameterWriter, "parameterWriter");
+            ExceptionUtilities.CheckArgumentNotNull(testConfiguration, "testConfiguration");
+
+            this.parameterWriter = parameterWriter;
+            this.testConfiguration = testConfiguration;
+        }
+
+        /// <summary>
+        /// The underlying writer.
+        /// </summary>
+        public ODataParameterWriter ParameterWriter
+        {
+            get { return this.parameterWriter; }
+        }
+        
+        /// <summary>
+        /// Start writing a parameter payload.
+        /// </summary>
+        public override void WriteStart()
+        {
+            if (this.testConfiguration.Synchronous)
+            {
+                this.parameterWriter.WriteStart();
+            }
+            else
+            {
+#if WINDOWS_PHONE
+                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
+#else
+                this.parameterWriter.WriteStartAsync().Wait();
+#endif
+            }
+        }
+
+#if !WINDOWS_PHONE
+        /// <summary>
+        /// Asynchronously start writing a parameter payload.
+        /// </summary>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public override Task WriteStartAsync()
+        {
+            throw new NotImplementedException("Tests should always use synchronous APIs.");
+        }
+#endif
+
+        /// <summary>
+        /// Start writing a value parameter.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter to write.</param>
+        /// <param name="parameterValue">The value of the parameter to write.</param>
+        public override void WriteValue(string parameterName, object parameterValue)
+        {
+            if (this.testConfiguration.Synchronous)
+            {
+                this.parameterWriter.WriteValue(parameterName, parameterValue);
+            }
+            else
+            {
+#if SILVERLIGHT || WINDOWS_PHONE
+                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
+#else
+                this.parameterWriter.WriteValueAsync(parameterName, parameterValue).Wait();
+#endif
+            }
+        }
+
+#if !WINDOWS_PHONE
+        /// <summary>
+        /// Asynchronously start writing a value parameter.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter to write.</param>
+        /// <param name="parameterValue">The value of the parameter to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public override Task WriteValueAsync(string parameterName, object parameterValue)
+        {
+            throw new NotImplementedException("Tests should always use synchronous APIs.");
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataCollectionWriter"/> to write the value of a collection parameter.
+        /// </summary>
+        /// <param name="parameterName">The name of the collection parameter to write.</param>
+        /// <returns>The newly created <see cref="ODataCollectionWriter"/>.</returns>
+        public override ODataCollectionWriter CreateCollectionWriter(string parameterName)
+        {
+            if (this.testConfiguration.Synchronous)
+            {
+                return new ODataCollectionWriterTestWrapper(this.parameterWriter.CreateCollectionWriter(parameterName), this.testConfiguration);
+            }
+            else
+            {
+#if  SILVERLIGHT || WINDOWS_PHONE
+                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
+#else
+                return this.parameterWriter.CreateCollectionWriterAsync(parameterName)
+                    .ContinueWith(task => new ODataCollectionWriterTestWrapper(task.Result, this.testConfiguration), TaskContinuationOptions.ExecuteSynchronously)
+                    .WaitForResult();
+#endif
+            }
+        }
+
+#if !WINDOWS_PHONE
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataCollectionWriter"/> to write the value of a collection parameter.
+        /// </summary>
+        /// <param name="parameterName">The name of the collection parameter to write.</param>
+        /// <returns>A running task for the created writer.</returns>
+        public override Task<ODataCollectionWriter> CreateCollectionWriterAsync(string parameterName)
+        {
+            throw new NotImplementedException("Tests should always use synchronous APIs.");
+        }
+
+        public override ODataWriter CreateEntryWriter(string parameterName)
+        {
+            if (this.testConfiguration.Synchronous)
+            {
+                return new ODataWriterTestWrapper(this.parameterWriter.CreateEntryWriter(parameterName), this.testConfiguration);
+            }
+            else
+            {
+#if  SILVERLIGHT || WINDOWS_PHONE
+                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
+#else
+                return this.parameterWriter.CreateEntryWriterAsync(parameterName)
+                    .ContinueWith(task => new ODataWriterTestWrapper(task.Result, this.testConfiguration), TaskContinuationOptions.ExecuteSynchronously)
+                    .WaitForResult();
+#endif
+            }
+        }
+
+        public override Task<ODataWriter> CreateEntryWriterAsync(string parameterName)
+        {
+            throw new NotImplementedException("Tests should always use synchronous APIs.");
+        }
+
+        public override ODataWriter CreateFeedWriter(string parameterName)
+        {
+            if (this.testConfiguration.Synchronous)
+            {
+                return new ODataWriterTestWrapper(this.parameterWriter.CreateFeedWriter(parameterName), this.testConfiguration);
+            }
+            else
+            {
+#if  SILVERLIGHT || WINDOWS_PHONE
+                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
+#else
+                return this.parameterWriter.CreateFeedWriterAsync(parameterName)
+                    .ContinueWith(task => new ODataWriterTestWrapper(task.Result, this.testConfiguration), TaskContinuationOptions.ExecuteSynchronously)
+                    .WaitForResult();
+#endif
+            }
+        }
+
+        public override Task<ODataWriter> CreateFeedWriterAsync(string parameterName)
+        {
+            throw new NotImplementedException("Tests should always use synchronous APIs.");
+        }
+#endif
+
+        /// <summary>
+        /// Finish writing a parameter payload.
+        /// </summary>
+        public override void WriteEnd()
+        {
+            if (this.testConfiguration.Synchronous)
+            {
+                this.parameterWriter.WriteEnd();
+            }
+            else
+            {
+#if  WINDOWS_PHONE
+                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
+#else
+                this.parameterWriter.WriteEndAsync().Wait();
+#endif
+            }
+        }
+
+#if !WINDOWS_PHONE
+        /// <summary>
+        /// Asynchronously finish writing a parameter payload.
+        /// </summary>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public override Task WriteEndAsync()
+        {
+            throw new NotImplementedException("Tests should always use synchronous APIs.");
+        }
+#endif
+
+        /// <summary>
+        /// Flushes the write buffer to the underlying stream.
+        /// </summary>
+        public override void Flush()
+        {
+            if (this.testConfiguration.Synchronous)
+            {
+                this.parameterWriter.Flush();
+            }
+            else
+            {
+#if WINDOWS_PHONE
+                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
+#else
+                this.parameterWriter.FlushAsync().Wait();
+#endif
+            }
+        }
+
+#if !WINDOWS_PHONE
+        /// <summary>
+        /// Asynchronously flushes the write buffer to the underlying stream.
+        /// </summary>
+        /// <returns>A task instance that represents the asynchronous operation.</returns>
+        public override Task FlushAsync()
+        {
+            throw new NotImplementedException("Tests should always use synchronous APIs.");
+        }
+#endif
+    }
+}

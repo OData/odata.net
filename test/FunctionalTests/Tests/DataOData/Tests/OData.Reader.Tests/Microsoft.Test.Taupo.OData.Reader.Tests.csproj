@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{70CCA883-E9EC-41C8-9A42-F910C4A6FCB6}</ProjectGuid>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.OData.Reader.Tests</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.OData.Reader.Tests</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
+  </PropertyGroup>
+  <!-- References -->
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll" />
+    <DataFile Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll">
+      <InProject>false</InProject>
+      <SubFolder>
+      </SubFolder>
+    </DataFile>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo\Microsoft.Test.Taupo.csproj">
+      <Project>{34010F3A-20CC-479C-83CF-EC99B1C90CD1}</Project>
+      <Name>Microsoft.Test.Taupo</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Spatial\Microsoft.Test.Taupo.Spatial.csproj">
+      <Project>{7FF7E0D4-B00C-4C08-80F1-C7EFF617597D}</Project>
+      <Name>Microsoft.Test.Taupo.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.EdmLib\Microsoft.Test.Taupo.Edmlib.csproj">
+      <Project>{65C0C702-8A6D-4CDE-A387-0D0C1893E4BC}</Project>
+      <Name>Microsoft.Test.Taupo.Edmlib</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Astoria\Microsoft.Test.Taupo.Astoria.csproj">
+      <Project>{854AF4E9-B78F-4994-B9C5-82B846604CBE}</Project>
+      <Name>Microsoft.Test.Taupo.Astoria</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Query\Microsoft.Test.Taupo.Query.csproj">
+      <Project>{29236BBA-852B-46B2-A39B-09DB47A7F6EB}</Project>
+      <Name>Microsoft.Test.Taupo.Query</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\TestUtils\Common\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj">
+      <Project>{efa72cf8-a73a-4eb4-88d4-ae6d4ce1b270}</Project>
+      <Name>Microsoft.Test.OData.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\OData\Microsoft.Test.Taupo.OData.csproj">
+      <Project>{1D54775E-E211-4B35-A002-E53416BAE743}</Project>
+      <Name>Microsoft.Test.Taupo.OData</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Source files -->
+  <ItemGroup>
+    <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs" />
+    <Compile Include="Common\NavigationLinkIsCollectionPropertyValidator.cs" />
+    <Compile Include="Common\NavigationLinkTestCaseDescriptor.cs" />
+    <Compile Include="JsonLight\JsonLightExpectedPayloadElementNormalizer.cs" />
+    <Compile Include="JsonLight\JsonLightPayloadElementFixup.cs" />
+    <Compile Include="JsonLight\NavigationLinkInRequestReaderJsonLightTests.cs" />
+    <Compile Include="JsonLight\JsonLightObjectModelToPayloadElementConverter.cs" />
+    <Compile Include="JsonLight\NullValueTests.cs" />
+    <Compile Include="JsonLight\UndelcaredPropertyReaderJsonLightTests.cs" />
+    <Compile Include="Json\InStreamErrorReaderJsonTests.cs" />
+    <Compile Include="AtomPayloadElementPropertyOrderNormalizer.cs" />
+    <Compile Include="Atom\AtomMetadataReaderTests.cs" />
+    <Compile Include="Atom\CollectionReaderAtomTests.cs" />
+    <Compile Include="Atom\AtomObjectModelToPayloadElementConverter.cs" />
+    <Compile Include="Atom\ComplexValueReaderAtomTests.cs" />
+    <Compile Include="Atom\PayloadKindDetectionAtomTests.cs" />
+    <Compile Include="Atom\ElementValueTests.cs" />
+    <Compile Include="Atom\EncodingAtomTests.cs" />
+    <Compile Include="Atom\EntityReferenceLinkReaderAtomTests.cs" />
+    <Compile Include="Atom\EntryPayloadOrderReaderAtomTests.cs" />
+    <Compile Include="Atom\EntryReaderAtomMetadataTests.cs" />
+    <Compile Include="Atom\EntryReaderAtomTests.cs" />
+    <Compile Include="Atom\ErrorReaderAtomTests.cs" />
+    <Compile Include="Atom\ErrorMessageNormalizer.cs" />
+    <Compile Include="Atom\FeedPayloadOrderReaderAtomTests.cs" />
+    <Compile Include="Batch\BatchReaderCrossReferenceTests.cs" />
+    <Compile Include="Batch\BatchReaderHttpStreamSimulationTests.cs" />
+    <Compile Include="Batch\BatchReaderMixedEncodingTests.cs" />
+    <Compile Include="Batch\BatchReaderStreamBufferState.cs" />
+    <Compile Include="Batch\BatchReaderStreamOrBufferTestCase.cs" />
+    <Compile Include="Batch\BatchReaderStreamTestCase.cs" />
+    <Compile Include="Atom\FeedReaderAtomMetadataTests.cs" />
+    <Compile Include="Atom\ODataAtomMetadataReaderTestCase.cs" />
+    <Compile Include="Batch\BatchReaderTestExpectedResults.cs" />
+    <Compile Include="Batch\BatchReaderTests.cs" />
+    <Compile Include="Batch\BatchReaderStreamBufferWrapper.cs" />
+    <Compile Include="Batch\BatchReaderStreamBufferTests.cs" />
+    <Compile Include="Batch\BatchReaderStreamWrapper.cs" />
+    <Compile Include="Batch\BatchReaderStreamTestUtils.cs" />
+    <Compile Include="Batch\BatchReaderStreamBufferTestCase.cs" />
+    <Compile Include="Batch\BatchReaderStreamReadWithDelimiterTests.cs" />
+    <Compile Include="Batch\BatchReaderStreamReadDescriptor.cs" />
+    <Compile Include="Batch\BatchReaderStreamReadWithLengthTests.cs" />
+    <Compile Include="Batch\BatchReaderStreamProcessPartHeaderTests.cs" />
+    <Compile Include="Batch\BatchReaderStreamReadLineTests.cs" />
+    <Compile Include="Batch\BatchReaderSkipToBoundaryTests.cs" />
+    <Compile Include="Batch\BatchReaderPayloadKindDetectionTests.cs" />
+    <Compile Include="Batch\BatchOperationHeadersWrapper.cs" />
+    <Compile Include="Batch\BatchReaderHeadersTests.cs" />
+    <Compile Include="Batch\BatchReaderTestStream.cs" />
+    <Compile Include="Batch\MemoryStreamBatchPayloadBuilder.cs" />
+    <Compile Include="Common\ExtensionMethods.cs" />
+    <Compile Include="Common\RemoveOperationsNormalizer.cs" />
+    <Compile Include="Common\RemoveStreamPropertyPayloadElementNormalizer.cs" />
+    <Compile Include="ConvertFromUriLiteralTests.cs" />
+    <Compile Include="Common\ConvertAtomMetadataForConfigurationPayloadElementNormalizer.cs" />
+    <Compile Include="Common\RemoveAssociationLinkPayloadElementNormalizer.cs" />
+    <Compile Include="Reader\ReaderSyncAsyncMismatchTests.cs" />
+    <Compile Include="RemoveCollectionNameAnnotationForCollectionPayloadElementVisitor.cs" />
+    <Compile Include="JsonLight\CollectionValueReaderJsonLightTests.cs" />
+    <Compile Include="JsonLight\ComplexValueReaderJsonLightTests.cs" />
+    <Compile Include="JsonLight\CollectionReaderJsonLightTests.cs" />
+    <Compile Include="JsonLight\FeedReaderJsonLightTests.cs" />
+    <Compile Include="JsonLight\EntryReaderJsonLightTests.cs" />
+    <Compile Include="JsonLight\JsonLightPayloadElementNormalizer.cs" />
+    <Compile Include="JsonLight\MessageReaderJsonLightTests.cs" />
+    <Compile Include="JsonLight\NavigationLinkInResponseReaderJsonLightTests.cs" />
+    <Compile Include="JsonLight\OperationReaderJsonLightTests.cs" />
+    <Compile Include="JsonLight\ParameterReaderJsonLightTests.cs" />
+    <Compile Include="JsonLight\PayloadKindDetectionJsonLightTests.cs" />
+    <Compile Include="JsonLight\PropertyReaderJsonLightTests.cs" />
+    <Compile Include="JsonLight\ContextUriParserJsonLightTests.cs" />
+    <Compile Include="JsonLight\ReorderingJsonReaderTestCaseDescriptor.cs" />
+    <Compile Include="JsonLight\ReorderingJsonReader.cs" />
+    <Compile Include="JsonLight\ErrorReaderJsonLightTests.cs" />
+    <Compile Include="JsonLight\ServiceDocumentReaderJsonLightTests.cs" />
+    <Compile Include="JsonLight\StreamReferenceValueReaderJsonLightTests.cs" />
+    <Compile Include="Json\OperationsJsonReaderTestValues.cs" />
+    <Compile Include="PayloadKindDetectionResult.cs" />
+    <Compile Include="PayloadKindDetectionTestDescriptor.cs" />
+    <Compile Include="PayloadKindDetectionTestExpectedResult.cs" />
+    <Compile Include="JsonPayloadElementPropertyDeduplicationNormalizer.cs" />
+    <Compile Include="ODataFeedPayloadOrderObjectModelAnnotation.cs" />
+    <Compile Include="ODataParameterReaderTestWrapper.cs" />
+    <Compile Include="JsonPayloadElementPropertyOrderNormalizer.cs" />
+    <Compile Include="Atom\OperationReaderAtomTests.cs" />
+    <Compile Include="Atom\FeedReaderAtomTests.cs" />
+    <Compile Include="Atom\CollectionValueReaderAtomTests.cs" />
+    <Compile Include="Atom\NavigationLinkReaderAtomTests.cs" />
+    <Compile Include="Atom\PropertiesElementAtomValues.cs" />
+    <Compile Include="Atom\ReadPropertyAtomTests.cs" />
+    <Compile Include="Atom\ServiceDocumentReaderAtomTests.cs" />
+    <Compile Include="Atom\StreamReferenceValueReaderAtomTests.cs" />
+    <Compile Include="MetadataReaderTestExpectedResult.cs" />
+    <Compile Include="MetadataReaderTestDescriptor.cs" />
+    <Compile Include="Atom\XmlBaseReaderTests.cs" />
+    <Compile Include="Atom\BufferingXmlReader.cs" />
+    <Compile Include="Atom\BufferingXmlReaderTests.cs" />
+    <Compile Include="ObjectModelToPayloadElementPayloadWithPayloadOrderConverter.cs" />
+    <Compile Include="ODataEntryPayloadOrderObjectModelAnnotation.cs" />
+    <Compile Include="ODataMessageReaderSettingsInspector.cs" />
+    <Compile Include="ODataPayloadOrderReaderTestCase.cs" />
+    <Compile Include="ODataReaderBehaviorInspector.cs" />
+    <Compile Include="PayloadOrderODataPayloadElementAnnotation.cs" />
+    <Compile Include="PayloadReaderTestDescriptorGenerator.cs" />
+    <Compile Include="ReaderAbsoluteUriODataObjectModelValidator.cs" />
+    <Compile Include="ReaderContentTypeTestDescriptor.cs" />
+    <Compile Include="ReaderTestConfigurationProvider.cs" />
+    <Compile Include="Reader\MessageSizeLimitsReaderTests.cs" />
+    <Compile Include="Reader\ParameterReaderTests.cs" />
+    <Compile Include="Reader\MetadataDocumentReaderErrorTests.cs" />
+    <Compile Include="Reader\MetadataDocumentReaderTests.cs" />
+    <Compile Include="Reader\OperationReaderTests.cs" />
+    <Compile Include="Reader\ReaderContentTypeTests.cs" />
+    <Compile Include="RemoveAtomMetadataFromPayloadElementVisitor.cs" />
+    <Compile Include="RemoveCollectionNameFromCollectionPayloadElementVisitor.cs" />
+    <Compile Include="Reader\UriHandlingTests.cs" />
+    <Compile Include="Reader\ServiceDocumentReaderTests.cs" />
+    <Compile Include="Reader\ErrorReaderTests.cs" />
+    <Compile Include="Reader\EntityReferenceLinkReaderTests.cs" />
+    <Compile Include="TestEntityReferenceLinks.cs" />
+    <Compile Include="FillTypeNamesFromTypeAnnotationsPayloadElementVisitor.cs" />
+    <Compile Include="PayloadReaderTestDescriptorExtensions.cs" />
+    <Compile Include="Reader\AssociationLinkReaderTests.cs" />
+    <Compile Include="Reader\CollectionReaderTests.cs" />
+    <Compile Include="Reader\CollectionValueReaderTests.cs" />
+    <Compile Include="Reader\StreamReferenceValueReaderTests.cs" />
+    <Compile Include="Reader\DataServiceVersionHeaderTests.cs" />
+    <Compile Include="Reader\NavigationLinkReaderTests.cs" />
+    <Compile Include="Common\AggregateODataObjectModelValidator.cs" />
+    <Compile Include="ReaderEnumerablesODataObjectModelValidator.cs" />
+    <Compile Include="Contracts\IODataObjectModelValidator.cs" />
+    <Compile Include="Json\BufferingJsonReader.cs" />
+    <Compile Include="Json\BufferingJsonReaderTestCaseDescriptor.cs" />
+    <Compile Include="Json\BufferingJsonReaderTests.cs" />
+    <Compile Include="Json\JsonPayloadErrorTestCase.cs" />
+    <Compile Include="Json\JsonReader.cs" />
+    <Compile Include="Json\JsonReaderPayloads.cs" />
+    <Compile Include="Json\JsonReaderTestCaseDescriptor.cs" />
+    <Compile Include="Json\JsonReaderTestConfiguration.cs" />
+    <Compile Include="Json\JsonReaderTests.cs" />
+    <Compile Include="Json\JsonReaderUtils.cs" />
+    <Compile Include="MessageToObjectModelReader.cs" />
+    <Compile Include="NativeInputReaderTestDescriptor.cs" />
+    <Compile Include="ObjectModelToPayloadElementConverter.cs" />
+    <Compile Include="ODataBatchReaderTestWrapper.cs" />
+    <Compile Include="ODataCollectionReaderTestWrapper.cs" />
+    <Compile Include="ODataMessageReaderTestWrapper.cs" />
+    <Compile Include="ODataReaderTestsTestModule.cs" />
+    <Compile Include="ODataReaderTestWrapper.cs" />
+    <Compile Include="ReaderDefaultODataObjectModelValidator.cs" />
+    <Compile Include="PayloadReaderTestDescriptor.cs" />
+    <Compile Include="PayloadReaderTestExpectedResult.cs" />
+    <Compile Include="ReaderTestConfiguration.cs" />
+    <Compile Include="ReaderTestDescriptor.cs" />
+    <Compile Include="ReaderTestExpectedResult.cs" />
+    <Compile Include="ODataReaderTestCase.cs" />
+    <Compile Include="TestReaderUtils.cs" />
+    <Compile Include="Reader\ComplexValueReaderTests.cs" />
+    <Compile Include="Reader\EntryReaderTests.cs" />
+    <Compile Include="Reader\MessageReaderTests.cs" />
+    <Compile Include="Reader\PrimitiveValueReaderTest.cs" />
+    <Compile Include="Reader\FeedReaderTests.cs" />
+    <Compile Include="Reader\PropertyReaderTests.cs" />
+    <Compile Include="MetadataReaderTestDescriptorGenerator.cs" />
+    <Compile Include="WcfDsServerPayloadElementNormalizer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ODataReaderTests.suite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

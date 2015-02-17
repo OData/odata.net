@@ -1,0 +1,125 @@
+﻿--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: mUltIpArt/mIxEd; bOUndAry=changeset_eaab4754-7965-43f0-a7a9-a5556d12787c 
+
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 1
+
+POST Customers HTTP/1.1
+cOntEnt-typE: ApplIcAtIOn/AtOm+xml;typE=entry
+
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns:adsm="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <category term="#AstoriaUnitTests.Stubs.Customer" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <content type="application/xml"><adsm:properties>
+    <ads:Name>FooBaz</ads:Name>
+    <ads:ID>123456</ads:ID>
+    <ads:Address>
+        <ads:StreetAddress>Street Number, Street Address</ads:StreetAddress>
+        <ads:City>Redmond</ads:City>
+        <ads:PostalCode>98052</ads:PostalCode>
+    </ads:Address>
+  </adsm:properties></content>
+</entry>
+
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 3
+
+POST $1/Orders HTTP/1.1
+cOntEnt-typE: ApplIcAtIOn/AtOm+xml;typE=entry
+
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns:adsm="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <content type="application/xml"><adsm:properties>
+    <ads:ID>99000</ads:ID>
+    <ads:DollarAmount>1500.00</ads:DollarAmount>
+  </adsm:properties></content>
+</entry>
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c--
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: mUltIpArt/mIxEd; bOUndAry=changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 5
+
+POST Customers HTTP/1.1
+cOntEnt-typE: ApplIcAtIOn/AtOm+xml;typE=entry
+
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns:adsm="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <category term="#AstoriaUnitTests.Stubs.Customer" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <content type="application/xml"><adsm:properties>
+    <ads:Name>FooBaz</ads:Name>
+    <ads:ID>555555</ads:ID>
+    <ads:Address>
+        <ads:StreetAddress>Street Number, Street Address</ads:StreetAddress>
+        <ads:City>Redmond</ads:City>
+        <ads:PostalCode>98052</ads:PostalCode>
+    </ads:Address>
+  </adsm:properties></content>
+</entry>
+
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 6
+
+POST Customers HTTP/1.1
+cOntEnt-typE: ApplIcAtIOn/AtOm+xml;typE=entry
+
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns:adsm="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <category term="#AstoriaUnitTests.Stubs.Customer" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <content type="application/xml"><adsm:properties>
+    <ads:Name>FooBazBestFriend</ads:Name>
+    <ads:ID>666666</ads:ID>
+    <ads:Address>
+        <ads:StreetAddress>Best Friend Street Number, Street Address</ads:StreetAddress>
+        <ads:City>Redmond</ads:City>
+        <ads:PostalCode>98052</ads:PostalCode>
+    </ads:Address>
+  </adsm:properties></content>
+</entry>
+
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 7
+
+POST Orders HTTP/1.1
+cOntEnt-typE: ApplIcAtIOn/AtOm+xml;typE=entry
+
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns:adsm="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <content type="application/xml"><adsm:properties>
+    <ads:ID>77777</ads:ID>
+    <ads:DollarAmount>1500.00</ads:DollarAmount>
+  </adsm:properties></content>
+</entry>
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 8
+
+PUT $5/BestFriend/$ref HTTP/1.1
+cOntEnt-typE: application/xml
+
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<ref xmlns="http://docs.oasis-open.org/odata/ns/metadata" id="$6" />
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 9
+
+POST $5/Orders/$ref HTTP/1.1
+cOntEnt-typE: application/xml
+
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<ref xmlns="http://docs.oasis-open.org/odata/ns/metadata" id="$7" />
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c--
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b--

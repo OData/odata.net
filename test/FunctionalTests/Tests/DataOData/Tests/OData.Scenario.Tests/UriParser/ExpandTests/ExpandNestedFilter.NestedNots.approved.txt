@@ -1,0 +1,101 @@
+$select = 
+$expand = AssociatedOrder($filter=OrderDetails/all(a: not (not (not (not (not (not (not (not (not ((not (a/ProductID ge 3.2)) or (not (a/OrderPlaced eq a/OrderPlaced)))))))))))))
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: AssociatedOrder)]
+			FilterQueryOption
+				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+				Parameter = 
+				EntityRangeVariable
+					Name = $it
+					NavigationSource = Orders
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+				Expression = 
+				AllNode
+					Type Reference = [Edm.Boolean Nullable=True]
+					Body = 
+					Not(
+						Not(
+							Not(
+								Not(
+									Not(
+										Not(
+											Not(
+												Not(
+													Not(
+															Not(
+																	ConvertNode
+																		TypeReference = [Edm.Single Nullable=False]
+																		Source = 
+																		SingleValuePropertyAccessNode
+																			Property = ProductID
+																			TypeReference = [Edm.Int32 Nullable=False]
+																			Source = 
+																			EntityRangeVariableReferenceNode
+																				Name = a
+																				NavigationSource = OrderDetails
+																				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+																				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+																GreaterThanOrEqual
+																	3.2(Type: [Edm.Single Nullable=False])
+															)
+														Or
+															Not(
+																	SingleValuePropertyAccessNode
+																		Property = OrderPlaced
+																		TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
+																		Source = 
+																		EntityRangeVariableReferenceNode
+																			Name = a
+																			NavigationSource = OrderDetails
+																			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+																			Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+																Equal
+																	SingleValuePropertyAccessNode
+																		Property = OrderPlaced
+																		TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
+																		Source = 
+																		EntityRangeVariableReferenceNode
+																			Name = a
+																			NavigationSource = OrderDetails
+																			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+																			Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+															)
+													)
+												)
+											)
+										)
+									)
+								)
+							)
+						)
+					)
+					Source = 
+					CollectionNavigationNode
+						ItemType = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+						Entity Item Type = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+						NavigationSource = OrderDetails
+						Multiplicity = Many
+						Navigation Property = OrderDetails
+						Source = 
+						EntityRangeVariableReferenceNode
+							Name = $it
+							NavigationSource = Orders
+							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Parameters = 
+					EntityRangeVariable
+						Name = a
+						NavigationSource = OrderDetails
+						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+					EntityRangeVariable
+						Name = $it
+						NavigationSource = Orders
+						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems(Empty List)

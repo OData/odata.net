@@ -1,0 +1,47 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <ComplexType Name="Address">
+    <Property Name="Street" Type="Edm.String" />
+    <Property Name="City" Type="Edm.String" Nullable="false" MaxLength="30" />
+    <Property Name="Zip" Type="NS1.ZipCode" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="ZipCode">
+    <Property Name="Main" Type="Edm.String" Nullable="false" MaxLength="5" Unicode="false" />
+    <Property Name="Extended" Type="Edm.String" MaxLength="5" Unicode="false" />
+  </ComplexType>
+  <ComplexType Name="ForeignAddress" BaseType="NS1.Address">
+    <Property Name="State" Type="Edm.String" />
+  </ComplexType>
+  <EntityType Name="Person" Abstract="true">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Customer" BaseType="NS1.Person">
+    <Property Name="IsVIP" Type="Edm.Boolean" />
+    <Property Name="LastUpdated" Type="Edm.DateTimeOffset" ConcurrencyMode="Fixed" Nullable="false" />
+    <Property Name="BillingAddress" Type="NS1.Address" Nullable="false" />
+    <Property Name="ShippingAddress" Type="NS1.Address" Nullable="false" />
+    <NavigationProperty Name="ToOrders" Type="Collection(NS1.Order)" Partner="ToCustomer" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+    <Property Name="CustomerId" Type="Edm.Int32" Nullable="false" />
+    <NavigationProperty Name="ToCustomer" Type="NS1.Customer" Nullable="false" Partner="ToOrders">
+      <ReferentialConstraint Property="CustomerId" ReferencedProperty="Id" />
+    </NavigationProperty>
+  </EntityType>
+  <Function Name="Function1">
+    <Parameter Name="Param1" Type="Edm.Int32" />
+    <ReturnType Type="Edm.Int64" />
+  </Function>
+  <EntityContainer Name="MyContainer">
+    <EntitySet Name="PersonSet" EntityType="NS1.Person" />
+    <EntitySet Name="OrderSet" EntityType="NS1.Order" />
+    <FunctionImport Name="Function1" Function="NS1.Function1" />
+  </EntityContainer>
+</Schema>
+

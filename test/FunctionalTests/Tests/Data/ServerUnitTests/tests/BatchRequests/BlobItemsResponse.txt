@@ -1,0 +1,121 @@
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: multipart/mixed; boundary=changesetresponse_00000001-0000-0000-0000-000000000000
+
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 2
+
+HTTP/1.1 201 Created
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+CustomResponseHeader1: CustomResponseHeaderValue1
+CustomResponseHeader2: CustomResponseHeaderValue2
+Cache-Control: no-cache
+Location: http://host/Items(123456)/AstoriaUnitTests.Stubs.Photo
+ETag: W/"'Batch%20photo%20name','Batch%20photo%20description'"
+
+{"@odata.context":"http://host/$metadata#Items/AstoriaUnitTests.Stubs.Photo/$entity","@odata.type":"#AstoriaUnitTests.Stubs.Photo","@odata.mediaReadLink":"Items(123456)/AstoriaUnitTests.Stubs.Photo/$value","@odata.mediaContentType":"image/png","@odata.mediaEtag":"\"BlobETag123\"","ID":123456,"Name":"Batch photo name","Description":"Batch photo description","Rating":3,"ThumbNail":"AQIDBA=="}
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 3
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+ETag: W/"'Batch%20photo%20name','Batch%20photo%20description'"
+
+
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 4
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+ETag: W/"'Batch%20photo%20name','Batch%20photo%20description'"
+
+
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 5
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+ETag: W/"'Batch%20photo%20name','Batch%20photo%20description'"
+
+
+--changesetresponse_00000001-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 6
+
+HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+CustomResponseHeader1: CustomResponseHeaderValue1
+CustomResponseHeader2: CustomResponseHeaderValue2
+Cache-Control: no-cache
+OData-Version: 4.0;
+ETag: "BlobETag123"
+
+
+--changesetresponse_00000001-0000-0000-0000-000000000000--
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 304 Not Modified
+Content-Type: image/png
+X-Content-Type-Options: nosniff
+CustomResponseHeader1: CustomResponseHeaderValue1
+CustomResponseHeader2: CustomResponseHeaderValue2
+ETag: "BlobETag123"
+
+
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 304 Not Modified
+Content-Type: image/png
+X-Content-Type-Options: nosniff
+CustomResponseHeader1: CustomResponseHeaderValue1
+CustomResponseHeader2: CustomResponseHeaderValue2
+ETag: "BlobETag123"
+
+
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+Content-Type: image/png
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0;
+CustomResponseHeader1: CustomResponseHeaderValue1
+CustomResponseHeader2: CustomResponseHeaderValue2
+ETag: "BlobETag123"
+
+22222222222222222222
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+ETag: W/"'Batch%20photo%20name','Batch%20photo%20description'"
+
+{"error":{"code":"","message":"Expected custom request headers not found!"}}
+--batchresponse_00000000-0000-0000-0000-000000000000--

@@ -1,0 +1,3960 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><m:properties><d:ID>foo</d:ID></m:properties></entry></feed>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 5; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><m:properties><d:ID>foo</d:ID></m:properties></entry></feed>
+
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 7; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 9; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link"><m:inline><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><m:properties><d:ID>foo</d:ID></m:properties></entry></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 10; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 11; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 13; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 15; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 17; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 18; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 19; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 20; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 21; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 22; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 23; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 25; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed>
+
+Combination: 26; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 27; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 28; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 29; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed>
+
+Combination: 30; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 31; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 33; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link"><m:inline><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 34; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/binary" src="http://odata.org/read" />
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 35; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/binary" src="http://odata.org/read" />
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 36; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <content type="application/binary" src="http://odata.org/read" />
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 37; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 38; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 39; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 40; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 41; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 42; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 43; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 44; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 45; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 46; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/binary" src="http://odata.org/read" />
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 47; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/binary" src="http://odata.org/read" />
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 48; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <content type="application/binary" src="http://odata.org/read" />
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 49; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed>
+
+Combination: 50; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 51; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 52; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 53; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed>
+
+Combination: 54; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 55; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 56; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 57; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link"><m:inline><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 58; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <link rel="edit-media" href="http://odata.org/edit" />
+        <content type="application/binary" src="http://odata.org/read" />
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 59; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <link rel="edit-media" href="http://odata.org/edit" />
+        <content type="application/binary" src="http://odata.org/read" />
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 60; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <link rel="edit-media" href="http://odata.org/edit" />
+        <content type="application/binary" src="http://odata.org/read" />
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 61; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 62; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 63; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 64; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 65; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 66; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 67; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 68; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 69; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 70; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <link rel="edit-media" href="http://odata.org/edit" />
+                  <content type="application/binary" src="http://odata.org/read" />
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 71; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <link rel="edit-media" href="http://odata.org/edit" />
+                  <content type="application/binary" src="http://odata.org/read" />
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 72; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <link rel="edit-media" href="http://odata.org/edit" />
+                  <content type="application/binary" src="http://odata.org/read" />
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 73; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed>
+
+Combination: 74; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 75; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 76; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 77; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed>
+
+Combination: 78; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 79; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 80; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 81; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link"><m:inline><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><m:properties><d:ID>foo</d:ID></m:properties></entry></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 82; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <link rel="edit-media" href="http://odata.org/edit" />
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 83; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <link rel="edit-media" href="http://odata.org/edit" />
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 84; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <link rel="edit-media" href="http://odata.org/edit" />
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 85; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 86; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 87; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 88; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 89; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 90; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 91; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 92; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 93; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 94; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <link rel="edit-media" href="http://odata.org/edit" />
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 95; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <link rel="edit-media" href="http://odata.org/edit" />
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 96; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <link rel="edit-media" href="http://odata.org/edit" />
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 97; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed>
+
+Combination: 98; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 99; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 100; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 101; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet"><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed>
+
+Combination: 102; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 103; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 104; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet">
+  <id>http://www.odata.org/feedid</id>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+  <entry>
+    <id>http://www.odata.org/entryid</id>
+    <link rel="self" href="http://www.odata.org/entry/readlink" />
+    <title />
+    <updated>9999-12-31T23:59:59Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+    <content type="application/binary" src="http://odata.org/read" />
+    <m:properties>
+      <d:ID>foo</d:ID>
+    </m:properties>
+  </entry>
+</feed>
+
+Combination: 105; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link"><m:inline><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 106; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+        <content type="application/binary" src="http://odata.org/read" />
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 107; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+        <content type="application/binary" src="http://odata.org/read" />
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 108; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=entry" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <entry>
+        <id>http://www.odata.org/entryid</id>
+        <link rel="self" href="http://www.odata.org/entry/readlink" />
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <author>
+          <name />
+        </author>
+        <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+        <content type="application/binary" src="http://odata.org/read" />
+        <m:properties>
+          <d:ID>foo</d:ID>
+        </m:properties>
+      </entry>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 109; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 110; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 111; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 112; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 113; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 114; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 115; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 116; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+          <content type="application/binary" src="http://odata.org/read" />
+          <m:properties>
+            <d:ID>foo</d:ID>
+          </m:properties>
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 117; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>9999-12-31T23:59:59Z</updated><entry><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" /><content type="application/binary" src="http://odata.org/read" /><m:properties><d:ID>foo</d:ID></m:properties></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 118; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+                  <content type="application/binary" src="http://odata.org/read" />
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 119; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+                  <content type="application/binary" src="http://odata.org/read" />
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+
+Combination: 120; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity">
+  <id>http://www.odata.org/entryid</id>
+  <link rel="self" href="http://www.odata.org/entry/readlink" />
+  <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+    <m:inline>
+      <feed>
+        <id>http://www.odata.org/feedid</id>
+        <title />
+        <updated>9999-12-31T23:59:59Z</updated>
+        <entry>
+          <id>http://www.odata.org/entryid</id>
+          <link rel="self" href="http://www.odata.org/entry/readlink" />
+          <link rel="http://docs.oasis-open.org/odata/ns/related/SampleLinkName" type="application/atom+xml;type=feed" title="SampleLinkName" href="http://odata.org/link">
+            <m:inline>
+              <feed>
+                <id>http://www.odata.org/feedid</id>
+                <title />
+                <updated>9999-12-31T23:59:59Z</updated>
+                <entry>
+                  <id>http://www.odata.org/entryid</id>
+                  <link rel="self" href="http://www.odata.org/entry/readlink" />
+                  <title />
+                  <updated>9999-12-31T23:59:59Z</updated>
+                  <author>
+                    <name />
+                  </author>
+                  <link rel="edit-media" href="http://odata.org/edit" m:etag="&quot;myetagvalue&quot;" />
+                  <content type="application/binary" src="http://odata.org/read" />
+                  <m:properties>
+                    <d:ID>foo</d:ID>
+                  </m:properties>
+                </entry>
+              </feed>
+            </m:inline>
+          </link>
+          <title />
+          <updated>9999-12-31T23:59:59Z</updated>
+          <author>
+            <name />
+          </author>
+          <content type="application/xml" />
+        </entry>
+      </feed>
+    </m:inline>
+  </link>
+  <title />
+  <updated>9999-12-31T23:59:59Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml" />
+</entry>
+

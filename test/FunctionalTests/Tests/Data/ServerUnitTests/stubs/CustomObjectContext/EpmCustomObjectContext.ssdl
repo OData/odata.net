@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="testModel.Store" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+  <EntityContainer Name="dbo2">
+    <EntitySet Name="EpmCustomers" EntityType="testModel.Store.EpmCustomer" Table="#EpmCustomers"/>
+    <EntitySet Name="EpmOrders" EntityType="testModel.Store.EpmOrder" Table="#EpmOrders"/>
+    <EntitySet Name="EpmProducts" EntityType="testModel.Store.EpmProduct" Table="#EpmProducts"/>
+    <AssociationSet Name="FK__EpmOrders__EpmCustomer__00551192" Association="testModel.Store.FK__EpmOrders__EpmCustomer__00551192">
+      <End Role="Customers" EntitySet="EpmCustomers" />
+      <End Role="Orders" EntitySet="EpmOrders" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="EpmCustomer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Birthday" Type="datetime" />
+    <Property Name="Address" Type="nvarchar" MaxLength="512" />
+    <Property Name="City" Type="nvarchar" MaxLength="100" />
+    <Property Name="State" Type="nvarchar" MaxLength="100" />
+    <Property Name="PostalCode" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="EpmOrder">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="true" />
+    <Property Name="DollarAmount" Type="float" />
+  </EntityType>
+  <EntityType Name="EpmProduct">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="int" Nullable="false" />
+    <Property Name="ProductName" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="QuantityPerUnit" Type="nvarchar" MaxLength="20" />
+    <Property Name="UnitPrice" Type="money" />
+    <Property Name="UnitsInStock" Type="smallint" />
+    <Property Name="UnitsOnOrder" Type="smallint" />
+    <Property Name="ReorderLevel" Type="smallint" />
+    <Property Name="Discontinued" Type="bit" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__EpmOrders__EpmCustomer__00551192">
+    <End Role="Customers" Type="testModel.Store.EpmCustomer" Multiplicity="0..1" />
+    <End Role="Orders" Type="testModel.Store.EpmOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

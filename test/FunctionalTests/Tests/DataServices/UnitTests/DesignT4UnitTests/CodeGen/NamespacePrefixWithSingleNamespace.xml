@@ -1,0 +1,17 @@
+<?xml version="1.0" standalone="yes"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="NamespacePrefixWithSingleNamespace" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="MyContainer">
+        <EntitySet Name="Items" EntityType="NamespacePrefixWithSingleNamespace.TestType" />
+      </EntityContainer>
+      <EntityType Name="TestType">
+        <Key>
+          <PropertyRef Name="KeyProp" />
+        </Key>
+        <Property Name="KeyProp" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ValueProp" Type="Edm.String" Nullable="false" />
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

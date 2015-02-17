@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="EFFKModel.Store" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+  <EntityContainer Name="dbo">
+    <EntitySet Name="Customers" EntityType="EFFKModel.Store.Customer" Table="#Customers"/>
+    <EntitySet Name="CustomerBlobs" EntityType="EFFKModel.Store.CustomerBlob" Table="#CustomerBlobs"/>
+    <EntitySet Name="Orders" EntityType="EFFKModel.Store.Order" Table="#Orders"/>
+    <EntitySet Name="Order Details" EntityType="EFFKModel.Store.Order Detail" Table="#Order Details"/>
+    <EntitySet Name="Workers" EntityType="EFFKModel.Store.Workers" Table="#Workers" />
+    <EntitySet Name="Offices" EntityType="EFFKModel.Store.Offices" Table="#Offices" />
+    <AssociationSet Name="FK__Orders__Customer__00551192" Association="EFFKModel.Store.FK__Orders__Customer__00551192">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Orders__OrderDetails" Association="EFFKModel.Store.FK_OrderDetails_Orders">
+      <End Role="Order Details" EntitySet="Order Details" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+
+    <AssociationSet Name="FK_Workers_Offices" Association="EFFKModel.Store.FK_Workers_Offices">
+      <End Role="Offices" EntitySet="Offices" />
+      <End Role="Workers" EntitySet="Workers" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Concurrency" Type="nchar" MaxLength="5" />
+    <Property Name="EditTimeStamp" Nullable="false" Type="timestamp" StoreGeneratedPattern="Computed" />
+    <Property Name="GuidValue" Type="uniqueidentifier" />
+    <Property Name="Birthday" Type="datetime" />
+    <Property Name="Address" Type="nvarchar" MaxLength="512" />
+    <Property Name="City" Type="nvarchar" MaxLength="100" />
+    <Property Name="State" Type="nvarchar" MaxLength="100" />
+    <Property Name="PostalCode" Type="nvarchar" MaxLength="100" />
+    <Property Name="BestFriend" Type="int" />
+  </EntityType>
+  <EntityType Name="CustomerBlob">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Concurrency" Type="nchar" MaxLength="5" />
+    <Property Name="EditTimeStamp" Nullable="false" Type="timestamp" StoreGeneratedPattern="Computed" />
+    <Property Name="GuidValue" Type="uniqueidentifier" />
+    <Property Name="Birthday" Type="datetime" />
+    <Property Name="Address" Type="nvarchar" MaxLength="512" />
+    <Property Name="City" Type="nvarchar" MaxLength="100" />
+    <Property Name="State" Type="nvarchar" MaxLength="100" />
+    <Property Name="PostalCode" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="true" />
+    <Property Name="DollarAmount" Type="float" />
+  </EntityType>
+  <EntityType Name="Order Detail">
+    <Key>
+      <PropertyRef Name="OrderID" />
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="OrderID" Type="int" Nullable="false" />
+    <Property Name="ProductID" Type="int" Nullable="false" />
+    <Property Name="UnitPrice" Type="money" Nullable="false" />
+    <Property Name="Quantity" Type="smallint" Nullable="false" />
+    <Property Name="Discount" Type="real" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__Orders__Customer__00551192">
+    <End Role="Customers" Type="EFFKModel.Store.Customer" Multiplicity="0..1" />
+    <End Role="Orders" Type="EFFKModel.Store.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrderDetails_Orders">
+    <End Role="Orders" Type="EFFKModel.Store.Order" Multiplicity="1" />
+    <End Role="Order Details" Type="EFFKModel.Store.Order Detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Orders">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Order Details">
+        <PropertyRef Name="OrderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  
+  <EntityType Name="Offices">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="OfficeNumber" Type="int" Nullable="false" />
+    <Property Name="FloorNumber" Type="smallint" Nullable="false" />
+    <Property Name="BuildingName" Type="nvarchar" Nullable="false" MaxLength="30" />
+  </EntityType>
+
+  <EntityType Name="Workers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" Nullable="false" MaxLength="30" />
+    <Property Name="LastName" Type="nvarchar" Nullable="false" MaxLength="30" />
+    <Property Name="MiddleName" Type="nvarchar" Nullable="true" MaxLength="30" />
+  </EntityType>
+
+  <Association Name="FK_Workers_Offices">
+    <End Role="Offices" Type="EFFKModel.Store.Offices" Multiplicity="1" />
+    <End Role="Workers" Type="EFFKModel.Store.Workers" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Offices">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Workers">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+
+</Schema>

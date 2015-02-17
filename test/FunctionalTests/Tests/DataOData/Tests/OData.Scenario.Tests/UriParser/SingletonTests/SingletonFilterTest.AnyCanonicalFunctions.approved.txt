@@ -1,0 +1,152 @@
+$filter = OrderDetails/any(a: a/ProductID ge 3.2 and year(a/OrderPlaced) eq 1971 or month(a/OrderPlaced) lt 2 or day(a/OrderPlaced) eq 1 and hour(a/OrderPlaced) ne 3 and minute(a/OrderPlaced) eq 5 and second(a/OrderPlaced) lt 40)
+
+
+FilterQueryOption
+	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+	Parameter = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = SpecialOrder
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+	Expression = 
+	AnyNode
+		TypeReference = [Edm.Boolean Nullable=True]
+		Body = 
+						ConvertNode
+							TypeReference = [Edm.Single Nullable=False]
+							Source = 
+							SingleValuePropertyAccessNode
+								Property = ProductID
+								TypeReference = [Edm.Int32 Nullable=False]
+								Source = 
+								EntityRangeVariableReferenceNode
+									Name = a
+									NavigationSource = OrderDetails
+									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+									Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					GreaterThanOrEqual
+						3.2(Type: [Edm.Single Nullable=False])
+				And
+						SingleValueFunctionCallNode
+							Name = year
+							Return Type = [Edm.Int32 Nullable=False]
+							Function = 
+							Arguments = 
+								SingleValuePropertyAccessNode
+									Property = OrderPlaced
+									TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
+									Source = 
+									EntityRangeVariableReferenceNode
+										Name = a
+										NavigationSource = OrderDetails
+										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+										Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Equal
+						1971(Type: [Edm.Int32 Nullable=False])
+			Or
+					SingleValueFunctionCallNode
+						Name = month
+						Return Type = [Edm.Int32 Nullable=False]
+						Function = 
+						Arguments = 
+							SingleValuePropertyAccessNode
+								Property = OrderPlaced
+								TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
+								Source = 
+								EntityRangeVariableReferenceNode
+									Name = a
+									NavigationSource = OrderDetails
+									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+									Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				LessThan
+					2(Type: [Edm.Int32 Nullable=False])
+		Or
+							SingleValueFunctionCallNode
+								Name = day
+								Return Type = [Edm.Int32 Nullable=False]
+								Function = 
+								Arguments = 
+									SingleValuePropertyAccessNode
+										Property = OrderPlaced
+										TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
+										Source = 
+										EntityRangeVariableReferenceNode
+											Name = a
+											NavigationSource = OrderDetails
+											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+											Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+						Equal
+							1(Type: [Edm.Int32 Nullable=False])
+					And
+							SingleValueFunctionCallNode
+								Name = hour
+								Return Type = [Edm.Int32 Nullable=False]
+								Function = 
+								Arguments = 
+									SingleValuePropertyAccessNode
+										Property = OrderPlaced
+										TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
+										Source = 
+										EntityRangeVariableReferenceNode
+											Name = a
+											NavigationSource = OrderDetails
+											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+											Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+						NotEqual
+							3(Type: [Edm.Int32 Nullable=False])
+				And
+						SingleValueFunctionCallNode
+							Name = minute
+							Return Type = [Edm.Int32 Nullable=False]
+							Function = 
+							Arguments = 
+								SingleValuePropertyAccessNode
+									Property = OrderPlaced
+									TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
+									Source = 
+									EntityRangeVariableReferenceNode
+										Name = a
+										NavigationSource = OrderDetails
+										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+										Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Equal
+						5(Type: [Edm.Int32 Nullable=False])
+			And
+					SingleValueFunctionCallNode
+						Name = second
+						Return Type = [Edm.Int32 Nullable=False]
+						Function = 
+						Arguments = 
+							SingleValuePropertyAccessNode
+								Property = OrderPlaced
+								TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
+								Source = 
+								EntityRangeVariableReferenceNode
+									Name = a
+									NavigationSource = OrderDetails
+									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+									Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				LessThan
+					40(Type: [Edm.Int32 Nullable=False])
+		Source = 
+		CollectionNavigationNode
+			ItemType = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+			Entity Item Type = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+			NavigationSource = OrderDetails
+			Multiplicity = Many
+			Navigation Property = OrderDetails
+			Source = 
+			EntityRangeVariableReferenceNode
+				Name = $it
+				NavigationSource = SpecialOrder
+				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+		Parameters = 
+		EntityRangeVariable
+			Name = a
+			NavigationSource = OrderDetails
+			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
+		EntityRangeVariable
+			Name = $it
+			NavigationSource = SpecialOrder
+			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]

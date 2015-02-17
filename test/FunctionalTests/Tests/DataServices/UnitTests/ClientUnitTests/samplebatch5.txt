@@ -1,0 +1,106 @@
+﻿--batch_f9b231d9-72ab-46ea-9613-c7e8f5ece46b
+Content-Type: multipart/mixed; boundary=changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST http://localhost:49239/service.svc/Categories HTTP/1.1
+Content-ID: 1
+Content-Type: application/atom+xml;type=entry
+
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns:adsm="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <content type="application/xml">
+    <ads:CategoryID>999998</ads:CategoryID>
+    <ads:CategoryName>Software</ads:CategoryName>
+    <ads:Description adsm:null="true" />
+    <ads:Picture adsm:null="true" />
+  </content>
+</entry>
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST http://localhost:49239/service.svc/Products HTTP/1.1
+Content-ID: 2
+Content-Type: application/atom+xml;type=entry
+
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns:adsm="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <content type="application/xml">
+    <ads:Discontinued>false</ads:Discontinued>
+    <ads:ProductID>888887</ads:ProductID>
+    <ads:ProductName>Astoria</ads:ProductName>
+    <ads:QuantityPerUnit adsm:null="true" />
+    <ads:ReorderLevel adsm:null="true" />
+    <ads:UnitPrice adsm:null="true" />
+    <ads:UnitsInStock adsm:null="true" />
+    <ads:UnitsOnOrder adsm:null="true" />
+  </content>
+</entry>
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST $1/Products HTTP/1.1
+Content-Type: application/atom+xml;type=entry
+
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns="http://www.w3.org/2005/Atom">
+  <id>$2</id>
+</entry>
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c--
+--batch_f9b231d9-72ab-46ea-9613-c7e8f5ece46b
+Content-Type: multipart/mixed; boundary=changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST http://localhost:49239/service.svc/Categories HTTP/1.1
+Content-ID: 1
+Content-Type: application/atom+xml;type=entry
+
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns:adsm="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <content type="application/xml">
+    <ads:CategoryID>999998</ads:CategoryID>
+    <ads:CategoryName>Software</ads:CategoryName>
+    <ads:Description adsm:null="true" />
+    <ads:Picture adsm:null="true" />
+  </content>
+</entry>
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST http://localhost:49239/service.svc/Products HTTP/1.1
+Content-ID: 2
+Content-Type: application/atom+xml;type=entry
+
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns:adsm="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <content type="application/xml">
+    <ads:Discontinued>false</ads:Discontinued>
+    <ads:ProductID>888887</ads:ProductID>
+    <ads:ProductName>Astoria</ads:ProductName>
+    <ads:QuantityPerUnit adsm:null="true" />
+    <ads:ReorderLevel adsm:null="true" />
+    <ads:UnitPrice adsm:null="true" />
+    <ads:UnitsInStock adsm:null="true" />
+    <ads:UnitsOnOrder adsm:null="true" />
+  </content>
+</entry>
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST $1/Products HTTP/1.1
+Content-Type: application/atom+xml;type=entry
+
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns="http://www.w3.org/2005/Atom">
+  <id>$2</id>
+</entry>
+--batch_f9b231d9-72ab-46ea-9613-c7e8f5ece46b--

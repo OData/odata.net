@@ -1,0 +1,272 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.CodeDom" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ output extension=".cs" #>
+//---------------------------------------------------------------------
+// <copyright file="CodeDomTreeRewriter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+// this code has been generated from T4 template 'CodeDomTreeRewriter.tt' file. 
+// Do not modify the file, modify template instead.
+namespace Microsoft.Test.Taupo.Contracts
+{
+    using System;
+    using System.CodeDom;
+    using System.Collections;
+    using System.Collections.Specialized;
+
+    /// <summary>
+    /// Rewriting visitor for CodeDom trees.
+    /// </summary>
+    /// <remarks>
+    /// Current implementation always copies the input.
+    /// </remarks>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Code is generated")]
+    public class CodeDomTreeRewriter
+    {
+        /// <summary>
+        /// Initializes a new instance of the CodeDomTreeRewriter class.
+        /// </summary>
+        public CodeDomTreeRewriter()
+        {
+        }
+<#
+PushIndent("    ");
+PushIndent("    ");
+GeneratePublicRewriter(typeof(CodeExpression));
+GeneratePublicRewriter(typeof(CodeCompileUnit));
+GeneratePublicRewriter(typeof(CodeNamespace));
+GeneratePublicRewriter(typeof(CodeTypeDeclaration));
+GeneratePublicRewriter(typeof(CodeStatement));
+GeneratePublicRewriter(typeof(CodeTypeReference));
+PopIndent();
+
+foreach (Type type in typeof(CodeCompileUnit).Assembly
+    .GetExportedTypes()
+    .Where(c => c.Namespace == "System.CodeDom")
+    )
+{
+    PushIndent("    ");
+    if (type.Name.EndsWith("Collection"))
+    {
+            GenerateCollectionRewriter(type);
+    }
+    else
+    {
+            GenerateRewriter(type);
+    }
+    PopIndent();
+}PopIndent();
+#>
+
+        /// <summary>
+        /// Rewrites CodeAttributeDeclaration.
+        /// </summary>
+        /// <param name="source">A CodeAttributeDeclaration to be rewritten.</param>
+        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
+        /// <returns>Rewritten CodeAttributeDeclaration.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Need this to simplify recursion.")]
+        protected virtual CodeAttributeDeclaration Rewrite(CodeAttributeDeclaration source, ref bool didRewrite)
+        {
+            bool didChildRewrite = false;
+            CodeAttributeDeclaration result = new CodeAttributeDeclaration(this.Rewrite(source.AttributeType, ref didChildRewrite));
+            result.Name = source.Name;
+            this.Rewrite(result.Arguments, source.Arguments, ref didChildRewrite);
+            if (didChildRewrite)
+            {
+                didRewrite = true;
+                return result;
+            }
+            else
+            {
+                return source;
+            }
+        }
+        
+        /// <summary>
+        /// Copies contents of one list into another.
+        /// </summary>
+        /// <param name="target">Target collection.</param>
+        /// <param name="source">Source collection.</param>
+        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "2#", Justification = "Need this to simplify recursion.")]
+        protected void Rewrite(IList target, IList source, ref bool didRewrite)
+        {
+            didRewrite = true;
+            foreach (var str in source)
+            {
+                target.Add(str);
+            }
+        }
+
+        /// <summary>
+        /// Copies contents of one dictionary into another.
+        /// </summary>
+        /// <param name="target">Target dictionary.</param>
+        /// <param name="source">Source dictionary.</param>
+        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "2#", Justification = "Need this to simplify recursion.")]
+        protected void Rewrite(IDictionary target, IDictionary source, ref bool didRewrite)
+        {
+            didRewrite = true;
+            foreach (var k in source.Keys)
+            {
+                target.Add(k, source[k]);
+            }
+        }
+    }
+}<#+
+
+class TypeComparer : IComparer<Type>
+{
+    public int Compare(Type t1, Type t2)
+    {
+        int depthCompare = GetInheritanceDepth(t1) - GetInheritanceDepth(t2);
+        if (depthCompare != 0)
+        {
+            return -depthCompare;
+        }
+        
+        return string.Compare(t1.Name, t2.Name);
+    }
+
+    private int GetInheritanceDepth(Type t)
+    {
+        int counter = 0;
+        
+        while (t != null && t != typeof(object))
+        {
+            counter++;
+            t = t.BaseType;
+        }
+        
+        return counter;
+    }
+}void GenerateCollectionRewriter(Type type)
+{
+    WriteLine("");
+    WriteLine("/// <summary>");
+    WriteLine("/// Rewrites {0}", type.Name);
+    WriteLine("/// </summary>");
+    WriteLine("/// <param name=\"target\">Target collection.</param>");
+    WriteLine("/// <param name=\"source\">Source collection.</param>");
+    WriteLine("/// <param name=\"didRewrite\">A value which will be set to true if the rewriting returned a new object.</param>");
+    WriteLine("[System.Diagnostics.CodeAnalysis.SuppressMessage(\"Microsoft.Design\", \"CA1045:DoNotPassTypesByReference\", MessageId = \"2#\", Justification = \"Need this to simplify recursion.\")]");
+    WriteLine("protected void Rewrite({0} target, {0} source, ref bool didRewrite)", type.Name);
+    WriteLine("{");
+    PushIndent("    ");
+    string itemTypeName = type.Name.Replace("Collection", "");
+    WriteLine("foreach ({0} item in source)", itemTypeName);
+    WriteLine("{");
+    PushIndent("    ");
+    WriteLine("target.Add(this.Rewrite(item, ref didRewrite));");
+    PopIndent();
+    WriteLine("}");
+    PopIndent();
+    WriteLine("}");
+}void GenerateRewriter(Type type)
+{
+    if (type == typeof(CodeAttributeDeclaration))
+    {
+        return;
+    }
+    
+    WriteLine("");
+    WriteLine("/// <summary>");
+    WriteLine("/// Rewrites {0}", type.Name);
+    WriteLine("/// </summary>");
+    WriteLine("/// <param name=\"source\">A {0} to be rewritten.</param>", type.Name);
+    WriteLine("/// <param name=\"didRewrite\">A value which will be set to true if the rewriting returned a new object.</param>");
+    WriteLine("/// <returns>Rewritten {0}.</returns>", type.Name);
+    WriteLine("[System.Diagnostics.CodeAnalysis.SuppressMessage(\"Microsoft.Maintainability\", \"CA1502:AvoidExcessiveComplexity\", Justification = \"Generated code.\")]");
+    WriteLine("[System.Diagnostics.CodeAnalysis.SuppressMessage(\"Microsoft.Maintainability\", \"CA1505:AvoidUnmaintainableCode\", Justification = \"Code is generated.\")]");
+    WriteLine("[System.Diagnostics.CodeAnalysis.SuppressMessage(\"Microsoft.Maintainability\", \"CA1506:AvoidExcessiveClassCoupling\", Justification = \"Generated code.\")]");
+    WriteLine("[System.Diagnostics.CodeAnalysis.SuppressMessage(\"Microsoft.Design\", \"CA1045:DoNotPassTypesByReference\", MessageId = \"1#\", Justification = \"Need this to simplify recursive code.\")]");
+    WriteLine("[System.Diagnostics.CodeAnalysis.SuppressMessage(\"Microsoft.Performance\", \"CA1800:DoNotCastUnnecessarily\", Justification = \"Makes the code more readable, avoids too many variables.\")]");
+    WriteLine("protected virtual {0} Rewrite({0} source, ref bool didRewrite)", type.Name);
+    WriteLine("{");
+    PushIndent("    ");
+    if (!type.IsValueType)
+    {
+        WriteLine("if (source == null)");
+        WriteLine("{");
+        PushIndent("    ");
+        WriteLine("return source;");
+        PopIndent();
+        WriteLine("}");
+        WriteLine("");
+    }
+    
+    var children = typeof(CodeObject).Assembly.GetExportedTypes()
+        .Where(c => c.Namespace == "System.CodeDom" && c != type && type.IsAssignableFrom(c)).ToList();
+        
+    if (children.Count > 0)
+    {
+        foreach (var childType in children.OrderBy(c => c, new TypeComparer()))
+        {
+            WriteLine("if (source is {0})", childType.Name);
+            WriteLine("{");
+            PushIndent("    ");
+            WriteLine("return this.Rewrite(({0})source, ref didRewrite);", childType.Name);
+            PopIndent();
+            WriteLine("}");
+            WriteLine("");
+        }
+    }		
+    WriteLine("bool didChildRewrite = false;");
+    WriteLine("{0} result = new {0}();", type.Name);
+    
+    foreach (PropertyInfo pi in type.GetProperties())
+    {
+        if (pi.PropertyType.Name.EndsWith("Collection") || pi.PropertyType == typeof(IDictionary))
+        {
+            WriteLine("this.Rewrite(result.{0}, source.{0}, ref didChildRewrite);", pi.Name);
+        }
+        else if (pi.PropertyType.Namespace == "System.CodeDom")
+        {
+            WriteLine("result.{0} = this.Rewrite(source.{0}, ref didChildRewrite);", pi.Name);
+        }
+        else
+        {
+            WriteLine("result.{0} = source.{0};", pi.Name);
+        }
+    }
+    
+    WriteLine("if (didChildRewrite)");
+    WriteLine("{");
+    PushIndent("    ");
+    WriteLine("didRewrite = true;");
+    WriteLine("return result;");
+    PopIndent();
+    WriteLine("}");
+    WriteLine("else");
+    WriteLine("{");
+    PushIndent("    ");
+    WriteLine("return source;");
+    PopIndent();
+    WriteLine("}");
+    PopIndent();
+    WriteLine("}");
+}void GeneratePublicRewriter(Type type)
+{
+    WriteLine("");
+    WriteLine("/// <summary>");
+    WriteLine("/// Rewrites {0}", type.Name);
+    WriteLine("/// </summary>");
+    WriteLine("/// <param name=\"source\">A {0} to be rewritten.</param>", type.Name);
+    WriteLine("/// <returns>Rewritten {0}.</returns>", type.Name);
+    WriteLine("public {0} Rewrite({0} source)", type.Name);
+    WriteLine("{");
+    PushIndent("    ");
+    WriteLine("bool didRewrite = false;");
+    WriteLine("return this.Rewrite(source, ref didRewrite);");
+    PopIndent();
+    WriteLine("}");
+}#>
+

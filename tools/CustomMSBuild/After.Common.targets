@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Ensures that if this file changes it forces a rebuild -->
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BuildDependsOn>
+      GenerateTextStringResources;
+      GenerateAssemblyAttributeFile;
+      ExcludeAssemblyFilesFromSourceAnalysis;
+      $(BuildDependsOn);
+    </BuildDependsOn>
+  </PropertyGroup>
+
+  <Target Name="AfterBuild" DependsOnTargets="$(AfterBuildDependsOn)"/>
+
+  <!-- ********************************************************************************************* -->
+  <!-- *** Generate resources from .txt format resource files -->
+  <!-- ********************************************************************************************* -->
+  <PropertyGroup>
+    <GenerateTextStringResourcesDependsOn>
+      PrepareForBuild;
+      GenerateStringResources;
+    </GenerateTextStringResourcesDependsOn>
+  </PropertyGroup>
+
+  <Target Name="GenerateTextStringResources"
+          Condition="'@(TextStringResource)' != ''"
+          DependsOnTargets="$(GenerateTextStringResourcesDependsOn)"/>
+
+  <Target Name="GenerateStringResources">
+
+    <ItemGroup>
+      <EmbeddedResource Include="@(TextStringResource)" Condition="'%(TextStringResource.GenerateResource)' == 'true'">
+        <!-- "Resx" indicates it should go through GenerateResource -->
+        <Type>Resx</Type>
+        <WithCulture>false</WithCulture>
+        <ManifestResourceName>%(Filename)</ManifestResourceName>
+      </EmbeddedResource>
+    </ItemGroup>
+
+  </Target>
+
+  <!-- ********************************************************************************************* -->
+
+  <!-- ********************************************************************************************* -->
+  <!-- *** Exclude certain files globally from source analysis. In previous build system, these files-->
+  <!-- *** were globally excluded in a edit to StyleCop.targets. This replicates the same behavior.  -->
+  <!-- ********************************************************************************************* -->
+  <Target Name="ExcludeAssemblyFilesFromSourceAnalysis">
+    <ItemGroup>
+      <Compile Condition="'%(Filename)%(Extension)'=='AssemblyAttributes.cs' or '%(Filename)%(Extension)'=='AssemblyRefs.cs' or '%(Filename)%(Extension)'=='.NETFramework,Version=v4.0.AssemblyAttributes.cs' or '%(Filename)%(Extension)'=='PlatformHelper.cs'">
+        <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+      </Compile>
+    </ItemGroup>
+  </Target>
+  <!-- ********************************************************************************************* -->
+
+  <!-- ********************************************************************************************* -->
+  <!-- *** Generate a file with assembly attributes and hook it into the build -->
+  <!-- ********************************************************************************************* -->
+  <Target Name="GenerateAssemblyAttributeFile"
+          Inputs="$(MSBuildProjectFile)"
+          Outputs="$(IntermediateOutputPath.TrimEnd('\'))\AssemblyAttributes$(DefaultLanguageSourceExtension)"
+          Condition="'$(ShouldGenerateAssemblyAttributeFile)' == 'true'">
+
+    <PropertyGroup>
+      <!--Add more templates if we generate AssemblyAttribute files for other project types.-->
+      <GenerateAssemblyAttributeTemplate>UNDEFINED_GenerateAssemblyAttributeTemplate</GenerateAssemblyAttributeTemplate>
+      <GenerateAssemblyAttributeTemplateCSharp>
+using System.Reflection;
+[assembly: AssemblyDescription("%AssemblyNameFull%")]
+[assembly: AssemblyTitle("%AssemblyNameFull%")]
+[assembly: AssemblyDefaultAlias("%AssemblyNameFull%")]
+      </GenerateAssemblyAttributeTemplateCSharp>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Language)' == 'C#'">
+      <GenerateAssemblyAttributeTemplate>$(GenerateAssemblyAttributeTemplateCSharp)</GenerateAssemblyAttributeTemplate>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <AssemblyAttributeOutputFile>$(IntermediateOutputPath.TrimEnd("\\"))\AssemblyAttributes$(DefaultLanguageSourceExtension)</AssemblyAttributeOutputFile>
+      <AssemblyNameFull>$(AssemblyName)$(TargetExt)</AssemblyNameFull>
+      <AssemblyAttributeFileContentsTransformed>$([System.String]::Copy('$(GenerateAssemblyAttributeTemplate)').Replace("%25AssemblyNameFull%25",$(AssemblyNameFull)))</AssemblyAttributeFileContentsTransformed>
+    </PropertyGroup>
+
+    <Message Text="GenerateAssemblyAttributeFile: Generating $(AssemblyAttributeOutputFile)" Importance="high" Condition="'$(DebugMessages)' == 'true'"/>
+
+    <MakeDir Directories="$(IntermediateOutputPath)" Condition="!Exists($(IntermediateOutputPath))"/>
+    
+    <WriteLinesToFile
+        File="$(AssemblyAttributeOutputFile)"
+        Lines="$(AssemblyAttributeFileContentsTransformed)"
+        Overwrite="true"
+        Encoding="Unicode" 
+        ContinueOnError="false"/>
+    
+    <ItemGroup>
+      <Compile Include="$(AssemblyAttributeOutputFile)" />
+    </ItemGroup>
+
+  </Target>
+
+  <!-- ********************************************************************************************* -->
+
+  <!-- Execute StyleCop for each project -->
+  <Import Project="$(StyleCopTargets)" Condition="Exists('$(StyleCopTargets)') and '$(RunStyleCop)' == 'true' and '$(EnableStyleCop)' == 'true'"/>
+
+  <!-- Chain into the defaults from the toolset -->
+  <Import Condition="'$(DefaultCustomAfterMicrosoftCommonTargets)' != ''" Project="$(DefaultCustomAfterMicrosoftCommonTargets)" />
+</Project>

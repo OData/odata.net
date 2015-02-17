@@ -1,0 +1,79 @@
+$orderby = FirstName desc, LastName, City asc, Birthday desc
+
+
+OrderByClause
+	Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+	Direction = Descending
+	Range Variable = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = Customers
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+	Expression = 
+	SingleValuePropertyAccessNode
+		Property = FirstName
+		TypeReference = [Edm.String Nullable=True Unicode=True]
+		Source = 
+		EntityRangeVariableReferenceNode
+			Name = $it
+			NavigationSource = Customers
+			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+			Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+	Then By = 
+	OrderByClause
+		Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+		Direction = Ascending
+		Range Variable = 
+		EntityRangeVariable
+			Name = $it
+			NavigationSource = Customers
+			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+		Expression = 
+		SingleValuePropertyAccessNode
+			Property = LastName
+			TypeReference = [Edm.String Nullable=True Unicode=True]
+			Source = 
+			EntityRangeVariableReferenceNode
+				Name = $it
+				NavigationSource = Customers
+				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+		Then By = 
+		OrderByClause
+			Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+			Direction = Ascending
+			Range Variable = 
+			EntityRangeVariable
+				Name = $it
+				NavigationSource = Customers
+				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+			Expression = 
+			SingleValuePropertyAccessNode
+				Property = City
+				TypeReference = [Edm.String Nullable=True Unicode=True]
+				Source = 
+				EntityRangeVariableReferenceNode
+					Name = $it
+					NavigationSource = Customers
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+					Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+			Then By = 
+			OrderByClause
+				Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+				Direction = Descending
+				Range Variable = 
+				EntityRangeVariable
+					Name = $it
+					NavigationSource = Customers
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+				Expression = 
+				SingleValuePropertyAccessNode
+					Property = Birthday
+					TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
+					Source = 
+					EntityRangeVariableReferenceNode
+						Name = $it
+						NavigationSource = Customers
+						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+						Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Then By = 

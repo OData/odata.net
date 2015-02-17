@@ -1,0 +1,477 @@
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataT4CamelCaseTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace AstoriaUnitTests.TDD.Tests.Client
+{
+    using System.Collections;
+    using System.Collections.ObjectModel;
+    using System.IO;
+    using System.Linq.Expressions;
+    using AstoriaUnitTests.Tests;
+    using FluentAssertions;
+    using Microsoft.OData.Client;
+    using Microsoft.OData.Client.Materialization;
+    using Microsoft.OData.Core;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    public partial class Container : DataServiceContext
+    {
+        public Container(Uri serviceRoot) : 
+                base(serviceRoot, ODataProtocolVersion.V4)
+        {
+            this.ResolveName = this.ResolveNameFromType;
+            this.ResolveType = this.ResolveTypeFromName;
+        }
+
+        protected new Type ResolveTypeFromName(string typeName)
+        {
+            Type resolvedType = this.DefaultResolveType(typeName, "namespace.test", "AstoriaUnitTests.TDD.Tests.Client");
+            if ((resolvedType != null))
+            {
+                return resolvedType;
+            }
+
+            return null;
+        }
+
+        protected string ResolveNameFromType(Type clientType)
+        {
+            OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)clientType.GetCustomAttributes(typeof(OriginalNameAttribute), true).SingleOrDefault();
+            if (clientType.Namespace.Equals("AstoriaUnitTests.TDD.Tests.Client", StringComparison.Ordinal))
+            {
+                if (originalNameAttribute != null)
+                {
+                    return string.Concat("namespace.test.", originalNameAttribute.OriginalName);
+                }
+
+                return string.Concat("namespace.test.", clientType.Name);
+            }
+
+            if (originalNameAttribute != null)
+            {
+                return clientType.Namespace + "." + originalNameAttribute.OriginalName;
+            }
+
+            return clientType.FullName;
+        }
+
+        public DataServiceQuery<BaseType> BaseSet
+        {
+            get
+            {
+                if ((this._BaseSet == null))
+                {
+                    this._BaseSet = this.CreateQuery<BaseType>("baseSet");
+                }
+                return this._BaseSet;
+            }
+        }
+        private DataServiceQuery<BaseType> _BaseSet;
+
+        public DataServiceQuery<EntityType> EntitySet
+        {
+            get
+            {
+                if ((this._EntitySet == null))
+                {
+                    this._EntitySet = this.CreateQuery<EntityType>("entitySet");
+                }
+                return this._EntitySet;
+            }
+        }
+        private DataServiceQuery<EntityType> _EntitySet;
+
+        public void AddToEntitySet(EntityType entityType)
+        {
+            this.AddObject("entitySet", entityType);
+        }
+
+        public DataServiceQuery<SingleType> Singleton
+        {
+            get
+            {
+                if ((this._Singleton == null))
+                {
+                    this._Singleton = this.CreateSingletonQuery<SingleType>("singleton");
+                }
+                return this._Singleton;
+            }
+        }
+        private DataServiceQuery<SingleType> _Singleton;
+    }
+
+    [Key("keyProp")]
+    [OriginalNameAttribute("baseType")]
+    public class BaseType : BaseEntityType
+    {
+        [OriginalNameAttribute("keyProp")]
+        public int KeyProp { get; set; }
+
+        [OriginalNameAttribute("colorProp")]
+        public Color? ColorProp { get; set; }
+
+        [OriginalNameAttribute("primitiveCollection")]
+        public ObservableCollection<int> PrimitiveCollection { get; set; }
+
+        [OriginalNameAttribute("enumCollection")]
+        public ObservableCollection<Color> EnumCollection { get; set; }
+
+        [OriginalNameAttribute("complexCollection")]
+        public ObservableCollection<ComplexType> ComplexCollection { get; set; }
+    }
+
+    [OriginalNameAttribute("entityType")]
+    public class EntityType : BaseType
+    {
+        [OriginalNameAttribute("access")]
+        public AccessLevel Access { get; set; }
+
+        [OriginalNameAttribute("complexProp")]
+        public ComplexType ComplexProp { get; set; }
+
+        [OriginalNameAttribute("navigationProperty")]
+        public Navigation NavigationProperty { get; set; }
+    }
+
+    [Key("keyProp")]
+    [OriginalNameAttribute("singleType")]
+    public class SingleType : BaseEntityType
+    {
+        [OriginalNameAttribute("keyProp")]
+        public int KeyProp { get; set; }
+
+        [OriginalNameAttribute("name")]
+        public string Name { get; set; }
+    }
+
+    [OriginalNameAttribute("complexType")]
+    public class ComplexType
+    {
+        [OriginalNameAttribute("age")]
+        public int Age { get; set; }
+
+        [OriginalNameAttribute("name")]
+        public string Name { get; set; }
+
+        [OriginalNameAttribute("color")]
+        public Color Color { get; set; }
+
+        [OriginalNameAttribute("primitives")]
+        public ObservableCollection<int> Primitives { get; set; }
+
+        [OriginalNameAttribute("enums")]
+        public ObservableCollection<Color> Enums { get; set; }
+    }
+
+    [OriginalNameAttribute("navigation")]
+    public class Navigation
+    {
+        [OriginalNameAttribute("id")]
+        public int Id { get; set; }
+
+        [OriginalNameAttribute("name")]
+        public string Name { get; set; }
+    }
+
+    [OriginalNameAttribute("color")]
+    public enum Color
+    {
+        [OriginalNameAttribute("red")]
+        Red = 1,
+        [OriginalNameAttribute("white")]
+        White = 2,
+        [OriginalNameAttribute("blue")]
+        Blue = 3
+    }
+
+    [Flags]
+    [OriginalNameAttribute("accessLevel")]
+    public enum AccessLevel
+    {
+        [OriginalNameAttribute("read")]
+        Read,
+        Write,
+        [OriginalNameAttribute("execute")]
+        Execute
+    }
+
+    [TestClass]
+    public class ODataT4CamelCaseTests
+    {
+        public const string ServerNamespace = "namespace.test";
+        public Container Context = new Container(new Uri("http://www.odata.org/service.svc"));
+
+        [TestMethod]
+        public void EntitySetUriShouldUseOriginalName()
+        {
+            var entitySet = Context.EntitySet;
+            entitySet.RequestUri.OriginalString.Should().Be("http://www.odata.org/service.svc/entitySet");
+        }
+
+        [TestMethod]
+        public void SingletonUriShouldUseOriginalName()
+        {
+            var singleton = Context.Singleton;
+            singleton.RequestUri.OriginalString.Should().Be("http://www.odata.org/service.svc/singleton");
+
+            var singletonProp = Context.Singleton.Select(e => e.Name) as DataServiceQuery;
+            singletonProp.RequestUri.OriginalString.Should().Be("http://www.odata.org/service.svc/singleton/name");
+        }
+
+        [TestMethod]
+        public void EntityUriShouldUseOriginalName()
+        {
+            var entity = Context.EntitySet.Where(e => e.KeyProp == 1) as DataServiceQuery;
+            entity.RequestUri.OriginalString.Should().Be("http://www.odata.org/service.svc/entitySet(1)");
+        }
+
+        [TestMethod]
+        public void NavigationUriShouldUseOriginalName()
+        {
+            var navigation = Context.EntitySet.Expand(e => e.NavigationProperty).Where(e => e.KeyProp == 1) as DataServiceQuery;
+            navigation.RequestUri.OriginalString.Should().Be("http://www.odata.org/service.svc/entitySet(1)?$expand=navigationProperty");
+        }
+
+        [TestMethod]
+        public void TypeNameUriShouldUseOriginalName()
+        {
+            var baseEntity = Context.BaseSet.Where(b => b.KeyProp == 1).Select(b => (b as EntityType).ComplexProp) as DataServiceQuery;
+            baseEntity.RequestUri.OriginalString.Should().Be("http://www.odata.org/service.svc/baseSet(1)/" + ServerNamespace + ".entityType/complexProp");
+        }
+
+        [TestMethod]
+        public void MaterializeEntityShouldWork()
+        {
+            var odataEntry = new ODataEntry() { Id = new Uri("http://www.odata.org/service.svc/entitySet(1)") };
+            odataEntry.Properties = new ODataProperty[]
+            {
+                new ODataProperty { Name = "keyProp", Value = 1 },
+                new ODataProperty
+                {
+                    Name = "complexProp",
+                    Value = new ODataComplexValue
+                    {
+                        Properties = new ODataProperty[]
+                        {
+                            new ODataProperty { Name = "age", Value = 11 },
+                            new ODataProperty { Name = "name", Value = "June" }
+                        }
+                    }
+                },
+                new ODataProperty { Name = "colorProp", Value = new ODataEnumValue("blue") },
+                new ODataProperty {
+                    Name = "primitiveCollection",
+                    Value = new ODataCollectionValue
+                    {
+                        TypeName = "Edm.Int32",
+                        Items = new List<int> {1, 2, 3}
+                    }
+                },
+                new ODataProperty {
+                    Name = "complexCollection",
+                    Value = new ODataCollectionValue
+                    {
+                        TypeName = "complexType",
+                        Items = new List<ODataComplexValue>
+                        {
+                            new ODataComplexValue
+                            {
+                                Properties = new ODataProperty[]
+                                {
+                                    new ODataProperty { Name = "name", Value = "Aug" },
+                                    new ODataProperty { Name = "age", Value = 8 },
+                                    new ODataProperty { Name = "color", Value = new ODataEnumValue("white")}
+                                }
+                            },
+                            new ODataComplexValue
+                            {
+                                Properties = new ODataProperty[]
+                                {
+                                    new ODataProperty { Name = "name", Value = "Sep" },
+                                    new ODataProperty { Name = "age", Value = 9 },
+                                    new ODataProperty { Name = "color", Value = new ODataEnumValue("blue") }
+                                }
+                            }
+                        }
+                    }
+                },
+                new ODataProperty {
+                    Name = "enumCollection",
+                    Value = new ODataCollectionValue
+                    {
+                        TypeName = "color",
+                        Items = new List<ODataEnumValue> { new ODataEnumValue("white"), new ODataEnumValue("blue") }
+                    }
+                }
+            };
+
+            var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
+            var context = new DataServiceContext();
+            MaterializerEntry.CreateEntry(odataEntry, ODataFormat.Atom, true, clientEdmModel);
+            var materializerContext = new TestMaterializerContext() { Model = clientEdmModel, Context = context };
+            var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
+            QueryComponents components = new QueryComponents(new Uri("http://foo.com/Service"), new Version(4, 0), typeof(EntityType), null, new Dictionary<Expression, Expression>());
+
+            var entriesMaterializer = new ODataEntriesEntityMaterializer(new ODataEntry[] { odataEntry }, materializerContext, adapter, components, typeof(EntityType), null, ODataFormat.Atom);
+
+            var customersRead = new List<EntityType>();
+            while (entriesMaterializer.Read())
+            {
+                customersRead.Add(entriesMaterializer.CurrentValue as EntityType);
+            }
+
+            customersRead.Should().HaveCount(1);
+            customersRead[0].KeyProp.Should().Be(1);
+            customersRead[0].ComplexProp.Should().Equals(new ComplexType { Age = 11, Name = "June" });
+            customersRead[0].ColorProp.Should().Equals(Color.Blue);
+            customersRead[0].PrimitiveCollection.Should().Equals(new List<int> { 1, 2, 3 });
+            ComplexType complex1 = new ComplexType { Name = "Aug", Age = 8, Color = Color.White };
+            ComplexType complex2 = new ComplexType { Name = "Sep", Age = 9, Color = Color.Blue };
+            customersRead[0].ComplexCollection.Should().Equals(new List<ComplexType> { complex1, complex2 });
+            customersRead[0].EnumCollection.Should().Equals(new List<Color> { Color.White, Color.Blue });
+        }
+
+        [TestMethod]
+        public void MaterializeComplexTypeShouldWork()
+        {
+            ODataComplexValue complexValue = new ODataComplexValue
+            {
+                Properties = new ODataProperty[]
+                {
+                    new ODataProperty { Name = "age", Value = 11 },
+                    new ODataProperty { Name = "name", Value = "June" },
+                    new ODataProperty { Name = "color", Value = new ODataEnumValue("blue") },
+                    new ODataProperty
+                    {
+                        Name = "primitives",
+                        Value = new ODataCollectionValue
+                        {
+                            TypeName = "Edm.Int32",
+                            Items = new List<int> {1, 2, 3}
+                        }
+                    },
+                    new ODataProperty
+                    {
+                        Name = "enums",
+                        Value = new ODataCollectionValue
+                        {
+                            TypeName = "color",
+                            Items = new List<ODataEnumValue> { new ODataEnumValue("white"), new ODataEnumValue("blue") }
+                        }
+                    }
+                }
+            };
+            this.CreatePrimitiveValueMaterializationPolicy().MaterializeComplexTypeProperty(typeof(ComplexType), complexValue);
+            complexValue.HasMaterializedValue().Should().BeTrue();
+            var complex = complexValue.GetMaterializedValue().As<ComplexType>();
+            complex.Name.Should().Be("June");
+            complex.Age.Should().Be(11);
+            complex.Color.Should().Be(Color.Blue);
+            complex.Primitives.Should().ContainInOrder(1, 2, 3);
+            complex.Enums.Should().ContainInOrder(Color.White, Color.Blue);
+        }
+
+        [TestMethod]
+        public void MaterializeEnumTypeShouldWork()
+        {
+            ODataEnumValue enumValue = new ODataEnumValue("blue");
+            ODataProperty property = new ODataProperty{ Name = "enumProperty", Value = enumValue };
+            var enumPolicy = new EnumValueMaterializationPolicy(new TestMaterializerContext());
+            var result = enumPolicy.MaterializeEnumTypeProperty(typeof(Color), property);
+            property.GetMaterializedValue().Should().Be(Color.Blue);
+            result.Should().Be(Color.Blue);
+        }
+
+        [TestMethod]
+        public void WriteUriOperationParametersShouldUseOriginalName()
+        {
+            var requestInfo = new RequestInfo(Context);
+            var serializer = new Serializer(requestInfo);
+            ComplexType complex = new ComplexType()
+            {
+                Age = 11,
+                Name = "June",
+                Color = Color.White,
+                Primitives = new ObservableCollection<int> { 1, 2, 3 },
+                Enums = new ObservableCollection<Color> { Color.White, Color.Blue }
+            };
+            Uri requestUri = new Uri("http://www.odata.org/service.svc/Function");
+            List<UriOperationParameter> parameters = new List<UriOperationParameter>
+            {
+                new UriOperationParameter("complexArg", complex),
+                new UriOperationParameter("color", Color.Blue),
+                new UriOperationParameter("colors", new List<Color> { Color.White, Color.Blue })
+            };
+            string complexParameterString = Uri.EscapeDataString("{\"@odata.type\":\"#" + ServerNamespace + ".complexType\",\"age\":11,\"color@odata.type\":\"#namespace.test.color\",\"color\":\"white\",\"enums@odata.type\":\"#Collection(namespace.test.color)\",\"enums\":[\"white\",\"blue\"],\"name\":\"June\",\"primitives@odata.type\":\"#Collection(Int32)\",\"primitives\":[1,2,3]}");
+            // Should use ServerNamespace and type name in schema for enum type in url
+            string enumParameterString = Uri.EscapeDataString("namespace.test" + ".color'blue'");
+            string enumsParameterString = Uri.EscapeDataString("[\"white\",\"blue\"]");
+            Uri expectedUri = new Uri(string.Format("http://www.odata.org/service.svc/Function(complexArg=%40complexArg,color={0},colors=%40colors)?%40complexArg={1}&%40colors={2}", enumParameterString, complexParameterString, enumsParameterString));
+            requestUri = serializer.WriteUriOperationParametersToUri(requestUri, parameters);
+            Assert.AreEqual(expectedUri, requestUri);
+        }
+
+        [TestMethod]
+        public void WriteBodyOperationParametersShouldUseOriginalName()
+        {
+            var requestInfo = new RequestInfo(Context);
+            var serializer = new Serializer(requestInfo);
+            ComplexType complex = new ComplexType()
+            {
+                Age = 11,
+                Name = "June",
+                Color = Color.White,
+                Primitives = new ObservableCollection<int> { 1, 2, 3 },
+                Enums = new ObservableCollection<Color> { Color.White, Color.Blue }
+            };
+            Uri requestUri = new Uri("http://www.odata.org/service.svc/Action");
+            List<BodyOperationParameter> parameters = new List<BodyOperationParameter>
+            {
+                new BodyOperationParameter("p1", 1),
+                new BodyOperationParameter("complexArg", complex),
+                new BodyOperationParameter("color", Color.Blue),
+                new BodyOperationParameter("colors", new List<Color> { Color.White, Color.Blue })
+            };
+            ODataRequestMessageWrapper requestMessage = new RequestInfo(Context).WriteHelper.CreateRequestMessage(Context.CreateRequestArgsAndFireBuildingRequest("POST", requestUri, new HeaderCollection(), Context.HttpStack, null /*descriptor*/));
+            const string complexParameterString = "\"complexArg\":{\"@odata.type\":\"#" + ServerNamespace + ".complexType\",\"age\":11,\"color@odata.type\":\"#namespace.test.color\",\"color\":\"white\",\"enums@odata.type\":\"#Collection(" + ServerNamespace + ".color)\",\"enums\":[\"white\",\"blue\"],\"name\":\"June\",\"primitives@odata.type\":\"#Collection(Int32)\",\"primitives\":[1,2,3]}";
+            const string enumParameterString = "\"color\":\"blue\"";
+            const string enumsParameterString = "\"colors\":[\"white\",\"blue\"]";
+            serializer.WriteBodyOperationParameters(parameters, requestMessage);
+            MemoryStream stream = (MemoryStream)requestMessage.CachedRequestStream.Stream;
+            StreamReader streamReader = new StreamReader(stream);
+            String body = streamReader.ReadToEnd();
+            body.Should().Contain("\"p1\":1");
+            body.Should().Contain(complexParameterString);
+            body.Should().Contain(enumParameterString);
+            body.Should().Contain(enumsParameterString);
+        }
+
+        private ComplexValueMaterializationPolicy CreatePrimitiveValueMaterializationPolicy()
+        {
+            TestMaterializerContext context = new TestMaterializerContext() { Context = new DataServiceContext()};
+            return CreatePrimitiveValueMaterializationPolicy(context);
+        }
+
+        private ComplexValueMaterializationPolicy CreatePrimitiveValueMaterializationPolicy(TestMaterializerContext context)
+        {
+            var lazyPrimitivePropertyConverter = new Microsoft.OData.Client.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter(ODataFormat.Json));
+            var primitiveValueMaterializerPolicy = new PrimitiveValueMaterializationPolicy(context, lazyPrimitivePropertyConverter);
+            var complexPolicy = new ComplexValueMaterializationPolicy(context, lazyPrimitivePropertyConverter);
+            var collectionPolicy = new CollectionValueMaterializationPolicy(context, primitiveValueMaterializerPolicy);
+            var intanceAnnotationPolicy = new InstanceAnnotationMaterializationPolicy(context);
+
+            collectionPolicy.ComplexValueMaterializationPolicy = complexPolicy;
+            complexPolicy.CollectionValueMaterializationPolicy = collectionPolicy;
+            complexPolicy.InstanceAnnotationMaterializationPolicy = intanceAnnotationPolicy;
+
+            return complexPolicy;
+        }
+    }
+}

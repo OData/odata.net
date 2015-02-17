@@ -1,0 +1,16 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/collection"><atom:title /><categories><atom:category term="Test category 1 term" scheme="http://odata.org/categories/1" label="Test category 1 label" /></categories></collection></workspace></service>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/collection"><atom:title /><categories><atom:category term="Test category 1 term" scheme="http://odata.org/categories/1" label="Test category 1 label" /></categories></collection></workspace></service>
+
+Combination: 5; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/collection"><atom:title /><categories><atom:category term="Test category 1 term" /></categories></collection></workspace></service>
+
+Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"><workspace><atom:title type="text">Default</atom:title><collection href="http://odata.org/collection"><atom:title /><categories><atom:category term="Test category 1 term" /></categories></collection></workspace></service>
+

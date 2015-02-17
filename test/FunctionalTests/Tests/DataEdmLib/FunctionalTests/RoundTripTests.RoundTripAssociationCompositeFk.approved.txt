@@ -1,0 +1,23 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id1" />
+      <PropertyRef Name="Id2" />
+    </Key>
+    <Property Name="Id1" Type="Edm.Int32" />
+    <Property Name="Id2" Type="Edm.Int32" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Id1" />
+    </Key>
+    <Property Name="Id1" Type="Edm.Int32" />
+    <Property Name="CustomerId1" Type="Edm.Int32" />
+    <Property Name="CustomerId2" Type="Edm.Int32" />
+    <NavigationProperty Name="ToCustomer" Type="NS1.Customer" Nullable="false">
+      <ReferentialConstraint Property="CustomerId1" ReferencedProperty="Id1" />
+      <ReferentialConstraint Property="CustomerId2" ReferencedProperty="Id2" />
+    </NavigationProperty>
+  </EntityType>
+</Schema>
+

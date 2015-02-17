@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{E7A080F5-2054-447F-B09C-4E7B9B1B1B6A}</ProjectGuid>
+    <RootNamespace>AstoriaUnitTests.TDD</RootNamespace>
+    <AssemblyName>AstoriaUnitTests.TDDUnitTests</AssemblyName>
+    <SignAssemblyAttribute>true</SignAssemblyAttribute>
+    <TransparentAssembly>true</TransparentAssembly>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <DefineConstants>$(DefineConstants);EFRTM</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>3016;472</NoWarn>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll" />
+    <Reference Include="$(NugetPack)\EntityFramework.4.3.1\lib\net40\EntityFramework.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
+      <Name>Microsoft.OData.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\CommonTestUtil\Microsoft.OData.Service.Test.Common.csproj">
+      <Project>{A7A080F5-2054-447F-B09C-4E7B8B1B1B4A}</Project>
+      <Name>Microsoft.OData.Service.Test.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\Microsoft.Spatial\TestData.cs">
+      <Link>Tests\Server\Util\TestData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\DataOData\Tests\OData.Query.TDD.Tests\TestUtilities\ModelBuildingHelpers.cs">
+      <Link>Tests\Server\Util\ModelBuildingHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\DataOData\Tests\OData.Query.TDD.Tests\TestUtilities\HardCodedTestModel.cs">
+      <Link>Tests\Server\Util\HardCodedTestModel.cs</Link>
+    </Compile>
+    <Compile Include="Tests\Server\ClientPreferenceTests.cs" />
+    <Compile Include="Tests\Server\WebUtilTests.cs" />
+    <Compile Include="Tests\Server\ContentTypeUtilTests.cs" />
+    <Compile Include="Tests\Server\AnnotationsTests.cs" />
+    <Compile Include="Tests\Server\DataServiceSimulatorWithGetService.cs" />
+    <Compile Include="Tests\Server\SkipTokenAndETagParserTests.cs" />
+    <Compile Include="Tests\Server\MetadataProviderEdmModelTests.cs" />
+    <Compile Include="Tests\Server\Parsing\NodeToExpressionTranslatorTests.cs" />
+    <Compile Include="Tests\Server\ErrorHandlerTests.cs" />
+    <Compile Include="Tests\Server\PublicProviderTests.cs" />
+    <Compile Include="Tests\Server\SelectedOperationsCacheTests.cs" />
+    <Compile Include="Tests\Server\DataServiceActionProviderWrapperTests.cs" />
+    <Compile Include="Tests\Server\HandleExceptionArgsTests.cs" />
+    <Compile Include="Tests\Server\LinqExtensionsTests.cs" />
+    <Compile Include="Tests\Server\OperationSerializerTests.cs" />
+    <Compile Include="Tests\Server\OperationLinkBuilderTests.cs" />
+    <Compile Include="Tests\Server\OperationCacheTests.cs" />
+    <Compile Include="Tests\Server\DataServiceConfigurationTests.cs" />
+    <Compile Include="Tests\Server\ServerUrlConventionTests.cs" />
+    <Compile Include="Tests\Server\LiteralConversionTests.cs" />
+    <Compile Include="Tests\Server\KeySerializationTests.cs" />
+    <Compile Include="Tests\Server\CallbackQueryOptionHandlerTests.cs" />
+    <Compile Include="Tests\Server\DataServiceBehaviorTests.cs" />
+    <Compile Include="Tests\Server\EntityToSerializeTests.cs" />
+    <Compile Include="Tests\Server\ProjectedWrapperTests.cs" />
+    <Compile Include="Tests\Server\ODataFormatWithParametersTests.cs" />
+    <Compile Include="Tests\Server\DataServiceOperationContextTests.cs" />
+    <Compile Include="Tests\Server\MessageWriterBuilderTests.cs" />
+    <Compile Include="Tests\Server\ExpandAndSelectParsingTests.cs" />
+    <Compile Include="Tests\Server\AstoriaRequestMessageTests.cs" />
+    <Compile Include="Tests\Server\AstoriaResponseMessageTests.cs" />
+    <Compile Include="Tests\Server\TestActionProvider.cs" />
+    <Compile Include="Tests\Server\TestSerializedEntityKey.cs" />
+    <Compile Include="Tests\Server\VersionUtilTests.cs" />
+    <Compile Include="Tests\Server\WcfQueryStringHandlerTests.cs" />
+    <Compile Include="Tests\Server\AcceptableContentTypeSelectorTests.cs" />
+    <Compile Include="Tests\Server\RequestDescriptionTests.cs" />
+    <Compile Include="Tests\Server\ExpandedWrapperTests.cs" />
+    <Compile Include="Tests\Server\PayloadMetadataVerbosityTests.cs" />
+    <Compile Include="Tests\Server\DataServiceExceptionSerializationTests.cs" />
+    <Compile Include="Tests\Server\DataServiceProviderWrapperTests.cs" />
+    <Compile Include="Tests\Server\HttpVerbsTests.cs" />
+    <Compile Include="Tests\Server\PipelineTests.cs" />
+    <Compile Include="Tests\Server\ResourceTypeTests.cs" />
+    <Compile Include="Tests\Server\Simulators\DataServiceHost2Simulator.cs" />
+    <Compile Include="Tests\Server\HostScenarioTests.cs" />
+    <Compile Include="Tests\Server\Util\TestService.cs" />
+    <Compile Include="Tests\Server\UpdatableWrapperTests.cs" />
+    <Compile Include="Tests\Server\DataServiceExecutionProviderWrapperTests.cs" />
+    <Compile Include="Tests\Server\DataServiceExecutionProviderTests.cs" />
+    <Compile Include="Tests\Server\ExpressionLexerTest.cs" />
+    <Compile Include="Tests\Server\MetadataObjectModelTests.cs" />
+    <Compile Include="Tests\Server\ObjectContextMetadataTests.cs" />
+    <Compile Include="Tests\Server\ObjectContextServiceProvider_MetadataTests.cs" />
+    <Compile Include="Tests\Server\PrimitiveResourceTypeMapTests.cs" />
+    <Compile Include="Tests\Server\RequestQueryProcessorTests.cs" />
+    <Compile Include="Tests\Server\RequestUriProcessorTests.cs" />
+    <Compile Include="Tests\Server\Simulators\DataServiceHostSimulator.cs" />
+    <Compile Include="Tests\Server\Simulators\DataServiceProviderSimulator.cs" />
+    <Compile Include="Tests\Server\Simulators\ProviderMemberSimulator.cs" />
+    <Compile Include="Tests\Server\Simulators\ProviderMetadataSimulator.cs" />
+    <Compile Include="Tests\Server\Simulators\ProviderTypeSimulator.cs" />
+    <Compile Include="Tests\Server\Simulators\DataServiceSimulator.cs" />
+    <Compile Include="Tests\Server\MultiThreadingTest.cs" />
+    <Compile Include="Tests\Server\Util\ServiceSimulatorFactory.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

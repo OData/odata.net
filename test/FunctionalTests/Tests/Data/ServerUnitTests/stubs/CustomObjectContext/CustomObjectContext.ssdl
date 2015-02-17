@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="testModel.Store" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+  <EntityContainer Name="dbo">
+    <EntitySet Name="Customers" EntityType="testModel.Store.Customer" Table="#Customers"/>
+    <EntitySet Name="CustomerBlobs" EntityType="testModel.Store.CustomerBlob" Table="#CustomerBlobs"/>
+    <EntitySet Name="Orders" EntityType="testModel.Store.Order" Table="#Orders"/>
+    <AssociationSet Name="FK__Orders__Customer__00551192" Association="testModel.Store.FK__Orders__Customer__00551192">
+      <End Role="Customers" EntitySet="Customers" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <!--<AssociationSet Name="CustomersBestFriend" Association="testModel.Store.CustomersBestFriend">
+      <End Role="BestFriend" EntitySet="Customers" />
+      <End Role="CustomersWhoConsiderMeTheirBestFriend" EntitySet="Customers" />
+    </AssociationSet>-->
+  </EntityContainer>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Concurrency" Type="nchar" MaxLength="5" />
+    <Property Name="EditTimeStamp" Nullable="false" Type="timestamp" StoreGeneratedPattern="Computed" />
+    <Property Name="GuidValue" Type="uniqueidentifier" />
+    <Property Name="Birthday" Type="datetime" />
+    <Property Name="Address" Type="nvarchar" MaxLength="512" />
+    <Property Name="City" Type="nvarchar" MaxLength="100" />
+    <Property Name="State" Type="nvarchar" MaxLength="100" />
+    <Property Name="PostalCode" Type="nvarchar" MaxLength="100" />
+    <Property Name="BestFriend" Type="int" />
+  </EntityType>
+  <EntityType Name="CustomerBlob">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="Concurrency" Type="nchar" MaxLength="5" />
+    <Property Name="EditTimeStamp" Nullable="false" Type="timestamp" StoreGeneratedPattern="Computed" />
+    <Property Name="GuidValue" Type="uniqueidentifier" />
+    <Property Name="Birthday" Type="datetime" />
+    <Property Name="Address" Type="nvarchar" MaxLength="512" />
+    <Property Name="City" Type="nvarchar" MaxLength="100" />
+    <Property Name="State" Type="nvarchar" MaxLength="100" />
+    <Property Name="PostalCode" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="true" />
+    <Property Name="DollarAmount" Type="float" />
+  </EntityType>
+  <Association Name="FK__Orders__Customer__00551192">
+    <End Role="Customers" Type="testModel.Store.Customer" Multiplicity="0..1" />
+    <End Role="Orders" Type="testModel.Store.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

@@ -1,0 +1,5 @@
+﻿### This file contains valid MULTIPOINT data in geography well known text format. Comments are lines starting with # ###
+MULTIPOINT EMPTY
+MULTIPOINT ((-122.7 47.38))
+MULTIPOINT ((178.94 51.5961), (172.826 52.7892), (177.539 52.1022), (177.508 51.9917), (173.153 52.8453), (173.045 52.8103), (177.76 51.9461))
+MULTIPOINT ((173.334 52.8606), (178.7 51.65), (179.5 51.9125), (179.728 51.9222), (173.105 52.795), (172.914 52.9778))

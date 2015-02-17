@@ -1,0 +1,2148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectGuid>{ACB8647F-9830-4B96-B45A-6A0ACDE6A25F}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.Astoria</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.Astoria.SL</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <NoWarn>3005,3016</NoWarn>
+    <TaupoCrossTargettingSourcePath>..\Taupo.Astoria</TaupoCrossTargettingSourcePath>
+    <DefineConstants>TAUPO_ASTORIA</DefineConstants>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <XTargetOutputFile Include="$(MSBuildThisFile)">
+      <SourceProject>$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Astoria\Microsoft.Test.Taupo.Astoria.csproj</SourceProject>
+      <TargetPathPrefixName>TaupoCrossTargettingSourcePath</TargetPathPrefixName>
+    </XTargetOutputFile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Web\Client.PortableLibrary\Microsoft.OData.Client.Portable.csproj">
+      <Project>{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Xml" />
+    <Reference Include="$(SilverlightClientLibraries)\System.Xml.Linq.dll">
+      <SpecificVersion>true</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+  <!--
+  This ItemGroup is generated automatically.
+  
+  !!!! DO NOT MODIFY THIS ItemGroup MANUALLY !!!!
+  -->
+  <ItemGroup>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\..\PlatformHelper.cs">
+      <Link>PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\AnonymousAuthenticationProvider.cs">
+      <Link>AnonymousAuthenticationProvider.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\AssemblyAttributes.cs">
+      <Link>AssemblyAttributes.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\AstoriaQueryDataSetBuilder.cs">
+      <Link>AstoriaQueryDataSetBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\AstoriaQueryTypeLibraryBuilder.cs">
+      <Link>AstoriaQueryTypeLibraryBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\AstoriaTestCaseBase.cs">
+      <Link>AstoriaTestCaseBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\AstoriaTestModule.cs">
+      <Link>AstoriaTestModule.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\AstoriaTestServices.cs">
+      <Link>AstoriaTestServices.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\AstoriaWorkspaceBuilder.cs">
+      <Link>AstoriaWorkspaceBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientExpectedErrorComparer.cs">
+      <Link>Client\ClientExpectedErrorComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientQueryCodeGenHelperMethods.cs">
+      <Link>Client\ClientQueryCodeGenHelperMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientQueryExpressionCodeExpressionConverter.cs">
+      <Link>Client\ClientQueryExpressionCodeExpressionConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientQueryFreeVariableAssignmentsExtractingVisitor.cs">
+      <Link>Client\ClientQueryFreeVariableAssignmentsExtractingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientQueryGenerator.cs">
+      <Link>Client\ClientQueryGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientQueryInvokeActionSingleVariationCodeBuilder.cs">
+      <Link>Client\ClientQueryInvokeActionSingleVariationCodeBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientQueryMethodSyntaxCodeGenerator.cs">
+      <Link>Client\ClientQueryMethodSyntaxCodeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientQueryResultComparer.cs">
+      <Link>Client\ClientQueryResultComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientQuerySingleVariationCodeBuilder.cs">
+      <Link>Client\ClientQuerySingleVariationCodeBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientQuerySingleVariationCodeBuilderBase.cs">
+      <Link>Client\ClientQuerySingleVariationCodeBuilderBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientQuerySingleVariationCodeBuilderResolver.cs">
+      <Link>Client\ClientQuerySingleVariationCodeBuilderResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientQuerySyntaxCodeGenerator.cs">
+      <Link>Client\ClientQuerySyntaxCodeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientQueryVersionErrorCalculator.cs">
+      <Link>Client\ClientQueryVersionErrorCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientResponseQueryValueBuilder.cs">
+      <Link>Client\ClientResponseQueryValueBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientResultComparerBase.cs">
+      <Link>Client\ClientResultComparerBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\ClientSideProjectionReplacingVisitor.cs">
+      <Link>Client\ClientSideProjectionReplacingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\DataServiceContextCreator.cs">
+      <Link>Client\DataServiceContextCreator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\DataServiceContextExtensions.cs">
+      <Link>Client\DataServiceContextExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\DataServiceContextHttpTracker.cs">
+      <Link>Client\DataServiceContextHttpTracker.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\DataServiceContextRequestsDefaultVerifier.cs">
+      <Link>Client\DataServiceContextRequestsDefaultVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\DataServiceContextTracker.cs">
+      <Link>Client\DataServiceContextTracker.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\DataServiceContextTrackingScope.cs">
+      <Link>Client\DataServiceContextTrackingScope.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\DataServiceContextVerifier.cs">
+      <Link>Client\DataServiceContextVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\DataServiceExecuteVerifier.cs">
+      <Link>Client\DataServiceExecuteVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\DataServiceResponseDefaultVerifier.cs">
+      <Link>Client\DataServiceResponseDefaultVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\DataServiceResponsePreferenceVerifier.cs">
+      <Link>Client\DataServiceResponsePreferenceVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\DefaultDataContextFormatApplier.cs">
+      <Link>Client\DefaultDataContextFormatApplier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\DescriptorExtensions.cs">
+      <Link>Client\DescriptorExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\EntityDescriptorDataDefaultChangeTracker.cs">
+      <Link>Client\EntityDescriptorDataDefaultChangeTracker.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\EntityDescriptorValueCalculator.cs">
+      <Link>Client\EntityDescriptorValueCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\EntityDescriptorVersionCalculator.cs">
+      <Link>Client\EntityDescriptorVersionCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\HttpDrivenSaveChangesVerifier.cs">
+      <Link>Client\HttpDrivenSaveChangesVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\JsonLightDataContextFormatApplier.cs">
+      <Link>Client\JsonLightDataContextFormatApplier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\LinqResultComparerDataServiceContextAdapter.cs">
+      <Link>Client\LinqResultComparerDataServiceContextAdapter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\PocoClientCodeLayerGenerator.cs">
+      <Link>Client\PocoClientCodeLayerGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\PocoDataBindingClientCodeLayerGenerator.cs">
+      <Link>Client\PocoDataBindingClientCodeLayerGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\RemoteClientCodeLayerGenerator.cs">
+      <Link>Client\RemoteClientCodeLayerGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\SaveChangesHttpValidatingEmulator.cs">
+      <Link>Client\SaveChangesHttpValidatingEmulator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\SaveChangesRequestDefaultCalculator.cs">
+      <Link>Client\SaveChangesRequestDefaultCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\SaveChangesResponseDefaultCalculator.cs">
+      <Link>Client\SaveChangesResponseDefaultCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\SaveChangesServerStateVerifier.cs">
+      <Link>Client\SaveChangesServerStateVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\SaveChangesSingleRequestCalculator.cs">
+      <Link>Client\SaveChangesSingleRequestCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\SaveChangesVerifier.cs">
+      <Link>Client\SaveChangesVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\SaveChangesVerifierBase.cs">
+      <Link>Client\SaveChangesVerifierBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Client\SendingRequestEventVerifier.cs">
+      <Link>Client\SendingRequestEventVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ClrMetadataProviderTypesStrategy.cs">
+      <Link>ClrMetadataProviderTypesStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\CollectionsModelFixup.cs">
+      <Link>CollectionsModelFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\AstoriaPseudoLocalizationFixup.cs">
+      <Link>Common\AstoriaPseudoLocalizationFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\AstoriaQueryDataSetBuilderBase.cs">
+      <Link>Common\AstoriaQueryDataSetBuilderBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\AstoriaQueryRepositoryBuilderBase.cs">
+      <Link>Common\AstoriaQueryRepositoryBuilderBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\AstoriaWorkspaceBase.cs">
+      <Link>Common\AstoriaWorkspaceBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\AstoriaWorkspaceBuilderBase.cs">
+      <Link>Common\AstoriaWorkspaceBuilderBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\ClrTypeReferenceResolverBase.cs">
+      <Link>Common\ClrTypeReferenceResolverBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\EventLogger`1.cs">
+      <Link>Common\EventLogger`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\LoggingStreamProxy.cs">
+      <Link>Common\LoggingStreamProxy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\ObjectLayerCodeGeneratorBase.cs">
+      <Link>Common\ObjectLayerCodeGeneratorBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\ODataPayloadElementNormalizerBase.cs">
+      <Link>Common\ODataPayloadElementNormalizerBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\ODataPayloadElementReplacingVisitor.cs">
+      <Link>Common\ODataPayloadElementReplacingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\ODataPayloadElementVisitorBase.cs">
+      <Link>Common\ODataPayloadElementVisitorBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\PrimitiveConverter`1.cs">
+      <Link>Common\PrimitiveConverter`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\ReadWriteOnlyStreamProxy.cs">
+      <Link>Common\ReadWriteOnlyStreamProxy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\StreamHelpers.cs">
+      <Link>Common\StreamHelpers.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\StronglyTypedClrTypeReferenceResolver.cs">
+      <Link>Common\StronglyTypedClrTypeReferenceResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\StronglyTypedObjectLayerCodeGenerator.cs">
+      <Link>Common\StronglyTypedObjectLayerCodeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\UriHelpers.cs">
+      <Link>Common\UriHelpers.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ActionOperationRights.cs">
+      <Link>Contracts\ActionOperationRights.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ArchType.cs">
+      <Link>Contracts\ArchType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\AstoriaMachineSearchCriteria.cs">
+      <Link>Contracts\AstoriaMachineSearchCriteria.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\AstoriaWorkspace.cs">
+      <Link>Contracts\AstoriaWorkspace.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\AstoriaWorkspaceInfoConstants.cs">
+      <Link>Contracts\AstoriaWorkspaceInfoConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\CallOrderUtilities.cs">
+      <Link>Contracts\CallOrderUtilities.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\ChangeOperationResponseData.cs">
+      <Link>Contracts\Client\ChangeOperationResponseData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\ClientQueryExtensionMethods.cs">
+      <Link>Contracts\Client\ClientQueryExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\DataServiceContextData.cs">
+      <Link>Contracts\Client\DataServiceContextData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\DataServiceResponseData.cs">
+      <Link>Contracts\Client\DataServiceResponseData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\DescriptorData.cs">
+      <Link>Contracts\Client\DescriptorData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\DescriptorDataExtensions.cs">
+      <Link>Contracts\Client\DescriptorDataExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\EntityDescriptorData.cs">
+      <Link>Contracts\Client\EntityDescriptorData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\ExpectedClientErrorBaseline.cs">
+      <Link>Contracts\Client\ExpectedClientErrorBaseline.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\ExpectedClientRequest.cs">
+      <Link>Contracts\Client\ExpectedClientRequest.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\ExtensionMethods.cs">
+      <Link>Contracts\Client\ExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IClientCodeLayerGenerator.cs">
+      <Link>Contracts\Client\IClientCodeLayerGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IClientDataContextFormatApplier.cs">
+      <Link>Contracts\Client\IClientDataContextFormatApplier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IClientExpectedErrorComparer.cs">
+      <Link>Contracts\Client\IClientExpectedErrorComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IClientQueryCodeGenerator.cs">
+      <Link>Contracts\Client\IClientQueryCodeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IClientQueryExpressionCodeExpressionConverter.cs">
+      <Link>Contracts\Client\IClientQueryExpressionCodeExpressionConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IClientQueryResultComparer.cs">
+      <Link>Contracts\Client\IClientQueryResultComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IClientQuerySingleVariationCodeBuilder.cs">
+      <Link>Contracts\Client\IClientQuerySingleVariationCodeBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IClientQuerySingleVariationCodeBuilderResolver.cs">
+      <Link>Contracts\Client\IClientQuerySingleVariationCodeBuilderResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IClientQueryVersionErrorCalculator.cs">
+      <Link>Contracts\Client\IClientQueryVersionErrorCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IClientResponseQueryValueBuilder.cs">
+      <Link>Contracts\Client\IClientResponseQueryValueBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IClientSideProjectionReplacingVisitor.cs">
+      <Link>Contracts\Client\IClientSideProjectionReplacingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IDataServiceContextCreator.cs">
+      <Link>Contracts\Client\IDataServiceContextCreator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IDataServiceContextEventVerifier.cs">
+      <Link>Contracts\Client\IDataServiceContextEventVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IDataServiceContextHttpTracker.cs">
+      <Link>Contracts\Client\IDataServiceContextHttpTracker.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IDataServiceContextRequestsVerifier.cs">
+      <Link>Contracts\Client\IDataServiceContextRequestsVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IDataServiceContextTrackingScope.cs">
+      <Link>Contracts\Client\IDataServiceContextTrackingScope.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IDataServiceContextVerifier.cs">
+      <Link>Contracts\Client\IDataServiceContextVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IDataServiceResponsePreferenceVerifier.cs">
+      <Link>Contracts\Client\IDataServiceResponsePreferenceVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IDataServiceResponseVerifier.cs">
+      <Link>Contracts\Client\IDataServiceResponseVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IEntityDescriptorDataChangeTracker.cs">
+      <Link>Contracts\Client\IEntityDescriptorDataChangeTracker.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IEntityDescriptorValueCalculator.cs">
+      <Link>Contracts\Client\IEntityDescriptorValueCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\IEntityDescriptorVersionCalculator.cs">
+      <Link>Contracts\Client\IEntityDescriptorVersionCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\ISaveChangesHttpValidatingEmulator.cs">
+      <Link>Contracts\Client\ISaveChangesHttpValidatingEmulator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\ISaveChangesRequestCalculator.cs">
+      <Link>Contracts\Client\ISaveChangesRequestCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\ISaveChangesResponseCalculator.cs">
+      <Link>Contracts\Client\ISaveChangesResponseCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\ISaveChangesServerStateVerifier.cs">
+      <Link>Contracts\Client\ISaveChangesServerStateVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\ISaveChangesSingleRequestCalculator.cs">
+      <Link>Contracts\Client\ISaveChangesSingleRequestCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\ISaveChangesVerifier.cs">
+      <Link>Contracts\Client\ISaveChangesVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\ISendingRequestEventVerifier.cs">
+      <Link>Contracts\Client\ISendingRequestEventVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\LinkDescriptorData.cs">
+      <Link>Contracts\Client\LinkDescriptorData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\LinkInfoData.cs">
+      <Link>Contracts\Client\LinkInfoData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\OperationDescriptorData.cs">
+      <Link>Contracts\Client\OperationDescriptorData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\OperationResponseData.cs">
+      <Link>Contracts\Client\OperationResponseData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\ProductExtensionMethods.cs">
+      <Link>Contracts\Client\ProductExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\SaveStreamData.cs">
+      <Link>Contracts\Client\SaveStreamData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Client\StreamDescriptorData.cs">
+      <Link>Contracts\Client\StreamDescriptorData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\DataLayerProviderKind.cs">
+      <Link>Contracts\DataLayerProviderKind.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\DataProviderSettings.cs">
+      <Link>Contracts\DataProviderSettings.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\DataServiceHostDeploymentSettings.cs">
+      <Link>Contracts\DataServiceHostDeploymentSettings.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\DataServiceProtocolVersion.cs">
+      <Link>Contracts\DataServiceProtocolVersion.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\DataServices\WebServerLocator.cs">
+      <Link>Contracts\DataServices\WebServerLocator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\DeploymentSettings.cs">
+      <Link>Contracts\DeploymentSettings.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ActionOperationRightsAnnotation.cs">
+      <Link>Contracts\EntityModel\ActionOperationRightsAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ActionWithSingleParameterReturnedAnnotation.cs">
+      <Link>Contracts\EntityModel\ActionWithSingleParameterReturnedAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\AddRootServiceOperationsFixup.cs">
+      <Link>Contracts\EntityModel\AddRootServiceOperationsFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\AstoriaMetadataExtensions.cs">
+      <Link>Contracts\EntityModel\AstoriaMetadataExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ClientMediaEntryAnnotation.cs">
+      <Link>Contracts\EntityModel\ClientMediaEntryAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ClientTypeHasNoKeysAnnotation.cs">
+      <Link>Contracts\EntityModel\ClientTypeHasNoKeysAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ClrAssociationsFixup.cs">
+      <Link>Contracts\EntityModel\ClrAssociationsFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ClrNullableDataTypesFixup.cs">
+      <Link>Contracts\EntityModel\ClrNullableDataTypesFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\CodeDomBodyAnnotation.cs">
+      <Link>Contracts\EntityModel\CodeDomBodyAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\CodeGenerationTypeUsage.cs">
+      <Link>Contracts\EntityModel\CodeGenerationTypeUsage.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\CollectionContractTypeAnnotation.cs">
+      <Link>Contracts\EntityModel\CollectionContractTypeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\CollectionInstanceTypeAnnotation.cs">
+      <Link>Contracts\EntityModel\CollectionInstanceTypeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\CollectionTypeAnnotation.cs">
+      <Link>Contracts\EntityModel\CollectionTypeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ConstantInterceptorAnnotation.cs">
+      <Link>Contracts\EntityModel\ConstantInterceptorAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\CreateODataWriterAnnotation.cs">
+      <Link>Contracts\EntityModel\CreateODataWriterAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\DataServiceBehaviorAnnotation.cs">
+      <Link>Contracts\EntityModel\DataServiceBehaviorAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\DataServiceConfigurationAnnotation.cs">
+      <Link>Contracts\EntityModel\DataServiceConfigurationAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\DataServiceEntitySetAnnotation.cs">
+      <Link>Contracts\EntityModel\DataServiceEntitySetAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\DataServiceMemberGeneratorAnnotation.cs">
+      <Link>Contracts\EntityModel\DataServiceMemberGeneratorAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\Data\EntitySetDataRowWithStreams.cs">
+      <Link>Contracts\EntityModel\Data\EntitySetDataRowWithStreams.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\Data\StreamData.cs">
+      <Link>Contracts\EntityModel\Data\StreamData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\DictionaryResourcePropertyInstanceLink.cs">
+      <Link>Contracts\EntityModel\DictionaryResourcePropertyInstanceLink.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\EditLinkReplacementAnnotation.cs">
+      <Link>Contracts\EntityModel\EditLinkReplacementAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\EditMediaLinkReplacementAnnotation.cs">
+      <Link>Contracts\EntityModel\EditMediaLinkReplacementAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\EntitySetEndPointAnnotation.cs">
+      <Link>Contracts\EntityModel\EntitySetEndPointAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\EntitySetRightsAnnotation.cs">
+      <Link>Contracts\EntityModel\EntitySetRightsAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\EntryAttributeReplacementAnnotation.cs">
+      <Link>Contracts\EntityModel\EntryAttributeReplacementAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\EntryIdReplacementAnnotation.cs">
+      <Link>Contracts\EntityModel\EntryIdReplacementAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\FeedAttributeReplacementAnnotation.cs">
+      <Link>Contracts\EntityModel\FeedAttributeReplacementAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\FunctionBodyAnnotation.cs">
+      <Link>Contracts\EntityModel\FunctionBodyAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\HasStreamAnnotation.cs">
+      <Link>Contracts\EntityModel\HasStreamAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\IClrToPrimitiveDataTypeConverter.cs">
+      <Link>Contracts\EntityModel\IClrToPrimitiveDataTypeConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\IncrementIntegerPropertyValueActionAnnotation.cs">
+      <Link>Contracts\EntityModel\IncrementIntegerPropertyValueActionAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\LazyLoadedTypeAnnotation.cs">
+      <Link>Contracts\EntityModel\LazyLoadedTypeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\LegacyServiceOperationAnnotation.cs">
+      <Link>Contracts\EntityModel\LegacyServiceOperationAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\MakeNamesUniqueFixup.cs">
+      <Link>Contracts\EntityModel\MakeNamesUniqueFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\MetadataDeclaredPropertyAnnotation.cs">
+      <Link>Contracts\EntityModel\MetadataDeclaredPropertyAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\MethodCodeAnnotation.cs">
+      <Link>Contracts\EntityModel\MethodCodeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\MimeTypeAnnotation.cs">
+      <Link>Contracts\EntityModel\MimeTypeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\NavigationLinkEndPointAnnotation.cs">
+      <Link>Contracts\EntityModel\NavigationLinkEndPointAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\PageSizeAnnotation.cs">
+      <Link>Contracts\EntityModel\PageSizeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\PropertyMappingAnnotation.cs">
+      <Link>Contracts\EntityModel\PropertyMappingAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\RelationshipLinkEndPointAnnotation.cs">
+      <Link>Contracts\EntityModel\RelationshipLinkEndPointAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\RemoveActionsFixup.cs">
+      <Link>Contracts\EntityModel\RemoveActionsFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\RemoveConcurrencyAnnotationFromDerivedTypesFixup.cs">
+      <Link>Contracts\EntityModel\RemoveConcurrencyAnnotationFromDerivedTypesFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\RemoveConcurrencyTokensFromComplexTypesFixup.cs">
+      <Link>Contracts\EntityModel\RemoveConcurrencyTokensFromComplexTypesFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\RemoveDataServiceVersionInResponseAnnotation.cs">
+      <Link>Contracts\EntityModel\RemoveDataServiceVersionInResponseAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\RemoveEditLinkAnnotation.cs">
+      <Link>Contracts\EntityModel\RemoveEditLinkAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\RemoveHigherVersionFeaturesFixup.cs">
+      <Link>Contracts\EntityModel\RemoveHigherVersionFeaturesFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\RemoveMultiValueFixup.cs">
+      <Link>Contracts\EntityModel\RemoveMultiValueFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\RemoveNamedStreamsFixup.cs">
+      <Link>Contracts\EntityModel\RemoveNamedStreamsFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\RemoveNavigationPropertiesFromDerivedTypesFixup.cs">
+      <Link>Contracts\EntityModel\RemoveNavigationPropertiesFromDerivedTypesFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\RemoveSpatialFeatureFixup.cs">
+      <Link>Contracts\EntityModel\RemoveSpatialFeatureFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\RemoveUnsupportedFeaturesForCodeFirstFixup.cs">
+      <Link>Contracts\EntityModel\RemoveUnsupportedFeaturesForCodeFirstFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ReplaceBinaryKeysFixup.cs">
+      <Link>Contracts\EntityModel\ReplaceBinaryKeysFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ReturnDefaultProcedureAnnotation.cs">
+      <Link>Contracts\EntityModel\ReturnDefaultProcedureAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ServiceOperationAnnotation.cs">
+      <Link>Contracts\EntityModel\ServiceOperationAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ServiceOperationReturnTypeQualifier.cs">
+      <Link>Contracts\EntityModel\ServiceOperationReturnTypeQualifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ServiceOperationRightsAnnotation.cs">
+      <Link>Contracts\EntityModel\ServiceOperationRightsAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\SetActionDefaultEntitySetFixup.cs">
+      <Link>Contracts\EntityModel\SetActionDefaultEntitySetFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\SetDefaultCollectionTypesFixup.cs">
+      <Link>Contracts\EntityModel\SetDefaultCollectionTypesFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\SetDefaultDataServiceConfigurationBehaviors.cs">
+      <Link>Contracts\EntityModel\SetDefaultDataServiceConfigurationBehaviors.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\SupportedOperationsAnnotation.cs">
+      <Link>Contracts\EntityModel\SupportedOperationsAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ThrowDataServiceExceptionAnnotation.cs">
+      <Link>Contracts\EntityModel\ThrowDataServiceExceptionAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\ToggleBoolPropertyValueActionAnnotation.cs">
+      <Link>Contracts\EntityModel\ToggleBoolPropertyValueActionAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\TypeBackedAnnotation.cs">
+      <Link>Contracts\EntityModel\TypeBackedAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntityModel\TypeNameReplacementAnnotation.cs">
+      <Link>Contracts\EntityModel\TypeNameReplacementAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\EntitySetRights.cs">
+      <Link>Contracts\EntitySetRights.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ExistingDataServiceDataProviderSettings.cs">
+      <Link>Contracts\ExistingDataServiceDataProviderSettings.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ExistingDataServiceDeploymentSettings.cs">
+      <Link>Contracts\ExistingDataServiceDeploymentSettings.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ExpectedErrorExtensions.cs">
+      <Link>Contracts\ExpectedErrorExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ExpectedErrorMessage.cs">
+      <Link>Contracts\ExpectedErrorMessage.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ExtensionMethods.cs">
+      <Link>Contracts\ExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\GeneralExtensionMethods.cs">
+      <Link>Contracts\GeneralExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\HostType.cs">
+      <Link>Contracts\HostType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\FormatQueryOptions.cs">
+      <Link>Contracts\Http\FormatQueryOptions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\HttpExtensionMethods.cs">
+      <Link>Contracts\Http\HttpExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\HttpHeaderCollection.cs">
+      <Link>Contracts\Http\HttpHeaderCollection.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\HttpHeaders.cs">
+      <Link>Contracts\Http\HttpHeaders.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\HttpRequestData.cs">
+      <Link>Contracts\Http\HttpRequestData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\HttpRequestData`2.cs">
+      <Link>Contracts\Http\HttpRequestData`2.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\HttpResponseBuilder.cs">
+      <Link>Contracts\Http\HttpResponseBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\HttpResponseData.cs">
+      <Link>Contracts\Http\HttpResponseData.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\HttpUtilities.cs">
+      <Link>Contracts\Http\HttpUtilities.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\HttpVerb.cs">
+      <Link>Contracts\Http\HttpVerb.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\IHttpImplementation.cs">
+      <Link>Contracts\Http\IHttpImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\IHttpMessage.cs">
+      <Link>Contracts\Http\IHttpMessage.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\IHttpRequest.cs">
+      <Link>Contracts\Http\IHttpRequest.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\IMimePart.cs">
+      <Link>Contracts\Http\IMimePart.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\MimePartData`1.cs">
+      <Link>Contracts\Http\MimePartData`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\MimeTypes.cs">
+      <Link>Contracts\Http\MimeTypes.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Http\MultipartMimeData`1.cs">
+      <Link>Contracts\Http\MultipartMimeData`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IAstoriaGlobalizationFixup.cs">
+      <Link>Contracts\IAstoriaGlobalizationFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IAstoriaQueryRepositoryHelper.cs">
+      <Link>Contracts\IAstoriaQueryRepositoryHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IAstoriaServiceDescriptor.cs">
+      <Link>Contracts\IAstoriaServiceDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IAstoriaStringResourceVerifiers.cs">
+      <Link>Contracts\IAstoriaStringResourceVerifiers.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IAstoriaWorkspaceBuilder.cs">
+      <Link>Contracts\IAstoriaWorkspaceBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IAsyncDataSynchronizer.cs">
+      <Link>Contracts\IAsyncDataSynchronizer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IAuthenticationProvider.cs">
+      <Link>Contracts\IAuthenticationProvider.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IClrTypeReferenceResolver.cs">
+      <Link>Contracts\IClrTypeReferenceResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ICodeGenerationVerifier.cs">
+      <Link>Contracts\ICodeGenerationVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IDataOracleResultConverter.cs">
+      <Link>Contracts\IDataOracleResultConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IDataServiceWebServerLocatorStrategy.cs">
+      <Link>Contracts\IDataServiceWebServerLocatorStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IEntityModelVersionCalculator.cs">
+      <Link>Contracts\IEntityModelVersionCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IEntitySetResolver.cs">
+      <Link>Contracts\IEntitySetResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IisDeploymentSettings.cs">
+      <Link>Contracts\IisDeploymentSettings.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IMetadataProviderTypingStrategy.cs">
+      <Link>Contracts\IMetadataProviderTypingStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\INonClrCodeGenerator.cs">
+      <Link>Contracts\INonClrCodeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\InProcessWebServiceHostDeploymentSettings.cs">
+      <Link>Contracts\InProcessWebServiceHostDeploymentSettings.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\InternetInformationServerMajorVersion.cs">
+      <Link>Contracts\InternetInformationServerMajorVersion.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IObjectLayerCodeGenerator.cs">
+      <Link>Contracts\IObjectLayerCodeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IODataPayloadElementVersionCalculator.cs">
+      <Link>Contracts\IODataPayloadElementVersionCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IODataUriVersionCalculator.cs">
+      <Link>Contracts\IODataUriVersionCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IOracleBasedDataSynchronizer.cs">
+      <Link>Contracts\IOracleBasedDataSynchronizer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IPhpCodeExecutor.cs">
+      <Link>Contracts\IPhpCodeExecutor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IServiceDocumentParser.cs">
+      <Link>Contracts\IServiceDocumentParser.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IServiceMethodResolver.cs">
+      <Link>Contracts\IServiceMethodResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ISpecificExceptionMessageVerifierFactory.cs">
+      <Link>Contracts\ISpecificExceptionMessageVerifierFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IStreamLogger.cs">
+      <Link>Contracts\IStreamLogger.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IStreamsServices.cs">
+      <Link>Contracts\IStreamsServices.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IWebServerLocator.cs">
+      <Link>Contracts\IWebServerLocator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Json\IDictionaryToJsonObjectConverter.cs">
+      <Link>Contracts\Json\IDictionaryToJsonObjectConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Json\IJsonValueVisitor.cs">
+      <Link>Contracts\Json\IJsonValueVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Json\IJsonValueVisitor`1.cs">
+      <Link>Contracts\Json\IJsonValueVisitor`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Json\JsonAnnotation.cs">
+      <Link>Contracts\Json\JsonAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Json\JsonArray.cs">
+      <Link>Contracts\Json\JsonArray.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Json\JsonObject.cs">
+      <Link>Contracts\Json\JsonObject.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Json\JsonOriginalTextAnnotation.cs">
+      <Link>Contracts\Json\JsonOriginalTextAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Json\JsonPrimitiveValue.cs">
+      <Link>Contracts\Json\JsonPrimitiveValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Json\JsonProperty.cs">
+      <Link>Contracts\Json\JsonProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Json\JsonTextAnnotation.cs">
+      <Link>Contracts\Json\JsonTextAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Json\JsonTokenType.cs">
+      <Link>Contracts\Json\JsonTokenType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Json\JsonValue.cs">
+      <Link>Contracts\Json\JsonValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Json\JsonValueType.cs">
+      <Link>Contracts\Json\JsonValueType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LabServerLanguage.cs">
+      <Link>Contracts\LabServerLanguage.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LabSkuType.cs">
+      <Link>Contracts\LabSkuType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\AstoriaCanonicalFunctions.cs">
+      <Link>Contracts\LinqToAstoria\AstoriaCanonicalFunctions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\AstoriaQueryStreamType.cs">
+      <Link>Contracts\LinqToAstoria\AstoriaQueryStreamType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\AstoriaQueryStreamValue.cs">
+      <Link>Contracts\LinqToAstoria\AstoriaQueryStreamValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\IAstoriaQueryValueVisitor`1.cs">
+      <Link>Contracts\LinqToAstoria\IAstoriaQueryValueVisitor`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\IAstoriaQueryVerifierCapabilityInspector.cs">
+      <Link>Contracts\LinqToAstoria\IAstoriaQueryVerifierCapabilityInspector.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\IClrCanonicalFunctionEvaluator.cs">
+      <Link>Contracts\LinqToAstoria\IClrCanonicalFunctionEvaluator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\ILinqToAstoriaExpressionEvaluator.cs">
+      <Link>Contracts\LinqToAstoria\ILinqToAstoriaExpressionEvaluator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\ILinqToAstoriaExpressionVisitor`1.cs">
+      <Link>Contracts\LinqToAstoria\ILinqToAstoriaExpressionVisitor`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\ILinqToAstoriaQueryEvaluationStrategy.cs">
+      <Link>Contracts\LinqToAstoria\ILinqToAstoriaQueryEvaluationStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\ILinqToAstoriaQueryResolver.cs">
+      <Link>Contracts\LinqToAstoria\ILinqToAstoriaQueryResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\ILinqToAstoriaQuerySpanGenerator.cs">
+      <Link>Contracts\LinqToAstoria\ILinqToAstoriaQuerySpanGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\IODataUriEvaluator.cs">
+      <Link>Contracts\LinqToAstoria\IODataUriEvaluator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\IQueryToODataPayloadConverter.cs">
+      <Link>Contracts\LinqToAstoria\IQueryToODataPayloadConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\IQueryToODataUriConverter.cs">
+      <Link>Contracts\LinqToAstoria\IQueryToODataUriConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\IQueryToUriStringConverter.cs">
+      <Link>Contracts\LinqToAstoria\IQueryToUriStringConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\IsDynamicPropertyValueAnnotation.cs">
+      <Link>Contracts\LinqToAstoria\IsDynamicPropertyValueAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\LinqToAstoriaAddQueryOptionExpression.cs">
+      <Link>Contracts\LinqToAstoria\LinqToAstoriaAddQueryOptionExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\LinqToAstoriaConditionalExpression.cs">
+      <Link>Contracts\LinqToAstoria\LinqToAstoriaConditionalExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\LinqToAstoriaExpandExpression.cs">
+      <Link>Contracts\LinqToAstoria\LinqToAstoriaExpandExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\LinqToAstoriaExpandLambdaExpression.cs">
+      <Link>Contracts\LinqToAstoria\LinqToAstoriaExpandLambdaExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\LinqToAstoriaKeyExpression.cs">
+      <Link>Contracts\LinqToAstoria\LinqToAstoriaKeyExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\LinqToAstoriaLinksExpression.cs">
+      <Link>Contracts\LinqToAstoria\LinqToAstoriaLinksExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\LinqToAstoriaLinqBuilder.cs">
+      <Link>Contracts\LinqToAstoria\LinqToAstoriaLinqBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\LinqToAstoriaQueryExpressionExtensions.cs">
+      <Link>Contracts\LinqToAstoria\LinqToAstoriaQueryExpressionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\LinqToAstoriaValueExpression.cs">
+      <Link>Contracts\LinqToAstoria\LinqToAstoriaValueExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\MaskedQueryStructuralValue.cs">
+      <Link>Contracts\LinqToAstoria\MaskedQueryStructuralValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\ODataCanonicalFunctionNameAnnotation.cs">
+      <Link>Contracts\LinqToAstoria\ODataCanonicalFunctionNameAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\ODataUriEvaluatorExtensions.cs">
+      <Link>Contracts\LinqToAstoria\ODataUriEvaluatorExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\QueryBasedODataUri.cs">
+      <Link>Contracts\LinqToAstoria\QueryBasedODataUri.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LinqToAstoria\QueryVoidType.cs">
+      <Link>Contracts\LinqToAstoria\QueryVoidType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\LiveDataServiceDataProviderSettings.cs">
+      <Link>Contracts\LiveDataServiceDataProviderSettings.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\MachineSearchCriteria.cs">
+      <Link>Contracts\MachineSearchCriteria.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\MajorAstoriaReleaseVersion.cs">
+      <Link>Contracts\MajorAstoriaReleaseVersion.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\MetadataExtensionMethods.cs">
+      <Link>Contracts\MetadataExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\MultiValueType.cs">
+      <Link>Contracts\MultiValueType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\BatchChangeset`1.cs">
+      <Link>Contracts\OData\BatchChangeset`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\BatchPayloadBuilder.cs">
+      <Link>Contracts\OData\BatchPayloadBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\BatchPayload`2.cs">
+      <Link>Contracts\OData\BatchPayload`2.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\BatchRequestChangeset.cs">
+      <Link>Contracts\OData\BatchRequestChangeset.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\BatchRequestPayload.cs">
+      <Link>Contracts\OData\BatchRequestPayload.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\BatchResponseChangeset.cs">
+      <Link>Contracts\OData\BatchResponseChangeset.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\BatchResponsePayload.cs">
+      <Link>Contracts\OData\BatchResponsePayload.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\CollectionItemElementNameAnnotation.cs">
+      <Link>Contracts\OData\CollectionItemElementNameAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\CollectionNameAnnotation.cs">
+      <Link>Contracts\OData\CollectionNameAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ComplexInstance.cs">
+      <Link>Contracts\OData\ComplexInstance.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ComplexInstanceCollection.cs">
+      <Link>Contracts\OData\ComplexInstanceCollection.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ComplexMultiValue.cs">
+      <Link>Contracts\OData\ComplexMultiValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ComplexMultiValueProperty.cs">
+      <Link>Contracts\OData\ComplexMultiValueProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ComplexProperty.cs">
+      <Link>Contracts\OData\ComplexProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ContentTypeAnnotation.cs">
+      <Link>Contracts\OData\ContentTypeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\DataTypeAnnotation.cs">
+      <Link>Contracts\OData\DataTypeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\DeferredLink.cs">
+      <Link>Contracts\OData\DeferredLink.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\EmptyCollectionProperty.cs">
+      <Link>Contracts\OData\EmptyCollectionProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\EmptyPayload.cs">
+      <Link>Contracts\OData\EmptyPayload.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\EmptyUntypedCollection.cs">
+      <Link>Contracts\OData\EmptyUntypedCollection.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\Endpoints.cs">
+      <Link>Contracts\OData\Endpoints.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\EntityInstance.cs">
+      <Link>Contracts\OData\EntityInstance.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\EntitySetAnnotation.cs">
+      <Link>Contracts\OData\EntitySetAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\EntitySetInstance.cs">
+      <Link>Contracts\OData\EntitySetInstance.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\EntitySetSegment.cs">
+      <Link>Contracts\OData\EntitySetSegment.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\EntityTypeSegment.cs">
+      <Link>Contracts\OData\EntityTypeSegment.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ExpandedLink.cs">
+      <Link>Contracts\OData\ExpandedLink.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ExpectedPayloadElementTypeAnnotation.cs">
+      <Link>Contracts\OData\ExpectedPayloadElementTypeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\FunctionAnnotation.cs">
+      <Link>Contracts\OData\FunctionAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\FunctionSegment.cs">
+      <Link>Contracts\OData\FunctionSegment.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\HtmlErrorPayload.cs">
+      <Link>Contracts\OData\HtmlErrorPayload.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IActionPayloadElementToQueryValuesConverter.cs">
+      <Link>Contracts\OData\IActionPayloadElementToQueryValuesConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IBatchPayloadComparer.cs">
+      <Link>Contracts\OData\IBatchPayloadComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IBatchPayloadDeserializer.cs">
+      <Link>Contracts\OData\IBatchPayloadDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IBatchPayloadSerializer.cs">
+      <Link>Contracts\OData\IBatchPayloadSerializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IJsonPrimitiveConverter.cs">
+      <Link>Contracts\OData\IJsonPrimitiveConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IJsonToPayloadElementConverter.cs">
+      <Link>Contracts\OData\IJsonToPayloadElementConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IODataConventionBasedLinkGenerator.cs">
+      <Link>Contracts\OData\IODataConventionBasedLinkGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IODataLiteralConverter.cs">
+      <Link>Contracts\OData\IODataLiteralConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IODataPayloadBuilder.cs">
+      <Link>Contracts\OData\IODataPayloadBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IODataPayloadElementComparer.cs">
+      <Link>Contracts\OData\IODataPayloadElementComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IODataPayloadElementMetadataResolver.cs">
+      <Link>Contracts\OData\IODataPayloadElementMetadataResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IODataPayloadElementNormalizer.cs">
+      <Link>Contracts\OData\IODataPayloadElementNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IODataPayloadElementVisitor.cs">
+      <Link>Contracts\OData\IODataPayloadElementVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IODataPayloadElementVisitor`1.cs">
+      <Link>Contracts\OData\IODataPayloadElementVisitor`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IODataRequestManager.cs">
+      <Link>Contracts\OData\IODataRequestManager.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IODataRequestVersionResourceErrorCalculator.cs">
+      <Link>Contracts\OData\IODataRequestVersionResourceErrorCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IODataUriMinimumVersionRequiredCalculator.cs">
+      <Link>Contracts\OData\IODataUriMinimumVersionRequiredCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IODataUriToStringConverter.cs">
+      <Link>Contracts\OData\IODataUriToStringConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IPayloadDeserializer.cs">
+      <Link>Contracts\OData\IPayloadDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IPayloadElementToJsonConverter.cs">
+      <Link>Contracts\OData\IPayloadElementToJsonConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IPayloadElementToJsonLightConverter.cs">
+      <Link>Contracts\OData\IPayloadElementToJsonLightConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IPayloadElementToNamedValuesConverter.cs">
+      <Link>Contracts\OData\IPayloadElementToNamedValuesConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IPayloadElementToQueryValueConverter.cs">
+      <Link>Contracts\OData\IPayloadElementToQueryValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IPayloadElementToXmlConverter.cs">
+      <Link>Contracts\OData\IPayloadElementToXmlConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IPayloadErrorDeserializer.cs">
+      <Link>Contracts\OData\IPayloadErrorDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IPayloadSerializer.cs">
+      <Link>Contracts\OData\IPayloadSerializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IPayloadTransformationScope.cs">
+      <Link>Contracts\OData\IPayloadTransformationScope.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IPayloadTransformFactory.cs">
+      <Link>Contracts\OData\IPayloadTransformFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IPayloadTransform`1.cs">
+      <Link>Contracts\OData\IPayloadTransform`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IProtocolFormatStrategy.cs">
+      <Link>Contracts\OData\IProtocolFormatStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IProtocolFormatStrategySelector.cs">
+      <Link>Contracts\OData\IProtocolFormatStrategySelector.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IProtocolImplementationDetails.cs">
+      <Link>Contracts\OData\IProtocolImplementationDetails.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IQueryToODataUriExpressionConverter.cs">
+      <Link>Contracts\OData\IQueryToODataUriExpressionConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IsMediaLinkEntryAnnotation.cs">
+      <Link>Contracts\OData\IsMediaLinkEntryAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ISpatialPrimitiveToODataJsonValueConverter.cs">
+      <Link>Contracts\OData\ISpatialPrimitiveToODataJsonValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ITypedValue.cs">
+      <Link>Contracts\OData\ITypedValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IXmlPrimitiveConverter.cs">
+      <Link>Contracts\OData\IXmlPrimitiveConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\IXmlToPayloadElementConverter.cs">
+      <Link>Contracts\OData\IXmlToPayloadElementConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\JsonCollectionResultWrapperAnnotation.cs">
+      <Link>Contracts\OData\JsonCollectionResultWrapperAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\KeyExpressionSegment.cs">
+      <Link>Contracts\OData\KeyExpressionSegment.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\Link.cs">
+      <Link>Contracts\OData\Link.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\LinkCollection.cs">
+      <Link>Contracts\OData\LinkCollection.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\MemberPropertyAnnotation.cs">
+      <Link>Contracts\OData\MemberPropertyAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\MetadataPayloadElement.cs">
+      <Link>Contracts\OData\MetadataPayloadElement.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\NamedStreamInstance.cs">
+      <Link>Contracts\OData\NamedStreamInstance.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\NamedStreamSegment.cs">
+      <Link>Contracts\OData\NamedStreamSegment.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\NavigationPropertyAnnotation.cs">
+      <Link>Contracts\OData\NavigationPropertyAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\NavigationPropertyInstance.cs">
+      <Link>Contracts\OData\NavigationPropertyInstance.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\NavigationSegment.cs">
+      <Link>Contracts\OData\NavigationSegment.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\NullPropertyInstance.cs">
+      <Link>Contracts\OData\NullPropertyInstance.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataAnnotations.cs">
+      <Link>Contracts\OData\ODataAnnotations.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataConstants.cs">
+      <Link>Contracts\OData\ODataConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataErrorPayload.cs">
+      <Link>Contracts\OData\ODataErrorPayload.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataExtensions.cs">
+      <Link>Contracts\OData\ODataExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataInternalExceptionPayload.cs">
+      <Link>Contracts\OData\ODataInternalExceptionPayload.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataPayloadBody.cs">
+      <Link>Contracts\OData\ODataPayloadBody.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataPayloadContext.cs">
+      <Link>Contracts\OData\ODataPayloadContext.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataPayloadElement.cs">
+      <Link>Contracts\OData\ODataPayloadElement.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataPayloadElementAnnotation.cs">
+      <Link>Contracts\OData\ODataPayloadElementAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataPayloadElementCollection.cs">
+      <Link>Contracts\OData\ODataPayloadElementCollection.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataPayloadElementCollection`1.cs">
+      <Link>Contracts\OData\ODataPayloadElementCollection`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataPayloadElementEquatableAnnotation.cs">
+      <Link>Contracts\OData\ODataPayloadElementEquatableAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataPayloadElementType.cs">
+      <Link>Contracts\OData\ODataPayloadElementType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataPayloadOptions.cs">
+      <Link>Contracts\OData\ODataPayloadOptions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataRequest.cs">
+      <Link>Contracts\OData\ODataRequest.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataRequestExtensions.cs">
+      <Link>Contracts\OData\ODataRequestExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataResponse.cs">
+      <Link>Contracts\OData\ODataResponse.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataUri.cs">
+      <Link>Contracts\OData\ODataUri.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataUriBuilder.cs">
+      <Link>Contracts\OData\ODataUriBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataUriExtensions.cs">
+      <Link>Contracts\OData\ODataUriExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataUriParser.cs">
+      <Link>Contracts\OData\ODataUriParser.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataUriSegment.cs">
+      <Link>Contracts\OData\ODataUriSegment.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataUriSegmentPathCollection.cs">
+      <Link>Contracts\OData\ODataUriSegmentPathCollection.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataUriSegmentType.cs">
+      <Link>Contracts\OData\ODataUriSegmentType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ODataUtilities.cs">
+      <Link>Contracts\OData\ODataUtilities.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ParametersExpressionSegment.cs">
+      <Link>Contracts\OData\ParametersExpressionSegment.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\PayloadTransformationFluentExtensions.cs">
+      <Link>Contracts\OData\PayloadTransformationFluentExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\PrimitiveCollection.cs">
+      <Link>Contracts\OData\PrimitiveCollection.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\PrimitiveMultiValue.cs">
+      <Link>Contracts\OData\PrimitiveMultiValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\PrimitiveMultiValueProperty.cs">
+      <Link>Contracts\OData\PrimitiveMultiValueProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\PrimitiveProperty.cs">
+      <Link>Contracts\OData\PrimitiveProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\PrimitiveValue.cs">
+      <Link>Contracts\OData\PrimitiveValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\PropertyInstance.cs">
+      <Link>Contracts\OData\PropertyInstance.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\PropertySegment.cs">
+      <Link>Contracts\OData\PropertySegment.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\QueryOptions.cs">
+      <Link>Contracts\OData\QueryOptions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\RawTextPayloadElementRepresentationAnnotation.cs">
+      <Link>Contracts\OData\RawTextPayloadElementRepresentationAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ReplacedElementAnnotation.cs">
+      <Link>Contracts\OData\ReplacedElementAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ResourceCollectionInstance.cs">
+      <Link>Contracts\OData\ResourceCollectionInstance.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\SelfLinkAnnotation.cs">
+      <Link>Contracts\OData\SelfLinkAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\SerializationEncodingNameAnnotation.cs">
+      <Link>Contracts\OData\SerializationEncodingNameAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ServiceDocumentInstance.cs">
+      <Link>Contracts\OData\ServiceDocumentInstance.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ServiceOperationDescriptor.cs">
+      <Link>Contracts\OData\ServiceOperationDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\ServiceRootSegment.cs">
+      <Link>Contracts\OData\ServiceRootSegment.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\SystemSegment.cs">
+      <Link>Contracts\OData\SystemSegment.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\TitleAnnotation.cs">
+      <Link>Contracts\OData\TitleAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\TypedProperty`1.cs">
+      <Link>Contracts\OData\TypedProperty`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\TypedValue.cs">
+      <Link>Contracts\OData\TypedValue.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\TypedValueCollection`1.cs">
+      <Link>Contracts\OData\TypedValueCollection`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\UnrecognizedSegment.cs">
+      <Link>Contracts\OData\UnrecognizedSegment.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\UseMetadataNamespaceAnnotation.cs">
+      <Link>Contracts\OData\UseMetadataNamespaceAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\WorkspaceInstance.cs">
+      <Link>Contracts\OData\WorkspaceInstance.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\XmlBaseAnnotation.cs">
+      <Link>Contracts\OData\XmlBaseAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\XmlPayloadElementRepresentationAnnotation.cs">
+      <Link>Contracts\OData\XmlPayloadElementRepresentationAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\XmlRewriteElementAnnotation.cs">
+      <Link>Contracts\OData\XmlRewriteElementAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OData\XmlTreeAnnotation.cs">
+      <Link>Contracts\OData\XmlTreeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OperationParameterBindingKind.cs">
+      <Link>Contracts\OperationParameterBindingKind.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\OutOfProcessWebServiceHostDeploymentSettings.cs">
+      <Link>Contracts\OutOfProcessWebServiceHostDeploymentSettings.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\PredefinedModel.cs">
+      <Link>Contracts\PredefinedModel.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Product\DataServiceResponsePreference.cs">
+      <Link>Contracts\Product\DataServiceResponsePreference.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Product\EntityStates.cs">
+      <Link>Contracts\Product\EntityStates.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Product\MergeOption.cs">
+      <Link>Contracts\Product\MergeOption.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Product\SaveChangesOptions.cs">
+      <Link>Contracts\Product\SaveChangesOptions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ProtocolTestServices.cs">
+      <Link>Contracts\ProtocolTestServices.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryExpressionToTypedValueExtensionMethods.cs">
+      <Link>Contracts\QueryExpressionToTypedValueExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\QueryValueExtensionMethods.cs">
+      <Link>Contracts\QueryValueExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ResponseVerification\INextLinkExpectationGenerator.cs">
+      <Link>Contracts\ResponseVerification\INextLinkExpectationGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ResponseVerification\IODataJsonDateTimeFormattingValidator.cs">
+      <Link>Contracts\ResponseVerification\IODataJsonDateTimeFormattingValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ResponseVerification\IODataPayloadElementValidator.cs">
+      <Link>Contracts\ResponseVerification\IODataPayloadElementValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ResponseVerification\IResponseVerificationContext.cs">
+      <Link>Contracts\ResponseVerification\IResponseVerificationContext.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ResponseVerification\IResponseVerificationServices.cs">
+      <Link>Contracts\ResponseVerification\IResponseVerificationServices.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ResponseVerification\IResponseVerifier.cs">
+      <Link>Contracts\ResponseVerification\IResponseVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ResponseVerification\IResponseVerifierFactory.cs">
+      <Link>Contracts\ResponseVerification\IResponseVerifierFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ResponseVerification\ISelectiveResponseVerifier.cs">
+      <Link>Contracts\ResponseVerification\ISelectiveResponseVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ResponseVerification\IVerifyServiceActionQueryResult.cs">
+      <Link>Contracts\ResponseVerification\IVerifyServiceActionQueryResult.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ServiceBuilderSettingsBase.cs">
+      <Link>Contracts\ServiceBuilderSettingsBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ServiceOperationRights.cs">
+      <Link>Contracts\ServiceOperationRights.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ServiceReferences\IServiceReferenceFactory.cs">
+      <Link>Contracts\ServiceReferences\IServiceReferenceFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ServiceReferences\ServiceReferenceExtensions.cs">
+      <Link>Contracts\ServiceReferences\ServiceReferenceExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\StackBasedAssertionHandler.cs">
+      <Link>Contracts\StackBasedAssertionHandler.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\SyndicationItemProperty.cs">
+      <Link>Contracts\SyndicationItemProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\SyndicationTextContentKind.cs">
+      <Link>Contracts\SyndicationTextContentKind.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\VersionCalculationType.cs">
+      <Link>Contracts\VersionCalculationType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\VersionHelper.cs">
+      <Link>Contracts\VersionHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\VersioningExtensionMethods.cs">
+      <Link>Contracts\VersioningExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\WebServerLocatorCompleteEventArgs.cs">
+      <Link>Contracts\WebServerLocatorCompleteEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\AstoriaWrapperUtilities.cs">
+      <Link>Contracts\Wrappers\AstoriaWrapperUtilities.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\EnumerableProxy.cs">
+      <Link>Contracts\Wrappers\EnumerableProxy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\EnumerableProxy`1.cs">
+      <Link>Contracts\Wrappers\EnumerableProxy`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\EnumeratorProxy.cs">
+      <Link>Contracts\Wrappers\EnumeratorProxy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\EnumeratorProxy`1.cs">
+      <Link>Contracts\Wrappers\EnumeratorProxy`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\OrderedQueryableProxy.cs">
+      <Link>Contracts\Wrappers\OrderedQueryableProxy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\OrderedQueryableProxy`1.cs">
+      <Link>Contracts\Wrappers\OrderedQueryableProxy`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\ProxyFactory.cs">
+      <Link>Contracts\Wrappers\ProxyFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\QueryableProxy.cs">
+      <Link>Contracts\Wrappers\QueryableProxy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\QueryableProxy`1.cs">
+      <Link>Contracts\Wrappers\QueryableProxy`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\QueryProviderProxy.cs">
+      <Link>Contracts\Wrappers\QueryProviderProxy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\StreamProxy.cs">
+      <Link>Contracts\Wrappers\StreamProxy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedActionDescriptor.cs">
+      <Link>Contracts\Wrappers\WrappedActionDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedBodyOperationParameter.cs">
+      <Link>Contracts\Wrappers\WrappedBodyOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedDataServiceCollection`1.cs">
+      <Link>Contracts\Wrappers\WrappedDataServiceCollection`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedDataServiceContext.cs">
+      <Link>Contracts\Wrappers\WrappedDataServiceContext.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedDataServiceQuery.cs">
+      <Link>Contracts\Wrappers\WrappedDataServiceQuery.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedDataServiceQueryContinuation.cs">
+      <Link>Contracts\Wrappers\WrappedDataServiceQueryContinuation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedDataServiceQueryContinuation`1.cs">
+      <Link>Contracts\Wrappers\WrappedDataServiceQueryContinuation`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedDataServiceQuery`1.cs">
+      <Link>Contracts\Wrappers\WrappedDataServiceQuery`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedDataServiceQuery`1.Extensions.cs">
+      <Link>Contracts\Wrappers\WrappedDataServiceQuery`1.Extensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedDataServiceRequest.cs">
+      <Link>Contracts\Wrappers\WrappedDataServiceRequest.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedDataServiceRequest`1.cs">
+      <Link>Contracts\Wrappers\WrappedDataServiceRequest`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedDataServiceResponse.cs">
+      <Link>Contracts\Wrappers\WrappedDataServiceResponse.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedDataServiceStreamLink.cs">
+      <Link>Contracts\Wrappers\WrappedDataServiceStreamLink.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedDataServiceStreamResponse.cs">
+      <Link>Contracts\Wrappers\WrappedDataServiceStreamResponse.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedDescriptor.cs">
+      <Link>Contracts\Wrappers\WrappedDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedEntityDescriptor.cs">
+      <Link>Contracts\Wrappers\WrappedEntityDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedFunctionDescriptor.cs">
+      <Link>Contracts\Wrappers\WrappedFunctionDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedLinkDescriptor.cs">
+      <Link>Contracts\Wrappers\WrappedLinkDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedLinkInfo.cs">
+      <Link>Contracts\Wrappers\WrappedLinkInfo.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedOperationDescriptor.cs">
+      <Link>Contracts\Wrappers\WrappedOperationDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedOperationParameter.cs">
+      <Link>Contracts\Wrappers\WrappedOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedQueryOperationResponse.cs">
+      <Link>Contracts\Wrappers\WrappedQueryOperationResponse.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedQueryOperationResponse`1.cs">
+      <Link>Contracts\Wrappers\WrappedQueryOperationResponse`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedStreamDescriptor.cs">
+      <Link>Contracts\Wrappers\WrappedStreamDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrappedUriOperationParameter.cs">
+      <Link>Contracts\Wrappers\WrappedUriOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\Wrappers\WrapperExtensionMethods.cs">
+      <Link>Contracts\Wrappers\WrapperExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\DataOracleResultConverter.cs">
+      <Link>DataOracleResultConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\DefaultAstoriaQueryRepositoryHelper.cs">
+      <Link>DefaultAstoriaQueryRepositoryHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\DefaultEntitySetResolver.cs">
+      <Link>DefaultEntitySetResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\DefaultStackBasedAssertionHandler.cs">
+      <Link>DefaultStackBasedAssertionHandler.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\DictionaryDataProviderSettings.cs">
+      <Link>DictionaryDataProviderSettings.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\DictionaryProviderServiceMethodResolver.cs">
+      <Link>DictionaryProviderServiceMethodResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityFrameworkDataProviderSettings.cs">
+      <Link>EntityFrameworkDataProviderSettings.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModelVersionCalculator.cs">
+      <Link>EntityModelVersionCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\ActionsModelGenerator.cs">
+      <Link>EntityModel\ActionsModelGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\AstoriaAttributeToPropertyMappingAnnotationConverter.cs">
+      <Link>EntityModel\AstoriaAttributeToPropertyMappingAnnotationConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\AstoriaDefaultModelGenerator.cs">
+      <Link>EntityModel\AstoriaDefaultModelGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\AstoriaPhoneModelGenerator.cs">
+      <Link>EntityModel\AstoriaPhoneModelGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\AstoriaProductAnnotationConverter.cs">
+      <Link>EntityModel\AstoriaProductAnnotationConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\ClrToPrimitiveDataTypeConverter.cs">
+      <Link>EntityModel\ClrToPrimitiveDataTypeConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\KatmaiTypesModelGenerator.cs">
+      <Link>EntityModel\KatmaiTypesModelGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\NetflixModelGenerator.cs">
+      <Link>EntityModel\NetflixModelGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\OpenTypesComplexPropertiesModelGenerator.cs">
+      <Link>EntityModel\OpenTypesComplexPropertiesModelGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\PreexistingModelGenerator.cs">
+      <Link>EntityModel\PreexistingModelGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\SpatialClientModelGenerator.cs">
+      <Link>EntityModel\SpatialClientModelGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\SpatialModelGenerator.cs">
+      <Link>EntityModel\SpatialModelGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\StreamsModelGenerator.cs">
+      <Link>EntityModel\StreamsModelGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\GlobalSuppressions.cs">
+      <Link>GlobalSuppressions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Http\SystemNetHttpImplementation.cs">
+      <Link>Http\SystemNetHttpImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Json\DictionaryToJsonObjectConverter.cs">
+      <Link>Json\DictionaryToJsonObjectConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Json\JsonParser.cs">
+      <Link>Json\JsonParser.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Json\JsonTokenizer.cs">
+      <Link>Json\JsonTokenizer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Json\JsonUtilities.cs">
+      <Link>Json\JsonUtilities.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Json\JsonValueWriter.cs">
+      <Link>Json\JsonValueWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Json\JsonWriter.cs">
+      <Link>Json\JsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LazyMetadataProviderTypesStrategy.cs">
+      <Link>LazyMetadataProviderTypesStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\AstoriaQueryValueDeepCopyingVisitor.cs">
+      <Link>LinqToAstoria\AstoriaQueryValueDeepCopyingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\AstoriaQueryVerifierCapabilityInspector.cs">
+      <Link>LinqToAstoria\AstoriaQueryVerifierCapabilityInspector.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\ClrCanonicalFunctionEvaluator.cs">
+      <Link>LinqToAstoria\ClrCanonicalFunctionEvaluator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\DataServiceQueryVerifier.cs">
+      <Link>LinqToAstoria\DataServiceQueryVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\LinqToAstoriaClrQueryEvaluationStrategy.cs">
+      <Link>LinqToAstoria\LinqToAstoriaClrQueryEvaluationStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\LinqToAstoriaCustomFunctionResolutionVisitor.cs">
+      <Link>LinqToAstoria\LinqToAstoriaCustomFunctionResolutionVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\LinqToAstoriaEvaluator.cs">
+      <Link>LinqToAstoria\LinqToAstoriaEvaluator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\LinqToAstoriaExpressionReplacingVisitor.cs">
+      <Link>LinqToAstoria\LinqToAstoriaExpressionReplacingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\LinqToAstoriaParameterNameResolutionVisitor.cs">
+      <Link>LinqToAstoria\LinqToAstoriaParameterNameResolutionVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\LinqToAstoriaQueryResolver.cs">
+      <Link>LinqToAstoria\LinqToAstoriaQueryResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\LinqToAstoriaQuerySpanGenerator.cs">
+      <Link>LinqToAstoria\LinqToAstoriaQuerySpanGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\LinqToAstoriaReplaceFunctionParameterReferenceVisitor.cs">
+      <Link>LinqToAstoria\LinqToAstoriaReplaceFunctionParameterReferenceVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\LinqToAstoriaTypeResolutionVisitor.cs">
+      <Link>LinqToAstoria\LinqToAstoriaTypeResolutionVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\ODataUriEvaluator.cs">
+      <Link>LinqToAstoria\ODataUriEvaluator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\ODataUriQueryVisitor.cs">
+      <Link>LinqToAstoria\ODataUriQueryVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\ParameterReplacingVisitor.cs">
+      <Link>LinqToAstoria\ParameterReplacingVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\QueryDataSetSynchronizer.cs">
+      <Link>LinqToAstoria\QueryDataSetSynchronizer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\QueryToODataPayloadConverter.cs">
+      <Link>LinqToAstoria\QueryToODataPayloadConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\QueryToODataUriExpressionConverter.cs">
+      <Link>LinqToAstoria\QueryToODataUriExpressionConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\UriQueryVisitor.cs">
+      <Link>LinqToAstoria\UriQueryVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\LinqToAstoria\UriQueryVisitorBase.cs">
+      <Link>LinqToAstoria\UriQueryVisitorBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ODataPayloadElementVersionCalculator.cs">
+      <Link>ODataPayloadElementVersionCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ODataQueryTestCase.cs">
+      <Link>ODataQueryTestCase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ODataServiceDocumentParser.cs">
+      <Link>ODataServiceDocumentParser.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ODataUriVersionCalculator.cs">
+      <Link>ODataUriVersionCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ActionPayloadElementToQueryValuesConverter.cs">
+      <Link>OData\ActionPayloadElementToQueryValuesConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\AddXmlCommentsPayloadTransform.cs">
+      <Link>OData\AddXmlCommentsPayloadTransform.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\BatchPayloadComparer.cs">
+      <Link>OData\BatchPayloadComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\BatchPayloadDeserializer.cs">
+      <Link>OData\BatchPayloadDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\BatchPayloadSerializer.cs">
+      <Link>OData\BatchPayloadSerializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\BinaryValueProtocolFormatStrategy.cs">
+      <Link>OData\BinaryValueProtocolFormatStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ChangeXmlNamespaceTransform.cs">
+      <Link>OData\ChangeXmlNamespaceTransform.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\CompositePayloadTransform`1.cs">
+      <Link>OData\CompositePayloadTransform`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\CountProtocolFormatStrategy.cs">
+      <Link>OData\CountProtocolFormatStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\DataServicesProtocolImplementationDetails.cs">
+      <Link>OData\DataServicesProtocolImplementationDetails.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\DefaultPayloadTransformFactory.cs">
+      <Link>OData\DefaultPayloadTransformFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\DefaultProtocolFormatStrategySelector.cs">
+      <Link>OData\DefaultProtocolFormatStrategySelector.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\HtmlFormProtocolFormatStrategy.cs">
+      <Link>OData\HtmlFormProtocolFormatStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\HtmlPayloadErrorDeserializer.cs">
+      <Link>OData\HtmlPayloadErrorDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\JsonPayloadDeserializer.cs">
+      <Link>OData\JsonPayloadDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\JsonPayloadErrorDeserializer.cs">
+      <Link>OData\JsonPayloadErrorDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\JsonPayloadNormalizer.cs">
+      <Link>OData\JsonPayloadNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\JsonPayloadSerializer.cs">
+      <Link>OData\JsonPayloadSerializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\JsonPrimitiveConverter.cs">
+      <Link>OData\JsonPrimitiveConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\JsonPrimitiveValueComparer.cs">
+      <Link>OData\JsonPrimitiveValueComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\JsonProtocolFormatStrategy.cs">
+      <Link>OData\JsonProtocolFormatStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\JsonToPayloadElementConverter.cs">
+      <Link>OData\JsonToPayloadElementConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\KeyExpressionParser.cs">
+      <Link>OData\KeyExpressionParser.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ODataConventionBasedLinkGenerator.cs">
+      <Link>OData\ODataConventionBasedLinkGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ODataJsonLightResponseOrderIgnoringPayloadElementComparer.cs">
+      <Link>OData\ODataJsonLightResponseOrderIgnoringPayloadElementComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ODataJsonLightResponsePayloadElementComparer.cs">
+      <Link>OData\ODataJsonLightResponsePayloadElementComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ODataLiteralConverter.cs">
+      <Link>OData\ODataLiteralConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ODataOrderIgnoringPayloadElementComparer.cs">
+      <Link>OData\ODataOrderIgnoringPayloadElementComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ODataPayloadBuilder.cs">
+      <Link>OData\ODataPayloadBuilder.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ODataPayloadElementComparer.cs">
+      <Link>OData\ODataPayloadElementComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ODataPayloadElementMetadataResolver.cs">
+      <Link>OData\ODataPayloadElementMetadataResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ODataRequestManager.cs">
+      <Link>OData\ODataRequestManager.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ODataRequestVersionResourceErrorCalculator.cs">
+      <Link>OData\ODataRequestVersionResourceErrorCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ODataUriMinimumVersionRequiredCalculator.cs">
+      <Link>OData\ODataUriMinimumVersionRequiredCalculator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\ODataUriToStringConverterBase.cs">
+      <Link>OData\ODataUriToStringConverterBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\PayloadElementToJsonConverter.cs">
+      <Link>OData\PayloadElementToJsonConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\PayloadElementToNamedValuesConverter.cs">
+      <Link>OData\PayloadElementToNamedValuesConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\PayloadElementToQueryValueConverter.cs">
+      <Link>OData\PayloadElementToQueryValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\PayloadElementToXmlConverter.cs">
+      <Link>OData\PayloadElementToXmlConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\SimpleProtocolFormatStrategyBase.cs">
+      <Link>OData\SimpleProtocolFormatStrategyBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\SpatialPrimitiveToODataJsonValueConverter.cs">
+      <Link>OData\SpatialPrimitiveToODataJsonValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\StrictlyOrderedODataUriToStringConverter.cs">
+      <Link>OData\StrictlyOrderedODataUriToStringConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\TextValueProtocolFormatStrategy.cs">
+      <Link>OData\TextValueProtocolFormatStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\XmlPayloadDeserializer.cs">
+      <Link>OData\XmlPayloadDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\XmlPayloadErrorDeserializer.cs">
+      <Link>OData\XmlPayloadErrorDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\XmlPayloadNormalizer.cs">
+      <Link>OData\XmlPayloadNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\XmlPayloadSerializer.cs">
+      <Link>OData\XmlPayloadSerializer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\XmlPrimitiveConverter.cs">
+      <Link>OData\XmlPrimitiveConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\XmlProtocolFormatStrategy.cs">
+      <Link>OData\XmlProtocolFormatStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OData\XmlToPayloadElementConverter.cs">
+      <Link>OData\XmlToPayloadElementConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OpenMetadataProviderTypesStrategy.cs">
+      <Link>OpenMetadataProviderTypesStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\OracleBasedAsyncDataSynchronizer.cs">
+      <Link>OracleBasedAsyncDataSynchronizer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Php\PhpClientQueryVerifier.cs">
+      <Link>Php\PhpClientQueryVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Php\PhpCodeExecutor.cs">
+      <Link>Php\PhpCodeExecutor.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Php\PhpCodeGenerator.cs">
+      <Link>Php\PhpCodeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Php\PhpConstants.cs">
+      <Link>Php\PhpConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Php\PhpQueryOptions.cs">
+      <Link>Php\PhpQueryOptions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Php\QueryExpressionToPhpOptionsConverter.cs">
+      <Link>Php\QueryExpressionToPhpOptionsConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\RandomMetadataProviderTypingStrategy.cs">
+      <Link>RandomMetadataProviderTypingStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ReflectionDataProviderSettings.cs">
+      <Link>ReflectionDataProviderSettings.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ActionResponseVerifier.cs">
+      <Link>ResponseVerification\ActionResponseVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\CompositeResponseVerifier.cs">
+      <Link>ResponseVerification\CompositeResponseVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ContentTypeHeaderVerifier.cs">
+      <Link>ResponseVerification\ContentTypeHeaderVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\DataServiceVersionVerifier.cs">
+      <Link>ResponseVerification\DataServiceVersionVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\DelegateBasedResponseVerifier.cs">
+      <Link>ResponseVerification\DelegateBasedResponseVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\DeleteResponseVerifier.cs">
+      <Link>ResponseVerification\DeleteResponseVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ErrorResponseVerifier.cs">
+      <Link>ResponseVerification\ErrorResponseVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ETagHeaderVerifier.cs">
+      <Link>ResponseVerification\ETagHeaderVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ExpectedPayloadTypeResponseVerifier.cs">
+      <Link>ResponseVerification\ExpectedPayloadTypeResponseVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\JsonDateTimeFormattingResponseVerifier.cs">
+      <Link>ResponseVerification\JsonDateTimeFormattingResponseVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\JsonProtocolQueryVerifier.cs">
+      <Link>ResponseVerification\JsonProtocolQueryVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\NextLinkResponseVerifier.cs">
+      <Link>ResponseVerification\NextLinkResponseVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\NoSniffHeaderVerifier.cs">
+      <Link>ResponseVerification\NoSniffHeaderVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ODataJsonDateTimeFormattingValidator.cs">
+      <Link>ResponseVerification\ODataJsonDateTimeFormattingValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ODataPayloadElementDataValidator.cs">
+      <Link>ResponseVerification\ODataPayloadElementDataValidator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ODataPayloadElementEntityGraphPrettyPrinter.cs">
+      <Link>ResponseVerification\ODataPayloadElementEntityGraphPrettyPrinter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ODataQueryValueEntityGraphPrettyPrinter.cs">
+      <Link>ResponseVerification\ODataQueryValueEntityGraphPrettyPrinter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\PreferHeaderVerifier.cs">
+      <Link>ResponseVerification\PreferHeaderVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ProtocolQueryVerifier.cs">
+      <Link>ResponseVerification\ProtocolQueryVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\QueryBasedNextLinkGenerator.cs">
+      <Link>ResponseVerification\QueryBasedNextLinkGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\QueryResponseVerifier.cs">
+      <Link>ResponseVerification\QueryResponseVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\RelationshipLinkVerifier.cs">
+      <Link>ResponseVerification\RelationshipLinkVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ResponseVerificationContext.cs">
+      <Link>ResponseVerification\ResponseVerificationContext.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ResponseVerificationException.cs">
+      <Link>ResponseVerification\ResponseVerificationException.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ResponseVerificationServices.cs">
+      <Link>ResponseVerification\ResponseVerificationServices.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ResponseVerifierBase.cs">
+      <Link>ResponseVerification\ResponseVerifierBase.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ResponseVerifierFactory.cs">
+      <Link>ResponseVerification\ResponseVerifierFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\ServiceOperationDescriptorVerifier.cs">
+      <Link>ResponseVerification\ServiceOperationDescriptorVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\StatusCodeVerifier.cs">
+      <Link>ResponseVerification\StatusCodeVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\UpdateResponseVerifier.cs">
+      <Link>ResponseVerification\UpdateResponseVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ResponseVerification\XmlProtocolQueryVerifier.cs">
+      <Link>ResponseVerification\XmlProtocolQueryVerifier.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ServiceCreation\DataServiceWebServerLocator.cs">
+      <Link>ServiceCreation\DataServiceWebServerLocator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ServiceCreation\DataServiceWebServerLocatorStrategy.cs">
+      <Link>ServiceCreation\DataServiceWebServerLocatorStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ServiceCreation\FakeAsyncResult.cs">
+      <Link>ServiceCreation\FakeAsyncResult.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ServiceCreation\FakeDataServiceWebServerLocatorStrategy.cs">
+      <Link>ServiceCreation\FakeDataServiceWebServerLocatorStrategy.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ServiceDocumentBasedEntitySetResolver.cs">
+      <Link>ServiceDocumentBasedEntitySetResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ServiceMethodResolver.cs">
+      <Link>ServiceMethodResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\ServiceReferences\ServiceReferenceFactory.cs">
+      <Link>ServiceReferences\ServiceReferenceFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\SpecificExceptionMessageVerifierFactory.cs">
+      <Link>SpecificExceptionMessageVerifierFactory.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StreamServices.cs">
+      <Link>StreamServices.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\WindowsAuthenticationProvider.cs">
+      <Link>WindowsAuthenticationProvider.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Service References\Contracts.WebServices.DataOracleService.Silverlight\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\Contracts.WebServices.DataServiceBuilderService.Silverlight\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\Taupo.Astoria\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\External\System.CodeDom.SL\System.CodeDom.SL.csproj">
+      <Project>{93850EF2-5F47-404F-8988-812043FB83E9}</Project>
+      <Name>System.CodeDom.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Taupo.Query.SL\Microsoft.Test.Taupo.Query.SL.csproj">
+      <Project>{62D87E3D-923B-468B-82CA-5F6E65298C58}</Project>
+      <Name>Microsoft.Test.Taupo.Query.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Taupo.SL\Microsoft.Test.Taupo.SL.csproj">
+      <Project>{E88DCBA1-8E6F-4BB7-8017-7CD5A213107A}</Project>
+      <Name>Microsoft.Test.Taupo.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Taupo.Spatial.SL\Microsoft.Test.Taupo.Spatial.SL.csproj">
+      <Project>{2EBC2D89-C7E7-4214-8954-7C7015B8C5FE}</Project>
+      <Name>Microsoft.Test.Taupo.Spatial.SL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(AssemblyKeysCSharpFilePath)">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Taupo.Astoria\app.config">
+      <Link>app.config</Link>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataOracleService.Silverlight\entitycontainerdata.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataOracleService.Silverlight\Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Silverlight.SerializableEntity.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataOracleService.Silverlight\service.wsdl" />
+    <None Include="Service References\Contracts.WebServices.DataOracleService.Silverlight\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataOracleService.Silverlight\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.Silverlight\Arrays.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.Silverlight\Microsoft.Test.Taupo.WebServices.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.Silverlight\service.wsdl" />
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.Silverlight\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.Silverlight\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.Silverlight\configuration91.svcinfo" />
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.Silverlight\configuration.svcinfo" />
+    <None Include="Service References\Contracts.WebServices.DataServiceBuilderService.Silverlight\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\Contracts.WebServices.DataOracleService.Silverlight\configuration91.svcinfo" />
+    <None Include="Service References\Contracts.WebServices.DataOracleService.Silverlight\configuration.svcinfo" />
+    <None Include="Service References\Contracts.WebServices.DataOracleService.Silverlight\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="ServiceReferences.ClientConfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\Contracts.WebServices.DataOracleService.Silverlight\" />
+    <WCFMetadataStorage Include="Service References\Contracts.WebServices.DataServiceBuilderService.Silverlight\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

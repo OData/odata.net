@@ -1,0 +1,60 @@
+<Schema Namespace="FindMethodsTestModelBuilder.MultipleSchemasWithSameNamespace" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="validEntityType1">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+    <NavigationProperty Name="Grumble" Type="Collection(FindMethodsTestModelBuilder.MultipleSchemasWithSameNamespace.VALIDeNTITYtYPE2)" />
+  </EntityType>
+  <EntityType Name="VALIDeNTITYtYPE2">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+  </EntityType>
+  <ComplexType Name="ValidNameComplexType1">
+    <Property Name="aPropertyOne" Type="FindMethodsTestModelBuilder.MultipleSchemasWithSameNamespace.ValidNameComplexType1" Nullable="false" />
+  </ComplexType>
+  <Function Name="ValidFunction1">
+    <ReturnType Type="Edm.Single" Nullable="false" />
+  </Function>
+  <Function Name="ValidFunction1">
+    <Parameter Name="param1" Type="FindMethodsTestModelBuilder.MultipleSchemasWithSameNamespace.validEntityType1" />
+    <ReturnType Type="Edm.Single" Nullable="false" />
+  </Function>
+  <Function Name="ValidFunction1">
+    <Parameter Name="param1" Type="Edm.Single" Nullable="false" />
+    <ReturnType Type="Edm.Single" Nullable="false" />
+  </Function>
+  <EntityType Name="validEntityTypeA">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+    <NavigationProperty Name="Mumble" Type="Collection(FindMethodsTestModelBuilder.MultipleSchemasWithSameNamespace.VALIDeNTITYtYPEB)" />
+  </EntityType>
+  <EntityType Name="VALIDeNTITYtYPEB">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+  </EntityType>
+  <ComplexType Name="ValidNameComplexTypeA">
+    <Property Name="aPropertyOne" Type="FindMethodsTestModelBuilder.MultipleSchemasWithSameNamespace.ValidNameComplexTypeA" Nullable="false" />
+  </ComplexType>
+  <Function Name="ValidFunctionA">
+    <ReturnType Type="Edm.Single" Nullable="false" />
+  </Function>
+  <Function Name="ValidFunctionA">
+    <Parameter Name="param1" Type="FindMethodsTestModelBuilder.MultipleSchemasWithSameNamespace.validEntityTypeA" />
+    <ReturnType Type="Edm.Single" Nullable="false" />
+  </Function>
+  <Function Name="ValidFunctionA">
+    <Parameter Name="param1" Type="Edm.Single" Nullable="false" />
+    <ReturnType Type="Edm.Single" Nullable="false" />
+  </Function>
+  <EntityContainer Name="vALIDeNTITYcONTAINER2">
+    <EntitySet Name="AValidEntitySet2" EntityType="FindMethodsTestModelBuilder.MultipleSchemasWithSameNamespace.VALIDeNTITYtYPE2" />
+  </EntityContainer>
+</Schema>
+

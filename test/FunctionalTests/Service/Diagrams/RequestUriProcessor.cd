@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="NameAndType">
+  <Comment CommentText="RequestUriProcessor.ProcessRequestUri works by taking a host and data provider, examining the request the host has received, and transforming the Uri into a request description. The data provider supplies the metadata and the IQueryable instances that can be operated on. Uri &quot;operations&quot; become operations on the IQueryable (through the Queryable helper class), and its arguments are represented by Expression instances (creates through Expression static methods).">
+    <Position X="2.67" Y="2.049" Height="1.761" Width="3.958" />
+  </Comment>
+  <Class Name="Microsoft.OData.Service.RequestUriProcessor">
+    <Position X="7" Y="0.5" Width="3.5" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AEAKAIAAAAEMEAAIIiAAUAAAsAEAAAAQAAIIARYABiA=</HashCode>
+      <FileName>System\Data\Services\RequestUriProcessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Linq.Expressions.Expression">
+    <Position X="6.75" Y="4.25" Width="4.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="System.Linq.Queryable">
+    <Position X="0.75" Y="4.25" Width="5.5" />
+    <TypeIdentifier />
+  </Class>
+  <Interface Name="System.Linq.IQueryable">
+    <Position X="0.5" Y="0.5" Width="2" />
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="Provider" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="System.Linq.IQueryable&lt;T&gt;" Collapsed="true">
+    <Position X="0.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="System.Linq.IQueryProvider">
+    <Position X="3.75" Y="0.5" Width="3" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Microsoft.OData.Service.IDataServiceHost">
+    <Position X="11.25" Y="0.5" Width="2.25" />
+    <Members>
+      <Method Name="ProcessException" Hidden="true" />
+      <Property Name="ResponseStream" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AACAAKAAAAAIAgQAwAEAwACAAABJBGAAAIAAAAAAIAA=</HashCode>
+      <FileName>System\Data\Services\IDataServiceHost.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Microsoft.OData.Service.Providers.IDataServiceProvider">
+    <Position X="11.25" Y="5" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAgAEAACgAIQAAAAEAAAAEAEACAQgAAQAhkQAA=</HashCode>
+      <FileName>System\Data\Services\Providers\IDataServiceProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

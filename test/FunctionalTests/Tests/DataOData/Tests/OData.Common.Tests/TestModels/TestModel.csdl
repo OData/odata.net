@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Schema Namespace="TestModel" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="Data">
+    <EntitySet Name="Customers" EntityType="TestModel.Customer" />
+    <EntitySet Name="Orders" EntityType="TestModel.Orders" />
+    <EntitySet Name="AllTypesSet" EntityType="TestModel.AllTypesType" />
+
+    <AssociationSet Name="Customers_Orders_Orders" Association="TestModel.Customer_Orders">
+      <End Role="Customer_Orders" EntitySet="Customers" />
+      <End Role="Order_Customer" EntitySet="Orders" />
+    </AssociationSet>
+
+    <FunctionImport Name="Call" IsBindable="true">
+      <Parameter Name="Customer" Type="TestModel.Customer" />
+    </FunctionImport>
+  </EntityContainer>
+  <EntityContainer Name="EmptyData">
+  </EntityContainer>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" />
+    <Property Name="Image" Type="Stream" />
+    <NavigationProperty Name="Orders" ToRole="Order_Customer" FromRole="Customer_Orders" Relationship="TestModel.Customer_Orders" />
+  </EntityType>
+  <EntityType Name="Orders">
+    <Key>
+      <PropertyRef Name="KeyA" />
+      <PropertyRef Name="KeyB" />
+    </Key>
+    <Property Name="KeyA" Type="Int32" Nullable="false" />
+    <Property Name="KeyB" Type="String" Nullable="false" />
+    <NavigationProperty Name="Customer" ToRole="Customer_Orders" FromRole="Order_Customer" Relationship="TestModel.Customer_Orders" />
+  </EntityType>
+  <Association Name="Customer_Orders">
+    <End Type="TestModel.Customer" Multiplicity="0..1" Role="Customer_Orders" />
+    <End Type="TestModel.Orders" Multiplicity="*" Role="Order_Customer" />
+  </Association>
+
+  <EntityType Name="AllTypesType">
+    <Key>
+      <PropertyRef Name="Key" />
+    </Key>
+    <Property Name="Key" Type="Int32" Nullable="false" />
+
+    <Property Name="BinaryProperty"         Type="Binary"         Nullable="true" />
+    <Property Name="BooleanProperty"        Type="Boolean"        Nullable="true" />
+    <Property Name="ByteProperty"           Type="Byte"           Nullable="true" />
+    <Property Name="DateTimeProperty"       Type="DateTime"       Nullable="true" />
+    <Property Name="DateTimeOffsetProperty" Type="DateTimeOffset" Nullable="true" />
+    <Property Name="DecimalProperty"        Type="Decimal"        Nullable="true" />
+    <Property Name="DoubleProperty"         Type="Double"         Nullable="true" />
+    <Property Name="GuidProperty"           Type="Guid"           Nullable="true" />
+    <Property Name="Int16Property"          Type="Int16"          Nullable="true" />
+    <Property Name="Int32Property"          Type="Int32"          Nullable="true" />
+    <Property Name="Int64Property"          Type="Int64"          Nullable="true" />
+    <Property Name="SByteProperty"          Type="SByte"          Nullable="true" />
+    <Property Name="SingleProperty"         Type="Single"         Nullable="true" />
+    <Property Name="StringProperty"         Type="String"         Nullable="true" />
+    <Property Name="DurationProperty"       Type="Duration"       Nullable="true" />
+  </EntityType>
+</Schema>

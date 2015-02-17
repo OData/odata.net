@@ -1,0 +1,17 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" />
+  </EntityType>
+  <Function Name="GetCustomersExcluding">
+    <Parameter Name="CustomerId" Type="Edm.Int32" />
+    <ReturnType Type="Collection(NS1.Customer)" Nullable="false" />
+  </Function>
+  <EntityContainer Name="MyContainer">
+    <EntitySet Name="Customer" EntityType="NS1.Customer" />
+    <FunctionImport Name="GetCustomersExcluding" Function="NS1.GetCustomersExcluding" EntitySet="Customer" />
+  </EntityContainer>
+</Schema>
+

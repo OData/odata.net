@@ -1,0 +1,116 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://test/Id</id><category term="#TestModel.OpenTypeWithNullSpatial" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:SpatialProperty m:null="true" /></m:properties></content></entry>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://test/Id</id>
+  <category term="#TestModel.OpenTypeWithNullSpatial" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:SpatialProperty m:null="true" />
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://test/Id</id>
+  <category term="#TestModel.OpenTypeWithNullSpatial" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:SpatialProperty m:null="true" />
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://test/Id</id>
+  <category term="#TestModel.OpenTypeWithNullSpatial" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:SpatialProperty m:null="true" />
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 9; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://test/Id</id><category term="#TestModel.OpenTypeWithNullUndeclaredProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><title /><updated>0000-00-00T00:00:00Z</updated><author><name /></author><content type="application/xml"><m:properties><d:UndeclaredProperty m:null="true" /></m:properties></content></entry>
+
+Combination: 10; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://test/Id</id>
+  <category term="#TestModel.OpenTypeWithNullUndeclaredProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:UndeclaredProperty m:null="true" />
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 11; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://test/Id</id>
+  <category term="#TestModel.OpenTypeWithNullUndeclaredProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:UndeclaredProperty m:null="true" />
+    </m:properties>
+  </content>
+</entry>
+
+Combination: 12; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity">
+  <id>http://test/Id</id>
+  <category term="#TestModel.OpenTypeWithNullUndeclaredProperty" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <title />
+  <updated>0000-00-00T00:00:00Z</updated>
+  <author>
+    <name />
+  </author>
+  <content type="application/xml">
+    <m:properties>
+      <d:UndeclaredProperty m:null="true" />
+    </m:properties>
+  </content>
+</entry>
+

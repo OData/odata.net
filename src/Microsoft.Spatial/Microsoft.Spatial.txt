@@ -1,0 +1,58 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Note: During the build, this file is merged with the DataWeb\OData\Microsoft.Data.Json.Common.txt file to generate the System.Data.Spatial.txt file.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Error Messages
+
+SpatialImplementation_NoRegisteredOperations=No operations are registered. Please provide operations using SpatialImplementation.CurrentImplementation.Operations property.
+
+InvalidPointCoordinate=The value '{0}' is not valid for the coordinate '{1}'.
+Point_AccessCoordinateWhenEmpty=Access to the coordinate properties of an empty point is not supported.
+
+SpatialBuilder_CannotCreateBeforeDrawn=The builder cannot create an instance until all pipeline calls are completed.
+
+GmlReader_UnexpectedElement=Incorrect GML Format: The XmlReader instance encountered an unexpected element "{0}".
+GmlReader_ExpectReaderAtElement=Incorrect GML Format: the XmlReader instance is expected to be at the start of a GML element.
+GmlReader_InvalidSpatialType=Incorrect GML Format: unknown spatial type tag "{0}".
+GmlReader_EmptyRingsNotAllowed=Incorrect GML Format: a LinearRing element must not be empty.
+GmlReader_PosNeedTwoNumbers=Incorrect GML Format: a pos element must contain at least two coordinates.
+GmlReader_PosListNeedsEvenCount=Incorrect GML Format: a posList element must contain an even number of coordinates.
+GmlReader_InvalidSrsName=Incorrect GML Format: a srsName attribute must begin with the namespace "{0}".
+GmlReader_InvalidAttribute=The attribute '{0}' on element '{1}' is not supported.
+
+WellKnownText_UnexpectedToken=Expecting token type "{0}" with text "{1}" but found "{2}".
+WellKnownText_UnexpectedCharacter=Unexpected character '{0}' found in text.
+WellKnownText_UnknownTaggedText=Unknown Tagged Text "{0}".
+WellKnownText_TooManyDimensions=The WellKnownTextReader is configured to allow only two dimensions, and a third dimension was encountered.
+
+Validator_SridMismatch=Invalid spatial data: An instance of spatial type can have only one unique CoordinateSystem for all of its coordinates.
+Validator_InvalidType=Invalid spatial data: Invalid spatial type "{0}".
+Validator_FullGlobeInCollection=Invalid spatial data: the spatial type "FullGlobe" cannot be part of a collection type.
+Validator_LineStringNeedsTwoPoints=Invalid spatial data: the spatial type "LineString" must contain at least two points.
+Validator_FullGlobeCannotHaveElements=Invalid spatial data: the spatial type "FullGlobe" cannot contain figures.
+Validator_NestingOverflow=Invalid spatial data: only {0} levels of nesting are supported in collection types.
+Validator_InvalidPointCoordinate=Invalid spatial data: the coordinates ({0} {1} {2} {3}) are not valid.
+Validator_UnexpectedCall=Invalid spatial data: expected call to "{0}" but got call to "{1}".
+Validator_UnexpectedCall2=Invalid spatial data: expected call to "{0}" or "{1}" but got call to "{2}".
+Validator_InvalidPolygonPoints=Invalid spatial data: A polygon ring must contain at least four points, and the last point must be equal to the first point.
+Validator_InvalidLatitudeCoordinate=Invalid latitude coordinate {0}. A latitude coordinate must be a value between -90.0 and +90.0 degrees.
+Validator_InvalidLongitudeCoordinate=Invalid longitude coordinate {0}. A longitude coordinate must be a value between -15069.0 and +15069.0 degrees
+Validator_UnexpectedGeography=A geography operation was called while processing a geometric shape.
+Validator_UnexpectedGeometry=A geometry operation was called while processing a geographic shape.
+
+GeoJsonReader_MissingRequiredMember=Invalid GeoJSON. The '{0}' member is required, but was not found.
+GeoJsonReader_InvalidPosition=Invalid GeoJSON. A position must contain at least two and no more than four elements.
+GeoJsonReader_InvalidTypeName=Invalid GeoJSON. The value '{0}' is not a valid value for the 'type' member.
+GeoJsonReader_InvalidNullElement=Invalid GeoJSON. A null value was found in an array element where nulls are not allowed.
+GeoJsonReader_ExpectedNumeric=Invalid GeoJSON. A non-numeric value was found in an array element where a numeric value was expected.
+GeoJsonReader_ExpectedArray=Invalid GeoJSON. A primitive value was found in an array element where an array was expected.
+GeoJsonReader_InvalidCrsType=Invalid GeoJSON. The value '{0}' is not a recognized CRS type.
+GeoJsonReader_InvalidCrsName=Invalid GeoJSON. The value '{0}' is not a recognized CRS name.
+
+; Note: The below list of error messages are common to both the OData and the Spatial project.
+
+JsonReaderExtensions_CannotReadPropertyValueAsString=Cannot read the value '{0}' for the property '{1}' as a quoted JSON string value.
+JsonReaderExtensions_CannotReadValueAsJsonObject=Cannot read the value '{0}' as a JSON object.
+
+; Note: The below list of error messages are common to the ODataLib, EdmLib, Spatial, Server and Client projects.
+PlatformHelper_DateTimeOffsetMustContainTimeZone=The time zone information is missing on the DateTimeOffset value '{0}'. A DateTimeOffset value must contain the time zone information.

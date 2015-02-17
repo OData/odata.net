@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{93850EF2-5F47-404F-8988-812043FB83E9}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>System.CodeDom.SL</RootNamespace>
+    <AssemblyName>System.CodeDom.SL</AssemblyName>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <DefineConstants>CODEDOM</DefineConstants>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="system" />
+    <Reference Include="System.Net" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CharMethods.cs" />
+    <Compile Include="CodeDom\CodeArgumentReferenceExpression.cs" />
+    <Compile Include="CodeDom\CodeArrayCreateExpression.cs" />
+    <Compile Include="CodeDom\CodeArrayIndexerExpression.cs" />
+    <Compile Include="CodeDom\CodeAssignStatement.cs" />
+    <Compile Include="CodeDom\CodeAttachEventStatement.cs" />
+    <Compile Include="CodeDom\CodeAttributeArgument.cs" />
+    <Compile Include="CodeDom\CodeAttributeArgumentCollection.cs" />
+    <Compile Include="CodeDom\CodeAttributeDeclaration.cs" />
+    <Compile Include="CodeDom\CodeAttributeDeclarationCollection.cs" />
+    <Compile Include="CodeDom\CodeBaseReferenceExpression.cs" />
+    <Compile Include="CodeDom\CodeBinaryOperatorExpression.cs" />
+    <Compile Include="CodeDom\CodeBinaryOperatorType.cs" />
+    <Compile Include="CodeDom\CodeCastExpression.cs" />
+    <Compile Include="CodeDom\CodeCatchClause.cs" />
+    <Compile Include="CodeDom\CodeCatchClauseCollection.cs" />
+    <Compile Include="CodeDom\CodeChecksumPragma.cs" />
+    <Compile Include="CodeDom\CodeComment.cs" />
+    <Compile Include="CodeDom\CodeCommentStatement.cs" />
+    <Compile Include="CodeDom\CodeCommentStatementCollection.cs" />
+    <Compile Include="CodeDom\CodeCompileUnit.cs" />
+    <Compile Include="CodeDom\CodeConditionStatement.cs" />
+    <Compile Include="CodeDom\CodeConstructor.cs" />
+    <Compile Include="CodeDom\CodeDefaultValueExpression.cs" />
+    <Compile Include="CodeDom\CodeDelegateCreateExpression.cs" />
+    <Compile Include="CodeDom\CodeDelegateInvokeExpression.cs" />
+    <Compile Include="CodeDom\CodeDirectionExpression.cs" />
+    <Compile Include="CodeDom\CodeDirective.cs" />
+    <Compile Include="CodeDom\CodeDirectiveCollection.cs" />
+    <Compile Include="CodeDom\CodeEntryPointMethod.cs" />
+    <Compile Include="CodeDom\CodeEventReferenceExpression.cs" />
+    <Compile Include="CodeDom\CodeExpression.cs" />
+    <Compile Include="CodeDom\CodeExpressionCollection.cs" />
+    <Compile Include="CodeDom\CodeExpressionStatement.cs" />
+    <Compile Include="CodeDom\CodeFieldReferenceExpression.cs" />
+    <Compile Include="CodeDom\CodeGotoStatement.cs" />
+    <Compile Include="CodeDom\CodeIndexerExpression.cs" />
+    <Compile Include="CodeDom\CodeIterationStatement.cs" />
+    <Compile Include="CodeDom\CodeLabeledStatement.cs" />
+    <Compile Include="CodeDom\CodeLinePragma.cs" />
+    <Compile Include="CodeDom\CodeMemberEvent.cs" />
+    <Compile Include="CodeDom\CodeMemberField.cs" />
+    <Compile Include="CodeDom\CodeMemberMethod.cs" />
+    <Compile Include="CodeDom\CodeMemberProperty.cs" />
+    <Compile Include="CodeDom\CodeMethodInvokeExpression.cs" />
+    <Compile Include="CodeDom\codemethodreferenceexpression.cs" />
+    <Compile Include="CodeDom\CodeMethodReturnStatement.cs" />
+    <Compile Include="CodeDom\CodeNamespace.cs" />
+    <Compile Include="CodeDom\CodeNamespaceCollection.cs" />
+    <Compile Include="CodeDom\CodeNamespaceImport.cs" />
+    <Compile Include="CodeDom\CodeNamespaceImportCollection.cs" />
+    <Compile Include="CodeDom\CodeObject.cs" />
+    <Compile Include="CodeDom\CodeObjectCreateExpression.cs" />
+    <Compile Include="CodeDom\CodeParameterDeclarationExpression.cs" />
+    <Compile Include="CodeDom\CodeParameterDeclarationExpressionCollection.cs" />
+    <Compile Include="CodeDom\CodePrimitiveExpression.cs" />
+    <Compile Include="CodeDom\CodePropertyReferenceExpression.cs" />
+    <Compile Include="CodeDom\CodePropertySetValueReferenceExpression.cs" />
+    <Compile Include="CodeDom\CodeRegionDirective.cs" />
+    <Compile Include="CodeDom\CodeRegionMode.cs" />
+    <Compile Include="CodeDom\CodeRemoveEventStatement.cs" />
+    <Compile Include="CodeDom\CodeSnippetCompileUnit.cs" />
+    <Compile Include="CodeDom\CodeSnippetExpression.cs" />
+    <Compile Include="CodeDom\CodeSnippetStatement.cs" />
+    <Compile Include="CodeDom\CodeSnippetTypeMember.cs" />
+    <Compile Include="CodeDom\CodeStatement.cs" />
+    <Compile Include="CodeDom\CodeStatementCollection.cs" />
+    <Compile Include="CodeDom\CodeThisReferenceExpression.cs" />
+    <Compile Include="CodeDom\CodeThrowExceptionStatement.cs" />
+    <Compile Include="CodeDom\CodeTryCatchFinallyStatement.cs" />
+    <Compile Include="CodeDom\CodeTypeConstructor.cs" />
+    <Compile Include="CodeDom\CodeTypeDeclaration.cs" />
+    <Compile Include="CodeDom\CodeTypeDeclarationCollection.cs" />
+    <Compile Include="CodeDom\CodeTypeDelegate.cs" />
+    <Compile Include="CodeDom\CodeTypeMember.cs" />
+    <Compile Include="CodeDom\CodeTypeMemberCollection.cs" />
+    <Compile Include="CodeDom\CodeTypeOfExpression.cs" />
+    <Compile Include="CodeDom\CodeTypeParameter.cs" />
+    <Compile Include="CodeDom\CodeTypeParameterCollection.cs" />
+    <Compile Include="CodeDom\CodeTypeReference.cs" />
+    <Compile Include="CodeDom\CodeTypeReferenceCollection.cs" />
+    <Compile Include="CodeDom\CodeTypeReferenceExpression.cs" />
+    <Compile Include="CodeDom\CodeVariableDeclarationStatement.cs" />
+    <Compile Include="CodeDom\CodeVariableReferenceExpression.cs" />
+    <Compile Include="CodeDom\Compiler\CodeGenerator.cs" />
+    <Compile Include="CodeDom\Compiler\GeneratorSupport.cs" />
+    <Compile Include="CodeDom\Compiler\ICodeGenerator.cs" />
+    <Compile Include="CodeDom\Compiler\IndentedTextWriter.cs" />
+    <Compile Include="CodeDom\Compiler\SafeCodeGeneratorOptions.cs" />
+    <Compile Include="CodeDom\FieldDirection.cs" />
+    <Compile Include="CodeDom\MemberAttributes.cs" />
+    <Compile Include="Collections\CollectionBase.cs" />
+    <Compile Include="Collections\StringCollection.cs" />
+    <Compile Include="FixedStringLookup.cs" />
+    <Compile Include="Microsoft\CSharp\CSharpCodeGenerator.cs" />
+    <Compile Include="Microsoft\VisualBasic\VBCodeGenerator.cs" />
+    <Compile Include="..\..\Source\PlatformHelper.cs">
+      <Link>PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="SR.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

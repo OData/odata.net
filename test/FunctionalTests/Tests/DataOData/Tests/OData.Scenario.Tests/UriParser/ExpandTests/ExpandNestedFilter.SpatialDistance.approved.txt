@@ -1,0 +1,45 @@
+$select = 
+$expand = LoggedInEmployee($filter=geo.distance(Home, Office) lt 0.5)
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: LoggedInEmployee)]
+			FilterQueryOption
+				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
+				Parameter = 
+				EntityRangeVariable
+					Name = $it
+					NavigationSource = LoggedInEmployee
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
+				Expression = 
+					SingleValueFunctionCallNode
+						Name = geo.distance
+						Return Type = [Edm.Double Nullable=True]
+						Function = 
+						Arguments = 
+							SingleValuePropertyAccessNode
+								Property = Home
+								TypeReference = [Edm.GeographyPoint Nullable=True SRID=4326]
+								Source = 
+								EntityRangeVariableReferenceNode
+									Name = $it
+									NavigationSource = LoggedInEmployee
+									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
+									Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+							SingleValuePropertyAccessNode
+								Property = Office
+								TypeReference = [Edm.GeographyPoint Nullable=True SRID=4326]
+								Source = 
+								EntityRangeVariableReferenceNode
+									Name = $it
+									NavigationSource = LoggedInEmployee
+									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
+									Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				LessThan
+					0.5(Type: [Edm.Double Nullable=False])
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems(Empty List)

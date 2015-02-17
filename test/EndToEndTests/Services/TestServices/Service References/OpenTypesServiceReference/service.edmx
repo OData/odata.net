@@ -1,0 +1,46 @@
+﻿<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <edmx:DataServices m:DataServiceVersion="1.0" m:MaxDataServiceVersion="4.0" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
+    <Schema Namespace="Microsoft.Test.OData.Services.OpenTypesService" xmlns="http://schemas.microsoft.com/ado/2008/01/edm">
+      <EntityType Name="Row" OpenType="true">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Guid" Nullable="false" />
+      </EntityType>
+      <EntityType Name="IndexedRow" BaseType="Microsoft.Test.OData.Services.OpenTypesService.Row" OpenType="true" />
+      <EntityType Name="RowIndex" OpenType="true">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Rows" Relationship="Microsoft.Test.OData.Services.OpenTypesService.RowIndex_Rows" ToRole="Rows" FromRole="RowIndex" />
+      </EntityType>
+      <ComplexType Name="ContactDetails">
+        <Property Name="FirstContacted" Type="Edm.Binary" />
+        <Property Name="LastContacted" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="Contacted" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="GUID" Type="Edm.Guid" Nullable="false" />
+        <Property Name="PreferedContactTime" Type="Edm.Duration" Nullable="false" />
+        <Property Name="Byte" Type="Edm.Byte" Nullable="false" />
+        <Property Name="SignedByte" Type="Edm.SByte" Nullable="false" />
+        <Property Name="Double" Type="Edm.Double" Nullable="false" />
+        <Property Name="Single" Type="Edm.Single" Nullable="false" />
+        <Property Name="Short" Type="Edm.Int16" Nullable="false" />
+        <Property Name="Int" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Long" Type="Edm.Int64" Nullable="false" />
+      </ComplexType>
+      <Association Name="RowIndex_Rows">
+        <End Type="Microsoft.Test.OData.Services.OpenTypesService.RowIndex" Role="RowIndex" Multiplicity="*" />
+        <End Type="Microsoft.Test.OData.Services.OpenTypesService.IndexedRow" Role="Rows" Multiplicity="*" />
+      </Association>
+      <EntityContainer Name="DefaultContainer" m:IsDefaultEntityContainer="true">
+        <EntitySet Name="Row" EntityType="Microsoft.Test.OData.Services.OpenTypesService.Row" />
+        <EntitySet Name="RowIndex" EntityType="Microsoft.Test.OData.Services.OpenTypesService.RowIndex" />
+        <AssociationSet Name="Index_Rows" Association="Microsoft.Test.OData.Services.OpenTypesService.RowIndex_Rows">
+          <End Role="RowIndex" EntitySet="RowIndex" />
+          <End Role="Rows" EntitySet="Row" />
+        </AssociationSet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

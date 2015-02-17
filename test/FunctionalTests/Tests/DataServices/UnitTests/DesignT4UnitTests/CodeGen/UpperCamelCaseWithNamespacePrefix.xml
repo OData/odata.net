@@ -1,0 +1,63 @@
+<?xml version="1.0" standalone="yes" ?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="namespace.foo" xmlns:d="http://docs.oasis-open.org/odata/ns/data"
+            xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="baseType">
+        <Key>
+          <PropertyRef Name="keyProp" />
+        </Key>
+        <Property Name="keyProp" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+      <EntityType Name="testType" BaseType="namespace.foo.baseType">
+        <NavigationProperty Name="singleType" Type="namespace.foo.singleType" />
+      </EntityType>
+      <EntityType Name="singleType">
+        <Key>
+          <PropertyRef Name="keyProp" />
+        </Key>
+        <Property Name="keyProp" Type="Edm.Int32" Nullable="false" />
+        <Property Name="colorProp" Type="namespace.foo.color" Nullable="false" />
+        <NavigationProperty Name="baseSet" Type="Collection(namespace.foo.testType)" />
+      </EntityType>
+      <ComplexType Name="complex">
+        <Property Name="intProp" Type="Edm.Int32" Nullable="false" />
+        <Property Name="stringProp" Type="Edm.String" Nullable="false" />
+      </ComplexType>
+      <EnumType Name="color" UnderlyingType="Edm.Int32" IsFlags="true">
+        <Member Name="red"/>
+        <Member Name="white"/>
+        <Member Name="blue"/>
+      </EnumType>
+      <Function Name="foo6">
+        <Parameter Name="p1" Type="Collection(namespace.foo.testType)" />
+        <ReturnType Type="Edm.String" />
+      </Function>
+      <Function Name="foo7" IsBound="true">
+        <Parameter Name="p1" Type="namespace.foo.testType" />
+        <Parameter Name="p1" Type="namespace.foo.color" Nullable="false" />
+        <Parameter Name="p2" Type="namespace.foo.complex" />
+        <ReturnType Type="Edm.String" />
+      </Function>
+      <Action Name="foo8" IsBound="True">
+        <Parameter Name="p1" Type="namespace.foo.singleType" />
+        <ReturnType Type="Edm.Int32" />
+      </Action>
+      <Action Name="foo9">
+        <Parameter Name="p1" Type="namespace.foo.color" />
+        <Parameter Name="p2" Type="namespace.foo.complex" />
+      </Action>
+    </Schema>
+    <Schema Namespace="namespace.bar" xmlns:d="http://docs.oasis-open.org/odata/ns/data"
+            xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="singletonContainer">
+        <EntitySet Name="testTypeSet" EntityType="namespace.foo.testType" />
+        <EntitySet Name="baseTypeSet" EntityType="namespace.foo.baseType" />
+        <Singleton Name="superType" Type="namespace.foo.testType" />
+        <Singleton Name="single" Type="namespace.foo.singleType" />
+        <FunctionImport Name="foo6" Function="namespace.foo.foo6"/>
+        <ActionImport Name="foo9" Action="namespace.foo.foo9"/>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

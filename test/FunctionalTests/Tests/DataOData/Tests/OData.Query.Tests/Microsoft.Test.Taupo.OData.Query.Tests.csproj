@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <ProjectGuid>{C0A623F5-7165-432C-A764-2E995FD9ADA9}</ProjectGuid>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.OData.Query.Tests</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.OData.Query.Tests</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <SignAssemblyAttribute>true</SignAssemblyAttribute>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <!-- References -->
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo\Microsoft.Test.Taupo.csproj">
+      <Project>{34010F3A-20CC-479C-83CF-EC99B1C90CD1}</Project>
+      <Name>Microsoft.Test.Taupo</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Astoria\Microsoft.Test.Taupo.Astoria.csproj">
+      <Project>{854AF4E9-B78F-4994-B9C5-82B846604CBE}</Project>
+      <Name>Microsoft.Test.Taupo.Astoria</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Query\Microsoft.Test.Taupo.Query.csproj">
+      <Project>{29236BBA-852B-46B2-A39B-09DB47A7F6EB}</Project>
+      <Name>Microsoft.Test.Taupo.Query</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\OData\Microsoft.Test.Taupo.OData.csproj">
+      <Project>{1D54775E-E211-4B35-A002-E53416BAE743}</Project>
+      <Name>Microsoft.Test.Taupo.OData</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Source files -->
+  <ItemGroup>
+    <Compile Include="Common\DataServiceProviderFactory.cs" />
+    <Compile Include="Common\DataServiceProvider\DSPContext.cs" />
+    <Compile Include="Common\DataServiceProvider\DSPResource.cs" />
+    <Compile Include="Common\ODataQueryEntityModelSchemaToEdmModelConverter.cs" />
+    <Compile Include="Common\ODataUriParserVerifier.cs" />
+    <Compile Include="Common\StronglyTypedDataServiceProviderFactory.cs" />
+    <Compile Include="Common\UntypedDataServiceProviderFactory.cs" />
+    <Compile Include="DataClasses\Address.cs" />
+    <Compile Include="DataClasses\Customer.cs" />
+    <Compile Include="DataClasses\MultiKey.cs" />
+    <Compile Include="DataClasses\TypeWithPrimitiveProperties.cs" />
+    <Compile Include="MetadataBinder\BinderErrorTests.cs" />
+    <Compile Include="MetadataBinder\FilterBinderFunctionalTests.cs" />
+    <Compile Include="MetadataBinder\OrderByBinderFunctionalTests.cs" />
+    <Compile Include="MetadataBinder\QueryNodeUtils.cs" />
+    <Compile Include="MetadataBinder\SkipTopBinderTests.cs" />
+    <Compile Include="MetadataBinder\TypePromotionTests.cs" />
+    <Compile Include="ObjectModel\QueryTokenObjectModelTests.cs" />
+    <Compile Include="ODataQueryTestsTestModule.cs" />
+    <Compile Include="ODataTaupoQueryTest.cs" />
+    <Compile Include="ODataTestCase.cs" />
+    <Compile Include="QueryTestData.cs" />
+    <Compile Include="QueryTestMetadata.cs" />
+    <Compile Include="QueryTestUtils.cs" />
+    <Compile Include="UriParser\ExpressionTestCases.cs" />
+    <Compile Include="UriParser\FilterQueryTokenTests.cs" />
+    <Compile Include="UriParser\OrderByQueryTokenTests.cs" />
+    <Compile Include="UriParser\QueryOptionQueryTokenTests.cs" />
+    <Compile Include="UriParser\QueryTokenUtils.cs" />
+    <Compile Include="UriParser\SyntacticTree.cs" />
+    <Compile Include="UriParser\SystemQueryOptionsQueryTokenTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ODataQueryTests.suite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UriParser\ODataUrls.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Common\Annotations\" />
+    <Folder Include="CustomExtensions\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

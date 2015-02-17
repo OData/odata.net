@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Comment CommentText="The DataService instance manages a configuration and an authorized provider. The configuration contains details about what rights are available and what authorization filter methods should be invoked.">
+    <Position X="1.01" Y="3.719" Height="0.882" Width="3.804" />
+  </Comment>
+  <Class Name="Microsoft.OData.Service.DataService&lt;T&gt;" Collapsed="true">
+    <Position X="1" Y="1" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ACoAAASGhOCSEARICBBSAQgEBGGSAADEBIwAIACAEAA=</HashCode>
+      <FileName>Microsoft\Data\Web\WebDataService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.OData.Service.DataServiceConfiguration">
+    <Position X="8" Y="1" Width="3.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EGAAABRCAASAAAArAEAkAAACgBQAABQgAAMACAABBQA=</HashCode>
+      <FileName>Microsoft\Data\Web\WebDataServiceConfiguration.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Enum Name="Microsoft.OData.Service.ServiceOperationRights">
+    <Position X="3.25" Y="1" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAABAAAAAAAAAIAAEAEAAAA=</HashCode>
+      <FileName>Microsoft\Data\Web\ServiceOperationRights.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Microsoft.OData.Service.EntitySetRights">
+    <Position X="5.5" Y="1" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAABAAAAAAABABAAAABAAAAAAAACIAAEAEAAAA=</HashCode>
+      <FileName>Microsoft\Data\Web\ResourceContainerRights.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

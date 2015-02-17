@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssemblyName>Microsoft.OData.Service.Design.T4</AssemblyName>
+    <OutputType>Library</OutputType>
+    <AllowPartialTrustedCalls>false</AllowPartialTrustedCalls>
+    <ConditionalAPTCA_L2>true</ConditionalAPTCA_L2>
+    <DefineConstants>$(DefineConstants);QFE_ENV;ASTORIA_DESIGN;</DefineConstants>
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <RootNamespace>System</RootNamespace>
+    <ProjectGuid>{E4167281-C1AF-48C1-9BBD-0453BFB8CE2D}</ProjectGuid>
+    <EnableStyleCop>false</EnableStyleCop>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="$(NuGetPack)\Microsoft.TextTemplating.CBT.10.1.0.1\Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll" Condition="'$(BuildInOSS)' != 'true'" />
+    <Reference Include="$(NuGetPack)\Microsoft.TextTemplating.CBT.10.1.0.1\Microsoft.VisualStudio.TextTemplating.VSHost.10.0.dll" Condition="'$(BuildInOSS)' != 'true'" />
+    <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" Condition="'$(BuildInOSS)' == 'true'" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7d921888-fe03-4c3f-80fe-2f624505461c}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Source files -->
+  <ItemGroup>
+    <Compile Include="$(EnlistmentRoot)\_BuildCommon\ProductVersion\AssemblyRefs.cs" Condition="'$(BuildInOSS)' != 'true'">
+      <Link>AssemblyRefs.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\AssemblyInfo\AssemblyRefs.cs" Condition="'$(BuildInOSS)' == 'true'">
+      <Link>AssemblyRefs.cs</Link>
+    </Compile>
+    <Compile Include="ODataT4CodeGenerator.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ODataT4CodeGenerator.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="InternalsVisibleTo.cs" />
+    <Compile Include="$(AssemblyKeysCSharpFilePath)" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ODataT4CodeGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>Microsoft.OData.Client.Design.T4</CustomToolNamespace>
+      <LastGenOutput>ODataT4CodeGenerator.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ODataT4CodeGenerator.ttinclude" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

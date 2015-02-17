@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Dictionary>
+  <Words>
+    <Recognized>
+      <Word>IANA</Word>
+      <Word>describedby</Word>
+      <Word>Composable</Word>
+      <Word>noncomposable</Word>
+      <Word>Edm</Word>
+      <Word>Edmx</Word>
+      <Word>Csdl</Word>
+      <Word>Multi</Word>
+      <Word>Contrib</Word>
+      <Word>Changeset</Word>
+      <Word>odata</Word>
+      <Word>Api</Word>
+      <Word>Util</Word>
+      <Word>Dereferenceable</Word>
+      <Word>Etag</Word>
+      <Word>etag</Word>
+      <Word>deltalink</Word>
+      <Word>Srs</Word>
+      <Word>Pos</Word>
+    </Recognized>
+    <DiscreteExceptions>
+      <Term>OData</Term>
+      <Term>CharSets</Term>
+      <Term>ETag</Term>
+      <Term>subType</Term>
+      <Term>DeltaLink</Term>
+      <Term>forceFully</Term>
+      <Term>TypeCast</Term>
+      <Term>NonEntity</Term>
+      <Term>UnBound</Term>
+      <Term>NonBinding</Term>
+    </DiscreteExceptions>
+  </Words>
+  <Acronyms>
+    <CasingExceptions>
+      <Acronym>IDs</Acronym>
+      <Acronym>Un</Acronym>
+      <Acronym>URL</Acronym>
+    </CasingExceptions>
+  </Acronyms>
+</Dictionary>

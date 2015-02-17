@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="NonPublicPropertiesContext.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="NonPublicPropertiesContextStoreContainer">
+    <EntitySet Name="Customers" EntityType="NonPublicPropertiesContext.Store.Customers" store:Type="Tables" Table="#Customers" />
+    <EntitySet Name="Orders" EntityType="NonPublicPropertiesContext.Store.Orders" store:Type="Tables" Table="#Orders" />
+    <AssociationSet Name="CustomerOrder" Association="NonPublicPropertiesContext.Store.CustomerOrder">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Order" EntitySet="Orders" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Customers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="Orders">
+    <Key>
+      <PropertyRef Name="bKey" />
+      <PropertyRef Name="AKey" />
+    </Key>
+    <Property Name="bKey" Type="int" Nullable="false" />
+    <Property Name="AKey" Type="int" Nullable="false" />
+    <Property Name="Customer_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="CustomerOrder">
+    <End Role="Customer" Type="NonPublicPropertiesContext.Store.Customers" Multiplicity="1" />
+    <End Role="Order" Type="NonPublicPropertiesContext.Store.Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Order">
+        <PropertyRef Name="Customer_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

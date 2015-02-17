@@ -1,0 +1,435 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{E6B4D992-6DBF-4171-81E0-2C98CDA796F2}</ProjectGuid>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.OData.Writer.Tests</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.OData.Writer.Tests</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <GenerateAssemblyRefs>true</GenerateAssemblyRefs>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <OutputType>Library</OutputType>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ODataCrossTargettingSourcePath>..\..\Tests\OData.Writer.Tests</ODataCrossTargettingSourcePath>
+  </PropertyGroup>
+  <!-- References -->
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.XML" />
+    <Reference Include="$(SilverlightClientLibraries)\System.Xml.Linq.dll">
+      <SpecificVersion>true</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <XTargetOutputFile Include="$(MSBuildThisFile)">
+      <SourceProject>$(EnlistmentRoot)\test\FunctionalTests\Tests\OData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj</SourceProject>
+      <TargetPathPrefixName>ODataCrossTargettingSourcePath</TargetPathPrefixName>
+    </XTargetOutputFile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Web\Client.PortableLibrary\Microsoft.OData.Client.Portable.csproj">
+      <Project>{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.SL\Microsoft.Test.Taupo.SL.csproj">
+      <Project>{E88DCBA1-8E6F-4BB7-8017-7CD5A213107A}</Project>
+      <Name>Microsoft.Test.Taupo.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Edmlib.SL\Microsoft.Test.Taupo.Edmlib.SL.csproj">
+      <Project>{A3FD00F4-65DB-410E-A6D1-6E7832CD0F93}</Project>
+      <Name>Microsoft.Test.Taupo.Edmlib.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Astoria.SL\Microsoft.Test.Taupo.Astoria.SL.csproj">
+      <Project>{ACB8647F-9830-4B96-B45A-6A0ACDE6A25F}</Project>
+      <Name>Microsoft.Test.Taupo.Astoria.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Query.SL\Microsoft.Test.Taupo.Query.SL.csproj">
+      <Project>{62D87E3D-923B-468B-82CA-5F6E65298C58}</Project>
+      <Name>Microsoft.Test.Taupo.Query.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\External\System.CodeDom.SL\System.CodeDom.SL.csproj">
+      <Project>{93850EF2-5F47-404F-8988-812043FB83E9}</Project>
+      <Name>System.CodeDom.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common.Silverlight\OData\Microsoft.Test.Taupo.OData.csproj">
+      <Project>{29BFE3C4-C0A8-4E07-829E-112D1A9FA4DA}</Project>
+      <Name>Microsoft.Test.Taupo.OData</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\TestUtils\Common.Silverlight\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj">
+      <Project>{DE0EEB4B-5E35-488A-8D72-04D0DE5963EE}</Project>
+      <Name>Microsoft.Test.OData.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5D921888-FE03-4C3F-40FE-2F624505461D}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Source files -->
+  <!--
+  This ItemGroup is generated automatically.
+  
+  !!!! DO NOT MODIFY THIS ItemGroup MANUALLY !!!!
+  -->
+  <ItemGroup>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomResourceCollectionMetadataTests.cs">
+      <Link>Atom\AtomResourceCollectionMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomCategoryMetadataTests.cs">
+      <Link>Atom\AtomCategoryMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomEntryMetadataTests.cs">
+      <Link>Atom\AtomEntryMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomFeedMetadataTests.cs">
+      <Link>Atom\AtomFeedMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomGeneratorMetadataTests.cs">
+      <Link>Atom\AtomGeneratorMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomLinkMetadataTests.cs">
+      <Link>Atom\AtomLinkMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomPersonMetadataTests.cs">
+      <Link>Atom\AtomPersonMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomTextConstructMetadataTests.cs">
+      <Link>Atom\AtomTextConstructMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomXmlTests.cs">
+      <Link>Atom\AtomXmlTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\AtomCollectionWriterTests.cs">
+      <Link>Atom\AtomCollectionWriterTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\WriterEntryAtomTests.cs">
+      <Link>Atom\WriterEntryAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\WriterFeedAtomTests.cs">
+      <Link>Atom\WriterFeedAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\WriterMetadataDocumentAtomTests.cs">
+      <Link>Atom\WriterMetadataDocumentAtomTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\BatchWriter\BatchPayloadWriterTestDescriptor.cs">
+      <Link>BatchWriter\BatchPayloadWriterTestDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\BatchWriter\BatchWriterStatesTests.cs">
+      <Link>BatchWriter\BatchWriterStatesTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\BatchWriter\BatchWriterSyncAsyncMismatchTests.cs">
+      <Link>BatchWriter\BatchWriterSyncAsyncMismatchTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\BatchWriter\BatchWriterTestDescriptor.cs">
+      <Link>BatchWriter\BatchWriterTestDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\BatchWriter\BatchWriterTestExpectedResults.cs">
+      <Link>BatchWriter\BatchWriterTestExpectedResults.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\BatchWriter\BatchWriterTests.cs">
+      <Link>BatchWriter\BatchWriterTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\BatchWriter\BatchWriterUtils.cs">
+      <Link>BatchWriter\BatchWriterUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\BatchWriter\ODataBatchWriterTestCase.cs">
+      <Link>BatchWriter\ODataBatchWriterTestCase.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\CollectionWriter\CollectionWriterStatesTests.cs">
+      <Link>CollectionWriter\CollectionWriterStatesTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\CollectionWriter\CollectionWriterSyncAsyncMismatchTests.cs">
+      <Link>CollectionWriter\CollectionWriterSyncAsyncMismatchTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\CollectionWriter\CollectionWriterTestDescriptor.cs">
+      <Link>CollectionWriter\CollectionWriterTestDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\CollectionWriter\CollectionWriterTests.cs">
+      <Link>CollectionWriter\CollectionWriterTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\CollectionWriter\CollectionWriterUtils.cs">
+      <Link>CollectionWriter\CollectionWriterUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\BatchPayloadNormalizer.cs">
+      <Link>Common\BatchPayloadNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataEntityModelSchemaComparer.cs">
+      <Link>Common\ODataEntityModelSchemaComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataParameterWriterTestWrapper.cs">
+      <Link>Common\ODataParameterWriterTestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\DefaultProtocolFormatNormalizerSelector.cs">
+      <Link>Common\DefaultProtocolFormatNormalizerSelector.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\IProtocolFormatNormalizerSelector.cs">
+      <Link>Common\IProtocolFormatNormalizerSelector.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\MetadataWriterTestDescriptorGenerator.cs">
+      <Link>Common\MetadataWriterTestDescriptorGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\MetadataWriterTestExpectedResult.cs">
+      <Link>Common\MetadataWriterTestExpectedResult.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\MetadataWriterTestDescriptor.cs">
+      <Link>Common\MetadataWriterTestDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ObjectModelExtensions.cs">
+      <Link>Common\ObjectModelExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\PayloadWriterTestExpectedResults.cs">
+      <Link>Common\PayloadWriterTestExpectedResults.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\WriteEntryCallbacksAnnotation.cs">
+      <Link>Common\WriteEntryCallbacksAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\WriteFeedCallbackAnnotation.cs">
+      <Link>Common\WriteFeedCallbackAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\WriterTestDescriptor.cs">
+      <Link>Common\WriterTestDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataBatchWriterTestWrapper.cs">
+      <Link>Common\ODataBatchWriterTestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataCollectionWriterTestWrapper.cs">
+      <Link>Common\ODataCollectionWriterTestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataMessageWriterTestWrapper.cs">
+      <Link>Common\ODataMessageWriterTestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataWriterTestWrapper.cs">
+      <Link>Common\ODataWriterTestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\SingleEnumerator.cs">
+      <Link>Common\SingleEnumerator.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\WriterTestConfiguration.cs">
+      <Link>Common\WriterTestConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\WriterTestConfigurationProvider.cs">
+      <Link>Common\WriterTestConfigurationProvider.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\PayloadWriterTestDescriptor.cs">
+      <Link>Common\PayloadWriterTestDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\WriterTestExpectedResults.cs">
+      <Link>Common\WriterTestExpectedResults.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\AddExpandedLinkMetadata.cs">
+      <Link>Fixups\AddExpandedLinkMetadata.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\RemoveComplexWithNoProperties.cs">
+      <Link>Fixups\RemoveComplexWithNoProperties.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\RemoveFeedIDFixup.cs">
+      <Link>Fixups\RemoveFeedIDFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\ExpectedBatchPayloadFixup.cs">
+      <Link>Fixups\ExpectedBatchPayloadFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\ExpectedPayloadFixups.cs">
+      <Link>Fixups\ExpectedPayloadFixups.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\JsonSelfLinkToEditLinkFixup.cs">
+      <Link>Fixups\JsonSelfLinkToEditLinkFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\NullStringTypenameFixup.cs">
+      <Link>Fixups\NullStringTypenameFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\ObservedBatchPayloadFixup.cs">
+      <Link>Fixups\ObservedBatchPayloadFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\ODataPayloadElementAddDefaultAtomMetadata.cs">
+      <Link>Fixups\ODataPayloadElementAddDefaultAtomMetadata.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\ODataPayloadElementNullIDVisitor.cs">
+      <Link>Fixups\ODataPayloadElementNullIDVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\ODataPayloadElementNullTypenameVisitor.cs">
+      <Link>Fixups\ODataPayloadElementNullTypenameVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\RemoveAnnotations.cs">
+      <Link>Fixups\RemoveAnnotations.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\AddFeedIDFixup.cs">
+      <Link>Fixups\AddFeedIDFixup.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\RemoveMLEAnnotation.cs">
+      <Link>Fixups\RemoveMLEAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\RemoveTypeNameAnnotationFromComplexInCollection.cs">
+      <Link>Fixups\RemoveTypeNameAnnotationFromComplexInCollection.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Fixups\ReorderProperties.cs">
+      <Link>Fixups\ReorderProperties.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightNavigationLinkWriterTests.cs">
+      <Link>JsonLight\JsonLightNavigationLinkWriterTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightEntryWriterTests.cs">
+      <Link>JsonLight\JsonLightEntryWriterTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightParameterWriterTests.cs">
+      <Link>JsonLight\JsonLightParameterWriterTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightPropertyWriterTests.cs">
+      <Link>JsonLight\JsonLightPropertyWriterTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\JsonLightWriterUtils.cs">
+      <Link>JsonLight\JsonLightWriterUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\ODataJsonDateTimeFormat.cs">
+      <Link>Json\ODataJsonDateTimeFormat.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\LoggingReporter.cs">
+      <Link>LoggingReporter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ObjectModelToMessageWriter.cs">
+      <Link>ObjectModelToMessageWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ConvertToUriLiteralTests.cs">
+      <Link>ConvertToUriLiteralTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataWriterBehaviorInspector.cs">
+      <Link>ODataWriterBehaviorInspector.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonValueUtilsTests.cs">
+      <Link>Json\JsonValueUtilsTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonWriterTests.cs">
+      <Link>Json\JsonWriterTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataMessageWriterSettingsInspector.cs">
+      <Link>ODataMessageWriterSettingsInspector.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataWriterTestCase.cs">
+      <Link>ODataWriterTestCase.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ParameterWriter\ParameterWriterStatesTests.cs">
+      <Link>ParameterWriter\ParameterWriterStatesTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ParameterWriter\ParameterWriterSyncAsyncMismatchTests.cs">
+      <Link>ParameterWriter\ParameterWriterSyncAsyncMismatchTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ParameterWriter\ParameterWriterTests.cs">
+      <Link>ParameterWriter\ParameterWriterTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\WriterCombinatorialEngine\BaselineLogger.cs">
+      <Link>WriterCombinatorialEngine\BaselineLogger.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\WriterCombinatorialEngine\WriterCombinatiorialEngineProvider.cs">
+      <Link>WriterCombinatorialEngine\WriterCombinatiorialEngineProvider.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\WriterPayloads.cs">
+      <Link>WriterPayloads.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\TestWriterUtils.cs">
+      <Link>TestWriterUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Atom\TestAtomUtils.cs">
+      <Link>Atom\TestAtomUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ObjectModelUtils.cs">
+      <Link>Common\ObjectModelUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Common\ODataPayloadKindUtils.cs">
+      <Link>Common\ODataPayloadKindUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonUtils.cs">
+      <Link>Json\JsonUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataWriterTestsTestModule.cs">
+      <Link>ODataWriterTestsTestModule.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterProjectedPropertyTests.cs">
+      <Link>Writer\WriterProjectedPropertyTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\MessageWriterTests.cs">
+      <Link>Writer\MessageWriterTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\UriHandlingTests.cs">
+      <Link>Writer\UriHandlingTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterActionAndFunctionTests.cs">
+      <Link>Writer\WriterActionAndFunctionTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterArgumentValidationTest.cs">
+      <Link>Writer\WriterArgumentValidationTest.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterAssociationLinkTests.cs">
+      <Link>Writer\WriterAssociationLinkTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterContentTypeTests.cs">
+      <Link>Writer\WriterContentTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterEntryDefaultStreamTests.cs">
+      <Link>Writer\WriterEntryDefaultStreamTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterEntryTests.cs">
+      <Link>Writer\WriterEntryTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterErrorTests.cs">
+      <Link>Writer\WriterErrorTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterExceptionTests.cs">
+      <Link>Writer\WriterExceptionTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterExpandedLinkTests.cs">
+      <Link>Writer\WriterExpandedLinkTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterFeedTests.cs">
+      <Link>Writer\WriterFeedTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterInputValidationTests.cs">
+      <Link>Writer\WriterInputValidationTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterEntityReferenceLinksTests.cs">
+      <Link>Writer\WriterEntityReferenceLinksTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterMetadataInputValidationTests.cs">
+      <Link>Writer\WriterMetadataInputValidationTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterMetadataDocumentTests.cs">
+      <Link>Writer\WriterMetadataDocumentTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterStreamPropertyTests.cs">
+      <Link>Writer\WriterStreamPropertyTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterNavigationLinkTests.cs">
+      <Link>Writer\WriterNavigationLinkTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterPropertyTests.cs">
+      <Link>Writer\WriterPropertyTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterRawValueTests.cs">
+      <Link>Writer\WriterRawValueTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterServiceDocumentTests.cs">
+      <Link>Writer\WriterServiceDocumentTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterStatesTests.cs">
+      <Link>Writer\WriterStatesTests.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Writer\WriterSyncAsyncMismatchTests.cs">
+      <Link>Writer\WriterSyncAsyncMismatchTests.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

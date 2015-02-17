@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectGuid>{2EBC2D89-C7E7-4214-8954-7C7015B8C5FE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.Spatial</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.Spatial.SL</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <TransparentAssembly>true</TransparentAssembly>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <EnableStyleCop>false</EnableStyleCop>
+    <TaupoCrossTargettingSourcePath>..\Taupo.Spatial</TaupoCrossTargettingSourcePath>
+    <DefineConstants>TAUPO_SPATIAL</DefineConstants>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <XTargetOutputFile Include="$(MSBuildThisFile)">
+      <SourceProject>$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Spatial\Microsoft.Test.Taupo.Spatial.csproj</SourceProject>
+      <TargetPathPrefixName>TaupoCrossTargettingSourcePath</TargetPathPrefixName>
+    </XTargetOutputFile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5D921888-FE03-4C3F-40FE-2F624505461D}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="$(SilverlightClientLibraries)\System.Xml.Linq.dll">
+      <SpecificVersion>true</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+  <!--
+  This ItemGroup is generated automatically.
+  
+  !!!! DO NOT MODIFY THIS ItemGroup MANUALLY !!!!
+  -->
+  <ItemGroup>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\..\PlatformHelper.cs">
+      <Link>PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\AssemblyAttributes.cs">
+      <Link>AssemblyAttributes.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\PseudoDistanceImplementation.cs">
+      <Link>Common\PseudoDistanceImplementation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Common\SpatialPrimitiveFormatterBase`3.cs">
+      <Link>Common\SpatialPrimitiveFormatterBase`3.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IGeoJsonSpatialFormatter.cs">
+      <Link>Contracts\IGeoJsonSpatialFormatter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IGeometryToGeographyConverter.cs">
+      <Link>Contracts\IGeometryToGeographyConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IGmlSpatialFormatter.cs">
+      <Link>Contracts\IGmlSpatialFormatter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ISpatialPrimitiveFormatter`1.cs">
+      <Link>Contracts\ISpatialPrimitiveFormatter`1.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ISpatialRegistrationManager.cs">
+      <Link>Contracts\ISpatialRegistrationManager.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IWellKnownTextSpatialFormatter.cs">
+      <Link>Contracts\IWellKnownTextSpatialFormatter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\SpatialConstants.cs">
+      <Link>Contracts\SpatialConstants.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\SpatialExtensions.cs">
+      <Link>Contracts\SpatialExtensions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\SpatialTypeKind.cs">
+      <Link>Contracts\SpatialTypeKind.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\SpatialUtilities.cs">
+      <Link>Contracts\SpatialUtilities.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\DataGeneration\SpatialDataGeneratorResolver.cs">
+      <Link>DataGeneration\SpatialDataGeneratorResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\DefaultSpatialCodeGenerator.cs">
+      <Link>DefaultSpatialCodeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\SpatialClrTypeResolver.cs">
+      <Link>EntityModel\SpatialClrTypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EntityModel\SpatialDataTypeDefinitionResolver.cs">
+      <Link>EntityModel\SpatialDataTypeDefinitionResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\GeoJsonSpatialFormatter.cs">
+      <Link>GeoJsonSpatialFormatter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\GeometryToGeographyConverter.cs">
+      <Link>GeometryToGeographyConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\GmlSpatialFormatter.cs">
+      <Link>GmlSpatialFormatter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\MinimalSpatialRegistrationManager.cs">
+      <Link>MinimalSpatialRegistrationManager.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\WellKnownTextSpatialEqualityComparer.cs">
+      <Link>WellKnownTextSpatialEqualityComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\WellKnownTextSpatialFormatter.cs">
+      <Link>WellKnownTextSpatialFormatter.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(AssemblyKeysCSharpFilePath)">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+    <CodeAnalysisDictionary Include="..\Taupo.Spatial\CustomDictionary.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\External\System.CodeDom.SL\System.CodeDom.SL.csproj">
+      <Project>{93850EF2-5F47-404F-8988-812043FB83E9}</Project>
+      <Name>System.CodeDom.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Taupo.SL\Microsoft.Test.Taupo.SL.csproj">
+      <Project>{E88DCBA1-8E6F-4BB7-8017-7CD5A213107A}</Project>
+      <Name>Microsoft.Test.Taupo.SL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOGRAPHYCOLLECTION_4326.txt">
+      <Link>Resources\SpatialData\GEOGRAPHYCOLLECTION_4326.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOGRAPHYLINESTRING_4326.txt">
+      <Link>Resources\SpatialData\GEOGRAPHYLINESTRING_4326.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOGRAPHYMULTILINESTRING_4326.txt">
+      <Link>Resources\SpatialData\GEOGRAPHYMULTILINESTRING_4326.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOGRAPHYMULTIPOINT_4326.txt">
+      <Link>Resources\SpatialData\GEOGRAPHYMULTIPOINT_4326.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOGRAPHYMULTIPOLYGON_4326.txt">
+      <Link>Resources\SpatialData\GEOGRAPHYMULTIPOLYGON_4326.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOGRAPHYPOINT_4326.txt">
+      <Link>Resources\SpatialData\GEOGRAPHYPOINT_4326.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOGRAPHYPOLYGON_4326.txt">
+      <Link>Resources\SpatialData\GEOGRAPHYPOLYGON_4326.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOGRAPHY_4326.txt">
+      <Link>Resources\SpatialData\GEOGRAPHY_4326.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOMETRYCOLLECTION_0.txt">
+      <Link>Resources\SpatialData\GEOMETRYCOLLECTION_0.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOMETRYLINESTRING_0.txt">
+      <Link>Resources\SpatialData\GEOMETRYLINESTRING_0.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOMETRYMULTILINESTRING_0.txt">
+      <Link>Resources\SpatialData\GEOMETRYMULTILINESTRING_0.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOMETRYMULTIPOINT_0.txt">
+      <Link>Resources\SpatialData\GEOMETRYMULTIPOINT_0.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOMETRYMULTIPOLYGON_0.txt">
+      <Link>Resources\SpatialData\GEOMETRYMULTIPOLYGON_0.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOMETRYPOINT_0.txt">
+      <Link>Resources\SpatialData\GEOMETRYPOINT_0.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOMETRYPOLYGON_0.txt">
+      <Link>Resources\SpatialData\GEOMETRYPOLYGON_0.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Taupo.Spatial\Resources\SpatialData\GEOMETRY_0.txt">
+      <Link>Resources\SpatialData\GEOMETRY_0.txt</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="EdmDataTypesContext.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
+  <EntityContainer Name="EdmDataTypesContextStoreContainer">
+    <EntitySet Name="DataTypes" EntityType="EdmDataTypesContext.Store.DataTypes" Table="#DataTypes" />
+  </EntityContainer>
+  <EntityType Name="DataTypes">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="Integer" Type="int" />
+    <Property Name="Float" Type="float" />
+    <Property Name="Decimal" Type="decimal" />
+    <Property Name="String" Type="nvarchar(max)" />
+    <Property Name="Date" Type="datetime" />
+    <Property Name="Boolean" Type="bit" />
+    <Property Name="UniqueId" Type="uniqueidentifier" />
+  </EntityType>
+</Schema>

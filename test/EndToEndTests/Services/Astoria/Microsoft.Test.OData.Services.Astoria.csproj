@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ECF627BB-5156-488F-9F6B-CF6537F8D6FE}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.OData.Services.Astoria</RootNamespace>
+    <AssemblyName>Microsoft.Test.OData.Services.Astoria</AssemblyName>
+    <DefineConstants>$(DefineConstants);TEST_ODATA_SERVICES_ASTORIA</DefineConstants>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <TargetFrameworkFolderName>Desktop</TargetFrameworkFolderName>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="$(NugetPack)\EntityFramework.5.0.0\lib\net40\EntityFramework.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
+      <Name>Microsoft.OData.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\TestProviders\Microsoft.Test.OData.Framework.TestProviders.csproj">
+      <Project>{1211B700-008A-4646-8F5F-25BC96EBC138}</Project>
+      <Name>Microsoft.Test.OData.Framework.TestProviders</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="clientaccesspolicy.xml">
+      <BrowseToURL>/clientaccesspolicy.xml</BrowseToURL>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Default.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Web.config" />
+    <Content Include="Web.Astoria.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="ActionOverloading\ActionOverloadingTestActionProvider.cs" />
+    <Compile Include="Default\AstoriaDefaultActionProvider.cs" />
+    <Compile Include="Default\DefaultContainer.cs" />
+    <Compile Include="Default\Entities.cs" />
+    <Compile Include="ODataWriter\ODataWriterServiceBase.cs" />
+    <Compile Include="OpenTypes\DefaultContainer.cs" />
+    <Compile Include="OpenTypes\DefaultContainerMetadata.cs" />
+    <Compile Include="PrimitiveKeys\AllTypes.cs" />
+    <Compile Include="PrimitiveKeys\Folder.cs" />
+    <Compile Include="PrimitiveKeys\TestContext.cs" />
+    <Content Include="DefaultService.svc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="DefaultService.svc.cs">
+      <DependentUpon>DefaultService.svc</DependentUpon>
+    </Compile>
+    <Content Include="DefaultServiceWithAccessRestrictions.svc" />
+    <Compile Include="DefaultServiceWithAccessRestrictions.svc.cs">
+      <DependentUpon>DefaultServiceWithAccessRestrictions.svc</DependentUpon>
+    </Compile>
+    <Content Include="ActionOverloadingService.svc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="ActionOverloadingService.svc.cs">
+      <DependentUpon>ActionOverloadingService.svc</DependentUpon>
+    </Compile>
+    <Content Include="KeyAsSegmentService.svc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="KeyAsSegmentService.svc.cs">
+      <DependentUpon>KeyAsSegmentService.svc</DependentUpon>
+    </Compile>
+    <Content Include="ODataWriterDefaultService.svc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="ODataWriterDefaultService.svc.cs">
+      <DependentUpon>ODataWriterDefaultService.svc</DependentUpon>
+    </Compile>
+    <Content Include="OpenTypeService.svc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="OpenTypeService.svc.cs">
+      <DependentUpon>OpenTypeService.svc</DependentUpon>
+    </Compile>
+    <Content Include="PrimitiveKeys.svc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="PrimitiveKeys.svc.cs">
+      <DependentUpon>PrimitiveKeys.svc</DependentUpon>
+    </Compile>
+    <Content Include="PublicProviderEFService.svc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="PublicProviderEFService.svc.cs">
+      <DependentUpon>PublicProviderEFService.svc</DependentUpon>
+    </Compile>
+    <Content Include="PublicProviderHybridService.svc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="PublicProviderHybridService.svc.cs">
+      <DependentUpon>PublicProviderHybridService.svc</DependentUpon>
+    </Compile>
+    <Content Include="PublicProviderReflectionService.svc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="PublicProviderReflectionService.svc.cs">
+      <DependentUpon>PublicProviderReflectionService.svc</DependentUpon>
+    </Compile>
+    <Content Include="UrlModifyingService.svc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="UrlModifyingService.svc.cs">
+      <DependentUpon>UrlModifyingService.svc</DependentUpon>
+    </Compile>
+    <Compile Include="AstoriaDefaultServiceDBModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AstoriaDefaultServiceDBModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AstoriaDefaultServiceDBModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AstoriaDefaultServiceDBModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AstoriaDefaultServiceDBModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="EFCar.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFComputer.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFComputerDetail.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFCustomer.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFCustomerInfo.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFDriver.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFLastLogin.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFLicense.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFLogin.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFMappedEntityType.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFMessage.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFOrder.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFOrderLine.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFPageView.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFPerson.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFPersonMetadata.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFProduct.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFProductDetail.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFProductPhoto.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFProductReview.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EFRSAToken.cs">
+      <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PublicProvider\ParameterizedQueryProvider\EFParameterizedQuery.cs" />
+    <Compile Include="PublicProvider\ParameterizedQueryProvider\EFParameterizedExpressionVisitor.cs" />
+    <Compile Include="PublicProvider\ParameterizedQueryProvider\EFParameterizedQueryProvider.cs" />
+    <Compile Include="PublicProvider\ParameterizedQueryProvider\ExpressionVistor.cs" />
+    <Compile Include="PublicProvider\ParameterizedQueryProvider\IObjectQueryWrapper.cs" />
+    <Compile Include="PublicProvider\ParameterizedQueryProvider\L2OParameterizedExpressionVisitor.cs" />
+    <Compile Include="PublicProvider\ParameterizedQueryProvider\L2OParameterizedQueryProvider.cs" />
+    <Compile Include="PublicProvider\ParameterizedQueryProvider\L2OParameterizedQuery.cs" />
+    <Compile Include="PublicProvider\ParameterizedQueryProvider\TypeExtension.cs" />
+    <Compile Include="PublicProvider\ProviderTypeAttribute.cs" />
+    <Compile Include="PublicProvider\DatabaseHelper.cs" />
+    <Compile Include="PublicProvider\HybridDataSource.cs" />
+    <Compile Include="PublicProvider\HybridProvider.cs" />
+    <Compile Include="PublicProvider\EFProvider.cs" />
+    <Compile Include="PublicProvider\Log.cs" />
+    <Compile Include="PublicProvider\ReflectionProvider.cs" />
+    <EmbeddedResource Include="PublicProvider\AstoriaDefaultServiceDB.bak" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <EntityDeploy Include="AstoriaDefaultServiceDBModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AstoriaDefaultServiceDBModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="AstoriaDefaultServiceDBModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AstoriaDefaultServiceDBModel.edmx</DependentUpon>
+      <LastGenOutput>AstoriaDefaultServiceDBModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="AstoriaDefaultServiceDBModel.edmx.diagram">
+      <DependentUpon>AstoriaDefaultServiceDBModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="AstoriaDefaultServiceDBModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AstoriaDefaultServiceDBModel.edmx</DependentUpon>
+      <LastGenOutput>AstoriaDefaultServiceDBModel.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>6630</DevelopmentServerPort>
+          <DevelopmentServerVPath>/AstoriaDefault</DevelopmentServerVPath>
+          <IISUrl>http://localhost:6630/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- Trick VS into not converting project upon load -->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+</Project>

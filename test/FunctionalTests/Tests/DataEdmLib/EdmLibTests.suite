@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<suite>
+  <desktop>
+    <assembly name="EdmLibTests" />
+    <include name="." />
+  </desktop>
+  <Silverlight>
+    <assembly name="EdmLibTests.SL" />
+    <assembly name="Microsoft.OData.Edm" />
+    <assembly name="Microsoft.Test.Taupo.Edmlib.SL" />
+    <include name="." />
+  </Silverlight>
+</suite>

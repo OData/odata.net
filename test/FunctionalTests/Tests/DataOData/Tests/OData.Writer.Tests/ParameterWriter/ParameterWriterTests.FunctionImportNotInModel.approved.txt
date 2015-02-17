@@ -1,0 +1,8 @@
+Combination: 1; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"primitive":"Hi"}
+
+Combination: 2; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"primitive":"Hi"}
+

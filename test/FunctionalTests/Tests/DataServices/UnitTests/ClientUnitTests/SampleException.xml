@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<feed xml:base="http://sqlpod068-20/Northwind_Phanatic_91c1c0d3e37448fcbbe4199e2a0239b4/Northwind.svc/" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <title type="text">Summary_of_Sales_by_Year</title>
+  <id>http://sqlpod068-20/Northwind_Phanatic_91c1c0d3e37448fcbbe4199e2a0239b4/Northwind.svc/Summary_of_Sales_by_Year</id>
+  <updated>2008-03-24T18:39:40Z</updated>
+  <link rel="self" title="Summary_of_Sales_by_Year" href="Summary_of_Sales_by_Year" />
+  <entry>
+	<category term="northwind.Summary_of_Sales_by_Year" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
+    <id>http://sqlpod068-20/Northwind_Phanatic_91c1c0d3e37448fcbbe4199e2a0239b4/Northwind.svc/Summary_of_Sales_by_Year(10248)</id>
+    <title type="text"></title>
+    <updated>2008-03-24T18:39:40Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit" title="Summary_of_Sales_by_Year" href="Summary_of_Sales_by_Year(10248)" />
+    <content type="application/xml">
+      <m:properties>
+        <d:ShippedDate m:type="Edm.DateTimeOffset">1996-07-16T00:00:00Z</d:ShippedDate>
+        <d:OrderID m:type="Edm.Int32">10248</d:OrderID>
+        <d:Subtotal m:type="Edm.Decimal">635197928243542.0000</d:Subtotal>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+	<category term="northwind.Summary_of_Sales_by_Year" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
+    <id>http://sqlpod068-20/Northwind_Phanatic_91c1c0d3e37448fcbbe4199e2a0239b4/Northwind.svc/Summary_of_Sales_by_Year(10249)</id>
+    <title type="text"></title>
+    <updated>2008-03-24T18:39:40Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit" title="Summary_of_Sales_by_Year" href="Summary_of_Sales_by_Year(10249)" />
+    <content type="application/xml">
+      <m:properties>
+        <d:ShippedDate m:type="Edm.DateTimeOffset">1996-07-10T00:00:00Z</d:ShippedDate>
+        <d:OrderID m:type="Edm.Int32">10249</d:OrderID>
+        <d:Subtotal m:type="Edm.Decimal">1863.4000</d:Subtotal>
+      </m:properties>
+    </content>
+  </entry>
+  <entry>
+    <id>http://sqlpod068-20/Northwind_Phanatic_91c1c0d3e37448fcbbe4199e2a0239b4/Northwind.svc/Summary_of_Sales_by_Year(10250)</id>
+    <title type="text"></title>
+    <updated>2008-03-24T18:39:40Z</updated>
+    <author>
+      <name />
+    </author>
+    <link rel="edit" title="Summary_of_Sales_by_Year" href="Summary_of_Sales_by_Year(10250)" />
+    <content type="application/xml">
+      <m:properties>
+        <d:ShippedDate m:type="Edm.DateTimeOffset">1996-07-12T00:00:00Z</d:ShippedDate>
+        <d:OrderID m:type="Edm.Int32">10250</d:OrderID>
+        <d:Subtotal m:type="Edm.Decimal">1338.4000</d:Subtotal>
+      </m:properties>
+    </content>
+	<category term="northwind.Summary_of_Sales_by_Year" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
+  </entry>
+  <m:error>
+	<m:code></m:code>
+	<m:message>An error occurred while reading from the store provider's data reader. See the inner exception for details.</m:message>
+  </m:error>

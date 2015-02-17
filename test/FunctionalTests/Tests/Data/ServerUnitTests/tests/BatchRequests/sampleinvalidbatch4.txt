@@ -1,0 +1,63 @@
+﻿--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: mUltIpArt/mIxEd; bOUndAry=changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+cOntEnt-lEngth: 871
+
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 1
+
+POST Customers HTTP/1.1
+cOntEnt-typE: ApplIcAtIOn/AtOm+xml;typE=entry
+cOntEnt-lEngth: 805
+
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns:adsm="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom" adsm:type="">
+  <category term="#AstoriaUnitTests.Stubs.Customer" scheme="http://docs.oasis-open.org/odata/ns/scheme" />
+  <content type="application/xml"><adsm:properties>
+    <ads:Name>FooBaz</ads:Name>
+    <ads:ID>123456</ads:ID>
+    <ads:Address>
+        <ads:StreetAddress>Street Number, Street Address</ads:StreetAddress>
+        <ads:City>Redmond</ads:City>
+        <ads:PostalCode>98052</ads:PostalCode>
+    </ads:Address>
+  </adsm:properties></content>
+</entry>
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c--
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+
+GET Customers HTTP/1.1
+cOntEnt-lEngth: 0
+
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: mUltIpArt/mIxEd; bOUndAry=changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+cOntEnt-lEngth: 676
+
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 3
+
+PUT Orders HTTP/1.1
+cOntEnt-typE: ApplIcAtIOn/AtOm+xml;typE=entry
+cOntEnt-lEngth: 431
+
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns:adsm="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <id>Orders(1)</id>
+  <content type="application/xml"><adsm:properties>
+    <ads:ID>1</ads:ID>
+    <ads:DollarAmount adsm:type='Edm.Double'>1500.00</ads:DollarAmount>
+  </adsm:properties></content>
+</entry>
+--changeset_eaab4754-7965-43f0-a7a9-a5556d12787c--
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+
+GET Orders(1) HTTP/1.1
+
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b--

@@ -1,0 +1,364 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{834DEA16-4215-41D1-99E7-FBE41A3326DA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>EdmLibTests</RootNamespace>
+    <AssemblyName>EdmLibTests</AssemblyName>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestUtils\Common\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj">
+      <Project>{efa72cf8-a73a-4eb4-88d4-ae6d4ce1b270}</Project>
+      <Name>Microsoft.Test.OData.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\EndToEndTests\Framework\Core\Microsoft.Test.OData.Framework.csproj">
+      <Project>{CEC8AF29-77BC-4C62-B79C-A9B22C311E3B}</Project>
+      <Name>Microsoft.Test.OData.Framework</Name>
+    </ProjectReference>
+    <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll">
+      <Name>FluentAssertions</Name>
+    </Reference>
+    <Reference Include="$(NugetPack)\ApprovalTests.1.6\lib\ApprovalTests.dll" />
+    <Reference Include="$(NugetPack)\ApprovalTests.1.6\lib\ApprovalUtilities.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EdmLibTestCaseBase.cs" />
+    <Compile Include="FunctionalTests\AmbiguousTypeTests.cs" />
+    <Compile Include="FunctionalTests\AnnotatableTests.cs" />
+    <Compile Include="FunctionalTests\AnnotationsOnNonRepresentedElementTests.cs" />
+    <Compile Include="FunctionalTests\CodeCoverageBoostingTests.cs" />
+    <Compile Include="FunctionalTests\ConstantExpressionRoundTripTests.cs" />
+    <Compile Include="FunctionalTests\ConstantExpressionValidationTests.cs" />
+    <Compile Include="FunctionalTests\ConstructibleModelErrorCases.cs" />
+    <Compile Include="FunctionalTests\ConstructibleExpressionsTests.cs" />
+    <Compile Include="FunctionalTests\ConstructibleVocabularyAnnotationsTests.cs" />
+    <Compile Include="FunctionalTests\EdmToClrConversion.cs" />
+    <Compile Include="FunctionalTests\EdmValueKindTests.cs" />
+    <Compile Include="FunctionalTests\EdmVersionTests.cs" />
+    <Compile Include="FunctionalTests\EdmxRoundTripTests.cs" />
+    <Compile Include="FunctionalTests\EvaluationTests.cs" />
+    <Compile Include="FunctionalTests\ExpressionEvaluationTests.cs" />
+    <Compile Include="FunctionalTests\ExpressionRoundTripTests.cs" />
+    <Compile Include="FunctionalTests\ExpressionSemanticValidationTest.cs" />
+    <Compile Include="FunctionalTests\ExpressionSerializationTests.cs" />
+    <Compile Include="FunctionalTests\InterfaceCriticalTests.cs" />
+    <Compile Include="FunctionalTests\NavigationParsingTests.cs" />
+    <Compile Include="FunctionalTests\NavigationSerializingTests.cs" />
+    <Compile Include="FunctionalTests\NavigationValidationTests.cs" />
+    <Compile Include="FunctionalTests\ODataScenarioTests.cs" />
+    <Compile Include="FunctionalTests\ParallelTests.cs" />
+    <Compile Include="FunctionalTests\RoundtripTests.cs" />
+    <Compile Include="FunctionalTests\SemanticValidationTests.cs" />
+    <Compile Include="FunctionalTests\ConstructibleModelRemoveMethodsTests.cs" />
+    <Compile Include="FunctionalTests\ConstructibleModelTestsUsingConverter.cs" />
+    <Compile Include="FunctionalTests\ConstructibleModelTests.cs" />
+    <Compile Include="FunctionalTests\CsdlLocationTests.cs" />
+    <Compile Include="FunctionalTests\CsdlParsingTests.cs" />
+    <Compile Include="FunctionalTests\ParsingValidation.cs" />
+    <Compile Include="FunctionalTests\CsdlSerializingTests.cs" />
+    <Compile Include="FunctionalTests\ExtensionMethodsTests.cs" />
+    <Compile Include="FunctionalTests\EdmxParsingTests.cs" />
+    <Compile Include="FunctionalTests\EdmxSerializingTests.cs" />
+    <Compile Include="FunctionalTests\FindMethodTests.cs" />
+    <Compile Include="FunctionalTests\OperationModelTests.cs" />
+    <Compile Include="FunctionalTests\ParserTests.cs" />
+    <Compile Include="FunctionalTests\SerializerSchemaCustomizationTests.cs" />
+    <Compile Include="FunctionalTests\SerializerTests.cs" />
+    <Compile Include="FunctionalTests\TermAttributeTests.cs" />
+    <Compile Include="FunctionalTests\ToStringTests.cs" />
+    <Compile Include="FunctionalTests\TypeSemanticsUnitTests.cs" />
+    <Compile Include="FunctionalTests\VersioningDictionaryTests.cs" />
+    <Compile Include="FunctionalTests\VersioningListTests.cs" />
+    <Compile Include="FunctionalTests\VersioningTreeTests.cs" />
+    <Compile Include="FunctionalTests\VocabularyInterfaceTests.cs" />
+    <Compile Include="FunctionalTests\VocabularyParsingTests.cs" />
+    <Compile Include="FunctionalTests\VocabularyRoundTripTests.cs" />
+    <Compile Include="FunctionalTests\VocabularySerializingTests.cs" />
+    <Compile Include="FunctionalTests\ConstructibleVocabularyTestsUsingConverter.cs" />
+    <Compile Include="FunctionalTests\EdmLibCsdlSchemaCompliantTests.cs" />
+    <Compile Include="FunctionalTests\ClrTypeMappingTests.cs" />
+    <Compile Include="FunctionalTests\VocabularyValidationTests.cs" />
+    <Compile Include="FunctionalTests\XElementAnnotationTest.cs" />
+    <Compile Include="FunctionalUtilities\ClrTypeMappingTestModelBuilder.cs" />
+    <Compile Include="FunctionalUtilities\ConstantExpressionModelBuilder.cs" />
+    <Compile Include="FunctionalUtilities\CustomConsistentValidationTestAttribute.cs" />
+    <Compile Include="FunctionalUtilities\InterfaceCriticalModelBuilder.cs" />
+    <Compile Include="FunctionalUtilities\ModelWithRemovableElements.cs" />
+    <Compile Include="FunctionalUtilities\NavigationTestModelBuilder.cs" />
+    <Compile Include="FunctionalUtilities\CustomConstructibleVocabularyTestAttribute.cs" />
+    <Compile Include="FunctionalUtilities\CustomVocabularySerializerTestAttribute.cs" />
+    <Compile Include="FunctionalUtilities.UnitTests\AssertHelper.cs" />
+    <Compile Include="FunctionalUtilities.UnitTests\CsdlElementExtractorTests.cs" />
+    <Compile Include="FunctionalUtilities.UnitTests\CsdlXElementComparerTests.cs" />
+    <Compile Include="FunctionalUtilities.UnitTests\CsdlXElementSorterTests.cs" />
+    <Compile Include="FunctionalUtilities.UnitTests\VocabularyApplicationCsdlGeneratorTests.cs" />
+    <Compile Include="FunctionalUtilities.UnitTests\VocabularyDefinitionCsdlGeneratorTests.cs" />
+    <Compile Include="FunctionalUtilities.UnitTests\VocabularyModelComparerTests.cs" />
+    <Compile Include="FunctionalUtilities.UnitTests\EdmLibTestModelExtractorTests.cs" />
+    <Compile Include="FunctionalUtilities\AnnotationDocumentationModels.cs" />
+    <Compile Include="FunctionalUtilities\ConstructiveApiCsdlXElementComparer.cs" />
+    <Compile Include="FunctionalUtilities\EdmxModelBuilder.cs" />
+    <Compile Include="FunctionalUtilities\ExpectedEdmError.cs" />
+    <Compile Include="FunctionalUtilities\ExpectedEdmErrors.cs" />
+    <Compile Include="FunctionalUtilities\EdmLibTestModelExtractor.cs" />
+    <Compile Include="FunctionalUtilities\ExpressionValidationTestModelBuilder.cs" />
+    <Compile Include="FunctionalUtilities\ValidationTestInvalidModelAttribute.cs" />
+    <Compile Include="FunctionalUtilities\ValidationTestModelBuilder.cs" />
+    <Compile Include="FunctionalUtilities\CsdlElementExtractor.cs" />
+    <Compile Include="FunctionalUtilities\CsdlFacetsOutputLevel.cs" />
+    <Compile Include="FunctionalUtilities\CsdlTypeOutputFormat.cs" />
+    <Compile Include="FunctionalUtilities\CsdlXElementComparer.cs" />
+    <Compile Include="FunctionalUtilities\CsdlXElementSorter.cs" />
+    <Compile Include="FunctionalUtilities\EdmLibCsdlContentGenerator.cs" />
+    <Compile Include="FunctionalUtilities\EdmLibCsdlSchemaEnvelope.cs" />
+    <Compile Include="FunctionalUtilities\FindMethodsTestModelBuilder.cs" />
+    <Compile Include="FunctionalUtilities\OperationTestModelBuilder.cs" />
+    <Compile Include="FunctionalUtilities\ModelBuilder.cs" />
+    <Compile Include="FunctionalUtilities\ModelBuilderHelpers.cs" />
+    <Compile Include="FunctionalUtilities\SerializerResultVerifierUsingXml.cs" />
+    <Compile Include="FunctionalUtilities\ValidationVerificationHelper.cs" />
+    <Compile Include="FunctionalUtilities\VocabularyApplicationCsdlGenerator.cs" />
+    <Compile Include="FunctionalUtilities\VocabularyDefinitionCsdlGenerator.cs" />
+    <Compile Include="FunctionalUtilities\VocabularyModelComparer.cs" />
+    <Compile Include="FunctionalUtilities\VocabularyTestModelBuilder.cs" />
+    <Compile Include="FunctionalUtilities\CustomCsdlSchemaCompliantTestAttribute.cs" />
+    <Compile Include="FunctionalUtilities\XElementAnnotationModelBuilder.cs" />
+    <Compile Include="SampleTests.cs" />
+    <Compile Include="FunctionalUtilities\ODataTestModelBuilder.cs" />
+    <Compile Include="UnitTests\ComplexTypeTests.cs" />
+    <Compile Include="UnitTests\ExtensionMethodsTests.cs" />
+    <Compile Include="VocabularyStubs\StubNonAnnotatedElement.cs" />
+    <Compile Include="VocabularyStubs\StubPropertyConstructor.cs" />
+    <Compile Include="VocabularyStubs\StubPropertyValueBinding.cs" />
+    <Compile Include="VocabularyStubs\StubRecordExpression.cs" />
+    <Compile Include="VocabularyStubs\StubStringConstantExpression.cs" />
+    <Compile Include="VocabularyStubs\StubTypeTerm.cs" />
+    <Compile Include="VocabularyStubs\StubValueAnnotation.cs" />
+    <Compile Include="VocabularyStubs\StubValueTerm.cs" />
+    <Compile Include="StubEdm\StubEdmComplexType.cs" />
+    <Compile Include="StubEdm\StubEdmDirectValueAnnotationBinding.cs" />
+    <Compile Include="StubEdm\StubEdmElement.cs" />
+    <Compile Include="StubEdm\StubEdmEntityContainer.cs" />
+    <Compile Include="StubEdm\StubEdmEntitySet.cs" />
+    <Compile Include="StubEdm\StubEdmEntitySetReferenceExpression.cs" />
+    <Compile Include="StubEdm\StubEdmEntityType.cs" />
+    <Compile Include="StubEdm\StubEdmEnumMember.cs" />
+    <Compile Include="StubEdm\StubEdmEnumType.cs" />
+    <Compile Include="StubEdm\StubEdmModel.cs" />
+    <Compile Include="StubEdm\StubEdmNavigationProperty.cs" />
+    <Compile Include="StubEdm\StubEdmOperation.cs" />
+    <Compile Include="StubEdm\StubEdmOperationParameter.cs" />
+    <Compile Include="StubEdm\StubEdmStringConstant.cs" />
+    <Compile Include="StubEdm\StubEdmStructuralProperty.cs" />
+    <Compile Include="StubEdm\StubEdmType.cs" />
+    <Compile Include="StubEdm\StubEdmTypeReference.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="EdmLibTests.suite">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="Resources\System.Data.Resources.AnnotationSchema.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System.Data.Resources.CodeGenerationSchema.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_1_1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_2.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_3.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_4.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTestBuildODataDefaultTestModel.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripAssociationCompositeFk.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripAssociationFk.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripAssociationFkWithNavigation.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripAssociationIndependent.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripAssociationOnDeleteModel.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripComplexTypeAttributes.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripEntityContainerWithEntitySets.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripEntityContainerWithOperationImports.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripEntityInheritanceTree.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripEnumsWithFlagsandUnderlyingInt64.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripEnumsWithUnderlyingValuesOtherThanInt32.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripEnumsWithValues.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripFunctionWithAll.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripModelWithAllConcepts.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripModelWithDefaultEnum.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripMultipleNamespaces.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripOneComplexWithAllPrimitiveProperty.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripOneComplexWithAllSpatialProperty.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripOneComplexWithNestedComplex.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripOneComplexWithOneProperty.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripOneEntityWithAllPrimitiveProperty.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripOneEntityWithAllSpatialProperty.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripPropertyFacetsCollection.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTaupoDefaultModel.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\OperationModelTests.OperationStandaloneTestRoundtripVerify.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\OperationModelTests.OperationsWith2ParametersTestRoundtripVerify.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\OperationModelTests.OperationsWith3ParametersOfRowTypeTestRoundtripVerify.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\OperationModelTests.OperationsWithNamedStructuralDataTypeTestRoundtripVerify.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\OperationModelTests.OperationsWithReturnTypeOfPrimitiveDataTypeTestRoundtripVerify.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\OperationStandaloneTest.OperationStandaloneTestRoundtripVerify.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\OperationsWith2ParametersTest.OperationsWith2ParametersTestRoundtripVerify.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\OperationsWith3ParametersOfRowTypeTest.OperationsWith3ParametersOfRowTypeTestRoundtripVerify.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\OperationsWithReturnTypeOfPrimitiveDataTypeTest.OperationsWithReturnTypeOfPrimitiveDataTypeTestRoundtripVerify.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripAssociationFk.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripCollectionTypes.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripCollectionTypesWithSimpleType.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripMultipleSchemasWithDifferentNamespacesComplex.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripMultipleSchemasWithDifferentNamespacesCyclicInvalid.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripRowTypeProperties.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTaupoDefaultModel.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTestBuildODataTestModelAnnotationTestWithAnnotations.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTestBuildODataTestModelAnnotationTestWithoutAnnotations.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTestBuildODataTestModelEmptyModel.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTestBuildODataTestModelWithCollectionProperty.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTestBuildODataTestModelWithNamedStream.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTestBuildODataTestModelWithOpenType.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTestBuildODataTestModelWithOperationImport.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTestBuildODataTestModelWithSingleComplexType.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTestBuildODataTestModelWithSingleEntityType.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTypeRefFacets.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripEntityContainerAttributes.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripMultipleSchemasWithSameNamespace.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="FunctionalTests\RoundTripTests.RoundTripTestBuildODataTestModelTestModel.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

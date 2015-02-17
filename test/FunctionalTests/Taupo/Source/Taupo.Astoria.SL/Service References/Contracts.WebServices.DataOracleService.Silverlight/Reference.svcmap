@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="15428368-fcb9-41c4-aa32-cf18dc73023a" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>true</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>false</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8732/Design_Time_Addresses/Microsoft.Test.Taupo.WebServices/DataOracleService/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="5ecc52d9-0b91-4c51-8ca3-3d936f9ca724" SourceId="1" SourceUrl="http://localhost:8732/Design_Time_Addresses/Microsoft.Test.Taupo.WebServices/DataOracleService/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="70c8eee2-3c20-484a-8202-43db4124ee1c" SourceId="1" SourceUrl="http://localhost:8732/Design_Time_Addresses/Microsoft.Test.Taupo.WebServices/DataOracleService/mex" />
+    <MetadataFile FileName="entitycontainerdata.xsd" MetadataType="Schema" ID="e7779240-7a9c-414a-90c1-190c7141da70" SourceId="1" SourceUrl="http://localhost:8732/Design_Time_Addresses/Microsoft.Test.Taupo.WebServices/DataOracleService/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="4e6551c2-8037-4256-a7b6-c9317b21e547" SourceId="1" SourceUrl="http://localhost:8732/Design_Time_Addresses/Microsoft.Test.Taupo.WebServices/DataOracleService/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

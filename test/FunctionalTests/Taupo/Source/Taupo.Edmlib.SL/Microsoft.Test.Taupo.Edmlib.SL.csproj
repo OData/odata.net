@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectGuid>{A3FD00F4-65DB-410E-A6D1-6E7832CD0F93}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.Edmlib</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.Edmlib.SL</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <FileAlignment>512</FileAlignment>
+    <TransparentAssembly>true</TransparentAssembly>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <EnableStyleCop>false</EnableStyleCop>
+    <TaupoCrossTargettingSourcePath>..\Taupo.Edmlib</TaupoCrossTargettingSourcePath>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <XTargetOutputFile Include="$(MSBuildThisFile)">
+      <SourceProject>$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Edmlib\Microsoft.Test.Taupo.Edmlib.csproj</SourceProject>
+      <TargetPathPrefixName>TaupoCrossTargettingSourcePath</TargetPathPrefixName>
+    </XTargetOutputFile>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Xml" />
+    <Reference Include="$(SilverlightClientLibraries)\System.Xml.Linq.dll">
+      <SpecificVersion>true</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+  <!--
+  This ItemGroup is generated automatically.
+  
+  !!!! DO NOT MODIFY THIS ItemGroup MANUALLY !!!!
+  -->
+  <ItemGroup>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\IEdmToTaupoModelConverter.cs">
+      <Link>Contracts\IEdmToTaupoModelConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\Contracts\ITaupoToEdmModelConverter.cs">
+      <Link>Contracts\ITaupoToEdmModelConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EdmToTaupoModelConverter.cs">
+      <Link>EdmToTaupoModelConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\EdmToTaupoPrimitiveDataTypeConverter.cs">
+      <Link>EdmToTaupoPrimitiveDataTypeConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\GlobalSuppressions.cs">
+      <Link>GlobalSuppressions.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmComplexType.cs">
+      <Link>StubEdm\StubEdmComplexType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmDirectValueAnnotationBinding.cs">
+      <Link>StubEdm\StubEdmDirectValueAnnotationBinding.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmElement.cs">
+      <Link>StubEdm\StubEdmElement.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmEntityContainer.cs">
+      <Link>StubEdm\StubEdmEntityContainer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmEntitySet.cs">
+      <Link>StubEdm\StubEdmEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmEntitySetReferenceExpression.cs">
+      <Link>StubEdm\StubEdmEntitySetReferenceExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmEntityType.cs">
+      <Link>StubEdm\StubEdmEntityType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmEnumMember.cs">
+      <Link>StubEdm\StubEdmEnumMember.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmEnumType.cs">
+      <Link>StubEdm\StubEdmEnumType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmOperation.cs">
+      <Link>StubEdm\StubEdmOperation.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmOperationParameter.cs">
+      <Link>StubEdm\StubEdmOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmModel.cs">
+      <Link>StubEdm\StubEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmNavigationProperty.cs">
+      <Link>StubEdm\StubEdmNavigationProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmStringConstant.cs">
+      <Link>StubEdm\StubEdmStringConstant.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmStructuralProperty.cs">
+      <Link>StubEdm\StubEdmStructuralProperty.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmType.cs">
+      <Link>StubEdm\StubEdmType.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\StubEdm\StubEdmTypeReference.cs">
+      <Link>StubEdm\StubEdmTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\TaupoModelComparer.cs">
+      <Link>TaupoModelComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\TaupoToEdmDataTypeConverter.cs">
+      <Link>TaupoToEdmDataTypeConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\TaupoToEdmModelConverterUsingParser.cs">
+      <Link>TaupoToEdmModelConverterUsingParser.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\TaupoToEdmPrimitiveDataTypeConverter.cs">
+      <Link>TaupoToEdmPrimitiveDataTypeConverter.cs</Link>
+    </Compile>
+    <Compile Include="$(TaupoCrossTargettingSourcePath)\TypeReferenceFactory.cs">
+      <Link>TypeReferenceFactory.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\Taupo.EdmLib\CustomDictionary.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Taupo.SL\Microsoft.Test.Taupo.SL.csproj">
+      <Project>{E88DCBA1-8E6F-4BB7-8017-7CD5A213107A}</Project>
+      <Name>Microsoft.Test.Taupo.SL</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -1,0 +1,577 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{DB742DF2-9873-44CF-8439-DA5ACFF69A46}</ProjectGuid>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.OData.Writer.Tests</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.OData.Writer.Tests</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="$(NugetPack)\ApprovalTests.1.6\lib\ApprovalTests.dll" />
+    <Reference Include="$(NugetPack)\ApprovalTests.1.6\lib\ApprovalUtilities.dll" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo\Microsoft.Test.Taupo.csproj">
+      <Project>{34010F3A-20CC-479C-83CF-EC99B1C90CD1}</Project>
+      <Name>Microsoft.Test.Taupo</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.EdmLib\Microsoft.Test.Taupo.Edmlib.csproj">
+      <Project>{65C0C702-8A6D-4CDE-A387-0D0C1893E4BC}</Project>
+      <Name>Microsoft.Test.Taupo.Edmlib</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Astoria\Microsoft.Test.Taupo.Astoria.csproj">
+      <Project>{854AF4E9-B78F-4994-B9C5-82B846604CBE}</Project>
+      <Name>Microsoft.Test.Taupo.Astoria</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Query\Microsoft.Test.Taupo.Query.csproj">
+      <Project>{29236BBA-852B-46B2-A39B-09DB47A7F6EB}</Project>
+      <Name>Microsoft.Test.Taupo.Query</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\TestUtils\Common\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj">
+      <Project>{efa72cf8-a73a-4eb4-88d4-ae6d4ce1b270}</Project>
+      <Name>Microsoft.Test.OData.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\OData\Microsoft.Test.Taupo.OData.csproj">
+      <Project>{1D54775E-E211-4B35-A002-E53416BAE743}</Project>
+      <Name>Microsoft.Test.Taupo.OData</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Source files -->
+  <ItemGroup>
+    <Compile Include="Atom\AtomResourceCollectionMetadataTests.cs" />
+    <Compile Include="Atom\AtomCategoryMetadataTests.cs" />
+    <Compile Include="Atom\AtomEntryMetadataTests.cs" />
+    <Compile Include="Atom\AtomFeedMetadataTests.cs" />
+    <Compile Include="Atom\AtomGeneratorMetadataTests.cs" />
+    <Compile Include="Atom\AtomLinkMetadataTests.cs" />
+    <Compile Include="Atom\AtomPersonMetadataTests.cs" />
+    <Compile Include="Atom\AtomTextConstructMetadataTests.cs" />
+    <Compile Include="Atom\AtomXmlTests.cs" />
+    <Compile Include="Atom\AtomCollectionWriterTests.cs" />
+    <Compile Include="Atom\WriterEntryAtomTests.cs" />
+    <Compile Include="Atom\WriterFeedAtomTests.cs" />
+    <Compile Include="Atom\WriterMetadataDocumentAtomTests.cs" />
+    <Compile Include="BatchWriter\BatchPayloadWriterTestDescriptor.cs" />
+    <Compile Include="BatchWriter\BatchWriterStatesTests.cs" />
+    <Compile Include="BatchWriter\BatchWriterSyncAsyncMismatchTests.cs" />
+    <Compile Include="BatchWriter\BatchWriterTestDescriptor.cs" />
+    <Compile Include="BatchWriter\BatchWriterTestExpectedResults.cs" />
+    <Compile Include="BatchWriter\BatchWriterTests.cs" />
+    <Compile Include="BatchWriter\BatchWriterUtils.cs" />
+    <Compile Include="BatchWriter\ODataBatchWriterTestCase.cs" />
+    <Compile Include="CollectionWriter\CollectionWriterStatesTests.cs" />
+    <Compile Include="CollectionWriter\CollectionWriterSyncAsyncMismatchTests.cs" />
+    <Compile Include="CollectionWriter\CollectionWriterTestDescriptor.cs" />
+    <Compile Include="CollectionWriter\CollectionWriterTests.cs" />
+    <Compile Include="CollectionWriter\CollectionWriterUtils.cs" />
+    <Compile Include="Common\BatchPayloadNormalizer.cs" />
+    <Compile Include="Common\ODataEntityModelSchemaComparer.cs" />
+    <Compile Include="Common\ODataParameterWriterTestWrapper.cs" />
+    <Compile Include="Common\DefaultProtocolFormatNormalizerSelector.cs" />
+    <Compile Include="Common\IProtocolFormatNormalizerSelector.cs" />
+    <Compile Include="Common\MetadataWriterTestDescriptorGenerator.cs" />
+    <Compile Include="Common\MetadataWriterTestExpectedResult.cs" />
+    <Compile Include="Common\MetadataWriterTestDescriptor.cs" />
+    <Compile Include="Common\ObjectModelExtensions.cs" />
+    <Compile Include="Common\PayloadWriterTestExpectedResults.cs" />
+    <Compile Include="Common\WriteEntryCallbacksAnnotation.cs" />
+    <Compile Include="Common\WriteFeedCallbackAnnotation.cs" />
+    <Compile Include="Common\WriterTestDescriptor.cs" />
+    <Compile Include="Common\ODataBatchWriterTestWrapper.cs" />
+    <Compile Include="Common\ODataCollectionWriterTestWrapper.cs" />
+    <Compile Include="Common\ODataMessageWriterTestWrapper.cs" />
+    <Compile Include="Common\ODataWriterTestWrapper.cs" />
+    <Compile Include="Common\SingleEnumerator.cs" />
+    <Compile Include="Common\WriterTestConfiguration.cs" />
+    <Compile Include="Common\WriterTestConfigurationProvider.cs" />
+    <Compile Include="Common\PayloadWriterTestDescriptor.cs" />
+    <Compile Include="Common\WriterTestExpectedResults.cs" />
+    <Compile Include="Fixups\AddExpandedLinkMetadata.cs" />
+    <Compile Include="Fixups\RemoveComplexWithNoProperties.cs" />
+    <Compile Include="Fixups\RemoveFeedIDFixup.cs" />
+    <Compile Include="Fixups\ExpectedBatchPayloadFixup.cs" />
+    <Compile Include="Fixups\ExpectedPayloadFixups.cs" />
+    <Compile Include="Fixups\JsonSelfLinkToEditLinkFixup.cs" />
+    <Compile Include="Fixups\NullStringTypenameFixup.cs" />
+    <Compile Include="Fixups\ObservedBatchPayloadFixup.cs" />
+    <Compile Include="Fixups\ODataPayloadElementAddDefaultAtomMetadata.cs" />
+    <Compile Include="Fixups\ODataPayloadElementNullIDVisitor.cs" />
+    <Compile Include="Fixups\ODataPayloadElementNullTypenameVisitor.cs" />
+    <Compile Include="Fixups\RemoveAnnotations.cs" />
+    <Compile Include="Fixups\AddFeedIDFixup.cs" />
+    <Compile Include="Fixups\RemoveMLEAnnotation.cs" />
+    <Compile Include="Fixups\RemoveTypeNameAnnotationFromComplexInCollection.cs" />
+    <Compile Include="Fixups\ReorderProperties.cs" />
+    <Compile Include="JsonLight\JsonLightNavigationLinkWriterTests.cs" />
+    <Compile Include="JsonLight\JsonLightEntryWriterTests.cs" />
+    <Compile Include="JsonLight\JsonLightParameterWriterTests.cs" />
+    <Compile Include="JsonLight\JsonLightPropertyWriterTests.cs" />
+    <Compile Include="JsonLight\JsonLightWriterUtils.cs" />
+    <Compile Include="Json\ODataJsonDateTimeFormat.cs" />
+    <Compile Include="ObjectModelToMessageWriter.cs" />
+    <Compile Include="ConvertToUriLiteralTests.cs" />
+    <Compile Include="ODataWriterBehaviorInspector.cs" />
+    <Compile Include="Json\JsonValueUtilsTests.cs" />
+    <Compile Include="Json\JsonWriterTests.cs" />
+    <Compile Include="ODataMessageWriterSettingsInspector.cs" />
+    <Compile Include="ODataWriterTestCase.cs" />
+    <Compile Include="ParameterWriter\ParameterWriterStatesTests.cs" />
+    <Compile Include="ParameterWriter\ParameterWriterSyncAsyncMismatchTests.cs" />
+    <Compile Include="ParameterWriter\ParameterWriterTests.cs" />
+    <Compile Include="WriterCombinatorialEngine\BaselineLogger.cs" />
+    <Compile Include="WriterCombinatorialEngine\WriterCombinatiorialEngineProvider.cs" />
+    <Compile Include="WriterPayloads.cs" />
+    <Compile Include="TestWriterUtils.cs" />
+    <Compile Include="Atom\TestAtomUtils.cs" />
+    <Compile Include="Common\ObjectModelUtils.cs" />
+    <Compile Include="Common\ODataPayloadKindUtils.cs" />
+    <Compile Include="Json\JsonUtils.cs" />
+    <Compile Include="ODataWriterTestsTestModule.cs" />
+    <Compile Include="Writer\WriterProjectedPropertyTests.cs" />
+    <Compile Include="Writer\MessageWriterTests.cs" />
+    <Compile Include="Writer\UriHandlingTests.cs" />
+    <Compile Include="Writer\WriterActionAndFunctionTests.cs" />
+    <Compile Include="Writer\WriterArgumentValidationTest.cs" />
+    <Compile Include="Writer\WriterAssociationLinkTests.cs" />
+    <Compile Include="Writer\WriterContentTypeTests.cs" />
+    <Compile Include="Writer\WriterEntryDefaultStreamTests.cs" />
+    <Compile Include="Writer\WriterEntryTests.cs" />
+    <Compile Include="Writer\WriterErrorTests.cs" />
+    <Compile Include="Writer\WriterExceptionTests.cs" />
+    <Compile Include="Writer\WriterExpandedLinkTests.cs" />
+    <Compile Include="Writer\WriterFeedTests.cs" />
+    <Compile Include="Writer\WriterInputValidationTests.cs" />
+    <Compile Include="Writer\WriterEntityReferenceLinksTests.cs" />
+    <Compile Include="Writer\WriterMetadataInputValidationTests.cs" />
+    <Compile Include="Writer\WriterMetadataDocumentTests.cs" />
+    <Compile Include="Writer\WriterStreamPropertyTests.cs" />
+    <Compile Include="Writer\WriterNavigationLinkTests.cs" />
+    <Compile Include="Writer\WriterPropertyTests.cs" />
+    <Compile Include="Writer\WriterRawValueTests.cs" />
+    <Compile Include="Writer\WriterServiceDocumentTests.cs" />
+    <Compile Include="Writer\WriterStatesTests.cs" />
+    <Compile Include="Writer\WriterSyncAsyncMismatchTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ODataWriterTests.suite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Atom\AtomCategoryMetadataTests.CategoryMetadataOnWorkspaceCollectionCategoriesWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomCollectionWriterTests.CollectionNoErroronEmptyCollectionnTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomResourceCollectionMetadataTests.AtomCategoriesMetadataTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomResourceCollectionMetadataTests.AtomResourceCollectionMetadataTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomTextConstructMetadataTests.AtomTextConstructMetadataOnODataWorkspaceWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomXmlTests.RootElementNamespaces.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomXmlTests.RootElementNamespaces_CustomDataNamespace.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomXmlTests.XmlBaseOnRootElement.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CollectionWriter\CollectionWriterTests.CollectionPayloadTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CollectionWriter\CollectionWriterTests.CollectionWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CollectionWriter\CollectionWriterTests.HomogeneousCollectionWriterWithoutMetadataTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JsonLight\JsonLightPropertyWriterTests.WriteFloatingPointValue.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JsonLight\JsonLightPropertyWriterTests.TopLevelOpenPropertiesTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JsonLight\JsonLightPropertyWriterTests.TopLevelSpatialPropertiesTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JsonLight\JsonLightPropertyWriterTests.WritePropertyWithoutOwningType.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.AppJsonContentComplexTypeVersioningTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.AppJsonContentPrimitivetTypeVersioningTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.AppJsonContentTypeVersioningEntityReferenceLinksTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.AppJsonContentTypeVersioningTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.NestedComplexCollectionExpandedLinksTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.NullPropertiesOnOpenTypes.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.NullPropertyNameTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomCategoryMetadataTests.CategoryMetadataOnEntryWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomEntryMetadataTests.EntryMetadataWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomFeedMetadataTests.DeltaLinkInFeedMetadataWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomFeedMetadataTests.FeedMetadataWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomGeneratorMetadataTests.GeneratorMetadataWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomLinkMetadataTests.AssociationLinkMetadataWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomLinkMetadataTests.DefaultStreamEditLinkMetadataWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomLinkMetadataTests.EntryReadAndEditLinkMetadataWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomLinkMetadataTests.NamedStreamReadAndEditLinkMetadataWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomLinkMetadataTests.NavigationLinkMetadataWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomPersonMetadataTests.PersonMetadataWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomTextConstructMetadataTests.AtomTextConstructMetadataOnODataItemWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomXmlTests.RootElementNamespaces.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomXmlTests.RootElementNamespaces_CustomDataNamespace.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\AtomXmlTests.XmlBaseOnRootElement.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\WriterEntryAtomTests.PayloadOrderTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\WriterFeedAtomTests.FeedIdTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Atom\WriterFeedAtomTests.PayloadOrderTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JsonLight\JsonLightEntryWriterTests.ActionAndFunctionPayloadOrderTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JsonLight\JsonLightEntryWriterTests.OpenPropertiesInEntryTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JsonLight\JsonLightEntryWriterTests.PayloadOrderTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JsonLight\JsonLightEntryWriterTests.SpatialPropertiesInEntryTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ParameterWriter\ParameterWriterTests.FunctionImportNotInModel.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ParameterWriter\ParameterWriterTests.ParameterPayloadTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ParameterWriter\ParameterWriterTests.ParameterPayloadTestCollection.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ParameterWriter\ParameterWriterTests.ParameterPayloadTestWithFunctionImport.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\UriHandlingTests.AbsoluteUriTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\UriHandlingTests.RelativeUriTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\UriHandlingTests.ResolverUriTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterActionAndFunctionTests.ActionAndFunctionTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterAssociationLinkTests.AssociationLinkMetadataValidationTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterAssociationLinkTests.AssociationLinkOnNavigationLinkTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterAssociationLinkTests.AssociationLinkTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.AppJsonContentTypeVersioningEntryTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.AppJsonContentTypeVersioningFeedTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.AppJsonContentTypeVersioningTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.BinaryValueContentTypeTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.ComplexCollectionContentTypeTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.EntityReferenceLinkContentTypeTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.EntityReferenceLinksContentTypeTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.ErrorContentTypeTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.PrimitiveCollectionContentTypeTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.PropertyContentTypeTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.EncodingContentTypeTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.EntryContentTypeTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.FeedContentTypeTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.ParameterPayloadContentTypeTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.RawValueContentTypeTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterContentTypeTests.ServiceDocumentContentTypeTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntityReferenceLinksTests.EntityReferenceLinksCardinalityMismatchTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntityReferenceLinksTests.EntityReferenceLinksPropertyAccessOrderTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntityReferenceLinksTests.EntityReferenceLinksTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntityReferenceLinksTests.EntityReferenceLinkTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryDefaultStreamTests.EntryDefaultStreamTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.DefaultEntryTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.DuplicateNavigationLinkTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.DuplicatePropertyNamesTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.EmptyComplexValueTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.EntryIdTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.EntryPropertyTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.EntryPropertyTestsWithoutMetadata.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.EntrySerializationTypeNameAnnotationTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.EntryTypeNameTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.InferredTypeNamesTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.NoEntryIdTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.NullPropertyTypeNameTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.SelfAndEditLinkTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterEntryTests.TaupoSingleEntryTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterErrorTests.TopLevelODataMessageWriterErrorTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterFeedTests.FeedValidatorTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterErrorTests.TopLevelODataWriterErrorTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterExpandedLinkTests.ExpandedLinkWithNullNavigationTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterFeedTests.FeedInlineCountTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterFeedTests.FeedNextLinkTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterFeedTests.SetNextLinkAfterFeedStartTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterFeedTests.TaupoTopLevelFeedTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.CollectionValueSerializationTypeNameAnnotationTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.ComplexValueSerializationTypeNameAnnotationTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.InvalidXmlCharactersTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.NonNullablePropertyOnComplexValueTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.NullPropertyOnComplexValueTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.PreserveSpaceTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.PrimitiveValueSerializationTypeNameAnnotationTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.PropertyTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterFeedTests.WriteFeedTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterMetadataDocumentTests.MetadataDocumentWithODataAnnotationsWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterMetadataDocumentTests.MetadataDocumentWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterMetadataDocumentTests.MetadataFunctionImportAnnotationsWriterTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterInputValidationTests.ETagValidationTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterMetadataInputValidationTests.DefaultStreamMetadataTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterMetadataInputValidationTests.DefaultStreamMetadataWcfDSServerTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterMetadataInputValidationTests.MissingPropertyTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterNavigationLinkTests.NavigationLinkDepthTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterNavigationLinkTests.NavigationLinksInRequest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterNavigationLinkTests.NavigationLinksInResponse.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterProjectedPropertyTests.ProjectedPropertiesTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.NonNullablePropertyOnEntryTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.NullPropertyOnEntryTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.TaupoSinglePropertyTests_Atom.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.TaupoSinglePropertyTests_Json.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterRawValueTests.RawPrimitiveValueTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterServiceDocumentTests.SingletonTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterStreamPropertyTests.WriterStreamPropertiesTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterServiceDocumentTests.AdditionalResourceCollectionTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterServiceDocumentTests.ResourceCollectionNamePropertyTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterServiceDocumentTests.ResourceCollectionTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterServiceDocumentTests.WorkspaceNamesAndResourceCollectionTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterServiceDocumentTests.WorkspaceNamesTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

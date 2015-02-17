@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
+  <EntityContainerMapping StorageEntityContainer="PTStoreContainer" CdmEntityContainer="PTEntities">
+    <EntitySetMapping Name="FileStorage">
+      <EntityTypeMapping TypeName="IsTypeOf(PT.FileStorage)">
+        <MappingFragment StoreEntitySet="FileStorage">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+          <ScalarProperty Name="ContentType" ColumnName="ContentType" />
+          <ScalarProperty Name="ContentDisposition" ColumnName="ContentDisposition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LogEntries">
+      <EntityTypeMapping TypeName="IsTypeOf(PT.LogEntry)">
+        <MappingFragment StoreEntitySet="LogEntries">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Verb" ColumnName="Verb" />
+          <ScalarProperty Name="URI" ColumnName="URI" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LogEntryHeaders">
+      <EntityTypeMapping TypeName="IsTypeOf(PT.LogEntryHeader)">
+        <MappingFragment StoreEntitySet="LogEntryHeaders">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Header" ColumnName="Header" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Pictures">
+      <EntityTypeMapping TypeName="IsTypeOf(PT.Picture)">
+        <MappingFragment StoreEntitySet="Pictures">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(PT.DummyPictureNonMLE)">
+        <MappingFragment StoreEntitySet="DummyPictureNonMLEs">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="DummyMessage" ColumnName="DummyMessage" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(PT.InternalPicture)">
+        <MappingFragment StoreEntitySet="InternalPictures">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Exif" ColumnName="Exif" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(PT.ExternalPicture)">
+        <MappingFragment StoreEntitySet="ExternalPictures">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="URL" ColumnName="URL" />
+          <ScalarProperty Name="ContentType" ColumnName="ContentType" />
+          <ScalarProperty Name="BlobETag" ColumnName="BlobETag" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Tags">
+      <EntityTypeMapping TypeName="IsTypeOf(PT.Tag)">
+        <MappingFragment StoreEntitySet="Tags">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="TagName" ColumnName="TagName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TestOperations">
+      <EntityTypeMapping TypeName="IsTypeOf(PT.TestOperation)">
+        <MappingFragment StoreEntitySet="TestOperations">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="FK_LogEntry_TestOperation" TypeName="PT.FK_LogEntry_TestOperation" StoreEntitySet="LogEntries">
+      <EndProperty Name="TestOperations">
+        <ScalarProperty Name="Id" ColumnName="Operation" />
+      </EndProperty>
+      <EndProperty Name="LogEntries">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="Operation" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_LogEntryHeaders_LogEntry1" TypeName="PT.FK_LogEntryHeaders_LogEntry1" StoreEntitySet="LogEntryHeaders">
+      <EndProperty Name="LogEntries">
+        <ScalarProperty Name="Id" ColumnName="LogEntry" />
+      </EndProperty>
+      <EndProperty Name="LogEntryHeaders">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="PictureTag" TypeName="PT.PictureTag" StoreEntitySet="PictureTag">
+      <EndProperty Name="Pictures">
+        <ScalarProperty Name="Id" ColumnName="PictureId" />
+      </EndProperty>
+      <EndProperty Name="Tags">
+        <ScalarProperty Name="Id" ColumnName="TagId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_FileStorage_InternalPictures1" TypeName="PT.FK_FileStorage_InternalPictures1" StoreEntitySet="FileStorage">
+      <EndProperty Name="FileStorage">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <EndProperty Name="InternalPicture">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,36 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" />
+    <Property Name="ComplexProperty" Type="NS3.ComplexLevel1" Nullable="false" />
+  </EntityType>
+</Schema>
+<Schema Namespace="NS3" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <ComplexType Name="ComplexLevel1">
+    <Property Name="ComplexProperty" Type="NS2.ComplexLevel2" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="Customer" BaseType="NS1.Person">
+    <NavigationProperty Name="ToOrders" Type="Collection(NS2.Order)" Partner="ToCustomer" />
+  </EntityType>
+</Schema>
+<Schema Namespace="NS2" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <ComplexType Name="ComplexLevel2">
+    <Property Name="ComplexProperty" Type="NS2.ComplexLevel3" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="ComplexLevel3">
+    <Property Name="IntProperty" Type="Edm.Int32" />
+  </ComplexType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" />
+    <Property Name="CustomerId" Type="Edm.Int32" />
+    <NavigationProperty Name="ToCustomer" Type="NS3.Customer" Nullable="false" Partner="ToOrders">
+      <ReferentialConstraint Property="CustomerId" ReferencedProperty="Id" />
+    </NavigationProperty>
+  </EntityType>
+</Schema>
+

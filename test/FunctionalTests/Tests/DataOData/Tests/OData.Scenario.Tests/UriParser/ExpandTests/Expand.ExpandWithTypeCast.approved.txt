@@ -1,0 +1,12 @@
+$select = 
+$expand = Microsoft.Test.Taupo.OData.WCFService.Customer/Orders
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(Type: Microsoft.Test.Taupo.OData.WCFService.Customer)/(NavigationProperty: Orders)]
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems(Empty List)

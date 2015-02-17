@@ -1,0 +1,31 @@
+$select = 
+$expand = CustomerForOrder($orderby=FirstName desc)
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: CustomerForOrder)]
+			OrderByClause
+				Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+				Direction = Descending
+				Range Variable = 
+				EntityRangeVariable
+					Name = $it
+					NavigationSource = CustomerForOrder
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+				Expression = 
+				SingleValuePropertyAccessNode
+					Property = FirstName
+					TypeReference = [Edm.String Nullable=True Unicode=True]
+					Source = 
+					EntityRangeVariableReferenceNode
+						Name = $it
+						NavigationSource = CustomerForOrder
+						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+						Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Then By = 
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems(Empty List)

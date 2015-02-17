@@ -1,0 +1,98 @@
+--batchBoundary
+cOntEnt-typE: mUltIpArt/mIxEd; bOUndAry=changesetBoundary
+
+--changesetBoundary
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 1
+
+POST /Values HTTP/1.1
+AccEpt: applicaTION/atOM+xMl
+cOntEnt-typE: ApplIcAtIOn/AtOm+xml;typE=entry
+
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns:adsm="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <content type="application/xml"><adsm:properties>    
+    <ads:ID>1</ads:ID>
+  </adsm:properties></content>
+</entry>
+--changesetBoundary--
+--batchBoundary
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+
+GET /Values(1)/Stream2 HTTP/1.1
+
+--batchBoundary
+AccEpt: applicaTION/atOM+xMl
+cOntEnt-typE: mUltIpArt/mIxEd; bOUndAry=changesetBoundary
+
+--changesetBoundary
+AccEpt: applicaTION/atOM+xMl
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 0
+
+POST /Values HTTP/1.1
+AccEpt: applicaTION/atOM+xMl
+cOntEnt-typE: ApplIcAtIOn/AtOm+xml;typE=entry
+
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<entry xmlns:ads="http://docs.oasis-open.org/odata/ns/data" xmlns:adsm="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
+  <content type="application/xml"><adsm:properties>    
+    <ads:ID>2</ads:ID>
+  </adsm:properties></content>
+</entry>
+--changesetBoundary
+AccEpt: applicaTION/atOM+xMl
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 2
+
+PUT $0/Stream1 HTTP/1.1
+AccEpt: applicaTION/atOM+xMl
+cOntEnt-typE: CustomType/Stream1
+
+1234--changesetBoundary--
+--batchBoundary
+AccEpt: applicaTION/atOM+xMl
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+
+GET /Values(2) HTTP/1.1
+AccEpt: applicaTION/atOM+xMl
+
+--batchBoundary
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+
+GET /Values(2)/Stream1 HTTP/1.1
+
+--batchBoundary
+AccEpt: applicaTION/atOM+xMl
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+
+GET /Values HTTP/1.1
+AccEpt: applicaTION/atOM+xMl
+
+--batchBoundary
+cOntEnt-typE: mUltIpArt/mIxEd; bOUndAry=changesetBoundary
+
+--changesetBoundary
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+cOntEnt-Id: 3
+
+DELETE /Values(1) HTTP/1.1
+
+--changesetBoundary--
+--batchBoundary
+AccEpt: applicaTION/atOM+xMl
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+
+GET /Values HTTP/1.1
+AccEpt: applicaTION/atOM+xMl
+
+--batchBoundary--

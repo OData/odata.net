@@ -1,0 +1,361 @@
+<Schema Namespace="DefaultNamespace" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <Function Name="FunctionWithRowType3Parameters0">
+    <Parameter Name="Param1" Type="Edm.Binary" />
+    <Parameter Name="Param2">
+      <RowType />
+    </Parameter>
+    <ReturnType Type="Edm.Binary" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters1">
+    <Parameter Name="Param1" Type="Edm.Boolean" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Binary" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Boolean" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters2">
+    <Parameter Name="Param1" Type="Edm.Byte" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Boolean" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Byte" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters3">
+    <Parameter Name="Param1" Type="Edm.DateTimeOffset" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Byte" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.DateTimeOffset" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters4">
+    <Parameter Name="Param1" Type="Edm.Decimal" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.DateTimeOffset" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Decimal" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters5">
+    <Parameter Name="Param1" Type="Edm.Double" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Decimal" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Double" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters6">
+    <Parameter Name="Param1" Type="Edm.Guid" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Double" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Guid" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters7">
+    <Parameter Name="Param1" Type="Edm.Int16" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Guid" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Int16" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters8">
+    <Parameter Name="Param1" Type="Edm.Int32" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Int16" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Int32" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters9">
+    <Parameter Name="Param1" Type="Edm.Int64" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Int32" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Int64" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters10">
+    <Parameter Name="Param1" Type="Edm.SByte" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Int64" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.SByte" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters11">
+    <Parameter Name="Param1" Type="Edm.Single" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.SByte" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Single" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters12">
+    <Parameter Name="Param1" Type="Edm.Stream" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Single" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Stream" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters13">
+    <Parameter Name="Param1" Type="Edm.String" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Stream" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.String" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters14">
+    <Parameter Name="Param1" Type="Edm.Duration" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.String" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Duration" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters15">
+    <Parameter Name="Param1" Type="Edm.Geography" SRID="4326" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Duration" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Geography" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters16">
+    <Parameter Name="Param1" Type="Edm.GeographyPoint" SRID="4326" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Geography" Nullable="false" SRID="4326" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeographyPoint" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters17">
+    <Parameter Name="Param1" Type="Edm.GeographyPolygon" SRID="4326" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeographyPoint" Nullable="false" SRID="4326" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeographyPolygon" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters18">
+    <Parameter Name="Param1" Type="Edm.GeographyLineString" SRID="4326" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeographyPolygon" Nullable="false" SRID="4326" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeographyLineString" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters19">
+    <Parameter Name="Param1" Type="Edm.GeographyCollection" SRID="4326" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeographyLineString" Nullable="false" SRID="4326" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeographyCollection" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters20">
+    <Parameter Name="Param1" Type="Edm.GeographyMultiPolygon" SRID="4326" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeographyCollection" Nullable="false" SRID="4326" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeographyMultiPolygon" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters21">
+    <Parameter Name="Param1" Type="Edm.GeographyMultiLineString" SRID="4326" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeographyMultiPolygon" Nullable="false" SRID="4326" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeographyMultiLineString" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters22">
+    <Parameter Name="Param1" Type="Edm.GeographyMultiPoint" SRID="4326" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeographyMultiLineString" Nullable="false" SRID="4326" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeographyMultiPoint" Nullable="false" SRID="4326" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters23">
+    <Parameter Name="Param1" Type="Edm.Geometry" SRID="0" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeographyMultiPoint" Nullable="false" SRID="4326" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Geometry" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters24">
+    <Parameter Name="Param1" Type="Edm.GeometryPoint" SRID="0" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Geometry" Nullable="false" SRID="0" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeometryPoint" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters25">
+    <Parameter Name="Param1" Type="Edm.GeometryPolygon" SRID="0" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeometryPoint" Nullable="false" SRID="0" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeometryPolygon" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters26">
+    <Parameter Name="Param1" Type="Edm.GeometryLineString" SRID="0" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeometryPolygon" Nullable="false" SRID="0" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeometryLineString" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters27">
+    <Parameter Name="Param1" Type="Edm.GeometryCollection" SRID="0" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeometryLineString" Nullable="false" SRID="0" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeometryCollection" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters28">
+    <Parameter Name="Param1" Type="Edm.GeometryMultiPolygon" SRID="0" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeometryCollection" Nullable="false" SRID="0" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeometryMultiPolygon" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters29">
+    <Parameter Name="Param1" Type="Edm.GeometryMultiLineString" SRID="0" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeometryMultiPolygon" Nullable="false" SRID="0" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeometryMultiLineString" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters30">
+    <Parameter Name="Param1" Type="Edm.GeometryMultiPoint" SRID="0" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeometryMultiLineString" Nullable="false" SRID="0" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.GeometryMultiPoint" Nullable="false" SRID="0" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters31">
+    <Parameter Name="Param1" Type="Edm.Binary" MaxLength="2147483647" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.GeometryMultiPoint" Nullable="false" SRID="0" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Binary" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters32">
+    <Parameter Name="Param1" Type="Edm.String" MaxLength="0" />
+    <Parameter Name="Param2">
+      <RowType />
+    </Parameter>
+    <ReturnType Type="Edm.Boolean" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters33">
+    <Parameter Name="Param1" Type="Edm.Duration" Nullable="false" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Binary" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Byte" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters34">
+    <Parameter Name="Param1" Type="Edm.Decimal" Nullable="false" Precision="2147483647" Scale="1" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Boolean" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.DateTimeOffset" Nullable="false" />
+  </Function>
+  <Function Name="FunctionWithRowType3Parameters35">
+    <Parameter Name="Param1" Type="Edm.DateTimeOffset" Nullable="false" />
+    <Parameter Name="Param2">
+      <RowType>
+        <Property Name="Property1" Type="Edm.Byte" Nullable="false" />
+      </RowType>
+    </Parameter>
+    <ReturnType Type="Edm.Decimal" Nullable="false" />
+  </Function>
+  <EntityContainer Name="DefaultContainer">
+    <FunctionImport Name="FunctionWithRowType3Parameters0" Function="DefaultNamespace.FunctionWithRowType3Parameters0" />
+    <FunctionImport Name="FunctionWithRowType3Parameters1" Function="DefaultNamespace.FunctionWithRowType3Parameters1" />
+    <FunctionImport Name="FunctionWithRowType3Parameters2" Function="DefaultNamespace.FunctionWithRowType3Parameters2" />
+    <FunctionImport Name="FunctionWithRowType3Parameters3" Function="DefaultNamespace.FunctionWithRowType3Parameters3" />
+    <FunctionImport Name="FunctionWithRowType3Parameters4" Function="DefaultNamespace.FunctionWithRowType3Parameters4" />
+    <FunctionImport Name="FunctionWithRowType3Parameters5" Function="DefaultNamespace.FunctionWithRowType3Parameters5" />
+    <FunctionImport Name="FunctionWithRowType3Parameters6" Function="DefaultNamespace.FunctionWithRowType3Parameters6" />
+    <FunctionImport Name="FunctionWithRowType3Parameters7" Function="DefaultNamespace.FunctionWithRowType3Parameters7" />
+    <FunctionImport Name="FunctionWithRowType3Parameters8" Function="DefaultNamespace.FunctionWithRowType3Parameters8" />
+    <FunctionImport Name="FunctionWithRowType3Parameters9" Function="DefaultNamespace.FunctionWithRowType3Parameters9" />
+    <FunctionImport Name="FunctionWithRowType3Parameters10" Function="DefaultNamespace.FunctionWithRowType3Parameters10" />
+    <FunctionImport Name="FunctionWithRowType3Parameters11" Function="DefaultNamespace.FunctionWithRowType3Parameters11" />
+    <FunctionImport Name="FunctionWithRowType3Parameters12" Function="DefaultNamespace.FunctionWithRowType3Parameters12" />
+    <FunctionImport Name="FunctionWithRowType3Parameters13" Function="DefaultNamespace.FunctionWithRowType3Parameters13" />
+    <FunctionImport Name="FunctionWithRowType3Parameters14" Function="DefaultNamespace.FunctionWithRowType3Parameters14" />
+    <FunctionImport Name="FunctionWithRowType3Parameters15" Function="DefaultNamespace.FunctionWithRowType3Parameters15" />
+    <FunctionImport Name="FunctionWithRowType3Parameters16" Function="DefaultNamespace.FunctionWithRowType3Parameters16" />
+    <FunctionImport Name="FunctionWithRowType3Parameters17" Function="DefaultNamespace.FunctionWithRowType3Parameters17" />
+    <FunctionImport Name="FunctionWithRowType3Parameters18" Function="DefaultNamespace.FunctionWithRowType3Parameters18" />
+    <FunctionImport Name="FunctionWithRowType3Parameters19" Function="DefaultNamespace.FunctionWithRowType3Parameters19" />
+    <FunctionImport Name="FunctionWithRowType3Parameters20" Function="DefaultNamespace.FunctionWithRowType3Parameters20" />
+    <FunctionImport Name="FunctionWithRowType3Parameters21" Function="DefaultNamespace.FunctionWithRowType3Parameters21" />
+    <FunctionImport Name="FunctionWithRowType3Parameters22" Function="DefaultNamespace.FunctionWithRowType3Parameters22" />
+    <FunctionImport Name="FunctionWithRowType3Parameters23" Function="DefaultNamespace.FunctionWithRowType3Parameters23" />
+    <FunctionImport Name="FunctionWithRowType3Parameters24" Function="DefaultNamespace.FunctionWithRowType3Parameters24" />
+    <FunctionImport Name="FunctionWithRowType3Parameters25" Function="DefaultNamespace.FunctionWithRowType3Parameters25" />
+    <FunctionImport Name="FunctionWithRowType3Parameters26" Function="DefaultNamespace.FunctionWithRowType3Parameters26" />
+    <FunctionImport Name="FunctionWithRowType3Parameters27" Function="DefaultNamespace.FunctionWithRowType3Parameters27" />
+    <FunctionImport Name="FunctionWithRowType3Parameters28" Function="DefaultNamespace.FunctionWithRowType3Parameters28" />
+    <FunctionImport Name="FunctionWithRowType3Parameters29" Function="DefaultNamespace.FunctionWithRowType3Parameters29" />
+    <FunctionImport Name="FunctionWithRowType3Parameters30" Function="DefaultNamespace.FunctionWithRowType3Parameters30" />
+    <FunctionImport Name="FunctionWithRowType3Parameters31" Function="DefaultNamespace.FunctionWithRowType3Parameters31" />
+    <FunctionImport Name="FunctionWithRowType3Parameters32" Function="DefaultNamespace.FunctionWithRowType3Parameters32" />
+    <FunctionImport Name="FunctionWithRowType3Parameters33" Function="DefaultNamespace.FunctionWithRowType3Parameters33" />
+    <FunctionImport Name="FunctionWithRowType3Parameters34" Function="DefaultNamespace.FunctionWithRowType3Parameters34" />
+    <FunctionImport Name="FunctionWithRowType3Parameters35" Function="DefaultNamespace.FunctionWithRowType3Parameters35" />
+  </EntityContainer>
+</Schema>
+

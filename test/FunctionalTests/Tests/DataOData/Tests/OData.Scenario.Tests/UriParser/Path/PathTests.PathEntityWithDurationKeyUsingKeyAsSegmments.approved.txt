@@ -1,0 +1,1 @@
+Path[(EntitySet: DurationInKeys)/(Key: Id = 1.02:03:04.5678901)]

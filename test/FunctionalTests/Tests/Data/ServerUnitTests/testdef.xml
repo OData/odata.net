@@ -1,0 +1,6 @@
+<testDefinition version="1.0" testType="TRun">
+  <parameters>
+    <parameter name="suiteTimeout">480</parameter>
+    <parameter name="requiresElevation">true</parameter>
+  </parameters>
+</testDefinition>

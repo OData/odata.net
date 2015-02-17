@@ -1,0 +1,19 @@
+$select = Quantity
+$expand = AssociatedOrder($expand=CustomerForOrder)
+
+
+SelectExpandQueryOption
+	AllSelected = False
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: AssociatedOrder)]
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems
+					Expanded Navigation Property
+						Path[(NavigationProperty: CustomerForOrder)]
+						SelectExpandQueryOption
+							AllSelected = True
+							SelectedItems(Empty List)
+		Path[(Property: Quantity)]
+		Path[(NavigationProperty: AssociatedOrder)]

@@ -1,0 +1,17 @@
+<Schema Namespace="Namespace" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="EntityType1">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+    <Property Name="prop_0" Type="Edm.Decimal" Nullable="false" Precision="2" Scale="2" />
+    <Property Name="prop_1" Type="Edm.String" Nullable="false" MaxLength="100" Unicode="false" />
+    <Property Name="prop_2" Type="Collection(Edm.String)" Nullable="false" MaxLength="100" Unicode="false" />
+  </EntityType>
+  <ComplexType Name="ComplexType1">
+    <Property Name="property0" Type="Edm.Decimal" Nullable="false" Precision="2" Scale="2" />
+    <Property Name="property1" Type="Edm.String" Nullable="false" MaxLength="100" Unicode="false" />
+    <Property Name="property2" Type="Collection(Edm.String)" Nullable="false" MaxLength="100" Unicode="false" />
+  </ComplexType>
+</Schema>
+

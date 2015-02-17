@@ -1,0 +1,29 @@
+$orderby = HomeAddress/Microsoft.Test.Taupo.OData.WCFService.HomeAddress/HomeNO
+
+
+OrderByClause
+	Item Type = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
+	Direction = Ascending
+	Range Variable = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = People
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
+	Expression = 
+	SingleValuePropertyAccessNode
+		Property = HomeNO
+		TypeReference = [Edm.String Nullable=True Unicode=True]
+		Source = 
+		SingleValueCastNode
+			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
+			Source = 
+			SingleValuePropertyAccessNode
+				Property = HomeAddress
+				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Address Nullable=True]
+				Source = 
+				EntityRangeVariableReferenceNode
+					Name = $it
+					NavigationSource = People
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
+					Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+	Then By = 

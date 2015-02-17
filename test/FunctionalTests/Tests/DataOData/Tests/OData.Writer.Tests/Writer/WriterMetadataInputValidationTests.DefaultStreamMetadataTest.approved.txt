@@ -1,0 +1,80 @@
+Combination: 1; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 2; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 3; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 4; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
+
+Combination: 25; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></entry>
+
+Combination: 26; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></entry>
+
+Combination: 27; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></entry>
+
+Combination: 28; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author></entry>
+
+Combination: 29; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="media/type" src="http://odata.org/ReadLink" /></entry>
+
+Combination: 30; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="media/type" src="http://odata.org/ReadLink" /></entry>
+
+Combination: 31; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="media/type" src="http://odata.org/ReadLink" /></entry>
+
+Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="media/type" src="http://odata.org/ReadLink" /></entry>
+
+Combination: 33; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/EditLink" m:etag="W/&quot;myetag&quot;" /></entry>
+
+Combination: 34; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/EditLink" m:etag="W/&quot;myetag&quot;" /></entry>
+
+Combination: 35; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/EditLink" m:etag="W/&quot;myetag&quot;" /></entry>
+
+Combination: 36; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/EditLink" m:etag="W/&quot;myetag&quot;" /></entry>
+
+Combination: 37; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/EditLink" m:etag="W/&quot;myetag&quot;" /><content type="media/type" src="http://odata.org/ReadLink" /></entry>
+
+Combination: 38; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/EditLink" m:etag="W/&quot;myetag&quot;" /><content type="media/type" src="http://odata.org/ReadLink" /></entry>
+
+Combination: 39; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/EditLink" m:etag="W/&quot;myetag&quot;" /><content type="media/type" src="http://odata.org/ReadLink" /></entry>
+
+Combination: 40; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><category term="#TestModel.CityWithMapType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><id /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><link rel="edit-media" href="http://odata.org/EditLink" m:etag="W/&quot;myetag&quot;" /><content type="media/type" src="http://odata.org/ReadLink" /></entry>
+

@@ -1,0 +1,10 @@
+This file contains alphabet entries for Semigraphics string generator.
+One entry per line. Only entries starting with single quote are used, everything else is a comment.
+
+'\u00b6'         PILCROW SIGN
+'\u00b9'         SUPERSCRIPT ONE
+'\u2562'         BOX DRAWINGS VERTICAL DOUBLE AND LEFT SINGLE
+'\u256c'         BOX DRAWINGS DOUBLE VERTICAL AND HORIZONTAL
+'\u2580'         UPPER HALF BLOCK
+'\u2591'         LIGHT SHADE
+'\u2593'         DARK SHADE

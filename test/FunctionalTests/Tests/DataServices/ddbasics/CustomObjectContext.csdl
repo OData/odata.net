@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ModelNamespace" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:annotations="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+  <EntityContainer Name="CustomObjectContext">
+    <EntitySet Name="Customers" EntityType="ModelNamespace.Customer" />
+    <EntitySet Name="Orders" EntityType="ModelNamespace.Order" />
+    <EntitySet Name="Workers" EntityType="ModelNamespace.Worker" />
+    <EntitySet Name="Offices" EntityType="ModelNamespace.Office" />
+    <AssociationSet Name="FK_Worker_Office" Association="ModelNamespace.FK_Worker_Office">
+      <End Role="Worker" EntitySet="Workers" />
+      <End Role="Office" EntitySet="Offices" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Customer_BestFriend" Association="ModelNamespace.FK_Customer_BestFriend">
+      <End Role="CustomerReferredToAsBestFriend" EntitySet="Customers" />
+      <End Role="CustomerWhoHasBestFriend" EntitySet="Customers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orders_Customer" Association="ModelNamespace.FK_Orders_Customer">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Order" EntitySet="Orders" />
+    </AssociationSet>
+  </EntityContainer>
+
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" />
+    <Property Name="Concurrency" Type="String" ConcurrencyMode="Fixed" />
+    <Property Name="EditTimeStamp" Nullable="false" Type="Binary" MaxLength="8" FixedLength="true" ConcurrencyMode="Fixed" annotations:StoreGeneratedPattern="Computed" />
+    <Property Name="GuidValue" Type="Guid" />
+    <Property Name="Address" Type="ModelNamespace.Address" Nullable="false" />
+    <Property Name="BestFriendId" Type="Int32" />
+    <NavigationProperty Name="BestFriend" Relationship="ModelNamespace.FK_Customer_BestFriend" FromRole="CustomerWhoHasBestFriend" ToRole="CustomerReferredToAsBestFriend" />
+    <NavigationProperty Name="Orders" Relationship="ModelNamespace.FK_Orders_Customer" FromRole="Customer" ToRole="Order" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="CustomerId" Nullable="true" Type="Int32" />
+    <Property Name="DollarAmount" Type="Double" Nullable="false"/>
+    <NavigationProperty Name="Customer" Relationship="ModelNamespace.FK_Orders_Customer" FromRole="Order" ToRole="Customer" />
+  </EntityType>
+  <ComplexType Name="Address">
+    <Property Name="StreetAddress" Type="String" />
+    <Property Name="City" Type="String" />
+    <Property Name="State" Type="String" />
+    <Property Name="PostalCode" Type="String" />
+  </ComplexType>
+  <EntityType Name="Worker">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="LastName" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="MiddleName" Type="String" MaxLength="30" Nullable="true" />
+    <NavigationProperty Name="Office" Relationship="ModelNamespace.FK_Worker_Office" FromRole="Worker" ToRole="Office" />
+  </EntityType>
+  <EntityType Name="Office">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="OfficeNumber" Type="Int32" Nullable="false" />
+    <Property Name="FloorNumber" Type="Int16" Nullable="false"/>
+    <Property Name="BuildingName" Type="String" MaxLength="30" Nullable="false" />
+    <NavigationProperty Name="Worker" Relationship="ModelNamespace.FK_Worker_Office" FromRole="Office" ToRole="Worker" />
+  </EntityType>
+  <Association Name="FK_Worker_Office">
+    <End Role="Worker" Type="ModelNamespace.Worker" Multiplicity="0..1" />
+    <End Role="Office" Type="ModelNamespace.Office" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Office">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Worker">
+        <PropertyRef Name="ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="CustomerWithBirthday" BaseType="ModelNamespace.Customer">
+    <Property Type="DateTime" Name="Birthday" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CustomerBlob" m:HasStream="true" BaseType="ModelNamespace.Customer">
+  </EntityType>
+  <EntityType Name="CustomerBlobWithBirthday" BaseType="ModelNamespace.CustomerBlob">
+    <Property Type="DateTime" Name="Birthday" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Customer_BestFriend">
+    <End Type="ModelNamespace.Customer" Role="CustomerReferredToAsBestFriend" Multiplicity="0..1" />
+    <End Type="ModelNamespace.Customer" Role="CustomerWhoHasBestFriend" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CustomerReferredToAsBestFriend">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="CustomerWhoHasBestFriend">
+        <PropertyRef Name="BestFriendId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orders_Customer">
+    <End Type="ModelNamespace.Customer" Role="Customer" Multiplicity="0..1" />
+    <End Type="ModelNamespace.Order" Role="Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Order">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

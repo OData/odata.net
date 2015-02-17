@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="DupNames" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="DupWithTypeName">
+        <Key>
+          <PropertyRef Name="DupWithTypeName" />
+        </Key>
+        <Property Name="DupWithTypeName" Type="Edm.Guid" Nullable="false" />
+        <Property Name="dupWithTypeName" Type="Edm.Int32" Nullable="true" />
+        <Property Name="DupWithTypeName1" Type="Edm.Guid" Nullable="false" />
+        <Property Name="dupWithTypeName1" Type="Edm.Guid" Nullable="false" />
+        <Property Name="DupWithTypeName2" Type="Edm.Guid" Nullable="false" />
+        <Property Name="DupWithTypeName3" Type="DupNames.DupWithComplexTypeName" Nullable="false" />
+        <Property Name="DupPropertyName" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="dupPropertyName" Type="Collection(DupNames.DupWithTypeName1)"/>
+      </EntityType>
+      <ComplexType Name="DupWithComplexTypeName">
+        <Property Name="DupWithComplexTypeName" Type="Edm.Int32" Nullable="true" />
+        <Property Name="dupWithComplexTypeName" Type="Edm.Int32" Nullable="true" />
+        <Property Name="DupWithComplexTypeName1" Type="Edm.String" Nullable="true" />
+        <Property Name="_DupWithComplexTypeName2" Type="Edm.Int32" Nullable="true" />
+        <Property Name="__DupWithComplexTypeName2" Type="Edm.Int32" Nullable="true" />
+      </ComplexType>
+      <EntityType Name="DupWithTypeName1">
+        <Key>
+          <PropertyRef Name="DupWithTypeName" />
+        </Key>
+        <Property Name="dupWithTypeName" Type="Edm.Guid" Nullable="false" />
+        <Property Name="dupwithtypeName" Type="Edm.Guid" Nullable="false" />
+        <Property Name="DupWithTypeName" Type="Edm.Int32" Nullable="true" />
+        <Property Name="DupWithTypeName1" Type="Edm.Int32" Nullable="true" />
+        <Property Name="DupWithTypeName3" Type="Edm.Int32" Nullable="true" />
+      </EntityType>
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Set1" EntityType="DupNames.DupWithTypeName" />
+        <EntitySet Name="Set2" EntityType="DupNames.DupWithTypeName1">
+          <NavigationPropertyBinding Path="Set1" Target="Set1"/>
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

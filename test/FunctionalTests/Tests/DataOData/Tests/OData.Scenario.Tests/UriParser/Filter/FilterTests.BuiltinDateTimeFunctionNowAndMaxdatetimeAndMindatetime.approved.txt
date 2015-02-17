@@ -1,0 +1,34 @@
+$filter = now() le maxdatetime() and now() gt mindatetime()
+
+
+FilterQueryOption
+	ItemType = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
+	Parameter = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = DurationInKeys
+		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
+	Expression = 
+			SingleValueFunctionCallNode
+				Name = now
+				Return Type = [Edm.DateTimeOffset Nullable=False Precision=0]
+				Function = 
+				Arguments = 
+		LessThanOrEqual
+			SingleValueFunctionCallNode
+				Name = maxdatetime
+				Return Type = [Edm.DateTimeOffset Nullable=False Precision=0]
+				Function = 
+				Arguments = 
+	And
+			SingleValueFunctionCallNode
+				Name = now
+				Return Type = [Edm.DateTimeOffset Nullable=False Precision=0]
+				Function = 
+				Arguments = 
+		GreaterThan
+			SingleValueFunctionCallNode
+				Name = mindatetime
+				Return Type = [Edm.DateTimeOffset Nullable=False Precision=0]
+				Function = 
+				Arguments = 

@@ -1,0 +1,17 @@
+$select = 
+$expand = CustomerForOrder($expand=Orders)
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: CustomerForOrder)]
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems
+					Expanded Navigation Property
+						Path[(NavigationProperty: Orders)]
+						SelectExpandQueryOption
+							AllSelected = True
+							SelectedItems(Empty List)

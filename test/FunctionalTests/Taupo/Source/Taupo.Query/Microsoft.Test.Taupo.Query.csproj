@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
+    <ProjectGuid>{29236BBA-852B-46B2-A39B-09DB47A7F6EB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.Query</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.Query</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <EnableStyleCop>true</EnableStyleCop>
+    <TransparentAssembly>true</TransparentAssembly>
+    <CopyToTaupoBin>true</CopyToTaupoBin>
+    <DefineConstants>TAUPO_QUERY</DefineConstants>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\PlatformHelper.cs">
+      <Link>PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="ArithmeticEvaluationHelper.cs" />
+    <Compile Include="AssemblyAttributes.cs" />
+    <Compile Include="ClrQueryEvaluationStrategy.cs" />
+    <Compile Include="Common\CommonExpressionEvaluatingVisitor.cs" />
+    <Compile Include="Common\CommonExpressionReplacingVisitor.cs" />
+    <Compile Include="Common\CommonExpressionTypeResolutionVisitor.cs" />
+    <Compile Include="Common\CommonQueryBuilder.cs" />
+    <Compile Include="Common\ComparisonResult.cs" />
+    <Compile Include="Common\MissingPlatformFeatures.cs" />
+    <Compile Include="Common\QueryScalarValueToClrValueComparerBase.cs" />
+    <Compile Include="Contracts\ActualQueryError.cs" />
+    <Compile Include="Contracts\AnnotatedQueryItem.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryAddExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryAndExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryAsExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryBinaryExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryCastExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryConstantExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryCustomFunctionCallExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryDivideExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryEqualToExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryFunctionImportCallExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryFunctionParameterReferenceExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryGreaterThanExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryGreaterThanOrEqualToExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryIsNotNullExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryIsNullExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryIsOfExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryLessThanExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryLessThanOrEqualToExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryModuloExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryMultiplyExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryNotEqualToExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryNotExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryNullExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryOfTypeExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryOrExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryPropertyExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryRootExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QuerySubtractExpression.cs" />
+    <Compile Include="Contracts\CommonExpressions\QueryTypeOperationExpression.cs" />
+    <Compile Include="Contracts\DummyQueryEvaluationStrategy.cs" />
+    <Compile Include="Contracts\ExpectedExceptions.cs" />
+    <Compile Include="Contracts\ExpectedExceptionsComparer.cs" />
+    <Compile Include="Contracts\ExpectedExceptionTypeMessageVerifier`1.cs" />
+    <Compile Include="Contracts\ExpectedExceptionVerifier.cs" />
+    <Compile Include="Contracts\ExtensionMethods.cs" />
+    <Compile Include="Contracts\FunctionEvaluatorAnnotation.cs" />
+    <Compile Include="Contracts\ICommonExpressionVisitor`1.cs" />
+    <Compile Include="Contracts\INamedValueToQueryValueConverter.cs" />
+    <Compile Include="Contracts\INamedValueToQueryValueUpdater.cs" />
+    <Compile Include="Contracts\IObjectToQueryValueConverter.cs" />
+    <Compile Include="Contracts\IQueryClrType.cs" />
+    <Compile Include="Contracts\IQueryDataSet.cs" />
+    <Compile Include="Contracts\IQueryDataSetBuilder.cs" />
+    <Compile Include="Contracts\IQueryEvaluationStrategy.cs" />
+    <Compile Include="Contracts\IQueryExpressionEvaluator.cs" />
+    <Compile Include="Contracts\IQueryExpressionReplacingVisitor.cs" />
+    <Compile Include="Contracts\IQueryRepositoryBuilder.cs" />
+    <Compile Include="Contracts\IQueryResultReferenceTrimmer.cs" />
+    <Compile Include="Contracts\IQueryScalarValueToClrValueComparer.cs" />
+    <Compile Include="Contracts\IQueryStructuralValueToNamedValueComparer.cs" />
+    <Compile Include="Contracts\IQueryTypeLibraryBuilder.cs" />
+    <Compile Include="Contracts\IQueryTypeVisitor`1.cs" />
+    <Compile Include="Contracts\IQueryTypeWithMethods.cs" />
+    <Compile Include="Contracts\IQueryTypeWithProperties.cs" />
+    <Compile Include="Contracts\IQueryValueDeepCopyingVisitor.cs" />
+    <Compile Include="Contracts\IQueryValueVisitor`1.cs" />
+    <Compile Include="Contracts\IQueryVerifier.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqAllExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqAnyExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqAsEnumerableExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqBitwiseAndExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqBitwiseOrExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqBuiltInFunctionCallExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqCastExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqConcatExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqContainsExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqCountExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqDefaultIfEmptyExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqDistinctExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqExceptExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqExclusiveOrExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqFirstExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqFirstOrDefaultExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqFreeVariableExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqGroupByExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqGroupJoinExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqJoinExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqJoinExpressionBase.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqLambdaExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqLengthPropertyExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqLongCountExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqMaxExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqMemberMethodExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqMinExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqNewArrayExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqNewExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqNewInstanceExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqOrderByExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqParameterExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqQueryMethodExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqQueryMethodWithLambdaExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqSelectExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqSelectManyExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqSetOperationExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqSingleExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqSingleOrDefaultExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqSkipExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqTakeExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqUnionExpression.cs" />
+    <Compile Include="Contracts\Linq\Expressions\LinqWhereExpression.cs" />
+    <Compile Include="Contracts\Linq\ILinqExpressionVisitor`1.cs" />
+    <Compile Include="Contracts\Linq\ILinqQueryCodeGenerator.cs" />
+    <Compile Include="Contracts\Linq\ILinqQueryGenerator.cs" />
+    <Compile Include="Contracts\Linq\ILinqResultComparerContextAdapter.cs" />
+    <Compile Include="Contracts\Linq\LinqBuilder.cs" />
+    <Compile Include="Contracts\Linq\LinqBuiltInFunction.cs" />
+    <Compile Include="Contracts\Linq\LinqBuiltInFunctionKind.cs" />
+    <Compile Include="Contracts\Linq\LinqLambdaType.cs" />
+    <Compile Include="Contracts\Linq\LinqTypes.cs" />
+    <Compile Include="Contracts\QueryAnnotation.cs" />
+    <Compile Include="Contracts\QueryAnonymousStructuralType.cs" />
+    <Compile Include="Contracts\QueryBinaryOperation.cs" />
+    <Compile Include="Contracts\QueryBuiltInFunction.cs" />
+    <Compile Include="Contracts\QueryClrCollectionTypeFactory.cs" />
+    <Compile Include="Contracts\QueryClrCollectionType`1.cs" />
+    <Compile Include="Contracts\QueryClrEnumType.cs" />
+    <Compile Include="Contracts\QueryClrPrimitiveType.cs" />
+    <Compile Include="Contracts\QueryClrSpatialType.cs" />
+    <Compile Include="Contracts\QueryCollectionType.cs" />
+    <Compile Include="Contracts\QueryCollectionType`1.cs" />
+    <Compile Include="Contracts\QueryCollectionValue.cs" />
+    <Compile Include="Contracts\QueryComplexType.cs" />
+    <Compile Include="Contracts\QueryEntityType.cs" />
+    <Compile Include="Contracts\QueryEntityValue.cs" />
+    <Compile Include="Contracts\QueryError.cs" />
+    <Compile Include="Contracts\QueryExpression.cs" />
+    <Compile Include="Contracts\QueryGroupingType.cs" />
+    <Compile Include="Contracts\QueryKeyStructuralValue.cs" />
+    <Compile Include="Contracts\QueryMappedScalarType.cs" />
+    <Compile Include="Contracts\QueryMappedScalarTypeWithStructure.cs" />
+    <Compile Include="Contracts\QueryOrdering.cs" />
+    <Compile Include="Contracts\QueryProperty.cs" />
+    <Compile Include="Contracts\QueryProperty`1.cs" />
+    <Compile Include="Contracts\QueryRecordType.cs" />
+    <Compile Include="Contracts\QueryRecordValue.cs" />
+    <Compile Include="Contracts\QueryReferenceType.cs" />
+    <Compile Include="Contracts\QueryReferenceValue.cs" />
+    <Compile Include="Contracts\QueryRepository.cs" />
+    <Compile Include="Contracts\QueryScalarType.cs" />
+    <Compile Include="Contracts\QueryScalarValue.cs" />
+    <Compile Include="Contracts\QueryStreamType.cs" />
+    <Compile Include="Contracts\QueryStructuralType.cs" />
+    <Compile Include="Contracts\QueryStructuralValue.cs" />
+    <Compile Include="Contracts\QueryTestCase.cs" />
+    <Compile Include="Contracts\QueryType.cs" />
+    <Compile Include="Contracts\QueryTypeLibrary.cs" />
+    <Compile Include="Contracts\QueryUnaryOperation.cs" />
+    <Compile Include="Contracts\QueryUnresolvedCollectionType.cs" />
+    <Compile Include="Contracts\QueryUnresolvedScalarType.cs" />
+    <Compile Include="Contracts\QueryUnresolvedType.cs" />
+    <Compile Include="Contracts\QueryUnspecifiedType.cs" />
+    <Compile Include="Contracts\QueryValue.cs" />
+    <Compile Include="Contracts\TypedQueryExpression`1.cs" />
+    <Compile Include="Linq\LinqCommonSyntaxCodeGenerationVisitor.cs" />
+    <Compile Include="Linq\LinqEvaluatingVisitor.cs" />
+    <Compile Include="Linq\LinqExpressionReplacingVisitor.cs" />
+    <Compile Include="Linq\LinqMethodSyntaxCodeGenerationVisitor.cs" />
+    <Compile Include="Linq\LinqParameterNameResolutionVisitorHelper.cs" />
+    <Compile Include="Linq\LinqQueryGenerationVisitor.cs" />
+    <Compile Include="Linq\LinqQuerySyntaxCodeGenerationVisitor.cs" />
+    <Compile Include="Linq\LinqResultComparerBase.cs" />
+    <Compile Include="Linq\LinqTypeResolutionVisitor.cs" />
+    <Compile Include="Linq\LinqTypeSemantics.cs" />
+    <Compile Include="NamedValueToQueryValueConverter.cs" />
+    <Compile Include="NamedValueToQueryValueUpdater.cs" />
+    <Compile Include="ObjectToQueryValueConverter.cs" />
+    <Compile Include="QueryDataSet.cs" />
+    <Compile Include="QueryDataSetBuilderBase.cs" />
+    <Compile Include="QueryRepositoryBuilderBase.cs" />
+    <Compile Include="QueryResultReferenceTrimmerBase.cs" />
+    <Compile Include="QueryScalarValueToClrValueComparer.cs" />
+    <Compile Include="QueryStructuralValueToNamedValueComparer.cs" />
+    <Compile Include="QueryTypeLibraryBuilderBase.cs" />
+    <Compile Include="QueryValueDeepCopyingVisitor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="CustomDictionary.xml" />
+    <Compile Include="$(AssemblyKeysCSharpFilePath)" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj">
+      <Project>{34010F3A-20CC-479C-83CF-EC99B1C90CD1}</Project>
+      <Name>Microsoft.Test.Taupo</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="testModel.Store" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+  <EntityContainer Name="dbo1">
+    <EntitySet Name="Persons" EntityType="testModel.Store.Person" Table="#Persons" />
+    <EntitySet Name="Homes" EntityType="testModel.Store.Home" Table="#Homes"/>
+    <EntitySet Name="Person_Home_Ownership" EntityType="testModel.Store.Person_Home_Ownership" Table="#person_home_link_table" />
+    <AssociationSet Name="Person_Ownership" Association="testModel.Store.Person_Ownership">
+      <End Role="Persons" EntitySet="Persons" />
+      <End Role="Persons_Ownership" EntitySet="Person_Home_Ownership" />
+    </AssociationSet>
+    <AssociationSet Name="Home_Ownership" Association="testModel.Store.Home_Ownership">
+      <End Role="Homes" EntitySet="Homes" />
+      <End Role="Homes_Ownership" EntitySet="Person_Home_Ownership" />
+    </AssociationSet>
+  </EntityContainer>
+  
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Home">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Address" Type="nvarchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Person_Home_Ownership">
+    <Key>
+      <PropertyRef Name="PersonId" />
+      <PropertyRef Name="HomeId" />
+    </Key>
+    <Property Name="PersonId" Type="int" Nullable="false" />
+    <Property Name="HomeId" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="Person_Ownership">
+    <End Role="Persons" Type="testModel.Store.Person" Multiplicity="1" />
+    <End Role="Persons_Ownership" Type="testModel.Store.Person_Home_Ownership" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Persons">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Persons_Ownership">
+        <PropertyRef Name="PersonId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="Home_Ownership">
+    <End Role="Homes" Type="testModel.Store.Home" Multiplicity="1" />
+    <End Role="Homes_Ownership" Type="testModel.Store.Person_Home_Ownership" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Homes">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Homes_Ownership">
+        <PropertyRef Name="HomeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

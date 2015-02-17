@@ -1,0 +1,15 @@
+This file contains alphabet entries for Korean string generator.
+One entry per line. Only entries starting with single quote are used, everything else is a comment.
+
+'\u3131'         HANGUL LETTER KIYEOK
+'\u313f'         HANGUL LETTER RIEUL-PHIEUPH
+'\u3140'         HANGUL LETTER RIEUL-HIEUH
+'\u314f'         HANGUL LETTER A
+'\u3150'         HANGUL LETTER AE
+'\u315f'         HANGUL LETTER WI
+'\u3160'         HANGUL LETTER YU
+'\u316f'         HANGUL LETTER MIEUM-SIOS
+'\u3170'         HANGUL LETTER MIEUM-PANSIOS
+'\u317f'         HANGUL LETTER PANSIOS
+'\u3180'         HANGUL LETTER SSANGIEUNG
+'\u318e'         HANGUL LETTER ARAEAE

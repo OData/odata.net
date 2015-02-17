@@ -1,0 +1,47 @@
+<Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+    <NavigationProperty Name="ToOrders" Type="Collection(NS1.Order)" Partner="ToCustomer" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+    <Property Name="CustomerId" Type="Edm.Int32" Nullable="false" />
+    <NavigationProperty Name="ToCustomer" Type="NS1.Customer" Nullable="false" Partner="ToOrders">
+      <ReferentialConstraint Property="CustomerId" ReferencedProperty="Id" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityContainer Name="MyContainer1">
+    <EntitySet Name="CustomerSet1" EntityType="NS1.Customer">
+      <NavigationPropertyBinding Path="ToOrders" Target="OrderSet1" />
+    </EntitySet>
+    <EntitySet Name="OrderSet1" EntityType="NS1.Order">
+      <NavigationPropertyBinding Path="ToCustomer" Target="CustomerSet1" />
+    </EntitySet>
+    <EntitySet Name="OrderSet3" EntityType="NS1.Order" />
+    <EntitySet Name="CustomerSet2" EntityType="NS1.Customer">
+      <NavigationPropertyBinding Path="ToOrders" Target="OrderSet2" />
+    </EntitySet>
+    <EntitySet Name="OrderSet2" EntityType="NS1.Order">
+      <NavigationPropertyBinding Path="ToCustomer" Target="CustomerSet2" />
+    </EntitySet>
+  </EntityContainer>
+</Schema>
+<Schema Namespace="NS2" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+  <EntityType Name="Guest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+  </EntityType>
+  <Function Name="GetGuestsExcluding">
+    <Parameter Name="GuestId" Type="Edm.Int32" />
+    <ReturnType Type="Collection(NS2.Guest)" />
+  </Function>
+</Schema>
+

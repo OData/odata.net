@@ -1,0 +1,11 @@
+This file contains alphabet entries for SurrogateCharacters string generator.
+One entry per line. Only entries starting with single quote are used, everything else is a comment.
+
+'\ud800\udc00'   SURROGATE PAIR
+'\ud800\udfff'   SURROGATE PAIR
+'\ud840\udc0b'   SURROGATE PAIR
+'\ud98f\udd83'   SURROGATE PAIR
+'\uda10\ude00'   SURROGATE PAIR
+'\udb0a\ude83'   SURROGATE PAIR
+'\udbff\udc00'   SURROGATE PAIR
+'\udbff\udfff'   SURROGATE PAIR

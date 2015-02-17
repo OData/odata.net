@@ -1,0 +1,67 @@
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 404 Not Found
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+OData-Version: 4.0
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+
+{"error":{"code":"","message":"Resource not found for the segment 'Customers'."}}
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 201 Created
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+Location: $(BaseUri)Customers(102)
+ETag: W/"00000001-0000-0000-0000-000000000000"
+
+{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000001-0000-0000-0000-000000000000\"","ID":102,"Name":"Paul","Address":{"StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"},"GuidValue":"00000001-0000-0000-0000-000000000000","NameAsHtml":"<html><body>Paul</body></html>"}
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+ETag: W/"00000001-0000-0000-0000-000000000000"
+
+{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000001-0000-0000-0000-000000000000\"","ID":102,"Name":"Paul","Address":{"StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"},"GuidValue":"00000001-0000-0000-0000-000000000000","NameAsHtml":"<html><body>Paul</body></html>"}
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: multipart/mixed; boundary=changesetresponse_00000002-0000-0000-0000-000000000000
+
+--changesetresponse_00000002-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 8
+
+HTTP/1.1 201 Created
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+Location: $(BaseUri)Customers(103)
+ETag: W/"00000003-0000-0000-0000-000000000000"
+
+{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000003-0000-0000-0000-000000000000\"","ID":103,"Name":"Paul","Address":{"StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"},"GuidValue":"00000003-0000-0000-0000-000000000000","NameAsHtml":"<html><body>Paul</body></html>"}
+--changesetresponse_00000002-0000-0000-0000-000000000000--
+--batchresponse_00000000-0000-0000-0000-000000000000
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+OData-Version: 4.0;
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+X-Content-Type-Options: nosniff
+Cache-Control: no-cache
+ETag: W/"00000003-0000-0000-0000-000000000000"
+
+{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000003-0000-0000-0000-000000000000\"","ID":103,"Name":"Paul","Address":{"StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"},"GuidValue":"00000003-0000-0000-0000-000000000000","NameAsHtml":"<html><body>Paul</body></html>"}
+--batchresponse_00000000-0000-0000-0000-000000000000--

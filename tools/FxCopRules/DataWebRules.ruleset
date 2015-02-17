@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="DataWeb custom rules" Description="DataWeb-specifc rules" ToolsVersion="10.0">
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="AC0001" Action="Warning" />
+    <Rule Id="AC0002" Action="Warning" />
+    <Rule Id="AC0003" Action="Warning" />
+    <Rule Id="AC0004" Action="Warning" />
+    <Rule Id="AC0005" Action="Warning" />
+    <Rule Id="AC0006" Action="Warning" />
+    <Rule Id="AC0007" Action="Warning" />
+    <Rule Id="AC0008" Action="Warning" />
+    <Rule Id="AC0009" Action="Warning" />
+    <Rule Id="AC0010" Action="Warning" />
+    <Rule Id="AC0011" Action="Warning" />
+    <Rule Id="AC0012" Action="Warning" />
+    <Rule Id="AC0013" Action="Warning" />
+    <Rule Id="AC0014" Action="Warning" />
+    <Rule Id="AC0017" Action="Warning" />
+    <Rule Id="AC0018" Action="Warning" />
+    <Rule Id="AC0019" Action="Warning" />
+  </Rules>
+  <!-- Also include the Sdl6.0.ruleset so we remain SDL compliant-->
+  <Include Path="Sdl6.0.ruleset" Action="Default" />
+</RuleSet>

@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Core.V1"  Alias="Core">
+
+  <!--Documentation -->
+
+  <Term Name="Description" Type="Edm.String">
+    <Annotation Term="Core.Description" String="A brief description of a model element"/>
+    <Annotation Term="Core.IsLanguageDependent" Bool="true"/>
+  </Term>
+
+  <Term Name="LongDescription" Type="Edm.String">
+    <Annotation Term="Core.Description" String="A lengthy description of a model element"/>
+    <Annotation Term="Core.IsLanguageDependent" Bool="true"/>
+  </Term>
+
+  <Term Type="Core.Tag" Name="IsLanguageDependent" AppliesTo="Property Term" DefaultValue="true">
+    <Annotation Term="Core.Description" String="Properties and terms annotated with this term are language-dependent"/>
+    <Annotation Term="Core.RequiresType" String="Edm.String"/>
+  </Term>
+  
+  <Term Type="Edm.String" Name="RequiresType" AppliesTo="Term">
+    <Annotation Term="Core.Description" String="Properties and terms annotated with this annotation MUST have a type that is identical to or derived from the given type name"/>
+  </Term>
+
+  <Term Type="Edm.String" Name="ResourcePath" AppliesTo="EntitySet Singleton ActionImport FunctionImport">
+    <Annotation Term="Core.Description" String="Resource path for entity container child, can be relative to xml:base and the request URL"/>
+    <Annotation Term="Core.IsUrl" Bool="true"/>
+  </Term>
+
+  <Term Type="Core.Tag" Name="DereferenceableIDs" AppliesTo="EntityContainer" DefaultValue="true">
+    <Annotation Term="Core.Description" String="Entity-ids are URLs that locate the identified entity"/>
+  </Term>
+
+  <Term Type="Core.Tag" Name="ConventionalIDs" AppliesTo="EntityContainer" DefaultValue="true">
+    <Annotation Term="Core.Description" String="Entity-ids follow OData URL conventions"/>
+  </Term>
+
+  <Term Type="Core.Tag" Name="Immutable" AppliesTo="Property" DefaultValue="true">
+    <Annotation Term="Core.Description" String="A value for this non-key property can be provided on insert and remains unchanged on update"/>
+  </Term>
+
+  <Term Type="Core.Tag" Name="Computed" AppliesTo="Property" DefaultValue="true">
+    <Annotation Term="Core.Description" String="A value for this property is generated on both insert and update"/>
+  </Term>
+
+  <Term Type="Core.Tag" Name="IsURL" AppliesTo="Property Term" DefaultValue="true">
+    <Annotation Term="Core.Description" String="Properties and terms annotated with this term MUST contain a valid URL"/>
+    <Annotation Term="Core.RequiresType" String="Edm.String"/>
+  </Term>
+
+  <Term Type="Collection(Edm.String)" Name="AcceptableMediaTypes" AppliesTo="EntityType Property">
+    <Annotation Term="Core.Description" String="Lists the MIME types acceptable for the annotated entity type marked with HasStream=&quot;true&quot; or the annotated stream property"/>
+    <Annotation Term="Core.IsMediaType" Bool="true"/>
+  </Term>
+  
+  <Term Type="Edm.String" Name="MediaType" AppliesTo="Property">
+    <Annotation Term="Core.IsMediaType" Bool="true"/>
+    <Annotation Term="Core.RequiresType" String="Edm.Binary"/>
+  </Term>
+  
+  <Term Type="Core.Tag" Name="IsMediaType" AppliesTo="Property Term" DefaultValue="true">
+    <Annotation Term="Core.Description" String="Properties and terms annotated with this term MUST contain a valid MIME type"/>
+    <Annotation Term="Core.RequiresType" String="Edm.String"/>
+  </Term>
+  
+  <Term Name="OptimisticConcurrencyControl" Type="Core.OptimisticConcurrencyControlType" />
+  
+  <Term Name="OptimisticConcurrency" Type="Collection(Edm.PropertyPath)" AppliesTo="EntitySet">
+	  <Annotation Term="Core.Description" String="Data modification requires the use of Etags. A non-empty collection contains the set of properties that are used to compute the ETag"/>
+  </Term>
+
+  <!-- Metadata Extensions -->
+  <TypeDefinition Name="Tag" UnderlyingType="Edm.Boolean">
+    <Annotation Term="Core.Description" String="This is the type to use for all tagging terms"/>
+  </TypeDefinition>
+  
+  <ComplexType Name="OptimisticConcurrencyControlType">
+    <Annotation Term="Core.Description" String="If present, the annotated entity set uses optimistic concurrency control"/>
+    <Property Name="ETagDependsOn" Type="Collection(Edm.PropertyPath)" Nullable="true">
+      <Annotation Term="Core.Description" String="The ETag is computed from these properties"/>
+    </Property>
+  </ComplexType>
+</Schema>

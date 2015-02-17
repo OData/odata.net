@@ -1,0 +1,94 @@
+$select = 
+$expand = AssociatedOrder($filter=OrderID gt 1941;$expand=LoggedInEmployee($filter=Numbers/any(a: a eq '1942') and year(DateHired) eq 1943))
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(NavigationProperty: AssociatedOrder)]
+			FilterQueryOption
+				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+				Parameter = 
+				EntityRangeVariable
+					Name = $it
+					NavigationSource = Orders
+					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+				Expression = 
+					SingleValuePropertyAccessNode
+						Property = OrderID
+						TypeReference = [Edm.Int32 Nullable=False]
+						Source = 
+						EntityRangeVariableReferenceNode
+							Name = $it
+							NavigationSource = Orders
+							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				GreaterThan
+					1941(Type: [Edm.Int32 Nullable=False])
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems
+					Expanded Navigation Property
+						Path[(NavigationProperty: LoggedInEmployee)]
+						FilterQueryOption
+							ItemType = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
+							Parameter = 
+							EntityRangeVariable
+								Name = $it
+								NavigationSource = LoggedInEmployee
+								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
+							Expression = 
+								AnyNode
+									TypeReference = [Edm.Boolean Nullable=True]
+									Body = 
+										NonentityRangeVariableReferenceNode
+											Name = a
+											Range Variable = 
+											NonentityRangeVariable
+												Name = a
+												TypeReference = [Edm.String Nullable=True Unicode=True]
+											TypeReference = [Edm.String Nullable=True Unicode=True]
+									Equal
+										1942(Type: [Edm.String Nullable=True Unicode=True])
+									Source = 
+									CollectionPropertyAccessNode
+										Property = Numbers
+										ItemType = [Edm.String Nullable=True Unicode=True]
+										Source = 
+										EntityRangeVariableReferenceNode
+											Name = $it
+											NavigationSource = LoggedInEmployee
+											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
+											Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+									Parameters = 
+									NonentityRangeVariable
+										Name = a
+										TypeReference = [Edm.String Nullable=True Unicode=True]
+									EntityRangeVariable
+										Name = $it
+										NavigationSource = LoggedInEmployee
+										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
+							And
+								ConvertNode
+									TypeReference = [Edm.Boolean Nullable=True]
+									Source = 
+										SingleValueFunctionCallNode
+											Name = year
+											Return Type = [Edm.Int32 Nullable=False]
+											Function = 
+											Arguments = 
+												SingleValuePropertyAccessNode
+													Property = DateHired
+													TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
+													Source = 
+													EntityRangeVariableReferenceNode
+														Name = $it
+														NavigationSource = LoggedInEmployee
+														TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
+														Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+									Equal
+										1943(Type: [Edm.Int32 Nullable=False])
+						SelectExpandQueryOption
+							AllSelected = True
+							SelectedItems(Empty List)

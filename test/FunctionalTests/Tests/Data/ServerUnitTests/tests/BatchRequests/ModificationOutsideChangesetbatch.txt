@@ -1,0 +1,59 @@
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+
+GET Customers(102) HTTP/1.1
+Accept: application/json
+
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+
+POST Customers HTTP/1.1
+content-type: application/json
+Accept: application/json
+OData-Version: 4.0
+content-length: 98
+
+{
+    "@odata.type" : "AstoriaUnitTests.Stubs.Customer",
+    "ID" : 102,
+    "Name" : "Paul"
+}
+
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+
+GET Customers(102) HTTP/1.1
+Accept: application/json
+
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: mUltIpArt/mIxEd; bOUndAry=changeset_00000000-0000-0000-0000-000000000000
+
+--changeset_00000000-0000-0000-0000-000000000000
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+Content-ID: 8
+
+POST Customers HTTP/1.1
+content-type: application/json
+Accept: application/json
+OData-Version: 4.0
+content-length: 98
+
+{
+    "@odata.type" : "AstoriaUnitTests.Stubs.Customer",
+    "ID" : 103,
+    "Name" : "Paul"
+}
+
+--changeset_00000000-0000-0000-0000-000000000000--
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b
+cOntEnt-typE: ApplIcAtIon/http
+cOntEnt-trAnsfEr-EncOding: bInAry
+
+GET Customers(103) HTTP/1.1
+Accept: application/json
+
+--batch_e9b231d9-72ab-46ea-9613-c7e8f5ece46b--

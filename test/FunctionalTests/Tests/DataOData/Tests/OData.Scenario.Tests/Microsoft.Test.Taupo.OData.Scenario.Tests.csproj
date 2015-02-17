@@ -1,0 +1,680 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <ProjectGuid>{481C1E7B-1A96-4322-9479-2F9706656E71}</ProjectGuid>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.Taupo.OData.Scenario.Tests</RootNamespace>
+    <AssemblyName>Microsoft.Test.Taupo.OData.Scenario.Tests</AssemblyName>
+    <OutputType>Library</OutputType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <SignAssemblyAttribute>false</SignAssemblyAttribute>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <Reference Include="$(NugetPack)\ApprovalTests.1.6\lib\ApprovalTests.dll" />
+    <Reference Include="$(NugetPack)\ApprovalTests.1.6\lib\ApprovalUtilities.dll" />
+    <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Core" />
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
+      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
+      <Name>Microsoft.Spatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="StreamingReadWriteTests.cs" />
+    <Compile Include="StreamingWriteReadTests.cs" />
+    <Compile Include="Streaming\ObjectModelReadWriteStreamer.cs" />
+    <Compile Include="Streaming\ObjectModelWriteReadStreamer.cs" />
+    <Compile Include="Streaming\ODataStreamingTestCase.cs" />
+    <Compile Include="Streaming\StreamingPayloadReaderTestDescriptor.cs" />
+    <Compile Include="Streaming\StreamingPayloadWriterTestDescriptor.cs" />
+    <Compile Include="Streaming\StreamingTestStream.cs" />
+    <Compile Include="Streaming\StreamingWriterTestExpectedResults.cs" />
+    <Compile Include="Streaming\WriteFeedIDFirstFixup.cs" />
+    <Compile Include="UriParser\ExpandTests\ExpandNestedSearch.cs" />
+    <Compile Include="UriParser\ExpandTests\ExpandNestedOrderBy.cs" />
+    <Compile Include="UriParser\ExpandTests\ExpandNestedFilter.cs" />
+    <Compile Include="UriParser\Filter\FilterTests.cs" />
+    <Compile Include="UriParser\OrderBy\OrderByTests.cs" />
+    <Compile Include="UriParser\Path\PathTests.cs" />
+    <Compile Include="UriParser\QueryNodeComparer.cs" />
+    <Compile Include="UriParser\QueryNodeToStringVisitor.cs" />
+    <Compile Include="UriParser\ExpandTests\Expand.cs" />
+    <Compile Include="UriParser\SearchCombination\SearchCombinationTests.cs" />
+    <Compile Include="UriParser\SearchCombination\SearchTestHelper.cs" />
+    <Compile Include="UriParser\Search\SearchTests.cs" />
+    <Compile Include="UriParser\SegmentToStringVisitor.cs" />
+    <Compile Include="UriParser\SelectTests\Select.cs" />
+    <Compile Include="UriParser\SelectExpand\SelectExpandTest.cs" />
+    <Compile Include="UriParser\SingletonTests\SingletonFilterTest.cs" />
+    <Compile Include="UriParser\SingletonTests\SingletonOrderByTest.cs" />
+    <Compile Include="UriParser\SingletonTests\SingletonPathTest.cs" />
+    <Compile Include="UriParser\SingletonTests\SingletonSelectExpandTest.cs" />
+    <Compile Include="UriParser\SingletonTests\SingletonSelectTest.cs" />
+    <Compile Include="UriParser\UriParserTestsBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
+      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
+      <Name>Microsoft.OData.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
+      <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Astoria\Microsoft.Test.Taupo.Astoria.csproj">
+      <Project>{854AF4E9-B78F-4994-B9C5-82B846604CBE}</Project>
+      <Name>Microsoft.Test.Taupo.Astoria</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo.Query\Microsoft.Test.Taupo.Query.csproj">
+      <Project>{29236BBA-852B-46B2-A39B-09DB47A7F6EB}</Project>
+      <Name>Microsoft.Test.Taupo.Query</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Taupo\Source\Taupo\Microsoft.Test.Taupo.csproj">
+      <Project>{34010F3A-20CC-479C-83CF-EC99B1C90CD1}</Project>
+      <Name>Microsoft.Test.Taupo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\TestUtils\Common\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj">
+      <Project>{efa72cf8-a73a-4eb4-88d4-ae6d4ce1b270}</Project>
+      <Name>Microsoft.Test.OData.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\OData\Microsoft.Test.Taupo.OData.csproj">
+      <Project>{1D54775E-E211-4B35-A002-E53416BAE743}</Project>
+      <Name>Microsoft.Test.Taupo.OData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\OData.WCFService\Microsoft.Test.Taupo.OData.WCFService.csproj">
+      <Project>{2A9B8663-D894-48B9-93C1-CD6B397ACAA0}</Project>
+      <Name>Microsoft.Test.Taupo.OData.WCFService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj">
+      <Project>{70CCA883-E9EC-41C8-9A42-F910C4A6FCB6}</Project>
+      <Name>Microsoft.Test.Taupo.OData.Reader.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj">
+      <Project>{DB742DF2-9873-44CF-8439-DA5ACFF69A46}</Project>
+      <Name>Microsoft.Test.Taupo.OData.Writer.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ODataScenarioTests.suite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.AnyCanonicalFunctions.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.CompareTwoDateTimeOffsets.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.CompareTwoTimeSpans.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.GtAndLe.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.NestedNots.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.NotEndsWithAndBeginsWith.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.NullLiteralWithConvert.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.Replace.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.RoundFloorCeiling.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.ContainsIndexOf.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.SpatialLength.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.SpatialIntersects.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.SpatialDistance.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\OrderBy\OrderByTests.Concat.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\OrderBy\OrderByTests.MultipleProperties.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\OrderBy\OrderByTests.NavigationProperty.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\OrderBy\OrderByTests.NestedNots.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\OrderBy\OrderByTests.Property.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\OrderBy\OrderByTests.PropertyDesc.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\OrderBy\OrderByTests.IsOfCast.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectTests\Select.SelectBasic.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\Expand.ExpandBasic.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\Expand.ExpandMultipleNavProps.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\Expand.ExpandWithPathToNavProp.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\Expand.ExpandDeep.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\Expand.ExpandWithTypeCast.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathBaseEntitySet.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathBatch.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathComplex.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathEntity.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathKeysAsSegments.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathLinks.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathMetadata.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathNavigation.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathPrimitive.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathPrimitiveValue.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathTypeSegmentToNavigation.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectTests\Select.SelectAll.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectTests\Select.SelectComplex.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectTests\Select.SelectFunction.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectTests\Select.SelectNavigation.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.AnyOnCollection.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.NullLiteralWithoutConvert.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathCollection.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectExpand\SelectExpandTest.ExpandWhenItemPrimitiveAndNavPropSelected.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectExpand\SelectExpandTest.ExpandWhenPathSelected.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectExpand\SelectExpandTest.NoExpandWhenNavPropNotSelected.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectExpand\SelectExpandTest.OnlyOneNavPropsExpandedWhenOnlyOneSelected.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectExpand\SelectExpandTest.SelectExpandIgnoresPathAfterSpace.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectExpand\SelectExpandTest.SelectPrimitiveOnExpandedNavProp.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectExpand\SelectExpandTest.SingleNavPropSelectExpandTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectExpand\SelectExpandTest.SingleNavPropSelectExpandWithEntitySet.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectExpand\SelectExpandTest.TwoNapPropsExpanded.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectExpand\SelectExpandTest.TwoNapPropsExpandedWithEntitySet.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SelectExpand\SelectExpandTest.DeepSelectionsAreRedundantIfEntireSubtreeIsSelected.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathFunction.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathAction.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Path\PathTests.PathFunctionWithParameter.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.LtAndGe.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.NullLiteralWithoutConvert.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.NullLiteralWithConvert.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.NotEndsWithAndBeginsWith.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.RoundFloorCeiling.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.Replace.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.ContainsIndexOf.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.AnyCanonicalFunctions.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.AnyOnCollection.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.CompareTwoDateTimeOffsets.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.NestedNots.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.RedundantlyParserFilter.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.FunctionWithComplexLiteral.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.CompareTwoTimeSpans.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.FunctionWithMultipleAliasedParams.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.SpatialIntersects.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.SpatialDistance.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.SpatialLength.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedFilter.MultiNestedExpandWithFilter.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedOrderBy.Concat.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedOrderBy.PropertyDesc.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedOrderBy.IsofCast.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedOrderBy.MultipleProperties.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedOrderBy.NavigationProperty.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedOrderBy.NestedNots.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\ExpandTests\ExpandNestedOrderBy.Property.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="UriParser\ExpandTests\Expand.ExpandOnSingleton.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\ExpandTests\ExpandNestedFilter.BoundFunctionComposed.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\ExpandTests\ExpandNestedFilter.UnboundFunction.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\ExpandTests\ExpandNestedOrderBy.OrderByHoursMinutesSeconds.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\ExpandTests\ExpandNestedSearch.ImplicitAnd.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\ExpandTests\ExpandNestedSearch.KeyWord.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\ExpandTests\ExpandNestedSearch.KeywordWithParenthesis.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="UriParser\ExpandTests\ExpandNestedSearch.Phrase.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="UriParser\ExpandTests\ExpandNestedSearch.Word.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="UriParser\Filter\FilterTests.AnyOnOpenCollection.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\Filter\FilterTests.NonEntityCollection.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="UriParser\Filter\FilterTests.BuiltinDateTimeFunctionNowAndMaxdatetimeAndMindatetime.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.BuiltinDateTimeFunctionTotalseconds.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.BuiltinDateTimeFunctionFractionalsecondsAndTotaloffsetminutes.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.ComplexCastShouldWork.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.ComplexCollectionCastInLambdaShouldWork.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.ComplexCollectionCastShouldWork.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.EntityCastShouldWork.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.EntityCollectionCastInLambdaShouldWork.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.EntityCollectionCastShouldWork.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.BoundFunctionComposed.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.FunctionWithComplexLiteral.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.FunctionWithMultipleAliasedParams.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.RedundantlyParserFilter.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.SpatialTypeEqNull.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.SpatialTypeNeNull.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="UriParser\OrderBy\OrderByTests.NonEntityCollection.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="UriParser\OrderBy\OrderByTests.TemporalValueSubtraction.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\OrderBy\OrderByTests.TemporalValueAddition.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\OrderBy\OrderByTests.ComplexCastShouldWork.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\OrderBy\OrderByTests.EntityCastShouldWork.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Filter\FilterTests.UnboundFunction.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\OrderBy\OrderByTests.OrderByHoursMinutesSeconds.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Search\SearchTests.KeywordWithParenthesis.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Search\SearchTests.KeyWord.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Path\PathTests.PathEntityWIthDurationKey.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Path\PathTests.PathEntityWithDurationKeyUsingKeyAsSegmments.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Path\PathTests.PathFunctionAliasedParameterWithResolver.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Path\PathTests.PathFunctionOnEntity.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Path\PathTests.PathFunctionWithAliasedParameter.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Path\PathTests.PathFunctionWithComplexParameters.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Search\SearchTests.ImplicitAnd.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Search\SearchTests.Word.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="UriParser\Search\SearchTests.Phrase.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SearchCombination\SearchCombinationTests.OneWordTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SearchCombination\SearchCombinationTests.TwoWordsTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SearchCombination\SearchCombinationTests.FourWordsTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="UriParser\SearchCombination\SearchCombinationTests.ThreeWordsTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="UriParser\Search\SearchTests.ImplicitAndWithParenThesis.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SelectTests\Select.SelectComplexOnSingleton.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SelectTests\Select.SelectNavigationOnSingleton.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SelectTests\Select.SelectContainedNavigation.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\ExpandTests\Expand.ExpandOnContainedEntitySet.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Path\PathTests.PathFunctionInContainedEntity.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Path\PathTests.PathFunctionReturnsContainedEntity.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\Path\PathTests.PathActionReturnsContainedEntity.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonFilterTest.AnyCanonicalFunctions.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonFilterTest.AnyOnCollection.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonFilterTest.CompareTwoDateTimeOffsets.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonFilterTest.ContainsIndexOf.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonFilterTest.GtAndLe.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonFilterTest.NotEndsWithAndBeginsWith.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonFilterTest.NullLiteralWithConvert.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonFilterTest.NullLiteralWithoutConvert.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonFilterTest.Replace.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonFilterTest.RoundFloorCeiling.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonFilterTest.SpatialDistance.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonFilterTest.SpatialIntersects.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonFilterTest.SpatialLength.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonOrderByTest.Concat.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonOrderByTest.IsofCast.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonOrderByTest.MultipleProperties.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonOrderByTest.NavigationProperty.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonOrderByTest.NestedNots.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonOrderByTest.Property.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonOrderByTest.PropertyDesc.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonPathTest.PathAction.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonPathTest.PathBaseSingleton.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonPathTest.PathFunction.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonPathTest.PathFunctionAliasedParameterWithResolver.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonPathTest.PathFunctionWithAliasedParameter.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonPathTest.PathFunctionWithComplexParameters.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonPathTest.PathFunctionWithParameter.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonPathTest.PathLinks.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonPathTest.PathNavigation.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonPathTest.PathPrimitive.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonPathTest.PathPrimitiveValue.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonPathTest.PathTypeSegmentToNavigation.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonSelectExpandTest.ExpandWhenPathSelected.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonSelectExpandTest.SelectPrimitiveOnExpandedNavProp.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonSelectExpandTest.SingleNavPropSelectExpandTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonSelectExpandTest.TwoNapPropsExpanded.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonSelectTest.SelectAction.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonSelectTest.SelectAll.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonSelectTest.SelectBasic.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonSelectTest.SelectComplex.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonSelectTest.SelectContainedNavigation.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonSelectTest.SelectFunction.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\SingletonTests\SingletonSelectTest.SelectNavigation.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

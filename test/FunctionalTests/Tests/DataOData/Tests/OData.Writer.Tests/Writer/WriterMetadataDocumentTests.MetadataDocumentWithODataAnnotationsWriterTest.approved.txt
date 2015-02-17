@@ -1,0 +1,32 @@
+Combination: 1; TestConfiguration = Format: , Request: False, Synchronous: True
+Model Present: true
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="TestModel" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <ComplexType Name="Address">
+        <Property Name="Street" Type="Edm.String" />
+        <Property Name="Zip" Type="Edm.Int32" Nullable="false" p5:MimeType="text/plain" xmlns:p5="http://docs.oasis-open.org/odata/ns/metadata" />
+      </ComplexType>
+      <EntityType Name="PersonType" HasStream="true">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" p5:MimeType="text/plain" xmlns:p5="http://docs.oasis-open.org/odata/ns/metadata" />
+        <Property Name="Address" Type="TestModel.Address" Nullable="false" />
+        <Property Name="Picture" Type="Edm.Stream" Nullable="false" />
+      </EntityType>
+      <Function Name="ServiceOperation1" p4:MimeType="img/jpeg" xmlns:p4="http://docs.oasis-open.org/odata/ns/metadata">
+        <Parameter Name="a" Type="Edm.Int32" />
+        <Parameter Name="b" Type="Edm.String" />
+        <ReturnType Type="Edm.Int32" />
+      </Function>
+      <EntityContainer Name="DefaultContainer">
+        <EntitySet Name="People" EntityType="TestModel.PersonType" />
+        <FunctionImport Name="ServiceOperation1" Function="TestModel.ServiceOperation1" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+
