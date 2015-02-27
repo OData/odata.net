@@ -270,8 +270,6 @@ namespace Microsoft.OData.Client {
         internal const string PlatformHelper_DateTimeOffsetMustContainTimeZone = "PlatformHelper_DateTimeOffsetMustContainTimeZone";
         internal const string DataServiceRequest_FailGetCount = "DataServiceRequest_FailGetCount";
         internal const string Context_ExecuteExpectedVoidResponse = "Context_ExecuteExpectedVoidResponse";
-        internal const string Silverlight_BrowserHttp_NotSupported = "Silverlight_BrowserHttp_NotSupported";
-        internal const string DataServiceCollection_DataServiceQueryCanNotBeEnumerated = "DataServiceCollection_DataServiceQueryCanNotBeEnumerated";
 
         static TextRes loader = null;
         ResourceManager resources;

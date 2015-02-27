@@ -50,7 +50,7 @@
   </ItemGroup>
   <!-- Generated files -->
   <ItemGroup>
-    <TextStringResource Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.txt">
+    <TextStringResource Include="Microsoft.OData.Client.txt">
       <ResFile>Microsoft.OData.Client</ResFile>
       <Sealed>true</Sealed>
       <Parameterize>true</Parameterize>
@@ -856,10 +856,31 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.cs">
+    <Content Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.Common.txt" />
+    <Content Include="Microsoft.OData.Client.Portable.txt" />
+  </ItemGroup>
+  <Target Name="BuildTextFile">
+    <Exec Command="copy $(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.Common.txt + Microsoft.OData.Client.Portable.txt Microsoft.OData.Client.txt /B" />
+  </Target>
+  <ItemGroup>
+    <None Include="Microsoft.OData.Client.Portable.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Microsoft.OData.Client.Portable.cs</LastGenOutput>
+    </None>
+    <Compile Include="Microsoft.OData.Client.Portable.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Microsoft.OData.Client.Portable.tt</DependentUpon>
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Parameterized.Microsoft.OData.Client.cs">
+    <None Include="Parameterized.Microsoft.OData.Client.Portable.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Parameterized.Microsoft.OData.Client.Portable.cs</LastGenOutput>
+    </None>
+    <Compile Include="Parameterized.Microsoft.OData.Client.Portable.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Parameterized.Microsoft.OData.Client.Portable.tt</DependentUpon>
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
   </ItemGroup>
@@ -882,4 +903,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(BuildExtensionsPath)\Portable.targets" />
+  <PropertyGroup>
+    <GenerateTextStringResourcesDependsOn>BuildTextFile;$(GenerateTextStringResourcesDependsOn)</GenerateTextStringResourcesDependsOn>
+  </PropertyGroup>
 </Project>

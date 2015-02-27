@@ -1,0 +1,3 @@
+Silverlight_BrowserHttp_NotSupported=Silverlight Browser Http Stack is not supported on the Portable Library, only Client Http is supported.
+
+DataServiceCollection_DataServiceQueryCanNotBeEnumerated=Parameters of type DataServiceQuery<T> can not be used as the input enumerators for DataServiceCollection. Try using result of DataServiceQuery<T>.EndExecute instead.

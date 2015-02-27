@@ -287,16 +287,4 @@ ValueParser_InvalidDuration=The value '{0}' is not a valid duration value.
 
 ; Note: The below list of error messages are common to the ODataLib, EdmLib, Spatial, Server and Client projects.
 PlatformHelper_DateTimeOffsetMustContainTimeZone=The time zone information is missing on the DateTimeOffset value '{0}'. A DateTimeOffset value must contain the time zone information.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Desktop Error Messages
-
-DataServiceRequest_FailGetCount=Failed to get the count value from the server.
-
-Context_ExecuteExpectedVoidResponse=Execute overload for void service operations and actions received a non-void response from the server.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Portable Error Messages
-Silverlight_BrowserHttp_NotSupported=Silverlight Browser Http Stack is not supported on the Portable Library, only Client Http is supported.
-
-DataServiceCollection_DataServiceQueryCanNotBeEnumerated=Parameters of type DataServiceQuery<T> can not be used as the input enumerators for DataServiceCollection. Try using result of DataServiceQuery<T>.EndExecute instead.
+;END

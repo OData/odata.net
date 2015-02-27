@@ -1,4 +1,4 @@
-﻿<#@ include file="..\..\tools\StringResourceGenerator\ResourceClassGenerator.ttinclude" #>
+﻿<#@ include file="..\..\..\tools\StringResourceGenerator\ResourceClassGenerator.ttinclude" #>
 <#+
 public static class Configuration
 {
@@ -16,8 +16,8 @@ public static class Configuration
 
     // The list of text files containing all the string resources.
     public static readonly string[] TextFiles = {
-        "Microsoft.OData.Client.Common.txt",
-        "Microsoft.OData.Client.Desktop.txt"
+        "..\\Microsoft.OData.Client.Common.txt",
+        "Microsoft.OData.Client.Portable.txt"
     };
 }
 #>

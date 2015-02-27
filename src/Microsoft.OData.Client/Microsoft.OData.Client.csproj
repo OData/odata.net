@@ -426,7 +426,18 @@
     <None Include="Diagrams\ALinq.cd" />
     <None Include="Diagrams\Materialization.cd" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Microsoft.OData.Client.Common.txt" />
+    <Content Include="Microsoft.OData.Client.Desktop.txt" />
+  </ItemGroup>
+  <Target Name="BuildTextFile" Inputs="Microsoft.OData.Client.Common.txt;Microsoft.OData.Client.Desktop.txt" Outputs="Microsoft.OData.Client.txt">
+    <!-- The /B option in the copy command below treats the inputs as binary and prevents a SUB (ascii 26) char appearing in the resultant file -->
+    <Exec Command="copy Microsoft.OData.Client.Common.txt + Microsoft.OData.Client.Desktop.txt /B Microsoft.OData.Client.txt" />
+  </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <GenerateTextStringResourcesDependsOn>BuildTextFile;$(GenerateTextStringResourcesDependsOn)</GenerateTextStringResourcesDependsOn>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="Microsoft.OData.Client.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

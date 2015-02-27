@@ -1,0 +1,14 @@
+
+; NOTE: don't use \", use ' instead
+; NOTE: don't use #, use ; instead for comments
+; NOTE: leave the [strings] alone
+
+; See ResourceManager documentation and the ResGen tool.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Error Messages
+
+DataServiceRequest_FailGetCount=Failed to get the count value from the server.
+
+Context_ExecuteExpectedVoidResponse=Execute overload for void service operations and actions received a non-void response from the server.
+;END
