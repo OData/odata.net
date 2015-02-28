@@ -309,7 +309,7 @@ namespace System.Data.Test.Astoria
                 ConnectionOptions theConnection = new ConnectionOptions();
 
                 theConnection.Username = "user1";
-                theConnection.Password = "pwd1";
+                theConnection.Password = "fakepwd";
 
                 ManagementScope theScope = new ManagementScope("\\\\" + browserConfig.MachineInfo.IP + "\\root\\cimv2", theConnection);
                 theScope.Connect();
@@ -554,8 +554,7 @@ namespace System.Data.Test.Astoria
             public string SilverlightVersion { get; set; }
             public string IPAddress { get; set; }
         }
-        internal static string remoteClientConfigDb = "server=sqlpod068-19;user=OLEDB;pwd=1Password!;database=RemoteClientConfig";
-        //internal static string remoteClientConfigDb = "server=.\\SqlExpress;Integrated Security=true;database=RemoteClientConfig";
+        internal static string remoteClientConfigDb = "server=sqlpod068-19;user=OLEDB;pwd=fakepwd;database=RemoteClientConfig";
         internal static string remoteClientConfigDropShare = "\\\\wddata\\Public\\steveob\\SlRemoteRun";
 
         internal static void AssignMachine()

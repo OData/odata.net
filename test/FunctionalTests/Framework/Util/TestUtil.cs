@@ -70,7 +70,7 @@ namespace System.Data.Test.Astoria
         {
             get
             {
-                return "@\"provider=System.Data.SqlClient;metadata={0};provider connection string='server=tcp:markash420,1432;database=Northwind;uid=DataWorks;pwd=1Data\"\"Works!;persist security info=true;connect timeout=60;MultipleActiveResultSets=true;'\"";
+                return "@\"provider=System.Data.SqlClient;metadata={0};provider connection string='server=tcp:markash420,1432;database=Northwind;uid=DataWorks;pwd=fakepwd;persist security info=true;connect timeout=60;MultipleActiveResultSets=true;'\"";
             }
         }
 

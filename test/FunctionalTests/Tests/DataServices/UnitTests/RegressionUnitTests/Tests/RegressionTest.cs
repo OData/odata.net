@@ -585,7 +585,7 @@ namespace AstoriaUnitTests.Tests
                 string schemaFile1 = Path.Combine(schemaFileLocation, "Schema_1.csdl");
                 string schemaFile2 = Path.Combine(schemaFileLocation, "Schema_2.csdl");
                 string connectionString =
-                    String.Format(@"provider=System.Data.SqlClient;metadata={0};provider connection string='server=tcp:markash420,1432;database=Northwind;uid=DataWorks;pwd=1Data""Works!;persist security info=true;connect timeout=60;MultipleActiveResultSets=true;'",
+                    String.Format(@"provider=System.Data.SqlClient;metadata={0};provider connection string='server=tcp:markash420,1432;database=Northwind;uid=DataWorks;pwd=fakepwd;persist security info=true;connect timeout=60;MultipleActiveResultSets=true;'",
                         String.Format("{0}|{1}", schemaFile1, schemaFile2));
                 string sourceFile = Path.Combine(schemaFileLocation, "Test_PartialClass.cs");
 
