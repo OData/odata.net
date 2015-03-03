@@ -40,7 +40,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
     {
         private const string NameSpacePrefixReference = "Microsoft.Test.OData.Services.TestServices.";
         private const string NameSpacePrefixCodeGenerationTests = "CodeGenerationTests.";
-        private const string T4Version = "2.2.0";
+        private const string T4Version = "2.3.0";
 
         private static readonly Dictionary<string, ServiceDescriptor> TestServiceDescriptors = new Dictionary<string, ServiceDescriptor>()
         {
