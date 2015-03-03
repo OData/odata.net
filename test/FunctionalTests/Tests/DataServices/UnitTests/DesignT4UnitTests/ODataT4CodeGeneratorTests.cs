@@ -375,6 +375,16 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             ODataT4CodeGeneratorTestDescriptors.OverrideOperations.Verify(code, false/*isCSharp*/, false/*useDSC*/);
         }
 
+        [TestMethod]
+        public void CodeGenAbstractEntityTypeWithoutKeyTest()
+        {
+            string code = CodeGenWithT4Template(ODataT4CodeGeneratorTestDescriptors.AbstractEntityTypeWithoutKey.Metadata, null, true, true, false, false, null, true);
+            ODataT4CodeGeneratorTestDescriptors.AbstractEntityTypeWithoutKey.Verify(code, true/*isCSharp*/, true/*useDSC*/);
+
+            code = CodeGenWithT4Template(ODataT4CodeGeneratorTestDescriptors.AbstractEntityTypeWithoutKey.Metadata, null, false, false, true);
+            ODataT4CodeGeneratorTestDescriptors.AbstractEntityTypeWithoutKey.Verify(code, false/*isCSharp*/, false/*useDSC*/);
+        }
+
         private static string CodeGenWithT4Template(string edmx, string namespacePrefix, bool isCSharp, bool useDataServiceCollection, bool enableNamingAlias = false, bool ignoreUnexpectedElementsAndAttributes = false, Func<Uri, XmlReader> getReferencedModelReaderFunc = null, bool appendDSCSuffix = false)
         {
             if (useDataServiceCollection

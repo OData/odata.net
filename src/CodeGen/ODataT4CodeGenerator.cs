@@ -30,19 +30,14 @@ namespace Microsoft.OData.Client.Design.T4
     /// <summary>
     /// Class to produce the template output
     /// </summary>
-    
-    #line 1 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
     internal partial class ODataT4CodeGenerator : ODataT4CodeGeneratorBase
     {
-#line hidden
         /// <summary>
         /// Create the template output
         /// </summary>
         public virtual string TransformText()
         {
-            
-            #line 1 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
 /*
 OData Client T4 Template ver. 2.2.0
@@ -56,11 +51,6 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-            
-            #line default
-            #line hidden
-            
-            #line 41 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     CodeGenerationContext context;
     if (!string.IsNullOrWhiteSpace(this.Edmx))
@@ -110,26 +100,13 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     }
 
 
-            
-            #line default
-            #line hidden
-            
-            #line 89 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
             this.Write(this.ToStringHelper.ToStringWithCulture(template.TransformText()));
-            
-            #line default
-            #line hidden
-            
-            #line 89 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     foreach (string warning in context.Warnings)
     {
         this.Warning(warning);
     }
 
-            
-            #line default
-            #line hidden
             return this.GenerationEnvironment.ToString();
         }
         private global::Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost hostValue;
@@ -147,8 +124,6 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                 this.hostValue = value;
             }
         }
-        
-        #line 2 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.tt"
 
 public static class Configuration
 {
@@ -223,11 +198,6 @@ public static class Customization
 	}
 }
 
-        
-        #line default
-        #line hidden
-        
-        #line 94 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
 /// <summary>
 /// The string for the edmx content.
@@ -1125,7 +1095,7 @@ public abstract class ODataClientTemplate : TemplateBase
     internal abstract string ConstantExpressionConstructorWithType { get; }
     internal abstract string TypeofFormatter { get; }
     internal abstract string UriOperationParameterConstructor { get; }
-	internal abstract string UriEntityOperationParameterConstructor { get; }
+    internal abstract string UriEntityOperationParameterConstructor { get; }
     internal abstract string BodyOperationParameterConstructor { get; }
     internal abstract string BaseEntityType { get; }
     internal abstract string OverloadsModifier { get; }
@@ -1305,21 +1275,26 @@ public abstract class ODataClientTemplate : TemplateBase
                 entityTypeName = context.EnableNamingAlias ? Customization.CustomizeNaming(entityTypeName) : entityTypeName;
                 string entityTypeFullName = context.GetPrefixedFullName(type, GetFixedName(entityTypeName), this);
                 string returnTypeName = context.GetPrefixedFullName(type, GetFixedName(entityTypeName + this.singleSuffix), this);
-                List<string> keyParameters = new List<string>();
-                List<string> keyDictionaryItems = new List<string>();
-                List<string> keyNames = new List<string>();
-                foreach (IEdmProperty key in type.Key())
-                {
-                    string typeName = Utils.GetClrTypeName(key.Type, this.context.UseDataServiceCollection, this, this.context);
-                    string keyName = Utils.CamelCase(key.Name);
-                    keyNames.Add(keyName);
-                    keyParameters.Add(string.Format(this.ParameterDeclarationTemplate, typeName, this.GetFixedName(keyName)));
-                    keyDictionaryItems.Add(string.Format(this.DictionaryItemConstructor, "\"" + key.Name + "\"", this.GetFixedName(keyName)));
-                }
 
-                string keyParametersString = string.Join(this.KeyParameterSeparator, keyParameters);
-                string keyDictionaryItemsString = string.Join(this.KeyDictionaryItemSeparator, keyDictionaryItems);
-                this.WriteByKeyMethods(entityTypeFullName, returnTypeName, keyNames, keyParametersString, keyDictionaryItemsString);
+                var keyProperties = type.Key();
+                if(keyProperties != null && keyProperties.Any())
+                {
+                    List<string> keyParameters = new List<string>();
+                    List<string> keyDictionaryItems = new List<string>();
+                    List<string> keyNames = new List<string>();
+                    foreach (IEdmProperty key in keyProperties)
+                    {
+                        string typeName = Utils.GetClrTypeName(key.Type, this.context.UseDataServiceCollection, this, this.context);
+                        string keyName = Utils.CamelCase(key.Name);
+                        keyNames.Add(keyName);
+                        keyParameters.Add(string.Format(this.ParameterDeclarationTemplate, typeName, this.GetFixedName(keyName)));
+                        keyDictionaryItems.Add(string.Format(this.DictionaryItemConstructor, "\"" + key.Name + "\"", this.GetFixedName(keyName)));
+                    }
+
+                    string keyParametersString = string.Join(this.KeyParameterSeparator, keyParameters);
+                    string keyDictionaryItemsString = string.Join(this.KeyDictionaryItemSeparator, keyDictionaryItems);
+                    this.WriteByKeyMethods(entityTypeFullName, returnTypeName, keyNames, keyParametersString, keyDictionaryItemsString);
+                }
 
                 IEdmEntityType current = (IEdmEntityType)type.BaseType;
                 while (current != null)
@@ -1345,7 +1320,6 @@ public abstract class ODataClientTemplate : TemplateBase
                     string sourceTypeName = GetSourceOrReturnTypeName(edmTypeReference);
                     sourceTypeName = string.Format(edmTypeReference.IsCollection() ? this.DataServiceQueryStructureTemplate : this.DataServiceQuerySingleStructureTemplate, sourceTypeName);
                     string returnTypeName = GetSourceOrReturnTypeName(function.ReturnType);
-                   
                     string fixedFunctionName = GetFixedName(functionName);
                     string func = string.Format("{0}({1},{2})", fixedFunctionName, sourceTypeName, parameterTypes );
 
@@ -3199,7 +3173,7 @@ public sealed class ODataClientCSharpTemplate : ODataClientTemplate
     internal override string ConstantExpressionConstructorWithType { get { return "global::System.Linq.Expressions.Expression.Constant({0}, typeof({1}))"; } }
     internal override string TypeofFormatter { get { return "typeof({0})"; } }
     internal override string UriOperationParameterConstructor { get { return "new global::Microsoft.OData.Client.UriOperationParameter(\"{0}\", {1})"; } }
-	internal override string UriEntityOperationParameterConstructor { get { return "new global::Microsoft.OData.Client.UriEntityOperationParameter(\"{0}\", {1}, {2})"; } }
+    internal override string UriEntityOperationParameterConstructor { get { return "new global::Microsoft.OData.Client.UriEntityOperationParameter(\"{0}\", {1}, {2})"; } }
     internal override string BodyOperationParameterConstructor { get { return "new global::Microsoft.OData.Client.BodyOperationParameter(\"{0}\", {1})"; } }
     internal override string BaseEntityType { get { return " : global::Microsoft.OData.Client.BaseEntityType"; } }
     internal override string OverloadsModifier { get { return "new "; } }
@@ -3227,324 +3201,129 @@ public sealed class ODataClientCSharpTemplate : ODataClientTemplate
     internal override void WriteFileHeader()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3086 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("//------------------------------------------------------------------------------\r" +
         "\n// <auto-generated>\r\n//     This code was generated by a tool.\r\n//     Runtime " +
         "Version:");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3089 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(Environment.Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3089 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n//\r\n//     Changes to this file may cause incorrect behavior and will be lost i" +
         "f\r\n//     the code is regenerated.\r\n// </auto-generated>\r\n//--------------------" +
         "----------------------------------------------------------\r\n\r\n// Generation date" +
         ": ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3096 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(DateTime.Now.ToString(global::System.Globalization.CultureInfo.CurrentCulture)));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3096 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3097 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteNamespaceStart(string fullNamespace)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3102 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("namespace ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3103 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3103 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n{\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3105 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteClassStartForEntityContainer(string originalContainerName, string containerName, string fixedContainerName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3110 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    /// <summary>\r\n    /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3112 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(containerName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3112 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n    /// </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3114 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3117 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3118 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalContainerName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3118 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3119 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3121 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    public partial class ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3122 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fixedContainerName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3122 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" : global::Microsoft.OData.Client.DataServiceContext\r\n    {\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3124 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteMethodStartForEntityContainerConstructor(string containerName, string fixedContainerName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3129 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// Initialize a new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3131 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(containerName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3131 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" object.\r\n        /// </summary>\r\n        [global::System.CodeDom.Compiler.Genera" +
         "tedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3133 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3133 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n        public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3134 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fixedContainerName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3134 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(global::System.Uri serviceRoot) : \r\n                base(serviceRoot, global::Mi" +
         "crosoft.OData.Client.ODataProtocolVersion.V4)\r\n        {\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3137 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
     
     internal override void WriteKeyAsSegmentUrlConvention()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3142 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            this.UrlConventions = global::Microsoft.OData.Client.DataServiceUrlCo" +
         "nventions.KeyAsSegment;\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3144 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteInitializeResolveName()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3149 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            this.ResolveName = new global::System.Func<global::System.Type, strin" +
         "g>(this.ResolveNameFromType);\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3151 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteInitializeResolveType()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3156 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            this.ResolveType = new global::System.Func<string, global::System.Typ" +
         "e>(this.ResolveTypeFromName);\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3158 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteClassEndForEntityContainerConstructor()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3163 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            this.OnContextCreated();\r\n            this.Format.LoadServiceModel = " +
         "GeneratedEdmModel.GetInstance;\r\n            this.Format.UseJson();\r\n        }\r\n " +
         "       partial void OnContextCreated();\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3169 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteMethodStartForResolveTypeFromName()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3174 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@"        /// <summary>
         /// Since the namespace configured for this service reference
         /// in Visual Studio is different from the one indicated in the
@@ -3552,105 +3331,40 @@ this.Write(@"        /// <summary>
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute(""Microsoft.OData.Client.Design.T4"", """);
 
-        
-        #line default
-        #line hidden
-        
-        #line 3180 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3180 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n        protected global::System.Type ResolveTypeFromName(string typeName)\r\n" +
         "        {\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3183 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteResolveNamespace(string typeName, string fullNamespace, string languageDependentNamespace)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3188 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3189 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3189 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("resolvedType = this.DefaultResolveType(typeName, \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3189 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3189 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3189 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(languageDependentNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3189 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\");\r\n            if ((resolvedType != null))\r\n            {\r\n                retu" +
         "rn resolvedType;\r\n            }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3194 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteMethodEndForResolveTypeFromName()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3199 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            return null;\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3202 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
         
@@ -3662,11 +3376,6 @@ this.Write("            return null;\r\n        }\r\n");
     internal override void WriteMethodStartForResolveNameFromType(string containerName, string fullNamespace)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3212 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@"        /// <summary>
         /// Since the namespace configured for this service reference
         /// in Visual Studio is different from the one indicated in the
@@ -3674,43 +3383,18 @@ this.Write(@"        /// <summary>
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute(""Microsoft.OData.Client.Design.T4"", """);
 
-        
-        #line default
-        #line hidden
-        
-        #line 3218 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3218 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n        protected string ResolveNameFromType(global::System.Type clientType)" +
         "\r\n        {\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3221 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3224 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@"            global::Microsoft.OData.Client.OriginalNameAttribute originalNameAttribute = (global::Microsoft.OData.Client.OriginalNameAttribute)global::System.Linq.Enumerable.SingleOrDefault(global::Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, typeof(global::Microsoft.OData.Client.OriginalNameAttribute), true));
 ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3226 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
     }
@@ -3718,92 +3402,32 @@ this.Write(@"            global::Microsoft.OData.Client.OriginalNameAttribute or
     internal override void WriteResolveType(string fullNamespace, string languageDependentNamespace)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3232 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            if (clientType.Namespace.Equals(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3233 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(languageDependentNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3233 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", global::System.StringComparison.Ordinal))\r\n            {\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3235 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3238 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                if (originalNameAttribute != null)\r\n                {\r\n          " +
         "          return string.Concat(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3241 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3241 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".\", originalNameAttribute.OriginalName);\r\n                }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3243 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3245 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                return string.Concat(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3246 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3246 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".\", clientType.Name);\r\n            }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3248 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
@@ -3812,1071 +3436,356 @@ this.Write(".\", clientType.Name);\r\n            }\r\n");
         if (this.context.EnableNamingAlias && modelHasInheritance)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3255 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            if (originalNameAttribute != null)\r\n            {\r\n                re" +
         "turn clientType.Namespace + \".\" + originalNameAttribute.OriginalName;\r\n         " +
         "   }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3260 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3262 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            return ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3263 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(modelHasInheritance ? "clientType.FullName" : "null"));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3263 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(";\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3265 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteConstructorForSingleType(string singleTypeName, string baseTypeName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3270 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// Initialize a new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3272 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singleTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3272 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" object.\r\n        /// </summary>\r\n        public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3274 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singleTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3274 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(global::Microsoft.OData.Client.DataServiceContext context, string path)\r\n       " +
         "     : base(context, path) {}\r\n\r\n        /// <summary>\r\n        /// Initialize a" +
         " new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3278 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singleTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3278 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" object.\r\n        /// </summary>\r\n        public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3280 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singleTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3280 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isC" +
         "omposable)\r\n            : base(context, path, isComposable) {}\r\n\r\n        /// <s" +
         "ummary>\r\n        /// Initialize a new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3284 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singleTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3284 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" object.\r\n        /// </summary>\r\n        public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3286 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singleTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3286 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3286 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(baseTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3286 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" query)\r\n            : base(query) {}\r\n\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3289 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteContextEntitySetProperty(string entitySetName, string entitySetFixedName, string originalEntitySetName, string entitySetElementTypeName, bool inContext)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3294 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3296 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3296 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        /// </summary>\r\n        [global::System.CodeDom.Compiler" +
         ".GeneratedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3298 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3298 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3299 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3302 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3303 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalEntitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3303 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3304 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3306 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        public global::Microsoft.OData.Client.DataServiceQuery<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3307 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetElementTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3307 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("> ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3307 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetFixedName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3307 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n        {\r\n            get\r\n            {\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3311 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (!inContext)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3314 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                if (!this.IsComposable)\r\n                {\r\n                    t" +
         "hrow new global::System.NotSupportedException(\"The previous function is not comp" +
         "osable.\");\r\n                }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3319 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3321 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                if ((this._");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3322 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3322 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" == null))\r\n                {\r\n                    this._");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3324 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3324 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" = ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3324 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(inContext ? "base" : "Context"));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3324 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".CreateQuery<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3324 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetElementTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3324 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(">(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3324 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(inContext ? "\"" + originalEntitySetName + "\"" : "GetPath(\"" + originalEntitySetName + "\")"));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3324 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(");\r\n                }\r\n                return this._");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3326 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3326 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(";\r\n            }\r\n        }\r\n        [global::System.CodeDom.Compiler.GeneratedCo" +
         "deAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3329 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3329 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n        private global::Microsoft.OData.Client.DataServiceQuery<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3330 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetElementTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3330 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("> _");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3330 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3330 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(";\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3331 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteContextSingletonProperty(string singletonName, string singletonFixedName, string originalSingletonName, string singletonElementTypeName, bool inContext)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3336 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3338 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3338 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        /// </summary>\r\n        [global::System.CodeDom.Compiler" +
         ".GeneratedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3340 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3340 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3341 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3344 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3345 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalSingletonName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3345 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3346 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3348 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3349 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonElementTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3349 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3349 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonFixedName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3349 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n        {\r\n            get\r\n            {\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3353 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (!inContext)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3356 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                if (!this.IsComposable)\r\n                {\r\n                    t" +
         "hrow new global::System.NotSupportedException(\"The previous function is not comp" +
         "osable.\");\r\n                }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3361 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3363 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                if ((this._");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3364 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3364 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" == null))\r\n                {\r\n                    this._");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3366 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3366 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" = new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3366 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonElementTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3366 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3366 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(inContext ? "this" : "this.Context"));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3366 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3366 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(inContext ? "\"" + originalSingletonName + "\"" : "GetPath(\"" + originalSingletonName + "\")"));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3366 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(");\r\n                }\r\n                return this._");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3368 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3368 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(";\r\n            }\r\n        }\r\n        [global::System.CodeDom.Compiler.GeneratedCo" +
         "deAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3371 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3371 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n        private ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3372 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonElementTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3372 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" _");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3372 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3372 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(";\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3373 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteContextAddToEntitySetMethod(string entitySetName, string originalEntitySetName, string typeName, string parameterName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3378 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3380 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3380 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        /// </summary>\r\n        [global::System.CodeDom.Compiler" +
         ".GeneratedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3382 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3382 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n        public void AddTo");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3383 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3383 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3383 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3383 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3383 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3383 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        {\r\n            base.AddObject(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3385 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalEntitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3385 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3385 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3385 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(");\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3387 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteGeneratedEdmModel(string escapedEdmxString)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3392 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.OData." +
         "Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3393 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3393 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n        private abstract class GeneratedEdmModel\r\n        {\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3396 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.ReferencesMap != null)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3399 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            [global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.OD" +
         "ata.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3400 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3400 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n            private static global::System.Collections.Generic.Dictionary<str" +
         "ing, string> ReferencesMap = new global::System.Collections.Generic.Dictionary<s" +
         "tring, string>()\r\n                {\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3403 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
             foreach(var reference in this.context.ReferencesMap)
             {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3406 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                    {@\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3407 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(reference.Key.OriginalString.Replace("\"", "\"\"")));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3407 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", @\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3407 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(Utils.SerializeToString(reference.Value).Replace("\"", "\"\"")));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3407 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\"},\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3408 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
             }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3410 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                };\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3412 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3414 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            [global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.OD" +
         "ata.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3415 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3415 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n            private static global::Microsoft.OData.Edm.IEdmModel ParsedModel" +
         " = LoadModelFromString();\r\n            [global::System.CodeDom.Compiler.Generate" +
         "dCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3417 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3417 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n            private const string Edmx = @\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3418 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(escapedEdmxString));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3418 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\";\r\n            [global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsof" +
         "t.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3419 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3419 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n            public static global::Microsoft.OData.Edm.IEdmModel GetInstance(" +
         ")\r\n            {\r\n                return ParsedModel;\r\n            }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3424 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.ReferencesMap != null)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3427 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            [global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.OD" +
         "ata.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3428 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3428 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@""")]
             private static global::System.Xml.XmlReader getReferencedModelFromMap(global::System.Uri uri)
             {
@@ -4890,18 +3799,8 @@ this.Write(@""")]
             }
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute(""Microsoft.OData.Client.Design.T4"", """);
 
-        
-        #line default
-        #line hidden
-        
-        #line 3439 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3439 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@""")]
             private static global::Microsoft.OData.Edm.IEdmModel LoadModelFromString()
             {
@@ -4917,36 +3816,16 @@ this.Write(@""")]
             }
 ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3452 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
         else
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3456 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            [global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.OD" +
         "ata.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3457 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3457 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@""")]
             private static global::Microsoft.OData.Edm.IEdmModel LoadModelFromString()
             {
@@ -4962,221 +3841,86 @@ this.Write(@""")]
             }
 ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3470 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3472 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            [global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.OD" +
         "ata.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3473 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3473 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n            private static global::System.Xml.XmlReader CreateXmlReader(stri" +
         "ng edmxToParse)\r\n            {\r\n                return global::System.Xml.XmlRea" +
         "der.Create(new global::System.IO.StringReader(edmxToParse));\r\n            }\r\n   " +
         "     }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3479 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteClassEndForEntityContainer()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3484 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3486 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteSummaryCommentForStructuredType(string typeName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3491 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    /// <summary>\r\n    /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3493 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3493 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n    /// </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3495 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteKeyPropertiesCommentAndAttribute(IEnumerable<string> keyProperties, string keyString)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3500 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    /// <KeyProperties>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3502 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         foreach (string key in keyProperties)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3505 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    /// ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3506 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(key));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3506 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3507 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3509 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    /// </KeyProperties>\r\n    [global::Microsoft.OData.Client.Key(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3511 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(keyString));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3511 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3512 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteEntitySetAttribute(string entitySetName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3517 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    [global::Microsoft.OData.Client.EntitySet(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3518 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3518 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3519 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteEntityHasStreamAttribute()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3524 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    [global::Microsoft.OData.Client.HasStream()]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3526 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
@@ -5185,799 +3929,269 @@ this.Write("    [global::Microsoft.OData.Client.HasStream()]\r\n");
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3533 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3534 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3534 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3535 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3537 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    public");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3538 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(abstractModifier));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3538 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" partial class ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3538 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3538 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(baseTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3538 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n    {\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3540 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteSummaryCommentForStaticCreateMethod(string typeName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3545 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// Create a new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3547 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3547 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" object.\r\n        /// </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3549 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteParameterCommentForStaticCreateMethod(string parameterName, string propertyName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3554 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <param name=\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3555 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3555 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\">Initial value of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3555 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3555 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".</param>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3556 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteDeclarationStartForStaticCreateMethod(string typeName, string fixedTypeName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3561 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.OData." +
         "Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3562 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3562 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n        public static ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3563 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fixedTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3563 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" Create");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3563 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3563 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3563 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteParameterForStaticCreateMethod(string parameterTypeName, string parameterName, string parameterSeparater)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3568 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3568 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3568 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3568 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterSeparater));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3568 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteDeclarationEndForStaticCreateMethod(string typeName, string instanceName)
     {
           
-        
-        #line default
-        #line hidden
-        
-        #line 3573 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        {\r\n            ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3575 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3575 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3575 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(instanceName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3575 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" = new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3575 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3575 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("();\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3576 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void  WriteParameterNullCheckForStaticCreateMethod(string parameterName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3581 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            if ((");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3582 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3582 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" == null))\r\n            {\r\n                throw new global::System.ArgumentNullE" +
         "xception(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3584 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3584 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\");\r\n            }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3586 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WritePropertyValueAssignmentForStaticCreateMethod(string instanceName, string propertyName, string parameterName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3591 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3592 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(instanceName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3592 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3592 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3592 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" = ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3592 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3592 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(";\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3593 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteMethodEndForStaticCreateMethod(string instanceName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3598 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            return ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3599 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(instanceName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3599 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(";\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3601 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WritePropertyForStructuredType(string propertyType, string originalPropertyName, string propertyName, string fixedPropertyName, string privatePropertyName, string propertyInitializationValue, bool writeOnPropertyChanged)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3606 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// There are no comments for Property ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3608 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3608 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        /// </summary>\r\n        [global::System.CodeDom.Compiler" +
         ".GeneratedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3610 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3610 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3611 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias || IdentifierMappings.ContainsKey(originalPropertyName))
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3614 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3615 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalPropertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3615 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3616 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3618 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3619 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyType));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3619 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3619 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fixedPropertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3619 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n        {\r\n            get\r\n            {\r\n                return this.");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3623 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(privatePropertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3623 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(";\r\n            }\r\n            set\r\n            {\r\n                this.On");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3627 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3627 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Changing(value);\r\n                this.");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3628 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(privatePropertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3628 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" = value;\r\n                this.On");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3629 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3629 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Changed();\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3630 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (writeOnPropertyChanged)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3633 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                this.OnPropertyChanged(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3634 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalPropertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3634 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\");\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3635 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3637 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            }\r\n        }\r\n        [global::System.CodeDom.Compiler.GeneratedCodeA" +
         "ttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3640 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3640 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n        private ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3641 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyType));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3641 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3641 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(privatePropertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3641 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyInitializationValue != null ? " = " + propertyInitializationValue : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3641 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(";\r\n        partial void On");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3642 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3642 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Changing(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3642 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyType));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3642 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" value);\r\n        partial void On");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3643 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3643 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Changed();\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3644 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteINotifyPropertyChangedImplementation()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3649 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// This event is raised when the value of the pro" +
         "perty is changed\r\n        /// </summary>\r\n        [global::System.CodeDom.Compil" +
         "er.GeneratedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3653 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3653 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@""")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
@@ -5986,18 +4200,8 @@ this.Write(@""")]
         /// <param name=""property"">property name</param>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute(""Microsoft.OData.Client.Design.T4"", """);
 
-        
-        #line default
-        #line hidden
-        
-        #line 3659 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3659 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@""")]
         protected virtual void OnPropertyChanged(string property)
         {
@@ -6008,79 +4212,34 @@ this.Write(@""")]
         }
 ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3667 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteClassEndForStructuredType()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3672 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3674 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
     
     internal override void WriteEnumFlags()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3679 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    [global::System.Flags]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3681 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteSummaryCommentForEnumType(string enumName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3686 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    /// <summary>\r\n    /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3688 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(enumName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3688 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n    /// </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3690 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
@@ -6089,68 +4248,23 @@ this.Write(" in the schema.\r\n    /// </summary>\r\n");
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3697 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3698 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalEnumName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3698 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3699 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3701 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    public enum ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3702 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(enumName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3702 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(underlyingType));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3702 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n    {\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3704 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
@@ -6159,1192 +4273,382 @@ this.Write("\r\n    {\r\n");
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3711 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3712 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalMemberName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3712 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3713 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3715 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3716 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(member));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3716 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(last ? string.Empty : ","));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3716 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3717 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteEnumEnd()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3722 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3724 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
         
     internal override void WriteFunctionImportReturnCollectionResult(string functionName, string originalFunctionName, string returnTypeName, string parameters, string parameterValues, bool isComposable, bool useEntityReference)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3729 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3731 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3731 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        /// </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3733 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3736 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3737 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3737 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3738 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3740 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        public global::Microsoft.OData.Client.DataServiceQuery<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3741 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3741 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("> ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3741 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3741 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3741 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3741 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(useEntityReference ? ", bool useEntityReference = false" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3741 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        {\r\n            return this.CreateFunctionQuery<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3743 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3743 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(">(\"\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3743 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3743 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3743 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isComposable.ToString().ToLower()));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3743 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3743 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(");\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3745 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteFunctionImportReturnSingleResult(string functionName, string originalFunctionName, string returnTypeName, string parameters, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3750 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3752 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3752 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        /// </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3754 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3757 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3758 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3758 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3759 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3761 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3762 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? returnTypeName + this.singleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName)));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3762 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3762 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3762 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3762 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3762 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(useEntityReference ? ", bool useEntityReference = false" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3762 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        {\r\n            return ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3764 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? "new " + returnTypeName + this.singleSuffix + "(" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3764 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("this.CreateFunctionQuerySingle<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3764 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3764 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(">(\"\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3764 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3764 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3764 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isComposable.ToString().ToLower()));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3764 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3764 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3764 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? ")" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3764 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(";\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3766 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteBoundFunctionInEntityTypeReturnCollectionResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool useEntityReference)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3771 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3773 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3773 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        /// </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3775 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3778 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3779 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3779 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3780 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3782 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3783 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(hideBaseMethod ? this.OverloadsModifier : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3783 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("global::Microsoft.OData.Client.DataServiceQuery<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3783 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3783 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("> ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3783 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3783 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3783 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3783 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(useEntityReference ? ", bool useEntityReference = false" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3783 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        {\r\n            global::System.Uri requestUri;\r\n            Context.Try" +
         "GetUri(this, out requestUri);\r\n            return this.Context.CreateFunctionQue" +
         "ry<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3787 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3787 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(">(string.Join(\"/\", global::System.Linq.Enumerable.Select(global::System.Linq.Enum" +
         "erable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.T" +
         "rim(\'/\'))), \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3787 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3787 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3787 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3787 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3787 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isComposable.ToString().ToLower()));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3787 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3787 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(useEntityReference ? ", bool useEntityReference = false" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3787 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(");\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3789 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
     
     internal override void WriteBoundFunctionInEntityTypeReturnSingleResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3794 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3796 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3796 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        /// </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3798 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3801 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3802 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3802 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3803 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3805 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3806 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(hideBaseMethod ? this.OverloadsModifier : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3806 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3806 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? returnTypeName + this.singleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName)));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3806 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3806 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3806 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3806 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3806 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(useEntityReference ? ", bool useEntityReference = false" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3806 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        {\r\n            global::System.Uri requestUri;\r\n            Context.Try" +
         "GetUri(this, out requestUri);\r\n\r\n            return ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3811 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? "new " + returnTypeName + this.singleSuffix + "(" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3811 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("this.Context.CreateFunctionQuerySingle<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3811 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3811 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(">(string.Join(\"/\", global::System.Linq.Enumerable.Select(global::System.Linq.Enum" +
         "erable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.T" +
         "rim(\'/\'))), \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3811 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3811 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3811 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3811 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3811 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isComposable.ToString().ToLower()));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3811 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3811 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3811 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? ")" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3811 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(";\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3813 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
     internal override void WriteActionImport(string actionName, string originalActionName, string returnTypeName, string parameters, string parameterValues)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3818 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3820 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(actionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3820 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        /// </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3822 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3825 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3826 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalActionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3826 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3827 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3829 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3830 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3830 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3830 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(actionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3830 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3830 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3830 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        {\r\n            return new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3832 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3832 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(this, this.BaseUri.OriginalString.Trim(\'/\') + \"/");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3832 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalActionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3832 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3832 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3832 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(");\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3834 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteBoundActionInEntityType(bool hideBaseMethod, string actionName, string originalActionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3839 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3841 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(actionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3841 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        /// </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3843 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3846 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3847 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalActionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3847 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3848 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3850 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3851 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(hideBaseMethod ? this.OverloadsModifier : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3851 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3851 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3851 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(actionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3851 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3851 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3851 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@")
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
@@ -7355,1137 +4659,372 @@ this.Write(@")
 
             return new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3859 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3859 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(this.Context, resource.EditLink.OriginalString.Trim(\'/\') + \"/");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3859 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3859 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3859 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalActionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3859 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3859 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3859 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(");\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3861 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
     
     internal override void WriteExtensionMethodsStart()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3866 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    /// <summary>\r\n    /// Class containing all extension methods\r\n    /// </summ" +
         "ary>\r\n    public static class ExtensionMethods\r\n    {\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3872 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
  
     }
 
     internal override void WriteExtensionMethodsEnd()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3877 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3879 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteByKeyMethods(string entityTypeName, string returnTypeName, IEnumerable<string> keys, string keyParameters, string keyDictionaryItems)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3884 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// Get an entity of type ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3886 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entityTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3886 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" as ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3886 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entityTypeName + this.singleSuffix));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3886 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" specified by key from an entity set\r\n        /// </summary>\r\n        /// <param " +
         "name=\"source\">source entity set</param>\r\n        /// <param name=\"keys\">dictiona" +
         "ry with the names and values of keys</param>\r\n        public static ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3890 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3890 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ByKey(this global::Microsoft.OData.Client.DataServiceQuery<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3890 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entityTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3890 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("> source, global::System.Collections.Generic.Dictionary<string, object> keys)\r\n  " +
         "      {\r\n            return new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3892 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3892 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetK" +
         "eyString(source.Context, keys)));\r\n        }\r\n        /// <summary>\r\n        ///" +
         " Get an entity of type ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3895 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entityTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3895 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" as ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3895 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entityTypeName + this.singleSuffix));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3895 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" specified by key from an entity set\r\n        /// </summary>\r\n        /// <param " +
         "name=\"source\">source entity set</param>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3898 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         foreach (var key in keys)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3901 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <param name=\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3902 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(key));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3902 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\">The value of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3902 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(key));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3902 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("</param>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3903 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3905 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        public static ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3906 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3906 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ByKey(this global::Microsoft.OData.Client.DataServiceQuery<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3906 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entityTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3906 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("> source,\r\n            ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3907 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(keyParameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3907 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        {\r\n            global::System.Collections.Generic.Dictionary<string, o" +
         "bject> keys = new global::System.Collections.Generic.Dictionary<string, object>\r" +
         "\n            {\r\n                ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3911 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(keyDictionaryItems));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3911 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            };\r\n            return new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3913 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3913 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetK" +
         "eyString(source.Context, keys)));\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3915 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteCastToMethods(string baseTypeName, string derivedTypeName, string derivedTypeFullName, string returnTypeName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3920 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// Cast an entity of type ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3922 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(baseTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3922 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" to its derived type ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3922 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(derivedTypeFullName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3922 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n        /// </summary>\r\n        /// <param name=\"source\">source entity</param>\r" +
         "\n        public static ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3925 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3925 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" CastTo");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3925 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(derivedTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3925 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(this global::Microsoft.OData.Client.DataServiceQuerySingle<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3925 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(baseTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3925 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("> source)\r\n        {\r\n            global::Microsoft.OData.Client.DataServiceQuery" +
         "Single<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3927 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(derivedTypeFullName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3927 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("> query = source.CastTo<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3927 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(derivedTypeFullName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3927 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(">();\r\n            return new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3928 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3928 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(source.Context, query.GetPath(null));\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3930 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteBoundFunctionReturnSingleResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3935 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3937 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3937 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        /// </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3939 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3942 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3943 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3943 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3944 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3946 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        public static ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3947 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? returnTypeName + this.singleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName)));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3947 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3947 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3947 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(this ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3947 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(boundTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3947 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" source");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3947 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameters) ? string.Empty : ", " + parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3947 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(useEntityReference ? ", bool useEntityReference = false" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3947 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        {\r\n            if (!source.IsComposable)\r\n            {\r\n             " +
         "   throw new global::System.NotSupportedException(\"The previous function is not " +
         "composable.\");\r\n            }\r\n\r\n            return ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? "new " + returnTypeName + this.singleSuffix + "(" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("source.CreateFunctionQuerySingle<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(">(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isComposable.ToString().ToLower()));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? ")" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(";\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3956 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteBoundFunctionReturnCollectionResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool useEntityReference)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3961 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3963 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3963 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        /// </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3965 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3968 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3969 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3969 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3970 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3972 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        public static global::Microsoft.OData.Client.DataServiceQuery<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3973 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3973 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("> ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3973 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3973 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(this ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3973 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(boundTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3973 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" source");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3973 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameters) ? string.Empty : ", " + parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3973 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(useEntityReference ? ", bool useEntityReference = true" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3973 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        {\r\n            if (!source.IsComposable)\r\n            {\r\n             " +
         "   throw new global::System.NotSupportedException(\"The previous function is not " +
         "composable.\");\r\n            }\r\n\r\n            return source.CreateFunctionQuery<");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(">(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isComposable.ToString().ToLower()));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(");\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3982 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteBoundActionAsExtension(string actionName, string originalActionName, string boundSourceType, string returnTypeName, string parameters, string fullNamespace, string parameterValues)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3987 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        /// <summary>\r\n        /// There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3989 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(actionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3989 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        /// </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3991 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 3994 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        [global::Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3995 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalActionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3995 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")]\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3996 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 3998 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        public static ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3999 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3999 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3999 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(actionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3999 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(this ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3999 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(boundSourceType));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3999 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" source");
 
-        
-        #line default
-        #line hidden
-        
-        #line 3999 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameters) ? string.Empty : ", " + parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 3999 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        {\r\n            if (!source.IsComposable)\r\n            {\r\n             " +
         "   throw new global::System.NotSupportedException(\"The previous function is not " +
         "composable.\");\r\n            }\r\n\r\n            return new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4006 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4006 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(source.Context, source.AppendRequestUri(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4006 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4006 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4006 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalActionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4006 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4006 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4006 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(");\r\n        }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4008 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
  
     }
 
     internal override void WriteNamespaceEnd()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4013 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("}\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4015 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 }
@@ -8562,7 +5101,7 @@ public sealed class ODataClientVBTemplate : ODataClientTemplate
     internal override string ConstantExpressionConstructorWithType { get { return "Global.System.Linq.Expressions.Expression.Constant({0}, GetType({1}))"; } }
     internal override string TypeofFormatter { get { return "GetType({0})"; } }    
     internal override string UriOperationParameterConstructor { get { return "New Global.Microsoft.OData.Client.UriOperationParameter(\"{0}\", {1})"; } }
-	internal override string UriEntityOperationParameterConstructor { get { return "New Global.Microsoft.OData.Client.UriEntityOperationParameter(\"{0}\", {1}, {2})"; } }
+    internal override string UriEntityOperationParameterConstructor { get { return "New Global.Microsoft.OData.Client.UriEntityOperationParameter(\"{0}\", {1}, {2})"; } }
     internal override string BodyOperationParameterConstructor { get { return "New Global.Microsoft.OData.Client.BodyOperationParameter(\"{0}\", {1})"; } }
     internal override string BaseEntityType { get { return "\r\n        Inherits Global.Microsoft.OData.Client.BaseEntityType"; } }
     internal override string OverloadsModifier { get { return "Overloads "; } }
@@ -8599,27 +5138,12 @@ public sealed class ODataClientVBTemplate : ODataClientTemplate
     internal override void WriteFileHeader()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4127 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\'------------------------------------------------------------------------------\r\n" +
         "\' <auto-generated>\r\n\'     This code was generated by a tool.\r\n\'     Runtime Vers" +
         "ion:");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4130 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(Environment.Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4130 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@"
 '
 '     Changes to this file may cause incorrect behavior and will be lost if
@@ -8633,283 +5157,113 @@ Option Explicit On
 
 'Generation date: ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4141 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(DateTime.Now.ToString(System.Globalization.CultureInfo.CurrentCulture)));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4141 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4142 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteNamespaceStart(string fullNamespace)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4147 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Namespace ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4148 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4148 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4149 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteClassStartForEntityContainer(string originalContainerName, string containerName, string fixedContainerName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4154 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    \'\'\'<summary>\r\n    \'\'\'There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4156 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(containerName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4156 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n    \'\'\'</summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4158 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4161 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4162 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalContainerName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4162 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4163 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4165 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    Partial Public Class ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4166 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fixedContainerName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4166 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n        Inherits Global.Microsoft.OData.Client.DataServiceContext\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4168 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteMethodStartForEntityContainerConstructor(string containerName, string fixedContainerName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4173 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\'<summary>\r\n        \'\'\'Initialize a new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4175 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(containerName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4175 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" object.\r\n        \'\'\'</summary>\r\n        <Global.System.CodeDom.Compiler.Generate" +
         "dCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4177 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4177 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n        Public Sub New(ByVal serviceRoot As Global.System.Uri)\r\n         " +
         "   MyBase.New(serviceRoot, Global.Microsoft.OData.Client.ODataProtocolVersion.V4" +
         ")\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4180 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteKeyAsSegmentUrlConvention()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4185 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            Me.UrlConventions = Global.Microsoft.OData.Client.DataServiceUrlConve" +
         "ntions.KeyAsSegment\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4187 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteInitializeResolveName()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4192 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            Me.ResolveName = AddressOf Me.ResolveNameFromType\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4194 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteInitializeResolveType()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4199 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            Me.ResolveType = AddressOf Me.ResolveTypeFromName\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4201 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteClassEndForEntityContainerConstructor()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4206 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            Me.OnContextCreated\r\n            Me.Format.LoadServiceModel = Address" +
         "Of GeneratedEdmModel.GetInstance\r\n            Me.Format.UseJson()\r\n        End S" +
         "ub\r\n        Partial Private Sub OnContextCreated()\r\n        End Sub\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4213 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteMethodStartForResolveTypeFromName()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4218 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@"        '''<summary>
         '''Since the namespace configured for this service reference
         '''in Visual Studio is different from the one indicated in the
@@ -8917,26 +5271,11 @@ this.Write(@"        '''<summary>
         '''</summary>
         <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(""Microsoft.OData.Client.Design.T4"", """);
 
-        
-        #line default
-        #line hidden
-        
-        #line 4224 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4224 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n        Protected Function ResolveTypeFromName(ByVal typeName As String) " +
         "As Global.System.Type\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4226 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
@@ -8945,225 +5284,80 @@ this.Write("\")>  _\r\n        Protected Function ResolveTypeFromName(ByVal type
         if (!string.IsNullOrEmpty(typeName))
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4233 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            Dim resolvedType As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4234 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4234 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("= Me.DefaultResolveType(typeName, \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4234 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4234 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", String.Concat(ROOTNAMESPACE, \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4234 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(languageDependentNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4234 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\"))\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4235 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
         else
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4239 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            resolvedType = Me.DefaultResolveType(typeName, \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4240 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4240 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", String.Concat(ROOTNAMESPACE, \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4240 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(languageDependentNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4240 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\"))\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4241 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4243 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            If (Not (resolvedType) Is Nothing) Then\r\n                Return resol" +
         "vedType\r\n            End If\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4247 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteMethodEndForResolveTypeFromName()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4252 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            Return Nothing\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4255 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
     
     internal override void WritePropertyRootNamespace(string containerName, string fullNamespace)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4260 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.OData.C" +
         "lient.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4261 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4261 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n        Private Shared ROOTNAMESPACE As String = GetType(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4262 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(containerName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4262 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(").Namespace.Remove(GetType(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4262 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(containerName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4262 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(").Namespace.LastIndexOf(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4262 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4262 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\"))\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4263 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteMethodStartForResolveNameFromType(string containerName, string fullNamespace)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4268 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@"        '''<summary>
         '''Since the namespace configured for this service reference
         '''in Visual Studio is different from the one indicated in the
@@ -9171,44 +5365,19 @@ this.Write(@"        '''<summary>
         '''</summary>
         <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(""Microsoft.OData.Client.Design.T4"", """);
 
-        
-        #line default
-        #line hidden
-        
-        #line 4274 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4274 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n        Protected Function ResolveNameFromType(ByVal clientType As Global" +
         ".System.Type) As String\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4276 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4279 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@"            Dim originalNameAttribute As Global.Microsoft.OData.Client.OriginalNameAttribute =
                 CType(Global.System.Linq.Enumerable.SingleOrDefault(Global.Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, GetType(Global.Microsoft.OData.Client.OriginalNameAttribute), true)), Global.Microsoft.OData.Client.OriginalNameAttribute)
 ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4282 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
     }
@@ -9216,92 +5385,32 @@ this.Write(@"            Dim originalNameAttribute As Global.Microsoft.OData.Cli
     internal override void WriteResolveType(string fullNamespace, string languageDependentNamespace)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4288 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            If clientType.Namespace.Equals(String.Concat(ROOTNAMESPACE, \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4289 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(languageDependentNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4289 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\"), Global.System.StringComparison.OrdinalIgnoreCase) Then\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4290 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4293 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                If (Not (originalNameAttribute) Is Nothing) Then\r\n               " +
         "     Return String.Concat(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4295 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4295 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".\", originalNameAttribute.OriginalName)\r\n                End If\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4297 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4299 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                Return String.Concat(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4300 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4300 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".\", clientType.Name)\r\n            End If\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4302 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
@@ -9310,76 +5419,31 @@ this.Write(".\", clientType.Name)\r\n            End If\r\n");
         if (this.context.EnableNamingAlias && modelHasInheritance)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4309 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@"            If (Not (originalNameAttribute) Is Nothing) Then
                 Dim fullName As String = clientType.FullName.Substring(ROOTNAMESPACE.Length)
                 Return fullName.Remove(fullName.LastIndexOf(clientType.Name)) + originalNameAttribute.OriginalName
             End If
 ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4314 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4316 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            Return ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4317 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(modelHasInheritance ? "clientType.FullName.Substring(ROOTNAMESPACE.Length)" : "Nothing"));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4317 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4319 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteConstructorForSingleType(string singleTypeName, string baseTypeName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4324 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <summary>\r\n        \'\'\' Initialize a new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4326 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singleTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4326 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@" object.
         ''' </summary>
         Public Sub New(ByVal context As Global.Microsoft.OData.Client.DataServiceContext, ByVal path As String)
@@ -9389,18 +5453,8 @@ this.Write(@" object.
         ''' <summary>
         ''' Initialize a new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4333 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singleTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4333 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@" object.
         ''' </summary>
         Public Sub New(ByVal context As Global.Microsoft.OData.Client.DataServiceContext, ByVal path As String, ByVal isComposable As Boolean)
@@ -9410,716 +5464,231 @@ this.Write(@" object.
         ''' <summary>
         ''' Initialize a new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4340 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singleTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4340 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" object.\r\n        \'\'\' </summary>\r\n        Public Sub New(ByVal query As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4342 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(baseTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4342 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n            MyBase.New(query)\r\n        End Sub\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4345 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteContextEntitySetProperty(string entitySetName, string entitySetFixedName, string originalEntitySetName, string entitySetElementTypeName, bool inContext)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4350 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\'<summary>\r\n        \'\'\'There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4352 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4352 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        \'\'\'</summary>\r\n        <Global.System.CodeDom.Compiler.G" +
         "eneratedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4354 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4354 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4355 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4358 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4359 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalEntitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4359 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4360 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4362 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        Public ReadOnly Property ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4363 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetFixedName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4363 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("() As Global.Microsoft.OData.Client.DataServiceQuery(Of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4363 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetElementTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4363 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n            Get\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4365 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (!inContext)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4368 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                If Not Me.IsComposable Then\r\n                    Throw New Global" +
         ".System.NotSupportedException(\"The previous function is not composable.\")\r\n     " +
         "           End If\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4372 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4374 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                If (Me._");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4375 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4375 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" Is Nothing) Then\r\n                    Me._");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4376 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4376 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" = ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4376 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(inContext ? "MyBase" : "Context"));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4376 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".CreateQuery(Of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4376 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetElementTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4376 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4376 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(inContext ? "\"" + originalEntitySetName + "\"" : "GetPath(\"" + originalEntitySetName + "\")"));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4376 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n                End If\r\n                Return Me._");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4378 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4378 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            End Get\r\n        End Property\r\n        <Global.System.CodeDom.Compi" +
         "ler.GeneratedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4381 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4381 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n        Private _");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4382 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4382 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" As Global.Microsoft.OData.Client.DataServiceQuery(Of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4382 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetElementTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4382 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4383 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteContextSingletonProperty(string singletonName, string singletonFixedName, string originalSingletonName, string singletonElementTypeName, bool inContext)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4388 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\'<summary>\r\n        \'\'\'There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4390 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4390 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        \'\'\'</summary>\r\n        <Global.System.CodeDom.Compiler.G" +
         "eneratedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4392 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4392 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4393 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4396 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4397 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalSingletonName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4397 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4398 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4400 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        Public ReadOnly Property ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4401 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonFixedName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4401 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("() As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4401 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonElementTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4401 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            Get\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4403 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (!inContext)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4406 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                If Not Me.IsComposable Then\r\n                    Throw New Global" +
         ".System.NotSupportedException(\"The previous function is not composable.\")\r\n     " +
         "           End If\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4410 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4412 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                If (Me._");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4413 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4413 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" Is Nothing) Then\r\n                    Me._");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4414 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4414 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" = New ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4414 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonElementTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4414 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4414 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(inContext ? "Me" : "Me.Context"));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4414 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4414 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(inContext ? "\"" + originalSingletonName + "\"" : "GetPath(\"" + originalSingletonName + "\")"));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4414 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n                End If\r\n                Return Me._");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4416 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4416 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            End Get\r\n        End Property\r\n        <Global.System.CodeDom.Compi" +
         "ler.GeneratedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4419 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4419 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n        Private _");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4420 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4420 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4420 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(singletonElementTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4420 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4421 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteContextAddToEntitySetMethod(string entitySetName, string originalEntitySetName, string typeName, string parameterName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4426 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\'<summary>\r\n        \'\'\'There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4428 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4428 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        \'\'\'</summary>\r\n        <Global.System.CodeDom.Compiler.G" +
         "eneratedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4430 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4430 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n        Public Sub AddTo");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4431 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4431 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(ByVal ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4431 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4431 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4431 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4431 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n            MyBase.AddObject(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4432 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalEntitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4432 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4432 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4432 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        End Sub\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4434 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
@@ -10127,240 +5696,85 @@ this.Write(")\r\n        End Sub\r\n");
     {
         escapedEdmxString = escapedEdmxString.Replace("\r\n", "\" & _\r\n \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4440 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.OData.C" +
         "lient.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4441 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4441 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n        Private MustInherit Class GeneratedEdmModel\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4443 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.ReferencesMap != null)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4446 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.ODa" +
         "ta.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4447 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4447 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n            Private Shared ReferencesMap As Global.System.Collections.Gen" +
         "eric.Dictionary(Of String, String) = New Global.System.Collections.Generic.Dicti" +
         "onary(Of String, String) From\r\n                {\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4450 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
             int count = this.context.ReferencesMap.Count();
             foreach(var reference in this.context.ReferencesMap)
             {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4454 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                    {\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4455 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(reference.Key.OriginalString.Replace("\"", "\"\"")));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4455 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4455 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(Utils.SerializeToString(reference.Value).Replace("\"", "\"\"").Replace("\r\n", "\" & _\r\n \"")));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4455 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\"}");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4455 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture((--count>0?",":"")));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4455 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4456 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
             }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4458 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                }\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4460 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4462 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.ODa" +
         "ta.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4463 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4463 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n            Private Shared ParsedModel As Global.Microsoft.OData.Edm.IEdm" +
         "Model = LoadModelFromString\r\n            <Global.System.CodeDom.Compiler.Generat" +
         "edCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4465 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4465 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n            Private Const Edmx As String = \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4466 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(escapedEdmxString));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4466 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\"\r\n            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft." +
         "OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4467 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4467 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n            Public Shared Function GetInstance() As Global.Microsoft.ODat" +
         "a.Edm.IEdmModel\r\n                Return ParsedModel\r\n            End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4471 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.ReferencesMap != null)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4474 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.ODa" +
         "ta.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4475 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4475 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@""")>  _
             Private Shared Function getReferencedModelFromMap(ByVal uri As Global.System.Uri) As Global.System.Xml.XmlReader
                 Dim referencedEdmx As String = Nothing
@@ -10371,18 +5785,8 @@ this.Write(@""")>  _
             End Function
             <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(""Microsoft.OData.Client.Design.T4"", """);
 
-        
-        #line default
-        #line hidden
-        
-        #line 4483 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4483 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@""")>  _
             Private Shared Function LoadModelFromString() As Global.Microsoft.OData.Edm.IEdmModel
                 Dim reader As Global.System.Xml.XmlReader = CreateXmlReader(Edmx)
@@ -10394,36 +5798,16 @@ this.Write(@""")>  _
             End Function
 ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4492 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
         else
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4496 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.ODa" +
         "ta.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4497 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4497 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@""")>  _
             Private Shared Function LoadModelFromString() As Global.Microsoft.OData.Edm.IEdmModel
                 Dim reader As Global.System.Xml.XmlReader = CreateXmlReader(Edmx)
@@ -10435,34 +5819,14 @@ this.Write(@""")>  _
             End Function
 ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4506 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4508 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.ODa" +
         "ta.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4509 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4509 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@""")>  _
             Private Shared Function CreateXmlReader(ByVal edmxToParse As String) As Global.System.Xml.XmlReader
                 Return Global.System.Xml.XmlReader.Create(New Global.System.IO.StringReader(edmxToParse))
@@ -10470,188 +5834,73 @@ this.Write(@""")>  _
         End Class
 ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4514 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteClassEndForEntityContainer()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4519 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    End Class\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4521 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteSummaryCommentForStructuredType(string typeName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4526 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    \'\'\'<summary>\r\n    \'\'\'There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4528 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4528 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n    \'\'\'</summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4530 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteKeyPropertiesCommentAndAttribute(IEnumerable<string> keyProperties, string keyString)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4535 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    \'\'\'<KeyProperties>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4537 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         foreach (string key in keyProperties)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4540 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    \'\'\'");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4541 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(key));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4541 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4542 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         } 
 
-        
-        #line default
-        #line hidden
-        
-        #line 4544 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    \'\'\'</KeyProperties>\r\n    <Global.Microsoft.OData.Client.Key(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4546 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(keyString));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4546 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4547 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteEntitySetAttribute(string entitySetName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4552 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    <Global.Microsoft.OData.Client.EntitySet(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4553 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entitySetName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4553 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4554 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteEntityHasStreamAttribute()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4559 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    <Global.Microsoft.OData.Client.HasStream()>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4561 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
@@ -10660,207 +5909,72 @@ this.Write("    <Global.Microsoft.OData.Client.HasStream()>  _\r\n");
         if (this.context.EnableNamingAlias)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4568 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4569 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4569 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4570 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4572 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    Partial Public");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4573 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(abstractModifier));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4573 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" Class ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4573 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4573 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(baseTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4573 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4574 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteSummaryCommentForStaticCreateMethod(string typeName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4579 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\'<summary>\r\n        \'\'\'Create a new ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4581 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4581 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" object.\r\n        \'\'\'</summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4583 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteParameterCommentForStaticCreateMethod(string parameterName, string propertyName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4588 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\'<param name=\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4589 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4589 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\">Initial value of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4589 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4589 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".</param>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4590 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteDeclarationStartForStaticCreateMethod(string typeName, string fixedTypeName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4595 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(\"Microsoft.OData.C" +
         "lient.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4596 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4596 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n        Public Shared Function Create");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4597 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4597 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4597 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
 
     }
@@ -10868,495 +5982,165 @@ this.Write("(");
     internal override void WriteParameterForStaticCreateMethod(string parameterTypeName, string parameterName, string parameterSeparater)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4603 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("ByVal ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4603 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4603 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4603 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4603 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterSeparater));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4603 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteDeclarationEndForStaticCreateMethod(string typeName, string instanceName)
     {
           
-        
-        #line default
-        #line hidden
-        
-        #line 4608 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(") As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4608 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4608 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            Dim ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4609 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(instanceName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4609 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4609 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4609 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" = New ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4609 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(typeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4609 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("()\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4610 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void  WriteParameterNullCheckForStaticCreateMethod(string parameterName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4615 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            If (");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4616 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4616 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" Is Nothing) Then\r\n                Throw New Global.System.ArgumentNullException(" +
         "\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4617 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4617 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")\r\n            End If\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4619 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WritePropertyValueAssignmentForStaticCreateMethod(string instanceName, string propertyName, string parameterName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4624 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4625 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(instanceName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4625 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4625 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4625 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" = ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4625 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameterName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4625 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4626 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteMethodEndForStaticCreateMethod(string instanceName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4631 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            Return ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4632 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(instanceName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4632 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4634 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WritePropertyForStructuredType(string propertyType, string originalPropertyName, string propertyName, string fixedPropertyName, string privatePropertyName, string propertyInitializationValue, bool writeOnPropertyChanged)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4639 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\'<summary>\r\n        \'\'\'There are no comments for Property ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4641 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4641 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        \'\'\'</summary>\r\n        <Global.System.CodeDom.Compiler.G" +
         "eneratedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4643 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4643 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4644 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias || IdentifierMappings.ContainsKey(originalPropertyName))
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4647 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4648 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalPropertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4648 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4649 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4651 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        Public Property ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4652 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fixedPropertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4652 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("() As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4652 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyType));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4652 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            Get\r\n                Return Me.");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4654 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(privatePropertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4654 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            End Get\r\n            Set\r\n                Me.On");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4657 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4657 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Changing(value)\r\n                Me.");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4658 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(privatePropertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4658 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" = value\r\n                Me.On");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4659 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4659 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Changed\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4660 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (writeOnPropertyChanged)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4663 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("                Me.OnPropertyChanged(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4664 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalPropertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4664 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4665 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4667 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("            End Set\r\n        End Property\r\n        <Global.System.CodeDom.Compile" +
         "r.GeneratedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4670 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4670 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4671 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         string constructorString = string.Empty;
         if (!string.IsNullOrEmpty(propertyInitializationValue))
@@ -11364,122 +6148,42 @@ this.Write("\")>  _\r\n");
             constructorString = " = " + propertyInitializationValue;
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4677 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        Private ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4678 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(privatePropertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4678 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4678 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyType));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4678 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(constructorString));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4678 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n        Partial Private Sub On");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4679 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4679 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Changing(ByVal value As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4679 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyType));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4679 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        End Sub\r\n        Partial Private Sub On");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4681 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(propertyName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4681 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Changed()\r\n        End Sub\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4683 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteINotifyPropertyChangedImplementation()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4688 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <summary>\r\n        \'\'\' This event is raised when the value of the pro" +
         "perty is changed\r\n        \'\'\' </summary>\r\n        <Global.System.CodeDom.Compile" +
         "r.GeneratedCodeAttribute(\"Microsoft.OData.Client.Design.T4\", \"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4692 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4692 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@""")>  _
         Public Event PropertyChanged As Global.System.ComponentModel.PropertyChangedEventHandler Implements Global.System.ComponentModel.INotifyPropertyChanged.PropertyChanged
         ''' <summary>
@@ -11488,18 +6192,8 @@ this.Write(@""")>  _
         ''' <param name=""property"">property name</param>
         <Global.System.CodeDom.Compiler.GeneratedCodeAttribute(""Microsoft.OData.Client.Design.T4"", """);
 
-        
-        #line default
-        #line hidden
-        
-        #line 4698 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(T4Version));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4698 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@""")>  _
         Protected Overridable Sub OnPropertyChanged(ByVal [property] As String)
             If (Not (Me.PropertyChangedEvent) Is Nothing) Then
@@ -11508,79 +6202,34 @@ this.Write(@""")>  _
         End Sub
 ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4704 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteClassEndForStructuredType()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4709 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    End Class\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4711 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
     
     internal override void WriteEnumFlags()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4716 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    <Global.System.Flags()>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4718 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteSummaryCommentForEnumType(string enumName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4723 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    \'\'\'<summary>\r\n    \'\'\'There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4725 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(enumName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4725 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n    \'\'\'</summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4727 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
@@ -11589,68 +6238,23 @@ this.Write(" in the schema.\r\n    \'\'\'</summary>\r\n");
         if (this.context.EnableNamingAlias)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4734 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4735 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalEnumName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4735 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4736 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4738 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    Public Enum ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4739 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(enumName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4739 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(underlyingType));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4739 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4740 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
@@ -11659,1192 +6263,382 @@ this.Write("\r\n");
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4747 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4748 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalMemberName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4748 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4749 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4751 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4752 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(member));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4752 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4753 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteEnumEnd()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4758 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    End Enum\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4760 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
     
     internal override void WriteFunctionImportReturnCollectionResult(string functionName, string originalFunctionName, string returnTypeName, string parameters, string parameterValues, bool isComposable, bool useEntityReference)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4765 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <summary>\r\n        \'\'\' There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4767 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4767 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        \'\'\' </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4769 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4772 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4773 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4773 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4774 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4776 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        Public Function ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4777 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4777 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4777 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4777 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4777 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(") As Global.Microsoft.OData.Client.DataServiceQuery(Of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4777 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4777 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n            Return Me.CreateFunctionQuery(Of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4778 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4778 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")(\"\", \"/");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4778 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4778 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4778 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isComposable));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4778 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4778 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4778 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4780 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteFunctionImportReturnSingleResult(string functionName, string originalFunctionName, string returnTypeName, string parameters, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4785 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <summary>\r\n        \'\'\' There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4787 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4787 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        \'\'\' </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4789 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4792 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4793 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4793 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4794 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4796 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        Public Function ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4797 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4797 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4797 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4797 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4797 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(") As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4797 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? returnTypeName + this.singleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName)));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4797 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            Return ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4798 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? "New " + returnTypeName + this.singleSuffix + "(" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4798 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Me.CreateFunctionQuerySingle(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4798 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture("Of " + returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4798 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")(\"\", \"/");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4798 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4798 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4798 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isComposable));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4798 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4798 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4798 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? ")" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4798 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4800 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteBoundFunctionInEntityTypeReturnCollectionResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool useEntityReference)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4805 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <summary>\r\n        \'\'\' There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4807 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4807 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        \'\'\' </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4809 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4812 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4813 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4813 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4814 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4816 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        Public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4817 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(hideBaseMethod ? this.OverloadsModifier : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4817 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Function ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4817 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4817 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4817 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4817 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4817 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(") As Global.Microsoft.OData.Client.DataServiceQuery(Of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4817 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4817 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n            Dim requestUri As Global.System.Uri = Nothing\r\n            Context" +
         ".TryGetUri(Me, requestUri)\r\n            Return Me.Context.CreateFunctionQuery(Of" +
         " ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4820 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4820 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")(\"\", String.Join(\"/\", Global.System.Linq.Enumerable.Select(Global.System.Linq.En" +
         "umerable.Skip(requestUri.Segments, Me.Context.BaseUri.Segments.Length), Function" +
         "(s) s.Trim(\"/\"C))) + \"/");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4820 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4820 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4820 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4820 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4820 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isComposable));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4820 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4820 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4822 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteBoundFunctionInEntityTypeReturnSingleResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4827 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <summary>\r\n        \'\'\' There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4829 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4829 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        \'\'\' </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4831 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4834 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4835 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4835 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4836 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4838 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        Public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4839 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(hideBaseMethod ? this.OverloadsModifier : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4839 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Function ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4839 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4839 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4839 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4839 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4839 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(") As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4839 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? returnTypeName + this.singleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName)));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4839 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            Dim requestUri As Global.System.Uri = Nothing\r\n            Context." +
         "TryGetUri(Me, requestUri)\r\n            Return ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4842 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? "New " + returnTypeName + this.singleSuffix + "(" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4842 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Me.Context.CreateFunctionQuerySingle(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4842 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture("Of " + returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4842 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")(String.Join(\"/\", Global.System.Linq.Enumerable.Select(Global.System.Linq.Enumer" +
         "able.Skip(requestUri.Segments, Me.Context.BaseUri.Segments.Length), Function(s) " +
         "s.Trim(\"/\"C))), \"/");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4842 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4842 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4842 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4842 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4842 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isComposable));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4842 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4842 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4842 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? ")" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4842 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4844 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
     
     internal override void WriteActionImport(string actionName, string originalActionName, string returnTypeName, string parameters, string parameterValues)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4849 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <summary>\r\n        \'\'\' There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4851 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(actionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4851 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        \'\'\' </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4853 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4856 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4857 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalActionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4857 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4858 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4860 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        Public Function ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4861 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(actionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4861 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4861 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4861 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(") As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4861 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4861 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            Return New ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4862 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4862 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(Me, Me.BaseUri.OriginalString.Trim(\"/\"C) + \"/");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4862 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalActionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4862 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4862 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4862 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4864 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
     
     internal override void WriteBoundActionInEntityType(bool hideBaseMethod, string actionName, string originalActionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4869 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <summary>\r\n        \'\'\' There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4871 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(actionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4871 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        \'\'\' </summary>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4873 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4876 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4877 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalActionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4877 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4878 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4880 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        Public ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4881 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(hideBaseMethod ? this.OverloadsModifier : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4881 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("Function ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4881 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(actionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4881 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4881 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4881 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(") As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4881 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4881 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@"
             Dim resource As Global.Microsoft.OData.Client.EntityDescriptor = Context.EntityTracker.TryGetEntityDescriptor(Me)
             If resource Is Nothing Then
@@ -12853,143 +6647,53 @@ this.Write(@"
 
             Return New ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4887 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4887 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(Me.Context, resource.EditLink.OriginalString.Trim(\"/\"C) + \"/");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4887 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4887 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4887 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalActionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4887 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4887 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4887 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4889 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteExtensionMethodsStart()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4894 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    \'\'\' <summary>\r\n    \'\'\' Class containing all extension methods\r\n    \'\'\' </summ" +
         "ary>\r\n    Public Module ExtensionMethods\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4899 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteExtensionMethodsEnd()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4904 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("    End Module\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4906 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteByKeyMethods(string entityTypeName, string returnTypeName, IEnumerable<string> keys, string keyParameters, string keyDictionaryItems)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4911 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <summary>\r\n        \'\'\' Get an entity of type ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4913 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entityTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4913 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" as ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4913 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entityTypeName + this.singleSuffix));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4913 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(@" specified by key from an entity set
         ''' </summary>
         ''' <param name=""source"">source entity set</param>
@@ -12997,991 +6701,325 @@ this.Write(@" specified by key from an entity set
         <Global.System.Runtime.CompilerServices.Extension()>
         Public Function ByKey(ByVal source As Global.Microsoft.OData.Client.DataServiceQuery(Of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4918 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entityTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4918 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("), ByVal keys As Global.System.Collections.Generic.Dictionary(Of String, Object))" +
         " As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4918 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4918 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            Return New ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4919 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4919 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(source.Context, source.GetKeyPath(Global.Microsoft.OData.Client.Serializer.GetKe" +
         "yString(source.Context, keys)))\r\n        End Function\r\n        \'\'\' <summary>\r\n  " +
         "      \'\'\' Get an entity of type ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4922 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entityTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4922 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" as ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4922 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entityTypeName + this.singleSuffix));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4922 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" specified by key from an entity set\r\n        \'\'\' </summary>\r\n        \'\'\' <param " +
         "name=\"source\">source entity set</param>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4925 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         foreach (var key in keys)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4928 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <param name=\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4929 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(key));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4929 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\">The value of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4929 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(key));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4929 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("</param>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4930 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4932 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.System.Runtime.CompilerServices.Extension()>\r\n        Public Func" +
         "tion ByKey(ByVal source As Global.Microsoft.OData.Client.DataServiceQuery(Of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4934 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(entityTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4934 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("),\r\n            ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4935 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(keyParameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4935 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(") As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4935 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4935 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            Dim keys As Global.System.Collections.Generic.Dictionary(Of String," +
         " Object) = New Global.System.Collections.Generic.Dictionary(Of String, Object)()" +
         " From\r\n            {\r\n                ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4938 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(keyDictionaryItems));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4938 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            }\r\n            Return New ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4940 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4940 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(source.Context, source.GetKeyPath(Global.Microsoft.OData.Client.Serializer.GetKe" +
         "yString(source.Context, keys)))\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4942 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteCastToMethods(string baseTypeName, string derivedTypeName, string derivedTypeFullName, string returnTypeName)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4947 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <summary>\r\n        \'\'\' Cast an entity of type ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4949 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(baseTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4949 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" to its derived type ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4949 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(derivedTypeFullName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4949 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n        \'\'\' </summary>\r\n        \'\'\' <param name=\"source\">source entity</param>\r" +
         "\n        <Global.System.Runtime.CompilerServices.Extension()>\r\n        Public Fu" +
         "nction CastTo");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4953 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(derivedTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4953 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(ByVal source As Global.Microsoft.OData.Client.DataServiceQuerySingle(Of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4953 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(baseTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4953 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")) As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4953 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4953 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            Dim query As Global.Microsoft.OData.Client.DataServiceQuerySingle(O" +
         "f ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(derivedTypeFullName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(") = source.CastTo(Of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(derivedTypeFullName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4954 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")()\r\n            Return New ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4955 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4955 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(source.Context, query.GetPath(Nothing))\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4957 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteBoundFunctionReturnSingleResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4962 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <summary>\r\n        \'\'\' There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4964 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4964 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        \'\'\' </summary>\r\n        <Global.System.Runtime.CompilerS" +
         "ervices.Extension()>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4967 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4970 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4971 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4971 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4972 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4974 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        Public Function ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4975 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4975 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(ByVal source As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4975 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(boundTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4975 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameters) ? string.Empty : ", " + parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4975 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4975 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(") As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4975 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? returnTypeName + this.singleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName)));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4975 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            If Not source.IsComposable Then\r\n                Throw New Global.S" +
         "ystem.NotSupportedException(\"The previous function is not composable.\")\r\n       " +
         "     End If\r\n            \r\n            Return ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? "New " + returnTypeName + this.singleSuffix + "(" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("source.CreateFunctionQuerySingle(");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture("Of " + returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isComposable));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isReturnEntity ? ")" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4980 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4982 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteBoundFunctionReturnCollectionResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool useEntityReference)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4987 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <summary>\r\n        \'\'\' There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4989 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4989 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        \'\'\' </summary>\r\n        <Global.System.Runtime.CompilerS" +
         "ervices.Extension()>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4992 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 4995 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4996 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 4996 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 4997 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 4999 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        Public Function ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5000 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(functionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5000 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(ByVal source As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5000 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(boundTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5000 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameters) ? string.Empty : ", " + parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5000 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5000 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(") As Global.Microsoft.OData.Client.DataServiceQuery(Of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5000 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5000 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n            If Not source.IsComposable Then\r\n                Throw New Global." +
         "System.NotSupportedException(\"The previous function is not composable.\")\r\n      " +
         "      End If\r\n            \r\n            Return source.CreateFunctionQuery(Of ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5005 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5005 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5005 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5005 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5005 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalFunctionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5005 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\", ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5005 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(isComposable));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5005 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5005 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5007 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteBoundActionAsExtension(string actionName, string originalActionName, string boundSourceType, string returnTypeName, string parameters, string fullNamespace, string parameterValues)
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 5012 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        \'\'\' <summary>\r\n        \'\'\' There are no comments for ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5014 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(actionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5014 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(" in the schema.\r\n        \'\'\' </summary>\r\n        <Global.System.Runtime.CompilerS" +
         "ervices.Extension()>\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5017 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         if (this.context.EnableNamingAlias)
         {
 
-        
-        #line default
-        #line hidden
-        
-        #line 5020 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        <Global.Microsoft.OData.Client.OriginalNameAttribute(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5021 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalActionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5021 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")>  _\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5022 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
         }
 
-        
-        #line default
-        #line hidden
-        
-        #line 5024 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("        Public Function ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5025 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(actionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5025 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(ByVal source As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5025 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(boundSourceType));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5025 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameters) ? string.Empty : ", " + parameters));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5025 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(") As ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5025 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5025 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\r\n            If Not source.IsComposable Then\r\n                Throw New Global.S" +
         "ystem.NotSupportedException(\"The previous function is not composable.\")\r\n       " +
         "     End If\r\n            Return New ");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5029 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(returnTypeName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5029 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("(source.Context, source.AppendRequestUri(\"");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5029 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(fullNamespace));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5029 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(".");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5029 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(originalActionName));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5029 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("\")");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5029 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(this.ToStringHelper.ToStringWithCulture(string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues));
 
-        
-        #line default
-        #line hidden
-        
-        #line 5029 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write(")\r\n        End Function\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5031 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 
     internal override void WriteNamespaceEnd()
     {
 
-        
-        #line default
-        #line hidden
-        
-        #line 5036 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 this.Write("End Namespace\r\n");
 
-        
-        #line default
-        #line hidden
-        
-        #line 5038 "E:\odata.net\src\CodeGen\ODataT4CodeGenerator.ttinclude"
 
     }
 }
 
-        
-        #line default
-        #line hidden
     }
-    
-    #line default
-    #line hidden
     #region Base class
     /// <summary>
     /// Base class for this transformation

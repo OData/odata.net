@@ -550,5 +550,22 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             Verify = (code, isCSharp, useDSC) => VerifyGeneratedCode(code, OverrideOperations.ExpectedResults, isCSharp, useDSC, "OverrideOperations"),
         };
         #endregion
+
+        #region AbstractEntityTypeWithoutKey
+        public static string EdmxAbstractEntityTypeWithoutKey = LoadContentFromBaseline("AbstractEntityTypeWithoutKey.xml");
+        public static string AbstractEntityTypeWithoutKeyCSharpUseDSC = LoadContentFromBaseline("AbstractEntityTypeWithoutKeyDSC.cs");
+        public static string AbstractEntityTypeWithoutKeyVB = LoadContentFromBaseline("AbstractEntityTypeWithoutKey.vb");
+
+        public static ODataT4CodeGeneratorTestsDescriptor AbstractEntityTypeWithoutKey = new ODataT4CodeGeneratorTestsDescriptor()
+        {
+            Metadata = EdmxAbstractEntityTypeWithoutKey,
+            ExpectedResults = new Dictionary<string, string>()
+            { 
+                { ExpectedCSharpUseDSC, AbstractEntityTypeWithoutKeyCSharpUseDSC },
+                { ExpectedVB, AbstractEntityTypeWithoutKeyVB },
+            },
+            Verify = (code, isCSharp, useDSC) => VerifyGeneratedCode(code, AbstractEntityTypeWithoutKey.ExpectedResults, isCSharp, useDSC, "AbstractEntityTypeWithoutKey"),
+        };
+        #endregion
     }
 }

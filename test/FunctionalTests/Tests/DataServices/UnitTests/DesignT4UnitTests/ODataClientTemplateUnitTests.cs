@@ -693,7 +693,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
 <edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
     <Schema Namespace=""Namespace1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-      <EntityType Name=""EntityType""/>
+      <EntityType Name=""EntityType"" Abstract=""true"" />
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
@@ -845,7 +845,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
     <Schema Namespace=""Namespace1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <ComplexType Name=""ComplexType""/>
       <EnumType Name=""EnumType""/>
-      <EntityType Name=""EntityType""/>
+      <EntityType Name=""EntityType"" Abstract=""true""/>
       <EntityContainer Name=""EntityContainer""/>
     </Schema>
   </edmx:DataServices>
@@ -926,10 +926,9 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 "WriteConstructorForSingleType(EntityTypeSingle, DataServiceQuerySingle)",
                 "WriteClassEndForStructuredType()",
                 "WriteSummaryCommentForStructuredType(EntityType)",
-                "WriteClassStartForStructuredType(, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType)",
+                "WriteClassStartForStructuredType(AbstractModifier, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType)",
                 "WriteClassEndForStructuredType()",
                 "WriteExtensionMethodsStart()",
-                "WriteByKeyMethods(global::Namespace1.EntityType, global::Namespace1.EntityTypeSingle, , , )",
                 "WriteExtensionMethodsEnd()",
                 "WriteNamespaceEnd()"
             };
@@ -950,7 +949,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 "WriteClassStartForEntityContainer(EntityContainer, EntityContainer, EntityContainer)",
                 "WriteMethodStartForEntityContainerConstructor(EntityContainer, EntityContainer)",
                 "WriteClassEndForEntityContainerConstructor()",
-                "WriteGeneratedEdmModel(<edmx:Edmx Version=\"\"4.0\"\" xmlns:edmx=\"\"http://docs.oasis-open.org/odata/ns/edmx\"\">\r\n  <edmx:DataServices>\r\n    <Schema Namespace=\"\"Namespace1\"\" xmlns=\"\"http://docs.oasis-open.org/odata/ns/edm\"\">\r\n      <ComplexType Name=\"\"ComplexType\"\" />\r\n      <EnumType Name=\"\"EnumType\"\" />\r\n      <EntityType Name=\"\"EntityType\"\" />\r\n      <EntityContainer Name=\"\"EntityContainer\"\" />\r\n    </Schema>\r\n  </edmx:DataServices>\r\n</edmx:Edmx>)",
+                "WriteGeneratedEdmModel(<edmx:Edmx Version=\"\"4.0\"\" xmlns:edmx=\"\"http://docs.oasis-open.org/odata/ns/edmx\"\">\r\n  <edmx:DataServices>\r\n    <Schema Namespace=\"\"Namespace1\"\" xmlns=\"\"http://docs.oasis-open.org/odata/ns/edm\"\">\r\n      <ComplexType Name=\"\"ComplexType\"\" />\r\n      <EnumType Name=\"\"EnumType\"\" />\r\n      <EntityType Name=\"\"EntityType\"\" Abstract=\"\"true\"\" />\r\n      <EntityContainer Name=\"\"EntityContainer\"\" />\r\n    </Schema>\r\n  </edmx:DataServices>\r\n</edmx:Edmx>)",
                 "WriteClassEndForEntityContainer()",
                 "WriteSummaryCommentForStructuredType(ComplexType)",
                 "WriteClassStartForStructuredType(, ComplexType, ComplexType, )",
@@ -960,13 +959,12 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 "WriteConstructorForSingleType(EntityTypeSingle, DataServiceQuerySingle)",
                 "WriteClassEndForStructuredType()",
                 "WriteSummaryCommentForStructuredType(EntityType)",
-                "WriteClassStartForStructuredType(, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType)",
+                "WriteClassStartForStructuredType(AbstractModifier, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType)",
                 "WriteClassEndForStructuredType()",
                 "WriteSummaryCommentForEnumType(EnumType)",
                 "WriteEnumDeclaration(EnumType, EnumType, )",
                 "WriteEnumEnd()",
-                "WriteExtensionMethodsStart()", 
-                "WriteByKeyMethods(global::Namespace1.EntityType, global::Namespace1.EntityTypeSingle, , , )",
+                "WriteExtensionMethodsStart()",
                 "WriteExtensionMethodsEnd()",
                 "WriteNamespaceEnd()"
             };
@@ -1407,7 +1405,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 "WriteConstructorForSingleType(EntityTypeSingle, DataServiceQuerySingle)",
                 "WriteClassEndForStructuredType()",
                 "WriteSummaryCommentForStructuredType(EntityType)",
-                "WriteClassStartForStructuredType(, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType)",
+                "WriteClassStartForStructuredType(AbstractModifier, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType)",
                 "WriteClassEndForStructuredType()"
             };
             template.CalledActions.Should().Equal(expectedActions);
@@ -1429,7 +1427,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 "WriteConstructorForSingleType(EntityTypeSingle, DataServiceQuerySingle)",
                 "WriteClassEndForStructuredType()", 
                 "WriteSummaryCommentForStructuredType(EntityType)",
-                "WriteClassStartForStructuredType(, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType, NotifyPropertyChanged)",
+                "WriteClassStartForStructuredType(AbstractModifier, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType, NotifyPropertyChanged)",
                 "WriteINotifyPropertyChangedImplementation()",
                 "WriteClassEndForStructuredType()"
             };

@@ -11,7 +11,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #>
-<#@ template debug="true" hostSpecific="true" visibility="internal" #>
+<#@ template debug="true" hostSpecific="true" visibility="internal" linePragmas="false"#>
 <#@ output extension=".cs" #>
 <#@ Assembly Name="System.Core.dll" #>
 <#@ Assembly Name="System.Xml.dll" #>
@@ -1168,21 +1168,26 @@ public abstract class ODataClientTemplate : TemplateBase
                 entityTypeName = context.EnableNamingAlias ? Customization.CustomizeNaming(entityTypeName) : entityTypeName;
                 string entityTypeFullName = context.GetPrefixedFullName(type, GetFixedName(entityTypeName), this);
                 string returnTypeName = context.GetPrefixedFullName(type, GetFixedName(entityTypeName + this.singleSuffix), this);
-                List<string> keyParameters = new List<string>();
-                List<string> keyDictionaryItems = new List<string>();
-                List<string> keyNames = new List<string>();
-                foreach (IEdmProperty key in type.Key())
-                {
-                    string typeName = Utils.GetClrTypeName(key.Type, this.context.UseDataServiceCollection, this, this.context);
-                    string keyName = Utils.CamelCase(key.Name);
-                    keyNames.Add(keyName);
-                    keyParameters.Add(string.Format(this.ParameterDeclarationTemplate, typeName, this.GetFixedName(keyName)));
-                    keyDictionaryItems.Add(string.Format(this.DictionaryItemConstructor, "\"" + key.Name + "\"", this.GetFixedName(keyName)));
-                }
 
-                string keyParametersString = string.Join(this.KeyParameterSeparator, keyParameters);
-                string keyDictionaryItemsString = string.Join(this.KeyDictionaryItemSeparator, keyDictionaryItems);
-                this.WriteByKeyMethods(entityTypeFullName, returnTypeName, keyNames, keyParametersString, keyDictionaryItemsString);
+                var keyProperties = type.Key();
+                if(keyProperties != null && keyProperties.Any())
+                {
+                    List<string> keyParameters = new List<string>();
+                    List<string> keyDictionaryItems = new List<string>();
+                    List<string> keyNames = new List<string>();
+                    foreach (IEdmProperty key in keyProperties)
+                    {
+                        string typeName = Utils.GetClrTypeName(key.Type, this.context.UseDataServiceCollection, this, this.context);
+                        string keyName = Utils.CamelCase(key.Name);
+                        keyNames.Add(keyName);
+                        keyParameters.Add(string.Format(this.ParameterDeclarationTemplate, typeName, this.GetFixedName(keyName)));
+                        keyDictionaryItems.Add(string.Format(this.DictionaryItemConstructor, "\"" + key.Name + "\"", this.GetFixedName(keyName)));
+                    }
+
+                    string keyParametersString = string.Join(this.KeyParameterSeparator, keyParameters);
+                    string keyDictionaryItemsString = string.Join(this.KeyDictionaryItemSeparator, keyDictionaryItems);
+                    this.WriteByKeyMethods(entityTypeFullName, returnTypeName, keyNames, keyParametersString, keyDictionaryItemsString);
+                }
 
                 IEdmEntityType current = (IEdmEntityType)type.BaseType;
                 while (current != null)

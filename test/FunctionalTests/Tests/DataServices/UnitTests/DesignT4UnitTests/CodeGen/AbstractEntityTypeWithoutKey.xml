@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="AbstractEntityTypeWithoutKey" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="AbstractET" Abstract="true">
+        <Property Name="PropertyInAbstractET" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="DerivedAbstractET" BaseType ="AbstractEntityTypeWithoutKey.AbstractET" Abstract="true">
+        <Property Name="PropertyInDerivedAbstractET" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="DerivedBaseET" BaseType="AbstractEntityTypeWithoutKey.DerivedAbstractET">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityType Name="DerivedET" BaseType="AbstractEntityTypeWithoutKey.DerivedBaseET" >
+        <Property Name="PropertyInDerivedET" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+      <EntityType Name="DerivedAbstractETWithKey" BaseType ="AbstractEntityTypeWithoutKey.AbstractET" Abstract="true">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityType Name="DerivedET2" BaseType ="AbstractEntityTypeWithoutKey.DerivedAbstractETWithKey">
+        <Property Name="PropertyInDerivedET2" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityContainer Name="Container">
+        <EntitySet Name="DerivedBaseETSet" EntityType="AbstractEntityTypeWithoutKey.DerivedBaseET" />
+        <EntitySet Name="DerivedETSet" EntityType="AbstractEntityTypeWithoutKey.DerivedET" />
+        <EntitySet Name="DerivedAbstractETSet" EntityType="AbstractEntityTypeWithoutKey.DerivedAbstractETWithKey" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
