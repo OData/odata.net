@@ -47,6 +47,21 @@ namespace Microsoft.OData.Core
         private const string WaitPreferenceTokenName = "wait";
 
         /// <summary>
+        /// The odata.continue-on-error preference token.
+        /// </summary>
+        private const string ODataContinueOnErrorPreferenceToken = "odata.continue-on-error";
+
+        /// <summary>
+        /// The odata.maxpagesize=# preference token.
+        /// </summary>
+        private const string ODataMaxPageSizePreferenceToken = "odata.maxpagesize";
+        
+        /// <summary>
+        /// The odata.track-changes preference token.
+        /// </summary>
+        private const string ODataTrackChangesPreferenceToken = "odata.track-changes";
+
+        /// <summary>
         /// The Prefer header name.
         /// </summary>
         private const string PreferHeaderName = "Prefer";
@@ -62,6 +77,11 @@ namespace Microsoft.OData.Core
         private static readonly KeyValuePair<string, string>[] EmptyParameters = new KeyValuePair<string, string>[0];
 
         /// <summary>
+        /// The respond-async preference.
+        /// </summary>
+        private static readonly HttpHeaderValueElement ContinueOnErrorPreference = new HttpHeaderValueElement(ODataContinueOnErrorPreferenceToken, null, EmptyParameters);
+
+        /// <summary>
         /// The return=minimal preference.
         /// </summary>
         private static readonly HttpHeaderValueElement ReturnMinimalPreference = new HttpHeaderValueElement(ReturnPreferenceTokenName, ReturnMinimalPreferenceTokenValue, EmptyParameters);
@@ -75,6 +95,11 @@ namespace Microsoft.OData.Core
         /// The respond-async preference.
         /// </summary>
         private static readonly HttpHeaderValueElement RespondAsyncPreference = new HttpHeaderValueElement(RespondAsyncPreferenceToken, null, EmptyParameters);
+
+        /// <summary>
+        /// The respond-async preference.
+        /// </summary>
+        private static readonly HttpHeaderValueElement TrackChangesPreference = new HttpHeaderValueElement(ODataTrackChangesPreferenceToken, null, EmptyParameters);
 
         /// <summary>
         /// The message to set the preference header to and to get the preference header from.
@@ -286,6 +311,98 @@ namespace Microsoft.OData.Core
         private HttpHeaderValue Preferences
         {
             get { return this.preferences ?? (this.preferences = this.ParsePreferences()); }
+        }
+
+        /// <summary>
+        /// Property to get and set the "odata.continue-on-error" preference to the "Prefer" header on the underlying IODataRequestMessage or
+        /// the "Preference-Applied" header on the underlying IODataResponseMessage.
+        /// Setting true sets the "odata.continue-on-error" preference.
+        /// Setting false clears the "odata.continue-on-error" preference.
+        /// Returns true of the "odata.continue-on-error" preference is on the header.  Otherwise returns false if the "odata.continue-on-error" is not on the header.
+        /// </summary>
+        public bool ContinueOnError
+        {
+            get
+            {
+                return this.Get(ODataContinueOnErrorPreferenceToken) != null;
+            }
+
+            set
+            {
+                if (value)
+                {
+                    this.Set(ContinueOnErrorPreference);
+                }
+                else
+                {
+                    this.Clear(ODataContinueOnErrorPreferenceToken);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Property to get and set the "odata.maxpagesize" preference to the "Prefer" header on the underlying IODataRequestMessage or
+        /// the "Preference-Applied" header on the underlying IODataResponseMessage.
+        /// Setting N sets the "odata.maxpagesize=N" preference.
+        /// Setting null clears the "odata.maxpagesize" preference.
+        /// Returns N if the "odata.maxpagesize=N" preference is on the header.
+        /// Returning null indicates that "odata.maxpagesize" is not on the header.
+        /// </summary>
+        public int? MaxPageSize
+        {
+            get
+            {
+                var maxPageSizeHttpHeaderValueElement = this.Get(ODataMaxPageSizePreferenceToken);
+
+                // Should check maxPageSizeHttpHeaderValueElement.Value != null.
+                // Should do int.TryParse.
+                // If either of the above fail, should throw an ODataException for parsing, not a System.Exception (such as FormatException, etc.).
+                if (maxPageSizeHttpHeaderValueElement != null)
+                {
+                    return int.Parse(maxPageSizeHttpHeaderValueElement.Value, CultureInfo.InvariantCulture);
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value.HasValue)
+                {
+                    this.Set(new HttpHeaderValueElement(ODataMaxPageSizePreferenceToken, string.Format(CultureInfo.InvariantCulture, "{0}", value.Value), EmptyParameters));
+                }
+                else
+                {
+                    this.Clear(ODataMaxPageSizePreferenceToken);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Property to get and set the "odata.track-changes" preference to the "Prefer" header on the underlying IODataRequestMessage or
+        /// the "Preference-Applied" header on the underlying IODataResponseMessage.
+        /// Setting true sets the "odata.track-changes" preference.
+        /// Setting false clears the "odata.track-changes" preference.
+        /// Returns true of the "odata.track-changes" preference is on the header.  Otherwise returns false if the "odata.track-changes" is not on the header.
+        /// </summary>
+        public bool TrackChanges
+        {
+            get
+            {
+                return this.Get(ODataTrackChangesPreferenceToken) != null;
+            }
+
+            set
+            {
+                if (value)
+                {
+                    this.Set(TrackChangesPreference);
+                }
+                else
+                {
+                    this.Clear(ODataTrackChangesPreferenceToken);
+                }
+            }
         }
 
         /// <summary>

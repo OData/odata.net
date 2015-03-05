@@ -30,6 +30,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Common
         private const string RespondAyncPreference = "respond-async";
         private const string RespondAsyncAndWaitPreference = "respond-async,wait=10";
         private const string WaitPreference = "wait=10";
+        private const string MaxPageSizePreference = "odata.maxpagesize";
+        private const string TrackChangesPreference = "odata.track-changes";
+        private const string ContinueOnErrorPreference = "odata.continue-on-error";
 
         [TestInitialize]
         public void TestInit()
@@ -249,6 +252,65 @@ namespace Microsoft.Test.OData.TDD.Tests.Common
             int? wait;
             Action test = () => wait = this.preferHeader.Wait;
             test.ShouldThrow<FormatException>().WithMessage("Input string was not in a correct format.");
+        }
+
+        [TestMethod]
+        public void SetContinueOnErrorToTrueShouldAppendHeader()
+        {
+            this.preferHeader.ContinueOnError = true;
+            this.preferHeader.ContinueOnError.Should().BeTrue();
+            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(ContinueOnErrorPreference);
+        }
+
+        [TestMethod]
+        public void SetContinueOnErrorToFalseShouldClearHeader()
+        {
+            this.preferHeader.ContinueOnError = false;
+            this.preferHeader.ContinueOnError.Should().BeFalse();
+            this.requestMessage.GetHeader(PreferHeaderName).Should().BeNull();
+        }
+
+        [TestMethod]
+        public void SetMaxPageSizeShouldAppendHeader()
+        {
+            const int MaxPageSize = 10;
+            this.preferHeader.MaxPageSize = MaxPageSize;
+            this.preferHeader.MaxPageSize.Should().Be(MaxPageSize);
+            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(string.Format("{0}={1}", MaxPageSizePreference, MaxPageSize));
+        }
+
+        [TestMethod]
+        public void SetMaxPageSizeToNullShouldClearHeader()
+        {
+            this.preferHeader.MaxPageSize = null;
+            this.preferHeader.MaxPageSize.Should().Be(null);
+            this.requestMessage.GetHeader(PreferHeaderName).Should().BeNull();
+        }
+
+        [TestMethod]
+        public void ReturnMaxPageSizeOfBadIntergerFormatShouldThrow()
+        {
+            this.requestMessage.SetHeader(PreferHeaderName, string.Format("{0}=abc", MaxPageSizePreference));
+            this.preferHeader = new ODataPreferenceHeader(this.requestMessage);
+            int? maxPageSize;
+            Action test = () => maxPageSize = this.preferHeader.MaxPageSize;
+            test.ShouldThrow<FormatException>().WithMessage("Input string was not in a correct format.");
+        }
+
+        [TestMethod]
+        public void SetTrackChangesToTrueShouldAppendHeader()
+        {
+            this.preferHeader.TrackChanges = true;
+            this.preferHeader.TrackChanges.Should().BeTrue();
+            this.requestMessage.GetHeader(PreferHeaderName).Should().Be(TrackChangesPreference);
+        }
+
+        [TestMethod]
+        public void SetTrackChangesToFalseShouldClearHeader()
+        {
+            this.preferHeader.TrackChanges = false;
+            this.preferHeader.TrackChanges.Should().BeFalse();
+            this.requestMessage.GetHeader(PreferHeaderName).Should().BeNull();
         }
     }
 }
