@@ -44,6 +44,9 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>A skip token query option name.</summary>
         internal const string SkipTokenQueryOption = "$skipToken";
 
+        /// <summary>A delta token query option name.</summary>
+        internal const string DeltaTokenQueryOption = "$deltatoken";
+
         /// <summary>An entity id query option name. </summary>
         internal const string IdQueryOption = "$id";
 

@@ -240,6 +240,16 @@ namespace Microsoft.OData.Core.UriParser
             string skipTokenQuery;
             return this.TryGetQueryOption(UriQueryConstants.SkipTokenQueryOption, out skipTokenQuery) ? skipTokenQuery : null;
         }
+
+        /// <summary>
+        /// Parses a $deltatoken query option
+        /// </summary>
+        /// <returns>A value representing that delta token option, null if $deltatoken query does not exist.</returns>
+        public string ParseDeltaToken()
+        {
+            string deltaTokenQuery;
+            return this.TryGetQueryOption(UriQueryConstants.DeltaTokenQueryOption, out deltaTokenQuery) ? deltaTokenQuery : null;
+        }
         #endregion public methods
 
         #region private methods

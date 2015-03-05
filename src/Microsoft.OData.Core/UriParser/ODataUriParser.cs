@@ -341,6 +341,16 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
+        /// Parses a $deltatoken query option
+        /// </summary>
+        /// <returns>A value representing that delta token option, null if $deltatoken query does not exist.</returns>
+        public string ParseDeltaToken()
+        {
+            this.Initialize();
+            return this.queryOptionParser.ParseDeltaToken();
+        }
+
+        /// <summary>
         /// Parse a full Uri into its contingent parts with semantic meaning attached to each part. 
         /// See <see cref="ODataUri"/>.
         /// </summary>
@@ -359,6 +369,7 @@ namespace Microsoft.OData.Core.UriParser
             long? skip = this.ParseSkip();
             bool? count = this.ParseCount();
             string skipToken = this.ParseSkipToken();
+            string deltaToken = this.ParseDeltaToken();
 
             // TODO:  check it shouldn't be empty
             List<QueryNode> boundQueryOptions = new List<QueryNode>();
@@ -366,6 +377,7 @@ namespace Microsoft.OData.Core.UriParser
             ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, search, skip, top, count);
             odataUri.ServiceRoot = this.serviceRoot;
             odataUri.SkipToken = skipToken;
+            odataUri.DeltaToken = deltaToken;
             return odataUri;
         }
 

@@ -42,12 +42,13 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             uriParser.ParseCount().Should().Be(null);
             uriParser.ParseSearch().Should().BeNull();
             uriParser.ParseSkipToken().Should().BeNull();
+            uriParser.ParseDeltaToken().Should().BeNull();
         }
 
         [TestMethod]
         public void EmptyValueQueryOptionShouldWork()
         {
-            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$count=&$search=&$unknow=&$unknowvalue&$skipToken="));
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$count=&$search=&$unknow=&$unknowvalue&$skipToken=&$deltatoken="));
             var path = uriParser.ParsePath();
             path.Should().HaveCount(1);
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
@@ -65,6 +66,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             action = () => uriParser.ParseSearch();
             action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_ExpressionExpected(0, ""));
             uriParser.ParseSkipToken().Should().BeEmpty();
+            uriParser.ParseDeltaToken().Should().BeEmpty();
         }
 
         #region Setter/getter and validation tests
@@ -288,7 +290,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
         [TestMethod]
         public void ParseQueryOptionsShouldWork()
         {
-            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People?$filter=MyDog/Color eq 'Brown'&$select=ID&$expand=MyDog&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA&$unknow=&$unknowvalue&$skipToken=abc", UriKind.Relative));
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People?$filter=MyDog/Color eq 'Brown'&$select=ID&$expand=MyDog&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA&$unknow=&$unknowvalue&$skipToken=abc&$deltatoken=def", UriKind.Relative));
             parser.ParseSelectAndExpand().Should().NotBeNull();
             parser.ParseFilter().Should().NotBeNull();
             parser.ParseOrderBy().Should().NotBeNull();
@@ -297,7 +299,16 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             parser.ParseCount().Should().Be(true);
             parser.ParseSearch().Should().NotBeNull();
             parser.ParseSkipToken().Should().Be("abc");
+            parser.ParseDeltaToken().Should().Be("def");
         }
+
+        [TestMethod]
+        public void ParseDeltaTokenWithKindsofCharactorsShouldWork()
+        {
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People?$deltatoken=Start@Next_Chunk:From%26$To=Here!?()*+%2B,1-._~;", UriKind.Relative));
+            parser.ParseDeltaToken().Should().Be("Start@Next_Chunk:From&$To=Here!?()* +,1-._~;");
+        }
+
         #endregion
 
         #region ODataUnrecognizedPathException tests
