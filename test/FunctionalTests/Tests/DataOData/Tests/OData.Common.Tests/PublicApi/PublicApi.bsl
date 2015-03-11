@@ -656,7 +656,7 @@ public interface Microsoft.OData.Edm.IEdmEntityType : IEdmElement, IEdmNamedElem
 public interface Microsoft.OData.Edm.IEdmEntityTypeReference : IEdmElement, IEdmStructuredTypeReference, IEdmTypeReference {
 }
 
-public interface Microsoft.OData.Edm.IEdmEnumMember : IEdmElement, IEdmNamedElement {
+public interface Microsoft.OData.Edm.IEdmEnumMember : IEdmElement, IEdmNamedElement, IEdmVocabularyAnnotatable {
 	Microsoft.OData.Edm.IEdmEnumType DeclaringType  { public abstract get; }
 	Microsoft.OData.Edm.Values.IEdmPrimitiveValue Value  { public abstract get; }
 }
@@ -2600,7 +2600,7 @@ public class Microsoft.OData.Edm.Library.EdmEntityTypeReference : Microsoft.ODat
 	public EdmEntityTypeReference (Microsoft.OData.Edm.IEdmEntityType entityType, bool isNullable)
 }
 
-public class Microsoft.OData.Edm.Library.EdmEnumMember : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmEnumMember, IEdmNamedElement {
+public class Microsoft.OData.Edm.Library.EdmEnumMember : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmEnumMember, IEdmNamedElement, IEdmVocabularyAnnotatable {
 	public EdmEnumMember (Microsoft.OData.Edm.IEdmEnumType declaringType, string name, Microsoft.OData.Edm.Values.IEdmPrimitiveValue value)
 
 	Microsoft.OData.Edm.IEdmEnumType DeclaringType  { public virtual get; }
