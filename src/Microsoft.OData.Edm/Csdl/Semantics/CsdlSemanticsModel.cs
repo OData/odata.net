@@ -206,6 +206,15 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                             result.AddRange(((CsdlSemanticsElement)containerElement).InlineVocabularyAnnotations);
                         }
                     }
+
+                    CsdlSemanticsEnumTypeDefinition enumType = element as CsdlSemanticsEnumTypeDefinition;
+                    if (enumType != null)
+                    {
+                        foreach (IEdmEnumMember member in enumType.Members)
+                        {
+                            result.AddRange(((CsdlSemanticsElement)member).InlineVocabularyAnnotations);
+                        }
+                    }
                 }
 
                 return result;

@@ -2600,7 +2600,7 @@ public class Microsoft.OData.Edm.Library.EdmEntityTypeReference : Microsoft.ODat
 	public EdmEntityTypeReference (Microsoft.OData.Edm.IEdmEntityType entityType, bool isNullable)
 }
 
-public class Microsoft.OData.Edm.Library.EdmEnumMember : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmEnumMember, IEdmNamedElement {
+public class Microsoft.OData.Edm.Library.EdmEnumMember : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmEnumMember, IEdmNamedElement, IEdmVocabularyAnnotatable {
 	public EdmEnumMember (Microsoft.OData.Edm.IEdmEnumType declaringType, string name, Microsoft.OData.Edm.Values.IEdmPrimitiveValue value)
 
 	Microsoft.OData.Edm.IEdmEnumType DeclaringType  { public virtual get; }

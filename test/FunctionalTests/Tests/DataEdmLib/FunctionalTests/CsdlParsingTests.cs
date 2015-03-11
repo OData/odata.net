@@ -2376,14 +2376,49 @@ namespace EdmLibTests.FunctionalTests
 
             bool valid = model.Validate(out errors);
             Assert.IsFalse(valid, "valid");
-            Assert.AreEqual(1, errors.Count(), "one validation error expected");
+            Assert.AreEqual(2, errors.Count(), "two validation error expected");
             Assert.AreEqual(EdmErrorCode.EnumMemberValueOutOfRange, errors.ElementAt(0).ErrorCode, "EnumMemberValueOutOfRange expected");
+            Assert.AreEqual(EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType, errors.ElementAt(1).ErrorCode, "EnumMemberTypeMustMatchEnumUnderlyingType expected");
             Assert.IsTrue(errors.ElementAt(0).ErrorLocation.ToString().Contains("(4, 8)"), "error location");
+            Assert.IsTrue(errors.ElementAt(1).ErrorLocation.ToString().Contains("(4, 8)"), "error location");
 
-            IEdmEnumMember badEnumMemeber = ((IEdmEnumType)model.FindType("foo.Color")).Members.First(m => m.Name == "Green");
-            Assert.AreEqual(model.FindType("foo.Color"), badEnumMemeber.DeclaringType, "Bad member has correct type.");
-            Assert.IsTrue(badEnumMemeber.Value.IsBad(), "Bad member value is bad.");
-            Assert.AreEqual(EdmPrimitiveTypeKind.Int64, badEnumMemeber.Value.Type.PrimitiveKind(), "Bad members bad value has correct type.");
+            IEdmEnumMember enumMemeber = ((IEdmEnumType)model.FindType("foo.Color")).Members.First(m => m.Name == "Green");
+            Assert.AreEqual(model.FindType("foo.Color"), enumMemeber.DeclaringType, "Enum member has correct type.");
+            Assert.IsTrue(enumMemeber.Value.IsBad(), "Enum member value is bad.");
+            Assert.AreEqual(EdmPrimitiveTypeKind.Int64, enumMemeber.Value.Type.PrimitiveKind(), "Enum member bad value has correct type.");
+        }
+
+        [TestMethod]
+        public void TestEnumTypeParsingOutOfInt32Range()
+        {
+            const string csdl =
+@"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EnumType Name=""Color"" UnderlyingType=""Edm.Int32"" >
+      <Member Name=""Red"" Value=""2147483647""/>
+      <Member Name=""Green""/>
+      <Member Name=""Blue"" Value=""5""/>
+      <Member Name=""Yellow""/>
+    </EnumType>
+</Schema>";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+            Assert.IsTrue(parsed, "parsed");
+            Assert.IsTrue(errors.Count() == 0, "No errors");
+
+            bool valid = model.Validate(out errors);
+            Assert.IsFalse(valid, "valid");
+            Assert.AreEqual(2, errors.Count(), "two validation error expected");
+            Assert.AreEqual(EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType, errors.ElementAt(0).ErrorCode, "IntegerConstantValueOutOfRange expected");
+            Assert.AreEqual(EdmErrorCode.IntegerConstantValueOutOfRange, errors.ElementAt(1).ErrorCode, "EnumMemberTypeMustMatchEnumUnderlyingType expected");
+            Assert.IsTrue(errors.ElementAt(0).ErrorLocation.ToString().Contains("(4, 8)"), "error location");
+            Assert.IsTrue(errors.ElementAt(1).ErrorLocation is ObjectLocation, "error location");
+
+            IEdmEnumMember enumMemeber = ((IEdmEnumType)model.FindType("foo.Color")).Members.First(m => m.Name == "Green");
+            Assert.AreEqual(model.FindType("foo.Color"), enumMemeber.DeclaringType, "Enum member has correct type.");
+            Assert.IsFalse(enumMemeber.Value.IsBad(), "Enum member value is good.");
+            Assert.AreEqual(EdmPrimitiveTypeKind.Int32, enumMemeber.Value.Type.PrimitiveKind(), "Enum member value has correct type.");
         }
 
         [TestMethod]
