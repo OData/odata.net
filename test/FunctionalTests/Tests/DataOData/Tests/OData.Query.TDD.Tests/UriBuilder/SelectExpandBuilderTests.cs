@@ -329,6 +329,16 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.UriBuilder
             Uri actualUri = UriBuilder(queryUri, ODataUrlConventions.Default, settings);
             Assert.AreEqual(new Uri("http://gobbledygook/People?$expand=MyDog"), actualUri);
         }
+
+        [TestMethod]
+        public void ExpandWithInnerQueryOptions()
+        {
+            Uri queryUri = new Uri("People?$expand=Fully.Qualified.Namespace.Manager/DirectReports($levels=max;$orderby=ID desc),Fully.Qualified.Namespace.Employee/Manager($levels=3)", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlConventions.Default, settings);
+            Assert.AreEqual(
+                "http://gobbledygook/People?$expand=" + Uri.EscapeDataString("Fully.Qualified.Namespace.Manager/DirectReports($orderby=ID desc;$levels=max),Fully.Qualified.Namespace.Employee/Manager($levels=3)"),
+                actualUri.OriginalString);
+        }
         #endregion
 
         #region Interesting $expand with other options scenarios

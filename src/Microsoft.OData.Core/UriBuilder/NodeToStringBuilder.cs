@@ -9,6 +9,7 @@ namespace Microsoft.OData.Core.UriBuilder
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Text.RegularExpressions;
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
@@ -73,14 +74,14 @@ namespace Microsoft.OData.Core.UriBuilder
             {
                 left = String.Concat(ExpressionConstants.SymbolOpenParen, left, ExpressionConstants.SymbolClosedParen);
             }
-            
+
             var right = this.TranslateNode(node.Right);
             if (node.Right.Kind == QueryNodeKind.BinaryOperator && TranslateBinaryOperatorPriority(((BinaryOperatorNode)node.Right).OperatorKind) < TranslateBinaryOperatorPriority(node.OperatorKind))
             {
                 right = String.Concat(ExpressionConstants.SymbolOpenParen, right, ExpressionConstants.SymbolClosedParen);
             }
 
-            return String.Concat(left, ' ', this.BinaryOperatorNodeToString(node.OperatorKind), ' ', right);    
+            return String.Concat(left, ' ', this.BinaryOperatorNodeToString(node.OperatorKind), ' ', right);
         }
 
         /// <summary>
@@ -312,7 +313,7 @@ namespace Microsoft.OData.Core.UriBuilder
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated String.</returns>
         public override String Visit(SingleValuePropertyAccessNode node)
-        {   
+        {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
             return this.TranslatePropertyAccess(node.Source, node.Property.Name);
         }
@@ -352,10 +353,10 @@ namespace Microsoft.OData.Core.UriBuilder
             {
                 return String.Concat("\"", node.Text, "\"");
             }
-           else
-           {
-               return node.Text;
-           }    
+            else
+            {
+                return node.Text;
+            }
         }
 
         /// <summary>
@@ -392,7 +393,19 @@ namespace Microsoft.OData.Core.UriBuilder
             else
             {
                 return String.Concat(result, ExpressionConstants.SymbolOpenParen, this.TranslateNode(node.Operand), ExpressionConstants.SymbolClosedParen);
-            }       
+            }
+        }
+
+        /// <summary>Translates a <see cref="LevelsClause"/> into a string.</summary>
+        /// <param name="levelsClause">The levels clause to translate.</param>
+        /// <returns>The translated String.</returns>
+        internal static string TranslateLevelsClause(LevelsClause levelsClause)
+        {
+            Debug.Assert(levelsClause != null, "levelsClause != null");
+            string levelsStr = levelsClause.IsMaxLevel
+                ? ExpressionConstants.KeywordMax
+                : levelsClause.Level.ToString(CultureInfo.InvariantCulture);
+            return levelsStr;
         }
 
         /// <summary>
@@ -421,7 +434,7 @@ namespace Microsoft.OData.Core.UriBuilder
         internal String TranslateOrderByClause(OrderByClause orderByClause)
         {
             Debug.Assert(orderByClause != null, "orderByClause != null");
-           
+
             String expr = this.TranslateNode(orderByClause.Expression);
             if (orderByClause.Direction == OrderByDirection.Descending)
             {
@@ -436,7 +449,7 @@ namespace Microsoft.OData.Core.UriBuilder
             else
             {
                 return String.Concat(expr, ExpressionConstants.SymbolComma, this.TranslateOrderByClause(orderByClause));
-            }   
+            }
         }
 
         /// <summary>Translates a <see cref="SearchClause"/> into a <see cref="SearchClause"/>.</summary>
@@ -459,7 +472,7 @@ namespace Microsoft.OData.Core.UriBuilder
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values passed to this method are property names and not literals.")]
         internal String TranslateParameterAliasNodes(IDictionary<string, SingleValueNode> dictionary)
         {
-            String result = null; 
+            String result = null;
             if (dictionary != null)
             {
                 foreach (KeyValuePair<string, SingleValueNode> keyValuePair in dictionary)
@@ -502,7 +515,7 @@ namespace Microsoft.OData.Core.UriBuilder
         private String TranslateFunctionCall(string functionName, IEnumerable<QueryNode> argumentNodes)
         {
             ExceptionUtils.CheckArgumentNotNull(functionName, "functionName");
-            
+
             String result = String.Empty;
             foreach (QueryNode queryNode in argumentNodes)
             {
@@ -545,7 +558,7 @@ namespace Microsoft.OData.Core.UriBuilder
 
                     return ExpressionConstants.KeywordAnd;
                 case BinaryOperatorKind.Or:
-                     if (searchFlag)
+                    if (searchFlag)
                     {
                         return ExpressionConstants.SearchKeywordOr;
                     }
@@ -606,8 +619,8 @@ namespace Microsoft.OData.Core.UriBuilder
         /// </summary>
         /// <param name="text">string text to be judged</param>
         /// <returns>if the string is a valid SearchWord, return true, or return false.</returns>
-       private static bool IsValidSearchWord(string text)
-       {
+        private static bool IsValidSearchWord(string text)
+        {
             Match match = SearchLexer.InvalidWordPattern.Match(text);
             if (match.Success || String.Equals(text, "AND") || String.Equals(text, "OR") || String.Equals(text, "NOT"))
             {
@@ -617,6 +630,6 @@ namespace Microsoft.OData.Core.UriBuilder
             {
                 return true;
             }
-       } 
+        }
     }
 }
