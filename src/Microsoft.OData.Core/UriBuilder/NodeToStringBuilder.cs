@@ -313,7 +313,7 @@ namespace Microsoft.OData.Core.UriBuilder
         /// <returns>The translated String.</returns>
         public override String Visit(SingleValuePropertyAccessNode node)
         {   
-           ExceptionUtils.CheckArgumentNotNull(node, "node");
+            ExceptionUtils.CheckArgumentNotNull(node, "node");
             return this.TranslatePropertyAccess(node.Source, node.Property.Name);
         }
 

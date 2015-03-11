@@ -65,7 +65,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         {
             BinaryOperatorNode filterExpression = new BinaryOperatorNode(BinaryOperatorKind.Equal, new ConstantNode(1), new ConstantNode(1));
             FilterClause filterClause = new FilterClause(filterExpression, new EntityRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet()));
-            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), filterClause, null, null, null, null, null, null, null);
+            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, filterClause, null, null, null, null, null, null);
             expansion.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             expansion.FilterOption.Expression.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode(1);
             expansion.FilterOption.Expression.As<BinaryOperatorNode>().Right.ShouldBeConstantQueryNode(1);
@@ -76,28 +76,28 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         {
             SingleValuePropertyAccessNode propertyAccessNode = new SingleValuePropertyAccessNode(new ConstantNode(1), HardCodedTestModel.GetPersonNameProp());
             OrderByClause orderBy = new OrderByClause(null, propertyAccessNode, OrderByDirection.Descending, new EntityRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet()));
-            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, orderBy, null, null, null, null, null, null);
+            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, null, orderBy, null, null, null, null, null);
             expansion.OrderByOption.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
         }
 
         [TestMethod]
         public void TopOptionSetCorrectly()
         {
-            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, null, 42, null, null, null, null, null);
+            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, null, null, 42, null, null, null, null);
             expansion.TopOption.Should().Be(42);
         }
 
         [TestMethod]
         public void SkipOptionSetCorrectly()
         {
-            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, null, null, 42, null, null, null, null);
+            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, null, null, null, 42, null, null, null);
             expansion.SkipOption.Should().Be(42);
         }
 
         [TestMethod]
         public void CountQueryOptionSetCorrectly()
         {
-            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, null, null, null, true, null, null, null);
+            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, null, null, null, null, true, null, null);
             expansion.CountOption.Should().BeTrue();
         }
 
@@ -105,7 +105,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         public void LevelsOptionSetCorrectly()
         {
             LevelsClause levels = new LevelsClause(false, 16384);
-            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, null, null, null, null, levels, null, null);
+            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, null, null, null, null, null, null, levels);
             expansion.LevelsOption.IsMaxLevel.Should().BeFalse();
             expansion.LevelsOption.Level.Should().Be(16384);
         }
@@ -122,7 +122,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         public void SelectExpandOptionSetCorrectly()
         {
             SelectExpandClause selectAndExpand = new SelectExpandClause(null, true);
-            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, null, null, null, null, null, null, selectAndExpand);
+            ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), selectAndExpand, null, null, null, null, null, null, null);
             expansion.SelectAndExpand.AllSelected.Should().BeTrue();
             expansion.SelectAndExpand.SelectedItems.Should().BeEmpty();
         }

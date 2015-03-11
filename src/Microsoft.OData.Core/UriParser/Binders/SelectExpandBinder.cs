@@ -268,7 +268,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 searchOption = searchBinder.BindSearch(tokenIn.SearchOption);
             }
 
-            return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, levelsOption, searchOption, subSelectExpand);
+            return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, subSelectExpand, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, levelsOption);
         }
 
         /// <summary>

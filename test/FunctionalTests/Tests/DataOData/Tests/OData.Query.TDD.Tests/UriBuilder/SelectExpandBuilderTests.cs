@@ -5,6 +5,8 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Test.OData.Query.TDD.Tests.UriBuilder
@@ -447,7 +449,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.UriBuilder
         {
             Uri queryUri = new Uri("People?$select=MyDog&$expand=MyDog($expand=MyPeople($select=*))", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlConventions.Default, settings);
-            Assert.AreEqual("http://gobbledygook/People?$select=" + Uri.EscapeDataString("MyDog") + "&$expand=" + Uri.EscapeDataString("MyDog($expand=MyPeople($select=*))"), actualUri.OriginalString); 
+            Assert.AreEqual("http://gobbledygook/People?$select=" + Uri.EscapeDataString("MyDog") + "&$expand=" + Uri.EscapeDataString("MyDog($expand=MyPeople($select=*))"), actualUri.OriginalString);
         }
 
         [TestMethod]
@@ -539,7 +541,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.UriBuilder
         }
         #endregion
 
-        #region mixed examples 
+        #region mixed examples
         [TestMethod]
         public void SelectAllWithoutExpandShouldWork()
         {
@@ -594,6 +596,44 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.UriBuilder
             Uri queryUri = new Uri("People?$select=Name,MyOpenAddress/Test&$expand=MyDog($filter=Color eq 'Brown';$orderby=Color; $search=Color)", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlConventions.Default, settings);
             Assert.AreEqual("http://gobbledygook/People?$select=" + Uri.EscapeDataString("Name,MyOpenAddress/Test,MyDog") + "&$expand=" + Uri.EscapeDataString("MyDog($filter=Color eq 'Brown';$orderby=Color;$search=Color)"), actualUri.OriginalString);
+        }
+
+        [TestMethod]
+        public void ExpandWithNestedQueryOptionsShouldWork()
+        {
+            var ervFilter = new EntityRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+            var ervOrderby = new EntityRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+            var expand =
+                new ExpandedNavigationSelectItem(
+                    new ODataExpandPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null)),
+                    HardCodedTestModel.GetPeopleSet(),
+                    null,
+                    new FilterClause(
+                        new BinaryOperatorNode(
+                            BinaryOperatorKind.Equal,
+                            new SingleValuePropertyAccessNode(new EntityRangeVariableReferenceNode("$it", ervFilter), HardCodedTestModel.GetDogColorProp()),
+                            new ConstantNode("Brown", "'Brown'")),
+                            ervFilter),
+                    new OrderByClause(
+                        null,
+                        new SingleValuePropertyAccessNode(new EntityRangeVariableReferenceNode("$it", ervOrderby), HardCodedTestModel.GetDogColorProp()),
+                        OrderByDirection.Ascending,
+                        ervOrderby),
+                    1,
+                    /* skipOption */ null,
+                    true,
+                    new SearchClause(new SearchTermNode("termX")),
+                    /* levelsOption*/ null);
+
+            ODataUri uri = new ODataUri()
+            {
+                ServiceRoot = new Uri("http://gobbledygook/"),
+                Path = new ODataPath(new EntitySetSegment(HardCodedTestModel.GetPeopleSet())),
+                SelectAndExpand = new SelectExpandClause(new[] { expand }, true)
+            };
+
+            Uri actualUri = new ODataUriBuilder(ODataUrlConventions.Default, uri).BuildUri();
+            Assert.AreEqual("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($filter=Color eq 'Brown';$orderby=Color;$top=1;$count=true;$search=termX)"), actualUri.OriginalString);
         }
         #endregion
 
