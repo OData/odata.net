@@ -172,21 +172,6 @@ namespace Microsoft.OData.Core
         public bool? QueryCount { get; set; }
 
         /// <summary>
-        /// Gets or sets any $skipToken option for this uri.
-        /// </summary>
-        public string SkipToken { get; set; }
-
-        /// <summary>
-        /// Gets or sets any $deltaToken option for this uri.
-        /// </summary>
-        public string DeltaToken { get; set; }
-
-        /// <summary>
-        /// Gets or sets any $format option for this uri.
-        /// </summary>
-        public IEnumerable<KeyValuePair<ODataMediaType, string>> Format { get; set; }
-
-        /// <summary>
         /// Get or sets the MetadataDocumentUri, which is always ServiceRoot + $metadata
         /// </summary>
         internal Uri MetadataDocumentUri { get; private set; }
@@ -216,10 +201,7 @@ namespace Microsoft.OData.Core
                 Search = Search,
                 Skip = Skip,
                 Top = Top,
-                QueryCount = QueryCount,
-                SkipToken = SkipToken,
-                DeltaToken = DeltaToken,
-                Format = Format,
+                QueryCount = QueryCount            
             };
         }
     }

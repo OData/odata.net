@@ -332,36 +332,6 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Parses a $skipToken query option
-        /// </summary>
-        /// <returns>A value representing that skip token option, null if $skipToken query does not exist.</returns>
-        public string ParseSkipToken()
-        {
-            this.Initialize();
-            return this.queryOptionParser.ParseSkipToken();
-        }
-
-        /// <summary>
-        /// Parses a $deltaToken query option
-        /// </summary>
-        /// <returns>A value representing that delta token option, null if $deltaToken query does not exist.</returns>
-        public string ParseDeltaToken()
-        {
-            this.Initialize();
-            return this.queryOptionParser.ParseDeltaToken();
-        }
-
-        /// <summary>
-        /// Parses a $format query option
-        /// </summary>
-        /// <returns>A value representing that format option, null if $format query does not exist.</returns>
-        public IEnumerable<KeyValuePair<ODataMediaType, string>> ParseFormat()
-        {
-            this.Initialize();
-            return this.queryOptionParser.ParseFormat();
-        }
-
-        /// <summary>
         /// Parse a full Uri into its contingent parts with semantic meaning attached to each part. 
         /// See <see cref="ODataUri"/>.
         /// </summary>
@@ -379,18 +349,12 @@ namespace Microsoft.OData.Core.UriParser
             long? top = this.ParseTop();
             long? skip = this.ParseSkip();
             bool? count = this.ParseCount();
-            string skipToken = this.ParseSkipToken();
-            string deltaToken = this.ParseDeltaToken();
-            IEnumerable<KeyValuePair<ODataMediaType, string>> format = this.ParseFormat();
 
             // TODO:  check it shouldn't be empty
             List<QueryNode> boundQueryOptions = new List<QueryNode>();
 
             ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, search, skip, top, count);
             odataUri.ServiceRoot = this.serviceRoot;
-            odataUri.SkipToken = skipToken;
-            odataUri.DeltaToken = deltaToken;
-            odataUri.Format = format;
             return odataUri;
         }
 

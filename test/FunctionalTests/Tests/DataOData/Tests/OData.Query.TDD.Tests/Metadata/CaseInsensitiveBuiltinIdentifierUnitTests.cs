@@ -273,39 +273,6 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Metadata
                 HardCodedTestModel.TestModel,
                 new ODataUriResolver() { EnableCaseInsensitive = true });
         }
-
-        [TestMethod]
-        public void CaseInsensitiveSkipTokenShouldWork()
-        {
-            this.TestCaseInsensitiveBuiltIn(
-                "People?$skipToken=foo",
-                "People?$SKIPTOKEN=foo",
-                uriParser => uriParser.ParseSkipToken(),
-                val => val.Should().Be("foo"),
-                /*errorMessage*/ null);
-        }
-
-        [TestMethod]
-        public void CaseInsensitiveDeltaTokenShouldWork()
-        {
-            this.TestCaseInsensitiveBuiltIn(
-                "People?$deltaToken=foo",
-                "People?$DELTATOKEN=foo",
-                uriParser => uriParser.ParseDeltaToken(),
-                val => val.Should().Be("foo"),
-                /*errorMessage*/ null);
-        }
-
-        [TestMethod]
-        public void CaseInsensitiveFormatShouldWork()
-        {
-            this.TestCaseInsensitiveBuiltIn(
-                "People?$format=application/json",
-                "People?$FORMAT=application/json",
-                uriParser => uriParser.ParseFormat(),
-                format => format.Should().NotBeNull(),
-                /*errorMessage*/ null);
-        }
         #endregion
 
         #region builtin functions Tests
