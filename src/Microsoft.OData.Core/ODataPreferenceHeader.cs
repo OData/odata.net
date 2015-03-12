@@ -77,7 +77,7 @@ namespace Microsoft.OData.Core
         private static readonly KeyValuePair<string, string>[] EmptyParameters = new KeyValuePair<string, string>[0];
 
         /// <summary>
-        /// The respond-async preference.
+        /// The odata.continue-on-error preference.
         /// </summary>
         private static readonly HttpHeaderValueElement ContinueOnErrorPreference = new HttpHeaderValueElement(ODataContinueOnErrorPreferenceToken, null, EmptyParameters);
 
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Core
         private static readonly HttpHeaderValueElement RespondAsyncPreference = new HttpHeaderValueElement(RespondAsyncPreferenceToken, null, EmptyParameters);
 
         /// <summary>
-        /// The respond-async preference.
+        /// The odata.track-changes preference.
         /// </summary>
         private static readonly HttpHeaderValueElement TrackChangesPreference = new HttpHeaderValueElement(ODataTrackChangesPreferenceToken, null, EmptyParameters);
 
