@@ -36,7 +36,7 @@ namespace Microsoft.OData.Core.UriBuilder
             ExceptionUtils.CheckArgumentNotNull(selectExpandClause, "selectExpandClause");
 
             List<string> selectList = selectExpandClause.GetCurrentLevelSelectList();
-            string selectClause = null;      
+            string selectClause = null;
             if (selectList.Any())
             {
                 selectClause = String.Join(ODataConstants.ContextUriProjectionPropertySeparator, selectList.ToArray());
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core.UriBuilder
 
             selectClause = string.IsNullOrEmpty(selectClause) ? null : string.Concat("$select", ExpressionConstants.SymbolEqual, isFirstSelectItem ? Uri.EscapeDataString(selectClause) : selectClause);
             isFirstSelectItem = false;
-            
+
             string expandClause = null;
             foreach (ExpandedNavigationSelectItem expandSelectItem in selectExpandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>())
             {
@@ -167,6 +167,14 @@ namespace Microsoft.OData.Core.UriBuilder
                 res += "$search";
                 res += ExpressionConstants.SymbolEqual;
                 res += nodeToStringBuilder.TranslateSearchClause(item.SearchOption);
+            }
+
+            if (item.LevelsOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += ExpressionConstants.QueryOptionLevels;
+                res += ExpressionConstants.SymbolEqual;
+                res += NodeToStringBuilder.TranslateLevelsClause(item.LevelsOption);
             }
 
             return string.Concat(currentExpandClause, string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen));

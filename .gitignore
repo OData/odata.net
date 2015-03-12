@@ -25,11 +25,13 @@ StyleCop.Cache
 src/Microsoft.OData.Edm/Microsoft.OData.Edm.xml
 src/Microsoft.OData.Core/Microsoft.OData.Core.xml
 src/Microsoft.Spatial/Microsoft.Spatial.xml
+src/Microsoft.OData.Client/Microsoft.OData.Client.txt
 src/Microsoft.OData.Client/Microsoft.OData.Client.xml
 test/FunctionalTests/Service/Microsoft.OData.Service.xml
 src/Microsoft.OData.Edm/Build.Orcas/Microsoft.OData.Edm.NetFX35.xml
 src/Microsoft.OData.Core/Build.Orcas/Microsoft.OData.Core.NetFX35.xml
 src/Microsoft.Spatial/Build.Orcas/Microsoft.Spatial.NetFX35.xml
+src/Microsoft.OData.Client/Build.Portable/Microsoft.OData.Client.txt
 src/Microsoft.OData.Client/Build.Portable/Microsoft.OData.Client.xml
 src/CodeGen/Microsoft.OData.Service.Design.T4.xml
 src/Web/GenExe/DataSvcUtil.xml

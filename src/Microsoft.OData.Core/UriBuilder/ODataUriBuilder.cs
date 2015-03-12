@@ -7,7 +7,6 @@
 namespace Microsoft.OData.Core.UriBuilder
 {
     using System;
-    using System.Collections.Generic;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Core.UriParser.Semantic;
