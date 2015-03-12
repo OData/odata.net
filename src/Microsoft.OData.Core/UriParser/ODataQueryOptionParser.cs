@@ -231,6 +231,16 @@ namespace Microsoft.OData.Core.UriParser
             this.searchClause = ParseSearchImplementation(searchQuery, this.Configuration);
             return searchClause;
         }
+
+        /// <summary>
+        /// Parses a $deltaToken query option
+        /// </summary>
+        /// <returns>A value representing that delta token option, null if $deltaToken query does not exist.</returns>
+        public string ParseDeltaToken()
+        {
+            string deltaTokenQuery;
+            return this.TryGetQueryOption(UriQueryConstants.DeltaTokenQueryOption, out deltaTokenQuery) ? deltaTokenQuery : null;
+        }
         #endregion public methods
 
         #region private methods

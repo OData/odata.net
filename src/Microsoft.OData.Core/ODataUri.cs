@@ -172,6 +172,11 @@ namespace Microsoft.OData.Core
         public bool? QueryCount { get; set; }
 
         /// <summary>
+        /// Gets or sets any $deltaToken option for this uri.
+        /// </summary>
+        public string DeltaToken { get; set; }
+
+        /// <summary>
         /// Get or sets the MetadataDocumentUri, which is always ServiceRoot + $metadata
         /// </summary>
         internal Uri MetadataDocumentUri { get; private set; }
@@ -201,7 +206,8 @@ namespace Microsoft.OData.Core
                 Search = Search,
                 Skip = Skip,
                 Top = Top,
-                QueryCount = QueryCount            
+                QueryCount = QueryCount,
+                DeltaToken = DeltaToken,
             };
         }
     }

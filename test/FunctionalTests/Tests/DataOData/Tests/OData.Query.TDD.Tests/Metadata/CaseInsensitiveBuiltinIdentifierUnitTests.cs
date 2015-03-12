@@ -273,6 +273,17 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Metadata
                 HardCodedTestModel.TestModel,
                 new ODataUriResolver() { EnableCaseInsensitive = true });
         }
+
+        [TestMethod]
+        public void CaseInsensitiveDeltaTokenShouldWork()
+        {
+            this.TestCaseInsensitiveBuiltIn(
+                "People?$deltaToken=foo",
+                "People?$DELTATOKEN=foo",
+                uriParser => uriParser.ParseDeltaToken(),
+                val => val.Should().Be("foo"),
+                /*errorMessage*/ null);
+        }
         #endregion
 
         #region builtin functions Tests

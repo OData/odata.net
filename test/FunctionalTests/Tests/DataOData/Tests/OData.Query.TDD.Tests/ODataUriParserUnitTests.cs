@@ -11,7 +11,6 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
     using System.Linq;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Core.UriParser.Semantic;
@@ -42,12 +41,13 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             uriParser.ParseSkip().Should().Be(null);
             uriParser.ParseCount().Should().Be(null);
             uriParser.ParseSearch().Should().BeNull();
+            uriParser.ParseDeltaToken().Should().BeNull();
         }
 
         [TestMethod]
         public void EmptyValueQueryOptionShouldWork()
         {
-            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$count=&$search=&$unknow=&$unknowvalue"));
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$count=&$search=&$unknow=&$unknowvalue&$deltaToken="));
             var path = uriParser.ParsePath();
             path.Should().HaveCount(1);
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
@@ -64,6 +64,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             action.ShouldThrow<ODataException>().WithMessage(Strings.ODataUriParser_InvalidCount(""));
             action = () => uriParser.ParseSearch();
             action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_ExpressionExpected(0, ""));
+            uriParser.ParseDeltaToken().Should().BeEmpty();
         }
 
         [TestMethod]
@@ -569,7 +570,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
         [TestMethod]
         public void ParseQueryOptionsShouldWork()
         {
-            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People?$filter=MyDog/Color eq 'Brown'&$select=ID&$expand=MyDog&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA&$unknow=&$unknowvalue", UriKind.Relative));
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People?$filter=MyDog/Color eq 'Brown'&$select=ID&$expand=MyDog&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA&$unknow=&$unknowvalue&$deltaToken=def", UriKind.Relative));
             parser.ParseSelectAndExpand().Should().NotBeNull();
             parser.ParseFilter().Should().NotBeNull();
             parser.ParseOrderBy().Should().NotBeNull();
@@ -577,6 +578,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             parser.ParseSkip().Should().Be(2);
             parser.ParseCount().Should().Be(true);
             parser.ParseSearch().Should().NotBeNull();
+            parser.ParseDeltaToken().Should().Be("def");
         }
         #endregion
 
