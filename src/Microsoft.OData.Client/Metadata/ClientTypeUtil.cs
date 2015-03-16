@@ -410,6 +410,47 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
+        /// Gets any key attributes on type or its properties via duck typing.
+        /// </summary>
+        /// <param name="type">Type in question.</param>
+        /// <returns>Returns the list of key properties defined on <paramref name="type"/></returns>
+        internal static KeyAttribute GetKeyAttributeViaDuckTyping(Type type)
+        {
+            Func<CustomAttributeData, bool> isKeyAttribute = ca =>
+                ca.AttributeType != null
+                && ca.AttributeType.DeclaringType != null
+                && ca.AttributeType.DeclaringType.Name == "KeyAttribute";
+
+            var typeKeyData = type.GetTypeInfo().CustomAttributes.FirstOrDefault(isKeyAttribute);
+            if (typeKeyData == null)
+            {
+                var propertyKeyData = GetPropertiesOnType(type, declaredOnly: false)
+                    .Where(pi => pi != null && pi.CustomAttributes.Any(isKeyAttribute))
+                    .Select(p => p.Name)
+                    .ToArray();
+
+                if (propertyKeyData.Any())
+                {
+                    return new KeyAttribute(propertyKeyData);
+                }
+            }
+            else if (typeKeyData.ConstructorArguments.Any())
+            {
+                var keyArgument = typeKeyData.ConstructorArguments[0];
+                if (keyArgument.ArgumentType == typeof(string))
+                {
+                    return new KeyAttribute((string)keyArgument.Value);
+                }
+                else if (keyArgument.ArgumentType == typeof(string[]))
+                {
+                    return new KeyAttribute(((IEnumerable<CustomAttributeTypedArgument>)keyArgument.Value).Select(k => k.Value as string).ToArray());
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Returns the list of key properties defined on <paramref name="type"/>; null if <paramref name="type"/> is complex.
         /// </summary>
         /// <param name="type">Type in question.</param>
@@ -436,7 +477,7 @@ namespace Microsoft.OData.Client.Metadata
             string typeName = type.ToString();
             IEnumerable<object> customAttributes = type.GetCustomAttributes(true);
             bool isEntity = customAttributes.OfType<EntityTypeAttribute>().Any();
-            KeyAttribute dataServiceKeyAttribute = customAttributes.OfType<KeyAttribute>().FirstOrDefault();
+            KeyAttribute dataServiceKeyAttribute = customAttributes.OfType<KeyAttribute>().FirstOrDefault() ?? GetKeyAttributeViaDuckTyping(type);
             List<PropertyInfo> keyProperties = new List<PropertyInfo>();
             PropertyInfo[] properties = ClientTypeUtil.GetPropertiesOnType(type, false /*declaredOnly*/).ToArray();
             hasProperties = properties.Length > 0;
