@@ -4765,8 +4765,11 @@ public sealed class Microsoft.OData.Core.ODataPayloadKindDetectionResult {
 
 public sealed class Microsoft.OData.Core.ODataPreferenceHeader {
 	string AnnotationFilter  { public get; public set; }
+	bool ContinueOnError  { public get; public set; }
+	System.Nullable`1[[System.Int32]] MaxPageSize  { public get; public set; }
 	bool RespondAsync  { public get; public set; }
 	System.Nullable`1[[System.Boolean]] ReturnContent  { public get; public set; }
+	bool TrackChanges  { public get; public set; }
 	System.Nullable`1[[System.Int32]] Wait  { public get; public set; }
 }
 
