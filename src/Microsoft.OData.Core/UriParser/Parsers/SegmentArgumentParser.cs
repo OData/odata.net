@@ -305,7 +305,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     valueText = literalToken.OriginalText;
 
                     // disallow "{...}" if enableUriTemplateParsing is false (which could have been seen as valid function parameter, e.g. array notation)
-                    if (UriTemplateParser.IsValidTemplateLiteral(valueText) && !enableUriTemplateParsing)
+                    if (!enableUriTemplateParsing && UriTemplateParser.IsValidTemplateLiteral(valueText))
                     {
                         instance = null;
                         return false;

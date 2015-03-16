@@ -485,7 +485,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 || previous.TargetKind == RequestTargetKind.OpenPropertyValue   /* $value, see TryCreateValueSegment */
                 || previous.TargetKind == RequestTargetKind.EnumValue           /* $value, see TryCreateValueSegment */
                 || previous.TargetKind == RequestTargetKind.MediaResource       /* $value or Media resource, see TryCreateValueSegment/CreateNamedStreamSegment */
-                || previous.TargetKind == RequestTargetKind.VoidOperation       /* service operation with void return type */)
+                || previous.TargetKind == RequestTargetKind.VoidOperation       /* service operation with void return type */
+                || previous.TargetKind == RequestTargetKind.Nothing             /* Nothing targeted (e.g. PathTemplate) */)
             {
                 // Nothing can come after a $metadata, $value or $batch segment.
                 // Nothing can come after a service operation with void return type.
@@ -970,6 +971,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // before treating this as a property, try to handle it as a key property value, unless it was preceeded by an escape-marker segment ('$').
             if (this.TryHandleAsKeySegment(text))
             {
+                return;
+            }
+
+            // Parse as path template segment if EnableUriTemplateParsing is enabled.
+            if (this.configuration.EnableUriTemplateParsing && UriTemplateParser.IsValidTemplateLiteral(text))
+            {
+                this.parsedSegments.Add(new PathTemplateSegment(text));
                 return;
             }
 
