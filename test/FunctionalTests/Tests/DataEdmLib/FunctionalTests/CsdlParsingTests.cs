@@ -2372,11 +2372,11 @@ namespace EdmLibTests.FunctionalTests
             IEnumerable<EdmError> errors;
             bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
-            Assert.IsTrue(errors.Count() == 0, "No errors");
+            Assert.AreEqual(0, errors.Count(), "No errors");
 
             bool valid = model.Validate(out errors);
             Assert.IsFalse(valid, "valid");
-            Assert.AreEqual(2, errors.Count(), "two validation error expected");
+            Assert.AreEqual(2, errors.Count(), "two validation errors expected");
             Assert.AreEqual(EdmErrorCode.EnumMemberValueOutOfRange, errors.ElementAt(0).ErrorCode, "EnumMemberValueOutOfRange expected");
             Assert.AreEqual(EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType, errors.ElementAt(1).ErrorCode, "EnumMemberTypeMustMatchEnumUnderlyingType expected");
             Assert.IsTrue(errors.ElementAt(0).ErrorLocation.ToString().Contains("(4, 8)"), "error location");
@@ -2405,13 +2405,13 @@ namespace EdmLibTests.FunctionalTests
             IEnumerable<EdmError> errors;
             bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
-            Assert.IsTrue(errors.Count() == 0, "No errors");
+            Assert.AreEqual(0, errors.Count(), "No errors");
 
             bool valid = model.Validate(out errors);
             Assert.IsFalse(valid, "valid");
-            Assert.AreEqual(2, errors.Count(), "two validation error expected");
-            Assert.AreEqual(EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType, errors.ElementAt(0).ErrorCode, "IntegerConstantValueOutOfRange expected");
-            Assert.AreEqual(EdmErrorCode.IntegerConstantValueOutOfRange, errors.ElementAt(1).ErrorCode, "EnumMemberTypeMustMatchEnumUnderlyingType expected");
+            Assert.AreEqual(2, errors.Count(), "two validation errors expected");
+            Assert.AreEqual(EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType, errors.ElementAt(0).ErrorCode, "EnumMemberTypeMustMatchEnumUnderlyingType expected");
+            Assert.AreEqual(EdmErrorCode.IntegerConstantValueOutOfRange, errors.ElementAt(1).ErrorCode, "IntegerConstantValueOutOfRange expected");
             Assert.IsTrue(errors.ElementAt(0).ErrorLocation.ToString().Contains("(4, 8)"), "error location");
             Assert.IsTrue(errors.ElementAt(1).ErrorLocation is ObjectLocation, "error location");
 

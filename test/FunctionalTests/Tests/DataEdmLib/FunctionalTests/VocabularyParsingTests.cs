@@ -737,12 +737,15 @@ namespace EdmLibTests.FunctionalTests
             var valueAnnotations = model.VocabularyAnnotations.OfType<IEdmValueAnnotation>();
             Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotation count.");
 
-            foreach (var valueAnnotation in valueAnnotations)
-            {
-                var intValue = valueAnnotation.Value as IEdmIntegerConstantExpression;
-                Assert.IsNotNull(intValue, "Invalid integer value.");
-                Assert.AreEqual(5, intValue.Value, "Invalid integer value.");
-            }
+            //Call FindVocabularyAnnotations to get vocabulary annotations.
+            var enumType = model.FindDeclaredType("DefaultNamespace.MyEnumType") as IEdmEnumType;
+            var vocabularyAnnotatable = enumType.Members.First() as IEdmVocabularyAnnotatable;
+            var valueAnnotations1 = model.FindVocabularyAnnotations(vocabularyAnnotatable).OfType<IEdmValueAnnotation>();
+            Assert.AreEqual(1, valueAnnotations1.Count(), "Invalid value annotation count.");
+
+            var intValue = valueAnnotations1.First().Value as IEdmIntegerConstantExpression;
+            Assert.IsNotNull(intValue, "Invalid integer value.");
+            Assert.AreEqual(5, intValue.Value, "Invalid integer value.");
         }
 
         [TestMethod]
