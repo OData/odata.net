@@ -4765,8 +4765,11 @@ public sealed class Microsoft.OData.Core.ODataPayloadKindDetectionResult {
 
 public sealed class Microsoft.OData.Core.ODataPreferenceHeader {
 	string AnnotationFilter  { public get; public set; }
+	bool ContinueOnError  { public get; public set; }
+	System.Nullable`1[[System.Int32]] MaxPageSize  { public get; public set; }
 	bool RespondAsync  { public get; public set; }
 	System.Nullable`1[[System.Boolean]] ReturnContent  { public get; public set; }
+	bool TrackChanges  { public get; public set; }
 	System.Nullable`1[[System.Int32]] Wait  { public get; public set; }
 }
 
@@ -5479,6 +5482,7 @@ public sealed class Microsoft.OData.Core.UriParser.Semantic.EntitySetSegment : M
 
 public sealed class Microsoft.OData.Core.UriParser.Semantic.ExpandedNavigationSelectItem : Microsoft.OData.Core.UriParser.Semantic.SelectItem {
 	public ExpandedNavigationSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause selectExpandOption)
+	public ExpandedNavigationSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause selectAndExpand, Microsoft.OData.Core.UriParser.Semantic.FilterClause filterOption, Microsoft.OData.Core.UriParser.Semantic.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.Core.UriParser.Semantic.SearchClause searchOption, Microsoft.OData.Core.UriParser.Semantic.LevelsClause levelsOption)
 
 	System.Nullable`1[[System.Boolean]] CountOption  { public get; }
 	Microsoft.OData.Core.UriParser.Semantic.FilterClause FilterOption  { public get; }

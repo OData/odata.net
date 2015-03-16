@@ -73,7 +73,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="selectExpandOption">This level select and any sub expands for this expand item.</param>
         /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
         public ExpandedNavigationSelectItem(ODataExpandPath pathToNavigationProperty, IEdmNavigationSource navigationSource, SelectExpandClause selectExpandOption)
-            : this(pathToNavigationProperty, navigationSource, null, null, null, null, null, null, null, selectExpandOption)
+            : this(pathToNavigationProperty, navigationSource, selectExpandOption, null, null, null, null, null, null, null)
         {
         }
 
@@ -82,39 +82,39 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         /// <param name="pathToNavigationProperty">the path to the navigation property for this expand item, including any type segments</param>
         /// <param name="navigationSource">the navigation source for this expand level.</param>
+        /// <param name="selectAndExpand">This level select and any sub expands for this expand item.</param>
         /// <param name="filterOption">A filter clause for this expand (can be null)</param>
         /// <param name="orderByOption">An Orderby clause for this expand (can be null)</param>
         /// <param name="topOption">A top clause for this expand (can be null)</param>
         /// <param name="skipOption">A skip clause for this expand (can be null)</param>
         /// <param name="countOption">An query count clause for this expand (can be null)</param>
-        /// <param name="levelsOption">An levels clause for this expand (can be null)</param>
         /// <param name="searchOption">An levels clause for this expand (can be null)</param>
-        /// <param name="selectAndExpand">This level select and any sub expands for this expand item.</param>
+        /// <param name="levelsOption">An levels clause for this expand (can be null)</param>
         /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
-        internal ExpandedNavigationSelectItem(
+        public ExpandedNavigationSelectItem(
              ODataExpandPath pathToNavigationProperty,
              IEdmNavigationSource navigationSource,
+             SelectExpandClause selectAndExpand,
              FilterClause filterOption,
              OrderByClause orderByOption,
              long? topOption,
              long? skipOption,
              bool? countOption,
-             LevelsClause levelsOption,
              SearchClause searchOption,
-             SelectExpandClause selectAndExpand)
+             LevelsClause levelsOption)
         {
             ExceptionUtils.CheckArgumentNotNull(pathToNavigationProperty, "navigationProperty");
 
             this.pathToNavigationProperty = pathToNavigationProperty;
             this.navigationSource = navigationSource;
+            this.selectAndExpand = selectAndExpand;
             this.filterOption = filterOption;
             this.orderByOption = orderByOption;
             this.topOption = topOption;
             this.skipOption = skipOption;
             this.countOption = countOption;
-            this.levelsOption = levelsOption;
             this.searchOption = searchOption;
-            this.selectAndExpand = selectAndExpand;
+            this.levelsOption = levelsOption;
         }
 
         /// <summary>

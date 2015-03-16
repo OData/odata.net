@@ -25,7 +25,10 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Constructs a <see cref="LevelsClause"/> from given parameters.
         /// </summary>
         /// <param name="isMaxLevel">Flag indicating max level is specified.</param>
-        /// <param name="level">The level value for the LevelsClause.</param>
+        /// <param name="level">
+        /// The level value for the LevelsClause.
+        /// This value is only used when <paramref name="isMaxLevel"/> is set to false.
+        /// </param>
         public LevelsClause(bool isMaxLevel, long level)
         {
             this.isMaxLevel = isMaxLevel;
