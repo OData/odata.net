@@ -114,6 +114,7 @@
     <Compile Include="ModelReferenceTests\ModelReferenceClientTests.cs" />
     <Compile Include="ModelReferenceTests\ModelReferenceCUDTests.cs" />
     <Compile Include="ModelReferenceTests\ModelReferenceQueryTests.cs" />
+    <Compile Include="ODataWCFServiceTests\AbstractEntityTypeTests.cs" />
     <Compile Include="OperationTests\OperationClientTests.cs" />
     <Compile Include="PluggableFormatServiceTests\PluggableFormatServiceTests.cs" />
     <Compile Include="PropertyTrackingTests\ChangeTrackingTest.cs" />

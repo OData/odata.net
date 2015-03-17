@@ -74,6 +74,7 @@ namespace Microsoft.OData.Client
             this.Query = query;
             this.Context = query.Context;
             this.IsComposable = isComposable;
+            this.isFunction = query.IsFunction;
         }
 
         /// <summary>

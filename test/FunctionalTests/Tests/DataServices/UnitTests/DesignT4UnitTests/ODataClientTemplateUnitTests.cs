@@ -496,6 +496,11 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 this.CalledActions.Add("WriteKeyPropertiesCommentAndAttribute(" + string.Join(", ", keyProperties) + ")");
             }
 
+            internal override void WriteEntityTypeAttribute()
+            {
+                this.CalledActions.Add("WriteEntityTypeAttribute()");
+            }
+
             internal override void WriteEntitySetAttribute(string entitySetName)
             {
                 this.CalledActions.Add("WriteEntitySetAttribute(" + entitySetName + ")");
@@ -926,6 +931,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 "WriteConstructorForSingleType(EntityTypeSingle, DataServiceQuerySingle)",
                 "WriteClassEndForStructuredType()",
                 "WriteSummaryCommentForStructuredType(EntityType)",
+                "WriteEntityTypeAttribute()",
                 "WriteClassStartForStructuredType(AbstractModifier, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType)",
                 "WriteClassEndForStructuredType()",
                 "WriteExtensionMethodsStart()",
@@ -959,6 +965,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 "WriteConstructorForSingleType(EntityTypeSingle, DataServiceQuerySingle)",
                 "WriteClassEndForStructuredType()",
                 "WriteSummaryCommentForStructuredType(EntityType)",
+                "WriteEntityTypeAttribute()",
                 "WriteClassStartForStructuredType(AbstractModifier, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType)",
                 "WriteClassEndForStructuredType()",
                 "WriteSummaryCommentForEnumType(EnumType)",
@@ -1405,6 +1412,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 "WriteConstructorForSingleType(EntityTypeSingle, DataServiceQuerySingle)",
                 "WriteClassEndForStructuredType()",
                 "WriteSummaryCommentForStructuredType(EntityType)",
+                "WriteEntityTypeAttribute()",
                 "WriteClassStartForStructuredType(AbstractModifier, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType)",
                 "WriteClassEndForStructuredType()"
             };
@@ -1427,6 +1435,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 "WriteConstructorForSingleType(EntityTypeSingle, DataServiceQuerySingle)",
                 "WriteClassEndForStructuredType()", 
                 "WriteSummaryCommentForStructuredType(EntityType)",
+                "WriteEntityTypeAttribute()",
                 "WriteClassStartForStructuredType(AbstractModifier, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType, NotifyPropertyChanged)",
                 "WriteINotifyPropertyChangedImplementation()",
                 "WriteClassEndForStructuredType()"
@@ -1463,6 +1472,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 "WriteConstructorForSingleType(EntityTypeSingle, DataServiceQuerySingle)",
                 "WriteClassEndForStructuredType()", 
                 "WriteSummaryCommentForStructuredType(EntityType)",
+                "WriteEntityTypeAttribute()",
                 "WriteEntitySetAttribute(Set1)",
                 "WriteClassStartForStructuredType(, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType, NotifyPropertyChanged)",
                 "WriteINotifyPropertyChangedImplementation()",
@@ -1488,6 +1498,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 "WriteConstructorForSingleType(EntityTypeSingle, DataServiceQuerySingle)",
                 "WriteClassEndForStructuredType()",
                 "WriteSummaryCommentForStructuredType(EntityType)",
+                "WriteEntityTypeAttribute()",
                 "WriteEntityHasStreamAttribute()",
                 "WriteClassStartForStructuredType(, EntityType, EntityType, global::Microsoft.OData.Client.BaseEntityType)",
                 "WriteClassEndForStructuredType()"
@@ -1511,6 +1522,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 "WriteConstructorForSingleType(EntityTypeSingle, DataServiceQuerySingle)",
                 "WriteClassEndForStructuredType()",
                 "WriteSummaryCommentForStructuredType(EntityType)",
+                "WriteEntityTypeAttribute()",
                 "WriteClassStartForStructuredType(, EntityType, EntityType, ClassInheritBaseEntityType)",
                 "WriteClassEndForStructuredType()"
             };

@@ -57,6 +57,9 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             {NameSpacePrefixCodeGenerationTests + "PublicProviderReflectionServiceReference", ServiceDescriptors.PublicProviderReflectionService},
             {NameSpacePrefixCodeGenerationTests + "ModelReferenceServiceReference", ServiceDescriptors.ModelRefServiceDescriptor},
 
+            //{NameSpacePrefixReference + "ODataWCFServiceReference", ServiceDescriptors.ODataWCFServiceDescriptor}
+            //{NameSpacePrefixReference + "TrippinServiceReference", ServiceDescriptors.TripPinServiceDescriptor},
+            //{NameSpacePrefixReference + "PluggableFormatServiceReference", ServiceDescriptors.PluggableFormatServiceDescriptor},
             //{NameSpacePrefixReference + "OperationServiceReference", ServiceDescriptors.OperationServiceDescriptor},
         };
 

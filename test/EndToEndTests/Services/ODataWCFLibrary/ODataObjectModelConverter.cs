@@ -16,6 +16,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
     /// <summary>
@@ -54,6 +55,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                         entry.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Name, annotation.ConvertValueToODataValue()));
                     }
                 }
+            }
+
+            // Work around for entities from different entity set.
+            if (!string.IsNullOrEmpty(((ClrObject)element).EntitySetName) && entitySource is IEdmEntitySet && entityType is IEdmEntityType)
+            {
+                entitySource = new EdmEntitySet(((IEdmEntitySet)entitySource).Container, ((ClrObject)element).EntitySetName, (IEdmEntityType)entityType);
             }
 
             string typeName;

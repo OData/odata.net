@@ -242,21 +242,32 @@ namespace Microsoft.OData.Client
         /// <param name="projection">the projection expression</param>
         /// <param name="resourceTypeAs">TypeAs type</param>
         /// <param name="uriVersion">version of the Uri from the expand and projection paths</param>
+        /// <param name="operationName">The operation name.</param>
+        /// <param name="operationParameters">The operation parameter names and parameters pair for Resource</param>
         /// <returns>The navigation resource expression.</returns>
-        internal static QueryableResourceExpression CreateNavigationResourceExpression(ExpressionType expressionType, Type type, Expression source, Expression memberExpression, Type resourceType, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion)
+        internal static QueryableResourceExpression CreateNavigationResourceExpression(ExpressionType expressionType, Type type, Expression source, Expression memberExpression, Type resourceType, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion, string operationName, Dictionary<string, string> operationParameters)
         {
             Debug.Assert(
                 expressionType == (ExpressionType)ResourceExpressionType.RootResourceSet || expressionType == (ExpressionType)ResourceExpressionType.ResourceNavigationProperty || expressionType == (ExpressionType)ResourceExpressionType.RootSingleResource,
                 "Expression type is not one of following: RootResourceSet, ResourceNavigationProperty, RootSingleResource.");
 
+            QueryableResourceExpression expression = null;
+
             if (expressionType == (ExpressionType)ResourceExpressionType.RootResourceSet || expressionType == (ExpressionType)ResourceExpressionType.ResourceNavigationProperty)
             {
-                return new ResourceSetExpression(type, source, memberExpression, resourceType, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion);
+                expression = new ResourceSetExpression(type, source, memberExpression, resourceType, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion);
             }
 
             if (expressionType == (ExpressionType)ResourceExpressionType.RootSingleResource)
             {
-                return new SingletonResourceExpression(type, source, memberExpression, resourceType, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion);
+                expression = new SingletonResourceExpression(type, source, memberExpression, resourceType, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion);
+            }
+
+            if (expression != null)
+            {
+                expression.OperationName = operationName;
+                expression.OperationParameters = operationParameters;
+                return expression;
             }
 
             return null;

@@ -56,7 +56,7 @@ namespace Microsoft.OData.Client
 
             if (source != rse.Source)
             {
-                rse = QueryableResourceExpression.CreateNavigationResourceExpression(rse.NodeType, rse.Type, source, rse.MemberExpression, rse.ResourceType, rse.ExpandPaths, rse.CountOption, rse.CustomQueryOptions, rse.Projection, rse.ResourceTypeAs, rse.UriVersion);
+                rse = QueryableResourceExpression.CreateNavigationResourceExpression(rse.NodeType, rse.Type, source, rse.MemberExpression, rse.ResourceType, rse.ExpandPaths, rse.CountOption, rse.CustomQueryOptions, rse.Projection, rse.ResourceTypeAs, rse.UriVersion, rse.OperationName, rse.OperationParameters);
             }
 
             return rse;
