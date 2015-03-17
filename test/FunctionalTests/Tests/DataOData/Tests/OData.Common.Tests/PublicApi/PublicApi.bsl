@@ -656,7 +656,7 @@ public interface Microsoft.OData.Edm.IEdmEntityType : IEdmElement, IEdmNamedElem
 public interface Microsoft.OData.Edm.IEdmEntityTypeReference : IEdmElement, IEdmStructuredTypeReference, IEdmTypeReference {
 }
 
-public interface Microsoft.OData.Edm.IEdmEnumMember : IEdmElement, IEdmNamedElement {
+public interface Microsoft.OData.Edm.IEdmEnumMember : IEdmElement, IEdmNamedElement, IEdmVocabularyAnnotatable {
 	Microsoft.OData.Edm.IEdmEnumType DeclaringType  { public abstract get; }
 	Microsoft.OData.Edm.Values.IEdmPrimitiveValue Value  { public abstract get; }
 }

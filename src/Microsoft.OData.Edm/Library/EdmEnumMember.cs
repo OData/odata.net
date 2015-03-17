@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm.Library
     /// <summary>
     /// Represents a member of an EDM enumeration type.
     /// </summary>
-    public class EdmEnumMember : EdmNamedElement, IEdmEnumMember, IEdmVocabularyAnnotatable
+    public class EdmEnumMember : EdmNamedElement, IEdmEnumMember
     {
         private readonly IEdmEnumType declaringType;
         private IEdmPrimitiveValue value;

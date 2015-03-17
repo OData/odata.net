@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for a CsdlEnumMember.
     /// </summary>
-    internal class CsdlSemanticsEnumMember : CsdlSemanticsElement, IEdmEnumMember, IEdmVocabularyAnnotatable
+    internal class CsdlSemanticsEnumMember : CsdlSemanticsElement, IEdmEnumMember
     {
         private readonly CsdlEnumMember member;
         private readonly CsdlSemanticsEnumTypeDefinition declaringType;

@@ -739,7 +739,7 @@ namespace EdmLibTests.FunctionalTests
 
             //Call FindVocabularyAnnotations to get vocabulary annotations.
             var enumType = model.FindDeclaredType("DefaultNamespace.MyEnumType") as IEdmEnumType;
-            var vocabularyAnnotatable = enumType.Members.First() as IEdmVocabularyAnnotatable;
+            var vocabularyAnnotatable = enumType.Members.First();
             var valueAnnotations1 = model.FindVocabularyAnnotations(vocabularyAnnotatable).OfType<IEdmValueAnnotation>();
             Assert.AreEqual(1, valueAnnotations1.Count(), "Invalid value annotation count.");
 
