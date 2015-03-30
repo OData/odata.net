@@ -164,5 +164,15 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Translate a PathTemplateSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public virtual T Translate(PathTemplateSegment segment)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

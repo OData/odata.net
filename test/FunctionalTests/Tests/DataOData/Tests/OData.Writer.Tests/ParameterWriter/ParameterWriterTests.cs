@@ -29,8 +29,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
     {
         #region DefineData
 
-            // build collection of one/multiple primitive values
-            string[] stringValues = new string[]
+        // build collection of one/multiple primitive values
+        string[] stringValues = new string[]
             {
                 "foo",
                 "bar",
@@ -44,8 +44,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                 "-collectionElement10-",
             };
 
-            // build collection of one/multiple complex values
-            List<ODataComplexValue> complexValues = new List<ODataComplexValue>()
+        // build collection of one/multiple complex values
+        List<ODataComplexValue> complexValues = new List<ODataComplexValue>()
             {
                 new ODataComplexValue()
                 {
@@ -64,7 +64,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                 },
             };
 
-            List<ODataComplexValue> complexValuesNoTypeName = new List<ODataComplexValue>()
+        List<ODataComplexValue> complexValuesNoTypeName = new List<ODataComplexValue>()
             {
                 new ODataComplexValue()
                 {
@@ -80,8 +80,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                 },
             };
 
-            // build collection of complex values containing collection properties
-            List<ODataComplexValue> complexWithCollections = new List<ODataComplexValue>()
+        // build collection of complex values containing collection properties
+        List<ODataComplexValue> complexWithCollections = new List<ODataComplexValue>()
             {
                 new ODataComplexValue()
                 {
@@ -119,76 +119,76 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                 },
             };
 
-            private ODataCollectionStart GetPrimitiveStringCollection(int noOfItems)
+        private ODataCollectionStart GetPrimitiveStringCollection(int noOfItems)
+        {
+            return GetPrimitiveCollection("Edm.String", stringValues, noOfItems);
+        }
+
+        private ODataCollectionStart GetPrimitiveIntCollection(int noOfItems)
+        {
+            noOfItems = noOfItems < 0 ? 5 : noOfItems;
+            return GetPrimitiveCollection("Edm.Int32", Enumerable.Range(0, noOfItems).ToArray(), noOfItems);
+        }
+
+        private ODataCollectionStart GetPrimitiveCollection<T>(string typeName, T[] items, int noOfItems)
+        {
+            ExceptionUtilities.Assert(!string.IsNullOrEmpty(typeName), "!string.IsNullOrEmpty(typeName)");
+            ExceptionUtilities.Assert(items != null, "items != null");
+            ExceptionUtilities.Assert(noOfItems <= items.Length, "noOfItems < items.Length");
+
+            ODataCollectionStart primitiveItemCollectionStart = new ODataCollectionStart() { Name = EntityModelUtils.GetCollectionTypeName(typeName) };
+            var primitiveItemAnnotation = new ODataCollectionItemsObjectModelAnnotation();
+            int cnt = noOfItems == -1 ? items.Length : noOfItems;
+            for (int i = 0; i < cnt; ++i)
             {
-                return GetPrimitiveCollection("Edm.String", stringValues, noOfItems);
+                primitiveItemAnnotation.Add(items[i]);
             }
 
-            private ODataCollectionStart GetPrimitiveIntCollection(int noOfItems)
+            primitiveItemCollectionStart.SetAnnotation<ODataCollectionItemsObjectModelAnnotation>(primitiveItemAnnotation);
+            return primitiveItemCollectionStart;
+        }
+
+        private ODataCollectionStart GetComplexCollection(int noOfItems)
+        {
+            ODataCollectionStart complexItemCollectionStart = new ODataCollectionStart() { Name = EntityModelUtils.GetCollectionTypeName("TestModel.ComplexType") };
+            var complexItemAnnotation = new ODataCollectionItemsObjectModelAnnotation();
+            int cnt = noOfItems == -1 ? complexValues.Count : noOfItems;
+            for (int i = 0; i < cnt; ++i)
             {
-                noOfItems = noOfItems < 0 ? 5 : noOfItems;
-                return GetPrimitiveCollection("Edm.Int32", Enumerable.Range(0, noOfItems).ToArray(), noOfItems);
+                complexItemAnnotation.Add(complexValues[i]);
             }
 
-            private ODataCollectionStart GetPrimitiveCollection<T>(string typeName, T[] items, int noOfItems)
+            complexItemCollectionStart.SetAnnotation<ODataCollectionItemsObjectModelAnnotation>(complexItemAnnotation);
+            return complexItemCollectionStart;
+        }
+
+        private ODataCollectionStart GetComplexCollectionNoTypeName(int noOfItems)
+        {
+            ODataCollectionStart complexItemCollectionStart = new ODataCollectionStart() { Name = EntityModelUtils.GetCollectionTypeName("ComplexValuesNoTypeName") };
+            var complexItemAnnotation = new ODataCollectionItemsObjectModelAnnotation();
+            int cnt = noOfItems == -1 ? complexValuesNoTypeName.Count : noOfItems;
+            for (int i = 0; i < cnt; ++i)
             {
-                ExceptionUtilities.Assert(!string.IsNullOrEmpty(typeName), "!string.IsNullOrEmpty(typeName)");
-                ExceptionUtilities.Assert(items != null, "items != null");
-                ExceptionUtilities.Assert(noOfItems <= items.Length, "noOfItems < items.Length");
-
-                ODataCollectionStart primitiveItemCollectionStart = new ODataCollectionStart() { Name = EntityModelUtils.GetCollectionTypeName(typeName) };
-                var primitiveItemAnnotation = new ODataCollectionItemsObjectModelAnnotation();
-                int cnt = noOfItems == -1 ? items.Length : noOfItems;
-                for (int i = 0; i < cnt; ++i)
-                {
-                    primitiveItemAnnotation.Add(items[i]);
-                }
-
-                primitiveItemCollectionStart.SetAnnotation<ODataCollectionItemsObjectModelAnnotation>(primitiveItemAnnotation);
-                return primitiveItemCollectionStart;
+                complexItemAnnotation.Add(complexValuesNoTypeName[i]);
             }
 
-            private ODataCollectionStart GetComplexCollection(int noOfItems)
+            complexItemCollectionStart.SetAnnotation<ODataCollectionItemsObjectModelAnnotation>(complexItemAnnotation);
+            return complexItemCollectionStart;
+        }
+
+        private ODataCollectionStart GetComplexCollectionContainingCollectionItem()
+        {
+            ODataCollectionStart complexWithCollectionItemCollectionStart = new ODataCollectionStart() { Name = EntityModelUtils.GetCollectionTypeName("TestModel.MyComplex") };
+            var complexWithCollectionItemAnnotation = new ODataCollectionItemsObjectModelAnnotation();
+            foreach (ODataComplexValue cv in complexWithCollections)
             {
-                ODataCollectionStart complexItemCollectionStart = new ODataCollectionStart() { Name = EntityModelUtils.GetCollectionTypeName("TestModel.ComplexType") };
-                var complexItemAnnotation = new ODataCollectionItemsObjectModelAnnotation();
-                int cnt = noOfItems == -1 ? complexValues.Count : noOfItems;
-                for (int i = 0; i < cnt; ++i)
-                {
-                    complexItemAnnotation.Add(complexValues[i]);
-                }
-
-                complexItemCollectionStart.SetAnnotation<ODataCollectionItemsObjectModelAnnotation>(complexItemAnnotation);
-                return complexItemCollectionStart;
+                complexWithCollectionItemAnnotation.Add(cv);
             }
+            complexWithCollectionItemCollectionStart.SetAnnotation<ODataCollectionItemsObjectModelAnnotation>(complexWithCollectionItemAnnotation);
 
-            private ODataCollectionStart GetComplexCollectionNoTypeName(int noOfItems)
-            {
-                ODataCollectionStart complexItemCollectionStart = new ODataCollectionStart() { Name = EntityModelUtils.GetCollectionTypeName("ComplexValuesNoTypeName") };
-                var complexItemAnnotation = new ODataCollectionItemsObjectModelAnnotation();
-                int cnt = noOfItems == -1 ? complexValuesNoTypeName.Count : noOfItems;
-                for (int i = 0; i < cnt; ++i)
-                {
-                    complexItemAnnotation.Add(complexValuesNoTypeName[i]);
-                }
+            return complexWithCollectionItemCollectionStart;
+        }
 
-                complexItemCollectionStart.SetAnnotation<ODataCollectionItemsObjectModelAnnotation>(complexItemAnnotation);
-                return complexItemCollectionStart;
-            }
-
-            private ODataCollectionStart GetComplexCollectionContainingCollectionItem()
-            {
-                ODataCollectionStart complexWithCollectionItemCollectionStart = new ODataCollectionStart() { Name = EntityModelUtils.GetCollectionTypeName("TestModel.MyComplex") };
-                var complexWithCollectionItemAnnotation = new ODataCollectionItemsObjectModelAnnotation();
-                foreach (ODataComplexValue cv in complexWithCollections)
-                {
-                    complexWithCollectionItemAnnotation.Add(cv);
-                }
-                complexWithCollectionItemCollectionStart.SetAnnotation<ODataCollectionItemsObjectModelAnnotation>(complexWithCollectionItemAnnotation);
-
-                return complexWithCollectionItemCollectionStart;
-            }
-       
         #endregion DefineData
 
         [InjectDependency(IsRequired = true)]
@@ -204,9 +204,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                 {
                     if (testConfig.Format == ODataFormat.Json)
                     {
-                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings) 
-                        { 
-                            ExpectedException2 = ODataExpectedExceptions.ODataException("ODataParameterWriter_CannotCreateParameterWriterOnResponseMessage") 
+                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                        {
+                            ExpectedException2 = ODataExpectedExceptions.ODataException("ODataParameterWriter_CannotCreateParameterWriterOnResponseMessage")
                         };
                     }
                     else
@@ -232,9 +232,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                 {
                     if (testConfig.Format == ODataFormat.Json)
                     {
-                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings) 
-                        { 
-                            ExpectedException2 = ODataExpectedExceptions.ODataException("ODataMessageWriter_CannotSpecifyOperationWithoutModel") 
+                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                        {
+                            ExpectedException2 = ODataExpectedExceptions.ODataException("ODataMessageWriter_CannotSpecifyOperationWithoutModel")
                         };
                     }
                     else
@@ -303,9 +303,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
             var container = new EdmEntityContainer("TestModel", "TestContainer");
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry() {TypeName = "TestModel.TestEntityType", Properties = new List<ODataProperty>() {new ODataProperty() {Name = "ID", Value = 1}, new ODataProperty() {Name = "Name", Value = "TestName"}, new ODataProperty() {Name = "ComplexProperty", Value = new ODataComplexValue() {}}}};
+            ODataEntry entry = new ODataEntry() { TypeName = "TestModel.TestEntityType", Properties = new List<ODataProperty>() { new ODataProperty() { Name = "ID", Value = 1 }, new ODataProperty() { Name = "Name", Value = "TestName" }, new ODataProperty() { Name = "ComplexProperty", Value = new ODataComplexValue() { } } } };
             ODataFeed feed = new ODataFeed();
-            feed.SetAnnotation(new ODataFeedEntriesObjectModelAnnotation(){entry});
+            feed.SetAnnotation(new ODataFeedEntriesObjectModelAnnotation() { entry });
 
             var testCases = new[]
             {
@@ -595,21 +595,21 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
             var testConfigurations = this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest);
             this.CombinatorialEngineProvider.RunCombinations(testConfigurations, testCases, (testConfiguration, testCase) =>
             {
-                PayloadWriterTestDescriptor.WriterTestExpectedResultCallback resultCallback = 
-                    testConfig => 
+                PayloadWriterTestDescriptor.WriterTestExpectedResultCallback resultCallback =
+                    testConfig =>
+                    {
+                        if (testConfig.Format == ODataFormat.Json)
                         {
-                            if (testConfig.Format == ODataFormat.Json)
+                            return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
-                                return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings) 
-                                {
-                                    Json = testCase.JsonLight
-                                };
-                            }
-                            else
-                            {
-                                throw new TaupoInvalidOperationException("Format '" + testConfig.Format.GetType().Name + "' not supported.");
-                            }
-                        };
+                                Json = testCase.JsonLight
+                            };
+                        }
+                        else
+                        {
+                            throw new TaupoInvalidOperationException("Format '" + testConfig.Format.GetType().Name + "' not supported.");
+                        }
+                    };
 
                 var testDescriptor = new PayloadWriterTestDescriptor<ODataParameters>(this.Settings, ObjectModelUtils.CreateDefaultParameter(), resultCallback)
                     {
@@ -781,9 +781,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
             model.AddElement(container);
 
             var testConfigurations = this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest);
-            PayloadWriterTestDescriptor.WriterTestExpectedResultCallback resultCallback = testConfig => 
-                new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings) 
-                { 
+            PayloadWriterTestDescriptor.WriterTestExpectedResultCallback resultCallback = testConfig =>
+                new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                {
                     ExpectedException2 = ODataExpectedExceptions.ODataException("ODataMessageWriter_ErrorPayloadInRequest")
                 };
             var testDescriptor = new PayloadWriterTestDescriptor<ODataParameters>(this.Settings, ObjectModelUtils.CreateDefaultParameter(), resultCallback)
@@ -1137,19 +1137,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     FunctionImport = functionImport_PrimitiveCollection,
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncorrectTypeKindNoTypeName", "Complex", "Primitive")
                 },
-
-                // TODO: [EdmLib-Integration] Service operation parameters in EDM seem to be always nullable
-                //      We can only enable this test once EdmLib and the test infrastructure understand non-nullable function parameters
-                // Collection of non-nullable integers in the metadata, null value in the payload
-                //new
-                //{
-                //    ParameterPayload = new ODataParameters()
-                //    {
-                //        new KeyValuePair<string, object>("p1", this.GetPrimitiveCollection("Edm.Int32", new int?[]{ 0, null, 1 }, 3))
-                //    },
-                //    FunctionImport = functionImport_NonNullablePrimitiveCollection,
-                //    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_NullCollectionItemForNonNullableType", "Complex")
-                //},
             };
 
             var testConfigurations = this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest);
@@ -1332,8 +1319,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
 
             EdmAction action2 = new EdmAction("TestModel", "f2", null);
             action2.AddParameter("p1", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(isNullable: true)));
-            EdmOperationImport edmF2 = container.AddActionImport("f2", action2);            
-            
+            EdmOperationImport edmF2 = container.AddActionImport("f2", action2);
+
             var testCases = new[]
             {
                 new
@@ -1418,6 +1405,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         this.Assert,
                         this.Logger);
                 });
-        }                
+        }
     }
 }

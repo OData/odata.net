@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 11/4/2014 10:13:22 PM
+// Generation date: 3/20/2015 3:40:10 PM
 namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus
 {
     /// <summary>
@@ -20,7 +20,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// Initialize a new InMemoryEntitiesPlus object.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public InMemoryEntitiesPlus(global::System.Uri serviceRoot) :
             base(serviceRoot, global::Microsoft.OData.Client.ODataProtocolVersion.V4)
         {
@@ -36,7 +36,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// in Visual Studio is different from the one indicated in the
         /// server schema, use type-mappers to map between the two.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
             global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.Test.OData.Services.ODataWCFService", "Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus");
@@ -51,7 +51,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// in Visual Studio is different from the one indicated in the
         /// server schema, use type-mappers to map between the two.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected string ResolveNameFromType(global::System.Type clientType)
         {
             global::Microsoft.OData.Client.OriginalNameAttribute originalNameAttribute = (global::Microsoft.OData.Client.OriginalNameAttribute)global::System.Linq.Enumerable.SingleOrDefault(global::Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, typeof(global::Microsoft.OData.Client.OriginalNameAttribute), true));
@@ -72,7 +72,8 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for PeoplePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("People")]
         public global::Microsoft.OData.Client.DataServiceQuery<PersonPlus> PeoplePlus
         {
             get
@@ -84,12 +85,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._PeoplePlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<PersonPlus> _PeoplePlus;
         /// <summary>
         /// There are no comments for CustomersPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Customers")]
         public global::Microsoft.OData.Client.DataServiceQuery<CustomerPlus> CustomersPlus
         {
             get
@@ -101,12 +103,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._CustomersPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<CustomerPlus> _CustomersPlus;
         /// <summary>
         /// There are no comments for EmployeesPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Employees")]
         public global::Microsoft.OData.Client.DataServiceQuery<EmployeePlus> EmployeesPlus
         {
             get
@@ -118,12 +121,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._EmployeesPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<EmployeePlus> _EmployeesPlus;
         /// <summary>
         /// There are no comments for ProductsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Products")]
         public global::Microsoft.OData.Client.DataServiceQuery<ProductPlus> ProductsPlus
         {
             get
@@ -135,12 +139,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._ProductsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<ProductPlus> _ProductsPlus;
         /// <summary>
         /// There are no comments for ProductDetailsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ProductDetails")]
         public global::Microsoft.OData.Client.DataServiceQuery<ProductDetailPlus> ProductDetailsPlus
         {
             get
@@ -152,12 +157,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._ProductDetailsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<ProductDetailPlus> _ProductDetailsPlus;
         /// <summary>
         /// There are no comments for ProductReviewsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ProductReviews")]
         public global::Microsoft.OData.Client.DataServiceQuery<ProductReviewPlus> ProductReviewsPlus
         {
             get
@@ -169,12 +175,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._ProductReviewsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<ProductReviewPlus> _ProductReviewsPlus;
         /// <summary>
         /// There are no comments for OrdersPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Orders")]
         public global::Microsoft.OData.Client.DataServiceQuery<OrderPlus> OrdersPlus
         {
             get
@@ -186,12 +193,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._OrdersPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<OrderPlus> _OrdersPlus;
         /// <summary>
         /// There are no comments for OrderDetailsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("OrderDetails")]
         public global::Microsoft.OData.Client.DataServiceQuery<OrderDetailPlus> OrderDetailsPlus
         {
             get
@@ -203,12 +211,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._OrderDetailsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<OrderDetailPlus> _OrderDetailsPlus;
         /// <summary>
         /// There are no comments for DepartmentsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Departments")]
         public global::Microsoft.OData.Client.DataServiceQuery<DepartmentPlus> DepartmentsPlus
         {
             get
@@ -220,12 +229,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._DepartmentsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<DepartmentPlus> _DepartmentsPlus;
         /// <summary>
         /// There are no comments for AccountsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Accounts")]
         public global::Microsoft.OData.Client.DataServiceQuery<AccountPlus> AccountsPlus
         {
             get
@@ -237,12 +247,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._AccountsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<AccountPlus> _AccountsPlus;
         /// <summary>
         /// There are no comments for StoredPIsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("StoredPIs")]
         public global::Microsoft.OData.Client.DataServiceQuery<StoredPIPlus> StoredPIsPlus
         {
             get
@@ -254,12 +265,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._StoredPIsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<StoredPIPlus> _StoredPIsPlus;
         /// <summary>
         /// There are no comments for SubscriptionTemplatesPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("SubscriptionTemplates")]
         public global::Microsoft.OData.Client.DataServiceQuery<SubscriptionPlus> SubscriptionTemplatesPlus
         {
             get
@@ -271,12 +283,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._SubscriptionTemplatesPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<SubscriptionPlus> _SubscriptionTemplatesPlus;
         /// <summary>
         /// There are no comments for PeoplePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToPeoplePlus(PersonPlus person)
         {
             base.AddObject("People", person);
@@ -284,7 +296,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for CustomersPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToCustomersPlus(CustomerPlus customer)
         {
             base.AddObject("Customers", customer);
@@ -292,7 +304,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for EmployeesPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToEmployeesPlus(EmployeePlus employee)
         {
             base.AddObject("Employees", employee);
@@ -300,7 +312,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for ProductsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToProductsPlus(ProductPlus product)
         {
             base.AddObject("Products", product);
@@ -308,7 +320,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for ProductDetailsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToProductDetailsPlus(ProductDetailPlus productDetail)
         {
             base.AddObject("ProductDetails", productDetail);
@@ -316,7 +328,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for ProductReviewsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToProductReviewsPlus(ProductReviewPlus productReview)
         {
             base.AddObject("ProductReviews", productReview);
@@ -324,7 +336,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for OrdersPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToOrdersPlus(OrderPlus order)
         {
             base.AddObject("Orders", order);
@@ -332,7 +344,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for OrderDetailsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToOrderDetailsPlus(OrderDetailPlus orderDetail)
         {
             base.AddObject("OrderDetails", orderDetail);
@@ -340,7 +352,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for DepartmentsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToDepartmentsPlus(DepartmentPlus department)
         {
             base.AddObject("Departments", department);
@@ -348,7 +360,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for AccountsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToAccountsPlus(AccountPlus account)
         {
             base.AddObject("Accounts", account);
@@ -356,7 +368,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for StoredPIsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToStoredPIsPlus(StoredPIPlus storedPI)
         {
             base.AddObject("StoredPIs", storedPI);
@@ -364,7 +376,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for SubscriptionTemplatesPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToSubscriptionTemplatesPlus(SubscriptionPlus subscription)
         {
             base.AddObject("SubscriptionTemplates", subscription);
@@ -372,7 +384,8 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for BossPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Boss")]
         public PersonPlusSingle BossPlus
         {
             get
@@ -384,12 +397,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._BossPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private PersonPlusSingle _BossPlus;
         /// <summary>
         /// There are no comments for VipCustomerPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("VipCustomer")]
         public CustomerPlusSingle VipCustomerPlus
         {
             get
@@ -401,12 +415,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._VipCustomerPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private CustomerPlusSingle _VipCustomerPlus;
         /// <summary>
         /// There are no comments for CompanyPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Company")]
         public CompanyPlusSingle CompanyPlus
         {
             get
@@ -418,12 +433,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._CompanyPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private CompanyPlusSingle _CompanyPlus;
         /// <summary>
         /// There are no comments for PublicCompanyPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("PublicCompany")]
         public CompanyPlusSingle PublicCompanyPlus
         {
             get
@@ -435,12 +451,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._PublicCompanyPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private CompanyPlusSingle _PublicCompanyPlus;
         /// <summary>
         /// There are no comments for LabourUnionPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("LabourUnion")]
         public LabourUnionPlusSingle LabourUnionPlus
         {
             get
@@ -452,12 +469,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._LabourUnionPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private LabourUnionPlusSingle _LabourUnionPlus;
         /// <summary>
         /// There are no comments for DefaultStoredPIPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("DefaultStoredPI")]
         public StoredPIPlusSingle DefaultStoredPIPlus
         {
             get
@@ -469,14 +487,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._DefaultStoredPIPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private StoredPIPlusSingle _DefaultStoredPIPlus;
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private abstract class GeneratedEdmModel
         {
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::Microsoft.OData.Edm.IEdmModel ParsedModel = LoadModelFromString();
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
     <Schema Namespace=""Microsoft.Test.OData.Services.ODataWCFService"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -589,7 +607,8 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         <Property Name=""Comment"" Type=""Edm.String"" Nullable=""false"" />
         <Property Name=""Author"" Type=""Edm.String"" Nullable=""false"" />
       </EntityType>
-      <EntityType Name=""Order"">
+      <EntityType Name=""AbstractEntity"" Abstract=""true"" />
+      <EntityType Name=""Order"" BaseType=""Microsoft.Test.OData.Services.ODataWCFService.AbstractEntity"">
         <Key>
           <PropertyRef Name=""OrderID"" />
         </Key>
@@ -603,7 +622,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         <NavigationProperty Name=""CustomerForOrder"" Type=""Microsoft.Test.OData.Services.ODataWCFService.Customer"" Nullable=""false"" />
         <NavigationProperty Name=""OrderDetails"" Type=""Collection(Microsoft.Test.OData.Services.ODataWCFService.OrderDetail)"" />
       </EntityType>
-      <EntityType Name=""OrderDetail"">
+      <EntityType Name=""OrderDetail"" BaseType=""Microsoft.Test.OData.Services.ODataWCFService.AbstractEntity"">
         <Key>
           <PropertyRef Name=""OrderID"" />
           <PropertyRef Name=""ProductID"" />
@@ -732,6 +751,10 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
       <Function Name=""GetRelatedProduct"" IsBound=""true"" EntitySetPath=""productDetail/RelatedProduct"" IsComposable=""true"">
         <Parameter Name=""productDetail"" Type=""Microsoft.Test.OData.Services.ODataWCFService.ProductDetail"" Nullable=""false"" />
         <ReturnType Type=""Microsoft.Test.OData.Services.ODataWCFService.Product"" Nullable=""false"" />
+      </Function>
+      <Function Name=""getOrderAndOrderDetails"" IsBound=""true"" EntitySetPath=""customer/Orders"" IsComposable=""true"">
+        <Parameter Name=""customer"" Type=""Microsoft.Test.OData.Services.ODataWCFService.Customer"" Nullable=""false"" />
+        <ReturnType Type=""Collection(Microsoft.Test.OData.Services.ODataWCFService.AbstractEntity)"" Nullable=""false"" />
       </Function>
       <Function Name=""GetSeniorEmployees"" IsBound=""true"" EntitySetPath=""People"" IsComposable=""true"">
         <Parameter Name=""employees"" Type=""Collection(Microsoft.Test.OData.Services.ODataWCFService.Employee)"" Nullable=""false"" />
@@ -969,12 +992,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             public static global::Microsoft.OData.Edm.IEdmModel GetInstance()
             {
                 return ParsedModel;
             }
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::Microsoft.OData.Edm.IEdmModel LoadModelFromString()
             {
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
@@ -987,7 +1010,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                     ((global::System.IDisposable)(reader)).Dispose();
                 }
             }
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::System.Xml.XmlReader CreateXmlReader(string edmxToParse)
             {
                 return global::System.Xml.XmlReader.Create(new global::System.IO.StringReader(edmxToParse));
@@ -996,55 +1019,56 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for GetDefaultColorPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetDefaultColor")]
         public global::Microsoft.OData.Client.DataServiceQuerySingle<global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ColorPlus>> GetDefaultColorPlus()
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ColorPlus>>(this, "/GetDefaultColor" + parameterString, true);
+            return this.CreateFunctionQuerySingle<global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ColorPlus>>("", "GetDefaultColor", true);
         }
         /// <summary>
         /// There are no comments for GetPersonPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetPerson")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlusSingle GetPersonPlus(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus address)
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this, new global::Microsoft.OData.Client.UriOperationParameter("address", address));
-            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlusSingle(this, "/GetPerson" + parameterString, true);
+            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlusSingle(this.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus>("", "GetPerson", true, new global::Microsoft.OData.Client.UriOperationParameter("address", address)));
         }
         /// <summary>
         /// There are no comments for GetPerson2Plus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetPerson2")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlusSingle GetPerson2Plus(string city)
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this, new global::Microsoft.OData.Client.UriOperationParameter("city", city));
-            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlusSingle(this, "/GetPerson2" + parameterString, true);
+            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlusSingle(this.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus>("", "GetPerson2", true, new global::Microsoft.OData.Client.UriOperationParameter("city", city)));
         }
         /// <summary>
         /// There are no comments for GetAllProductsPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetAllProducts")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus> GetAllProductsPlus()
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this);
-            return this.CreateQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus>("/GetAllProducts" + parameterString, true);
+            return this.CreateFunctionQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus>("", "GetAllProducts", true);
         }
         /// <summary>
         /// There are no comments for GetBossEmailsPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetBossEmails")]
         public global::Microsoft.OData.Client.DataServiceQuery<string> GetBossEmailsPlus(int start, int count)
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this, new global::Microsoft.OData.Client.UriOperationParameter("start", start),
+            return this.CreateFunctionQuery<string>("", "GetBossEmails", false, new global::Microsoft.OData.Client.UriOperationParameter("start", start),
                     new global::Microsoft.OData.Client.UriOperationParameter("count", count));
-            return this.CreateQuery<string>("/GetBossEmails" + parameterString, false);
         }
         /// <summary>
         /// There are no comments for GetProductsByAccessLevelPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetProductsByAccessLevel")]
         public global::Microsoft.OData.Client.DataServiceQuery<string> GetProductsByAccessLevelPlus(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccessLevelPlus accessLevel)
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this, new global::Microsoft.OData.Client.UriOperationParameter("accessLevel", accessLevel));
-            return this.CreateQuery<string>("/GetProductsByAccessLevel" + parameterString, false);
+            return this.CreateFunctionQuery<string>("", "GetProductsByAccessLevel", false, new global::Microsoft.OData.Client.UriOperationParameter("accessLevel", accessLevel));
         }
         /// <summary>
         /// There are no comments for DiscountPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Discount")]
         public global::Microsoft.OData.Client.DataServiceActionQuery DiscountPlus(int percentage)
         {
             return new global::Microsoft.OData.Client.DataServiceActionQuery(this, this.BaseUri.OriginalString.Trim('/') + "/Discount", new global::Microsoft.OData.Client.BodyOperationParameter("percentage", percentage));
@@ -1052,6 +1076,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for ResetBossEmailPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetBossEmail")]
         public global::Microsoft.OData.Client.DataServiceActionQuery<string> ResetBossEmailPlus(global::System.Collections.Generic.ICollection<string> emails)
         {
             return new global::Microsoft.OData.Client.DataServiceActionQuery<string>(this, this.BaseUri.OriginalString.Trim('/') + "/ResetBossEmail", new global::Microsoft.OData.Client.BodyOperationParameter("emails", emails));
@@ -1059,6 +1084,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for ResetBossAddressPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetBossAddress")]
         public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus> ResetBossAddressPlus(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus address)
         {
             return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus>(this, this.BaseUri.OriginalString.Trim('/') + "/ResetBossAddress", new global::Microsoft.OData.Client.BodyOperationParameter("address", address));
@@ -1066,6 +1092,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for ResetDataSourcePlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetDataSource")]
         public global::Microsoft.OData.Client.DataServiceActionQuery ResetDataSourcePlus()
         {
             return new global::Microsoft.OData.Client.DataServiceActionQuery(this, this.BaseUri.OriginalString.Trim('/') + "/ResetDataSource");
@@ -1083,7 +1110,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="street">Initial value of StreetPlus.</param>
         /// <param name="city">Initial value of CityPlus.</param>
         /// <param name="postalCode">Initial value of PostalCodePlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static AddressPlus CreateAddressPlus(string street, string city, string postalCode)
         {
             AddressPlus addressPlus = new AddressPlus();
@@ -1095,7 +1122,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property StreetPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Street")]
         public string StreetPlus
         {
@@ -1111,14 +1138,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Street");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _StreetPlus;
         partial void OnStreetPlusChanging(string value);
         partial void OnStreetPlusChanged();
         /// <summary>
         /// There are no comments for Property CityPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("City")]
         public string CityPlus
         {
@@ -1134,14 +1161,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("City");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _CityPlus;
         partial void OnCityPlusChanging(string value);
         partial void OnCityPlusChanged();
         /// <summary>
         /// There are no comments for Property PostalCodePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PostalCode")]
         public string PostalCodePlus
         {
@@ -1157,20 +1184,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("PostalCode");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _PostalCodePlus;
         partial void OnPostalCodePlusChanging(string value);
         partial void OnPostalCodePlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -1191,7 +1218,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="street">Initial value of StreetPlus.</param>
         /// <param name="city">Initial value of CityPlus.</param>
         /// <param name="postalCode">Initial value of PostalCodePlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static HomeAddressPlus CreateHomeAddressPlus(string street, string city, string postalCode)
         {
             HomeAddressPlus homeAddressPlus = new HomeAddressPlus();
@@ -1203,7 +1230,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property FamilyNamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("FamilyName")]
         public string FamilyNamePlus
         {
@@ -1219,7 +1246,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("FamilyName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _FamilyNamePlus;
         partial void OnFamilyNamePlusChanging(string value);
         partial void OnFamilyNamePlusChanged();
@@ -1237,7 +1264,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="city">Initial value of CityPlus.</param>
         /// <param name="postalCode">Initial value of PostalCodePlus.</param>
         /// <param name="companyName">Initial value of CompanyNamePlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static CompanyAddressPlus CreateCompanyAddressPlus(string street, string city, string postalCode, string companyName)
         {
             CompanyAddressPlus companyAddressPlus = new CompanyAddressPlus();
@@ -1250,7 +1277,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property CompanyNamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CompanyName")]
         public string CompanyNamePlus
         {
@@ -1266,7 +1293,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CompanyName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _CompanyNamePlus;
         partial void OnCompanyNamePlusChanging(string value);
         partial void OnCompanyNamePlusChanged();
@@ -1282,7 +1309,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         /// <param name="countryRegion">Initial value of CountryRegionPlus.</param>
         /// <param name="isCapital">Initial value of IsCapitalPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static CityInformationPlus CreateCityInformationPlus(string countryRegion, bool isCapital)
         {
             CityInformationPlus cityInformationPlus = new CityInformationPlus();
@@ -1293,7 +1320,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property CountryRegionPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CountryRegion")]
         public string CountryRegionPlus
         {
@@ -1309,14 +1336,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CountryRegion");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _CountryRegionPlus;
         partial void OnCountryRegionPlusChanging(string value);
         partial void OnCountryRegionPlusChanged();
         /// <summary>
         /// There are no comments for Property IsCapitalPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("IsCapital")]
         public bool IsCapitalPlus
         {
@@ -1332,20 +1359,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("IsCapital");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private bool _IsCapitalPlus;
         partial void OnIsCapitalPlusChanging(bool value);
         partial void OnIsCapitalPlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -1371,10 +1398,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public PersonPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new PersonPlusSingle object.
+        /// </summary>
+        public PersonPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<PersonPlus> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for ParentPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Parent")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlusSingle ParentPlus
         {
             get
@@ -1390,7 +1425,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._ParentPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlusSingle _ParentPlus;
     }
     /// <summary>
@@ -1410,7 +1445,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="firstName">Initial value of FirstNamePlus.</param>
         /// <param name="lastName">Initial value of LastNamePlus.</param>
         /// <param name="parent">Initial value of ParentPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static PersonPlus CreatePersonPlus(int personID, string firstName, string lastName, global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus parent)
         {
             PersonPlus personPlus = new PersonPlus();
@@ -1427,7 +1462,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property PersonIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PersonID")]
         public int PersonIDPlus
         {
@@ -1443,14 +1478,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("PersonID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _PersonIDPlus;
         partial void OnPersonIDPlusChanging(int value);
         partial void OnPersonIDPlusChanged();
         /// <summary>
         /// There are no comments for Property FirstNamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("FirstName")]
         public string FirstNamePlus
         {
@@ -1466,14 +1501,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("FirstName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _FirstNamePlus;
         partial void OnFirstNamePlusChanging(string value);
         partial void OnFirstNamePlusChanged();
         /// <summary>
         /// There are no comments for Property LastNamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("LastName")]
         public string LastNamePlus
         {
@@ -1489,14 +1524,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("LastName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _LastNamePlus;
         partial void OnLastNamePlusChanging(string value);
         partial void OnLastNamePlusChanged();
         /// <summary>
         /// There are no comments for Property MiddleNamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("MiddleName")]
         public string MiddleNamePlus
         {
@@ -1512,14 +1547,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("MiddleName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _MiddleNamePlus;
         partial void OnMiddleNamePlusChanging(string value);
         partial void OnMiddleNamePlusChanged();
         /// <summary>
         /// There are no comments for Property HomeAddressPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("HomeAddress")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus HomeAddressPlus
         {
@@ -1535,14 +1570,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("HomeAddress");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus _HomeAddressPlus;
         partial void OnHomeAddressPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus value);
         partial void OnHomeAddressPlusChanged();
         /// <summary>
         /// There are no comments for Property HomePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Home")]
         public global::Microsoft.Spatial.GeographyPoint HomePlus
         {
@@ -1558,14 +1593,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Home");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Spatial.GeographyPoint _HomePlus;
         partial void OnHomePlusChanging(global::Microsoft.Spatial.GeographyPoint value);
         partial void OnHomePlusChanged();
         /// <summary>
         /// There are no comments for Property NumbersPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Numbers")]
         public global::System.Collections.ObjectModel.ObservableCollection<string> NumbersPlus
         {
@@ -1581,14 +1616,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Numbers");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Collections.ObjectModel.ObservableCollection<string> _NumbersPlus = new global::System.Collections.ObjectModel.ObservableCollection<string>();
         partial void OnNumbersPlusChanging(global::System.Collections.ObjectModel.ObservableCollection<string> value);
         partial void OnNumbersPlusChanged();
         /// <summary>
         /// There are no comments for Property EmailsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Emails")]
         public global::System.Collections.ObjectModel.ObservableCollection<string> EmailsPlus
         {
@@ -1604,14 +1639,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Emails");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Collections.ObjectModel.ObservableCollection<string> _EmailsPlus = new global::System.Collections.ObjectModel.ObservableCollection<string>();
         partial void OnEmailsPlusChanging(global::System.Collections.ObjectModel.ObservableCollection<string> value);
         partial void OnEmailsPlusChanged();
         /// <summary>
         /// There are no comments for Property ParentPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Parent")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus ParentPlus
         {
@@ -1627,20 +1662,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Parent");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus _ParentPlus;
         partial void OnParentPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus value);
         partial void OnParentPlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -1654,14 +1689,15 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetHomeAddress")]
         public global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.HomeAddressPlus> GetHomeAddressPlus()
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context);
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.HomeAddressPlus>(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress" + parameterString, true);
+
+            return this.Context.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.HomeAddressPlus>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress", true);
         }
         /// <summary>
         /// There are no comments for ResetAddressPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetAddress")]
         public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus> ResetAddressPlus(global::System.Collections.Generic.ICollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus> addresses, int index)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
@@ -1691,10 +1727,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public CustomerPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new CustomerPlusSingle object.
+        /// </summary>
+        public CustomerPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<CustomerPlus> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for OrdersPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Orders")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> OrdersPlus
         {
             get
@@ -1710,12 +1754,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._OrdersPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> _OrdersPlus;
         /// <summary>
         /// There are no comments for CompanyPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Company")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlusSingle CompanyPlus
         {
             get
@@ -1731,12 +1776,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._CompanyPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlusSingle _CompanyPlus;
         /// <summary>
         /// There are no comments for ParentPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Parent")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlusSingle ParentPlus
         {
             get
@@ -1752,7 +1798,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._ParentPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlusSingle _ParentPlus;
     }
     /// <summary>
@@ -1776,7 +1822,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="birthday">Initial value of BirthdayPlus.</param>
         /// <param name="timeBetweenLastTwoOrders">Initial value of TimeBetweenLastTwoOrdersPlus.</param>
         /// <param name="company">Initial value of CompanyPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static CustomerPlus CreateCustomerPlus(int personID,
                     string firstName,
                     string lastName,
@@ -1808,7 +1854,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property CityPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("City")]
         public string CityPlus
         {
@@ -1824,14 +1870,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("City");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _CityPlus;
         partial void OnCityPlusChanging(string value);
         partial void OnCityPlusChanged();
         /// <summary>
         /// There are no comments for Property BirthdayPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Birthday")]
         public global::System.DateTimeOffset BirthdayPlus
         {
@@ -1847,14 +1893,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Birthday");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.DateTimeOffset _BirthdayPlus;
         partial void OnBirthdayPlusChanging(global::System.DateTimeOffset value);
         partial void OnBirthdayPlusChanged();
         /// <summary>
         /// There are no comments for Property TimeBetweenLastTwoOrdersPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("TimeBetweenLastTwoOrders")]
         public global::System.TimeSpan TimeBetweenLastTwoOrdersPlus
         {
@@ -1870,14 +1916,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("TimeBetweenLastTwoOrders");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.TimeSpan _TimeBetweenLastTwoOrdersPlus;
         partial void OnTimeBetweenLastTwoOrdersPlusChanging(global::System.TimeSpan value);
         partial void OnTimeBetweenLastTwoOrdersPlusChanged();
         /// <summary>
         /// There are no comments for Property OrdersPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Orders")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> OrdersPlus
         {
@@ -1893,14 +1939,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Orders");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> _OrdersPlus = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnOrdersPlusChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> value);
         partial void OnOrdersPlusChanged();
         /// <summary>
         /// There are no comments for Property CompanyPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Company")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlus CompanyPlus
         {
@@ -1916,13 +1962,24 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Company");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlus _CompanyPlus;
         partial void OnCompanyPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlus value);
         partial void OnCompanyPlusChanged();
         /// <summary>
+        /// There are no comments for GetOrderAndOrderDetailsPlus in the schema.
+        /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("getOrderAndOrderDetails")]
+        public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AbstractEntityPlus> GetOrderAndOrderDetailsPlus()
+        {
+            global::System.Uri requestUri;
+            Context.TryGetUri(this, out requestUri);
+            return this.Context.CreateFunctionQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AbstractEntityPlus>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.getOrderAndOrderDetails", true);
+        }
+        /// <summary>
         /// There are no comments for PlaceOrderPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("PlaceOrder")]
         public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> PlaceOrderPlus(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus order)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
@@ -1936,6 +1993,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for PlaceOrdersPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("PlaceOrders")]
         public global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> PlaceOrdersPlus(global::System.Collections.Generic.ICollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> orders)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
@@ -1964,10 +2022,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public EmployeePlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new EmployeePlusSingle object.
+        /// </summary>
+        public EmployeePlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<EmployeePlus> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for CompanyPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Company")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlusSingle CompanyPlus
         {
             get
@@ -1983,12 +2049,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._CompanyPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlusSingle _CompanyPlus;
         /// <summary>
         /// There are no comments for ParentPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Parent")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlusSingle ParentPlus
         {
             get
@@ -2004,7 +2071,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._ParentPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlusSingle _ParentPlus;
     }
     /// <summary>
@@ -2027,7 +2094,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="parent">Initial value of ParentPlus.</param>
         /// <param name="dateHired">Initial value of DateHiredPlus.</param>
         /// <param name="company">Initial value of CompanyPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static EmployeePlus CreateEmployeePlus(int personID,
                     string firstName,
                     string lastName,
@@ -2055,7 +2122,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property DateHiredPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("DateHired")]
         public global::System.DateTimeOffset DateHiredPlus
         {
@@ -2071,14 +2138,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("DateHired");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.DateTimeOffset _DateHiredPlus;
         partial void OnDateHiredPlusChanging(global::System.DateTimeOffset value);
         partial void OnDateHiredPlusChanged();
         /// <summary>
         /// There are no comments for Property OfficePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Office")]
         public global::Microsoft.Spatial.GeographyPoint OfficePlus
         {
@@ -2094,14 +2161,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Office");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Spatial.GeographyPoint _OfficePlus;
         partial void OnOfficePlusChanging(global::Microsoft.Spatial.GeographyPoint value);
         partial void OnOfficePlusChanged();
         /// <summary>
         /// There are no comments for Property CompanyPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Company")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlus CompanyPlus
         {
@@ -2117,7 +2184,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Company");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlus _CompanyPlus;
         partial void OnCompanyPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlus value);
         partial void OnCompanyPlusChanged();
@@ -2139,10 +2206,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public ProductPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new ProductPlusSingle object.
+        /// </summary>
+        public ProductPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<ProductPlus> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for DetailsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Details")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductDetailPlus> DetailsPlus
         {
             get
@@ -2158,7 +2233,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._DetailsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductDetailPlus> _DetailsPlus;
     }
     /// <summary>
@@ -2181,7 +2256,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="unitPrice">Initial value of UnitPricePlus.</param>
         /// <param name="quantityInStock">Initial value of QuantityInStockPlus.</param>
         /// <param name="discontinued">Initial value of DiscontinuedPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static ProductPlus CreateProductPlus(int productID,
                     string name,
                     string quantityPerUnit,
@@ -2201,7 +2276,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property ProductIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductID")]
         public int ProductIDPlus
         {
@@ -2217,14 +2292,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ProductID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _ProductIDPlus;
         partial void OnProductIDPlusChanging(int value);
         partial void OnProductIDPlusChanged();
         /// <summary>
         /// There are no comments for Property NamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Name")]
         public string NamePlus
         {
@@ -2240,14 +2315,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Name");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _NamePlus;
         partial void OnNamePlusChanging(string value);
         partial void OnNamePlusChanged();
         /// <summary>
         /// There are no comments for Property QuantityPerUnitPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("QuantityPerUnit")]
         public string QuantityPerUnitPlus
         {
@@ -2263,14 +2338,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("QuantityPerUnit");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _QuantityPerUnitPlus;
         partial void OnQuantityPerUnitPlusChanging(string value);
         partial void OnQuantityPerUnitPlusChanged();
         /// <summary>
         /// There are no comments for Property UnitPricePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("UnitPrice")]
         public float UnitPricePlus
         {
@@ -2286,14 +2361,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("UnitPrice");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private float _UnitPricePlus;
         partial void OnUnitPricePlusChanging(float value);
         partial void OnUnitPricePlusChanged();
         /// <summary>
         /// There are no comments for Property QuantityInStockPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("QuantityInStock")]
         public int QuantityInStockPlus
         {
@@ -2309,14 +2384,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("QuantityInStock");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _QuantityInStockPlus;
         partial void OnQuantityInStockPlusChanging(int value);
         partial void OnQuantityInStockPlusChanged();
         /// <summary>
         /// There are no comments for Property DiscontinuedPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Discontinued")]
         public bool DiscontinuedPlus
         {
@@ -2332,14 +2407,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Discontinued");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private bool _DiscontinuedPlus;
         partial void OnDiscontinuedPlusChanging(bool value);
         partial void OnDiscontinuedPlusChanged();
         /// <summary>
         /// There are no comments for Property UserAccessPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("UserAccess")]
         public global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccessLevelPlus> UserAccessPlus
         {
@@ -2355,14 +2430,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("UserAccess");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccessLevelPlus> _UserAccessPlus;
         partial void OnUserAccessPlusChanging(global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccessLevelPlus> value);
         partial void OnUserAccessPlusChanged();
         /// <summary>
         /// There are no comments for Property SkinColorPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("SkinColor")]
         public global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ColorPlus> SkinColorPlus
         {
@@ -2378,14 +2453,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("SkinColor");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ColorPlus> _SkinColorPlus;
         partial void OnSkinColorPlusChanging(global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ColorPlus> value);
         partial void OnSkinColorPlusChanged();
         /// <summary>
         /// There are no comments for Property CoverColorsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CoverColors")]
         public global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ColorPlus> CoverColorsPlus
         {
@@ -2401,14 +2476,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CoverColors");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ColorPlus> _CoverColorsPlus = new global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ColorPlus>();
         partial void OnCoverColorsPlusChanging(global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ColorPlus> value);
         partial void OnCoverColorsPlusChanged();
         /// <summary>
         /// There are no comments for Property DetailsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Details")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductDetailPlus> DetailsPlus
         {
@@ -2424,20 +2499,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Details");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductDetailPlus> _DetailsPlus = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductDetailPlus>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnDetailsPlusChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductDetailPlus> value);
         partial void OnDetailsPlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -2451,14 +2526,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetProductDetails")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductDetailPlus> GetProductDetailsPlus(global::System.Nullable<int> count)
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context, new global::Microsoft.OData.Client.UriOperationParameter("count", count));
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return this.Context.CreateQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductDetailPlus>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails" + parameterString, true);
+            return this.Context.CreateFunctionQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductDetailPlus>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails", true, new global::Microsoft.OData.Client.UriOperationParameter("count", count));
         }
         /// <summary>
         /// There are no comments for AddAccessRightPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("AddAccessRight")]
         public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccessLevelPlus>> AddAccessRightPlus(global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccessLevelPlus> accessRight)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
@@ -2487,10 +2562,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public ProductDetailPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new ProductDetailPlusSingle object.
+        /// </summary>
+        public ProductDetailPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<ProductDetailPlus> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for RelatedProductPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("RelatedProduct")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlusSingle RelatedProductPlus
         {
             get
@@ -2506,12 +2589,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._RelatedProductPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlusSingle _RelatedProductPlus;
         /// <summary>
         /// There are no comments for ReviewsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Reviews")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductReviewPlus> ReviewsPlus
         {
             get
@@ -2527,7 +2611,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._ReviewsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductReviewPlus> _ReviewsPlus;
     }
     /// <summary>
@@ -2549,7 +2633,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="productDetailID">Initial value of ProductDetailIDPlus.</param>
         /// <param name="productName">Initial value of ProductNamePlus.</param>
         /// <param name="description">Initial value of DescriptionPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static ProductDetailPlus CreateProductDetailPlus(int productID, int productDetailID, string productName, string description)
         {
             ProductDetailPlus productDetailPlus = new ProductDetailPlus();
@@ -2562,7 +2646,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property ProductIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductID")]
         public int ProductIDPlus
         {
@@ -2578,14 +2662,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ProductID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _ProductIDPlus;
         partial void OnProductIDPlusChanging(int value);
         partial void OnProductIDPlusChanged();
         /// <summary>
         /// There are no comments for Property ProductDetailIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductDetailID")]
         public int ProductDetailIDPlus
         {
@@ -2601,14 +2685,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ProductDetailID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _ProductDetailIDPlus;
         partial void OnProductDetailIDPlusChanging(int value);
         partial void OnProductDetailIDPlusChanged();
         /// <summary>
         /// There are no comments for Property ProductNamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductName")]
         public string ProductNamePlus
         {
@@ -2624,14 +2708,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ProductName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _ProductNamePlus;
         partial void OnProductNamePlusChanging(string value);
         partial void OnProductNamePlusChanged();
         /// <summary>
         /// There are no comments for Property DescriptionPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Description")]
         public string DescriptionPlus
         {
@@ -2647,14 +2731,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Description");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _DescriptionPlus;
         partial void OnDescriptionPlusChanging(string value);
         partial void OnDescriptionPlusChanged();
         /// <summary>
         /// There are no comments for Property RelatedProductPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("RelatedProduct")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus RelatedProductPlus
         {
@@ -2670,14 +2754,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("RelatedProduct");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus _RelatedProductPlus;
         partial void OnRelatedProductPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus value);
         partial void OnRelatedProductPlusChanged();
         /// <summary>
         /// There are no comments for Property ReviewsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Reviews")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductReviewPlus> ReviewsPlus
         {
@@ -2693,20 +2777,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Reviews");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductReviewPlus> _ReviewsPlus = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductReviewPlus>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnReviewsPlusChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductReviewPlus> value);
         partial void OnReviewsPlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -2720,10 +2804,10 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetRelatedProduct")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlusSingle GetRelatedProductPlus()
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context);
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlusSingle(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.Test.OData.Services.ODataWCFService.GetRelatedProduct" + parameterString, true);
+
+            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlusSingle(this.Context.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.GetRelatedProduct", true));
         }
     }
     /// <summary>
@@ -2743,6 +2827,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public ProductReviewPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new ProductReviewPlusSingle object.
+        /// </summary>
+        public ProductReviewPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<ProductReviewPlus> query)
+            : base(query) { }
+
     }
     /// <summary>
     /// There are no comments for ProductReviewPlus in the schema.
@@ -2767,7 +2858,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="revisionID">Initial value of RevisionIDPlus.</param>
         /// <param name="comment">Initial value of CommentPlus.</param>
         /// <param name="author">Initial value of AuthorPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static ProductReviewPlus CreateProductReviewPlus(int productID,
                     int productDetailID,
                     string reviewTitle,
@@ -2787,7 +2878,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property ProductIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductID")]
         public int ProductIDPlus
         {
@@ -2803,14 +2894,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ProductID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _ProductIDPlus;
         partial void OnProductIDPlusChanging(int value);
         partial void OnProductIDPlusChanged();
         /// <summary>
         /// There are no comments for Property ProductDetailIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductDetailID")]
         public int ProductDetailIDPlus
         {
@@ -2826,14 +2917,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ProductDetailID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _ProductDetailIDPlus;
         partial void OnProductDetailIDPlusChanging(int value);
         partial void OnProductDetailIDPlusChanged();
         /// <summary>
         /// There are no comments for Property ReviewTitlePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ReviewTitle")]
         public string ReviewTitlePlus
         {
@@ -2849,14 +2940,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ReviewTitle");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _ReviewTitlePlus;
         partial void OnReviewTitlePlusChanging(string value);
         partial void OnReviewTitlePlusChanged();
         /// <summary>
         /// There are no comments for Property RevisionIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("RevisionID")]
         public int RevisionIDPlus
         {
@@ -2872,14 +2963,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("RevisionID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _RevisionIDPlus;
         partial void OnRevisionIDPlusChanging(int value);
         partial void OnRevisionIDPlusChanged();
         /// <summary>
         /// There are no comments for Property CommentPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Comment")]
         public string CommentPlus
         {
@@ -2895,14 +2986,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Comment");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _CommentPlus;
         partial void OnCommentPlusChanging(string value);
         partial void OnCommentPlusChanged();
         /// <summary>
         /// There are no comments for Property AuthorPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Author")]
         public string AuthorPlus
         {
@@ -2918,20 +3009,70 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Author");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _AuthorPlus;
         partial void OnAuthorPlusChanging(string value);
         partial void OnAuthorPlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        protected virtual void OnPropertyChanged(string property)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(property));
+            }
+        }
+    }
+    /// <summary>
+    /// There are no comments for AbstractEntityPlusSingle in the schema.
+    /// </summary>
+    [global::Microsoft.OData.Client.OriginalNameAttribute("AbstractEntitySingle")]
+    public partial class AbstractEntityPlusSingle : global::Microsoft.OData.Client.DataServiceQuerySingle<AbstractEntityPlus>
+    {
+        /// <summary>
+        /// Initialize a new AbstractEntityPlusSingle object.
+        /// </summary>
+        public AbstractEntityPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path)
+            : base(context, path) { }
+
+        /// <summary>
+        /// Initialize a new AbstractEntityPlusSingle object.
+        /// </summary>
+        public AbstractEntityPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
+            : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new AbstractEntityPlusSingle object.
+        /// </summary>
+        public AbstractEntityPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<AbstractEntityPlus> query)
+            : base(query) { }
+
+    }
+    /// <summary>
+    /// There are no comments for AbstractEntityPlus in the schema.
+    /// </summary>
+    [global::Microsoft.OData.Client.EntityType()]
+    [global::Microsoft.OData.Client.OriginalNameAttribute("AbstractEntity")]
+    public abstract partial class AbstractEntityPlus : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
+    {
+        /// <summary>
+        /// This event is raised when the value of the property is changed
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// The value of the property is changed
+        /// </summary>
+        /// <param name="property">property name</param>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -2957,10 +3098,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public OrderPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new OrderPlusSingle object.
+        /// </summary>
+        public OrderPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<OrderPlus> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for LoggedInEmployeePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("LoggedInEmployee")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlusSingle LoggedInEmployeePlus
         {
             get
@@ -2976,12 +3125,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._LoggedInEmployeePlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlusSingle _LoggedInEmployeePlus;
         /// <summary>
         /// There are no comments for CustomerForOrderPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("CustomerForOrder")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlusSingle CustomerForOrderPlus
         {
             get
@@ -2997,12 +3147,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._CustomerForOrderPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlusSingle _CustomerForOrderPlus;
         /// <summary>
         /// There are no comments for OrderDetailsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("OrderDetails")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlus> OrderDetailsPlus
         {
             get
@@ -3018,7 +3169,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._OrderDetailsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlus> _OrderDetailsPlus;
     }
     /// <summary>
@@ -3030,7 +3181,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
     [global::Microsoft.OData.Client.Key("OrderID")]
     [global::Microsoft.OData.Client.EntitySet("Orders")]
     [global::Microsoft.OData.Client.OriginalNameAttribute("Order")]
-    public partial class OrderPlus : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
+    public partial class OrderPlus : AbstractEntityPlus
     {
         /// <summary>
         /// Create a new OrderPlus object.
@@ -3041,7 +3192,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="shipTime">Initial value of ShipTimePlus.</param>
         /// <param name="loggedInEmployee">Initial value of LoggedInEmployeePlus.</param>
         /// <param name="customerForOrder">Initial value of CustomerForOrderPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static OrderPlus CreateOrderPlus(int orderID,
                     global::System.DateTimeOffset orderDate,
                     global::Microsoft.OData.Edm.Library.Date shipDate,
@@ -3069,7 +3220,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property OrderIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("OrderID")]
         public int OrderIDPlus
         {
@@ -3085,14 +3236,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("OrderID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _OrderIDPlus;
         partial void OnOrderIDPlusChanging(int value);
         partial void OnOrderIDPlusChanged();
         /// <summary>
         /// There are no comments for Property OrderDatePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("OrderDate")]
         public global::System.DateTimeOffset OrderDatePlus
         {
@@ -3108,14 +3259,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("OrderDate");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.DateTimeOffset _OrderDatePlus;
         partial void OnOrderDatePlusChanging(global::System.DateTimeOffset value);
         partial void OnOrderDatePlusChanged();
         /// <summary>
         /// There are no comments for Property ShelfLifePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ShelfLife")]
         public global::System.Nullable<global::System.TimeSpan> ShelfLifePlus
         {
@@ -3131,14 +3282,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ShelfLife");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<global::System.TimeSpan> _ShelfLifePlus;
         partial void OnShelfLifePlusChanging(global::System.Nullable<global::System.TimeSpan> value);
         partial void OnShelfLifePlusChanged();
         /// <summary>
         /// There are no comments for Property OrderShelfLifesPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("OrderShelfLifes")]
         public global::System.Collections.ObjectModel.ObservableCollection<global::System.TimeSpan> OrderShelfLifesPlus
         {
@@ -3154,14 +3305,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("OrderShelfLifes");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Collections.ObjectModel.ObservableCollection<global::System.TimeSpan> _OrderShelfLifesPlus = new global::System.Collections.ObjectModel.ObservableCollection<global::System.TimeSpan>();
         partial void OnOrderShelfLifesPlusChanging(global::System.Collections.ObjectModel.ObservableCollection<global::System.TimeSpan> value);
         partial void OnOrderShelfLifesPlusChanged();
         /// <summary>
         /// There are no comments for Property ShipDatePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ShipDate")]
         public global::Microsoft.OData.Edm.Library.Date ShipDatePlus
         {
@@ -3177,14 +3328,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ShipDate");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Edm.Library.Date _ShipDatePlus;
         partial void OnShipDatePlusChanging(global::Microsoft.OData.Edm.Library.Date value);
         partial void OnShipDatePlusChanged();
         /// <summary>
         /// There are no comments for Property ShipTimePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ShipTime")]
         public global::Microsoft.OData.Edm.Library.TimeOfDay ShipTimePlus
         {
@@ -3200,14 +3351,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ShipTime");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Edm.Library.TimeOfDay _ShipTimePlus;
         partial void OnShipTimePlusChanging(global::Microsoft.OData.Edm.Library.TimeOfDay value);
         partial void OnShipTimePlusChanged();
         /// <summary>
         /// There are no comments for Property LoggedInEmployeePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("LoggedInEmployee")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus LoggedInEmployeePlus
         {
@@ -3223,14 +3374,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("LoggedInEmployee");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus _LoggedInEmployeePlus;
         partial void OnLoggedInEmployeePlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus value);
         partial void OnLoggedInEmployeePlusChanged();
         /// <summary>
         /// There are no comments for Property CustomerForOrderPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CustomerForOrder")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus CustomerForOrderPlus
         {
@@ -3246,14 +3397,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CustomerForOrder");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus _CustomerForOrderPlus;
         partial void OnCustomerForOrderPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus value);
         partial void OnCustomerForOrderPlusChanged();
         /// <summary>
         /// There are no comments for Property OrderDetailsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("OrderDetails")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlus> OrderDetailsPlus
         {
@@ -3269,37 +3420,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("OrderDetails");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlus> _OrderDetailsPlus = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlus>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnOrderDetailsPlusChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlus> value);
         partial void OnOrderDetailsPlusChanged();
-        /// <summary>
-        /// This event is raised when the value of the property is changed
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        /// <summary>
-        /// The value of the property is changed
-        /// </summary>
-        /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        protected virtual void OnPropertyChanged(string property)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(property));
-            }
-        }
         /// <summary>
         /// There are no comments for GetShipDatePlus in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetShipDate")]
         public global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Library.Date> GetShipDatePlus()
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context);
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Library.Date>(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.Test.OData.Services.ODataWCFService.GetShipDate" + parameterString, false);
+
+            return this.Context.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.Library.Date>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.GetShipDate", false);
         }
         /// <summary>
         /// There are no comments for GetShipTimePlus in the schema.
@@ -3307,10 +3441,10 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetShipTime")]
         public global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Library.TimeOfDay> GetShipTimePlus()
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context);
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Library.TimeOfDay>(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.Test.OData.Services.ODataWCFService.GetShipTime" + parameterString, false);
+
+            return this.Context.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.Library.TimeOfDay>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.GetShipTime", false);
         }
         /// <summary>
         /// There are no comments for CheckShipTimePlus in the schema.
@@ -3318,10 +3452,10 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         [global::Microsoft.OData.Client.OriginalNameAttribute("CheckShipTime")]
         public global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipTimePlus(global::Microsoft.OData.Edm.Library.TimeOfDay time)
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context, new global::Microsoft.OData.Client.UriOperationParameter("time", time));
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<bool>(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.Test.OData.Services.ODataWCFService.CheckShipTime" + parameterString, false);
+
+            return this.Context.CreateFunctionQuerySingle<bool>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.CheckShipTime", false, new global::Microsoft.OData.Client.UriOperationParameter("time", time));
         }
         /// <summary>
         /// There are no comments for CheckShipDatePlus in the schema.
@@ -3329,14 +3463,15 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         [global::Microsoft.OData.Client.OriginalNameAttribute("CheckShipDate")]
         public global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipDatePlus(global::Microsoft.OData.Edm.Library.Date date)
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context, new global::Microsoft.OData.Client.UriOperationParameter("date", date));
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<bool>(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.Test.OData.Services.ODataWCFService.CheckShipDate" + parameterString, false);
+
+            return this.Context.CreateFunctionQuerySingle<bool>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.CheckShipDate", false, new global::Microsoft.OData.Client.UriOperationParameter("date", date));
         }
         /// <summary>
         /// There are no comments for ChangeShipTimeAndDatePlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ChangeShipTimeAndDate")]
         public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> ChangeShipTimeAndDatePlus(global::Microsoft.OData.Edm.Library.Date date, global::Microsoft.OData.Edm.Library.TimeOfDay time)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
@@ -3366,10 +3501,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public OrderDetailPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new OrderDetailPlusSingle object.
+        /// </summary>
+        public OrderDetailPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<OrderDetailPlus> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for ProductOrderedPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ProductOrdered")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus> ProductOrderedPlus
         {
             get
@@ -3385,12 +3528,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._ProductOrderedPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus> _ProductOrderedPlus;
         /// <summary>
         /// There are no comments for AssociatedOrderPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("AssociatedOrder")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlusSingle AssociatedOrderPlus
         {
             get
@@ -3406,7 +3550,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._AssociatedOrderPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlusSingle _AssociatedOrderPlus;
     }
     /// <summary>
@@ -3419,7 +3563,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
     [global::Microsoft.OData.Client.Key("OrderID", "ProductID")]
     [global::Microsoft.OData.Client.EntitySet("OrderDetails")]
     [global::Microsoft.OData.Client.OriginalNameAttribute("OrderDetail")]
-    public partial class OrderDetailPlus : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
+    public partial class OrderDetailPlus : AbstractEntityPlus
     {
         /// <summary>
         /// Create a new OrderDetailPlus object.
@@ -3430,7 +3574,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="quantity">Initial value of QuantityPlus.</param>
         /// <param name="unitPrice">Initial value of UnitPricePlus.</param>
         /// <param name="associatedOrder">Initial value of AssociatedOrderPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static OrderDetailPlus CreateOrderDetailPlus(int orderID,
                     int productID,
                     global::System.DateTimeOffset orderPlaced,
@@ -3454,7 +3598,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property OrderIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("OrderID")]
         public int OrderIDPlus
         {
@@ -3470,14 +3614,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("OrderID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _OrderIDPlus;
         partial void OnOrderIDPlusChanging(int value);
         partial void OnOrderIDPlusChanged();
         /// <summary>
         /// There are no comments for Property ProductIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductID")]
         public int ProductIDPlus
         {
@@ -3493,14 +3637,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ProductID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _ProductIDPlus;
         partial void OnProductIDPlusChanging(int value);
         partial void OnProductIDPlusChanged();
         /// <summary>
         /// There are no comments for Property OrderPlacedPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("OrderPlaced")]
         public global::System.DateTimeOffset OrderPlacedPlus
         {
@@ -3516,14 +3660,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("OrderPlaced");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.DateTimeOffset _OrderPlacedPlus;
         partial void OnOrderPlacedPlusChanging(global::System.DateTimeOffset value);
         partial void OnOrderPlacedPlusChanged();
         /// <summary>
         /// There are no comments for Property QuantityPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Quantity")]
         public int QuantityPlus
         {
@@ -3539,14 +3683,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Quantity");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _QuantityPlus;
         partial void OnQuantityPlusChanging(int value);
         partial void OnQuantityPlusChanged();
         /// <summary>
         /// There are no comments for Property UnitPricePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("UnitPrice")]
         public float UnitPricePlus
         {
@@ -3562,14 +3706,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("UnitPrice");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private float _UnitPricePlus;
         partial void OnUnitPricePlusChanging(float value);
         partial void OnUnitPricePlusChanged();
         /// <summary>
         /// There are no comments for Property ProductOrderedPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductOrdered")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus> ProductOrderedPlus
         {
@@ -3585,14 +3729,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ProductOrdered");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus> _ProductOrderedPlus = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnProductOrderedPlusChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus> value);
         partial void OnProductOrderedPlusChanged();
         /// <summary>
         /// There are no comments for Property AssociatedOrderPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("AssociatedOrder")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus AssociatedOrderPlus
         {
@@ -3608,27 +3752,10 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("AssociatedOrder");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus _AssociatedOrderPlus;
         partial void OnAssociatedOrderPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus value);
         partial void OnAssociatedOrderPlusChanged();
-        /// <summary>
-        /// This event is raised when the value of the property is changed
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        /// <summary>
-        /// The value of the property is changed
-        /// </summary>
-        /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
-        protected virtual void OnPropertyChanged(string property)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(property));
-            }
-        }
     }
     /// <summary>
     /// There are no comments for DepartmentPlusSingle in the schema.
@@ -3647,10 +3774,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public DepartmentPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new DepartmentPlusSingle object.
+        /// </summary>
+        public DepartmentPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<DepartmentPlus> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for CompanyPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Company")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlusSingle CompanyPlus
         {
             get
@@ -3666,7 +3801,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._CompanyPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlusSingle _CompanyPlus;
     }
     /// <summary>
@@ -3686,7 +3821,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="departmentID">Initial value of DepartmentIDPlus.</param>
         /// <param name="name">Initial value of NamePlus.</param>
         /// <param name="company">Initial value of CompanyPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static DepartmentPlus CreateDepartmentPlus(int departmentID, string name, global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlus company)
         {
             DepartmentPlus departmentPlus = new DepartmentPlus();
@@ -3702,7 +3837,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property DepartmentIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("DepartmentID")]
         public int DepartmentIDPlus
         {
@@ -3718,14 +3853,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("DepartmentID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _DepartmentIDPlus;
         partial void OnDepartmentIDPlusChanging(int value);
         partial void OnDepartmentIDPlusChanged();
         /// <summary>
         /// There are no comments for Property NamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Name")]
         public string NamePlus
         {
@@ -3741,14 +3876,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Name");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _NamePlus;
         partial void OnNamePlusChanging(string value);
         partial void OnNamePlusChanged();
         /// <summary>
         /// There are no comments for Property DepartmentNOPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("DepartmentNO")]
         public string DepartmentNOPlus
         {
@@ -3764,14 +3899,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("DepartmentNO");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _DepartmentNOPlus;
         partial void OnDepartmentNOPlusChanging(string value);
         partial void OnDepartmentNOPlusChanged();
         /// <summary>
         /// There are no comments for Property CompanyPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Company")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlus CompanyPlus
         {
@@ -3787,20 +3922,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Company");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlus _CompanyPlus;
         partial void OnCompanyPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlus value);
         partial void OnCompanyPlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -3826,10 +3961,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public CompanyPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new CompanyPlusSingle object.
+        /// </summary>
+        public CompanyPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<CompanyPlus> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for EmployeesPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Employees")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus> EmployeesPlus
         {
             get
@@ -3845,12 +3988,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._EmployeesPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus> _EmployeesPlus;
         /// <summary>
         /// There are no comments for VipCustomerPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("VipCustomer")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlusSingle VipCustomerPlus
         {
             get
@@ -3866,12 +4010,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._VipCustomerPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlusSingle _VipCustomerPlus;
         /// <summary>
         /// There are no comments for DepartmentsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Departments")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlus> DepartmentsPlus
         {
             get
@@ -3887,12 +4032,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._DepartmentsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlus> _DepartmentsPlus;
         /// <summary>
         /// There are no comments for CoreDepartmentPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("CoreDepartment")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlusSingle CoreDepartmentPlus
         {
             get
@@ -3908,7 +4054,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._CoreDepartmentPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlusSingle _CoreDepartmentPlus;
     }
     /// <summary>
@@ -3928,7 +4074,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="revenue">Initial value of RevenuePlus.</param>
         /// <param name="vipCustomer">Initial value of VipCustomerPlus.</param>
         /// <param name="coreDepartment">Initial value of CoreDepartmentPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static CompanyPlus CreateCompanyPlus(int companyID, long revenue, global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus vipCustomer, global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlus coreDepartment)
         {
             CompanyPlus companyPlus = new CompanyPlus();
@@ -3949,7 +4095,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property CompanyIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CompanyID")]
         public int CompanyIDPlus
         {
@@ -3965,14 +4111,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CompanyID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _CompanyIDPlus;
         partial void OnCompanyIDPlusChanging(int value);
         partial void OnCompanyIDPlusChanged();
         /// <summary>
         /// There are no comments for Property CompanyCategoryPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CompanyCategory")]
         public global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyCategoryPlus> CompanyCategoryPlus
         {
@@ -3988,14 +4134,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CompanyCategory");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyCategoryPlus> _CompanyCategoryPlus;
         partial void OnCompanyCategoryPlusChanging(global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyCategoryPlus> value);
         partial void OnCompanyCategoryPlusChanged();
         /// <summary>
         /// There are no comments for Property RevenuePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Revenue")]
         public long RevenuePlus
         {
@@ -4011,14 +4157,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Revenue");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private long _RevenuePlus;
         partial void OnRevenuePlusChanging(long value);
         partial void OnRevenuePlusChanged();
         /// <summary>
         /// There are no comments for Property NamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Name")]
         public string NamePlus
         {
@@ -4034,14 +4180,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Name");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _NamePlus;
         partial void OnNamePlusChanging(string value);
         partial void OnNamePlusChanged();
         /// <summary>
         /// There are no comments for Property AddressPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Address")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus AddressPlus
         {
@@ -4057,14 +4203,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Address");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus _AddressPlus;
         partial void OnAddressPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus value);
         partial void OnAddressPlusChanged();
         /// <summary>
         /// There are no comments for Property EmployeesPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Employees")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus> EmployeesPlus
         {
@@ -4080,14 +4226,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Employees");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus> _EmployeesPlus = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnEmployeesPlusChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus> value);
         partial void OnEmployeesPlusChanged();
         /// <summary>
         /// There are no comments for Property VipCustomerPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("VipCustomer")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus VipCustomerPlus
         {
@@ -4103,14 +4249,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("VipCustomer");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus _VipCustomerPlus;
         partial void OnVipCustomerPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus value);
         partial void OnVipCustomerPlusChanged();
         /// <summary>
         /// There are no comments for Property DepartmentsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Departments")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlus> DepartmentsPlus
         {
@@ -4126,14 +4272,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Departments");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlus> _DepartmentsPlus = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlus>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnDepartmentsPlusChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlus> value);
         partial void OnDepartmentsPlusChanged();
         /// <summary>
         /// There are no comments for Property CoreDepartmentPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CoreDepartment")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlus CoreDepartmentPlus
         {
@@ -4149,20 +4295,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CoreDepartment");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlus _CoreDepartmentPlus;
         partial void OnCoreDepartmentPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlus value);
         partial void OnCoreDepartmentPlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -4176,14 +4322,15 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetEmployeesCount")]
         public global::Microsoft.OData.Client.DataServiceQuerySingle<int> GetEmployeesCountPlus()
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context);
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<int>(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount" + parameterString, false);
+
+            return this.Context.CreateFunctionQuerySingle<int>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount", false);
         }
         /// <summary>
         /// There are no comments for IncreaseRevenuePlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("IncreaseRevenue")]
         public global::Microsoft.OData.Client.DataServiceActionQuerySingle<long> IncreaseRevenuePlus(global::System.Nullable<long> IncreaseValue)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
@@ -4212,10 +4359,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public PublicCompanyPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new PublicCompanyPlusSingle object.
+        /// </summary>
+        public PublicCompanyPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<PublicCompanyPlus> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for AssetsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Assets")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AssetPlus> AssetsPlus
         {
             get
@@ -4231,12 +4386,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._AssetsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AssetPlus> _AssetsPlus;
         /// <summary>
         /// There are no comments for ClubPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Club")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ClubPlusSingle ClubPlus
         {
             get
@@ -4252,12 +4408,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._ClubPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ClubPlusSingle _ClubPlus;
         /// <summary>
         /// There are no comments for LabourUnionPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("LabourUnion")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.LabourUnionPlusSingle LabourUnionPlus
         {
             get
@@ -4273,12 +4430,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._LabourUnionPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.LabourUnionPlusSingle _LabourUnionPlus;
         /// <summary>
         /// There are no comments for EmployeesPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Employees")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus> EmployeesPlus
         {
             get
@@ -4294,12 +4452,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._EmployeesPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus> _EmployeesPlus;
         /// <summary>
         /// There are no comments for VipCustomerPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("VipCustomer")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlusSingle VipCustomerPlus
         {
             get
@@ -4315,12 +4474,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._VipCustomerPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlusSingle _VipCustomerPlus;
         /// <summary>
         /// There are no comments for DepartmentsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Departments")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlus> DepartmentsPlus
         {
             get
@@ -4336,12 +4496,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._DepartmentsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlus> _DepartmentsPlus;
         /// <summary>
         /// There are no comments for CoreDepartmentPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("CoreDepartment")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlusSingle CoreDepartmentPlus
         {
             get
@@ -4357,7 +4518,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._CoreDepartmentPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlusSingle _CoreDepartmentPlus;
     }
     /// <summary>
@@ -4379,7 +4540,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="coreDepartment">Initial value of CoreDepartmentPlus.</param>
         /// <param name="club">Initial value of ClubPlus.</param>
         /// <param name="labourUnion">Initial value of LabourUnionPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static PublicCompanyPlus CreatePublicCompanyPlus(int companyID,
                     long revenue,
                     global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus vipCustomer,
@@ -4415,7 +4576,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property StockExchangePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("StockExchange")]
         public string StockExchangePlus
         {
@@ -4431,14 +4592,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("StockExchange");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _StockExchangePlus;
         partial void OnStockExchangePlusChanging(string value);
         partial void OnStockExchangePlusChanged();
         /// <summary>
         /// There are no comments for Property AssetsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Assets")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AssetPlus> AssetsPlus
         {
@@ -4454,14 +4615,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Assets");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AssetPlus> _AssetsPlus = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AssetPlus>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnAssetsPlusChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AssetPlus> value);
         partial void OnAssetsPlusChanged();
         /// <summary>
         /// There are no comments for Property ClubPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Club")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ClubPlus ClubPlus
         {
@@ -4477,14 +4638,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Club");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ClubPlus _ClubPlus;
         partial void OnClubPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ClubPlus value);
         partial void OnClubPlusChanged();
         /// <summary>
         /// There are no comments for Property LabourUnionPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("LabourUnion")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.LabourUnionPlus LabourUnionPlus
         {
@@ -4500,7 +4661,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("LabourUnion");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.LabourUnionPlus _LabourUnionPlus;
         partial void OnLabourUnionPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.LabourUnionPlus value);
         partial void OnLabourUnionPlusChanged();
@@ -4522,6 +4683,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public AssetPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new AssetPlusSingle object.
+        /// </summary>
+        public AssetPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<AssetPlus> query)
+            : base(query) { }
+
     }
     /// <summary>
     /// There are no comments for AssetPlus in the schema.
@@ -4538,7 +4706,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         /// <param name="assetID">Initial value of AssetIDPlus.</param>
         /// <param name="number">Initial value of NumberPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static AssetPlus CreateAssetPlus(int assetID, int number)
         {
             AssetPlus assetPlus = new AssetPlus();
@@ -4549,7 +4717,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property AssetIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("AssetID")]
         public int AssetIDPlus
         {
@@ -4565,14 +4733,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("AssetID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _AssetIDPlus;
         partial void OnAssetIDPlusChanging(int value);
         partial void OnAssetIDPlusChanged();
         /// <summary>
         /// There are no comments for Property NamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Name")]
         public string NamePlus
         {
@@ -4588,14 +4756,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Name");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _NamePlus;
         partial void OnNamePlusChanging(string value);
         partial void OnNamePlusChanged();
         /// <summary>
         /// There are no comments for Property NumberPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Number")]
         public int NumberPlus
         {
@@ -4611,20 +4779,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Number");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _NumberPlus;
         partial void OnNumberPlusChanging(int value);
         partial void OnNumberPlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -4650,6 +4818,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public ClubPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new ClubPlusSingle object.
+        /// </summary>
+        public ClubPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<ClubPlus> query)
+            : base(query) { }
+
     }
     /// <summary>
     /// There are no comments for ClubPlus in the schema.
@@ -4665,7 +4840,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// Create a new ClubPlus object.
         /// </summary>
         /// <param name="clubID">Initial value of ClubIDPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static ClubPlus CreateClubPlus(int clubID)
         {
             ClubPlus clubPlus = new ClubPlus();
@@ -4675,7 +4850,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property ClubIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ClubID")]
         public int ClubIDPlus
         {
@@ -4691,14 +4866,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ClubID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _ClubIDPlus;
         partial void OnClubIDPlusChanging(int value);
         partial void OnClubIDPlusChanged();
         /// <summary>
         /// There are no comments for Property NamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Name")]
         public string NamePlus
         {
@@ -4714,20 +4889,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Name");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _NamePlus;
         partial void OnNamePlusChanging(string value);
         partial void OnNamePlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -4753,6 +4928,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public LabourUnionPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new LabourUnionPlusSingle object.
+        /// </summary>
+        public LabourUnionPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<LabourUnionPlus> query)
+            : base(query) { }
+
     }
     /// <summary>
     /// There are no comments for LabourUnionPlus in the schema.
@@ -4768,7 +4950,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// Create a new LabourUnionPlus object.
         /// </summary>
         /// <param name="labourUnionID">Initial value of LabourUnionIDPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static LabourUnionPlus CreateLabourUnionPlus(int labourUnionID)
         {
             LabourUnionPlus labourUnionPlus = new LabourUnionPlus();
@@ -4778,7 +4960,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property LabourUnionIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("LabourUnionID")]
         public int LabourUnionIDPlus
         {
@@ -4794,14 +4976,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("LabourUnionID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _LabourUnionIDPlus;
         partial void OnLabourUnionIDPlusChanging(int value);
         partial void OnLabourUnionIDPlusChanged();
         /// <summary>
         /// There are no comments for Property NamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Name")]
         public string NamePlus
         {
@@ -4817,20 +4999,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Name");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _NamePlus;
         partial void OnNamePlusChanging(string value);
         partial void OnNamePlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -4841,6 +5023,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for ChangeLabourUnionNamePlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ChangeLabourUnionName")]
         public global::Microsoft.OData.Client.DataServiceActionQuery ChangeLabourUnionNamePlus(string name)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
@@ -4863,7 +5046,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         /// <param name="firstName">Initial value of FirstNamePlus.</param>
         /// <param name="lastName">Initial value of LastNamePlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static AccountInfoPlus CreateAccountInfoPlus(string firstName, string lastName)
         {
             AccountInfoPlus accountInfoPlus = new AccountInfoPlus();
@@ -4874,7 +5057,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property FirstNamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("FirstName")]
         public string FirstNamePlus
         {
@@ -4890,14 +5073,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("FirstName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _FirstNamePlus;
         partial void OnFirstNamePlusChanging(string value);
         partial void OnFirstNamePlusChanged();
         /// <summary>
         /// There are no comments for Property LastNamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("LastName")]
         public string LastNamePlus
         {
@@ -4913,20 +5096,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("LastName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _LastNamePlus;
         partial void OnLastNamePlusChanging(string value);
         partial void OnLastNamePlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -4952,10 +5135,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public AccountPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new AccountPlusSingle object.
+        /// </summary>
+        public AccountPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<AccountPlus> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for MyGiftCardPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyGiftCard")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.GiftCardPlusSingle MyGiftCardPlus
         {
             get
@@ -4971,12 +5162,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._MyGiftCardPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.GiftCardPlusSingle _MyGiftCardPlus;
         /// <summary>
         /// There are no comments for MyPaymentInstrumentsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("MyPaymentInstruments")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlus> MyPaymentInstrumentsPlus
         {
             get
@@ -4992,12 +5184,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._MyPaymentInstrumentsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlus> _MyPaymentInstrumentsPlus;
         /// <summary>
         /// There are no comments for ActiveSubscriptionsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ActiveSubscriptions")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.SubscriptionPlus> ActiveSubscriptionsPlus
         {
             get
@@ -5013,12 +5206,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._ActiveSubscriptionsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.SubscriptionPlus> _ActiveSubscriptionsPlus;
         /// <summary>
         /// There are no comments for AvailableSubscriptionTemplatessPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("AvailableSubscriptionTemplatess")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.SubscriptionPlus> AvailableSubscriptionTemplatessPlus
         {
             get
@@ -5034,7 +5228,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._AvailableSubscriptionTemplatessPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.SubscriptionPlus> _AvailableSubscriptionTemplatessPlus;
     }
     /// <summary>
@@ -5053,7 +5247,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         /// <param name="accountID">Initial value of AccountIDPlus.</param>
         /// <param name="countryRegion">Initial value of CountryRegionPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static AccountPlus CreateAccountPlus(int accountID, string countryRegion)
         {
             AccountPlus accountPlus = new AccountPlus();
@@ -5064,7 +5258,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property AccountIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("AccountID")]
         public int AccountIDPlus
         {
@@ -5080,14 +5274,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("AccountID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _AccountIDPlus;
         partial void OnAccountIDPlusChanging(int value);
         partial void OnAccountIDPlusChanged();
         /// <summary>
         /// There are no comments for Property CountryRegionPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CountryRegion")]
         public string CountryRegionPlus
         {
@@ -5103,14 +5297,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CountryRegion");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _CountryRegionPlus;
         partial void OnCountryRegionPlusChanging(string value);
         partial void OnCountryRegionPlusChanged();
         /// <summary>
         /// There are no comments for Property AccountInfoPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("AccountInfo")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccountInfoPlus AccountInfoPlus
         {
@@ -5126,14 +5320,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("AccountInfo");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccountInfoPlus _AccountInfoPlus;
         partial void OnAccountInfoPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccountInfoPlus value);
         partial void OnAccountInfoPlusChanged();
         /// <summary>
         /// There are no comments for Property MyGiftCardPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("MyGiftCard")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.GiftCardPlus MyGiftCardPlus
         {
@@ -5149,14 +5343,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("MyGiftCard");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.GiftCardPlus _MyGiftCardPlus;
         partial void OnMyGiftCardPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.GiftCardPlus value);
         partial void OnMyGiftCardPlusChanged();
         /// <summary>
         /// There are no comments for Property MyPaymentInstrumentsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("MyPaymentInstruments")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlus> MyPaymentInstrumentsPlus
         {
@@ -5172,14 +5366,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("MyPaymentInstruments");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlus> _MyPaymentInstrumentsPlus = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlus>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnMyPaymentInstrumentsPlusChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlus> value);
         partial void OnMyPaymentInstrumentsPlusChanged();
         /// <summary>
         /// There are no comments for Property ActiveSubscriptionsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ActiveSubscriptions")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.SubscriptionPlus> ActiveSubscriptionsPlus
         {
@@ -5195,14 +5389,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ActiveSubscriptions");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.SubscriptionPlus> _ActiveSubscriptionsPlus = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.SubscriptionPlus>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnActiveSubscriptionsPlusChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.SubscriptionPlus> value);
         partial void OnActiveSubscriptionsPlusChanged();
         /// <summary>
         /// There are no comments for Property AvailableSubscriptionTemplatessPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("AvailableSubscriptionTemplatess")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.SubscriptionPlus> AvailableSubscriptionTemplatessPlus
         {
@@ -5218,20 +5412,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("AvailableSubscriptionTemplatess");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.SubscriptionPlus> _AvailableSubscriptionTemplatessPlus = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.SubscriptionPlus>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnAvailableSubscriptionTemplatessPlusChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.SubscriptionPlus> value);
         partial void OnAvailableSubscriptionTemplatessPlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -5245,10 +5439,10 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetDefaultPI")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlusSingle GetDefaultPIPlus()
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context);
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlusSingle(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.Test.OData.Services.ODataWCFService.GetDefaultPI" + parameterString, false);
+
+            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlusSingle(this.Context.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlus>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.GetDefaultPI", false));
         }
         /// <summary>
         /// There are no comments for GetAccountInfoPlus in the schema.
@@ -5256,14 +5450,15 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetAccountInfo")]
         public global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccountInfoPlus> GetAccountInfoPlus()
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context);
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccountInfoPlus>(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.Test.OData.Services.ODataWCFService.GetAccountInfo" + parameterString, true);
+
+            return this.Context.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccountInfoPlus>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.GetAccountInfo", true);
         }
         /// <summary>
         /// There are no comments for RefreshDefaultPIPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("RefreshDefaultPI")]
         public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlus> RefreshDefaultPIPlus(global::System.Nullable<global::System.DateTimeOffset> newDate)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
@@ -5292,6 +5487,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public GiftCardPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new GiftCardPlusSingle object.
+        /// </summary>
+        public GiftCardPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<GiftCardPlus> query)
+            : base(query) { }
+
     }
     /// <summary>
     /// There are no comments for GiftCardPlus in the schema.
@@ -5310,7 +5512,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="giftCardNO">Initial value of GiftCardNOPlus.</param>
         /// <param name="amount">Initial value of AmountPlus.</param>
         /// <param name="experationDate">Initial value of ExperationDatePlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static GiftCardPlus CreateGiftCardPlus(int giftCardID, string giftCardNO, double amount, global::System.DateTimeOffset experationDate)
         {
             GiftCardPlus giftCardPlus = new GiftCardPlus();
@@ -5323,7 +5525,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property GiftCardIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("GiftCardID")]
         public int GiftCardIDPlus
         {
@@ -5339,14 +5541,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("GiftCardID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _GiftCardIDPlus;
         partial void OnGiftCardIDPlusChanging(int value);
         partial void OnGiftCardIDPlusChanged();
         /// <summary>
         /// There are no comments for Property GiftCardNOPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("GiftCardNO")]
         public string GiftCardNOPlus
         {
@@ -5362,14 +5564,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("GiftCardNO");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _GiftCardNOPlus;
         partial void OnGiftCardNOPlusChanging(string value);
         partial void OnGiftCardNOPlusChanged();
         /// <summary>
         /// There are no comments for Property AmountPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Amount")]
         public double AmountPlus
         {
@@ -5385,14 +5587,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Amount");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private double _AmountPlus;
         partial void OnAmountPlusChanging(double value);
         partial void OnAmountPlusChanged();
         /// <summary>
         /// There are no comments for Property ExperationDatePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ExperationDate")]
         public global::System.DateTimeOffset ExperationDatePlus
         {
@@ -5408,14 +5610,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ExperationDate");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.DateTimeOffset _ExperationDatePlus;
         partial void OnExperationDatePlusChanging(global::System.DateTimeOffset value);
         partial void OnExperationDatePlusChanged();
         /// <summary>
         /// There are no comments for Property OwnerNamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("OwnerName")]
         public string OwnerNamePlus
         {
@@ -5431,20 +5633,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("OwnerName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _OwnerNamePlus;
         partial void OnOwnerNamePlusChanging(string value);
         partial void OnOwnerNamePlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -5458,10 +5660,10 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetActualAmount")]
         public global::Microsoft.OData.Client.DataServiceQuerySingle<double> GetActualAmountPlus(global::System.Nullable<double> bonusRate)
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context, new global::Microsoft.OData.Client.UriOperationParameter("bonusRate", bonusRate));
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<double>(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount" + parameterString, false);
+
+            return this.Context.CreateFunctionQuerySingle<double>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount", false, new global::Microsoft.OData.Client.UriOperationParameter("bonusRate", bonusRate));
         }
     }
     /// <summary>
@@ -5481,10 +5683,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public PaymentInstrumentPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new PaymentInstrumentPlusSingle object.
+        /// </summary>
+        public PaymentInstrumentPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<PaymentInstrumentPlus> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for TheStoredPIPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("TheStoredPI")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlusSingle TheStoredPIPlus
         {
             get
@@ -5500,12 +5710,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._TheStoredPIPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlusSingle _TheStoredPIPlus;
         /// <summary>
         /// There are no comments for BillingStatementsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("BillingStatements")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StatementPlus> BillingStatementsPlus
         {
             get
@@ -5521,12 +5732,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._BillingStatementsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StatementPlus> _BillingStatementsPlus;
         /// <summary>
         /// There are no comments for BackupStoredPIPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("BackupStoredPI")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlusSingle BackupStoredPIPlus
         {
             get
@@ -5542,7 +5754,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._BackupStoredPIPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlusSingle _BackupStoredPIPlus;
     }
     /// <summary>
@@ -5563,7 +5775,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="createdDate">Initial value of CreatedDatePlus.</param>
         /// <param name="theStoredPI">Initial value of TheStoredPIPlus.</param>
         /// <param name="backupStoredPI">Initial value of BackupStoredPIPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static PaymentInstrumentPlus CreatePaymentInstrumentPlus(int paymentInstrumentID, string friendlyName, global::System.DateTimeOffset createdDate, global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlus theStoredPI, global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlus backupStoredPI)
         {
             PaymentInstrumentPlus paymentInstrumentPlus = new PaymentInstrumentPlus();
@@ -5585,7 +5797,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property PaymentInstrumentIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PaymentInstrumentID")]
         public int PaymentInstrumentIDPlus
         {
@@ -5601,14 +5813,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("PaymentInstrumentID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _PaymentInstrumentIDPlus;
         partial void OnPaymentInstrumentIDPlusChanging(int value);
         partial void OnPaymentInstrumentIDPlusChanged();
         /// <summary>
         /// There are no comments for Property FriendlyNamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("FriendlyName")]
         public string FriendlyNamePlus
         {
@@ -5624,14 +5836,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("FriendlyName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _FriendlyNamePlus;
         partial void OnFriendlyNamePlusChanging(string value);
         partial void OnFriendlyNamePlusChanged();
         /// <summary>
         /// There are no comments for Property CreatedDatePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CreatedDate")]
         public global::System.DateTimeOffset CreatedDatePlus
         {
@@ -5647,14 +5859,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CreatedDate");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.DateTimeOffset _CreatedDatePlus;
         partial void OnCreatedDatePlusChanging(global::System.DateTimeOffset value);
         partial void OnCreatedDatePlusChanged();
         /// <summary>
         /// There are no comments for Property TheStoredPIPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("TheStoredPI")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlus TheStoredPIPlus
         {
@@ -5670,14 +5882,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("TheStoredPI");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlus _TheStoredPIPlus;
         partial void OnTheStoredPIPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlus value);
         partial void OnTheStoredPIPlusChanged();
         /// <summary>
         /// There are no comments for Property BillingStatementsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("BillingStatements")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StatementPlus> BillingStatementsPlus
         {
@@ -5693,14 +5905,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("BillingStatements");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StatementPlus> _BillingStatementsPlus = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StatementPlus>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnBillingStatementsPlusChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StatementPlus> value);
         partial void OnBillingStatementsPlusChanged();
         /// <summary>
         /// There are no comments for Property BackupStoredPIPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("BackupStoredPI")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlus BackupStoredPIPlus
         {
@@ -5716,20 +5928,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("BackupStoredPI");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlus _BackupStoredPIPlus;
         partial void OnBackupStoredPIPlusChanging(global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlus value);
         partial void OnBackupStoredPIPlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -5755,10 +5967,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public CreditCardPIPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new CreditCardPIPlusSingle object.
+        /// </summary>
+        public CreditCardPIPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<CreditCardPIPlus> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for CreditRecordsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("CreditRecords")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CreditRecordPlus> CreditRecordsPlus
         {
             get
@@ -5774,12 +5994,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._CreditRecordsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CreditRecordPlus> _CreditRecordsPlus;
         /// <summary>
         /// There are no comments for TheStoredPIPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("TheStoredPI")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlusSingle TheStoredPIPlus
         {
             get
@@ -5795,12 +6016,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._TheStoredPIPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlusSingle _TheStoredPIPlus;
         /// <summary>
         /// There are no comments for BillingStatementsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("BillingStatements")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StatementPlus> BillingStatementsPlus
         {
             get
@@ -5816,12 +6038,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._BillingStatementsPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StatementPlus> _BillingStatementsPlus;
         /// <summary>
         /// There are no comments for BackupStoredPIPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("BackupStoredPI")]
         public global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlusSingle BackupStoredPIPlus
         {
             get
@@ -5837,7 +6060,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 return this._BackupStoredPIPlus;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.StoredPIPlusSingle _BackupStoredPIPlus;
     }
     /// <summary>
@@ -5863,7 +6086,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="holderName">Initial value of HolderNamePlus.</param>
         /// <param name="balance">Initial value of BalancePlus.</param>
         /// <param name="experationDate">Initial value of ExperationDatePlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static CreditCardPIPlus CreateCreditCardPIPlus(int paymentInstrumentID,
                     string friendlyName,
                     global::System.DateTimeOffset createdDate,
@@ -5899,7 +6122,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property CardNumberPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CardNumber")]
         public string CardNumberPlus
         {
@@ -5915,14 +6138,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CardNumber");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _CardNumberPlus;
         partial void OnCardNumberPlusChanging(string value);
         partial void OnCardNumberPlusChanged();
         /// <summary>
         /// There are no comments for Property CVVPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CVV")]
         public string CVVPlus
         {
@@ -5938,14 +6161,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CVV");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _CVVPlus;
         partial void OnCVVPlusChanging(string value);
         partial void OnCVVPlusChanged();
         /// <summary>
         /// There are no comments for Property HolderNamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("HolderName")]
         public string HolderNamePlus
         {
@@ -5961,14 +6184,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("HolderName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _HolderNamePlus;
         partial void OnHolderNamePlusChanging(string value);
         partial void OnHolderNamePlusChanged();
         /// <summary>
         /// There are no comments for Property BalancePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Balance")]
         public double BalancePlus
         {
@@ -5984,14 +6207,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Balance");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private double _BalancePlus;
         partial void OnBalancePlusChanging(double value);
         partial void OnBalancePlusChanged();
         /// <summary>
         /// There are no comments for Property ExperationDatePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ExperationDate")]
         public global::System.DateTimeOffset ExperationDatePlus
         {
@@ -6007,14 +6230,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("ExperationDate");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.DateTimeOffset _ExperationDatePlus;
         partial void OnExperationDatePlusChanging(global::System.DateTimeOffset value);
         partial void OnExperationDatePlusChanged();
         /// <summary>
         /// There are no comments for Property CreditRecordsPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CreditRecords")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CreditRecordPlus> CreditRecordsPlus
         {
@@ -6030,7 +6253,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CreditRecords");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CreditRecordPlus> _CreditRecordsPlus = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CreditRecordPlus>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnCreditRecordsPlusChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CreditRecordPlus> value);
         partial void OnCreditRecordsPlusChanged();
@@ -6052,6 +6275,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public StoredPIPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new StoredPIPlusSingle object.
+        /// </summary>
+        public StoredPIPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<StoredPIPlus> query)
+            : base(query) { }
+
     }
     /// <summary>
     /// There are no comments for StoredPIPlus in the schema.
@@ -6070,7 +6300,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="pIName">Initial value of PINamePlus.</param>
         /// <param name="pIType">Initial value of PITypePlus.</param>
         /// <param name="createdDate">Initial value of CreatedDatePlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static StoredPIPlus CreateStoredPIPlus(int storedPIID, string pIName, string pIType, global::System.DateTimeOffset createdDate)
         {
             StoredPIPlus storedPIPlus = new StoredPIPlus();
@@ -6083,7 +6313,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property StoredPIIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("StoredPIID")]
         public int StoredPIIDPlus
         {
@@ -6099,14 +6329,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("StoredPIID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _StoredPIIDPlus;
         partial void OnStoredPIIDPlusChanging(int value);
         partial void OnStoredPIIDPlusChanged();
         /// <summary>
         /// There are no comments for Property PINamePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PIName")]
         public string PINamePlus
         {
@@ -6122,14 +6352,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("PIName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _PINamePlus;
         partial void OnPINamePlusChanging(string value);
         partial void OnPINamePlusChanged();
         /// <summary>
         /// There are no comments for Property PITypePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PIType")]
         public string PITypePlus
         {
@@ -6145,14 +6375,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("PIType");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _PITypePlus;
         partial void OnPITypePlusChanging(string value);
         partial void OnPITypePlusChanged();
         /// <summary>
         /// There are no comments for Property CreatedDatePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CreatedDate")]
         public global::System.DateTimeOffset CreatedDatePlus
         {
@@ -6168,20 +6398,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CreatedDate");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.DateTimeOffset _CreatedDatePlus;
         partial void OnCreatedDatePlusChanging(global::System.DateTimeOffset value);
         partial void OnCreatedDatePlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -6207,6 +6437,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public StatementPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new StatementPlusSingle object.
+        /// </summary>
+        public StatementPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<StatementPlus> query)
+            : base(query) { }
+
     }
     /// <summary>
     /// There are no comments for StatementPlus in the schema.
@@ -6225,7 +6462,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="transactionType">Initial value of TransactionTypePlus.</param>
         /// <param name="transactionDescription">Initial value of TransactionDescriptionPlus.</param>
         /// <param name="amount">Initial value of AmountPlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static StatementPlus CreateStatementPlus(int statementID, string transactionType, string transactionDescription, double amount)
         {
             StatementPlus statementPlus = new StatementPlus();
@@ -6238,7 +6475,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property StatementIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("StatementID")]
         public int StatementIDPlus
         {
@@ -6254,14 +6491,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("StatementID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _StatementIDPlus;
         partial void OnStatementIDPlusChanging(int value);
         partial void OnStatementIDPlusChanged();
         /// <summary>
         /// There are no comments for Property TransactionTypePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("TransactionType")]
         public string TransactionTypePlus
         {
@@ -6277,14 +6514,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("TransactionType");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _TransactionTypePlus;
         partial void OnTransactionTypePlusChanging(string value);
         partial void OnTransactionTypePlusChanged();
         /// <summary>
         /// There are no comments for Property TransactionDescriptionPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("TransactionDescription")]
         public string TransactionDescriptionPlus
         {
@@ -6300,14 +6537,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("TransactionDescription");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _TransactionDescriptionPlus;
         partial void OnTransactionDescriptionPlusChanging(string value);
         partial void OnTransactionDescriptionPlusChanged();
         /// <summary>
         /// There are no comments for Property AmountPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Amount")]
         public double AmountPlus
         {
@@ -6323,20 +6560,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Amount");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private double _AmountPlus;
         partial void OnAmountPlusChanging(double value);
         partial void OnAmountPlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -6362,6 +6599,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public CreditRecordPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new CreditRecordPlusSingle object.
+        /// </summary>
+        public CreditRecordPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<CreditRecordPlus> query)
+            : base(query) { }
+
     }
     /// <summary>
     /// There are no comments for CreditRecordPlus in the schema.
@@ -6380,7 +6624,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="isGood">Initial value of IsGoodPlus.</param>
         /// <param name="reason">Initial value of ReasonPlus.</param>
         /// <param name="createdDate">Initial value of CreatedDatePlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static CreditRecordPlus CreateCreditRecordPlus(int creditRecordID, bool isGood, string reason, global::System.DateTimeOffset createdDate)
         {
             CreditRecordPlus creditRecordPlus = new CreditRecordPlus();
@@ -6393,7 +6637,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property CreditRecordIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CreditRecordID")]
         public int CreditRecordIDPlus
         {
@@ -6409,14 +6653,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CreditRecordID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _CreditRecordIDPlus;
         partial void OnCreditRecordIDPlusChanging(int value);
         partial void OnCreditRecordIDPlusChanged();
         /// <summary>
         /// There are no comments for Property IsGoodPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("IsGood")]
         public bool IsGoodPlus
         {
@@ -6432,14 +6676,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("IsGood");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private bool _IsGoodPlus;
         partial void OnIsGoodPlusChanging(bool value);
         partial void OnIsGoodPlusChanged();
         /// <summary>
         /// There are no comments for Property ReasonPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Reason")]
         public string ReasonPlus
         {
@@ -6455,14 +6699,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Reason");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _ReasonPlus;
         partial void OnReasonPlusChanging(string value);
         partial void OnReasonPlusChanged();
         /// <summary>
         /// There are no comments for Property CreatedDatePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CreatedDate")]
         public global::System.DateTimeOffset CreatedDatePlus
         {
@@ -6478,20 +6722,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CreatedDate");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.DateTimeOffset _CreatedDatePlus;
         partial void OnCreatedDatePlusChanging(global::System.DateTimeOffset value);
         partial void OnCreatedDatePlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -6517,6 +6761,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         public SubscriptionPlusSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
             : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new SubscriptionPlusSingle object.
+        /// </summary>
+        public SubscriptionPlusSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<SubscriptionPlus> query)
+            : base(query) { }
+
     }
     /// <summary>
     /// There are no comments for SubscriptionPlus in the schema.
@@ -6537,7 +6788,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="title">Initial value of TitlePlus.</param>
         /// <param name="category">Initial value of CategoryPlus.</param>
         /// <param name="createdDate">Initial value of CreatedDatePlus.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static SubscriptionPlus CreateSubscriptionPlus(int subscriptionID, string templateGuid, string title, string category, global::System.DateTimeOffset createdDate)
         {
             SubscriptionPlus subscriptionPlus = new SubscriptionPlus();
@@ -6551,7 +6802,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for Property SubscriptionIDPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("SubscriptionID")]
         public int SubscriptionIDPlus
         {
@@ -6567,14 +6818,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("SubscriptionID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _SubscriptionIDPlus;
         partial void OnSubscriptionIDPlusChanging(int value);
         partial void OnSubscriptionIDPlusChanged();
         /// <summary>
         /// There are no comments for Property TemplateGuidPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("TemplateGuid")]
         public string TemplateGuidPlus
         {
@@ -6590,14 +6841,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("TemplateGuid");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _TemplateGuidPlus;
         partial void OnTemplateGuidPlusChanging(string value);
         partial void OnTemplateGuidPlusChanged();
         /// <summary>
         /// There are no comments for Property TitlePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Title")]
         public string TitlePlus
         {
@@ -6613,14 +6864,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Title");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _TitlePlus;
         partial void OnTitlePlusChanging(string value);
         partial void OnTitlePlusChanged();
         /// <summary>
         /// There are no comments for Property CategoryPlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Category")]
         public string CategoryPlus
         {
@@ -6636,14 +6887,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("Category");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _CategoryPlus;
         partial void OnCategoryPlusChanging(string value);
         partial void OnCategoryPlusChanged();
         /// <summary>
         /// There are no comments for Property CreatedDatePlus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CreatedDate")]
         public global::System.DateTimeOffset CreatedDatePlus
         {
@@ -6659,20 +6910,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 this.OnPropertyChanged("CreatedDate");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.DateTimeOffset _CreatedDatePlus;
         partial void OnCreatedDatePlusChanging(global::System.DateTimeOffset value);
         partial void OnCreatedDatePlusChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.1.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -6924,6 +7175,15 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
             return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlusSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
         /// <summary>
+        /// Cast an entity of type global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AbstractEntityPlus to its derived type global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus
+        /// </summary>
+        /// <param name="source">source entity</param>
+        public static global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlusSingle CastToOrderPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AbstractEntityPlus> source)
+        {
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> query = source.CastTo<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus>();
+            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlusSingle(source.Context, query.GetPath(null));
+        }
+        /// <summary>
         /// Get an entity of type global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlus as global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlusSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
@@ -6948,6 +7208,15 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 { "ProductID", productID }
             };
             return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlusSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+        }
+        /// <summary>
+        /// Cast an entity of type global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AbstractEntityPlus to its derived type global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlus
+        /// </summary>
+        /// <param name="source">source entity</param>
+        public static global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlusSingle CastToOrderDetailPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AbstractEntityPlus> source)
+        {
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlus> query = source.CastTo<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlus>();
+            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderDetailPlusSingle(source.Context, query.GetPath(null));
         }
         /// <summary>
         /// Get an entity of type global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlus as global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.DepartmentPlusSingle specified by key from an entity set
@@ -7292,6 +7561,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for GetEmployeesCountPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetEmployeesCount")]
         public static global::Microsoft.OData.Client.DataServiceQuerySingle<int> GetEmployeesCountPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlus> source)
         {
             if (!source.IsComposable)
@@ -7299,12 +7569,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<int>(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount" + parameterString), false);
+            return source.CreateFunctionQuerySingle<int>("Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount", false);
         }
         /// <summary>
         /// There are no comments for GetEmployeesCountPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetEmployeesCount")]
         public static global::Microsoft.OData.Client.DataServiceQuerySingle<int> GetEmployeesCountPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PublicCompanyPlus> source)
         {
             if (!source.IsComposable)
@@ -7312,12 +7582,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<int>(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount" + parameterString), false);
+            return source.CreateFunctionQuerySingle<int>("Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount", false);
         }
         /// <summary>
         /// There are no comments for GetProductDetailsPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetProductDetails")]
         public static global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductDetailPlus> GetProductDetailsPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus> source, global::System.Nullable<int> count)
         {
             if (!source.IsComposable)
@@ -7325,12 +7595,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context, new global::Microsoft.OData.Client.UriOperationParameter("count", count));
-            return source.Context.CreateQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductDetailPlus>(source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails" + parameterString), true);
+            return source.CreateFunctionQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductDetailPlus>("Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails", true, new global::Microsoft.OData.Client.UriOperationParameter("count", count));
         }
         /// <summary>
         /// There are no comments for GetRelatedProductPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetRelatedProduct")]
         public static global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlusSingle GetRelatedProductPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductDetailPlus> source)
         {
             if (!source.IsComposable)
@@ -7338,12 +7608,25 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlusSingle(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.GetRelatedProduct" + parameterString), true);
+            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlusSingle(source.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus>("Microsoft.Test.OData.Services.ODataWCFService.GetRelatedProduct", true));
+        }
+        /// <summary>
+        /// There are no comments for GetOrderAndOrderDetailsPlus in the schema.
+        /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("getOrderAndOrderDetails")]
+        public static global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AbstractEntityPlus> GetOrderAndOrderDetailsPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus> source)
+        {
+            if (!source.IsComposable)
+            {
+                throw new global::System.NotSupportedException("The previous function is not composable.");
+            }
+
+            return source.CreateFunctionQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AbstractEntityPlus>("Microsoft.Test.OData.Services.ODataWCFService.getOrderAndOrderDetails", true);
         }
         /// <summary>
         /// There are no comments for GetSeniorEmployeesPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetSeniorEmployees")]
         public static global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlusSingle GetSeniorEmployeesPlus(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus> source)
         {
             if (!source.IsComposable)
@@ -7351,12 +7634,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlusSingle(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.GetSeniorEmployees" + parameterString), true);
+            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlusSingle(source.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus>("Microsoft.Test.OData.Services.ODataWCFService.GetSeniorEmployees", true));
         }
         /// <summary>
         /// There are no comments for GetShipDatePlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetShipDate")]
         public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Library.Date> GetShipDatePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source)
         {
             if (!source.IsComposable)
@@ -7364,12 +7647,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Library.Date>(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.GetShipDate" + parameterString), false);
+            return source.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.Library.Date>("Microsoft.Test.OData.Services.ODataWCFService.GetShipDate", false);
         }
         /// <summary>
         /// There are no comments for GetShipTimePlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetShipTime")]
         public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Library.TimeOfDay> GetShipTimePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source)
         {
             if (!source.IsComposable)
@@ -7377,12 +7660,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Library.TimeOfDay>(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.GetShipTime" + parameterString), false);
+            return source.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.Library.TimeOfDay>("Microsoft.Test.OData.Services.ODataWCFService.GetShipTime", false);
         }
         /// <summary>
         /// There are no comments for CheckShipTimePlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("CheckShipTime")]
         public static global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipTimePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source, global::Microsoft.OData.Edm.Library.TimeOfDay time)
         {
             if (!source.IsComposable)
@@ -7390,12 +7673,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context, new global::Microsoft.OData.Client.UriOperationParameter("time", time));
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<bool>(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.CheckShipTime" + parameterString), false);
+            return source.CreateFunctionQuerySingle<bool>("Microsoft.Test.OData.Services.ODataWCFService.CheckShipTime", false, new global::Microsoft.OData.Client.UriOperationParameter("time", time));
         }
         /// <summary>
         /// There are no comments for CheckShipDatePlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("CheckShipDate")]
         public static global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipDatePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source, global::Microsoft.OData.Edm.Library.Date date)
         {
             if (!source.IsComposable)
@@ -7403,12 +7686,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context, new global::Microsoft.OData.Client.UriOperationParameter("date", date));
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<bool>(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.CheckShipDate" + parameterString), false);
+            return source.CreateFunctionQuerySingle<bool>("Microsoft.Test.OData.Services.ODataWCFService.CheckShipDate", false, new global::Microsoft.OData.Client.UriOperationParameter("date", date));
         }
         /// <summary>
         /// There are no comments for GetActualAmountPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetActualAmount")]
         public static global::Microsoft.OData.Client.DataServiceQuerySingle<double> GetActualAmountPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.GiftCardPlus> source, global::System.Nullable<double> bonusRate)
         {
             if (!source.IsComposable)
@@ -7416,12 +7699,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context, new global::Microsoft.OData.Client.UriOperationParameter("bonusRate", bonusRate));
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<double>(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount" + parameterString), false);
+            return source.CreateFunctionQuerySingle<double>("Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount", false, new global::Microsoft.OData.Client.UriOperationParameter("bonusRate", bonusRate));
         }
         /// <summary>
         /// There are no comments for GetDefaultPIPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetDefaultPI")]
         public static global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlusSingle GetDefaultPIPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccountPlus> source)
         {
             if (!source.IsComposable)
@@ -7429,12 +7712,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlusSingle(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.GetDefaultPI" + parameterString), false);
+            return new global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlusSingle(source.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlus>("Microsoft.Test.OData.Services.ODataWCFService.GetDefaultPI", false));
         }
         /// <summary>
         /// There are no comments for GetHomeAddressPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetHomeAddress")]
         public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.HomeAddressPlus> GetHomeAddressPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus> source)
         {
             if (!source.IsComposable)
@@ -7442,12 +7725,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.HomeAddressPlus>(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress" + parameterString), true);
+            return source.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.HomeAddressPlus>("Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress", true);
         }
         /// <summary>
         /// There are no comments for GetHomeAddressPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetHomeAddress")]
         public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.HomeAddressPlus> GetHomeAddressPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus> source)
         {
             if (!source.IsComposable)
@@ -7455,12 +7738,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.HomeAddressPlus>(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress" + parameterString), true);
+            return source.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.HomeAddressPlus>("Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress", true);
         }
         /// <summary>
         /// There are no comments for GetHomeAddressPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetHomeAddress")]
         public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.HomeAddressPlus> GetHomeAddressPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus> source)
         {
             if (!source.IsComposable)
@@ -7468,12 +7751,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.HomeAddressPlus>(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress" + parameterString), true);
+            return source.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.HomeAddressPlus>("Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress", true);
         }
         /// <summary>
         /// There are no comments for GetAccountInfoPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetAccountInfo")]
         public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccountInfoPlus> GetAccountInfoPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccountPlus> source)
         {
             if (!source.IsComposable)
@@ -7481,12 +7764,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccountInfoPlus>(source.Context, source.GetPath("Microsoft.Test.OData.Services.ODataWCFService.GetAccountInfo" + parameterString), true);
+            return source.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccountInfoPlus>("Microsoft.Test.OData.Services.ODataWCFService.GetAccountInfo", true);
         }
         /// <summary>
         /// There are no comments for AddAccessRightPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("AddAccessRight")]
         public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccessLevelPlus>> AddAccessRightPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus> source, global::System.Nullable<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccessLevelPlus> accessRight)
         {
             if (!source.IsComposable)
@@ -7499,7 +7782,21 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for IncreaseRevenuePlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("IncreaseRevenue")]
         public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<long> IncreaseRevenuePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CompanyPlus> source, global::System.Nullable<long> IncreaseValue)
+        {
+            if (!source.IsComposable)
+            {
+                throw new global::System.NotSupportedException("The previous function is not composable.");
+            }
+
+            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<long>(source.Context, source.AppendRequestUri("Microsoft.Test.OData.Services.ODataWCFService.IncreaseRevenue"), new global::Microsoft.OData.Client.BodyOperationParameter("IncreaseValue", IncreaseValue));
+        }
+        /// <summary>
+        /// There are no comments for IncreaseRevenuePlus in the schema.
+        /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("IncreaseRevenue")]
+        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<long> IncreaseRevenuePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PublicCompanyPlus> source, global::System.Nullable<long> IncreaseValue)
         {
             if (!source.IsComposable)
             {
@@ -7511,7 +7808,36 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for ResetAddressPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetAddress")]
         public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus> ResetAddressPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus> source, global::System.Collections.Generic.ICollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus> addresses, int index)
+        {
+            if (!source.IsComposable)
+            {
+                throw new global::System.NotSupportedException("The previous function is not composable.");
+            }
+
+            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus>(source.Context, source.AppendRequestUri("Microsoft.Test.OData.Services.ODataWCFService.ResetAddress"), new global::Microsoft.OData.Client.BodyOperationParameter("addresses", addresses),
+                    new global::Microsoft.OData.Client.BodyOperationParameter("index", index));
+        }
+        /// <summary>
+        /// There are no comments for ResetAddressPlus in the schema.
+        /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetAddress")]
+        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus> ResetAddressPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus> source, global::System.Collections.Generic.ICollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus> addresses, int index)
+        {
+            if (!source.IsComposable)
+            {
+                throw new global::System.NotSupportedException("The previous function is not composable.");
+            }
+
+            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus>(source.Context, source.AppendRequestUri("Microsoft.Test.OData.Services.ODataWCFService.ResetAddress"), new global::Microsoft.OData.Client.BodyOperationParameter("addresses", addresses),
+                    new global::Microsoft.OData.Client.BodyOperationParameter("index", index));
+        }
+        /// <summary>
+        /// There are no comments for ResetAddressPlus in the schema.
+        /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetAddress")]
+        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PersonPlus> ResetAddressPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus> source, global::System.Collections.Generic.ICollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AddressPlus> addresses, int index)
         {
             if (!source.IsComposable)
             {
@@ -7524,6 +7850,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for PlaceOrderPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("PlaceOrder")]
         public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> PlaceOrderPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus> source, global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus order)
         {
             if (!source.IsComposable)
@@ -7536,6 +7863,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for PlaceOrdersPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("PlaceOrders")]
         public static global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> PlaceOrdersPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus> source, global::System.Collections.Generic.ICollection<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> orders)
         {
             if (!source.IsComposable)
@@ -7548,6 +7876,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for DiscountPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Discount")]
         public static global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus> DiscountPlus(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.ProductPlus> source, int percentage)
         {
             if (!source.IsComposable)
@@ -7560,6 +7889,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for ChangeLabourUnionNamePlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ChangeLabourUnionName")]
         public static global::Microsoft.OData.Client.DataServiceActionQuery ChangeLabourUnionNamePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.LabourUnionPlus> source, string name)
         {
             if (!source.IsComposable)
@@ -7572,6 +7902,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for ChangeShipTimeAndDatePlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ChangeShipTimeAndDate")]
         public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> ChangeShipTimeAndDatePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source, global::Microsoft.OData.Edm.Library.Date date, global::Microsoft.OData.Edm.Library.TimeOfDay time)
         {
             if (!source.IsComposable)
@@ -7585,6 +7916,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <summary>
         /// There are no comments for RefreshDefaultPIPlus in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("RefreshDefaultPI")]
         public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.PaymentInstrumentPlus> RefreshDefaultPIPlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.AccountPlus> source, global::System.Nullable<global::System.DateTimeOffset> newDate)
         {
             if (!source.IsComposable)
@@ -7596,4 +7928,3 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         }
     }
 }
-

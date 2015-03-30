@@ -753,23 +753,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new OpenPropertyTestCase
                 {
-                    DebugDescription = "Spatial open property without type information - should fail.",
-                    ExpectedProperty = PayloadBuilder.PrimitiveProperty("OpenProperty", GeographyFactory.Point(25.0, 23.2).Build()),
-                    Json = "\"OpenProperty\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, GeographyFactory.Point(25.0, 23.2).Build()),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ValueWithoutType")
-                },
-                new OpenPropertyTestCase
-                {
                     DebugDescription = "Empty complex open property with type information.",
                     ExpectedProperty = PayloadBuilder.Property("OpenProperty", PayloadBuilder.ComplexValue("TestModel.Address")),
                     Json = "\"OpenProperty\":{ \"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.Address\"}",
-                },
-                new OpenPropertyTestCase
-                {
-                    DebugDescription = "Empty complex open property without type information - should fail.",
-                    ExpectedProperty = PayloadBuilder.Property("OpenProperty", PayloadBuilder.ComplexValue("TestModel.Address")),
-                    Json = "\"OpenProperty\":{}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ValueWithoutType")
                 },
                 new OpenPropertyTestCase
                 {
@@ -804,7 +790,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         .Property(testCase.ExpectedProperty)
                         .JsonRepresentation("{" +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities/TestModel.CityOpenType()/$entity\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.CityOpenType\"," + 
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.CityOpenType\"," +
                             "\"Id\":1," +
                             testCase.Json +
                             "}")

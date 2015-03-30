@@ -16,6 +16,12 @@
     <GenerateTargetFrameworkAttribute Condition="'$(GenerateTargetFrameworkAttribute)' == ''">true</GenerateTargetFrameworkAttribute>
     <ShouldGenerateAssemblyAttributeFile Condition="'$(ShouldGenerateAssemblyAttributeFile)' == ''">false</ShouldGenerateAssemblyAttributeFile>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);SERVICEABLE</DefineConstants>
+    <DefineConstants Condition="'$(TargetFrameworkVersion)' == 'v3.5'">$(DefineConstants);NET35</DefineConstants>
+    <DefineConstants Condition="'$(TargetFrameworkVersion)' == 'v4.0'">$(DefineConstants);NET40</DefineConstants>
+  </PropertyGroup>
   
   <PropertyGroup>
     <RelativeOutputPath>Product\$(RelativeOutputPath)</RelativeOutputPath>

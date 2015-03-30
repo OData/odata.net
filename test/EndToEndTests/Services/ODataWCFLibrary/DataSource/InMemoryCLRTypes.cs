@@ -23,6 +23,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         public DateTime UpdatedTime { get; set; }
 
         public List<InstanceAnnotationType> Annotations { get; set; }
+
+        public string EntitySetName { get; set; }
     }
 
     [Serializable]

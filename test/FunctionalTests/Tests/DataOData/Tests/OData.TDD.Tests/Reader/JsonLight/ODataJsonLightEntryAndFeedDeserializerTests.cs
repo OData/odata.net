@@ -170,24 +170,27 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
         }
 
         [TestMethod]
-        public void ReadInstanceAnnotationValueWillFailIfODataTypeAnnotationIsMissingForComplexValue()
+        public void ReadInstanceAnnotationValueWhenODataTypeAnnotationIsMissingForComplexValue()
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.ComplexAnnotation\":{}}");
             AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
             var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, true /*isResponse*/);
-            Action action = () => deserializer.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, "odata.ComplexAnnotation");
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ReaderValidationUtils_ValueWithoutType);
+            object resultTmp = deserializer.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, "odata.ComplexAnnotation");
+            resultTmp.As<ODataComplexValue>().Properties.Count().Should().Be(0);
+            resultTmp.As<ODataComplexValue>().TypeName.Should().BeNull();
         }
 
         [TestMethod]
-        public void ReadInstanceAnnotationValueWillFailIfODataTypeAnnotationIsMissingForCollectionValue()
+        public void ReadInstanceAnnotationValueWhenODataTypeAnnotationIsMissingForCollectionValue()
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@OData.CollectionAnnotation\":[]}");
             AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
             var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, true /*isResponse*/);
-            Action action = () => deserializer.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, "OData.CollectionAnnotation");
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ReaderValidationUtils_ValueWithoutType);
+            object tmp = deserializer.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, "OData.CollectionAnnotation");
+            tmp.As<ODataCollectionValue>().Items.Cast<string>().Count().Should().Be(0);
+            tmp.As<ODataCollectionValue>().TypeName.ShouldBeEquivalentTo(null);
         }
+
 
         [TestMethod]
         public void ReadInstanceAnnotationValueWithODataTypePropertyAnnotationShouldThrow()

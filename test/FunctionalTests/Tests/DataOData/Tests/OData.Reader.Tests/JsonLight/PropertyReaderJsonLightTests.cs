@@ -513,15 +513,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     JsonTypeInformation = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"Edm.DateTimeOffset\",",
                     Json = "{0}{1}\"" + JsonLightConstants.ODataValuePropertyName + "\":\"2012-04-13T02:43:10.215Z\"",
                 },
-                new OpenPropertyTestCase
-                {
-                    DebugDescription = "Open collection property.",
-                    ExpectedProperty = PayloadBuilder.Property("OpenProperty", PayloadBuilder.PrimitiveMultiValue("Collection(Edm.Int32)")),
-                    ExpectedPropertyWhenTypeUnavailable = null,
-                    ExpectedPropertyType = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(false)),
-                    JsonTypeInformation = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"Collection(Edm.Int32)\",",
-                    Json = "{0}{1}\"" + JsonLightConstants.ODataValuePropertyName + "\":[]",
-                },
             };
 
             bool[] withExpectedTypes = new bool[] { true, false };

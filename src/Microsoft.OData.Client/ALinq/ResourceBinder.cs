@@ -1267,7 +1267,7 @@ namespace Microsoft.OData.Client
                 // Debug.Assert(!rse.HasQueryOptions, "!rse.HasQueryOptions");
 
                 // since we could be adding query options to the root, create a new one which can be mutable.
-                return QueryableResourceExpression.CreateNavigationResourceExpression(rse.NodeType, rse.Type, rse.Source, rse.MemberExpression, rse.ResourceType, null /*expandPaths*/, CountOption.None, null /*customQueryOptions*/, null /*projection*/, rse.ResourceTypeAs, rse.UriVersion);
+                return QueryableResourceExpression.CreateNavigationResourceExpression(rse.NodeType, rse.Type, rse.Source, rse.MemberExpression, rse.ResourceType, null /*expandPaths*/, CountOption.None, null /*customQueryOptions*/, null /*projection*/, rse.ResourceTypeAs, rse.UriVersion, rse.OperationName, rse.OperationParameters);
             }
             return rse;
         }

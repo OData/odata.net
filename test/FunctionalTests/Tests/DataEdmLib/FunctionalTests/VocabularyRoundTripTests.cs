@@ -184,6 +184,23 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(0, errors.Count(), "Invalid error count.");
         }
 
+        [TestMethod]
+        public void RoundTripInLineAnnotationEnumMember()
+        {
+            var csdls = VocabularyTestModelBuilder.inlineAnnotationEnumMember();
+            var model = this.GetParserResult(csdls);
+
+            IEnumerable<EdmError> errors;
+            model.Validate(out errors);
+
+            Assert.AreEqual(0, errors.Count(), "Invalid error count.");
+
+            var serializedCsdls = this.GetSerializerResult(model, EdmVersion.V40, out errors);
+            Assert.AreEqual(0, errors.Count(), "Invalid error count.");
+            new ConstructiveApiCsdlXElementComparer().Compare(serializedCsdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).ToList(), 
+                csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).ToList());
+        }
+
         private void RoundTripValidator(IEnumerable<XElement> csdls, EdmVersion version)
         {
             var model = this.GetParserResult(csdls);
