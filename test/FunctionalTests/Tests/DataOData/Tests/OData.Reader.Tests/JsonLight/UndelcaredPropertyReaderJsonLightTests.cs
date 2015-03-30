@@ -276,28 +276,28 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Number without type",
                     Json = "\"UndeclaredProperty\":42",
                     IsValue = true,
-                    ExpectedEntity = PayloadBuilder.Entity(),
+                    ExpectedEntity = PayloadBuilder.Entity().PrimitiveProperty("UndeclaredProperty", 42),
                 },
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "String without type",
                     Json = "\"UndeclaredProperty\":\"value\"",
                     IsValue = true,
-                    ExpectedEntity = PayloadBuilder.Entity(),
+                    ExpectedEntity = PayloadBuilder.Entity().PrimitiveProperty("UndeclaredProperty", "value"),
                 },
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "null without type",
                     Json = "\"UndeclaredProperty\":null",
                     IsValue = true,
-                    ExpectedEntity = PayloadBuilder.Entity(),
+                    ExpectedEntity = PayloadBuilder.Entity().PrimitiveProperty("UndeclaredProperty", null),
                 },
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Boolean without type",
                     Json = "\"UndeclaredProperty\":false",
                     IsValue = true,
-                    ExpectedEntity = PayloadBuilder.Entity(),
+                    ExpectedEntity = PayloadBuilder.Entity().PrimitiveProperty("UndeclaredProperty", false),
                 },
                 new UndeclaredPropertyTestCase
                 {
@@ -306,8 +306,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.Int16\"," +
                         "\"UndeclaredProperty\":42",
                     IsValue = true,
-                    ExpectedEntity = PayloadBuilder.Entity(),
+                    ExpectedEntity = PayloadBuilder.Entity().PrimitiveProperty("UndeclaredProperty", (short)42),
                 },
+
+                // TODO read: Microsoft.OData.Core.ODataException: A type named 'TestModel.Unknown' could not be resolved by the model. When a model is available, each type name must resolve to a valid type. 
                 new UndeclaredPropertyTestCase
                 {
                     DebugDescription = "Number with invalid type - should work, the type is ignored",
@@ -316,6 +318,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"UndeclaredProperty\":42",
                     IsValue = true,
                     ExpectedEntity = PayloadBuilder.Entity(),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnrecognizedTypeName", "TestModel.Unknown")
                 },
                 new UndeclaredPropertyTestCase
                 {

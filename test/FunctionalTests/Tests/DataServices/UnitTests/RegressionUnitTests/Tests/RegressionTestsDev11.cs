@@ -2130,15 +2130,6 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                         CodeVerifier = new Action<int>((int code) => Assert.AreEqual(code, 200)),
                         ResponseVerifier = new Action<string>((string response) => Assert.IsTrue(response.Contains("String Value"))),
                     },
-                    new // Test that a dynamic collection property is dissallowed at deserialization time
-                    {
-                        UriString = "/DynamicCollection",
-                        Content = "{\"value\":[1, 2, 3, 4, 5]}",
-                        ExceptionVerifier = new Action<Exception>((Exception ex) =>  Assert.IsNotNull(ex)),
-                        CodeVerifier = new Action<int>((int code) => Assert.AreEqual(code, 400)),
-                        ResponseVerifier = new Action<string>((string response) => Assert.IsTrue(response.Contains(
-                            "A value without a type name was found and no expected type is available. When the model is specified, each value in the payload must have a type which can be either specified in the payload, explicitly by the caller or implicitly inferred from the parent value"))),
-                    },
                 };
 
                 DSPServiceDefinition service = GetService2();

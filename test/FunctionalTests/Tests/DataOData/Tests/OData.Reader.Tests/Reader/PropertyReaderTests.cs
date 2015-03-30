@@ -146,24 +146,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         PayloadEdmModel = model,
                         ExpectedException = ODataExpectedExceptions.ArgumentException("ODataMessageReader_ExpectedPropertyTypeEntityKind"),
                     },
-                    // Top-level collection without expected type and without type name is not allowed (when metadata is specified)
-                    new PayloadReaderTestDescriptor(this.Settings)
-                    {
-                        PayloadElement = PayloadBuilder.Property("propertyName2", PayloadBuilder.PrimitiveMultiValue(null).Item(42)),
-                        PayloadEdmModel = model,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ValueWithoutType"),               
-                        // This test has different meaning in JSON-L (no expected type + non-existent typename)
-                        SkipTestConfiguration = (tc) => tc.Format == ODataFormat.Json,
-                    },
-                    // Top-level complex property without expected type and without type name is not allowed (when metadata is specified)
-                    new PayloadReaderTestDescriptor(this.Settings)
-                    {
-                        PayloadElement = PayloadBuilder.Property("propertyName", PayloadBuilder.ComplexValue(null).PrimitiveProperty("foo", "bar")),
-                        PayloadEdmModel = model,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ValueWithoutType"),                       
-                        // This test has different meaning in JSON-L (no expected type + non-existent typename)
-                        SkipTestConfiguration = (tc) => tc.Format == ODataFormat.Json,
-                    },
                 };
 
             testDescriptors = testDescriptors.Concat(explicitTestDescriptors);
