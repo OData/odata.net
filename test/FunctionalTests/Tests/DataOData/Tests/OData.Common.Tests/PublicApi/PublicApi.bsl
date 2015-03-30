@@ -5025,6 +5025,25 @@ public sealed class Microsoft.OData.Core.Metadata.ODataEdmPropertyAnnotation {
 	Microsoft.OData.Core.Metadata.ODataNullValueBehaviorKind NullValueReadBehaviorKind  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 }
 
+public interface Microsoft.OData.Core.PrimitivePayloadValueConverters.IPrimitivePayloadValueConverter {
+	object ConvertFromPayloadValue (object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.Core.ODataMessageReaderSettings messageReaderSettings)
+	object ConvertToPayloadValue (object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.Core.ODataMessageWriterSettings messageWriterSettings)
+}
+
+public sealed class Microsoft.OData.Core.PrimitivePayloadValueConverters.PrimitivePayloadValueConverterProvider {
+	public static Microsoft.OData.Core.PrimitivePayloadValueConverters.IPrimitivePayloadValueConverter GetPrimitivePayloadValueConverter ()
+	public static void SetPrimitivePayloadValueConverter (Microsoft.OData.Core.PrimitivePayloadValueConverters.IPrimitivePayloadValueConverter primitivePayloadValueConverter)
+}
+
+public class Microsoft.OData.Core.PrimitivePayloadValueConverters.DefaultPrimitivePayloadValueConverter : IPrimitivePayloadValueConverter {
+	public static readonly Microsoft.OData.Core.PrimitivePayloadValueConverters.IPrimitivePayloadValueConverter Instance = Microsoft.OData.Core.PrimitivePayloadValueConverters.DefaultPrimitivePayloadValueConverter
+
+	public DefaultPrimitivePayloadValueConverter ()
+
+	public virtual object ConvertFromPayloadValue (object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.Core.ODataMessageReaderSettings messageReaderSettings)
+	public virtual object ConvertToPayloadValue (object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.Core.ODataMessageWriterSettings messageWriterSettings)
+}
+
 public sealed class Microsoft.OData.Core.UriBuilder.ODataUriBuilder {
 	public ODataUriBuilder (Microsoft.OData.Core.UriParser.ODataUrlConventions urlConventions, Microsoft.OData.Core.ODataUri odataUri)
 

@@ -35,19 +35,21 @@ namespace Microsoft.OData.Core.PrimitivePayloadValueConverters
     {
         public static readonly IPrimitivePayloadValueConverter Instance = new DefaultPrimitivePayloadValueConverter();
 
-        public virtual object ConvertToPayloadValue(object value, IEdmPrimitiveTypeReference primitiveTypeReference, ODataMessageWriterSettings messageWriterSettings)
+        public virtual object ConvertToPayloadValue(object value, IEdmTypeReference edmTypeReference, ODataMessageWriterSettings messageWriterSettings)
         {
             IEdmPrimitiveTypeReference actualTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
-            if (primitiveTypeReference != null)
+            if (edmTypeReference != null)
             {
-                ValidationUtils.ValidateIsExpectedPrimitiveType(value, actualTypeReference, primitiveTypeReference, !messageWriterSettings.EnableFullValidation);
+                ValidationUtils.ValidateIsExpectedPrimitiveType(value, actualTypeReference, edmTypeReference, !messageWriterSettings.EnableFullValidation);
             }
 
             return value;
         }
 
-        public virtual object ConvertFromPayloadValue(object value, IEdmPrimitiveTypeReference primitiveTypeReference, ODataMessageReaderSettings messageReaderSettings)
+        public virtual object ConvertFromPayloadValue(object value, IEdmTypeReference edmTypeReference, ODataMessageReaderSettings messageReaderSettings)
         {
+            IEdmPrimitiveTypeReference primitiveTypeReference = edmTypeReference as IEdmPrimitiveTypeReference;
+            Debug.Assert(primitiveTypeReference != null, "primitiveTypeReference != null");
             try
             {
                 Type targetType = EdmLibraryExtensions.GetPrimitiveClrType(primitiveTypeReference.PrimitiveDefinition(), false);

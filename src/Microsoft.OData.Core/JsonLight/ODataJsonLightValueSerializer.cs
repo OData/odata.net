@@ -346,7 +346,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             IEdmPrimitiveTypeReference actualTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
 
-            value = PrimitivePayloadValueConverters.PrimitivePayloadValueConverterProvider.GetPrimitivePayloadValueConverter().ConvertToPayloadValue(value, (IEdmPrimitiveTypeReference)expectedTypeReference, this.JsonLightOutputContext.MessageWriterSettings);
+            value = PrimitivePayloadValueConverters.PrimitivePayloadValueConverterProvider.GetPrimitivePayloadValueConverter().ConvertToPayloadValue(value, expectedTypeReference, this.JsonLightOutputContext.MessageWriterSettings);
 
             if (actualTypeReference != null && actualTypeReference.IsSpatial())
             {

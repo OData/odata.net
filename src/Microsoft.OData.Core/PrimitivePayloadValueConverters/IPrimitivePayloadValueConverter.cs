@@ -21,7 +21,7 @@ namespace Microsoft.OData.Core.PrimitivePayloadValueConverters
         /// <param name="value">The given CLR value.</param>
         /// <param name="primitiveTypeReference">The given Primitive Type Reference.</param>
         /// <returns>The converted payload value of the underlying type.</returns>
-        object ConvertToPayloadValue(object value, IEdmPrimitiveTypeReference primitiveTypeReference, ODataMessageWriterSettings messageWriterSettings);
+        object ConvertToPayloadValue(object value, IEdmTypeReference edmTypeReference, ODataMessageWriterSettings messageWriterSettings);
 
         /// <summary>
         /// Converts the given payload value to the type defined in a type definition.
@@ -29,6 +29,6 @@ namespace Microsoft.OData.Core.PrimitivePayloadValueConverters
         /// <param name="value">The given payload value.</param>
         /// <param name="primitiveTypeReference">The given Primitive Type Reference.</param>
         /// <returns>The converted value of the type.</returns>
-         object ConvertFromPayloadValue(object value, IEdmPrimitiveTypeReference primitiveTypeReference, ODataMessageReaderSettings messageReaderSettings);
+         object ConvertFromPayloadValue(object value, IEdmTypeReference edmTypeReference, ODataMessageReaderSettings messageReaderSettings);
     }
 }
