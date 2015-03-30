@@ -126,6 +126,16 @@ namespace Microsoft.OData.Core.Metadata
         /// <summary>The element name of the top-level &lt;Edmx&gt; metadata envelope.</summary>
         internal const string EdmxName = "Edmx";
 
+        /// <summary>
+        /// The URI of annotations that are internal and will not be serialized.
+        /// </summary>
+        internal const string InternalUri = "http://schemas.microsoft.com/ado/2011/04/edm/internal";
+
+        /// <summary>
+        /// The Primitive Payload Value Converter Annotation.
+        /// </summary>
+        internal const string PrimitivePayloadValueConverterAnnotation = "PrimitivePayloadValueConverter";
+
         #endregion
     }
 }

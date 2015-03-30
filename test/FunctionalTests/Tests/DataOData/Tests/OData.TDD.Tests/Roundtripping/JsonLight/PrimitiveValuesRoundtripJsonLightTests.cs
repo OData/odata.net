@@ -21,6 +21,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Roundtripping.JsonLight
     using Microsoft.Spatial;
     using Microsoft.Test.OData.TDD.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.OData.Core.PrimitivePayloadValueConverters;
+    using Microsoft.OData.Core.Metadata;
 
     [TestClass]
     public class PrimitiveValuesRoundtripJsonLightTests
@@ -44,6 +46,29 @@ namespace Microsoft.Test.OData.TDD.Tests.Roundtripping.JsonLight
 
             this.VerifyPrimitiveValuesRoundtripWithTypeInformation(values, "Edm.Binary");
             this.VerifyPrimitiveValuesDoNotRoundtripWithoutTypeInformation(values);
+        }
+
+        [TestMethod()]
+        public void BinaryPayloadAsStringRoundtripJsonLightTest()
+        {
+            var values = new byte[][]
+            {
+                new byte[0],
+                new byte[] { 0 },
+                new byte[] { 42, Byte.MinValue, Byte.MaxValue },
+            };
+
+            var expectedValues = new string[]
+            {
+                Convert.ToBase64String(values[0]),
+                Convert.ToBase64String(values[1]),
+                Convert.ToBase64String(values[2])
+            };
+
+            this.model.SetPrimitivePayloadValueConverter(new BinaryFieldAsStringPrimitivePayloadValueConverter());
+
+            this.VerifyPrimitiveValuesRoundtripWithTypeInformationAndWithExpectedValues(values, "Edm.Binary", expectedValues);
+            this.VerifyPrimitiveValuesRoundtripWithTypeInformation(expectedValues, "Edm.Binary");
         }
 
         [TestMethod()]
@@ -541,6 +566,21 @@ namespace Microsoft.Test.OData.TDD.Tests.Roundtripping.JsonLight
             }
         }
 
+
+        private void VerifyPrimitiveValuesRoundtripWithTypeInformationAndWithExpectedValues(Array clrValues, string edmTypeName, Array expectedValues)
+        {
+            var typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)this.model.FindType(edmTypeName), true);
+
+            clrValues.Length.Should().Be(expectedValues.Length);
+
+            for (int iterator = 0; iterator < clrValues.Length; iterator++)
+            {
+                object clrValue = clrValues.GetValue(iterator);
+                object expectedValue = expectedValues.GetValue(iterator);
+                this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, ODataVersion.V4, string.Format("JSON Light roundtrip value {0} of type {1} of expected value {2}.", clrValue, edmTypeName, expectedValue), isIeee754Compatible: true, expectedValue: expectedValue);
+            }
+        }
+
         private void VerifyPrimitiveValuesRoundtripWithoutTypeInformation(IEnumerable clrValues)
         {
             foreach (object clrValue in clrValues)
@@ -576,16 +616,21 @@ namespace Microsoft.Test.OData.TDD.Tests.Roundtripping.JsonLight
 
         private void VerifyPrimitiveValueRoundtrips(object clrValue, IEdmTypeReference typeReference, ODataVersion version, string description, bool isIeee754Compatible)
         {
+            VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, description, isIeee754Compatible, clrValue);
+        }
+
+        private void VerifyPrimitiveValueRoundtrips(object clrValue, IEdmTypeReference typeReference, ODataVersion version, string description, bool isIeee754Compatible, object expectedValue)
+        {
             var actualValue = this.WriteThenReadValue(clrValue, typeReference, version, isIeee754Compatible);
 
-            if (clrValue is byte[])
+            if (expectedValue is byte[])
             {
-                ((byte[])actualValue).Should().Equal((byte[])clrValue, description);
+                ((byte[])actualValue).Should().Equal((byte[])expectedValue, description);
             }
             else
             {
-                actualValue.GetType().Should().Be(clrValue.GetType(), description);
-                actualValue.Should().Be(clrValue, description);
+                actualValue.GetType().Should().Be(expectedValue.GetType(), description);
+                actualValue.Should().Be(expectedValue, description);
             }
         }
 
@@ -711,6 +756,41 @@ namespace Microsoft.Test.OData.TDD.Tests.Roundtripping.JsonLight
         public object ConvertFromUnderlyingType(object value)
         {
             return Convert.ToUInt64(value);
+        }
+    }
+
+    internal class BinaryFieldAsStringPrimitivePayloadValueConverter : DefaultPrimitivePayloadValueConverter
+    {
+        public override object ConvertToPayloadValue(object value, IEdmTypeReference edmTypeReference, ODataMessageWriterSettings messageWriterSettings)
+        {
+            // Bypass the conversion to Byte[] in case of Explicit Binary Properties
+            if (IsStringPayloadValueAndTypeBinary(value, edmTypeReference))
+            {
+                return value;
+            }
+            else
+            {
+                return base.ConvertToPayloadValue(value, edmTypeReference, messageWriterSettings);
+            }
+        }
+
+        public override object ConvertFromPayloadValue(object value, IEdmTypeReference edmTypeReference, ODataMessageReaderSettings messageReaderSettings)
+        {
+            // Skip Base implementation in case of Explicit Binary Properties
+            if (IsStringPayloadValueAndTypeBinary(value, edmTypeReference))
+            {
+                return value;
+            }
+
+            return base.ConvertFromPayloadValue(value, edmTypeReference, messageReaderSettings);
+        }
+
+        private static bool IsStringPayloadValueAndTypeBinary(object value, IEdmTypeReference edmTypeReference)
+        {
+            IEdmPrimitiveTypeReference actualTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
+
+            return actualTypeReference.IsString() &&
+                edmTypeReference.IsBinary();
         }
     }
 }

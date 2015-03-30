@@ -696,6 +696,7 @@ namespace Microsoft.OData.Core.JsonLight
                     result = ODataJsonLightReaderUtils.ConvertValue(
                         result,
                         expectedValueTypeReference,
+                        this.Model,
                         this.MessageReaderSettings,
                         validateNullValue,
                         propertyName);

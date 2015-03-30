@@ -346,10 +346,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             IEdmPrimitiveTypeReference actualTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
 
-            if (expectedTypeReference != null)
-            {
-                ValidationUtils.ValidateIsExpectedPrimitiveType(value, actualTypeReference, expectedTypeReference, !this.JsonLightOutputContext.MessageWriterSettings.EnableFullValidation);
-            }
+            value = this.Model.GetPrimitivePayloadValueConverter().ConvertToPayloadValue(value, expectedTypeReference, this.JsonLightOutputContext.MessageWriterSettings);
 
             if (actualTypeReference != null && actualTypeReference.IsSpatial())
             {
