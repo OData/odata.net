@@ -37,5 +37,6 @@ OData .NET library is open source at http://odata.codeplex.com</description>
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" target="src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" target="src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
+    <file src="$SourcesRoot$\_BuildCommon\ProductVersion\AssemblyInfoCommon.cs" target="src\AssemblyInfoCommon.cs" />
   </files>
 </package>
