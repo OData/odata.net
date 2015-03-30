@@ -77,7 +77,6 @@
     <Compile Include="Reader\JsonLight\ODataJsonLightServiceDocumentDeserializerTests.cs" />
     <Compile Include="Reader\JsonLight\ODataJsonLightSingletonReaderTests.cs" />
     <Compile Include="Reader\JsonLight\ODataJsonLightDeltaReaderTests.cs" />
-    <Compile Include="Reader\JsonLight\ODataJsonLightUndeclaredPropertiesReaderTests.cs" />
     <Compile Include="Reader\JsonLight\TimeOfDayReaderJsonLightTests.cs" />
     <Compile Include="Reader\ODataAsyncReaderTests.cs" />
     <Compile Include="Reader\ODataMetadataReaderTest.cs" />
