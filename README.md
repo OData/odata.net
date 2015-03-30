@@ -15,7 +15,7 @@ The file content should start with some metadata:
 layout: post
 title: "Title of the Sample Post"
 description: ""
-category: Core Libraries/Code Generated Client/ASP.NET Web API OData
+category: Core Libraries/Code Generated Client/ASP.NET Web API OData/Release Notes
 ---
 ```
 
