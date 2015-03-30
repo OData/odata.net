@@ -354,6 +354,7 @@ namespace Microsoft.OData.Service.Serializers
             if ((complexResourceType == null) || (complexValue.TypeName != complexResourceType.FullName))
             {
                 // Open complex value & Derived complex value - read the type from the value
+                // Note: 6.11 supports undeclared complex value, here it will cause exception (as expected) to be verified in test case.
                 Debug.Assert(!string.IsNullOrEmpty(complexValue.TypeName), "ODataLib should have verified that open complex value has a type name since we provided metadata.");
                 complexResourceType = this.Service.Provider.TryResolveResourceType(complexValue.TypeName);
                 Debug.Assert(complexResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType, "ODataLib should have verified that complex value has a complex resource type.");

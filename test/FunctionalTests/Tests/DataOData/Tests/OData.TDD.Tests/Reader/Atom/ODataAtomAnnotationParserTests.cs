@@ -13,6 +13,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Atom
 {
     using System.IO;
     using FluentAssertions;
+    using System.Linq;
     using System.Xml;
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core;
@@ -223,8 +224,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Atom
         public void ShouldThrowIfElementContentIsNotPrimitiveAndNoTypeAvailable()
         {
             // Comment: not the most intuitive error message if a user runs into this scenario.
-            Action testSubject = () => ReadAnnotation("<m:annotation term=\"my.namespace.term\"><m:element>42</m:element></m:annotation>");
-            testSubject.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ReaderValidationUtils_ValueWithoutType);
+            AtomInstanceAnnotation tmp = ReadAnnotation("<m:annotation term=\"my.namespace.term\"><d:element>42</d:element></m:annotation>");
+            tmp.TermName.Should().Be("my.namespace.term");
+            tmp.Value.As<ODataComplexValue>().Properties.Select(s=>s.Value).Cast<string>().Single().Should().Be("42");
         }
 
         [TestMethod]
