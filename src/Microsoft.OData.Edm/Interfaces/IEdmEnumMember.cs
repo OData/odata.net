@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a definition of an EDM enumeration type member.
     /// </summary>
-    public interface IEdmEnumMember : IEdmNamedElement
+    public interface IEdmEnumMember : IEdmNamedElement, IEdmVocabularyAnnotatable
     {
         /// <summary>
         /// Gets the value of this enumeration type member.

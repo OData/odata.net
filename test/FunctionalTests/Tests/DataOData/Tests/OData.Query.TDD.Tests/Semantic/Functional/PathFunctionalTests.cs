@@ -184,10 +184,21 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
         }
 
         [TestMethod]
-        public void UseEscapeMarkerWithTemplatedKeyTypeSegmentInKeyAsSegmentShouldThrow()
+        public void UseTemplatedKeyWithPathTemplateSegmentInKeyAsSegmentShouldWork()
         {
-            Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/$/{k1}")) { UrlConventions = ODataUrlConventions.KeyAsSegment, EnableUriTemplateParsing = true }.ParsePath();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.RequestUriProcessor_CannotQueryCollections("Dogs"));
+            var paths = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/{k1}/{k2}")) { UrlConventions = ODataUrlConventions.KeyAsSegment, EnableUriTemplateParsing = true }.ParsePath().ToList();
+            var keySegment = paths[1].As<KeySegment>();
+            KeyValuePair<string, object> keypair = keySegment.Keys.Single();
+            keypair.Key.Should().Be("ID");
+            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression() { LiteralText = "{k1}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            paths[2].As<PathTemplateSegment>().LiteralText.Should().Be("{k2}");
+        }
+
+        [TestMethod]
+        public void UseEscapeMarkerWithTemplatedKeyTypeSegmentInKeyAsSegmentShouldBeParsedAsPathTemplateSegment()
+        {
+            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/$/{k1}")) { UrlConventions = ODataUrlConventions.KeyAsSegment, EnableUriTemplateParsing = true }.ParsePath();
+            path.LastSegment.As<PathTemplateSegment>().LiteralText.Should().Be("{k1}");
         }
 
         [TestMethod]

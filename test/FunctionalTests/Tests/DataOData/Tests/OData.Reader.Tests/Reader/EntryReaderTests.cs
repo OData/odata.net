@@ -210,23 +210,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             // Add couple of hand-crafted payloads
             testDescriptors = testDescriptors.Concat(new[]
                 {
-                    // Open complex value without a type - must fail
-                    new PayloadReaderTestDescriptor(this.Settings)
-                    {
-                        PayloadElement = PayloadBuilder.ComplexValue(null).PrimitiveProperty("foo", "bar"),
-                        ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ValueWithoutType"),
-                    },
                     // Open complex value with undeclared type - must fail
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.ComplexValue("TestModel.NonExistantType"),
                         ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnrecognizedTypeName", "TestModel.NonExistantType"),
-                    },
-                    // Open collection properties must have type (and are not supported anyway)
-                    new PayloadReaderTestDescriptor(this.Settings)
-                    {
-                        PayloadElement = PayloadBuilder.PrimitiveMultiValue(null).Item(42),
-                        ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ValueWithoutType"),
                     },
                     // Open complex null value
                     new PayloadReaderTestDescriptor(this.Settings)
@@ -1332,9 +1320,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             {
                 PayloadBuilder.PrimitiveProperty("UndeclaredProperty", "test"),
                 PayloadBuilder.PrimitiveProperty("UndeclaredProperty", GeographyFactory.Point(0, 32).Build()),
-                PayloadBuilder.Property("UndeclaredProperty", PayloadBuilder.ComplexValue("TestModel.Wrong").PrimitiveProperty("NonExistant", "First")),
-                PayloadBuilder.Property("UndeclaredProperty", PayloadBuilder.PrimitiveMultiValue("Collection(String)").Item("test")),
-                PayloadBuilder.Property("UndeclaredProperty", PayloadBuilder.ComplexMultiValue("Collection(TestModel.Wrong)").Item(PayloadBuilder.ComplexValue("TestModel.Wrong"))),
+                PayloadBuilder.Property("UndeclaredProperty", PayloadBuilder.PrimitiveMultiValue().Item("test")),
+
+                // undefined complex type is not supported yet though undeclared complex value (of knonw type) is supported
+                //PayloadBuilder.Property("UndeclaredProperty", PayloadBuilder.ComplexMultiValue("Collection(TestModel.Wrong)").Item(PayloadBuilder.ComplexValue("TestModel.Wrong"))),
             };
 
         private static IEnumerable<PropertyInstance> undeclaredLinkProperties = new PropertyInstance[]
@@ -1355,29 +1344,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 PayloadBuilder.ExpandedNavigationProperty("UndeclaredProperty", PayloadBuilder.Entity("Wrong"), null, "http://odata.org/associationLink"),
                 PayloadBuilder.ExpandedNavigationProperty("UndeclaredProperty", PayloadBuilder.EntitySet(), null, "http://odata.org/associationLink"),
             };
-
-        [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies that UndeclaredPropertyBehaviorKinds setting behaves correctly.")]
-        public void UndeclaredPropertyTest()
-        {
-            this.CombinatorialEngineProvider.RunCombinations(
-                TestReaderUtils.ODataUndeclaredPropertyBehaviorKindsCombinations,
-                undeclaredPropertyBehaviorKinds =>
-                {
-                    var testDescriptors = CreateUndeclaredPropertyTestDescriptors(undeclaredPropertyBehaviorKinds, this.Settings);
-
-                    // Expanded links behave differently between ATOM and JSON so their tests are in the respective format places.
-                    this.CombinatorialEngineProvider.RunCombinations(
-                        testDescriptors,
-                        this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => !tc.IsRequest),
-                        (testDescriptor, testConfiguration) =>
-                        {
-                            testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                            testConfiguration.MessageReaderSettings.UndeclaredPropertyBehaviorKinds = undeclaredPropertyBehaviorKinds;
-
-                            testDescriptor.RunTest(testConfiguration);
-                        });
-                });
-        }
 
         [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies that UndeclaredPropertyBehaviorKinds setting behaves correctly.")]
         public void UndeclaredPropertyJsonLightTest()
@@ -1407,6 +1373,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEdmModel model = TestModels.BuildTestModel();
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = undeclaredValueProperties.SelectMany(undeclaredProperty =>
             {
+                if ((undeclaredProperty is PrimitiveProperty)
+                    && ((PrimitiveProperty)undeclaredProperty).Value.ClrValue.ToString() == "Microsoft.Data.Spatial.GeographyPointImplementation")
+                {
+                    return Enumerable.Empty<PayloadReaderTestDescriptor>();
+                }
+
                 EntityInstance inEntity = PayloadBuilder.Entity("TestModel.OfficeType")
                     .PrimitiveProperty("Id", 42);
 
@@ -1419,7 +1391,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                             new PayloadReaderTestDescriptor(settings)
                             {
                                 PayloadElement = inEntity.DeepCopy().Property(undeclaredProperty.DeepCopy()),
-                                ExpectedResultPayloadElement = tc => inEntity.DeepCopy(),
+                                ExpectedResultPayloadElement = tc => inEntity.DeepCopy().Property(undeclaredProperty.DeepCopy()),
                                 PayloadEdmModel = model,
                                 ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty)
                                                         ? null
@@ -1429,31 +1401,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                             new PayloadReaderTestDescriptor(settings)
                             {
                                 PayloadElement = PayloadBuilder.Entity("TestModel.CityWithMapType").PrimitiveProperty("Id", 1).AsMediaLinkEntry().Property(undeclaredProperty.DeepCopy()),
-                                ExpectedResultPayloadElement = tc => PayloadBuilder.Entity("TestModel.CityWithMapType").PrimitiveProperty("Id", 1).AsMediaLinkEntry(),
+                                ExpectedResultPayloadElement = tc => PayloadBuilder.Entity("TestModel.CityWithMapType").PrimitiveProperty("Id", 1).AsMediaLinkEntry().Property(undeclaredProperty.DeepCopy()),
                                 PayloadEdmModel = model,
                                 ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty)
                                                         ? null
                                                         : ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityWithMapType")
-                            },
-                            // In top-level complex property
-                            new PayloadReaderTestDescriptor(settings)
-                            {
-                                PayloadElement = PayloadBuilder.Property(null, inComplex.DeepCopy().Property(undeclaredProperty.DeepCopy())),
-                                ExpectedResultPayloadElement = tc => PayloadBuilder.Property(null, inComplex.DeepCopy()),
-                                PayloadEdmModel = model,
-                                ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty)
-                                                        ? null
-                                                        : ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.Address")
-                            },
-                            // In complex value on an entry
-                            new PayloadReaderTestDescriptor(settings)
-                            {
-                                PayloadElement = inEntity.DeepCopy().Property("Address", inComplex.DeepCopy().Property(undeclaredProperty.DeepCopy())),
-                                ExpectedResultPayloadElement = tc => inEntity.DeepCopy().Property("Address", inComplex.DeepCopy()),
-                                PayloadEdmModel = model,
-                                ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty)
-                                                        ? null
-                                                        : ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.Address")
                             },
                         };
             });
@@ -1466,9 +1418,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         new PayloadReaderTestDescriptor(settings)
                         {
                             PayloadElement = 
-                            !undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty) || settings == this.JsonLightSettings ?
-                            PayloadBuilder.Entity("TestModel.CityType").PrimitiveProperty("Id", 1).Property(undeclaredProperty.DeepCopy()) :
-                            PayloadBuilder.Entity("TestModel.CityType").PrimitiveProperty("Id", 1),
+                            PayloadBuilder.Entity("TestModel.CityType").PrimitiveProperty("Id", 1).Property(undeclaredProperty.DeepCopy()),// :
                             PayloadEdmModel = model,
                             ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty)
                                                     ? null
@@ -1478,9 +1428,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         new PayloadReaderTestDescriptor(settings)
                         {
                             PayloadElement =
-                            !undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty) || settings == this.JsonLightSettings ?
-                            PayloadBuilder.Entity("TestModel.CityWithMapType").PrimitiveProperty("Id", 1).AsMediaLinkEntry().Property(undeclaredProperty.DeepCopy()) :
-                            PayloadBuilder.Entity("TestModel.CityWithMapType").PrimitiveProperty("Id", 1).AsMediaLinkEntry(),
+                            PayloadBuilder.Entity("TestModel.CityWithMapType").PrimitiveProperty("Id", 1).AsMediaLinkEntry().Property(undeclaredProperty.DeepCopy()), //:
                             PayloadEdmModel = model,
                             ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty)
                                                     ? null
@@ -1646,12 +1594,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 {
                                     PayloadElement = PayloadBuilder.Entity("TestModel.EntityType").PrimitiveProperty("Id", 42).ExpandedNavigationProperty("UndeclaredProperty", PayloadBuilder.Entity("TestModel.EntityType")),
                                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncorrectValueTypeKind", "TestModel.EntityType", "Entity")
-                                },
-
-                                new PayloadReaderTestDescriptor(this.Settings)
-                                {
-                                    PayloadElement = PayloadBuilder.Entity("TestModel.EntityType").PrimitiveProperty("Id", 42).ExpandedNavigationProperty("UndeclaredProperty", PayloadBuilder.EntitySet()),
-                                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ValueWithoutType")
                                 },
 
                                 new PayloadReaderTestDescriptor(this.Settings)

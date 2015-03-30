@@ -792,13 +792,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     TypeReference = edmModel.ResolveTypeReference("TestModel.Address", false),
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertFromUriLiteralTypeRefWithoutModel"),
                 });
-            testCases.Add(
-                new ConvertFromUriLiteralTestCase()
-                {
-                    Parameter = "{}",
-                    Model = edmModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ValueWithoutType"),
-                });
             #endregion
 
             #region Value TypeReference Mismatch
@@ -973,12 +966,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         #region JSON Light
 
         [TestMethod, TestCategory("Reader.UriHandling"), Variation]
-        public void ConvertFromUriShouldNotTryJsonLightWhenNoModelIsProvided()
+        public void ConvertFromUriShouldParseJsonLightEvenNoModelIsProvided()
         {
             var text = "[1,2,3]";
-
-            Action parse = () => ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, null /*edmModel*/, null /*expectedType*/);
-            parse.ShouldThrow<ODataException>();
+            object restulTmp = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, null /*edmModel*/, null /*expectedType*/);
+            restulTmp.As<ODataCollectionValue>().TypeName.Should().Be(null);
+            restulTmp.As<ODataCollectionValue>().Items.Cast<Int32>().Count().Should().Be(3);
         }
 
         [TestMethod, TestCategory("Reader.UriHandling"), Variation]
@@ -1009,8 +1002,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 
             var text = "{\"numberProperty\":42}";
 
-            Action parse = () => ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, null /*typeReference*/);
-            parse.ShouldThrow<ODataException>().WithMessage("A value without a type name was found and no expected type is available. When the model is specified, each value in the payload must have a type which can be either specified in the payload, explicitly by the caller or implicitly inferred from the parent value.");
+            object resultTmp = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, null /*typeReference*/);
+            resultTmp.As<ODataComplexValue>().TypeName.Should().Be(null);
+            resultTmp.As<ODataComplexValue>().Properties.Should().OnlyContain(p => p.Name == "numberProperty" && p.Value.Equals(42));
         }
 
         [TestMethod, TestCategory("Reader.UriHandling"), Variation]
@@ -1129,6 +1123,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             result.Should().BeAssignableTo<ODataComplexValue>();
             result.As<ODataComplexValue>().TypeName.Should().Be("TestModel.ComplexTypeWithNumberProperty");
             result.As<ODataComplexValue>().Properties.Should().OnlyContain(p => p.Name == "numberProperty" && p.Value.Equals(42));
+        }
+
+        [TestMethod, TestCategory("Reader.UriHandling"), Variation]
+        public void ConvertFromUriShouldParseEmptyComplexValueWithNoType()
+        {
+            var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
+            object complextTmp = ODataUriUtils.ConvertFromUriLiteral("{}", ODataVersion.V4, edmModel, null);
+            complextTmp.As<ODataComplexValue>().TypeName.Should().Be(null);
+            complextTmp.As<ODataComplexValue>().Properties.Count().Should().Be(0);
         }
 
         [TestMethod, TestCategory("Reader.UriHandling"), Variation]

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 8/29/2014 1:51:33 AM
+// Generation date: 3/20/2015 3:43:37 PM
 namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo
 {
     /// <summary>
@@ -20,9 +20,9 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// Initialize a new TruckDemoService object.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        public TruckDemoService(global::System.Uri serviceRoot) : 
-                base(serviceRoot, global::Microsoft.OData.Client.ODataProtocolVersion.V4)
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        public TruckDemoService(global::System.Uri serviceRoot) :
+            base(serviceRoot, global::Microsoft.OData.Client.ODataProtocolVersion.V4)
         {
             this.ResolveName = new global::System.Func<global::System.Type, string>(this.ResolveNameFromType);
             this.ResolveType = new global::System.Func<string, global::System.Type>(this.ResolveTypeFromName);
@@ -36,7 +36,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// in Visual Studio is different from the one indicated in the
         /// server schema, use type-mappers to map between the two.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
             global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1", "Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1");
@@ -76,7 +76,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// in Visual Studio is different from the one indicated in the
         /// server schema, use type-mappers to map between the two.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected string ResolveNameFromType(global::System.Type clientType)
         {
             global::Microsoft.OData.Client.OriginalNameAttribute originalNameAttribute = (global::Microsoft.OData.Client.OriginalNameAttribute)global::System.Linq.Enumerable.SingleOrDefault(global::Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, typeof(global::Microsoft.OData.Client.OriginalNameAttribute), true));
@@ -137,7 +137,8 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for Trucks in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Trucks")]
         public global::Microsoft.OData.Client.DataServiceQuery<TruckType> Trucks
         {
             get
@@ -149,12 +150,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 return this._Trucks;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<TruckType> _Trucks;
         /// <summary>
         /// There are no comments for VehicleGPSSet in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("VehicleGPSSet")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> VehicleGPSSet
         {
             get
@@ -166,12 +168,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 return this._VehicleGPSSet;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> _VehicleGPSSet;
         /// <summary>
         /// There are no comments for DerivedVehicleGPSSet in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("DerivedVehicleGPSSet")]
         public global::Microsoft.OData.Client.DataServiceQuery<DerivedVehicleGPSType> DerivedVehicleGPSSet
         {
             get
@@ -183,12 +186,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 return this._DerivedVehicleGPSSet;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<DerivedVehicleGPSType> _DerivedVehicleGPSSet;
         /// <summary>
         /// There are no comments for VehicleGPSSetInGPS in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("VehicleGPSSetInGPS")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> VehicleGPSSetInGPS
         {
             get
@@ -200,12 +204,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 return this._VehicleGPSSetInGPS;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> _VehicleGPSSetInGPS;
         /// <summary>
         /// There are no comments for Trucks in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToTrucks(TruckType truckType)
         {
             base.AddObject("Trucks", truckType);
@@ -213,7 +217,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for VehicleGPSSet in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToVehicleGPSSet(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType vehicleGPSType)
         {
             base.AddObject("VehicleGPSSet", vehicleGPSType);
@@ -221,7 +225,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for DerivedVehicleGPSSet in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToDerivedVehicleGPSSet(DerivedVehicleGPSType derivedVehicleGPSType)
         {
             base.AddObject("DerivedVehicleGPSSet", derivedVehicleGPSType);
@@ -229,18 +233,18 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for VehicleGPSSetInGPS in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToVehicleGPSSetInGPS(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType vehicleGPSType)
         {
             base.AddObject("VehicleGPSSetInGPS", vehicleGPSType);
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private abstract class GeneratedEdmModel
         {
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::System.Collections.Generic.Dictionary<string, string> ReferencesMap = new global::System.Collections.Generic.Dictionary<string, string>()
                 {
-                    {@"http://juzhendev1:9090/ModelRef635448738937060933/CoreTerms.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
+                    {@"http://bixu-odata-3:9090/ModelRef635624629118997158/CoreTerms.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
   <edmx:DataServices>
     <Schema xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Core.V1"" Alias=""Core"">
       <Term Name=""Description"" Type=""Edm.String"">
@@ -250,8 +254,8 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>"},
-                    {@"http://juzhendev1:9090/ModelRef635448738937060933/DeviceModelTerms.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/CoreTerms.csdl"">
+                    {@"http://bixu-odata-3:9090/ModelRef635624629118997158/DeviceModelTerms.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/CoreTerms.csdl"">
     <edmx:Include Alias=""Core"" Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Core.V1"" />
   </edmx:Reference>
   <edmx:DataServices>
@@ -264,17 +268,17 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>"},
-                    {@"http://juzhendev1:9090/ModelRef635448738937060933/GPS.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/Location.csdl"">
+                    {@"http://bixu-odata-3:9090/ModelRef635624629118997158/GPS.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/Location.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Location"" Alias=""Loc"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/Map.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/Map.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Map"" Alias=""Map"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/TruckDemo.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/TruckDemo.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo"" Alias=""TruckDemo"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/DeviceModelTerms.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/DeviceModelTerms.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1"" Alias=""IoTDeviceModel"" />
   </edmx:Reference>
   <edmx:DataServices>
@@ -322,8 +326,8 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>"},
-                    {@"http://juzhendev1:9090/ModelRef635448738937060933/Location.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/DeviceModelTerms.csdl"">
+                    {@"http://bixu-odata-3:9090/ModelRef635624629118997158/Location.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/DeviceModelTerms.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1"" Alias=""IoTDeviceModel"" />
   </edmx:Reference>
   <edmx:DataServices>
@@ -340,7 +344,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>"},
-                    {@"http://juzhendev1:9090/ModelRef635448738937060933/Map.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
+                    {@"http://bixu-odata-3:9090/ModelRef635624629118997158/Map.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
   <edmx:DataServices>
     <Schema xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Map"" Alias=""Self"">
       <ComplexType Name=""MapType"">
@@ -352,23 +356,23 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
   </edmx:DataServices>
 </edmx:Edmx>"},
                 };
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::Microsoft.OData.Edm.IEdmModel ParsedModel = LoadModelFromString();
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/CoreTerms.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/CoreTerms.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Core.V1"" Alias=""Core"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/DeviceModelTerms.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/DeviceModelTerms.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1"" Alias=""IoTDeviceModel"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/GPS.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/GPS.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.GPS"" Alias=""GPS"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/Location.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/Location.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Location"" Alias=""Location"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/Map.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/Map.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Map"" Alias=""Map"" />
   </edmx:Reference>
   <edmx:DataServices>
@@ -440,22 +444,23 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             public static global::Microsoft.OData.Edm.IEdmModel GetInstance()
             {
                 return ParsedModel;
             }
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::System.Xml.XmlReader getReferencedModelFromMap(global::System.Uri uri)
             {
                 string referencedEdmx;
-                if (ReferencesMap.TryGetValue(uri.OriginalString, out referencedEdmx)){
+                if (ReferencesMap.TryGetValue(uri.OriginalString, out referencedEdmx))
+                {
                     return CreateXmlReader(referencedEdmx);
                 }
 
                 return null;
             }
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::Microsoft.OData.Edm.IEdmModel LoadModelFromString()
             {
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
@@ -468,7 +473,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                     ((global::System.IDisposable)(reader)).Dispose();
                 }
             }
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::System.Xml.XmlReader CreateXmlReader(string edmxToParse)
             {
                 return global::System.Xml.XmlReader.Create(new global::System.IO.StringReader(edmxToParse));
@@ -477,14 +482,15 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for GetDefaultOutsideGeoFenceAlarm in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetDefaultOutsideGeoFenceAlarm")]
         public global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType> GetDefaultOutsideGeoFenceAlarm()
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType>(this, "/GetDefaultOutsideGeoFenceAlarm" + parameterString, true);
+            return this.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType>("", "GetDefaultOutsideGeoFenceAlarm", true);
         }
         /// <summary>
         /// There are no comments for ResetDataSource in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetDataSource")]
         public global::Microsoft.OData.Client.DataServiceActionQuery ResetDataSource()
         {
             return new global::Microsoft.OData.Client.DataServiceActionQuery(this, this.BaseUri.OriginalString.Trim('/') + "/ResetDataSource");
@@ -492,6 +498,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for ResetVehicleSpeedToValue in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetVehicleSpeedToValue")]
         public global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> ResetVehicleSpeedToValue(global::System.Nullable<double> targetValue)
         {
             return new global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType>(this, this.BaseUri.OriginalString.Trim('/') + "/ResetVehicleSpeedToValue", new global::Microsoft.OData.Client.BodyOperationParameter("targetValue", targetValue));
@@ -506,7 +513,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for Property FuelLevel in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("FuelLevel")]
         public global::System.Nullable<double> FuelLevel
         {
@@ -522,14 +529,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("FuelLevel");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<double> _FuelLevel;
         partial void OnFuelLevelChanging(global::System.Nullable<double> value);
         partial void OnFuelLevelChanged();
         /// <summary>
         /// There are no comments for Property Location in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Location")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation Location
         {
@@ -545,20 +552,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("Location");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation _Location;
         partial void OnLocationChanging(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation value);
         partial void OnLocationChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -576,7 +583,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for Property Severity in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Severity")]
         public global::System.Nullable<int> Severity
         {
@@ -592,14 +599,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("Severity");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<int> _Severity = 3;
         partial void OnSeverityChanging(global::System.Nullable<int> value);
         partial void OnSeverityChanged();
         /// <summary>
         /// There are no comments for Property LocationAndFuel in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("LocationAndFuel")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.LocationAndFuel LocationAndFuel
         {
@@ -615,20 +622,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("LocationAndFuel");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.LocationAndFuel _LocationAndFuel;
         partial void OnLocationAndFuelChanging(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.LocationAndFuel value);
         partial void OnLocationAndFuelChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -647,13 +654,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// Initialize a new HeadUnitTypeSingle object.
         /// </summary>
         public HeadUnitTypeSingle(global::Microsoft.OData.Client.DataServiceContext context, string path)
-            : base(context, path) {}
+            : base(context, path) { }
 
         /// <summary>
         /// Initialize a new HeadUnitTypeSingle object.
         /// </summary>
         public HeadUnitTypeSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
-            : base(context, path, isComposable) {}
+            : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new HeadUnitTypeSingle object.
+        /// </summary>
+        public HeadUnitTypeSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<HeadUnitType> query)
+            : base(query) { }
+
     }
     /// <summary>
     /// There are no comments for HeadUnitType in the schema.
@@ -669,7 +683,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// Create a new HeadUnitType object.
         /// </summary>
         /// <param name="serialNo">Initial value of SerialNo.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static HeadUnitType CreateHeadUnitType(string serialNo)
         {
             HeadUnitType headUnitType = new HeadUnitType();
@@ -679,7 +693,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for Property SerialNo in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("SerialNo")]
         public string SerialNo
         {
@@ -695,14 +709,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("SerialNo");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _SerialNo;
         partial void OnSerialNoChanging(string value);
         partial void OnSerialNoChanged();
         /// <summary>
         /// There are no comments for Property DimmingLevel in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("DimmingLevel")]
         public global::System.Nullable<double> DimmingLevel
         {
@@ -718,20 +732,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("DimmingLevel");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<double> _DimmingLevel;
         partial void OnDimmingLevelChanging(global::System.Nullable<double> value);
         partial void OnDimmingLevelChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -750,17 +764,25 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// Initialize a new TruckTypeSingle object.
         /// </summary>
         public TruckTypeSingle(global::Microsoft.OData.Client.DataServiceContext context, string path)
-            : base(context, path) {}
+            : base(context, path) { }
 
         /// <summary>
         /// Initialize a new TruckTypeSingle object.
         /// </summary>
         public TruckTypeSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
-            : base(context, path, isComposable) {}
+            : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new TruckTypeSingle object.
+        /// </summary>
+        public TruckTypeSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<TruckType> query)
+            : base(query) { }
+
         /// <summary>
         /// There are no comments for HeadUnit in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("HeadUnit")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.HeadUnitTypeSingle HeadUnit
         {
             get
@@ -776,12 +798,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 return this._HeadUnit;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.HeadUnitTypeSingle _HeadUnit;
         /// <summary>
         /// There are no comments for VehicleGPS in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("VehicleGPS")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSTypeSingle VehicleGPS
         {
             get
@@ -797,12 +820,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 return this._VehicleGPS;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSTypeSingle _VehicleGPS;
         /// <summary>
         /// There are no comments for VehicleGPSGroupFromGPS in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("VehicleGPSGroupFromGPS")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> VehicleGPSGroupFromGPS
         {
             get
@@ -818,12 +842,13 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 return this._VehicleGPSGroupFromGPS;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> _VehicleGPSGroupFromGPS;
         /// <summary>
         /// There are no comments for VehicleGPSGroup in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("VehicleGPSGroup")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> VehicleGPSGroup
         {
             get
@@ -839,7 +864,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 return this._VehicleGPSGroup;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> _VehicleGPSGroup;
     }
     /// <summary>
@@ -857,7 +882,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// Create a new TruckType object.
         /// </summary>
         /// <param name="key">Initial value of Key.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static TruckType CreateTruckType(string key)
         {
             TruckType truckType = new TruckType();
@@ -867,7 +892,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for Property Key in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Key")]
         public string Key
         {
@@ -883,14 +908,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("Key");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _Key;
         partial void OnKeyChanging(string value);
         partial void OnKeyChanged();
         /// <summary>
         /// There are no comments for Property VIN in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("VIN")]
         public string VIN
         {
@@ -906,14 +931,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("VIN");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _VIN;
         partial void OnVINChanging(string value);
         partial void OnVINChanged();
         /// <summary>
         /// There are no comments for Property FuelLevel in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("FuelLevel")]
         public global::System.Nullable<double> FuelLevel
         {
@@ -929,14 +954,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("FuelLevel");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<double> _FuelLevel;
         partial void OnFuelLevelChanging(global::System.Nullable<double> value);
         partial void OnFuelLevelChanged();
         /// <summary>
         /// There are no comments for Property ACState in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ACState")]
         public global::System.Nullable<bool> ACState
         {
@@ -952,14 +977,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("ACState");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<bool> _ACState;
         partial void OnACStateChanging(global::System.Nullable<bool> value);
         partial void OnACStateChanged();
         /// <summary>
         /// There are no comments for Property TruckIsHomeFuelLevel in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("TruckIsHomeFuelLevel")]
         public global::System.Nullable<double> TruckIsHomeFuelLevel
         {
@@ -975,14 +1000,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("TruckIsHomeFuelLevel");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<double> _TruckIsHomeFuelLevel;
         partial void OnTruckIsHomeFuelLevelChanging(global::System.Nullable<double> value);
         partial void OnTruckIsHomeFuelLevelChanged();
         /// <summary>
         /// There are no comments for Property TruckStoppedAlarm in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("TruckStoppedAlarm")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.TruckStoppedAlarmType TruckStoppedAlarm
         {
@@ -998,14 +1023,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("TruckStoppedAlarm");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.TruckStoppedAlarmType _TruckStoppedAlarm;
         partial void OnTruckStoppedAlarmChanging(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.TruckStoppedAlarmType value);
         partial void OnTruckStoppedAlarmChanged();
         /// <summary>
         /// There are no comments for Property OutsideGeoFenceAlarm in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("OutsideGeoFenceAlarm")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType OutsideGeoFenceAlarm
         {
@@ -1021,14 +1046,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("OutsideGeoFenceAlarm");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType _OutsideGeoFenceAlarm;
         partial void OnOutsideGeoFenceAlarmChanging(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType value);
         partial void OnOutsideGeoFenceAlarmChanged();
         /// <summary>
         /// There are no comments for Property HeadUnit in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("HeadUnit")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.HeadUnitType HeadUnit
         {
@@ -1044,14 +1069,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("HeadUnit");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.HeadUnitType _HeadUnit;
         partial void OnHeadUnitChanging(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.HeadUnitType value);
         partial void OnHeadUnitChanged();
         /// <summary>
         /// There are no comments for Property VehicleGPS in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("VehicleGPS")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType VehicleGPS
         {
@@ -1067,14 +1092,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("VehicleGPS");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType _VehicleGPS;
         partial void OnVehicleGPSChanging(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType value);
         partial void OnVehicleGPSChanged();
         /// <summary>
         /// There are no comments for Property VehicleGPSGroupFromGPS in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("VehicleGPSGroupFromGPS")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> VehicleGPSGroupFromGPS
         {
@@ -1090,14 +1115,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("VehicleGPSGroupFromGPS");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> _VehicleGPSGroupFromGPS = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnVehicleGPSGroupFromGPSChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> value);
         partial void OnVehicleGPSGroupFromGPSChanged();
         /// <summary>
         /// There are no comments for Property VehicleGPSGroup in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("VehicleGPSGroup")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> VehicleGPSGroup
         {
@@ -1113,20 +1138,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("VehicleGPSGroup");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> _VehicleGPSGroup = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnVehicleGPSGroupChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> value);
         partial void OnVehicleGPSGroupChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -1137,6 +1162,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for SetACState in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("SetACState")]
         public global::Microsoft.OData.Client.DataServiceActionQuery SetACState(global::System.Nullable<bool> state)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
@@ -1150,6 +1176,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for TurnOffAC in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("TurnOffAC")]
         public global::Microsoft.OData.Client.DataServiceActionQuery TurnOffAC()
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
@@ -1171,13 +1198,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// Initialize a new DerivedVehicleGPSTypeSingle object.
         /// </summary>
         public DerivedVehicleGPSTypeSingle(global::Microsoft.OData.Client.DataServiceContext context, string path)
-            : base(context, path) {}
+            : base(context, path) { }
 
         /// <summary>
         /// Initialize a new DerivedVehicleGPSTypeSingle object.
         /// </summary>
         public DerivedVehicleGPSTypeSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
-            : base(context, path, isComposable) {}
+            : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new DerivedVehicleGPSTypeSingle object.
+        /// </summary>
+        public DerivedVehicleGPSTypeSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<DerivedVehicleGPSType> query)
+            : base(query) { }
+
     }
     /// <summary>
     /// There are no comments for DerivedVehicleGPSType in the schema.
@@ -1195,7 +1229,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// </summary>
         /// <param name="key">Initial value of Key.</param>
         /// <param name="displayName">Initial value of DisplayName.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static DerivedVehicleGPSType CreateDerivedVehicleGPSType(string key, string displayName)
         {
             DerivedVehicleGPSType derivedVehicleGPSType = new DerivedVehicleGPSType();
@@ -1206,7 +1240,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for Property DisplayName in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("DisplayName")]
         public string DisplayName
         {
@@ -1222,7 +1256,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("DisplayName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _DisplayName;
         partial void OnDisplayNameChanging(string value);
         partial void OnDisplayNameChanged();
@@ -1313,6 +1347,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for SetACState in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("SetACState")]
         public static global::Microsoft.OData.Client.DataServiceActionQuery SetACState(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.TruckType> source, global::System.Nullable<bool> state)
         {
             if (!source.IsComposable)
@@ -1325,6 +1360,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for TurnOffAC in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("TurnOffAC")]
         public static global::Microsoft.OData.Client.DataServiceActionQuery TurnOffAC(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.TruckType> source)
         {
             if (!source.IsComposable)
@@ -1338,21 +1374,9 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
 }
 namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Core.V1
 {
-    /// <summary>
-    /// Class containing all extension methods
-    /// </summary>
-    public static class ExtensionMethods
-    {
-    }
 }
 namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1
 {
-    /// <summary>
-    /// Class containing all extension methods
-    /// </summary>
-    public static class ExtensionMethods
-    {
-    }
 }
 namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS
 {
@@ -1365,9 +1389,9 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// Initialize a new GPSContainer object.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        public GPSContainer(global::System.Uri serviceRoot) : 
-                base(serviceRoot, global::Microsoft.OData.Client.ODataProtocolVersion.V4)
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        public GPSContainer(global::System.Uri serviceRoot) :
+            base(serviceRoot, global::Microsoft.OData.Client.ODataProtocolVersion.V4)
         {
             this.ResolveName = new global::System.Func<global::System.Type, string>(this.ResolveNameFromType);
             this.ResolveType = new global::System.Func<string, global::System.Type>(this.ResolveTypeFromName);
@@ -1381,7 +1405,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// in Visual Studio is different from the one indicated in the
         /// server schema, use type-mappers to map between the two.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
             global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1", "Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1");
@@ -1421,7 +1445,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// in Visual Studio is different from the one indicated in the
         /// server schema, use type-mappers to map between the two.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected string ResolveNameFromType(global::System.Type clientType)
         {
             global::Microsoft.OData.Client.OriginalNameAttribute originalNameAttribute = (global::Microsoft.OData.Client.OriginalNameAttribute)global::System.Linq.Enumerable.SingleOrDefault(global::Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, typeof(global::Microsoft.OData.Client.OriginalNameAttribute), true));
@@ -1482,7 +1506,8 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for VehicleGPSSetInGPS in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("VehicleGPSSetInGPS")]
         public global::Microsoft.OData.Client.DataServiceQuery<VehicleGPSType> VehicleGPSSetInGPS
         {
             get
@@ -1494,23 +1519,23 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 return this._VehicleGPSSetInGPS;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<VehicleGPSType> _VehicleGPSSetInGPS;
         /// <summary>
         /// There are no comments for VehicleGPSSetInGPS in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToVehicleGPSSetInGPS(VehicleGPSType vehicleGPSType)
         {
             base.AddObject("VehicleGPSSetInGPS", vehicleGPSType);
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private abstract class GeneratedEdmModel
         {
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::System.Collections.Generic.Dictionary<string, string> ReferencesMap = new global::System.Collections.Generic.Dictionary<string, string>()
                 {
-                    {@"http://juzhendev1:9090/ModelRef635448738937060933/CoreTerms.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
+                    {@"http://bixu-odata-3:9090/ModelRef635624629118997158/CoreTerms.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
   <edmx:DataServices>
     <Schema xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Core.V1"" Alias=""Core"">
       <Term Name=""Description"" Type=""Edm.String"">
@@ -1520,8 +1545,8 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>"},
-                    {@"http://juzhendev1:9090/ModelRef635448738937060933/DeviceModelTerms.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/CoreTerms.csdl"">
+                    {@"http://bixu-odata-3:9090/ModelRef635624629118997158/DeviceModelTerms.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/CoreTerms.csdl"">
     <edmx:Include Alias=""Core"" Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Core.V1"" />
   </edmx:Reference>
   <edmx:DataServices>
@@ -1534,17 +1559,17 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>"},
-                    {@"http://juzhendev1:9090/ModelRef635448738937060933/GPS.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/Location.csdl"">
+                    {@"http://bixu-odata-3:9090/ModelRef635624629118997158/GPS.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/Location.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Location"" Alias=""Loc"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/Map.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/Map.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Map"" Alias=""Map"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/TruckDemo.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/TruckDemo.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo"" Alias=""TruckDemo"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/DeviceModelTerms.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/DeviceModelTerms.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1"" Alias=""IoTDeviceModel"" />
   </edmx:Reference>
   <edmx:DataServices>
@@ -1592,8 +1617,8 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>"},
-                    {@"http://juzhendev1:9090/ModelRef635448738937060933/Location.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/DeviceModelTerms.csdl"">
+                    {@"http://bixu-odata-3:9090/ModelRef635624629118997158/Location.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/DeviceModelTerms.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1"" Alias=""IoTDeviceModel"" />
   </edmx:Reference>
   <edmx:DataServices>
@@ -1610,7 +1635,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>"},
-                    {@"http://juzhendev1:9090/ModelRef635448738937060933/Map.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
+                    {@"http://bixu-odata-3:9090/ModelRef635624629118997158/Map.csdl", @"<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
   <edmx:DataServices>
     <Schema xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Map"" Alias=""Self"">
       <ComplexType Name=""MapType"">
@@ -1622,23 +1647,23 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
   </edmx:DataServices>
 </edmx:Edmx>"},
                 };
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::Microsoft.OData.Edm.IEdmModel ParsedModel = LoadModelFromString();
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/CoreTerms.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/CoreTerms.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Core.V1"" Alias=""Core"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/DeviceModelTerms.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/DeviceModelTerms.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Vocabulary.V1"" Alias=""IoTDeviceModel"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/GPS.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/GPS.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.GPS"" Alias=""GPS"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/Location.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/Location.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Location"" Alias=""Location"" />
   </edmx:Reference>
-  <edmx:Reference Uri=""http://juzhendev1:9090/ModelRef635448738937060933/Map.csdl"">
+  <edmx:Reference Uri=""http://bixu-odata-3:9090/ModelRef635624629118997158/Map.csdl"">
     <edmx:Include Namespace=""Microsoft.OData.SampleService.Models.ModelRefDemo.Map"" Alias=""Map"" />
   </edmx:Reference>
   <edmx:DataServices>
@@ -1710,22 +1735,23 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             public static global::Microsoft.OData.Edm.IEdmModel GetInstance()
             {
                 return ParsedModel;
             }
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::System.Xml.XmlReader getReferencedModelFromMap(global::System.Uri uri)
             {
                 string referencedEdmx;
-                if (ReferencesMap.TryGetValue(uri.OriginalString, out referencedEdmx)){
+                if (ReferencesMap.TryGetValue(uri.OriginalString, out referencedEdmx))
+                {
                     return CreateXmlReader(referencedEdmx);
                 }
 
                 return null;
             }
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::Microsoft.OData.Edm.IEdmModel LoadModelFromString()
             {
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
@@ -1738,7 +1764,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                     ((global::System.IDisposable)(reader)).Dispose();
                 }
             }
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::System.Xml.XmlReader CreateXmlReader(string edmxToParse)
             {
                 return global::System.Xml.XmlReader.Create(new global::System.IO.StringReader(edmxToParse));
@@ -1747,14 +1773,15 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for GetDefaultOutsideGeoFenceAlarm in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetDefaultOutsideGeoFenceAlarm")]
         public global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType> GetDefaultOutsideGeoFenceAlarm()
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType>(this, "/GetDefaultOutsideGeoFenceAlarm" + parameterString, true);
+            return this.CreateFunctionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.OutsideGeoFenceAlarmType>("", "GetDefaultOutsideGeoFenceAlarm", true);
         }
         /// <summary>
         /// There are no comments for ResetVehicleSpeedToValue in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetVehicleSpeedToValue")]
         public global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> ResetVehicleSpeedToValue(global::System.Nullable<double> targetValue)
         {
             return new global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType>(this, this.BaseUri.OriginalString.Trim('/') + "/ResetVehicleSpeedToValue", new global::Microsoft.OData.Client.BodyOperationParameter("targetValue", targetValue));
@@ -1769,7 +1796,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for Property Severity in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Severity")]
         public global::System.Nullable<int> Severity
         {
@@ -1785,14 +1812,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("Severity");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<int> _Severity;
         partial void OnSeverityChanging(global::System.Nullable<int> value);
         partial void OnSeverityChanged();
         /// <summary>
         /// There are no comments for Property LastKnownLocation in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("LastKnownLocation")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation LastKnownLocation
         {
@@ -1808,20 +1835,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("LastKnownLocation");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation _LastKnownLocation;
         partial void OnLastKnownLocationChanging(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation value);
         partial void OnLastKnownLocationChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -1840,13 +1867,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// Initialize a new VehicleGPSTypeSingle object.
         /// </summary>
         public VehicleGPSTypeSingle(global::Microsoft.OData.Client.DataServiceContext context, string path)
-            : base(context, path) {}
+            : base(context, path) { }
 
         /// <summary>
         /// Initialize a new VehicleGPSTypeSingle object.
         /// </summary>
         public VehicleGPSTypeSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
-            : base(context, path, isComposable) {}
+            : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new VehicleGPSTypeSingle object.
+        /// </summary>
+        public VehicleGPSTypeSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<VehicleGPSType> query)
+            : base(query) { }
+
     }
     /// <summary>
     /// There are no comments for VehicleGPSType in the schema.
@@ -1862,7 +1896,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// Create a new VehicleGPSType object.
         /// </summary>
         /// <param name="key">Initial value of Key.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static VehicleGPSType CreateVehicleGPSType(string key)
         {
             VehicleGPSType vehicleGPSType = new VehicleGPSType();
@@ -1872,7 +1906,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for Property Key in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Key")]
         public string Key
         {
@@ -1888,14 +1922,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("Key");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _Key;
         partial void OnKeyChanging(string value);
         partial void OnKeyChanged();
         /// <summary>
         /// There are no comments for Property VehicleSpeed in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("VehicleSpeed")]
         public global::System.Nullable<double> VehicleSpeed
         {
@@ -1911,14 +1945,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("VehicleSpeed");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<double> _VehicleSpeed;
         partial void OnVehicleSpeedChanging(global::System.Nullable<double> value);
         partial void OnVehicleSpeedChanged();
         /// <summary>
         /// There are no comments for Property StartLocation in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("StartLocation")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation StartLocation
         {
@@ -1934,14 +1968,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("StartLocation");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation _StartLocation;
         partial void OnStartLocationChanging(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation value);
         partial void OnStartLocationChanged();
         /// <summary>
         /// There are no comments for Property EndLocation in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("EndLocation")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation EndLocation
         {
@@ -1957,14 +1991,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("EndLocation");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation _EndLocation;
         partial void OnEndLocationChanging(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation value);
         partial void OnEndLocationChanged();
         /// <summary>
         /// There are no comments for Property CurrentLocation in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CurrentLocation")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation CurrentLocation
         {
@@ -1980,14 +2014,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("CurrentLocation");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation _CurrentLocation;
         partial void OnCurrentLocationChanging(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation value);
         partial void OnCurrentLocationChanged();
         /// <summary>
         /// There are no comments for Property Map in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Map")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Map.MapType Map
         {
@@ -2003,14 +2037,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("Map");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Map.MapType _Map;
         partial void OnMapChanging(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Map.MapType value);
         partial void OnMapChanged();
         /// <summary>
         /// There are no comments for Property LostSignalAlarm in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("LostSignalAlarm")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.GPSLostSignalAlarmType LostSignalAlarm
         {
@@ -2026,20 +2060,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("LostSignalAlarm");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.GPSLostSignalAlarmType _LostSignalAlarm;
         partial void OnLostSignalAlarmChanging(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.GPSLostSignalAlarmType value);
         partial void OnLostSignalAlarmChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -2053,14 +2087,15 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetVehicleSpeed")]
         public global::Microsoft.OData.Client.DataServiceQuerySingle<double> GetVehicleSpeed()
         {
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context);
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<double>(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.GetVehicleSpeed" + parameterString, false);
+
+            return this.Context.CreateFunctionQuerySingle<double>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.GetVehicleSpeed", false);
         }
         /// <summary>
         /// There are no comments for ResetVehicleSpeed in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetVehicleSpeed")]
         public global::Microsoft.OData.Client.DataServiceActionQuery ResetVehicleSpeed(global::System.Nullable<double> targetValue)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
@@ -2103,6 +2138,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for GetVehicleSpeed in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetVehicleSpeed")]
         public static global::Microsoft.OData.Client.DataServiceQuerySingle<double> GetVehicleSpeed(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> source)
         {
             if (!source.IsComposable)
@@ -2110,12 +2146,12 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<double>(source.Context, source.GetPath("Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.GetVehicleSpeed" + parameterString), false);
+            return source.CreateFunctionQuerySingle<double>("Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.GetVehicleSpeed", false);
         }
         /// <summary>
         /// There are no comments for ResetVehicleSpeed in the schema.
         /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetVehicleSpeed")]
         public static global::Microsoft.OData.Client.DataServiceActionQuery ResetVehicleSpeed(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.VehicleGPSType> source, global::System.Nullable<double> targetValue)
         {
             if (!source.IsComposable)
@@ -2140,7 +2176,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// </summary>
         /// <param name="lat">Initial value of Lat.</param>
         /// <param name="long">Initial value of Long.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static GeoLocation CreateGeoLocation(double lat, double @long)
         {
             GeoLocation geoLocation = new GeoLocation();
@@ -2151,7 +2187,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for Property Lat in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Lat")]
         public double Lat
         {
@@ -2167,14 +2203,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("Lat");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private double _Lat;
         partial void OnLatChanging(double value);
         partial void OnLatChanged();
         /// <summary>
         /// There are no comments for Property Long in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Long")]
         public double Long
         {
@@ -2190,20 +2226,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("Long");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private double _Long;
         partial void OnLongChanging(double value);
         partial void OnLongChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -2221,7 +2257,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for Property Severity in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Severity")]
         public global::System.Nullable<int> Severity
         {
@@ -2237,14 +2273,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("Severity");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<int> _Severity;
         partial void OnSeverityChanging(global::System.Nullable<int> value);
         partial void OnSeverityChanged();
         /// <summary>
         /// There are no comments for Property Location in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Location")]
         public global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation Location
         {
@@ -2260,20 +2296,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("Location");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation _Location;
         partial void OnLocationChanging(global::Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location.GeoLocation value);
         partial void OnLocationChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -2281,12 +2317,6 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(property));
             }
         }
-    }
-    /// <summary>
-    /// Class containing all extension methods
-    /// </summary>
-    public static class ExtensionMethods
-    {
     }
 }
 namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Map
@@ -2300,7 +2330,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
         /// <summary>
         /// There are no comments for Property ProviderName in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProviderName")]
         public string ProviderName
         {
@@ -2316,14 +2346,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("ProviderName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _ProviderName;
         partial void OnProviderNameChanging(string value);
         partial void OnProviderNameChanged();
         /// <summary>
         /// There are no comments for Property Uri in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Uri")]
         public string Uri
         {
@@ -2339,14 +2369,14 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("Uri");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _Uri;
         partial void OnUriChanging(string value);
         partial void OnUriChanged();
         /// <summary>
         /// There are no comments for Property MBytesDownloaded in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("MBytesDownloaded")]
         public global::System.Nullable<double> MBytesDownloaded
         {
@@ -2362,20 +2392,20 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 this.OnPropertyChanged("MBytesDownloaded");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Nullable<double> _MBytesDownloaded;
         partial void OnMBytesDownloadedChanging(global::System.Nullable<double> value);
         partial void OnMBytesDownloadedChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -2384,11 +2414,4 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
             }
         }
     }
-    /// <summary>
-    /// Class containing all extension methods
-    /// </summary>
-    public static class ExtensionMethods
-    {
-    }
 }
-

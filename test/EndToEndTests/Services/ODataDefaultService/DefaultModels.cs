@@ -154,10 +154,15 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
     }
 
+    public abstract class AbstractEntity : ClrObject
+    {
+        
+    }
+
     /// <summary>
     /// The class represents the Order model type.
     /// </summary>
-    public class Order : ClrObject
+    public class Order : AbstractEntity
     {
         private EntityCollection<OrderDetail> orderDetails;
 
@@ -196,7 +201,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     /// <summary>
     /// The class represents the OrderDetail model type.
     /// </summary>
-    public class OrderDetail : ClrObject
+    public class OrderDetail : AbstractEntity
     {
         public int OrderID { get; set; }
         public int ProductID { get; set; }

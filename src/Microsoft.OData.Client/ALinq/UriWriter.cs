@@ -257,7 +257,19 @@ namespace Microsoft.OData.Client
         {
             if ((ResourceExpressionType)rse.NodeType == ResourceExpressionType.ResourceNavigationProperty)
             {
-                this.Visit(rse.Source);
+                if (rse.IsOperationInvocation && !(rse.Source is QueryableResourceExpression))
+                {
+                    var normalizerRewrites = new Dictionary<Expression, Expression>(ReferenceEqualityComparer<Expression>.Instance);
+                    var e = Evaluator.PartialEval(rse.Source);
+                    e = ExpressionNormalizer.Normalize(e, normalizerRewrites);
+                    e = ResourceBinder.Bind(e, this.context);
+                    this.Visit(e);
+                }
+                else
+                {
+                    this.Visit(rse.Source);
+                }
+
                 this.uriBuilder.Append(UriHelper.FORWARDSLASH).Append(this.ExpressionToString(rse.MemberExpression, /*inPath*/ true));
             }
             else if (rse.MemberExpression != null)

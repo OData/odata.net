@@ -64,9 +64,9 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.PublicApi
             }
             string outputString = File.ReadAllText(outputFile);
             Assert.IsTrue(
-              string.Compare(baselineString, outputString) == 0,
-              "Base line file {0} and output file {1} do not match, please check.\n" +
-              "To update the baseline, please run:\n\n" +
+              string.Compare(baselineString, outputString, StringComparison.Ordinal) == 0,
+              "Base line file {0} and output file {1} do not match, please check." + Environment.NewLine +
+              "To update the baseline, please run:" + Environment.NewLine + Environment.NewLine +
               "copy /y \"{1}\" \"{0}\"",
               @"test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\PublicApi\PublicApi.bsl",
               outputFile);

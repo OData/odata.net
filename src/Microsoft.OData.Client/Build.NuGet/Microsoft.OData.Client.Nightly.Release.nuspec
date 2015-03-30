@@ -94,5 +94,6 @@ OData .NET library is open source at http://odata.codeplex.com</description>
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\SyntacticAst\SystemToken.cs" target="src\Microsoft.OData.Core\UriParser\SyntacticAst\SystemToken.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\SyntacticAst\UnaryOperatorToken.cs" target="src\Microsoft.OData.Core\UriParser\SyntacticAst\UnaryOperatorToken.cs" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
+    <file src="$SourcesRoot$\_BuildCommon\ProductVersion\AssemblyInfoCommon.cs" target="src\AssemblyInfoCommon.cs" />
   </files>
 </package>

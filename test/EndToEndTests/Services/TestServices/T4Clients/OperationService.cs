@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 2/10/2015 1:24:36 PM
+// Generation date: 3/19/2015 5:05:02 PM
 namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
 {
     /// <summary>
@@ -19,7 +19,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <summary>
         /// Initialize a new OperationService object.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public OperationService(global::System.Uri serviceRoot) :
             base(serviceRoot, global::Microsoft.OData.Client.ODataProtocolVersion.V4)
         {
@@ -35,7 +35,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// in Visual Studio is different from the one indicated in the
         /// server schema, use type-mappers to map between the two.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
             global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.Test.OData.Services.ODataOperationService", "Microsoft.Test.OData.Services.TestServices.OperationServiceReference");
@@ -50,7 +50,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// in Visual Studio is different from the one indicated in the
         /// server schema, use type-mappers to map between the two.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected string ResolveNameFromType(global::System.Type clientType)
         {
             if (clientType.Namespace.Equals("Microsoft.Test.OData.Services.TestServices.OperationServiceReference", global::System.StringComparison.Ordinal))
@@ -62,7 +62,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <summary>
         /// There are no comments for Customers in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public global::Microsoft.OData.Client.DataServiceQuery<Customer> Customers
         {
             get
@@ -74,12 +74,12 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 return this._Customers;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<Customer> _Customers;
         /// <summary>
         /// There are no comments for Orders in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public global::Microsoft.OData.Client.DataServiceQuery<Order> Orders
         {
             get
@@ -91,12 +91,12 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 return this._Orders;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<Order> _Orders;
         /// <summary>
         /// There are no comments for Customers in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToCustomers(Customer customer)
         {
             base.AddObject("Customers", customer);
@@ -104,17 +104,17 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <summary>
         /// There are no comments for Orders in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public void AddToOrders(Order order)
         {
             base.AddObject("Orders", order);
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private abstract class GeneratedEdmModel
         {
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::Microsoft.OData.Edm.IEdmModel ParsedModel = LoadModelFromString();
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
     <Schema Namespace=""Microsoft.Test.OData.Services.ODataOperationService"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -237,12 +237,12 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             public static global::Microsoft.OData.Edm.IEdmModel GetInstance()
             {
                 return ParsedModel;
             }
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::Microsoft.OData.Edm.IEdmModel LoadModelFromString()
             {
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
@@ -255,7 +255,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                     ((global::System.IDisposable)(reader)).Dispose();
                 }
             }
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
             private static global::System.Xml.XmlReader CreateXmlReader(string edmxToParse)
             {
                 return global::System.Xml.XmlReader.Create(new global::System.IO.StringReader(edmxToParse));
@@ -301,7 +301,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <param name="street">Initial value of Street.</param>
         /// <param name="city">Initial value of City.</param>
         /// <param name="postalCode">Initial value of PostalCode.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static Address CreateAddress(string street, string city, string postalCode)
         {
             Address address = new Address();
@@ -313,7 +313,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <summary>
         /// There are no comments for Property Street in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public string Street
         {
             get
@@ -328,14 +328,14 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("Street");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _Street;
         partial void OnStreetChanging(string value);
         partial void OnStreetChanged();
         /// <summary>
         /// There are no comments for Property City in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public string City
         {
             get
@@ -350,14 +350,14 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("City");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _City;
         partial void OnCityChanging(string value);
         partial void OnCityChanged();
         /// <summary>
         /// There are no comments for Property PostalCode in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public string PostalCode
         {
             get
@@ -372,20 +372,20 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("PostalCode");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _PostalCode;
         partial void OnPostalCodeChanging(string value);
         partial void OnPostalCodeChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -405,7 +405,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <param name="street">Initial value of Street.</param>
         /// <param name="city">Initial value of City.</param>
         /// <param name="postalCode">Initial value of PostalCode.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static HomeAddress CreateHomeAddress(string street, string city, string postalCode)
         {
             HomeAddress homeAddress = new HomeAddress();
@@ -417,7 +417,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <summary>
         /// There are no comments for Property FamilyName in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public string FamilyName
         {
             get
@@ -432,7 +432,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("FamilyName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _FamilyName;
         partial void OnFamilyNameChanging(string value);
         partial void OnFamilyNameChanged();
@@ -449,7 +449,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <param name="city">Initial value of City.</param>
         /// <param name="postalCode">Initial value of PostalCode.</param>
         /// <param name="companyName">Initial value of CompanyName.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static CompanyAddress CreateCompanyAddress(string street, string city, string postalCode, string companyName)
         {
             CompanyAddress companyAddress = new CompanyAddress();
@@ -462,7 +462,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <summary>
         /// There are no comments for Property CompanyName in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public string CompanyName
         {
             get
@@ -477,7 +477,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("CompanyName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _CompanyName;
         partial void OnCompanyNameChanging(string value);
         partial void OnCompanyNameChanged();
@@ -508,7 +508,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <summary>
         /// There are no comments for Orders in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.Order> Orders
         {
             get
@@ -524,7 +524,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 return this._Orders;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.Order> _Orders;
     }
     /// <summary>
@@ -544,7 +544,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <param name="firstName">Initial value of FirstName.</param>
         /// <param name="lastName">Initial value of LastName.</param>
         /// <param name="level">Initial value of Level.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static Customer CreateCustomer(int ID, string firstName, string lastName, global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.CustomerLevel level)
         {
             Customer customer = new Customer();
@@ -557,7 +557,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <summary>
         /// There are no comments for Property ID in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public int ID
         {
             get
@@ -572,14 +572,14 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("ID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _ID;
         partial void OnIDChanging(int value);
         partial void OnIDChanged();
         /// <summary>
         /// There are no comments for Property FirstName in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public string FirstName
         {
             get
@@ -594,14 +594,14 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("FirstName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _FirstName;
         partial void OnFirstNameChanging(string value);
         partial void OnFirstNameChanged();
         /// <summary>
         /// There are no comments for Property LastName in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public string LastName
         {
             get
@@ -616,14 +616,14 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("LastName");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private string _LastName;
         partial void OnLastNameChanging(string value);
         partial void OnLastNameChanged();
         /// <summary>
         /// There are no comments for Property Address in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.Address Address
         {
             get
@@ -638,14 +638,14 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("Address");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.Address _Address;
         partial void OnAddressChanging(global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.Address value);
         partial void OnAddressChanged();
         /// <summary>
         /// There are no comments for Property Emails in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public global::System.Collections.ObjectModel.ObservableCollection<string> Emails
         {
             get
@@ -660,14 +660,14 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("Emails");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Collections.ObjectModel.ObservableCollection<string> _Emails = new global::System.Collections.ObjectModel.ObservableCollection<string>();
         partial void OnEmailsChanging(global::System.Collections.ObjectModel.ObservableCollection<string> value);
         partial void OnEmailsChanged();
         /// <summary>
         /// There are no comments for Property Level in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.CustomerLevel Level
         {
             get
@@ -682,14 +682,14 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("Level");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.CustomerLevel _Level;
         partial void OnLevelChanging(global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.CustomerLevel value);
         partial void OnLevelChanged();
         /// <summary>
         /// There are no comments for Property Orders in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.Order> Orders
         {
             get
@@ -704,20 +704,20 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("Orders");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.Order> _Orders = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.Order>(null, global::Microsoft.OData.Client.TrackingMode.None);
         partial void OnOrdersChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.Order> value);
         partial void OnOrdersChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -791,7 +791,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <summary>
         /// There are no comments for Customer in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.CustomerSingle Customer
         {
             get
@@ -807,7 +807,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 return this._Customer;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.CustomerSingle _Customer;
     }
     /// <summary>
@@ -826,7 +826,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <param name="ID">Initial value of ID.</param>
         /// <param name="orderDate">Initial value of OrderDate.</param>
         /// <param name="customer">Initial value of Customer.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static Order CreateOrder(int ID, global::System.DateTimeOffset orderDate, global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.Customer customer)
         {
             Order order = new Order();
@@ -842,7 +842,7 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         /// <summary>
         /// There are no comments for Property ID in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public int ID
         {
             get
@@ -857,14 +857,14 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("ID");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private int _ID;
         partial void OnIDChanging(int value);
         partial void OnIDChanged();
         /// <summary>
         /// There are no comments for Property OrderDate in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public global::System.DateTimeOffset OrderDate
         {
             get
@@ -879,14 +879,14 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("OrderDate");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.DateTimeOffset _OrderDate;
         partial void OnOrderDateChanging(global::System.DateTimeOffset value);
         partial void OnOrderDateChanged();
         /// <summary>
         /// There are no comments for Property Notes in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public global::System.Collections.ObjectModel.ObservableCollection<string> Notes
         {
             get
@@ -901,14 +901,14 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("Notes");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::System.Collections.ObjectModel.ObservableCollection<string> _Notes = new global::System.Collections.ObjectModel.ObservableCollection<string>();
         partial void OnNotesChanging(global::System.Collections.ObjectModel.ObservableCollection<string> value);
         partial void OnNotesChanged();
         /// <summary>
         /// There are no comments for Property Customer in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.Customer Customer
         {
             get
@@ -923,20 +923,20 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
                 this.OnPropertyChanged("Customer");
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         private global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.Customer _Customer;
         partial void OnCustomerChanging(global::Microsoft.Test.OData.Services.TestServices.OperationServiceReference.Customer value);
         partial void OnCustomerChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// The value of the property is changed
         /// </summary>
         /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         protected virtual void OnPropertyChanged(string property)
         {
             if ((this.PropertyChanged != null))
@@ -1139,3 +1139,4 @@ namespace Microsoft.Test.OData.Services.TestServices.OperationServiceReference
         }
     }
 }
+

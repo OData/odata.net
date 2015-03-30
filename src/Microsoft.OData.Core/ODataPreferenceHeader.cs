@@ -306,6 +306,98 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// Property to get and set the "odata.continue-on-error" preference to the "Prefer" header on the underlying IODataRequestMessage or
+        /// the "Preference-Applied" header on the underlying IODataResponseMessage.
+        /// Setting true sets the "odata.continue-on-error" preference.
+        /// Setting false clears the "odata.continue-on-error" preference.
+        /// Returns true of the "odata.continue-on-error" preference is on the header.  Otherwise returns false if the "odata.continue-on-error" is not on the header.
+        /// </summary>
+        public bool ContinueOnError
+        {
+            get
+            {
+                return this.Get(ODataContinueOnErrorPreferenceToken) != null;
+            }
+
+            set
+            {
+                if (value)
+                {
+                    this.Set(ContinueOnErrorPreference);
+                }
+                else
+                {
+                    this.Clear(ODataContinueOnErrorPreferenceToken);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Property to get and set the "odata.maxpagesize" preference to the "Prefer" header on the underlying IODataRequestMessage or
+        /// the "Preference-Applied" header on the underlying IODataResponseMessage.
+        /// Setting N sets the "odata.maxpagesize=N" preference.
+        /// Setting null clears the "odata.maxpagesize" preference.
+        /// Returns N if the "odata.maxpagesize=N" preference is on the header.
+        /// Returning null indicates that "odata.maxpagesize" is not on the header.
+        /// </summary>
+        public int? MaxPageSize
+        {
+            get
+            {
+                var maxPageSizeHttpHeaderValueElement = this.Get(ODataMaxPageSizePreferenceToken);
+
+                // Should check maxPageSizeHttpHeaderValueElement.Value != null.
+                // Should do int.TryParse.
+                // If either of the above fail, should throw an ODataException for parsing, not a System.Exception (such as FormatException, etc.).
+                if (maxPageSizeHttpHeaderValueElement != null)
+                {
+                    return int.Parse(maxPageSizeHttpHeaderValueElement.Value, CultureInfo.InvariantCulture);
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (value.HasValue)
+                {
+                    this.Set(new HttpHeaderValueElement(ODataMaxPageSizePreferenceToken, string.Format(CultureInfo.InvariantCulture, "{0}", value.Value), EmptyParameters));
+                }
+                else
+                {
+                    this.Clear(ODataMaxPageSizePreferenceToken);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Property to get and set the "odata.track-changes" preference to the "Prefer" header on the underlying IODataRequestMessage or
+        /// the "Preference-Applied" header on the underlying IODataResponseMessage.
+        /// Setting true sets the "odata.track-changes" preference.
+        /// Setting false clears the "odata.track-changes" preference.
+        /// Returns true of the "odata.track-changes" preference is on the header.  Otherwise returns false if the "odata.track-changes" is not on the header.
+        /// </summary>
+        public bool TrackChanges
+        {
+            get
+            {
+                return this.Get(ODataTrackChangesPreferenceToken) != null;
+            }
+
+            set
+            {
+                if (value)
+                {
+                    this.Set(TrackChangesPreference);
+                }
+                else
+                {
+                    this.Clear(ODataTrackChangesPreferenceToken);
+                }
+            }
+        }
+
+        /// <summary>
         /// Dictionary of preferences in the header.
         /// </summary>
         private HttpHeaderValue Preferences

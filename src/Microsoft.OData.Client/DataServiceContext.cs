@@ -1002,7 +1002,7 @@ namespace Microsoft.OData.Client
         {
             Dictionary<string, string> operationParameters = this.SerializeOperationParameters(parameters);
             ResourceSetExpression rse = new ResourceSetExpression(typeof(IOrderedQueryable<T>), null, Expression.Constant(path), typeof(T), null, CountOption.None, null, null, null, null, functionName, operationParameters, false);
-            return new DataServiceQuery<T>.DataServiceOrderedQuery(rse, new DataServiceQueryProvider(this));
+            return new DataServiceQuery<T>.DataServiceOrderedQuery(rse, new DataServiceQueryProvider(this), isComposable);
         }
 
         /// <summary>Creates a data service single query for function which return single data.</summary>

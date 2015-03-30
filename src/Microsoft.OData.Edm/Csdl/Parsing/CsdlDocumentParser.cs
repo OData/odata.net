@@ -341,7 +341,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 CsdlElement<CsdlEnumType>(CsdlConstants.Element_EnumType, this.OnEnumTypeElement,
                     documentationParser,
                 //// <Member>
-                    CsdlElement<CsdlEnumMember>(CsdlConstants.Element_Member, this.OnEnumMemberElement, documentationParser),
+                    CsdlElement<CsdlEnumMember>(CsdlConstants.Element_Member, this.OnEnumMemberElement, documentationParser, annotationParser),
                 //// <Annotation/>
                     annotationParser),
                 //// </EnumType>

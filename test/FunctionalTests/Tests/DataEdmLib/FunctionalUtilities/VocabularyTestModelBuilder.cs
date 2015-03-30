@@ -1196,6 +1196,19 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
+        public static IEnumerable<string> inlineAnnotationEnumMember()
+        {
+            return new List<string>{@"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""EnumMemberAnnotation"" Type=""Edm.Int32"" />
+    <EnumType Name=""MyEnumType"">
+        <Member Name=""EnumElement1"" Value=""0"">
+            <Annotation Term=""DefaultNamespace.EnumMemberAnnotation"" Int=""5"" />
+        </Member>
+    </EnumType>
+</Schema>"};
+        }
+
         public static IEnumerable<XElement> InlineAnnotationValueTerm()
         {
             return ConvertCsdlsToXElements(@"

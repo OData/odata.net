@@ -1420,8 +1420,8 @@ namespace Microsoft.OData.Core.JsonLight
             // We ignore the type name since we might not have the full model and thus might not be able to resolve it correctly.
             ValidateDataPropertyTypeNameAnnotation(entryState.DuplicatePropertyNamesChecker, propertyName);
 
-            // Ignore the property value
-            this.JsonReader.SkipValue();
+            // Read it as such.
+            this.ReadOpenProperty(entryState, propertyName, propertyWithValue);
             return null;
         }
 
@@ -1569,7 +1569,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_OperationMissingTargetProperty(metadataReferencePropertyName));
             }
-            
+
             // read the end-object node of the target / title pair
             readerContext.JsonReader.ReadEndObject();
 
@@ -1691,7 +1691,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             var operation = ODataJsonLightUtils.CreateODataOperation(this.ContextUriParseResult.MetadataDocumentUri, metadataReferencePropertyName, firstActionOrFunction, out isAction);
-            
+
             if (isAction)
             {
                 readerContext.AddActionToEntry((ODataAction)operation);

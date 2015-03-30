@@ -1474,6 +1474,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\PathSelectItem.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\PathSelectItem.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\PathTemplateSegment.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\PathTemplateSegment.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\PropertySegment.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\PropertySegment.cs</Link>
     </Compile>

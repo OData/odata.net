@@ -22,5 +22,6 @@ OData .NET library is open source at http://odata.codeplex.com</description>
     <file src=".NETPortable\v4.0\Microsoft.Spatial\1041\Microsoft.Spatial.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\ja" />
     <file src="$SourcesRoot$\src\Microsoft.Spatial\**\*.cs" target="src\Microsoft.Spatial" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
+    <file src="$SourcesRoot$\_BuildCommon\ProductVersion\AssemblyInfoCommon.cs" target="src\AssemblyInfoCommon.cs" />
   </files>
 </package>
