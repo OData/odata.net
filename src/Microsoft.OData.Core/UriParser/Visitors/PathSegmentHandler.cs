@@ -148,5 +148,14 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Handle a PathTemplateSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public virtual void Handle(PathTemplateSegment segment)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

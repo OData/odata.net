@@ -731,6 +731,24 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
+        public void Parsing_InlineAnnotationEnumMember()
+        {
+            var model = this.GetParserResult(VocabularyTestModelBuilder.inlineAnnotationEnumMember());
+            var valueAnnotations = model.VocabularyAnnotations.OfType<IEdmValueAnnotation>();
+            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotation count.");
+
+            //Call FindVocabularyAnnotations to get vocabulary annotations.
+            var enumType = model.FindDeclaredType("DefaultNamespace.MyEnumType") as IEdmEnumType;
+            var vocabularyAnnotatable = enumType.Members.First();
+            var valueAnnotations1 = model.FindVocabularyAnnotations(vocabularyAnnotatable).OfType<IEdmValueAnnotation>();
+            Assert.AreEqual(1, valueAnnotations1.Count(), "Invalid value annotation count.");
+
+            var intValue = valueAnnotations1.First().Value as IEdmIntegerConstantExpression;
+            Assert.IsNotNull(intValue, "Invalid integer value.");
+            Assert.AreEqual(5, intValue.Value, "Invalid integer value.");
+        }
+
+        [TestMethod]
         public void Parsing_InlineAnnotationValueTerm()
         {
             var inLineAnnotationValueTerm = VocabularyTestModelBuilder.InlineAnnotationValueTerm();

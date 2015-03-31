@@ -118,6 +118,22 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             return orders;
         }
 
+        public IList<AbstractEntity> GetOrderAndOrderDetails(Customer customer)
+        {
+            var list = new List<AbstractEntity>();
+            list.AddRange(customer.Orders);
+            foreach (var order in customer.Orders)
+            {
+                foreach (var od in order.OrderDetails)
+                {
+                    od.EntitySetName = "OrderDetails";
+                    list.Add(od);
+                }
+            }
+
+            return list;
+        }
+
         public Collection<string> ResetBossEmail(List<string> emails)
         {
             var boss = GetRootQuery("Boss") as Customer;

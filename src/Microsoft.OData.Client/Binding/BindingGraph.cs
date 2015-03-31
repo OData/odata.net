@@ -402,7 +402,7 @@ namespace Microsoft.OData.Client
         public void RemoveNonTrackedEntities()
         {
             // Cleanup all untracked entities
-            foreach (var entity in this.graph.Select(o => BindingEntityInfo.IsEntityType(o.GetType(), this.observer.Context.Model) && !this.observer.IsContextTrackingEntity(o)))
+            foreach (var entity in this.graph.Select(o => !this.observer.IsContextTrackingEntity(o) && BindingEntityInfo.IsEntityType(o.GetType(), this.observer.Context.Model)))
             {
                 this.graph.ClearEdgesForVertex(this.graph.LookupVertex(entity));
             }

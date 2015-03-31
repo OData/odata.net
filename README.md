@@ -65,6 +65,13 @@ Each solution contains some test projects. Please open it, build it and run all 
 
 **One-click build and test script will be available in the future.*
 
+### Nightly Builds
+
+We keep uploading the daily nightly signed NuGet packages for ODataLib/EdmLib/ClientLib/SpatialLib to our MyGet feed: https://www.myget.org/F/odlnightly.
+
+You can query the latest nightly NuGet packages using the following MAGIC OData query:
+https://www.myget.org/F/odlnightly/Packages?$select=Id,Version&$orderby=Version%20desc&$top=4&$format=application/json
+
 ## Community
 ### Contribution
 Please refer to the [CONTRIBUTION.md](https://github.com/OData/odata.net/blob/master/CONTRIBUTION.md).

@@ -9,6 +9,7 @@
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <RootNamespace>System</RootNamespace>
     <ProjectGuid>{E4167281-C1AF-48C1-9BBD-0453BFB8CE2D}</ProjectGuid>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <EnableStyleCop>false</EnableStyleCop>
   </PropertyGroup>
   <Import Project="..\Build.props" />

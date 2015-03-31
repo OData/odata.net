@@ -656,7 +656,7 @@ public interface Microsoft.OData.Edm.IEdmEntityType : IEdmElement, IEdmNamedElem
 public interface Microsoft.OData.Edm.IEdmEntityTypeReference : IEdmElement, IEdmStructuredTypeReference, IEdmTypeReference {
 }
 
-public interface Microsoft.OData.Edm.IEdmEnumMember : IEdmElement, IEdmNamedElement {
+public interface Microsoft.OData.Edm.IEdmEnumMember : IEdmElement, IEdmNamedElement, IEdmVocabularyAnnotatable {
 	Microsoft.OData.Edm.IEdmEnumType DeclaringType  { public abstract get; }
 	Microsoft.OData.Edm.Values.IEdmPrimitiveValue Value  { public abstract get; }
 }
@@ -2600,7 +2600,7 @@ public class Microsoft.OData.Edm.Library.EdmEntityTypeReference : Microsoft.ODat
 	public EdmEntityTypeReference (Microsoft.OData.Edm.IEdmEntityType entityType, bool isNullable)
 }
 
-public class Microsoft.OData.Edm.Library.EdmEnumMember : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmEnumMember, IEdmNamedElement {
+public class Microsoft.OData.Edm.Library.EdmEnumMember : Microsoft.OData.Edm.Library.EdmNamedElement, IEdmElement, IEdmEnumMember, IEdmNamedElement, IEdmVocabularyAnnotatable {
 	public EdmEnumMember (Microsoft.OData.Edm.IEdmEnumType declaringType, string name, Microsoft.OData.Edm.Values.IEdmPrimitiveValue value)
 
 	Microsoft.OData.Edm.IEdmEnumType DeclaringType  { public virtual get; }
@@ -5648,6 +5648,16 @@ public sealed class Microsoft.OData.Core.UriParser.Semantic.PathSelectItem : Mic
 	public virtual T TranslateWith (SelectItemTranslator`1 translator)
 }
 
+public sealed class Microsoft.OData.Core.UriParser.Semantic.PathTemplateSegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
+	public PathTemplateSegment (string literalText)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	string LiteralText  { [CompilerGeneratedAttribute(),]public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
 public sealed class Microsoft.OData.Core.UriParser.Semantic.PropertySegment : Microsoft.OData.Core.UriParser.Semantic.ODataPathSegment {
 	public PropertySegment (Microsoft.OData.Edm.IEdmStructuralProperty property)
 
@@ -5882,6 +5892,7 @@ public abstract class Microsoft.OData.Core.UriParser.Visitors.PathSegmentHandler
 	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.OpenPropertySegment segment)
 	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.OperationImportSegment segment)
 	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.OperationSegment segment)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.PathTemplateSegment segment)
 	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.PropertySegment segment)
 	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.SingletonSegment segment)
 	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.TypeSegment segment)
@@ -5902,6 +5913,7 @@ public abstract class Microsoft.OData.Core.UriParser.Visitors.PathSegmentTransla
 	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.OpenPropertySegment segment)
 	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.OperationImportSegment segment)
 	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.OperationSegment segment)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.PathTemplateSegment segment)
 	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.PropertySegment segment)
 	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.SingletonSegment segment)
 	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.TypeSegment segment)

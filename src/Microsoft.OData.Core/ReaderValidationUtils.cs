@@ -839,7 +839,7 @@ namespace Microsoft.OData.Core
                     throw new ODataException(Strings.ReaderValidationUtils_EntryWithoutType);
                 }
 
-                throw new ODataException(Strings.ReaderValidationUtils_ValueWithoutType);
+                return null; // supports undeclared property
             }
 
             // Payload types are always nullable.

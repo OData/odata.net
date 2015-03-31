@@ -18,7 +18,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class CsdlSemanticsEnumTypeDefinition : CsdlSemanticsTypeDefinition, IEdmEnumType
     {
-        private readonly CsdlSemanticsSchema context;
         private readonly CsdlEnumType enumeration;
 
         private readonly Cache<CsdlSemanticsEnumTypeDefinition, IEdmPrimitiveType> underlyingTypeCache = new Cache<CsdlSemanticsEnumTypeDefinition, IEdmPrimitiveType>();
@@ -30,7 +29,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public CsdlSemanticsEnumTypeDefinition(CsdlSemanticsSchema context, CsdlEnumType enumeration)
             : base(enumeration)
         {
-            this.context = context;
+            this.Context = context;
             this.enumeration = enumeration;
         }
 
@@ -39,7 +38,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.underlyingTypeCache.GetValue(this, ComputeUnderlyingTypeFunc, null); }
         }
 
-        IEnumerable<IEdmEnumMember> IEdmEnumType.Members
+        public IEnumerable<IEdmEnumMember> Members
         {
             get { return this.membersCache.GetValue(this, ComputeMembersFunc, null); }
         }
@@ -56,7 +55,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         
         public string Namespace
         {
-            get { return this.context.Namespace; }
+            get { return this.Context.Namespace; }
         }
 
         string IEdmNamedElement.Name
@@ -71,7 +70,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public override CsdlSemanticsModel Model
         {
-            get { return this.context.Model; }
+            get { return this.Context.Model; }
         }
 
         public override CsdlElement Element
@@ -79,9 +78,15 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.enumeration; }
         }
 
+        public CsdlSemanticsSchema Context
+        {
+            get;
+            private set;
+        }
+
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
         {
-            return this.Model.WrapInlineVocabularyAnnotations(this, this.context);
+            return this.Model.WrapInlineVocabularyAnnotations(this, this.Context);
         }
 
         private IEdmPrimitiveType ComputeUnderlyingType()
@@ -118,7 +123,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     }
                     else
                     {
-                        semanticsMember = new BadEnumMember(this, member.Name, new EdmError[] { new EdmError(member.Location ?? this.Location, EdmErrorCode.EnumMemberValueOutOfRange, Edm.Strings.CsdlSemantics_EnumMemberValueOutOfRange) });
+                        semanticsMember = new CsdlSemanticsEnumMember(this, member);
                     }
 
                     semanticsMember.SetIsValueExplicit(this.Model, false);

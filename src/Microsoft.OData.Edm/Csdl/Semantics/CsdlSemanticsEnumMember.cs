@@ -5,9 +5,12 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Values;
+using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Values;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
@@ -55,9 +58,26 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.member; }
         }
 
+        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
+        {
+            return this.Model.WrapInlineVocabularyAnnotations(this, this.declaringType.Context);
+        }
+
         private IEdmPrimitiveValue ComputeValue()
         {
-            return new EdmIntegerConstant(new EdmPrimitiveTypeReference(this.DeclaringType.UnderlyingType, false), this.member.Value.Value);
+            if (this.member.Value == null)
+            {
+                return new BadPrimitiveValue(
+                    new EdmPrimitiveTypeReference(this.DeclaringType.UnderlyingType, false),
+                    new EdmError[]
+                    {
+                        new EdmError(member.Location ?? this.Location, EdmErrorCode.EnumMemberValueOutOfRange, Edm.Strings.CsdlSemantics_EnumMemberValueOutOfRange)
+                    });
+            }
+            else
+            {
+                return new EdmIntegerConstant(new EdmPrimitiveTypeReference(this.DeclaringType.UnderlyingType, false), this.member.Value.Value);
+            }
         }
     }
 }

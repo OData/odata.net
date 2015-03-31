@@ -97,28 +97,6 @@ namespace AstoriaUnitTests.Tests
                         ContentType = UnitTestsUtil.JsonLightMimeType,
                         ExpectedErrorStatusCodeForDeclaredProperty = 400,
                     },
-                    // Wrong value type in JSON
-                    new UpdatePutPropertyTestCase
-                    {
-                        Payload = "{ value : {} }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
-                        // Since we're using V1 provider we will fail with 500 inside the provider, for V1 Astoria passed the value to V1 provider regardless of the desired value.
-                        // The server doesn't fail on the invalid payload and sends it to the provider as is. This was triaged as Won't fix.
-                        ExpectedErrorStatusCodeForDeclaredProperty = 400,
-                        // This looks like a complex value in open property, but it doesn't have a typename.
-                        ExpectedErrorStatusCodeForOpenProperty = 400,
-                    },
-                    // Wrong value type in JSON
-                    new UpdatePutPropertyTestCase
-                    {
-                        Payload = "{ value : [] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
-                        // Since we're using V1 provider we will fail with 500 inside the provider, for V1 Astoria passed the value to V1 provider regardless of the desired value.
-                        // The server doesn't fail on the invalid payload and sends it to the provider as is. This was triaged as Won't fix.
-                        ExpectedErrorStatusCodeForDeclaredProperty = 400,
-                        // For open property this fails correctly, since we can't figure out what the payload is.
-                        ExpectedErrorStatusCodeForOpenProperty = 400,
-                    },
                     // Wrong property name in JSON
                     new UpdatePutPropertyTestCase
                     {
@@ -413,26 +391,6 @@ namespace AstoriaUnitTests.Tests
                             Payload = "<ads:Address adsm:type='" + typeof(Address).FullName + "' xmlns:ads=\"http://docs.oasis-open.org/odata/ns/data\" xmlns:adsm=\"http://docs.oasis-open.org/odata/ns/metadata\"" +
                                         "><ads:City>Redmond</ads:City></ads:Address>",
                             ContentType = UnitTestsUtil.MimeApplicationXml,
-                        },
-                        // XML payload without type
-                        new UpdatePutPropertyTestCase
-                        {
-                            Payload = "<ads:Address xmlns:ads=\"http://docs.oasis-open.org/odata/ns/data\" xmlns:adsm=\"http://docs.oasis-open.org/odata/ns/metadata\"" +
-                                        "><ads:City>Redmond</ads:City></ads:Address>",
-                            ContentType = UnitTestsUtil.MimeApplicationXml,
-                            // Will fail for open property since the value is treated as a string - and it has elements in it
-                            ExpectedErrorStatusCodeForOpenProperty = 400
-                        },
-                        // XML payload with wrong type
-                        new UpdatePutPropertyTestCase
-                        {
-                            Payload = "<ads:Address adsm:type='Edm.String' xmlns:ads=\"http://docs.oasis-open.org/odata/ns/data\" xmlns:adsm=\"http://docs.oasis-open.org/odata/ns/metadata\"" +
-                                        "><ads:City>Redmond</ads:City></ads:Address>",
-                            ContentType = UnitTestsUtil.MimeApplicationXml,
-                            // Metadata type should be used if exists (i.e. not an open property)
-                            ExpectedErrorStatusCodeForDeclaredProperty = null,
-                            // This fails because the value of the primitive type is not a simple text (it has elements)
-                            ExpectedErrorStatusCodeForOpenProperty = 400
                         },
                         // XML payload with entity type
                         new UpdatePutPropertyTestCase
