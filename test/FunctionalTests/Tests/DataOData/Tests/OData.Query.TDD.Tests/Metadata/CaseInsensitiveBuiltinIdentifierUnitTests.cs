@@ -273,6 +273,17 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Metadata
                 HardCodedTestModel.TestModel,
                 new ODataUriResolver() { EnableCaseInsensitive = true });
         }
+
+        [TestMethod]
+        public void CaseInsensitiveSkipTokenShouldWork()
+        {
+            this.TestCaseInsensitiveBuiltIn(
+                "People?$skipToken=foo",
+                "People?$SKIPTOKEN=foo",
+                uriParser => uriParser.ParseSkipToken(),
+                val => val.Should().Be("foo"),
+                /*errorMessage*/ null);
+        }
         #endregion
 
         #region builtin functions Tests
