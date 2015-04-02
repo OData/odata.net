@@ -13,7 +13,7 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <summary>Classes to represent, construct, parse, serialize and validate entity data models. Supports OData v4 only.</summary>
     <description>Classes to represent, construct, parse, serialize and validate entity data models. Supports OData v4 only. Targets .NET Portable Lib with support for .NET 4.0, SL 5.0, Win Phone 8, Win Phone 8.1, and Win 8. Localized for CHS, CHT, DEU, ESN, FRA, ITA, JPN, KOR and RUS.
-OData .NET library is open source at http://odata.codeplex.com</description>
+OData .NET library is open source at http://github.com/OData/odata.net</description>
   </metadata>
   <files>
     <file src=".NETPortable\v4.0\Microsoft.OData.Edm\Microsoft.OData.Edm.dll" target="lib\portable-net40+sl5+wp8+win8+wpa" />

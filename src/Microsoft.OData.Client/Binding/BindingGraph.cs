@@ -887,11 +887,17 @@ namespace Microsoft.OData.Client
             /// </remarks>
             private IEnumerable<Vertex> UnreachableVertices()
             {
+                if (this.vertices.Count == 0)
+                {
+                    // If there is no vertex in the graph, there is no unreachable vertex as well.
+                    return Enumerable.Empty<Vertex>();
+                }
+
                 Queue<Vertex> q = new Queue<Vertex>();
-                
+
                 this.Root.Color = VertexColor.Gray;
                 q.Enqueue(this.Root);
-                
+
                 while (q.Count != 0)
                 {
                     Vertex current = q.Dequeue();
@@ -904,10 +910,10 @@ namespace Microsoft.OData.Client
                             q.Enqueue(e.Target);
                         }
                     }
-                    
+
                     current.Color = VertexColor.Black;
                 }
-                
+
                 return this.vertices.Values.Where(v => v.Color == VertexColor.White).ToList();
             }
         }

@@ -6,14 +6,10 @@
 
 namespace Microsoft.Test.OData.Tests.Client
 {
-    using System.Collections.ObjectModel;
     using Microsoft.OData.Client;
     using System.Linq;
-    using System.IO;
+    using System.Net;
     using System;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
@@ -74,6 +70,84 @@ namespace Microsoft.Test.OData.Tests.Client
 
             this.EnqueueTestComplete();
         }
+
+        #if !PORTABLELIB && !SILVERLIGHT
+        [TestMethod]
+        public void LoadCollectionExceptionShouldNotRuinEntityTracking()
+        {
+            var ctxwrap = this.CreateWrappedContext<DefaultContainer>();
+            var context = ctxwrap.Context;
+            int[] customerIds = { /*existing*/-9, /*non-existing*/0, /*existing*/-10 };
+            foreach (var customerId in customerIds)
+            {
+                Customer customer = null;
+
+                try
+                {
+                    var query = context.Customer.Where(c => c.CustomerId == customerId);
+                    var collection = new DataServiceCollection<Customer>(query);
+                    customer = collection.Single();
+                }
+                catch (DataServiceQueryException e)
+                {
+                    var inner = e.InnerException as DataServiceClientException;
+                    if (inner != null && inner.StatusCode == (int)HttpStatusCode.NotFound)
+                    {
+                        continue;
+                    }
+
+                    throw;
+                }
+
+                context.SaveChanges();
+            }
+        }
+
+        [TestMethod]
+        public void CanContinueLoadEntityAfterLoadCollectionException()
+        {
+            var ctxwrap = this.CreateWrappedContext<DefaultContainer>();
+            var context = ctxwrap.Context;
+            DataServiceCollection<Customer> collection = null;
+            int[] customerIds = { /*non-existing*/0, /*existing*/-10, /*existing*/-9 };
+            foreach (var customerId in customerIds)
+            {
+                Customer customer = null;
+
+                try
+                {
+                    var query = context.Customer.Where(c => c.CustomerId == customerId);
+
+                    if (collection == null)
+                    {
+                        collection = new DataServiceCollection<Customer>(query);
+                    }
+                    else
+                    {
+                        collection.Load(query);
+                    }
+
+                    customer = collection.Single();
+                }
+                catch (DataServiceQueryException e)
+                {
+                    var inner = e.InnerException as DataServiceClientException;
+                    if (inner != null && inner.StatusCode == (int)HttpStatusCode.NotFound)
+                    {
+                        continue;
+                    }
+
+                    throw;
+                }
+
+                // TODO: why DeleteObject won't trigger the callback in the observer to remove the entity in DataServiceCollection.
+                // context.DeleteObject(customer);
+
+                collection.Remove(customer);
+                context.SaveChanges();
+            }
+        }
+        #endif
         #endregion
 
         #region Remove tests

@@ -23,7 +23,7 @@
     <TargetFrameworkFolderName Condition="$(TargetFrameworkFolderName) == ''">Dev11</TargetFrameworkFolderName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFrameworkVersion)' == 'v3.5'">
-    <TargetFrameworkFolderName Condition="$(TargetFrameworkFolderName) == ''">Orcas</TargetFrameworkFolderName>
+    <TargetFrameworkFolderName Condition="$(TargetFrameworkFolderName) == ''">Net35</TargetFrameworkFolderName>
   </PropertyGroup>
   <!-- This condition needs to above the Desktop one since $(TargetFrameworkIdentifier) == '' is also true for Powershell.
      Hence to make sure Powershell stuff gets copied into the Powershell folder, this condition needs to appear first -->  

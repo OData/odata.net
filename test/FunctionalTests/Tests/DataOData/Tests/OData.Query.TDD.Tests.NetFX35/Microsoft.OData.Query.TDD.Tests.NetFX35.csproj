@@ -71,21 +71,18 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Build.Orcas\Microsoft.OData.Edm.NetFX35.csproj">
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Build.Net35\Microsoft.OData.Edm.NetFX35.csproj">
       <Project>{69a15676-2469-4315-9617-f0ffc04d310d}</Project>
       <Name>Microsoft.OData.Edm.NetFX35</Name>
     </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Build.Orcas\Microsoft.OData.Core.NetFX35.csproj">
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Build.Net35\Microsoft.OData.Core.NetFX35.csproj">
       <Project>{e7b15f0c-0442-458d-9d16-69f3272420bf}</Project>
       <Name>Microsoft.OData.Core.NetFX35</Name>
     </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Build.Orcas\Microsoft.Spatial.NetFX35.csproj">
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Build.Net35\Microsoft.Spatial.NetFX35.csproj">
       <Project>{1104c2e4-076f-47aa-8121-03015ae70630}</Project>
       <Name>Microsoft.Spatial.NetFX35</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
