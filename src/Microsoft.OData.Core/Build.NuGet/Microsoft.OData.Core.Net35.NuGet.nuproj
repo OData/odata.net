@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{883a5381-0cb0-4dd5-9c06-a9b280ce7ba6}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <PropertyGroup>
+    <NugetPackBasePath>$(OutputRootDir)\Product</NugetPackBasePath>
+    <NuGetPackSpecFile>Microsoft.OData.Core.Net35.$(Configuration).nuspec</NuGetPackSpecFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Build.Net35\Microsoft.OData.Core.NetFX35.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Project>{E7B15F0C-0442-458D-9D16-69F3272420BF}</Project>
+      <Name>Microsoft.OData.Core.NetFX35</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(BuildExtensionsPath)\NoTarget.targets" />
+</Project>

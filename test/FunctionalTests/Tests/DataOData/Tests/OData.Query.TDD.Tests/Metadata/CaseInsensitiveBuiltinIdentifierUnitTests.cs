@@ -284,6 +284,17 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Metadata
                 val => val.Should().Be("foo"),
                 /*errorMessage*/ null);
         }
+
+        [TestMethod]
+        public void CaseInsensitiveSkipTokenShouldWork()
+        {
+            this.TestCaseInsensitiveBuiltIn(
+                "People?$skipToken=var1",
+                "People?$SKIPTOKEN=var1",
+                uriParser => uriParser.ParseSkipToken(),
+                val => val.Should().Be("var1"),
+                /*errorMessage*/ null);
+        }
         #endregion
 
         #region builtin functions Tests

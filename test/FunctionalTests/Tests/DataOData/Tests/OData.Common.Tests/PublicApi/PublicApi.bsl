@@ -4828,6 +4828,7 @@ public sealed class Microsoft.OData.Core.ODataUri {
 	Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause SelectAndExpand  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 	System.Uri ServiceRoot  { public get; public set; }
 	System.Nullable`1[[System.Int64]] Skip  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	string SkipToken  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 	System.Nullable`1[[System.Int64]] Top  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 
 	public Microsoft.OData.Core.ODataUri Clone ()
@@ -5056,6 +5057,7 @@ public class Microsoft.OData.Core.UriParser.ODataQueryOptionParser {
 	public Microsoft.OData.Core.UriParser.Semantic.SearchClause ParseSearch ()
 	public Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause ParseSelectAndExpand ()
 	public System.Nullable`1[[System.Int64]] ParseSkip ()
+	public string ParseSkipToken ()
 	public System.Nullable`1[[System.Int64]] ParseTop ()
 }
 
@@ -5100,6 +5102,7 @@ public sealed class Microsoft.OData.Core.UriParser.ODataUriParser {
 	public Microsoft.OData.Core.UriParser.Semantic.SearchClause ParseSearch ()
 	public Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause ParseSelectAndExpand ()
 	public System.Nullable`1[[System.Int64]] ParseSkip ()
+	public string ParseSkipToken ()
 	public System.Nullable`1[[System.Int64]] ParseTop ()
 	public Microsoft.OData.Core.ODataUri ParseUri ()
 }
