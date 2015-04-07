@@ -9,6 +9,7 @@
     <BuildDependsOn>
       GenerateTextStringResources;
       GenerateAssemblyAttributeFile;
+      GenerateVersionConstantsFile;
       ExcludeAssemblyFilesFromSourceAnalysis;
       $(BuildDependsOn);
     </BuildDependsOn>
@@ -51,7 +52,12 @@
   <!-- ********************************************************************************************* -->
   <Target Name="ExcludeAssemblyFilesFromSourceAnalysis">
     <ItemGroup>
-      <Compile Condition="'%(Filename)%(Extension)'=='AssemblyAttributes.cs' or '%(Filename)%(Extension)'=='AssemblyRefs.cs' or '%(Filename)%(Extension)'=='.NETFramework,Version=v4.0.AssemblyAttributes.cs' or '%(Filename)%(Extension)'=='PlatformHelper.cs'">
+      <Compile Condition="'%(Filename)%(Extension)'=='AssemblyAttributes.cs'
+      	               or '%(Filename)%(Extension)'=='AssemblyRefs.cs'
+                       or '%(Filename)%(Extension)'=='.NETFramework,Version=v4.0.AssemblyAttributes.cs'
+                       or '%(Filename)%(Extension)'=='PlatformHelper.cs'
+                       or '%(Filename)%(Extension)'=='VersionConstants.cs'
+                       or '%(Filename)%(Extension)'=='AssemblyMetadataAttribute.cs'">
         <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
       </Compile>
     </ItemGroup>
@@ -71,20 +77,29 @@
       <GenerateAssemblyAttributeTemplate>UNDEFINED_GenerateAssemblyAttributeTemplate</GenerateAssemblyAttributeTemplate>
       <GenerateAssemblyAttributeTemplateCSharp>
 using System.Reflection;
+using System.Resources;
+
 [assembly: AssemblyDescription("%AssemblyNameFull%")]
 [assembly: AssemblyTitle("%AssemblyNameFull%")]
 [assembly: AssemblyDefaultAlias("%AssemblyNameFull%")]
+[assembly: AssemblyFileVersion("%VersionFull%")]
+[assembly: AssemblyInformationalVersion("%VersionFull%")]
+[assembly: AssemblyVersion("%VersionFull%")]
+[assembly: SatelliteContractVersion("%VersionFull%")]
+[assembly: AssemblyMetadata("Serviceable", "True")]
       </GenerateAssemblyAttributeTemplateCSharp>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Language)' == 'C#'">
       <GenerateAssemblyAttributeTemplate>$(GenerateAssemblyAttributeTemplateCSharp)</GenerateAssemblyAttributeTemplate>
+      <AssemblyMetadataAttributeFile>$(VersionOutputPath)\AssemblyMetadataAttribute$(DefaultLanguageSourceExtension)</AssemblyMetadataAttributeFile>
+      <DefineAssemblyMetadataAttribute Condition="'$(TargetFrameworkVersion)' == 'v3.5' or '$(TargetFrameworkVersion)' == 'v4.0'">true</DefineAssemblyMetadataAttribute>
     </PropertyGroup>
 
     <PropertyGroup>
       <AssemblyAttributeOutputFile>$(IntermediateOutputPath.TrimEnd("\\"))\AssemblyAttributes$(DefaultLanguageSourceExtension)</AssemblyAttributeOutputFile>
       <AssemblyNameFull>$(AssemblyName)$(TargetExt)</AssemblyNameFull>
-      <AssemblyAttributeFileContentsTransformed>$([System.String]::Copy('$(GenerateAssemblyAttributeTemplate)').Replace("%25AssemblyNameFull%25",$(AssemblyNameFull)))</AssemblyAttributeFileContentsTransformed>
+      <AssemblyAttributeFileContentsTransformed>$([System.String]::Copy('$(GenerateAssemblyAttributeTemplate)').Replace("%25AssemblyNameFull%25",$(AssemblyNameFull)).Replace("%25VersionFull%25",$(VersionFull)))</AssemblyAttributeFileContentsTransformed>
     </PropertyGroup>
 
     <Message Text="GenerateAssemblyAttributeFile: Generating $(AssemblyAttributeOutputFile)" Importance="high" Condition="'$(DebugMessages)' == 'true'"/>
@@ -100,6 +115,65 @@ using System.Reflection;
     
     <ItemGroup>
       <Compile Include="$(AssemblyAttributeOutputFile)" />
+      <Compile Include="$(AssemblyMetadataAttributeFile)" Condition="'$(DefineAssemblyMetadataAttribute)' == 'true'" />
+    </ItemGroup>
+
+  </Target>
+
+  <!-- ********************************************************************************************* -->
+
+  <!-- ********************************************************************************************* -->
+  <!-- *** Generate a file with version constants and hook it into the build -->
+  <!-- ********************************************************************************************* -->
+  <Target Name="GenerateVersionConstantsFile"
+          Inputs="$(MSBuildProjectFile)"
+          Outputs="$(IntermediateOutputPath.TrimEnd('\'))\VersionConstants$(DefaultLanguageSourceExtension)"
+          Condition="'$(ShouldGenerateVersionConstantsFile)' == 'true'">
+
+    <PropertyGroup>
+      <!--Add more templates if we generate VersionConstants files for other project types.-->
+      <GenerateVersionConstantsTemplate>UNDEFINED_GenerateVersionConstantsTemplate</GenerateVersionConstantsTemplate>
+      <GenerateVersionConstantsTemplateCSharp>
+internal static class VersionConstants
+{
+    internal const string ReleaseVersion = "%VersionFullSemantic%";
+    internal const string AssemblyVersion = "%VersionFull%";
+}
+      </GenerateVersionConstantsTemplateCSharp>
+      <GenerateVersionConstantsTemplateVB>
+Friend Class VersionConstants
+    Friend Shared ReleaseVersion As String = "%VersionFullSemantic%"
+    Friend Shared AssemblyVersion As String = "%VersionFull%"
+End Class
+      </GenerateVersionConstantsTemplateVB>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Language)' == 'C#'">
+      <GenerateVersionConstantsTemplate>$(GenerateVersionConstantsTemplateCSharp)</GenerateVersionConstantsTemplate>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Language)' == 'VB'">
+      <GenerateVersionConstantsTemplate>$(GenerateVersionConstantsTemplateVB)</GenerateVersionConstantsTemplate>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <VersionConstantsOutputFile>$(IntermediateOutputPath.TrimEnd("\\"))\VersionConstants$(DefaultLanguageSourceExtension)</VersionConstantsOutputFile>
+      <VersionConstantsFileContentsTransformed>$([System.String]::Copy('$(GenerateVersionConstantsTemplate)').Replace("%25VersionFull%25",$(VersionFull)).Replace("%25VersionFullSemantic%25",$(VersionFullSemantic)))</VersionConstantsFileContentsTransformed>
+    </PropertyGroup>
+
+    <Message Text="GenerateVersionConstantsFile: Generating $(VersionConstantsOutputFile)" Importance="high" Condition="'$(DebugMessages)' == 'true'"/>
+
+    <MakeDir Directories="$(IntermediateOutputPath)" Condition="!Exists($(IntermediateOutputPath))"/>
+    
+    <WriteLinesToFile
+        File="$(VersionConstantsOutputFile)"
+        Lines="$(VersionConstantsFileContentsTransformed)"
+        Overwrite="true"
+        Encoding="Unicode" 
+        ContinueOnError="false"/>
+    
+    <ItemGroup>
+      <Compile Include="$(VersionConstantsOutputFile)" />
     </ItemGroup>
 
   </Target>

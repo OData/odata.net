@@ -13,6 +13,7 @@
     <EnableLocalization>false</EnableLocalization>
     <SigningType>Product</SigningType>
     <SigningScenario>Delay</SigningScenario>
+    <ShouldGenerateAssemblyAttributeFile>true</ShouldGenerateAssemblyAttributeFile>
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>

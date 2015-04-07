@@ -28,8 +28,10 @@
     <!-- Default in product source is to generate code without attributes.  However attributes are required for unittests. -->
     <GenerateTargetFrameworkAttribute Condition="'$(GenerateTargetFrameworkAttribute)' == ''">true</GenerateTargetFrameworkAttribute>
 
+    <ShouldGenerateVersionConstantsFile Condition="'$(ShouldGenerateVersionConstantsFile)' == ''">true</ShouldGenerateVersionConstantsFile>
   </PropertyGroup>
 
   <Import Project="..\Build.props" />
+  <Import Project="$(CustomBuildExtensionsPath)\Versioning.props" />
 
 </Project>

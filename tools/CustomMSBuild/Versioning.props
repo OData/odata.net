@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <VersionMajor>6</VersionMajor>
+    <VersionMinor>11</VersionMinor>
+    <VersionBuildNumber>0</VersionBuildNumber>
+    <VersionFullSemantic>$(VersionMajor).$(VersionMinor).$(VersionBuildNumber)</VersionFullSemantic>
+    <VersionFull>$(VersionFullSemantic).0</VersionFull>
+
+    <T4VersionMajor>2</T4VersionMajor>
+    <T4VersionMinor>3</T4VersionMinor>
+    <T4VersionBuildNumber>0</T4VersionBuildNumber>
+    <T4VersionFullSemantic>$(T4VersionMajor).$(T4VersionMinor).$(T4VersionBuildNumber)</T4VersionFullSemantic>
+    <VersionT4Semantic>$(T4VersionFullSemantic)</VersionT4Semantic>
+    
+    <VersionPrereleaseExtension></VersionPrereleaseExtension>
+    <VersionNuGetSemantic>$(VersionFullSemantic)</VersionNuGetSemantic>
+    <VersionNuGetSemantic Condition="'$(VersionPrereleaseExtension)'!=''">$(VersionFullSemantic)-$(VersionPrereleaseExtension)</VersionNuGetSemantic>
+  </PropertyGroup>
+</Project>

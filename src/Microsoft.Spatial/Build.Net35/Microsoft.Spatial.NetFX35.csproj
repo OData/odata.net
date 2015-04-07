@@ -370,7 +370,6 @@
   <!-- Source files that are specific to this project -->
   <ItemGroup>
     <None Include="$(IntermediateOutputDirectory)\AssemblyAttributes.cs" />
-    <None Include="$(IntermediateOutputDirectory)\Microsoft.Spatial.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Microsoft.Spatial.cs">

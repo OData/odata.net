@@ -36,7 +36,7 @@ Friend Class DataFxAssemblyRef
         Friend Shared SilverlightV5_ReferenceAssemblyPath As String = "%ProgramFiles%\Microsoft Silverlight\5.1.20913.0"
         Friend Shared SilverlightV5_SdkClientReferenceAssemblyPath As String = "%ProgramFiles%\Microsoft SDKs\Silverlight\v5.0\Libraries\Client"
         Friend Shared SilverlightV5_SdkServerReferenceAssemblyPath As String = "%ProgramFiles%\Microsoft SDKs\Silverlight\v5.0\Libraries\Server"
-        Friend Shared DS_BaseVersion As String = "Ver0"
+        Friend Shared DS_BaseVersion As String = VersionConstants.ReleaseVersion
         Friend Shared EF_ReferenceAssemblyPath As String = "%ProgramFiles%\Microsoft Entity Framework June 2011 CTP\bin\.NetFramework"
         Friend Shared DS_ReferenceAssemblyPath As String = "%ProgramFiles%\Microsoft WCF Data Services\" + DS_BaseVersion + "\bin\.NetFramework"
         Friend Shared DS_SilverlightReferenceAssemblyPath As String = "%ProgramFiles%\Microsoft WCF Data Services\" + DS_BaseVersion + "\bin\Silverlight"
@@ -58,7 +58,7 @@ Friend Class DataFxAssemblyRef
 
     End Class
 
-    Friend Shared DataFxAssemblyVersion As String = "0.0.0.0"
+    Friend Shared DataFxAssemblyVersion As String = VersionConstants.AssemblyVersion
     Friend Shared FXAssemblyVersion As String = "4.0.0.0"
 
     Friend Shared EcmaPublicKey As String = "b77a5c561934e089"

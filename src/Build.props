@@ -11,18 +11,7 @@
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.root))\tools\CustomMSBuild\TargetFrameworkPath.props" Condition="'$(BuildInOSS)' == 'true'"/>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.root))\_BuildCommon\Extensions\TargetFrameworkPath.props" Condition="'$(BuildInOSS)' != 'true'"/>
-  
-  <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' == 'Silverlight' and '$(TargetFrameworkProfile)' == 'WindowsPhone71'">
-    <GenerateTargetFrameworkAttribute Condition="'$(GenerateTargetFrameworkAttribute)' == ''">true</GenerateTargetFrameworkAttribute>
-    <ShouldGenerateAssemblyAttributeFile Condition="'$(ShouldGenerateAssemblyAttributeFile)' == ''">false</ShouldGenerateAssemblyAttributeFile>
-  </PropertyGroup>
 
-  <PropertyGroup>
-    <DefineConstants>$(DefineConstants);SERVICEABLE</DefineConstants>
-    <DefineConstants Condition="'$(TargetFrameworkVersion)' == 'v3.5'">$(DefineConstants);NET35</DefineConstants>
-    <DefineConstants Condition="'$(TargetFrameworkVersion)' == 'v4.0'">$(DefineConstants);NET40</DefineConstants>
-  </PropertyGroup>
-  
   <PropertyGroup>
     <RelativeOutputPath>Product\$(RelativeOutputPath)</RelativeOutputPath>
     <EnableStyleCop>true</EnableStyleCop>
@@ -44,6 +33,7 @@
   </ItemGroup>
   
   <Import Project="..\Build.props" />
+  <Import Project="$(CustomBuildExtensionsPath)\Versioning.props" />
 
   <!-- This PropertyGroup should always be after the import of Build.props because it's extending the value of NugetPackOptions which is defined in Nuget.props which is included using Build.props -->
   <PropertyGroup>

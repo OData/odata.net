@@ -5,33 +5,16 @@
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(VersionTemplateExt)' == ''">
-    <VersionTemplateExt Condition="'$(Language)' == 'C#'">cs</VersionTemplateExt>
-    <VersionTemplateExt Condition="'$(Language)' == 'VB'">vb</VersionTemplateExt>
-  </PropertyGroup>
-
   <PropertyGroup>
-    <VersionTemplateFileName Condition="'$(VersionTemplateFileName)' == ''">AssemblyVersion</VersionTemplateFileName>
     <VersionRunBeforeTargets>$(VersionRunBeforeTargets);CoreCompile</VersionRunBeforeTargets>
     <VersionOutputPath>$(EnlistmentRoot)\src\AssemblyInfo</VersionOutputPath>
-    <AssemblyInfoCommonFile Condition="'$(AssemblyInfoCommonFile)'==''">AssemblyInfoCommon.$(VersionTemplateExt)</AssemblyInfoCommonFile>
-    <AssemblyInfoVersionFile Condition="'$(AssemblyInfoVersionFile)'==''">AssemblyVersion.$(VersionTemplateExt)</AssemblyInfoVersionFile>
-    <EnableAutoImportAssemblyInfoCommon Condition="'$(EnableAutoImportAssemblyInfoCommon)' != ''">$([System.Convert]::ToBoolean($(EnableAutoImportAssemblyInfoCommon)))</EnableAutoImportAssemblyInfoCommon>
-    <EnableAutoImportAssemblyInfoCommon Condition="'$(EnableAutoImportAssemblyInfoCommon)' == ''">true</EnableAutoImportAssemblyInfoCommon>
+    <AssemblyInfoCommonFile Condition="'$(AssemblyInfoCommonFile)'==''">AssemblyInfoCommon$(DefaultLanguageSourceExtension)</AssemblyInfoCommonFile>
   </PropertyGroup>
-  
-  <ItemGroup>
-    <VersionTemplateFiles Include="$(AssemblyInfoCommonFile)" Condition="'$(EnableAutoImportAssemblyInfoCommon)' == 'true'"/>
-  </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(VersionOutputPath)\$(AssemblyInfoCommonFile)" Condition="'$(EnableAutoImportAssemblyInfoCommon)' == 'true'" >
+    <Compile Include="$(VersionOutputPath)\$(AssemblyInfoCommonFile)">
       <ExcludeFromSourceAnalysis>true</ExcludeFromSourceAnalysis>
       <Link>$(AssemblyInfoCommonFile)</Link>
-    </Compile>
-    <Compile Include="$(VersionOutputPath)\$(AssemblyInfoVersionFile)" Condition="'$(MSBuildProjectExtension)' != '.tmp_proj'">
-      <ExcludeFromSourceAnalysis>true</ExcludeFromSourceAnalysis>
-      <Link>$(AssemblyInfoVersionFile)</Link>
     </Compile>
   </ItemGroup>
 

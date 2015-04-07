@@ -22,6 +22,6 @@ OData .NET library is open source at http://github.com/OData/odata.net</descript
     <file src=".NETPortable\v4.0\Microsoft.OData.Edm\1041\Microsoft.OData.Edm.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\ja" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\**\*.cs" target="src\Microsoft.OData.Edm" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
-    <file src="$SourcesRoot$\_BuildCommon\ProductVersion\AssemblyInfoCommon.cs" target="src\AssemblyInfoCommon.cs" />
+    <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />
   </files>
 </package>
