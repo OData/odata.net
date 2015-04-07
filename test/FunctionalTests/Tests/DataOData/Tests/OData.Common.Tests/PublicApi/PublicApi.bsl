@@ -5030,11 +5030,6 @@ public interface Microsoft.OData.Core.PrimitivePayloadValueConverters.IPrimitive
 	object ConvertToPayloadValue (object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.Core.ODataMessageWriterSettings messageWriterSettings)
 }
 
-public sealed class Microsoft.OData.Core.PrimitivePayloadValueConverters.PrimitivePayloadValueConverterProvider {
-	public static Microsoft.OData.Core.PrimitivePayloadValueConverters.IPrimitivePayloadValueConverter GetPrimitivePayloadValueConverter ()
-	public static void SetPrimitivePayloadValueConverter (Microsoft.OData.Core.PrimitivePayloadValueConverters.IPrimitivePayloadValueConverter primitivePayloadValueConverter)
-}
-
 public class Microsoft.OData.Core.PrimitivePayloadValueConverters.DefaultPrimitivePayloadValueConverter : IPrimitivePayloadValueConverter {
 	public static readonly Microsoft.OData.Core.PrimitivePayloadValueConverters.IPrimitivePayloadValueConverter Instance = Microsoft.OData.Core.PrimitivePayloadValueConverters.DefaultPrimitivePayloadValueConverter
 

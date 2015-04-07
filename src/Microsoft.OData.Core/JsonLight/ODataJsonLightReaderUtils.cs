@@ -97,6 +97,7 @@ namespace Microsoft.OData.Core.JsonLight
         internal static object ConvertValue(
             object value,
             IEdmPrimitiveTypeReference primitiveTypeReference,
+            IEdmModel model,
             ODataMessageReaderSettings messageReaderSettings,
             bool validateNullValue,
             string propertyName)
@@ -115,7 +116,7 @@ namespace Microsoft.OData.Core.JsonLight
                 return null;
             }
 
-            value = PrimitivePayloadValueConverters.PrimitivePayloadValueConverterProvider.GetPrimitivePayloadValueConverter().ConvertFromPayloadValue(value, primitiveTypeReference, messageReaderSettings);
+            value = model.GetPrimitivePayloadValueConverter().ConvertFromPayloadValue(value, primitiveTypeReference, messageReaderSettings);
 
             // otherwise just return the value without doing any conversion
             return value;

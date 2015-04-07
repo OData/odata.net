@@ -403,6 +403,7 @@ namespace Microsoft.OData.Core.JsonLight
             return (long)ODataJsonLightReaderUtils.ConvertValue(
                     value,
                     EdmCoreModel.Instance.GetInt64(false),
+					this.Model,
                     this.MessageReaderSettings,
                     /*validateNullValue*/ true,
                     annotationName);

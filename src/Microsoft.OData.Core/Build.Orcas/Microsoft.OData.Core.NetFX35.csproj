@@ -1725,6 +1725,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\PrimitivePayloadValueConverters\DefaultPrimitivePayloadValueConverter.cs">
+      <Link>Microsoft\OData\Core\PrimitivePayloadValueConverters\DefaultPrimitivePayloadValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\PrimitivePayloadValueConverters\IPrimitivePayloadValueConverter.cs">
+      <Link>Microsoft\OData\Core\PrimitivePayloadValueConverters\IPrimitivePayloadValueConverter.cs</Link>
+    </Compile>
     <Compile Include="ShippingAssemblyAttributes.cs" />
     <Compile Include="$(AssemblyKeysCSharpFilePath)">
       <IncludeInOpenSource>false</IncludeInOpenSource>

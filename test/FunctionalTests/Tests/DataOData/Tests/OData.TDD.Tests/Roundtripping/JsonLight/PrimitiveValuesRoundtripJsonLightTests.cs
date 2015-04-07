@@ -65,7 +65,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Roundtripping.JsonLight
                 Convert.ToBase64String(values[2])
             };
 
-            PrimitivePayloadValueConverterProvider.SetPrimitivePayloadValueConverter(new BinaryFieldAsStringPrimitivePayloadValueConverter());
+            this.model.SetPrimitivePayloadValueConverter(new BinaryFieldAsStringPrimitivePayloadValueConverter());
 
             this.VerifyPrimitiveValuesRoundtripWithTypeInformationAndWithExpectedValues(values, "Edm.Binary", expectedValues);
             this.VerifyPrimitiveValuesRoundtripWithTypeInformation(expectedValues, "Edm.Binary");

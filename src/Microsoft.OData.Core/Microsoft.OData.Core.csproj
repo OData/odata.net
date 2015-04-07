@@ -365,7 +365,6 @@
     <Compile Include="ODataWriterBehavior.cs" />
     <Compile Include="ODataWriterCore.cs" />
     <Compile Include="PrimitiveConverter.cs" />
-    <Compile Include="PrimitivePayloadValueConverters\PrimitivePayloadValueConverterProvider.cs" />
     <Compile Include="PrimitivePayloadValueConverters\DefaultPrimitivePayloadValueConverter.cs" />
     <Compile Include="PrimitivePayloadValueConverters\IPrimitivePayloadValueConverter.cs" />
     <Compile Include="ProjectedPropertiesAnnotation.cs" />
