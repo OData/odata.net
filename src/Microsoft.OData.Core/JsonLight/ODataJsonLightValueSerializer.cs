@@ -345,8 +345,15 @@ namespace Microsoft.OData.Core.JsonLight
             value = this.Model.ConvertToUnderlyingTypeIfUIntValue(value, expectedTypeReference);
 
             IEdmPrimitiveTypeReference actualTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
+            ODataPayloadValueConverter converter = this.Model.GetPayloadValueConverter();
 
-            value = this.Model.GetPrimitivePayloadValueConverter().ConvertToPayloadValue(value, expectedTypeReference, this.JsonLightOutputContext.MessageWriterSettings);
+            // Skip validation if user has set custom PayloadValueConverter
+            if (expectedTypeReference != null && converter.GetType() == typeof(ODataPayloadValueConverter))
+            {
+                ValidationUtils.ValidateIsExpectedPrimitiveType(value, actualTypeReference, expectedTypeReference, !this.JsonLightOutputContext.MessageWriterSettings.EnableFullValidation);
+            }
+
+            value = converter.ConvertToPayloadValue(value, expectedTypeReference);
 
             if (actualTypeReference != null && actualTypeReference.IsSpatial())
             {

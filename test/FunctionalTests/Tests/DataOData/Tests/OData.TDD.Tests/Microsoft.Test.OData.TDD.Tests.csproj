@@ -71,6 +71,7 @@
     <Compile Include="Common\ODataMessageExtensionsTests.cs" />
     <Compile Include="Common\ODataUtilsTests.cs" />
     <Compile Include="Common\ODataSpatialTypeUtil.cs" />
+    <Compile Include="Common\PayloadValueConverters.cs" />
     <Compile Include="MediaTypeResolverTests.cs" />
     <Compile Include="Reader\Atom\ODataAtomServiceDocumentDeserializerTests.cs" />
     <Compile Include="Reader\JsonLight\DateReaderJsonLightTests.cs" />

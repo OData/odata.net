@@ -332,6 +332,7 @@
     <Compile Include="ODataPayloadKind.cs" />
     <Compile Include="ODataPayloadKindDetectionInfo.cs" />
     <Compile Include="ODataPayloadKindDetectionResult.cs" />
+    <Compile Include="ODataPayloadValueConverter.cs" />
     <Compile Include="ODataPreferenceHeader.cs" />
     <Compile Include="ODataPrimitiveValue.cs" />
     <Compile Include="ODataProperty.cs" />
@@ -365,8 +366,6 @@
     <Compile Include="ODataWriterBehavior.cs" />
     <Compile Include="ODataWriterCore.cs" />
     <Compile Include="PrimitiveConverter.cs" />
-    <Compile Include="PrimitivePayloadValueConverters\DefaultPrimitivePayloadValueConverter.cs" />
-    <Compile Include="PrimitivePayloadValueConverters\IPrimitivePayloadValueConverter.cs" />
     <Compile Include="ProjectedPropertiesAnnotation.cs" />
     <Compile Include="Query\ExpressionConstants.cs" />
     <Compile Include="Query\ODataUriConversionUtils.cs" />
@@ -428,7 +427,6 @@
     <Compile Include="UriParser\LiteralUtils.cs" />
     <Compile Include="UriParser\Metadata\StringAsEnumResolver.cs" />
     <Compile Include="UriParser\Metadata\ODataUriResolver.cs" />
-    <Compile Include="UriParser\Metadata\ODataUriParserContext.cs" />
     <Compile Include="UriParser\Metadata\UnqualifiedODataUriResolver.cs" />
     <Compile Include="UriParser\Metadata\UriEdmHelpers.cs" />
     <Compile Include="UriParser\NamedValue.cs" />
@@ -663,5 +661,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(BuildExtensionsPath)\Portable.targets" />
 </Project>

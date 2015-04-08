@@ -835,6 +835,40 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
         }
 
+        [TestMethod()]
+        public void ReadDateTimeOffsetWithCustomFormat()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType entityType = new EdmEntityType("NS", "Person");
+            model.AddElement(entityType);
+            entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
+            entityType.AddStructuralProperty("Birthday", EdmPrimitiveTypeKind.DateTimeOffset);
+        
+            EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer");
+            EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            const string payload =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
+                "\"@odata.id\":\"http://mytest\"," +
+                "\"Id\":0," +
+                "\"Birthday\":\"Thu, 12 Apr 2012 18:43:10 GMT\"" +
+                "}";
+
+            model.SetPayloadValueConverter(new DateTimeOffsetCustomFormatPrimitivePayloadValueConverter());
+
+            ODataEntry entry = null;
+            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            Assert.IsNotNull(entry, "entry shouldn't be null");
+
+            IList<ODataProperty> propertyList = entry.Properties.ToList();
+            var birthday = propertyList[1].Value as DateTimeOffset?;
+            birthday.HasValue.Should().BeTrue();
+            birthday.Value.Should().Be(new DateTimeOffset(2012, 4, 12, 18, 43, 10, TimeSpan.Zero));
+        }
+
         private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmEntityType entityType, Action<ODataReader> action, bool isIeee754Compatible = true)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };

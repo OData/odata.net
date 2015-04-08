@@ -3,12 +3,10 @@
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
-
-using Microsoft.OData.Core.PrimitivePayloadValueConverters;
-using Microsoft.OData.Edm;
-using System.Diagnostics;
 namespace Microsoft.OData.Core
 {
+    using Microsoft.OData.Edm;
+
     /// <summary>
     /// Extension methods on the OData object model.
     /// </summary>
@@ -92,41 +90,40 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Set the default of primitive payload value converter
+        /// Set the payload value converter
         /// </summary>
-        /// <param name="model">The instance to set the primitive value payload converter.</param>
-        /// <param name="converter">The primitive payload value converter to set.</param>
-        public static void SetPrimitivePayloadValueConverter(this IEdmModel model, IPrimitivePayloadValueConverter converter)
+        /// <param name="model">The instance to set the value payload converter.</param>
+        /// <param name="converter">The payload value converter to set.</param>
+        public static void SetPayloadValueConverter(this IEdmModel model, ODataPayloadValueConverter converter)
         {
-            Debug.Assert(model != null, "model != null");
-            Debug.Assert(converter != null, "converter != null");
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
+            ExceptionUtils.CheckArgumentNotNull(converter, "converter");
 
-            // Set primitive payload value converter for the model.
-            model.SetAnnotationValue(model, 
-                Microsoft.OData.Core.Metadata.EdmConstants.InternalUri, 
-                Microsoft.OData.Core.Metadata.EdmConstants.PrimitivePayloadValueConverterAnnotation,
+            // Set payload value converter for the model.
+            model.SetAnnotationValue(
+                model,
+                Metadata.EdmConstants.InternalUri,
+                Metadata.EdmConstants.PayloadValueConverterAnnotation,
                 converter);
         }
 
         /// <summary>
-        /// Get the default of primitive payload value converter
+        /// Get the payload value converter
         /// </summary>
-        /// <param name="model">The instance to get the primitive value payload converter from.</param>
-        /// <returns>The primitive payload value converter</returns>
-        public static IPrimitivePayloadValueConverter GetPrimitivePayloadValueConverter(this IEdmModel model)
+        /// <param name="model">The instance to get the value payload converter from.</param>
+        /// <returns>The payload value converter</returns>
+        public static ODataPayloadValueConverter GetPayloadValueConverter(this IEdmModel model)
         {
-            Debug.Assert(model != null, "model != null");
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            // Get primitive payload value converter for the model.
-            object annotationValue = model.GetAnnotationValue(model,
-                Microsoft.OData.Core.Metadata.EdmConstants.InternalUri,
-                Microsoft.OData.Core.Metadata.EdmConstants.PrimitivePayloadValueConverterAnnotation);
+            // Get payload value converter for the model.
+            ODataPayloadValueConverter converter = model.GetAnnotationValue(
+                model,
+                Metadata.EdmConstants.InternalUri,
+                Metadata.EdmConstants.PayloadValueConverterAnnotation)
+                as ODataPayloadValueConverter;
 
-            IPrimitivePayloadValueConverter converter = annotationValue as IPrimitivePayloadValueConverter;
-            if (converter != null)
-                return converter;
-
-            return DefaultPrimitivePayloadValueConverter.Instance;
+            return converter ?? ODataPayloadValueConverter.Default;
         }
     }
 }

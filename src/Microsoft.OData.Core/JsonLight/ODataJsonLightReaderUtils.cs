@@ -92,15 +92,16 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="messageReaderSettings">The message reader settings used for reading.</param>
         /// <param name="validateNullValue">true to validate null values; otherwise false.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
+        /// <param name="converter">The payload value converter to convert this value.</param>
         /// <returns>Object which is in sync with the property type (modulo the V1 exception of converting numbers to non-compatible target types).</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static object ConvertValue(
             object value,
             IEdmPrimitiveTypeReference primitiveTypeReference,
-            IEdmModel model,
             ODataMessageReaderSettings messageReaderSettings,
             bool validateNullValue,
-            string propertyName)
+            string propertyName,
+            ODataPayloadValueConverter converter)
         {
             Debug.Assert(primitiveTypeReference != null, "primitiveTypeReference != null");
 
@@ -116,7 +117,7 @@ namespace Microsoft.OData.Core.JsonLight
                 return null;
             }
 
-            value = model.GetPrimitivePayloadValueConverter().ConvertFromPayloadValue(value, primitiveTypeReference, messageReaderSettings);
+            value = converter.ConvertFromPayloadValue(value, primitiveTypeReference);
 
             // otherwise just return the value without doing any conversion
             return value;

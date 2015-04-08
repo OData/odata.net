@@ -17,6 +17,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.JsonLight;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.Test.OData.TDD.Tests.Common;
 
     /// <summary>
     /// Unit tests and short-span integration tests for ODataJsonLightValueSerializer.
@@ -43,7 +44,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
         {
             var serializer = CreateODataJsonLightValueSerializer(false);
 
-            var collectionValue = new ODataCollectionValue() {Items = new List<string>()};
+            var collectionValue = new ODataCollectionValue() { Items = new List<string>() };
 
             Action test = () => serializer.WriteCollectionValue(collectionValue, null, false, false, false);
 
@@ -128,7 +129,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
             settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
             var result = this.SetupSerializerAndRunTest(serializer =>
             {
-                var complexValue = new ODataComplexValue {TypeName = "TestNamespace.Address", InstanceAnnotations = new Collection<ODataInstanceAnnotation> {new ODataInstanceAnnotation("Is.ReadOnly", new ODataPrimitiveValue(true))}};
+                var complexValue = new ODataComplexValue { TypeName = "TestNamespace.Address", InstanceAnnotations = new Collection<ODataInstanceAnnotation> { new ODataInstanceAnnotation("Is.ReadOnly", new ODataPrimitiveValue(true)) } };
 
                 var complexTypeRef = new EdmComplexTypeReference(complexType, false);
                 serializer.WriteComplexValue(complexValue, complexTypeRef, false, false, new DuplicatePropertyNamesChecker(false, true));
@@ -187,6 +188,22 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
 
             result.Should().NotContain("\"@Annotation.1\":true,\"@Annotation.2\":123,\"@Annotation.3\":\"annotation\"");
         }
+
+        [TestMethod()]
+        public void WritingDateTimeOffsetWithCustomFormat()
+        {
+            var df = EdmCoreModel.Instance.GetDateTimeOffset(false);
+            model.SetPayloadValueConverter(new DateTimeOffsetCustomFormatPrimitivePayloadValueConverter());
+            
+            var result = this.SetupSerializerAndRunTest(serializer =>
+            {
+                var value = new DateTimeOffset(2012, 4, 13, 2, 43, 10, TimeSpan.FromHours(8));
+                serializer.WritePrimitiveValue(value, df);
+            });
+
+            result.Should().Be("\"Thu, 12 Apr 2012 18:43:10 GMT\"");
+        }
+
 
         private ODataJsonLightValueSerializer CreateODataJsonLightValueSerializer(bool writingResponse)
         {

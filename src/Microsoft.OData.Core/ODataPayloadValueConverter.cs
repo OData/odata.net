@@ -1,52 +1,48 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="DefaultPrimitiveValueConverter.cs" company="Microsoft">
+// <copyright file="ODataPayloadValueConverter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.PrimitivePayloadValueConverters
+namespace Microsoft.OData.Core
 {
-	using System;
-	using System.Diagnostics;
-	using System.Globalization;
-	using Microsoft.OData.Edm;
-	using Microsoft.OData.Edm.Library;
-	using Microsoft.OData.Core.Json;
-	using Microsoft.OData.Core.Metadata;
-	using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using System;
+    using System.Diagnostics;
+    using System.Globalization;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Core.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     /// <summary>
-    /// The default implementation of primitive payload value converter for validation and converting:
-    ///     converts string to Byte[],
-    ///     converts string to Guid,
-    ///     converts string to TimeSpan,
-    ///     converts string to Date,
-    ///     converts string to TimeOfDay,
-    ///     converts string to DateTimeOffset,
-    ///     converts string to Double,
-    ///     converts string to Single,
-    ///     converts decimal to Int32,
-    ///     converts decimal to Int64,
-    ///     converts decimal to Double,
-    ///     converts decimal to Single,
-    ///     converts Double to Single
+    /// Class for defining a payload value conversion for given model. Currently supports primitive only.
     /// </summary>
-    public class DefaultPrimitivePayloadValueConverter : IPrimitivePayloadValueConverter
+    public class ODataPayloadValueConverter
     {
-        public static readonly IPrimitivePayloadValueConverter Instance = new DefaultPrimitivePayloadValueConverter();
+        /// <summary>
+        /// The default instance for <see cref="ODataPayloadValueConverter"/>.
+        /// </summary>
+        internal static readonly ODataPayloadValueConverter Default = new ODataPayloadValueConverter();
 
-        public virtual object ConvertToPayloadValue(object value, IEdmTypeReference edmTypeReference, ODataMessageWriterSettings messageWriterSettings)
+        /// <summary>
+        /// Converts the given primitive value defined in a type definition from the payload object.
+        /// </summary>
+        /// <param name="value">The given CLR value.</param>
+        /// <param name="edmTypeReference">The expected type reference from model.</param>
+        /// <returns>The converted payload value of the underlying type.</returns>
+        public virtual object ConvertToPayloadValue(object value, IEdmTypeReference edmTypeReference)
         {
-            IEdmPrimitiveTypeReference actualTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
-            if (edmTypeReference != null)
-            {
-                ValidationUtils.ValidateIsExpectedPrimitiveType(value, actualTypeReference, edmTypeReference, !messageWriterSettings.EnableFullValidation);
-            }
-
             return value;
         }
 
-        public virtual object ConvertFromPayloadValue(object value, IEdmTypeReference edmTypeReference, ODataMessageReaderSettings messageReaderSettings)
+        /// <summary>
+        /// Converts the given payload value to the type defined in a type definition.
+        /// </summary>
+        /// <param name="value">The given payload value.</param>
+        /// <param name="edmTypeReference">The expected type reference from model.</param>
+        /// <returns>The converted value of the type.</returns>
+        public virtual object ConvertFromPayloadValue(object value, IEdmTypeReference edmTypeReference)
         {
             IEdmPrimitiveTypeReference primitiveTypeReference = edmTypeReference as IEdmPrimitiveTypeReference;
             Debug.Assert(primitiveTypeReference != null, "primitiveTypeReference != null");

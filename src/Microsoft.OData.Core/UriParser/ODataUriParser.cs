@@ -154,8 +154,7 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="ODataUriResolver"/> for <see cref="ODataUriParser"/>, this resolver is used for
-        /// handling different kinds of <see cref="ODataUriParserContext"/>.
+        /// Gets or sets the <see cref="ODataUriResolver"/> for <see cref="ODataUriParser"/>.
         /// </summary>
         public ODataUriResolver Resolver
         {

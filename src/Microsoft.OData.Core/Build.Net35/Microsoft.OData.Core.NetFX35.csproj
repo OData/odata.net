@@ -919,6 +919,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataPayloadKindDetectionResult.cs">
       <Link>Microsoft\OData\Core\ODataPayloadKindDetectionResult.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataPayloadValueConverter.cs">
+      <Link>Microsoft\OData\Core\ODataPayloadValueConverter.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataPreferenceHeader.cs">
       <Link>Microsoft\OData\Core\ODataPreferenceHeader.cs</Link>
     </Compile>
@@ -1200,9 +1203,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Metadata\ODataUriResolver.cs">
       <Link>Microsoft\OData\Core\UriParser\Metadata\ODataUriResolver.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Metadata\ODataUriParserContext.cs">
-      <Link>Microsoft\OData\Core\UriParser\Metadata\ODataUriParserContext.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Metadata\UnqualifiedODataUriResolver.cs">
       <Link>Microsoft\OData\Core\UriParser\Metadata\UnqualifiedODataUriResolver.cs</Link>
@@ -1725,12 +1725,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\PrimitivePayloadValueConverters\DefaultPrimitivePayloadValueConverter.cs">
-      <Link>Microsoft\OData\Core\PrimitivePayloadValueConverters\DefaultPrimitivePayloadValueConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\PrimitivePayloadValueConverters\IPrimitivePayloadValueConverter.cs">
-      <Link>Microsoft\OData\Core\PrimitivePayloadValueConverters\IPrimitivePayloadValueConverter.cs</Link>
-    </Compile>
     <Compile Include="ShippingAssemblyAttributes.cs" />
     <Compile Include="$(AssemblyKeysCSharpFilePath)">
       <IncludeInOpenSource>false</IncludeInOpenSource>

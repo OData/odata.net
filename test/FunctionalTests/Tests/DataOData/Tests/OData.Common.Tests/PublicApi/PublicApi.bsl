@@ -4203,6 +4203,16 @@ public sealed class Microsoft.OData.Core.ODataObjectModelExtensions {
 	[
 	ExtensionAttribute(),
 	]
+	public static Microsoft.OData.Core.ODataPayloadValueConverter GetPayloadValueConverter (Microsoft.OData.Edm.IEdmModel model)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static void SetPayloadValueConverter (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Core.ODataPayloadValueConverter converter)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static void SetSerializationInfo (Microsoft.OData.Core.ODataCollectionStart collectionStart, Microsoft.OData.Core.ODataCollectionStartSerializationInfo serializationInfo)
 
 	[
@@ -4285,6 +4295,13 @@ public class Microsoft.OData.Core.ODataMediaTypeResolver {
 	public ODataMediaTypeResolver ()
 
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataMediaTypeFormat]] GetMediaTypeFormats (Microsoft.OData.Core.ODataPayloadKind payloadKind)
+}
+
+public class Microsoft.OData.Core.ODataPayloadValueConverter {
+	public ODataPayloadValueConverter ()
+
+	public virtual object ConvertFromPayloadValue (object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference)
+	public virtual object ConvertToPayloadValue (object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference)
 }
 
 [
@@ -5024,20 +5041,6 @@ public sealed class Microsoft.OData.Core.Metadata.ODataEdmPropertyAnnotation {
 	public ODataEdmPropertyAnnotation ()
 
 	Microsoft.OData.Core.Metadata.ODataNullValueBehaviorKind NullValueReadBehaviorKind  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
-}
-
-public interface Microsoft.OData.Core.PrimitivePayloadValueConverters.IPrimitivePayloadValueConverter {
-	object ConvertFromPayloadValue (object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.Core.ODataMessageReaderSettings messageReaderSettings)
-	object ConvertToPayloadValue (object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.Core.ODataMessageWriterSettings messageWriterSettings)
-}
-
-public class Microsoft.OData.Core.PrimitivePayloadValueConverters.DefaultPrimitivePayloadValueConverter : IPrimitivePayloadValueConverter {
-	public static readonly Microsoft.OData.Core.PrimitivePayloadValueConverters.IPrimitivePayloadValueConverter Instance = Microsoft.OData.Core.PrimitivePayloadValueConverters.DefaultPrimitivePayloadValueConverter
-
-	public DefaultPrimitivePayloadValueConverter ()
-
-	public virtual object ConvertFromPayloadValue (object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.Core.ODataMessageReaderSettings messageReaderSettings)
-	public virtual object ConvertToPayloadValue (object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.Core.ODataMessageWriterSettings messageWriterSettings)
 }
 
 public sealed class Microsoft.OData.Core.UriBuilder.ODataUriBuilder {
