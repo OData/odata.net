@@ -4,19 +4,39 @@
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <VersionMajor>6</VersionMajor>
-    <VersionMinor>11</VersionMinor>
-    <VersionBuildNumber>0</VersionBuildNumber>
-    <VersionFullSemantic>$(VersionMajor).$(VersionMinor).$(VersionBuildNumber)</VersionFullSemantic>
-    <VersionFull>$(VersionFullSemantic).0</VersionFull>
+  <!-- For ADO.NET Provider -->
+  <PropertyGroup Condition="'$(UseOfficeVersion)' == 'true'">
+    <VersionMajor Condition="'$(VersionMajor)' == ''">12</VersionMajor>
+    <VersionMinor Condition="'$(VersionMinor)' == ''">0</VersionMinor>
+    <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
+    <VersionBuildRevision Condition="'$(VersionBuildRevision)' == ''">0</VersionBuildRevision>
+  </PropertyGroup>
 
+  <!-- For ODataLib -->
+  <PropertyGroup>
+    <VersionMajor Condition="'$(VersionMajor)' == ''">6</VersionMajor>
+    <VersionMinor Condition="'$(VersionMinor)' == ''">11</VersionMinor>
+    <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
+    <VersionBuildRevision Condition="'$(VersionBuildRevision)' == ''">0</VersionBuildRevision>
+  </PropertyGroup>
+
+  <!-- Product Version -->
+  <PropertyGroup>
+    <VersionFullSemantic>$(VersionMajor).$(VersionMinor).$(VersionBuildNumber)</VersionFullSemantic>
+    <VersionFull>$(VersionFullSemantic).$(VersionBuildRevision)</VersionFull>
+  </PropertyGroup>
+
+  <!-- For T4 -->
+  <PropertyGroup>
     <T4VersionMajor>2</T4VersionMajor>
     <T4VersionMinor>3</T4VersionMinor>
     <T4VersionBuildNumber>0</T4VersionBuildNumber>
     <T4VersionFullSemantic>$(T4VersionMajor).$(T4VersionMinor).$(T4VersionBuildNumber)</T4VersionFullSemantic>
     <VersionT4Semantic>$(T4VersionFullSemantic)</VersionT4Semantic>
-    
+  </PropertyGroup>
+  
+  <!-- For NuGet Packages -->
+  <PropertyGroup>
     <VersionPrereleaseExtension></VersionPrereleaseExtension>
     <VersionNuGetSemantic>$(VersionFullSemantic)</VersionNuGetSemantic>
     <VersionNuGetSemantic Condition="'$(VersionPrereleaseExtension)'!=''">$(VersionFullSemantic)-$(VersionPrereleaseExtension)</VersionNuGetSemantic>
