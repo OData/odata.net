@@ -68,7 +68,7 @@
   <!-- *** Generate a file with assembly attributes and hook it into the build -->
   <!-- ********************************************************************************************* -->
   <Target Name="GenerateAssemblyAttributeFile"
-          Inputs="$(MSBuildProjectFile)"
+          Inputs="$(MSBuildProjectFile);$(CustomBuildExtensionsPath)\Versioning.props"
           Outputs="$(IntermediateOutputPath.TrimEnd('\'))\AssemblyAttributes$(DefaultLanguageSourceExtension)"
           Condition="'$(ShouldGenerateAssemblyAttributeFile)' == 'true'">
 
@@ -126,7 +126,7 @@ using System.Resources;
   <!-- *** Generate a file with version constants and hook it into the build -->
   <!-- ********************************************************************************************* -->
   <Target Name="GenerateVersionConstantsFile"
-          Inputs="$(MSBuildProjectFile)"
+          Inputs="$(MSBuildProjectFile);$(CustomBuildExtensionsPath)\Versioning.props"
           Outputs="$(IntermediateOutputPath.TrimEnd('\'))\VersionConstants$(DefaultLanguageSourceExtension)"
           Condition="'$(ShouldGenerateVersionConstantsFile)' == 'true'">
 
