@@ -172,6 +172,11 @@ namespace Microsoft.OData.Core
         public bool? QueryCount { get; set; }
 
         /// <summary>
+        /// Gets or sets any $deltaToken option for this uri.
+        /// </summary>
+        public string DeltaToken { get; set; }
+
+        /// <summary>
         /// Gets or sets any $skipToken option for this uri.
         /// </summary>
         public string SkipToken { get; set; }
@@ -207,6 +212,7 @@ namespace Microsoft.OData.Core
                 Skip = Skip,
                 Top = Top,
                 QueryCount = QueryCount,
+                DeltaToken = DeltaToken,
                 SkipToken = SkipToken,
             };
         }

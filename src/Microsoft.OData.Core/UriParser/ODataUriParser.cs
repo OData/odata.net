@@ -331,6 +331,16 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
+        /// Parses a $deltaToken query option
+        /// </summary>
+        /// <returns>A value representing that delta token option, null if $deltaToken query does not exist.</returns>
+        public string ParseDeltaToken()
+        {
+            this.Initialize();
+            return this.queryOptionParser.ParseDeltaToken();
+        }
+
+        /// <summary>
         /// Parses a $skipToken query option
         /// </summary>
         /// <returns>A value representing that skip token option, null if $skipToken query does not exist.</returns>
@@ -358,6 +368,7 @@ namespace Microsoft.OData.Core.UriParser
             long? top = this.ParseTop();
             long? skip = this.ParseSkip();
             bool? count = this.ParseCount();
+            string deltaToken = this.ParseDeltaToken();
             string skipToken = this.ParseSkipToken();
 
             // TODO:  check it shouldn't be empty
@@ -365,6 +376,7 @@ namespace Microsoft.OData.Core.UriParser
 
             ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, search, skip, top, count);
             odataUri.ServiceRoot = this.serviceRoot;
+            odataUri.DeltaToken = deltaToken;
             odataUri.SkipToken = skipToken;
             return odataUri;
         }

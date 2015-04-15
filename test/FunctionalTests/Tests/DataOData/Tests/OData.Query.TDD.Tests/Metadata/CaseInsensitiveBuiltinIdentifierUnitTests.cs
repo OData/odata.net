@@ -275,6 +275,17 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Metadata
         }
 
         [TestMethod]
+        public void CaseInsensitiveDeltaTokenShouldWork()
+        {
+            this.TestCaseInsensitiveBuiltIn(
+                "People?$deltaToken=foo",
+                "People?$DELTATOKEN=foo",
+                uriParser => uriParser.ParseDeltaToken(),
+                val => val.Should().Be("foo"),
+                /*errorMessage*/ null);
+        }
+
+        [TestMethod]
         public void CaseInsensitiveSkipTokenShouldWork()
         {
             this.TestCaseInsensitiveBuiltIn(
