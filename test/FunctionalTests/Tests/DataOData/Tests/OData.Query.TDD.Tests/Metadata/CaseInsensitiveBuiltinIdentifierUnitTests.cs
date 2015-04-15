@@ -278,7 +278,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Metadata
         public void CaseInsensitiveSkipTokenShouldWork()
         {
             this.TestCaseInsensitiveBuiltIn(
-                "People?$skipToken=var1",
+                "People?$skiptoken=var1",
                 "People?$SKIPTOKEN=var1",
                 uriParser => uriParser.ParseSkipToken(),
                 val => val.Should().Be("var1"),

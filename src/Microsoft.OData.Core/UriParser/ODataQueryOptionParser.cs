@@ -232,9 +232,9 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Parses a $skipToken query option
+        /// Parses a $skiptoken query option
         /// </summary>
-        /// <returns>A value representing that skip token option, null if $skipToken query does not exist.</returns>
+        /// <returns>A value representing that skip token option, null if $skiptoken query does not exist.</returns>
         public string ParseSkipToken()
         {
             string skipTokenQuery;

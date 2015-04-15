@@ -172,7 +172,7 @@ namespace Microsoft.OData.Core
         public bool? QueryCount { get; set; }
 
         /// <summary>
-        /// Gets or sets any $skipToken option for this uri.
+        /// Gets or sets any $skiptoken option for this uri.
         /// </summary>
         public string SkipToken { get; set; }
 
