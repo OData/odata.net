@@ -15,7 +15,7 @@
   <!-- For ODataLib -->
   <PropertyGroup>
     <VersionMajor Condition="'$(VersionMajor)' == ''">6</VersionMajor>
-    <VersionMinor Condition="'$(VersionMinor)' == ''">11</VersionMinor>
+    <VersionMinor Condition="'$(VersionMinor)' == ''">12</VersionMinor>
     <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
     <VersionBuildRevision Condition="'$(VersionBuildRevision)' == ''">0</VersionBuildRevision>
   </PropertyGroup>
