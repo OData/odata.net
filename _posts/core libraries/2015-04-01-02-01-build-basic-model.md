@@ -7,12 +7,13 @@ category: "2. EdmLib"
 
 The *EDM* (Entity Data Model) library (*abbr*. EdmLib) primarily contains APIs to **build** an entity data model that conforms to *CSDL* (Common Schema Definition Language) as well as APIs to **read** (or **write**) an entity data model **from** (or **to**) a CSDL document.
 
-This tutorial shows how to build a basic entity data model using EdmLib APIs.
+This section shows how to build a basic entity data model using EdmLib APIs.
 
 ### Software Versions Used in the Tutorial
  - [Visual Studio 2013 Update 4](http://go.microsoft.com/fwlink/?LinkId=517284)
  - [Microsoft.OData.Edm 6.11.0](http://www.nuget.org/packages/Microsoft.OData.Edm)
  - .NET 4.5
+ <br />
  
 ### Create the Visual Studio Project
 In Visual Studio, from the **File** menu, select **New > Project**.
@@ -37,7 +38,7 @@ In Solution Explorer, right-click the project **EdmLibSample**. From the context
 
 ![]({{site.baseurl}}/assets/2015-04-16-add-class.png)
 
-In the **SampleModelBuilder.cs** file, add the following `using` statements to introduce the EDM definitions:
+In the **SampleModelBuilder.cs** file, add the following `using` clauses to introduce the EDM definitions:
 
 {% highlight csharp %}
 using Microsoft.OData.Edm;
@@ -90,8 +91,9 @@ This code:
  - Defines a **keyless** complex type `Address` within the namespace `Sample.NS`;
  - Adds three structural properties `Street`, `City` and `PostalCode`;
  - Adds the `Sample.NS.Address` type to the model.
+ <br />
 
-### Add an Enumeration Type *Cateory*
+### Add an Enumeration Type *Category*
 In the **SampleModelBuilder.cs** file, add the following code into the `SampleModelBuilder` class:
 
 {% highlight csharp %}
@@ -122,6 +124,7 @@ This code:
  - Sets the attribute `IsFlags` to `true` so multiple members can be selected simultaneously;
  - Adds three enumeration members `Books`, `Dresses` and `Sports`;
  - Adds the `Sample.NS.Category` type to the model.
+ <br />
 
 ### Add an Entity Type *Customer*
 In the **SampleModelBuilder.cs** file, add the following code into the `SampleModelBuilder` class:
@@ -160,7 +163,8 @@ This code:
  - Adds a **nullable** property `Interests` of the type `Sample.NS.Category`;
  - Adds a **non-nullable** property `Address` of the type `Sample.NS.Address`;
  - Adds the `Sample.NS.Customer` type to the model.
-
+ <br />
+ 
 ### Add the Default Entity Container
 In the **SampleModelBuilder.cs** file, add the following code into the `SampleModelBuilder` class:
 
@@ -187,6 +191,7 @@ This code:
 
  - Defines an entity container `DefaultContainer` of the namespace `Sample.NS`;
  - Adds the container to the model.
+ <br />
  
 Note that each model **MUST** define exactly one entity container (*aka*. the `DefaultContainer`) which can be referenced later by the `_model.EntityContainer` property.
 
@@ -216,7 +221,7 @@ This code directly adds a new entity set `Customers` to the default container.
 ### Write the Model to a CSDL Document
 Congratulations! You now have a working entity data model! In order to show the model in an intuitive way, we would write it to a CSDL document.
 
-In the **Program.cs** file, add the following `using` statements:
+In the **Program.cs** file, add the following `using` clauses:
 
 {% highlight csharp %}
 using System.Collections.Generic;
@@ -244,12 +249,11 @@ namespace EdmLibSample
                 .BuildDefaultContainer()
                 .BuildCustomerSet()
                 .GetModel();
-            WriteModelToCsdl(model);
+            WriteModelToCsdl(model, "csdl.xml");
         }
-        private static void WriteModelToCsdl(IEdmModel model)
+        private static void WriteModelToCsdl(IEdmModel model, string fileName)
         {
-            using (var stream = new StreamWriter("csdl.xml"))
-            using (var writer = XmlWriter.Create(stream))
+            using (var writer = XmlWriter.Create(fileName))
             {
                 IEnumerable<EdmError> errors;
                 model.TryWriteCsdl(writer, out errors);
@@ -270,4 +274,7 @@ Open the **csdl.xml** file under the **output directory** with Internet Explorer
 
 ![]({{site.baseurl}}/assets/2015-04-17-csdl.png)
 
-As you can see, the document contains all the elements which have been built so far.
+As you can see, the document contains all the elements we have built so far.
+
+### References
+[[Tutorial & Sample] Use Enumeration types in OData](http://blogs.msdn.com/b/odatateam/archive/2014/03/18/use-enumeration-types-in-odata.aspx).
