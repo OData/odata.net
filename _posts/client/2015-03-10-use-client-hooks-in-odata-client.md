@@ -2,7 +2,7 @@
 layout: post
 title: "Client Hooks in OData Client"
 description: "How to use client hooks to compose higher level functionality"
-category: Code Generated Client
+category: "4. Client"
 ---
 
 OData Client provides several ways to allow developers to hook into the client request and response. It gives developers the opportunity to inspect, adjust or replace some request or response.

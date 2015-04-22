@@ -2,7 +2,7 @@
 layout: post
 title: "Client Annotation Support"
 description: "This tutorial describes how to get annotations on client side"
-category: Code Generated Client
+category: "4. Client"
 ---
 
 # Background #

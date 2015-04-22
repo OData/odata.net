@@ -2,7 +2,7 @@
 layout: post
 title: "Basic CRUD Operations"
 description: ""
-category: Code Generated Client
+category: "4. Client"
 ---
 
 # Request an entity set
