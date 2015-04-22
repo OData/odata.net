@@ -58,8 +58,9 @@ namespace Microsoft.OData.Client
             Debug.Assert(resolveNameFromType != null, "resolveNameFromType != null");
             this.resolveTypeFromName = resolveTypeFromName;
             this.resolveNameFromType = resolveNameFromType;
-            this.clientEdmModel = model;
             this.serviceModel = serviceModel;
+            this.clientEdmModel = model;
+            this.clientEdmModel.SetEdmEntitySets(serviceModel.EntityContainer.EntitySets());
         }
 
         /// <summary>

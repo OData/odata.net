@@ -48,6 +48,9 @@ namespace Microsoft.OData.Client
         /// <summary>Referenced core model.</summary>
         private readonly IEnumerable<IEdmModel> coreModel = new IEdmModel[] { EdmCoreModel.Instance };
 
+        /// <summary>The edm entity types from the TypeResolver's service model.</summary>
+        private IEnumerable<IEdmEntityType> edmEntityTypes;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -268,6 +271,18 @@ namespace Microsoft.OData.Client
             return this.GetClientTypeAnnotation(result);
         }
 
+        /// <summary>
+        /// Sets the entity sets which will be used to set the entity types.
+        /// </summary>
+        /// <param name="serviceModel">The service model.</param>
+        internal void SetEdmEntitySets(IEnumerable<IEdmEntitySet> edmEntitySets)
+        {
+            if (edmEntitySets.Any())
+            {
+                this.edmEntityTypes = edmEntitySets.Select(es => es.EntityType());
+            }
+        }
+
         /// <summary>Returns <paramref name="type"/> and its base types, in the order of most base type first and <paramref name="type"/> last.</summary>
         /// <param name="type">Type instance in question.</param>
         /// <param name="keyProperties">Returns the list of key properties if <paramref name="type"/> is an entity type; null otherwise.</param>
@@ -402,6 +417,14 @@ namespace Microsoft.OData.Client
             if (cachedEdmType == null)
             {
                 Type collectionType;
+                bool isOpen = false;
+                if (edmEntityTypes != null && edmEntityTypes.Any())
+                {
+                    IEdmEntityType edmEntityType = edmEntityTypes.FirstOrDefault(et => et.Name == type.Name);
+                    if (edmEntityType != null)
+                        isOpen = edmEntityType.IsOpen;
+                }
+
                 if (PrimitiveType.IsKnownNullableType(type))
                 {
                     PrimitiveType primitiveType;
@@ -462,7 +485,7 @@ namespace Microsoft.OData.Client
                         Debug.Assert(edmBaseType == null || edmBaseType.TypeKind == EdmTypeKind.Entity, "baseType == null || baseType.TypeKind == EdmTypeKind.Entity");
                         bool hasStream = GetHasStreamValue((IEdmEntityType)edmBaseType, type);
                         cachedEdmType = new EdmTypeCacheValue(
-                            new EdmEntityTypeWithDelayLoadedProperties(CommonUtil.GetModelTypeNamespace(type), CommonUtil.GetModelTypeName(type), (IEdmEntityType)edmBaseType, c.PlatformHelper.IsAbstract(type), /*isOpen*/ false, hasStream, delayLoadEntityProperties),
+                            new EdmEntityTypeWithDelayLoadedProperties(CommonUtil.GetModelTypeNamespace(type), CommonUtil.GetModelTypeName(type), (IEdmEntityType)edmBaseType, c.PlatformHelper.IsAbstract(type), isOpen, hasStream, delayLoadEntityProperties),
                             hasProperties);
                     }
                     else if ((enumTypeTmp = Nullable.GetUnderlyingType(type) ?? type) != null
@@ -513,7 +536,7 @@ namespace Microsoft.OData.Client
                         // Creating a complex type
                         Debug.Assert(edmBaseType == null || edmBaseType.TypeKind == EdmTypeKind.Complex, "baseType == null || baseType.TypeKind == EdmTypeKind.Complex");
                         cachedEdmType = new EdmTypeCacheValue(
-                            new EdmComplexTypeWithDelayLoadedProperties(CommonUtil.GetModelTypeNamespace(type), CommonUtil.GetModelTypeName(type), (IEdmComplexType)edmBaseType, c.PlatformHelper.IsAbstract(type), /*isOpen*/ false, delayLoadComplexProperties),
+                            new EdmComplexTypeWithDelayLoadedProperties(CommonUtil.GetModelTypeNamespace(type), CommonUtil.GetModelTypeName(type), (IEdmComplexType)edmBaseType, c.PlatformHelper.IsAbstract(type), isOpen, delayLoadComplexProperties),
                             hasProperties);
                     }
                 }
