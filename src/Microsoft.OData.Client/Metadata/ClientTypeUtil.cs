@@ -513,10 +513,24 @@ namespace Microsoft.OData.Client.Metadata
             return memberInfo.Name;
         }
 
-        /// <summary>Gets the server defined name in <see cref="OriginalNameAttribute"/> of the specified <paramref name="type"/>.</summary>
+        /// <summary>Gets the server defined type name in <see cref="OriginalNameAttribute"/> of the specified <paramref name="type"/>.</summary>
+        /// <param name="type">Member to get server defined type name of.</param>
+        /// <returns>The server defined type name.</returns>
+        internal static string GetServerDefinedTypeName(Type type)
+        {
+            OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
+            if (originalNameAttribute != null)
+            {
+                return originalNameAttribute.OriginalName;
+            }
+
+            return type.Name;
+        }
+
+        /// <summary>Gets the full server defined type name in <see cref="OriginalNameAttribute"/> of the specified <paramref name="type"/>.</summary>
         /// <param name="type">Member to get server defined name of.</param>
-        /// <returns>The server defined name.</returns>
-        internal static string GetServerDefinedlTypeFullName(Type type)
+        /// <returns>The server defined type full name.</returns>
+        internal static string GetServerDefinedTypeFullName(Type type)
         {
             OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
             if (originalNameAttribute != null)

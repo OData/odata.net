@@ -7,6 +7,7 @@
 namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
@@ -15,6 +16,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using ODataClient = Microsoft.OData.Client;
 
     [TestClass]
     public class ComplexTypeTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
@@ -902,7 +904,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
 
             accountInfo.FirstName = "Peter";
             accountInfo.MiddleName = "White";
-            
+
             // verify: open type enum property from client side should be serialized with odata.type
             accountInfo.FavoriteColor = Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.Color.Blue;
             accountInfo.Address = new Address
@@ -930,10 +932,26 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
         }
 
         [TestMethod]
+        public void UpdateOpenComplexTypeWithUndeclaredPropertiesClientTest()
+        {
+            TestClientContext.Format.UseJson(Model);
+
+            TestClientContext.MergeOption = ODataClient.MergeOption.OverwriteChanges;
+            TestClientContext.Configurations.RequestPipeline.OnEntryStarting(ea => EntryStarting(ea, TestClientContext));
+            var account = TestClientContext.Accounts.Where(a => a.AccountID == 101).First();
+
+            // In practice, transient property data would be mutated here in the partial companion to the client proxy.
+
+            TestClientContext.UpdateObject(account);
+            TestClientContext.SaveChanges();
+            // No more check, this case is to make sure that client doesn't throw exception.
+        }
+
+        [TestMethod]
         public void InsertDeleteEntityWithOpenComplexTypePropertyClientTest()
         {
             TestClientContext.Format.UseJson(Model);
-            
+
             Account newAccount = new Account()
             {
                 AccountID = 110,
@@ -1136,6 +1154,27 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             }
 
             return entry;
+        }
+
+        private void EntryStarting(Microsoft.OData.Client.WritingEntryArgs ea, InMemoryEntities context)
+        {
+            var entityState = context.Entities.First(e => e.Entity == ea.Entity).State;
+
+            // Send up an undeclared property on an Open Type.
+            if (entityState == ODataClient.EntityStates.Modified || entityState == ODataClient.EntityStates.Added)
+            {
+
+                // Send up an undeclared property on an Open Type.
+                if (ea.Entity.GetType() == typeof(Account))
+                {
+                    var accountInfoProperty = ea.Entry.Properties.FirstOrDefault(e => e.Name == "AccountInfo");
+                    var accountInfoComplexValueProperties = ((ODataComplexValue)accountInfoProperty.Value).Properties as List<ODataProperty>;
+
+                    // In practice, the data from this undeclared property would probably be stored in a transient property of the partial companion class to the client proxy.
+                    var undeclaredOdataProperty = new ODataProperty() { Name = "dynamicPropertyKey", Value = "dynamicPropertyValue" };
+                    accountInfoComplexValueProperties.Add(undeclaredOdataProperty);
+                }
+            }
         }
 
         #endregion

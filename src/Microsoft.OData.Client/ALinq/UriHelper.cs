@@ -180,7 +180,7 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                return context.ResolveNameFromTypeInternal(type) ?? ClientTypeUtil.GetServerDefinedlTypeFullName(type);
+                return context.ResolveNameFromTypeInternal(type) ?? ClientTypeUtil.GetServerDefinedTypeFullName(type);
             }
         }
 
@@ -207,7 +207,7 @@ namespace Microsoft.OData.Client
             // Raise the uriVersion each time we write the type segment on the uri.
             WebUtil.RaiseVersion(ref uriVersion, Util.ODataVersion4);
 
-            return context.ResolveNameFromTypeInternal(type) ?? ClientTypeUtil.GetServerDefinedlTypeFullName(type);
+            return context.ResolveNameFromTypeInternal(type) ?? ClientTypeUtil.GetServerDefinedTypeFullName(type);
         }
 
         /// <summary>
