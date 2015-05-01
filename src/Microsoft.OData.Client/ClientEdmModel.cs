@@ -48,8 +48,11 @@ namespace Microsoft.OData.Client
         /// <summary>Referenced core model.</summary>
         private readonly IEnumerable<IEdmModel> coreModel = new IEdmModel[] { EdmCoreModel.Instance };
 
-        /// <summary>The edm entity types from the TypeResolver's service model.</summary>
-        private IEnumerable<IEdmEntityType> edmEntityTypes;
+        /// <summary>The state of whether the edm structured schema elements have been set.</summary>
+        private bool edmStructuredSchemaElementsSet;
+
+        /// <summary>The edm structured types from the TypeResolver's service model schema elements.</summary>
+        private IEnumerable<IEdmSchemaElement> edmStructuredSchemaElements;
 
         /// <summary>
         /// Constructor.
@@ -109,6 +112,17 @@ namespace Microsoft.OData.Client
         public IEdmEntityContainer EntityContainer
         {
             get { throw new NotImplementedException(); }
+        }
+
+        /// <summary>
+        /// Gets the state of whether the edm structured schema elements have been set.
+        /// </summary>
+        public bool EdmStructuredSchemaElementsSet
+        {
+            get
+            {
+                return edmStructuredSchemaElementsSet;
+            }
         }
 
         /// <summary>
@@ -272,15 +286,13 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Sets the entity sets which will be used to set the entity types.
+        /// Sets the edm structured type schema elements for use in determining open types.
         /// </summary>
         /// <param name="serviceModel">The service model.</param>
-        internal void SetEdmEntitySets(IEnumerable<IEdmEntitySet> edmEntitySets)
+        internal void SetEdmStructuredSchemaElements(IEnumerable<IEdmSchemaElement> edmStructuredSchemaElements)
         {
-            if (edmEntitySets.Any())
-            {
-                this.edmEntityTypes = edmEntitySets.Select(es => es.EntityType());
-            }
+            this.edmStructuredSchemaElements = edmStructuredSchemaElements;
+            edmStructuredSchemaElementsSet = true;
         }
 
         /// <summary>Returns <paramref name="type"/> and its base types, in the order of most base type first and <paramref name="type"/> last.</summary>
@@ -418,11 +430,17 @@ namespace Microsoft.OData.Client
             {
                 Type collectionType;
                 bool isOpen = false;
-                if (edmEntityTypes != null && edmEntityTypes.Any())
+                if (edmStructuredSchemaElements != null && edmStructuredSchemaElements.Any())
                 {
-                    IEdmEntityType edmEntityType = edmEntityTypes.FirstOrDefault(et => et.Name == type.Name);
-                    if (edmEntityType != null)
-                        isOpen = edmEntityType.IsOpen;
+                    IEdmSchemaElement edmStructuredSchemaElement = edmStructuredSchemaElements.FirstOrDefault(et => et.Name == ClientTypeUtil.GetServerDefinedTypeName(type));
+                    if (edmStructuredSchemaElement != null)
+                    {
+                        IEdmStructuredType edmStructuredType = edmStructuredSchemaElement as IEdmStructuredType;
+                        if (edmStructuredType != null)
+                        {
+                            isOpen = edmStructuredType.IsOpen;
+                        }
+                    }
                 }
 
                 if (PrimitiveType.IsKnownNullableType(type))

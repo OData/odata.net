@@ -60,7 +60,12 @@ namespace Microsoft.OData.Client
             this.resolveNameFromType = resolveNameFromType;
             this.serviceModel = serviceModel;
             this.clientEdmModel = model;
-            this.clientEdmModel.SetEdmEntitySets(serviceModel.EntityContainer.EntitySets());
+
+            if (serviceModel != null && clientEdmModel != null && !clientEdmModel.EdmStructuredSchemaElementsSet)
+            {
+                var edmStructuredSchemaElements = serviceModel.SchemaElements.Where(se => se is IEdmStructuredType).Cast<IEdmSchemaElement>();
+                this.clientEdmModel.SetEdmStructuredSchemaElements(edmStructuredSchemaElements);
+            }
         }
 
         /// <summary>

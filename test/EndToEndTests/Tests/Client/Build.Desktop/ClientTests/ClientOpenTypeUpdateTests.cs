@@ -37,7 +37,8 @@ namespace Microsoft.Test.OData.Tests.Client
             contextWrapper.MergeOption = MergeOption.PreserveChanges;
             contextWrapper.Configurations.RequestPipeline.OnEntryStarting(ea => EntryStarting(ea));
             var row = contextWrapper.Context.Row.Where(r => r.Id == Guid.Parse("814d505b-6b6a-45a0-9de0-153b16149d56")).First();
-            
+            Assert.IsNotNull(row);
+
             // In practice, transient property data would be mutated here in the partial companion to the client proxy.
 
             contextWrapper.UpdateObject(row);

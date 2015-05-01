@@ -15,6 +15,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System.Collections.Generic;
 
     [TestClass]
     public class ComplexTypeTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
@@ -930,6 +931,24 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
         }
 
         [TestMethod]
+        public void UpdateOpenComplexTypeWithUndeclaredPropertiesClientTest()
+        {
+            TestClientContext.Format.UseJson(Model);
+
+            TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
+            TestClientContext.Configurations.RequestPipeline.OnEntryStarting(ea => EntryStarting(ea, TestClientContext));
+            var account = TestClientContext.Accounts.Where(a => a.AccountID == 101).First();
+
+            Assert.IsNotNull(account);
+            Assert.IsNotNull(account.AccountInfo);
+
+            // In practice, transient property data would be mutated here in the partial companion to the client proxy.
+
+            TestClientContext.UpdateObject(account);
+            TestClientContext.SaveChanges();
+        }
+
+        [TestMethod]
         public void InsertDeleteEntityWithOpenComplexTypePropertyClientTest()
         {
             TestClientContext.Format.UseJson(Model);
@@ -1136,6 +1155,27 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             }
 
             return entry;
+        }
+
+        private void EntryStarting(Microsoft.OData.Client.WritingEntryArgs ea, InMemoryEntities context)
+        {
+            var entityState = context.Entities.First(e => e.Entity == ea.Entity).State;
+
+            // Send up an undeclared property on an Open Type.
+            if (entityState == Microsoft.OData.Client.EntityStates.Modified || entityState == Microsoft.OData.Client.EntityStates.Added)
+            {
+
+                // Send up an undeclared property on an Open Type.
+                if (ea.Entity.GetType() == typeof(Account))
+                {
+                    var accountInfoProperty = ea.Entry.Properties.FirstOrDefault(e => e.Name == "AccountInfo");
+                    var accountInfoComplexValueProperties = ((ODataComplexValue)accountInfoProperty.Value).Properties as List<ODataProperty>;
+
+                    // In practice, the data from this undeclared property would probably be stored in a transient property of the partial companion class to the client proxy.
+                    var undeclaredOdataProperty = new ODataProperty() { Name = "dynamicPropertyKey", Value = "dynamicPropertyValue" };
+                    accountInfoComplexValueProperties.Add(undeclaredOdataProperty);
+                }
+            }
         }
 
         #endregion
