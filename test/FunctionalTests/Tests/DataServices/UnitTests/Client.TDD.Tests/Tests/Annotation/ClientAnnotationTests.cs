@@ -1010,7 +1010,6 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             });
         }
 
-
         [TestMethod]
         public void TestGetInstanceAnnotationOnSingleNavigationProperty()
         {
@@ -1243,8 +1242,72 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             });
         }
 
+        [TestMethod]
+        public void TestDisableInstanceAnnotationMaterializationOnODataFeed()
+        {
+            string response = FeedPayloadWithInstanceAnnotationOnFeedandEntry;
+            TestAnnotation(response, () =>
+            {
+                dsc.DisableInstanceAnnotationMaterialization = true;
+                var peopleQueryResponse = dsc.PeoplePlus.Execute();
+                var people = peopleQueryResponse.ToList();
+
+                // Get Enum annotation on feed, no instance annotation. 
+                PersonGenderPlus annotation;
+                bool result = dsc.TryGetAnnotation<PersonGenderPlus>(peopleQueryResponse, "Microsoft.OData.SampleService.Models.TripPin.Gender", out annotation);
+                Assert.IsFalse(result);
+                Assert.AreEqual(PersonGenderPlus.UnknownPlus, annotation);
+
+                // Get annotaion on entry, no instance annotation, return metadata annotation.
+                ICollection<string> annotation2 = null;
+                result = dsc.TryGetAnnotation<ICollection<string>>(people[0], "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation2);
+                Assert.IsTrue(result);
+                Assert.AreEqual("Bob", annotation2.First());
+                Assert.AreEqual("BobCat", annotation2.ElementAt(1));
+            });
+        }
+
+        [TestMethod]
+        public void TestDisableInstanceAnnotationMaterializationOnOnODataComplexValue()
+        {
+            TestAnnotation(ComplexValuePayloadWithInstanceAnnotationOnComplexValue, () =>
+            {
+                dsc.DisableInstanceAnnotationMaterialization = true;
+                var getLocationQuery = dsc.PeoplePlus.ByKey("Jason").SetLocationPlus();
+                var location = getLocationQuery.GetValue();
+
+                string annotation = null;
+                bool result = dsc.TryGetAnnotation<string>(location, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
+                Assert.IsTrue(result);
+                Assert.AreEqual("Nanjing", annotation);
+            });
+        }
+
+        [TestMethod]
+        public void TestDisableInstanceAnnotationMaterializationOnCollectionPropertyInAnEntity()
+        {
+            TestAnnotation(EntryPayloadWithInstanceAnnotationOnEntry, () =>
+            {
+                dsc.DisableInstanceAnnotationMaterialization = true;
+                var person = dsc.PeoplePlus.ByKey("russellwhyte").GetValue();
+
+                // Get instance annotation on collection property
+                ICollection<string> annotation;
+                bool result = dsc.TryGetAnnotation<Func<ObservableCollection<string>>, ICollection<string>>(() => person.EmailsPlus, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation);
+                Assert.IsFalse(result);
+                Assert.IsNull(annotation);
+
+                // Get instance annotation on the same collection property
+                bool annotation1;
+                result = dsc.TryGetAnnotation<Func<ObservableCollection<string>>, bool>(() => person.EmailsPlus, "Org.OData.Core.V1.Computed", out annotation1);
+                Assert.IsFalse(result);
+                Assert.AreEqual(false, annotation1);
+            });
+        }
+
         private void TestAnnotation(string response, Action testAction)
         {
+            dsc.DisableInstanceAnnotationMaterialization = false;
             SetResponse(response);
 
             dsc.SendingRequest2 += (sender, args) =>

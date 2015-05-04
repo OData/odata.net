@@ -255,8 +255,11 @@ namespace Microsoft.OData.Client.Materialization
                         prop.SetValue(instance, complexInstance, property.Name, true /* allowAdd? */);
                     }
 
-                    // Set instance annotation for this complex instance
-                    this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(property, complexInstance);
+                    if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization)
+                    {
+                        // Set instance annotation for this complex instance
+                        this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(property, complexInstance);
+                    }
                 }
                 else
                 {
@@ -265,8 +268,11 @@ namespace Microsoft.OData.Client.Materialization
                 }
             }
 
-            // Apply instance annotation for Property
-            this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(property, type.ElementType, instance);
+            if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization)
+            {
+                // Apply instance annotation for Property
+                this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(property, type.ElementType, instance);
+            }
         }
 
         /// <summary>

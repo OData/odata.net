@@ -62,7 +62,10 @@ namespace Microsoft.OData.Client.Materialization
             this.ApplyDataValues(complexType, complexValue.Properties, complexInstance);
             complexValue.SetMaterializedValue(complexInstance);
 
-            this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(complexValue, complexInstance);
+            if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization)
+            {
+                this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(complexValue, complexInstance);
+            }
         }
     }
 }

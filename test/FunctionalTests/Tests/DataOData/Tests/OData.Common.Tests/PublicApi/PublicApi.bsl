@@ -6235,6 +6235,7 @@ public class Microsoft.OData.Client.DataServiceContext {
 	System.Uri BaseUri  { public get; public set; }
 	Microsoft.OData.Client.DataServiceClientConfigurations Configurations  { [CompilerGeneratedAttribute(),]public get; }
 	System.Net.ICredentials Credentials  { public get; public set; }
+	bool DisableInstanceAnnotationMaterialization  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.EntityDescriptor]] Entities  { public get; }
 	Microsoft.OData.Client.EntityParameterSendOption EntityParameterSendOption  { public get; public set; }
 	Microsoft.OData.Client.EntityTracker EntityTracker  { public get; public set; }

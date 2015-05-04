@@ -238,7 +238,10 @@ namespace Microsoft.OData.Client.Materialization
                             addValueToBackingICollectionInstance(collectionInstance, complexInstance);
 
                             // Apply instance annotation for complex type item
-                            this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(complexValue, complexInstance);
+                            if (!this.materializerContext.Context.DisableInstanceAnnotationMaterialization)
+                            {
+                                this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(complexValue, complexInstance);
+                            }
                         }
                         else
                         {

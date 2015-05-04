@@ -621,7 +621,7 @@ namespace Microsoft.OData.Client.Materialization
                             {
                                 prop.SetValue(entry.ResolvedObject, linkEntry.ResolvedObject, link.Name, true /* allowAdd? */);
 
-                                if (linkEntry.ShouldUpdateFromPayload)
+                                if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization && linkEntry.ShouldUpdateFromPayload)
                                 {
                                     // Apply instance annotation for navigation property
                                     this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(

@@ -607,6 +607,15 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Disable instance annotation to be materialized.
+        /// </summary>
+        public bool DisableInstanceAnnotationMaterialization
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets a System.Boolean value that controls whether default credentials are sent with requests.
         /// </summary>
         internal bool UseDefaultCredentials

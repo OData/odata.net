@@ -715,7 +715,7 @@ namespace Microsoft.OData.Client.Materialization
                                 if (linkEntry.Entry != null && !linkEntry.EntityHasBeenResolved)
                                 {
                                     this.EntryValueMaterializationPolicy.Materialize(linkEntry, property.PropertyType, /* includeLinks */ false);
-                                    if (linkEntry.ShouldUpdateFromPayload)
+                                    if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization && linkEntry.ShouldUpdateFromPayload)
                                     {
                                         this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(linkEntry.Entry, linkEntry.ResolvedObject);
                                     }
@@ -728,7 +728,7 @@ namespace Microsoft.OData.Client.Materialization
                             }
 
                             // apply instance annotation for navigation property
-                            if (linkEntry.ShouldUpdateFromPayload)
+                            if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization && linkEntry.ShouldUpdateFromPayload)
                             {
                                 this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(propertyName, linkEntry.Entry, expectedType, entry.ResolvedObject);
                             }
@@ -796,7 +796,10 @@ namespace Microsoft.OData.Client.Materialization
 
                         // TODO: projection with anonymous type is not supported now.
                         // apply instance annotation for property
-                        this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(odataProperty, expectedType, entry.ResolvedObject);
+                        if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization)
+                        {
+                            this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(odataProperty, expectedType, entry.ResolvedObject);
+                        }
                     }
                 }
 
@@ -862,19 +865,22 @@ namespace Microsoft.OData.Client.Materialization
                 entryAndState.ResolvedObject = this.TargetInstance;
                 this.currentValue = this.materializeEntryPlan.Run(this, this.CurrentEntry, this.ExpectedType);
 
-                // apply instance annotations for feed
-                if (setFeedInstanceAnnotation && this.CurrentFeed != null && this.SetInstanceAnnotations != null)
-                 {
-                    this.SetInstanceAnnotations(
-                        this.InstanceAnnotationMaterializationPolicy.ConvertToClrInstanceAnnotations(this.CurrentFeed.InstanceAnnotations));
-                }
-
-                // 1. When using projection with anonymous type, the resolved object is null, ShouldUpdateFromPayload is false.
-                // 2. When using projection with a specific type, or in other circumstances,
-                // the resolved object is not null; the ShouldUpdateFromPayload is true or false according to the merge option.
-                if (this.CurrentEntry != null && entryAndState.ResolvedObject == null || entryAndState.ShouldUpdateFromPayload)
+                if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization)
                 {
-                    this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(this.CurrentEntry, this.currentValue);
+                    // apply instance annotations for feed
+                    if (setFeedInstanceAnnotation && this.CurrentFeed != null && this.SetInstanceAnnotations != null)
+                    {
+                        this.SetInstanceAnnotations(
+                            this.InstanceAnnotationMaterializationPolicy.ConvertToClrInstanceAnnotations(this.CurrentFeed.InstanceAnnotations));
+                    }
+
+                    // 1. When using projection with anonymous type, the resolved object is null, ShouldUpdateFromPayload is false.
+                    // 2. When using projection with a specific type, or in other circumstances,
+                    // the resolved object is not null; the ShouldUpdateFromPayload is true or false according to the merge option.
+                    if (this.CurrentEntry != null && entryAndState.ResolvedObject == null || entryAndState.ShouldUpdateFromPayload)
+                    {
+                        this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(this.CurrentEntry, this.currentValue);
+                    }
                 }
 
                 return true;
