@@ -228,20 +228,11 @@ namespace Microsoft.OData.Client.Materialization
                 bool ignoreMissingProperty = this.MaterializerContext.Context.IgnoreMissingProperties;
 
                 // Get the client property info
-                string clientPropertyName = ClientTypeUtil.GetClientPropertyName(type, propertyName, ignoreMissingProperty);
-                if (clientPropertyName != null)
-                {
-                    PropertyInfo propertyInfo = type.GetProperty(clientPropertyName);
-                    Type declaringType = propertyInfo.DeclaringType;
-
-                    if (type.IsSubclassOf(declaringType))
-                    {
-                        propertyInfo = declaringType.GetProperty(clientPropertyName);
-                    }
-
-                    Tuple<object, MemberInfo> annotationKeyForProperty = new Tuple<object, MemberInfo>(declaringInstance, propertyInfo);
-                    SetInstanceAnnotations(annotationKeyForProperty, instanceAnnotations);
-                }
+                ClientEdmModel edmModel = this.MaterializerContext.Model;
+                ClientTypeAnnotation clientTypeAnnotation = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(type));
+                ClientPropertyAnnotation clientPropertyAnnotation = clientTypeAnnotation.GetProperty(propertyName, ignoreMissingProperty);
+                Tuple<object, MemberInfo> annotationKeyForProperty = new Tuple<object, MemberInfo>(declaringInstance, clientPropertyAnnotation.PropertyInfo);
+                SetInstanceAnnotations(annotationKeyForProperty, instanceAnnotations);
             }
         }
 

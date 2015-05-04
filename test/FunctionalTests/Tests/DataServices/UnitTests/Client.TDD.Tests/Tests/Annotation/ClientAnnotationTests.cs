@@ -954,6 +954,64 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
         }
 
         [TestMethod]
+        public void TestGetAnnotationOnPropertyInDerivedEntity()
+        {
+            string response = @"{
+    ""@odata.context"":""http://odataService/$metadata#People/$entity"",
+    ""@odata.type"":""#Microsoft.OData.SampleService.Models.TripPin.VipCustomer"",
+    ""@Microsoft.OData.SampleService.Models.TripPin.SeoTerms"":
+    [
+        ""Russell1"",
+        ""Whyte1""
+    ],
+    ""UserName"":""russellwhyte"",
+    ""FirstName"":""Russell"",
+    ""LastName"":""Whyte"",
+    ""Emails"":[""Russell@example.com"",""Russell@contoso.com""],
+    ""Location"":
+    {
+        ""@Microsoft.OData.SampleService.Models.TripPin.CityName"" : ""Test1"",
+        ""Address"":""1 Microsoft Way"",
+        ""City"":
+        {
+            ""Name"":""Nanjing"",
+            ""CountryRegion"":""China""
+        }
+     },
+    ""CompanyLocation"":
+    {
+        ""@odata.type"":""#Microsoft.OData.SampleService.Models.TripPin.CompanyLocation"",
+        ""@Microsoft.OData.SampleService.Models.TripPin.CityName"" : ""Test2"",
+        ""Address"":""1 Microsoft Way"",
+        ""City"":
+        {
+            ""Name"":""Nanjing"",
+            ""CountryRegion"":""China""
+        }
+     },
+     ""Gender"":""Male"",
+     ""Age"":""22"",
+     ""Concurrency"":635548229917715070,
+     ""VipNumber"":1
+ }";
+            TestAnnotation(response, () =>
+            {
+                var person = dsc.PeoplePlus.ByKey("russellwhyte").GetValue();
+                string annotation = null;
+
+                // Get instance annotation on a single entity
+                bool result = dsc.TryGetAnnotation<Func<LocationPlus>, string>(() => person.LocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
+                Assert.IsTrue(result);
+                Assert.AreEqual("Test1", annotation);
+
+                result = dsc.TryGetAnnotation<Func<LocationPlus>, string>(() => person.CompanyLocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
+                Assert.IsTrue(result);
+                Assert.AreEqual("Test2", annotation);
+            });
+        }
+
+
+        [TestMethod]
         public void TestGetInstanceAnnotationOnSingleNavigationProperty()
         {
             string response = @"{

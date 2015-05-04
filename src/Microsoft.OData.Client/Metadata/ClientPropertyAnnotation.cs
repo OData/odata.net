@@ -30,6 +30,9 @@ namespace Microsoft.OData.Client.Metadata
         /// <summary>property name for debugging</summary>
         internal readonly string PropertyName;
 
+        /// <summary>PropertyInfo in CLR type.</summary>
+        internal readonly PropertyInfo PropertyInfo;
+
         /// <summary>Exact property type; possibly nullable but not necessarily so.</summary>
         internal readonly Type NullablePropertyType;
 
@@ -96,6 +99,7 @@ namespace Microsoft.OData.Client.Metadata
 
             this.EdmProperty = edmProperty;
             this.PropertyName = ClientTypeUtil.GetServerDefinedName(propertyInfo);
+            this.PropertyInfo = propertyInfo;
             this.NullablePropertyType = propertyInfo.PropertyType;
             this.PropertyType = Nullable.GetUnderlyingType(this.NullablePropertyType) ?? this.NullablePropertyType;
             this.DeclaringClrType = propertyInfo.DeclaringType;
