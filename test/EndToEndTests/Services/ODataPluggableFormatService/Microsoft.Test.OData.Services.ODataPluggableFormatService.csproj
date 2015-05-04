@@ -51,6 +51,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PayloadValueConverter\BinaryPayloadConverter.cs" />
+    <Compile Include="PayloadValueConverter\PayloadValueConverterService.cs" />
+    <Compile Include="PayloadValueConverter\PayloadValueConverterServiceDataSource.cs" />
+    <Compile Include="PayloadValueConverter\PayloadValueConverterServiceDescriptor.cs" />
     <Compile Include="PluggableFormatModels.cs" />
     <Compile Include="PluggableFormatOperationProvider.cs" />
     <Compile Include="PluggableFormatRequestHandler.cs" />

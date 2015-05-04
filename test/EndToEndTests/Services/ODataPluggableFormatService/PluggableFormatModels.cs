@@ -23,7 +23,7 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
 
         public byte[] Picture { get; set; }
 
-        public IEnumerable<int> Numbers { get; set; }
+        public List<int> Numbers { get; set; }
 
         public ContactInfo BusinessCard { get; set; }
     }

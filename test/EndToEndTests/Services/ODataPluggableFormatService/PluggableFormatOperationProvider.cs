@@ -11,11 +11,12 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
     using Microsoft.Test.OData.Services.ODataWCFService;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
-    internal class PluggableFormatOperationProvider : ODataReflectionOperationProvider
+    internal class PluggableFormatOperationProvider<T> : ODataReflectionOperationProvider
+        where T : class, IODataDataSource, new()
     {
         public void ResetDataSource()
         {
-            var dataSource = DataSourceManager.GetCurrentDataSource<PluggableFormatServiceDataSource>();
+            var dataSource = DataSourceManager.GetCurrentDataSource<T>();
             dataSource.Reset();
             dataSource.Initialize();
         }

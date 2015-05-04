@@ -19,7 +19,7 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
     {
         public PluggableFormatServiceDataSource()
         {
-            this.OperationProvider = new PluggableFormatOperationProvider();
+            this.OperationProvider = new PluggableFormatOperationProvider<PluggableFormatServiceDataSource>();
         }
 
         #region Entity Set Resources
@@ -70,6 +70,7 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
                 new Person()
                 {
                     Id = 32,
+                    Numbers = new List<int>{},
                     BusinessCard = new ContactInfo()
                     {
                         N = "Name2",
