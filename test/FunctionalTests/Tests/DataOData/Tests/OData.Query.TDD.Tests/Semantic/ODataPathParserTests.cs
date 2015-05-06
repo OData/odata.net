@@ -294,6 +294,63 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         }
         #endregion
 
+        #region Short types
+        [TestMethod]
+        public void TestIntArgumentOnByteParameter()
+        {
+            IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanByte(age=123)" });
+            path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForIsOlderThanByte());
+            var constantNode = path[2].As<OperationSegment>().Parameters.Single().Value.As<ConstantNode>();
+            constantNode.Value.Should().Be((byte)123);
+            constantNode.TypeReference.FullName().Should().Be("Edm.Byte");
+        }
+
+        [TestMethod]
+        public void TestIntArgumentOnSByteParameter()
+        {
+            IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanSByte(age=-128)" });
+            path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForIsOlderThanSByte());
+            var constantNode = path[2].As<OperationSegment>().Parameters.Single().Value.As<ConstantNode>();
+            constantNode.Value.Should().Be((sbyte)-128);
+            constantNode.TypeReference.FullName().Should().Be("Edm.SByte");
+        }
+
+        [TestMethod]
+        public void TestIntArgumentOnShortParameter()
+        {
+            IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanShort(age=12345)" });
+            path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForIsOlderThanShort());
+            var constantNode = path[2].As<OperationSegment>().Parameters.Single().Value.As<ConstantNode>();
+            constantNode.Value.Should().Be((short)12345);
+            constantNode.TypeReference.FullName().Should().Be("Edm.Int16");
+        }
+
+        [TestMethod]
+        public void TestOverflowIntArgumentOnShortParameter()
+        {
+            // short.MaxValue + 1 = 32768
+            Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanShort(age=32768)" });
+            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.Int16"));
+        }
+
+        [TestMethod]
+        public void TestSingleArgumentOnSingleParameter()
+        {
+            IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanSingle(age=123.456)" });
+            path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForIsOlderThanSingle());
+            var constantNode = path[2].As<OperationSegment>().Parameters.Single().Value.As<ConstantNode>();
+            constantNode.Value.Should().Be((float)123.456);
+            constantNode.TypeReference.FullName().Should().Be("Edm.Single");
+        }
+
+        [TestMethod]
+        public void TestDoubleArgumentOnSingleParameter()
+        {
+            Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanSingle(age=123.45678987)" });
+            parsePath.ShouldThrow<ODataException>().WithMessage(ErrorStrings.MetadataBinder_CannotConvertToType("Edm.Double", "Edm.Single"));
+        }
+        #endregion
+
         [TestMethod]
         public void ActionShouldWork()
         {

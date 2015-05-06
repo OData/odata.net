@@ -495,6 +495,26 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             FullyQualifiedNamespaceCanMoveToAddressesFunction.AddParameter("addresses", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespaceAddressTypeReference)));
             model.AddElement(FullyQualifiedNamespaceCanMoveToAddressesFunction);
 
+            var FullyQualifiedNamespaceIsOlderThanByteFunction = new EdmFunction("Fully.Qualified.Namespace", "IsOlderThanByte", EdmCoreModel.Instance.GetBoolean(true), true, null, false);
+            FullyQualifiedNamespaceIsOlderThanByteFunction.AddParameter("person", FullyQualifiedNamespacePersonTypeReference);
+            FullyQualifiedNamespaceIsOlderThanByteFunction.AddParameter("age", EdmCoreModel.Instance.GetByte(true));
+            model.AddElement(FullyQualifiedNamespaceIsOlderThanByteFunction);
+
+            var FullyQualifiedNamespaceIsOlderThanSByteFunction = new EdmFunction("Fully.Qualified.Namespace", "IsOlderThanSByte", EdmCoreModel.Instance.GetBoolean(true), true, null, false);
+            FullyQualifiedNamespaceIsOlderThanSByteFunction.AddParameter("person", FullyQualifiedNamespacePersonTypeReference);
+            FullyQualifiedNamespaceIsOlderThanSByteFunction.AddParameter("age", EdmCoreModel.Instance.GetSByte(true));
+            model.AddElement(FullyQualifiedNamespaceIsOlderThanSByteFunction);
+
+            var FullyQualifiedNamespaceIsOlderThanShortFunction = new EdmFunction("Fully.Qualified.Namespace", "IsOlderThanShort", EdmCoreModel.Instance.GetBoolean(true), true, null, false);
+            FullyQualifiedNamespaceIsOlderThanShortFunction.AddParameter("person", FullyQualifiedNamespacePersonTypeReference);
+            FullyQualifiedNamespaceIsOlderThanShortFunction.AddParameter("age", EdmCoreModel.Instance.GetInt16(true));
+            model.AddElement(FullyQualifiedNamespaceIsOlderThanShortFunction);
+
+            var FullyQualifiedNamespaceIsOlderThanSingleFunction = new EdmFunction("Fully.Qualified.Namespace", "IsOlderThanSingle", EdmCoreModel.Instance.GetBoolean(true), true, null, false);
+            FullyQualifiedNamespaceIsOlderThanSingleFunction.AddParameter("person", FullyQualifiedNamespacePersonTypeReference);
+            FullyQualifiedNamespaceIsOlderThanSingleFunction.AddParameter("age", EdmCoreModel.Instance.GetSingle(true));
+            model.AddElement(FullyQualifiedNamespaceIsOlderThanSingleFunction);
+
             var FullyQualifiedNamespacePaintAction = new EdmAction("Fully.Qualified.Namespace", "Paint", FullyQualifiedNamespacePaintingTypeReference, true, new EdmPathExpression("person/MyPaintings"));
             FullyQualifiedNamespacePaintAction.AddParameter("person", FullyQualifiedNamespacePersonTypeReference);
             model.AddElement(FullyQualifiedNamespacePaintAction);
@@ -1195,6 +1215,26 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
       <Function Name=""CanMoveToAddresses"" IsBound=""true"">
         <Parameter Name=""person"" Type=""Fully.Qualified.Namespace.Person"" />
         <Parameter Name=""addresses"" Type=""Collection(Fully.Qualified.Namespace.Address)"" />
+        <ReturnType Type=""Edm.Boolean"" />
+      </Function>
+      <Function Name=""IsOlderThanByte"" IsBound=""true"">
+        <Parameter Name=""person"" Type=""Fully.Qualified.Namespace.Person"" />
+        <Parameter Name=""age"" Type=""Edm.Byte"" />
+        <ReturnType Type=""Edm.Boolean"" />
+      </Function>
+      <Function Name=""IsOlderThanSByte"" IsBound=""true"">
+        <Parameter Name=""person"" Type=""Fully.Qualified.Namespace.Person"" />
+        <Parameter Name=""age"" Type=""Edm.SByte"" />
+        <ReturnType Type=""Edm.Boolean"" />
+      </Function>
+      <Function Name=""IsOlderThanShort"" IsBound=""true"">
+        <Parameter Name=""person"" Type=""Fully.Qualified.Namespace.Person"" />
+        <Parameter Name=""age"" Type=""Edm.Int16"" />
+        <ReturnType Type=""Edm.Boolean"" />
+      </Function>
+      <Function Name=""IsOlderThanSingle"" IsBound=""true"">
+        <Parameter Name=""person"" Type=""Fully.Qualified.Namespace.Person"" />
+        <Parameter Name=""age"" Type=""Edm.Single"" />
         <ReturnType Type=""Edm.Boolean"" />
       </Function>
       <Action Name=""Paint"" IsBound=""true"" EntitySetPath=""person/MyPaintings"">
@@ -1940,6 +1980,26 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
         public static IEdmFunction GetFunctionForCanMoveToAddresses()
         {
             return TestModel.FindOperations("Fully.Qualified.Namespace.CanMoveToAddresses").Single().As<IEdmFunction>();
+        }
+
+        public static IEdmFunction GetFunctionForIsOlderThanByte()
+        {
+            return TestModel.FindOperations("Fully.Qualified.Namespace.IsOlderThanByte").Single().As<IEdmFunction>();
+        }
+
+        public static IEdmFunction GetFunctionForIsOlderThanSByte()
+        {
+            return TestModel.FindOperations("Fully.Qualified.Namespace.IsOlderThanSByte").Single().As<IEdmFunction>();
+        }
+
+        public static IEdmFunction GetFunctionForIsOlderThanShort()
+        {
+            return TestModel.FindOperations("Fully.Qualified.Namespace.IsOlderThanShort").Single().As<IEdmFunction>();
+        }
+
+        public static IEdmFunction GetFunctionForIsOlderThanSingle()
+        {
+            return TestModel.FindOperations("Fully.Qualified.Namespace.IsOlderThanSingle").Single().As<IEdmFunction>();
         }
 
         public static IEdmOperationImport GetFunctionImportForOwnsTheseDogs()

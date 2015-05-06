@@ -127,7 +127,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
                 {
                     oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddresses()).As<IEdmFunction>();
                     aliasNodes["@addresses"].As<ConstantNode>().Value.ShouldBeODataCollectionValue().
-                        And.ItemsShouldBeAssignableTo<ODataComplexValue>().And.Count().Should().Be(2); ;
+                        And.ItemsShouldBeAssignableTo<ODataComplexValue>().And.Count().Should().Be(2);
                 });
         }
 
@@ -143,6 +143,22 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
                     aliasNodes["@dogNames"].As<ConstantNode>().Value.ShouldBeODataCollectionValue().
                         And.ItemsShouldBeAssignableTo<string>().And.Count().Should().Be(2); ;
                 });
+        }
+
+        [TestMethod]
+        public void ParsePath_IntArgumentOnShortParameter()
+        {
+            const string relativeUri = "People(1)/Fully.Qualified.Namespace.IsOlderThanShort(age=@age)?@age=1234";
+            Action parseUri = () => ParseUriAndVerify(
+                new Uri("http://gobbledygook/" + relativeUri),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForIsOlderThanShort()).As<IEdmFunction>();
+                    aliasNodes["@age"].As<ConstantNode>().Value.Should().Be(1234);
+                    aliasNodes["@age"].As<ConstantNode>().TypeReference.FullName().Should().Be("Edm.Int16");
+                });
+            // TODO: This is a bug repro. Remove this assertion after the bug is fixed.
+            parseUri.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.Int16"));
         }
 
         #endregion

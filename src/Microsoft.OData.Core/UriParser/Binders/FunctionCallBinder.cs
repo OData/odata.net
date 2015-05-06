@@ -429,7 +429,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 bool sourceIsNullOrOpenType = (sourceTypeReference == null);
                 if (!sourceIsNullOrOpenType)
                 {
-                    boundNode = MetadataBindingUtils.ConvertToTypeIfNeeded(boundNode, item.Key.Type);
+                    // if the node has been rewritten, no further conversion is needed.
+                    if (!TryRewriteIntegralConstantNode(ref boundNode, item.Key.Type))
+                    {
+                        boundNode = MetadataBindingUtils.ConvertToTypeIfNeeded(boundNode, item.Key.Type);
+                    }
                 }
 
                 OperationSegmentParameter boundParamer = new OperationSegmentParameter(item.Key.Name, boundNode);
@@ -437,6 +441,67 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             return boundParameters;
+        }
+
+        /// <summary>
+        /// Try to rewrite an Edm.Int32 constant node if its value is within the valid range of the target integer type.
+        /// </summary>
+        /// <param name="boundNode">The node to be rewritten.</param>
+        /// <param name="targetType">The target type reference.</param>
+        /// <returns>If the node is successfully rewritten.</returns>
+        private static bool TryRewriteIntegralConstantNode(ref SingleValueNode boundNode, IEdmTypeReference targetType)
+        {
+            if (targetType == null || !targetType.IsByte() && !targetType.IsSByte() && !targetType.IsInt16())
+            {
+                return false;
+            }
+
+            var constantNode = boundNode as ConstantNode;
+            if (constantNode == null)
+            {
+                return false;
+            }
+
+            var sourceType = constantNode.TypeReference;
+            if (sourceType == null || !sourceType.IsInt32())
+            {
+                return false;
+            }
+
+            var sourceValue = (int)constantNode.Value;
+            object targetValue = null;
+            switch (targetType.PrimitiveKind())
+            {
+                case EdmPrimitiveTypeKind.Byte:
+                    if (sourceValue >= byte.MinValue && sourceValue <= byte.MaxValue)
+                    {
+                        targetValue = (byte)sourceValue;
+                    }
+
+                    break;
+                case EdmPrimitiveTypeKind.SByte:
+                    if (sourceValue >= sbyte.MinValue && sourceValue <= sbyte.MaxValue)
+                    {
+                        targetValue = (sbyte)sourceValue;
+                    }
+
+                    break;
+                case EdmPrimitiveTypeKind.Int16:
+                    if (sourceValue >= short.MinValue && sourceValue <= short.MaxValue)
+                    {
+                        targetValue = (short)sourceValue;
+                    }
+
+                    break;
+            }
+
+            if (targetValue == null)
+            {
+                return false;
+            }
+
+            boundNode = new ConstantNode(targetValue, constantNode.LiteralText, targetType);
+            return true;
         }
 
         /// <summary>
