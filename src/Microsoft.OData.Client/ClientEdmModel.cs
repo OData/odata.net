@@ -48,9 +48,6 @@ namespace Microsoft.OData.Client
         /// <summary>Referenced core model.</summary>
         private readonly IEnumerable<IEdmModel> coreModel = new IEdmModel[] { EdmCoreModel.Instance };
 
-        /// <summary>The state of whether the edm structured schema elements have been set.</summary>
-        private bool edmStructuredSchemaElementsSet;
-
         /// <summary>The edm structured types from the TypeResolver's service model schema elements.</summary>
         private IEnumerable<IEdmSchemaElement> edmStructuredSchemaElements;
 
@@ -117,11 +114,15 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Gets the state of whether the edm structured schema elements have been set.
         /// </summary>
-        public bool EdmStructuredSchemaElementsSet
+        internal IEnumerable<IEdmSchemaElement> EdmStructuredSchemaElements
         {
             get
             {
-                return edmStructuredSchemaElementsSet;
+                return edmStructuredSchemaElements;
+            }
+            set
+            {
+                edmStructuredSchemaElements = value;
             }
         }
 
@@ -285,16 +286,6 @@ namespace Microsoft.OData.Client
             return this.GetClientTypeAnnotation(result);
         }
 
-        /// <summary>
-        /// Sets the edm structured type schema elements for use in determining open types.
-        /// </summary>
-        /// <param name="serviceModel">The service model.</param>
-        internal void SetEdmStructuredSchemaElements(IEnumerable<IEdmSchemaElement> edmStructuredSchemaElements)
-        {
-            this.edmStructuredSchemaElements = edmStructuredSchemaElements;
-            edmStructuredSchemaElementsSet = true;
-        }
-
         /// <summary>Returns <paramref name="type"/> and its base types, in the order of most base type first and <paramref name="type"/> last.</summary>
         /// <param name="type">Type instance in question.</param>
         /// <param name="keyProperties">Returns the list of key properties if <paramref name="type"/> is an entity type; null otherwise.</param>
@@ -430,9 +421,9 @@ namespace Microsoft.OData.Client
             {
                 Type collectionType;
                 bool isOpen = false;
-                if (edmStructuredSchemaElements != null && edmStructuredSchemaElements.Any())
+                if (EdmStructuredSchemaElements != null && EdmStructuredSchemaElements.Any())
                 {
-                    IEdmSchemaElement edmStructuredSchemaElement = edmStructuredSchemaElements.FirstOrDefault(et => et.Name == ClientTypeUtil.GetServerDefinedTypeName(type));
+                    IEdmSchemaElement edmStructuredSchemaElement = EdmStructuredSchemaElements.FirstOrDefault(et => et.Name == ClientTypeUtil.GetServerDefinedTypeName(type));
                     if (edmStructuredSchemaElement != null)
                     {
                         IEdmStructuredType edmStructuredType = edmStructuredSchemaElement as IEdmStructuredType;

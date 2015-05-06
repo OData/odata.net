@@ -939,9 +939,6 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             TestClientContext.Configurations.RequestPipeline.OnEntryStarting(ea => EntryStarting(ea, TestClientContext));
             var account = TestClientContext.Accounts.Where(a => a.AccountID == 101).First();
 
-            Assert.IsNotNull(account);
-            Assert.IsNotNull(account.AccountInfo);
-
             // In practice, transient property data would be mutated here in the partial companion to the client proxy.
 
             TestClientContext.UpdateObject(account);

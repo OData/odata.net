@@ -535,12 +535,12 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>The server defined name.</returns>
         internal static string GetServerDefinedTypeFullName(Type type)
         {
-            OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-            if (originalNameAttribute != null)
+            string typeName = GetServerDefinedTypeName(type);
+            if (!string.IsNullOrEmpty(typeName))
             {
-                return type.Namespace + "." + originalNameAttribute.OriginalName;
+                return type.Namespace + "." + typeName;
             }
-
+        
             return type.FullName;
         }
 
