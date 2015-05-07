@@ -48,6 +48,9 @@ namespace Microsoft.OData.Client
         /// <summary>Referenced core model.</summary>
         private readonly IEnumerable<IEdmModel> coreModel = new IEdmModel[] { EdmCoreModel.Instance };
 
+        /// <summary>The edm structured types from the TypeResolver's service model schema elements.</summary>
+        private IEnumerable<IEdmSchemaElement> edmStructuredSchemaElements;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -106,6 +109,21 @@ namespace Microsoft.OData.Client
         public IEdmEntityContainer EntityContainer
         {
             get { throw new NotImplementedException(); }
+        }
+
+        /// <summary>
+        /// Gets the state of whether the edm structured schema elements have been set.
+        /// </summary>
+        internal IEnumerable<IEdmSchemaElement> EdmStructuredSchemaElements
+        {
+            get
+            {
+                return edmStructuredSchemaElements;
+            }
+            set
+            {
+                edmStructuredSchemaElements = value;
+            }
         }
 
         /// <summary>
@@ -402,6 +420,20 @@ namespace Microsoft.OData.Client
             if (cachedEdmType == null)
             {
                 Type collectionType;
+                bool isOpen = false;
+                if (EdmStructuredSchemaElements != null && EdmStructuredSchemaElements.Any())
+                {
+                    IEdmSchemaElement edmStructuredSchemaElement = EdmStructuredSchemaElements.FirstOrDefault(et => et.Name == ClientTypeUtil.GetServerDefinedTypeName(type));
+                    if (edmStructuredSchemaElement != null)
+                    {
+                        IEdmStructuredType edmStructuredType = edmStructuredSchemaElement as IEdmStructuredType;
+                        if (edmStructuredType != null)
+                        {
+                            isOpen = edmStructuredType.IsOpen;
+                        }
+                    }
+                }
+
                 if (PrimitiveType.IsKnownNullableType(type))
                 {
                     PrimitiveType primitiveType;
@@ -462,7 +494,7 @@ namespace Microsoft.OData.Client
                         Debug.Assert(edmBaseType == null || edmBaseType.TypeKind == EdmTypeKind.Entity, "baseType == null || baseType.TypeKind == EdmTypeKind.Entity");
                         bool hasStream = GetHasStreamValue((IEdmEntityType)edmBaseType, type);
                         cachedEdmType = new EdmTypeCacheValue(
-                            new EdmEntityTypeWithDelayLoadedProperties(CommonUtil.GetModelTypeNamespace(type), CommonUtil.GetModelTypeName(type), (IEdmEntityType)edmBaseType, c.PlatformHelper.IsAbstract(type), /*isOpen*/ false, hasStream, delayLoadEntityProperties),
+                            new EdmEntityTypeWithDelayLoadedProperties(CommonUtil.GetModelTypeNamespace(type), CommonUtil.GetModelTypeName(type), (IEdmEntityType)edmBaseType, c.PlatformHelper.IsAbstract(type), isOpen, hasStream, delayLoadEntityProperties),
                             hasProperties);
                     }
                     else if ((enumTypeTmp = Nullable.GetUnderlyingType(type) ?? type) != null
@@ -513,7 +545,7 @@ namespace Microsoft.OData.Client
                         // Creating a complex type
                         Debug.Assert(edmBaseType == null || edmBaseType.TypeKind == EdmTypeKind.Complex, "baseType == null || baseType.TypeKind == EdmTypeKind.Complex");
                         cachedEdmType = new EdmTypeCacheValue(
-                            new EdmComplexTypeWithDelayLoadedProperties(CommonUtil.GetModelTypeNamespace(type), CommonUtil.GetModelTypeName(type), (IEdmComplexType)edmBaseType, c.PlatformHelper.IsAbstract(type), /*isOpen*/ false, delayLoadComplexProperties),
+                            new EdmComplexTypeWithDelayLoadedProperties(CommonUtil.GetModelTypeNamespace(type), CommonUtil.GetModelTypeName(type), (IEdmComplexType)edmBaseType, c.PlatformHelper.IsAbstract(type), isOpen, delayLoadComplexProperties),
                             hasProperties);
                     }
                 }

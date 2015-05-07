@@ -58,8 +58,13 @@ namespace Microsoft.OData.Client
             Debug.Assert(resolveNameFromType != null, "resolveNameFromType != null");
             this.resolveTypeFromName = resolveTypeFromName;
             this.resolveNameFromType = resolveNameFromType;
-            this.clientEdmModel = model;
             this.serviceModel = serviceModel;
+            this.clientEdmModel = model;
+
+            if (serviceModel != null && clientEdmModel != null && clientEdmModel.EdmStructuredSchemaElements == null)
+            {
+                clientEdmModel.EdmStructuredSchemaElements = serviceModel.SchemaElements.Where(se => se is IEdmStructuredType);
+            }
         }
 
         /// <summary>

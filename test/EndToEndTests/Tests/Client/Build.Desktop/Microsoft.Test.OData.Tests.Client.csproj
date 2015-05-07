@@ -103,6 +103,7 @@
     <Compile Include="AnnotationTests\InstanceAnnotationTests.cs" />
     <Compile Include="AsyncRequestTests\AsyncRequestTests.cs" />
     <Compile Include="ClientTests\ClientEntityDescripterTests.cs" />
+    <Compile Include="ClientTests\ClientOpenTypeUpdateTests.cs" />
     <Compile Include="ClientTests\ClientQueryTests.cs" />
     <Compile Include="ClientTests\ClientDeleteTests.cs" />
     <Compile Include="ClientWithoutTypeResolverTests\MismatchedClientModelWithoutTypeResolverTests.cs" />
