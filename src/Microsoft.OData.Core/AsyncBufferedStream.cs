@@ -209,9 +209,13 @@ namespace Microsoft.OData.Core
         /// Asynchronous flush operation. This will flush all buffered bytes to the underlying stream through asynchronous writes.
         /// </summary>
         /// <returns>The task representing the asynchronous flush operation.</returns>
+#if DNX451 || DNXCORE50
+        internal new Task FlushAsync()
+#else
         internal Task FlushAsync()
+#endif
         {
-            return this.FlushAsyncInternal();   
+            return this.FlushAsyncInternal();
         }
 
 

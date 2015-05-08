@@ -19,8 +19,8 @@
   <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETPortable' or '$(TargetFrameworkIdentifier)' == '.NETCore' or '$(TargetFrameworkIdentifier)' == 'WindowsPhone'">
     <TargetFrameworkFolderName Condition="$(TargetFrameworkFolderName) == ''">$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)</TargetFrameworkFolderName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFrameworkVersion)' == 'v4.5'">
-    <TargetFrameworkFolderName Condition="$(TargetFrameworkFolderName) == ''">Dev11</TargetFrameworkFolderName>
+  <PropertyGroup Condition="'$(TargetFrameworkVersion)' == 'v4.5.1'">
+    <TargetFrameworkFolderName Condition="$(TargetFrameworkFolderName) == ''">Net45</TargetFrameworkFolderName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFrameworkVersion)' == 'v3.5'">
     <TargetFrameworkFolderName Condition="$(TargetFrameworkFolderName) == ''">Net35</TargetFrameworkFolderName>
