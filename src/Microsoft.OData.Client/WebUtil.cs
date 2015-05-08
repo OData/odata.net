@@ -32,7 +32,7 @@ namespace Microsoft.OData.Client
         private static bool? dataServiceCollectionAvailable = null;
 
         /// <summary>Method info for GetDefaultValue&lt;T&gt;.</summary>
-#if WINRT
+#if DNXCORE50
         private static MethodInfo getDefaultValueMethodInfo = typeof(WebUtil).GetMethodWithGenericArgs("GetDefaultValue", false /*isPublic*/, true /*isStatic*/, 1 /*genericArgCount*/);
 #else
         private static MethodInfo getDefaultValueMethodInfo = (MethodInfo)typeof(WebUtil).GetMember("GetDefaultValue", BindingFlags.NonPublic | BindingFlags.Static).Single(m => ((MethodInfo)m).GetGenericArguments().Count() == 1);

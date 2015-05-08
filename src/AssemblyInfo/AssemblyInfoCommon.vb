@@ -11,7 +11,6 @@ Imports System.Runtime.CompilerServices
 Imports System.Runtime.InteropServices
 Imports System.Security
 
-#If Not WINDOWS_PHONE Then
 ' The following assembly information is common to all product assemblies.
 ' If you get compiler errors CS0579, "Duplicate '<attributename>' attribute", check your 
 ' Properties\AssemblyInfo.vb file and remove any lines duplicating the ones below.
@@ -79,8 +78,6 @@ Imports System.Security
 #End If
 
 <assembly:NeutralResourcesLanguageAttribute("en-US")>
-
-#End If
 
 ''' <summary>
 ''' Sets public key string for friend assemblies.

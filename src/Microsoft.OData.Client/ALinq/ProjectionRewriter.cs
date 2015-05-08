@@ -66,11 +66,7 @@ namespace Microsoft.OData.Client
             if (this.successfulRebind)
             {
                 Type delegateType = typeof(Func<,>).MakeGenericType(new Type[] { newLambdaParameter.Type, lambda.Body.Type });
-#if ASTORIA_LIGHT
-                return ExpressionHelpers.CreateLambda(delegateType, body, new ParameterExpression[] { this.newLambdaParameter });
-#else
                 return Expression.Lambda(delegateType, body, new ParameterExpression[] { this.newLambdaParameter });
-#endif
             }
             else
             {

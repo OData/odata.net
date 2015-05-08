@@ -14,97 +14,6 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq.Expressions;
-#if ASTORIA_LIGHT
-    using System.Reflection;
-    using System.Security;
-    using System.Security.Permissions;
-
-    /// <summary>
-    /// This class introduced because of a bug in SL3 which prevents using non-public (e.g anonymous) types as return types for lambdas
-    /// We should be able to remove this for SL4.
-    /// devnote (sparra): This still seems to be an issue in SL4, but does not repro in Win8 .NETCore framework.
-    /// </summary>
-    internal static class ExpressionHelpers
-    {
-        /// <summary>Lambda function.</summary>
-        private static MethodInfo lambdaFunc;
-
-        /// <summary>
-        /// Create a lambda function given the expression and the parameters.
-        /// </summary>
-        /// <param name="body">Expression for the lambda function.</param>
-        /// <param name="parameters">Parameters for the lambda function.</param>
-        /// <returns>An instance of LambdaExpression.</returns>
-        internal static LambdaExpression CreateLambda(Expression body, params ParameterExpression[] parameters)
-        {
-            return CreateLambda(InferDelegateType(body, parameters), body, parameters);
-        }
-
-        /// <summary>
-        /// This creates a tree and compiles it just for the purposes of creating the real lambda.
-        /// </summary>
-        /// <param name="delegateType">Generic type for the Lambda function.</param>
-        /// <param name="body">Expression for the lambda function.</param>
-        /// <param name="parameters">Parameters for the lambda function.</param>
-        /// <returns>An instance of LambdaExpression.</returns>
-        internal static LambdaExpression CreateLambda(Type delegateType, Expression body, params ParameterExpression[] parameters)
-        {
-            // Expression.Lambda() doesn't work directly if "body" is a non-public type
-            // Work around this by calling the factory from a DynamicMethod.
-            var args = new[] { Expression.Parameter(typeof(Expression), "body"), Expression.Parameter(typeof(ParameterExpression[]), "parameters") };
-
-            var lambdaFactory = Expression.Lambda<Func<Expression, ParameterExpression[], LambdaExpression>>(
-                Expression.Call(GetLambdaFactoryMethod(delegateType), args), args);
-
-            return lambdaFactory.Compile().Invoke(body, parameters);
-        }
-
-        /// <summary>
-        /// Returns the generic type of the lambda function.
-        /// </summary>
-        /// <param name="body">Expression for the lambda function.</param>
-        /// <param name="parameters">Parameters for the lambda function.</param>
-        /// <returns>The generic type of the lambda function.</returns>
-        private static Type InferDelegateType(Expression body, params ParameterExpression[] parameters)
-        {
-            bool isVoid = body.Type == typeof(void);
-            int length = (parameters == null) ? 0 : parameters.Length;
-
-            var typeArgs = new Type[length + (isVoid ? 0 : 1)];
-            for (int i = 0; i < length; i++)
-            {
-                typeArgs[i] = parameters[i].Type;
-            }
-
-            if (isVoid)
-            {
-                return Expression.GetActionType(typeArgs);
-            }
-            else
-            {
-                typeArgs[length] = body.Type;
-                return Expression.GetFuncType(typeArgs);
-            }
-        }
-
-        /// <summary>
-        /// Returns the methodinfo for the lambda function.
-        /// </summary>
-        /// <param name="delegateType">Generic type of the lambda function.</param>
-        /// <returns>MethodInfo which binds the generic type to the lambda function.</returns>
-        private static MethodInfo GetLambdaFactoryMethod(Type delegateType)
-        {
-            // Gets the MethodInfo for Expression.Lambda<TDelegate>(Expression body, params ParameterExpression[] parameters)
-            if (lambdaFunc == null)
-            {
-                lambdaFunc = new Func<Expression, ParameterExpression[], Expression<Action>>(Expression.Lambda<Action>).Method.GetGenericMethodDefinition();
-            }
-
-            // Create a throwaway delegate to bind to the right Labda function with a specific delegate type.
-            return lambdaFunc.MakeGenericMethod(delegateType);
-        }
-    }
-#endif
 
     /// <summary>
     /// base vistor class for walking an expression tree bottom up.
@@ -477,13 +386,7 @@ namespace Microsoft.OData.Client
             Expression body = this.Visit(lambda.Body);
             if (body != lambda.Body)
             {
-#if !ASTORIA_LIGHT
                 return Expression.Lambda(lambda.Type, body, lambda.Parameters);
-#else
-                ParameterExpression[] parameters = new ParameterExpression[lambda.Parameters.Count];
-                lambda.Parameters.CopyTo(parameters, 0);
-                return ExpressionHelpers.CreateLambda(lambda.Type, body, parameters);
-#endif
             }
 
             return lambda;

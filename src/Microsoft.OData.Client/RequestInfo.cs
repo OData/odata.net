@@ -91,7 +91,7 @@ namespace Microsoft.OData.Client
             get
             {
                 Debug.Assert(this.Context.ResolveName != null, "this.context.ResolveName != null.");
-#if WINRT
+#if DNXCORE50
     // Func<>.Method property does not exist on Win8 and there is no other way to access any MethodInfo that is behind the Func,
     // so we have no way to determine if the Func was supplied by the user or if it's the one provided by codegen.
     // In this case we will always assume it's the one provided by codegen, which means we'll try to resolve the name using the entity descriptor
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Client
             get { return this.Context.Credentials; }
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>
         /// Get the timeout span in seconds to use for the underlying HTTP request to the data service.
         /// </summary>
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Client
 
         #region Methods
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>
         /// This method wraps the HttpWebRequest.GetSyncronousResponse method call. The reasons for doing this are to give us a place
         /// to invoke internal test hook callbacks that can validate the response headers, and also so that we can do
@@ -450,12 +450,7 @@ namespace Microsoft.OData.Client
                 }
             }
 
-#if !ASTORIA_LIGHT
             var clientRequestMessageArgs = new DataServiceClientRequestMessageArgs(requestMessageArgs.Method, requestMessageArgs.RequestUri, this.UseDefaultCredentials, this.UsePostTunneling, headersDictionary);
-#else
-            var clientRequestMessageArgs = new DataServiceClientRequestMessageArgs(requestMessageArgs.Method, requestMessageArgs.RequestUri, this.UsePostTunneling, this.UseDefaultCredentials, headersDictionary, requestMessageArgs.ClientHttpStack);
-#endif
-
             DataServiceClientRequestMessage clientRequestMessage;
             if (this.Configurations.RequestPipeline.OnMessageCreating != null)
             {
@@ -492,11 +487,7 @@ namespace Microsoft.OData.Client
         /// Return the request DSV header value for this request.
         /// </summary>
         /// <returns>The request DSV header value for this request as Version instance.</returns>
-#if !ASTORIA_LIGHT
         private static Version GetRequestVersion(WebHeaderCollection headers)
-#else
-        private static Version GetRequestVersion(System.Net.WebHeaderCollection headers)
-#endif
         {
             string requestDSVHeaderValue = headers[XmlConstants.HttpODataVersion];
             if (!String.IsNullOrEmpty(requestDSVHeaderValue))

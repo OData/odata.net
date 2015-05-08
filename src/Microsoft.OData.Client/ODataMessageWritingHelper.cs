@@ -48,7 +48,7 @@ namespace Microsoft.OData.Client
                 // we can do this here.
                 DisableMessageStreamDisposal = !isBatchPartRequest
             };
-#if !WINRT
+#if !DNXCORE50
             if (enableAtom)
             {
                 // Enable ATOM for client

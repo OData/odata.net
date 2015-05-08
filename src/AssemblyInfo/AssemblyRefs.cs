@@ -62,7 +62,7 @@ internal static class DataFxAssemblyRef
         internal const string SilverlightV5_SdkClientReferenceAssemblyPath = @"%ProgramFiles%\Microsoft SDKs\Silverlight\v5.0\Libraries\Client";
         internal const string SilverlightV5_SdkServerReferenceAssemblyPath = @"%ProgramFiles%\Microsoft SDKs\Silverlight\v5.0\Libraries\Server";
 
-#if ASTORIA_LIGHT || SILVERLIGHT
+#if SILVERLIGHT // Needed by the legacy SL test projects in TFS builds
 
         /// <summary>where find executable binaries</summary>
         internal const string DE_InstallPath = DotNetFrameworkV4_InstallPath;

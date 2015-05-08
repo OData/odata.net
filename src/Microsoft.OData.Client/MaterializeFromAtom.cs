@@ -55,7 +55,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// output writer, set using reflection
         /// </summary>
-#if DEBUG && !ASTORIA_LIGHT
+#if DEBUG
         private System.IO.TextWriter writer = new System.IO.StringWriter(System.Globalization.CultureInfo.InvariantCulture);
 #else
 #pragma warning disable 649

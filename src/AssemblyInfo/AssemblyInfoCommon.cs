@@ -22,7 +22,6 @@ using System.Security;
 #endif
 #endif
 
-#if !WINDOWS_PHONE
 [assembly: AssemblyCompany("Microsoft Corporation")]
 // If you want to control this metadata globally but not with the VersionProductName property, hard-code the value below.
 // If you want to control this metadata at the individual project level with AssemblyInfo.cs, comment-out the line below.
@@ -88,5 +87,3 @@ using System.Security;
 #endif
 
 [assembly:NeutralResourcesLanguageAttribute("en-US")]
-
-#endif

@@ -10,7 +10,7 @@ namespace System.Data.OData
     using System.Data.OData.Staging;
     #endregion Namespaces
 
-#if WINDOWS_PHONE || ORCAS
+#if ORCAS
     /// <summary>
     /// Helper extension methods to hide differences in platforms.
     /// </summary>

@@ -28,7 +28,7 @@ namespace Microsoft.OData.Client
         private static readonly MethodInfo expandMethodInfo = typeof(DataServiceQuery<TElement>).GetMethod("Expand", new Type[] { typeof(string) });
 
         /// <summary>Method info for the generic version of the Expand method</summary>
-#if WINRT
+#if DNXCORE50
         private static readonly MethodInfo expandGenericMethodInfo = typeof(DataServiceQuery<TElement>).GetMethodWithGenericArgs("Expand", true /*isPublic*/, false /*isStatic*/, 1 /*genericArgCount*/);
 #else
         private static readonly MethodInfo expandGenericMethodInfo = (MethodInfo)typeof(DataServiceQuery<TElement>).GetMember("Expand*").Single(m => ((MethodInfo)m).GetGenericArguments().Count() == 1);
@@ -249,7 +249,7 @@ namespace Microsoft.OData.Client
             return nextTask;
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB // Synchronous methods not available
+#if !PORTABLELIB // Synchronous methods not available
         /// <summary>Executes the query and returns the results as a collection that implements IEnumerable.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
         /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> in which TElement represents the type of the query results.</returns>
         /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
@@ -340,7 +340,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Executes the query and returns the results as a collection.</summary>
         /// <returns>A typed enumerator over the results in which TElement represents the type of the query results.</returns>
-#if !ASTORIA_LIGHT && !PORTABLELIB // Synchronous methods not available
+#if !PORTABLELIB // Synchronous methods not available
         public IEnumerator<TElement> GetEnumerator()
         {
             return this.Execute().GetEnumerator();
@@ -371,7 +371,7 @@ namespace Microsoft.OData.Client
         /// <returns>An enumerator over the query results.</returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-#if !ASTORIA_LIGHT && !PORTABLELIB // Synchronous methods not available
+#if !PORTABLELIB // Synchronous methods not available
             return this.GetEnumerator();
 #else
             throw Error.NotSupported();
@@ -388,7 +388,7 @@ namespace Microsoft.OData.Client
             return this.Translate();
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// Synchronous methods not available
         /// <summary>
         /// Returns an IEnumerable from an Internet resource. 
@@ -460,7 +460,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// Synchronous methods not available
         /// <summary>
         /// Returns an IEnumerable from an Internet resource. 

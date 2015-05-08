@@ -199,14 +199,6 @@ namespace Microsoft.OData.Client
                 return null;
             }
 
-#if ASTORIA_LIGHT
-            // If we can use XHR, we will and thus we should use the old (V1) way of determining our
-            //   base URI. That is, use the uri of the HTML page
-            if (!baseUri.IsAbsoluteUri && XHRHttpWebRequest.IsAvailable())
-            {
-                return new Uri(System.Windows.Browser.HtmlPage.Document.DocumentUri, baseUri);
-            }
-#endif
             return baseUri;
         }
 

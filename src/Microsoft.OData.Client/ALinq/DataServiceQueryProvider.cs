@@ -109,7 +109,7 @@ namespace Microsoft.OData.Client
                         return query.AsEnumerable().First();
                     case SequenceMethod.FirstOrDefault:
                         return query.AsEnumerable().FirstOrDefault();
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
                     case SequenceMethod.LongCount:
                     case SequenceMethod.Count:
                         return (TElement)Convert.ChangeType(((DataServiceQuery<TElement>)query).GetQuerySetCount(this.Context), typeof(TElement), System.Globalization.CultureInfo.InvariantCulture.NumberFormat);

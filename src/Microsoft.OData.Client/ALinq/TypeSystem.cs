@@ -44,11 +44,7 @@ namespace Microsoft.OData.Client
 
         /// <summary> VB Assembly public key token</summary>
 #pragma warning disable 436
-#if !ASTORIA_LIGHT
         private const string VisualBasicAssemblyPublicKeyToken = "PublicKeyToken=" + OfficialDesktopPublicKeyToken;
-#else
-        private const string VisualBasicAssemblyPublicKeyToken = "PublicKeyToken=" + OfficialSilverLightPublicKeyToken;
-#endif
 #pragma warning restore 436
         /// <summary>
         /// Initializes method map
@@ -57,11 +53,7 @@ namespace Microsoft.OData.Client
         static TypeSystem()
         {
 #if !PORTABLELIB
-#if !ASTORIA_LIGHT
             const int ExpectedCount = 35;
-#else
-            const int ExpectedCount = 33;
-#endif
 #endif
             // string functions
             expressionMethodMap = new Dictionary<MethodInfo, string>(EqualityComparer<MethodInfo>.Default);
@@ -106,21 +98,18 @@ namespace Microsoft.OData.Client
             expressionMethodMap.Add(typeof(Math).GetMethod("Round", new Type[] { typeof(decimal) }), @"round");
             expressionMethodMap.Add(typeof(Math).GetMethod("Floor", new Type[] { typeof(double) }), @"floor");
 
-#if !ASTORIA_LIGHT // Math.Floor(Decimal) not available on Silverlight
             MethodInfo foundMethod = null;
             if (typeof(Math).TryGetMethod("Floor", new Type[] { typeof(decimal) }, out foundMethod))
             {
                 expressionMethodMap.Add(foundMethod, @"floor");
             }
-#endif
+
             expressionMethodMap.Add(typeof(Math).GetMethod("Ceiling", new Type[] { typeof(double) }), @"ceiling");
 
-#if !ASTORIA_LIGHT // Math.Ceiling(Decimal) not available on Silverlight
             if (typeof(Math).TryGetMethod("Ceiling", new Type[] { typeof(decimal) }, out foundMethod))
             {
                 expressionMethodMap.Add(foundMethod, @"ceiling");
             }
-#endif
 
             // Spatial methods
             expressionMethodMap.Add(typeof(GeographyOperationsExtensions).GetMethod("Distance", new Type[] { typeof(GeographyPoint), typeof(GeographyPoint) }, true /*isPublic*/, true /*isStatic*/), @"geo.distance");

@@ -204,7 +204,7 @@ namespace Microsoft.Test.OData.Framework.Common
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
         internal static bool IsEnum(this Type type)
         {
-#if WINRT
+#if DNXCORE50
             return type.GetTypeInfo().IsEnum;
 #else
             return type.IsEnum;
@@ -218,7 +218,7 @@ namespace Microsoft.Test.OData.Framework.Common
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
         internal static Type GetBaseType(this Type type)
         {
-#if WINRT
+#if DNXCORE50
             return type.GetTypeInfo().BaseType;
 #else
             return type.BaseType;

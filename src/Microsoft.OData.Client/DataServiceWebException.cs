@@ -8,15 +8,13 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-#if !ASTORIA_LIGHT
     using System.Runtime.Serialization;
-#endif
     using Microsoft.OData.Core;
 
     /// <summary>
     /// Class to describe errors thrown by transport layer.
     /// </summary>
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
     [Serializable]
 #endif
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "No longer relevant after .NET 4 introduction of SerializeObjectState event and ISafeSerializationData interface.")]
@@ -25,7 +23,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Contains the state for this exception.
         /// </summary>
-#if !ASTORIA_LIGHT  && !PORTABLELIB
+#if !PORTABLELIB
         [NonSerialized]
 #endif
         private DataServiceWebExceptionSerializationState state;
@@ -42,7 +40,7 @@ namespace Microsoft.OData.Client
 
             this.state.ResponseMessage = response;
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
             this.SerializeObjectState += (sender, e) => e.AddSerializedState(this.state);
 #endif
         }
@@ -58,11 +56,11 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Contains the state of the exception, used for serialization in security transparent code.
         /// </summary>
-#if !ASTORIA_LIGHT  && !PORTABLELIB
+#if !PORTABLELIB
         [Serializable]
 #endif
         private struct DataServiceWebExceptionSerializationState
-#if !ASTORIA_LIGHT  && !PORTABLELIB
+#if !PORTABLELIB
             : ISafeSerializationData
 #endif
         {
@@ -71,7 +69,7 @@ namespace Microsoft.OData.Client
             /// </summary>
             public IODataResponseMessage ResponseMessage { get; set; }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
             /// <summary>
             /// Called when deserialization of the exception is complete.
             /// </summary>

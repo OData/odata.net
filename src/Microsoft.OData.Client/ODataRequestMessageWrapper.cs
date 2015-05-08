@@ -149,7 +149,7 @@ namespace Microsoft.OData.Client
                 requestMessage.Credentials = requestInfo.Credentials;
             }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB // Timeout not available
+#if !PORTABLELIB // Timeout not available
             if (0 != requestInfo.Timeout)
             {
                 requestMessage.Timeout = requestInfo.Timeout;
@@ -222,7 +222,7 @@ namespace Microsoft.OData.Client
             return this.requestMessage.EndGetRequestStream(asyncResult);
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
 
         /// <summary>
         /// Sets the request stream.
@@ -287,7 +287,7 @@ namespace Microsoft.OData.Client
             return this.requestMessage.EndGetResponse(asyncResult);
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>
         /// Returns a response from an Internet resource.
         /// </summary>

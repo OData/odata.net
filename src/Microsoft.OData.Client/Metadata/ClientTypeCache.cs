@@ -26,7 +26,7 @@ namespace Microsoft.OData.Client.Metadata
         /// <summary>cache &lt;T&gt; and wireName to mapped type</summary>
         private static readonly Dictionary<TypeName, Type> namedTypes = new Dictionary<TypeName, Type>(new TypeNameEqualityComparer());
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>
         /// resolve the wireName/userType pair to a CLR type
         /// </summary>
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Client.Metadata
                 }
                 else
                 {
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
                     // searching only loaded assemblies, not referenced assemblies
                     foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 #else

@@ -421,7 +421,7 @@ namespace Microsoft.OData.Client
                 if (payloadType == null)
                 {
                     // if the type resolution method returns null or the ResolveType property was not set
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
                     payloadType = ClientTypeCache.ResolveFromName(wireName, expectedType);
 #else
                     payloadType = ClientTypeCache.ResolveFromName(wireName, expectedType, this.GetType());

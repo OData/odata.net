@@ -42,7 +42,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         public Uri RequestUri { get; private set; }
         
-#if !ASTORIA_LIGHT && !PORTABLELIB // Synchronous methods not available
+#if !PORTABLELIB // Synchronous methods not available
         /// <summary>
         /// Executes the action and returns the operation response.
         /// </summary>

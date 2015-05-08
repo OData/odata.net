@@ -104,7 +104,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>
         /// Executes the request synchronously.
         /// </summary>

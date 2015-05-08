@@ -270,7 +270,7 @@ namespace Microsoft.OData.Service
         /// <summary>Content-Transfer-Encoding value for batch requests.</summary>
         internal const string BatchRequestContentTransferEncoding = "binary";
 
-#if !ASTORIA_CLIENT || ASTORIA_LIGHT || PORTABLELIB
+#if !ASTORIA_CLIENT || PORTABLELIB
         /// <summary>text for the utf8 encoding</summary>
         internal const string Utf8Encoding = "UTF-8";
 #endif

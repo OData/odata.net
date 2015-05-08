@@ -94,7 +94,6 @@ namespace Microsoft.OData.Service.Client.Metadata
             return navigationFacade.FindNavigationTarget(this.serverEntitySet);
         }
 
-#if !ASTORIA_LIGHT
         /// <summary>
         /// Unit test method for determining whether two facades are equivalent (ie: wrap the same server entity set).
         /// </summary>
@@ -106,7 +105,6 @@ namespace Microsoft.OData.Service.Client.Metadata
         {
             return other != null && ReferenceEquals(other.serverEntitySet, this.serverEntitySet);
         }
-#endif
 
         /// <summary>
         /// Creates an exception for a intentionally-unsupported part of the API.

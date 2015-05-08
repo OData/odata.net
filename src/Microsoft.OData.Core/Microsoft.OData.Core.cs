@@ -842,7 +842,7 @@ namespace Microsoft.OData.Core {
         ResourceManager resources;
 
         internal TextRes() {
-#if !WINRT
+#if !DNXCORE50
             resources = new System.Resources.ResourceManager("Microsoft.OData.Core", this.GetType().Assembly);
 #else
             resources = new System.Resources.ResourceManager("Microsoft.OData.Core", this.GetType().GetTypeInfo().Assembly);

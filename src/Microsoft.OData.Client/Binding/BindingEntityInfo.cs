@@ -450,7 +450,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if ASTORIA_LIGHT || PORTABLELIB
+#if PORTABLELIB
         /// <summary>Read-writer lock, implemented over a Monitor.</summary>
         private sealed class ReaderWriterLockSlim
         {

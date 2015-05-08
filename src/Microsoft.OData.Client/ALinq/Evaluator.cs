@@ -111,11 +111,7 @@ namespace Microsoft.OData.Client
                     return e;
                 }
 
-#if ASTORIA_LIGHT
-                LambdaExpression lambda = ExpressionHelpers.CreateLambda(e, new ParameterExpression[0]); 
-#else
                 LambdaExpression lambda = Expression.Lambda(e);
-#endif
                 Delegate fn = lambda.Compile();
                 object constantValue = fn.DynamicInvoke(null);
                 Debug.Assert(!(constantValue is Expression), "!(constantValue is Expression)");

@@ -9,14 +9,14 @@ namespace Microsoft.OData.Client
     using System;
 
     /// <summary>Represents the error thrown if the data service returns a response code less than 200 or greater than 299, or the top-level element in the response is &lt;error&gt;. This class cannot be inherited.</summary>
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
     [Serializable]
 #endif
     [System.Diagnostics.DebuggerDisplay("{Message}")]
     public sealed class DataServiceRequestException : InvalidOperationException
     {
         /// <summary>Actual response object.</summary>
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         [NonSerialized]
 #endif
         private readonly DataServiceResponse response;
@@ -54,7 +54,7 @@ namespace Microsoft.OData.Client
             this.response = response;
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
 #pragma warning disable 0628
         /// <summary>
         /// Initializes a new instance of the DataServiceQueryException class from the 

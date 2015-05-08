@@ -18,7 +18,7 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Text;
     using System.Threading;
-#if WINRT
+#if DNXCORE50
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core;
@@ -474,7 +474,7 @@ namespace Microsoft.OData.Client
                     do
                     {
                         Util.DebugInjectFault("SaveAsyncResult::AsyncEndGetResponse_BeforeBeginRead");
-#if WINRT
+#if DNXCORE50
                         asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
 #else
                         asyncResult = InvokeAsync(httpResponseStream.BeginRead, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
@@ -1285,7 +1285,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if WINRT
+#if DNXCORE50
         /// <summary>Handle responseStream.ReadAsync and complete the read operation.</summary>
         /// <param name="task">Task that has completed.</param>
         /// <param name="asyncState">State associated with the Task.</param>
@@ -1300,11 +1300,11 @@ namespace Microsoft.OData.Client
         private void AsyncEndRead(IAsyncResult asyncResult)
 #endif
         {
-#if WINRT
+#if DNXCORE50
             IAsyncResult asyncResult = (IAsyncResult)task;
 #endif
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
-#if WINRT
+#if DNXCORE50
             AsyncReadState state = (AsyncReadState)asyncState;
 #else
             AsyncReadState state = (AsyncReadState)asyncResult.AsyncState;
@@ -1320,7 +1320,7 @@ namespace Microsoft.OData.Client
                 Stream httpResponseStream = Util.NullCheck(pereq.ResponseStream, InternalError.InvalidEndReadStream);
 
                 Util.DebugInjectFault("SaveAsyncResult::AsyncEndRead_BeforeEndRead");
-#if WINRT
+#if DNXCORE50
                 count = ((Task<int>)task).Result;
 #else
                 count = httpResponseStream.EndRead(asyncResult);
@@ -1336,7 +1336,7 @@ namespace Microsoft.OData.Client
                         // if CompletedSynchronously then caller will call and we reduce risk of stack overflow
                         do
                         {
-#if WINRT
+#if DNXCORE50
                             asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));                            
 #else
                             asyncResult = InvokeAsync(httpResponseStream.BeginRead, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, state);

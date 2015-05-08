@@ -96,7 +96,7 @@ namespace Microsoft.OData.Service
         {
             get
             {
-#if ASTORIA_LIGHT || PORTABLELIB  // ISO-8859-1 not available
+#if PORTABLELIB  // ISO-8859-1 not available
                 return Encoding.UTF8;
 #else
                 return Encoding.GetEncoding("ISO-8859-1", new EncoderExceptionFallback(), new DecoderExceptionFallback());
@@ -486,17 +486,7 @@ namespace Microsoft.OData.Service
 
             try
             {
-#if ASTORIA_LIGHT
-    // Silverlight client failing with FireFox 3.0
-    // we know we can do this with Silverlight because our http stack
-    // lets the browser convert from "ISO-8859-1" to string and then the stack
-    // converts the string into UTF8 for streaming into the client.
-    // it works for both nested payloads in batch and direct requests.
-    // Coordinate any change to this with the HttpWebRequest.ReadResponse()
-                    return Encoding.UTF8;
-#else
                 return Encoding.GetEncoding(name);
-#endif
             }
             catch (ArgumentException)
             {

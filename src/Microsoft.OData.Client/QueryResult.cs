@@ -13,7 +13,7 @@ namespace Microsoft.OData.Client
     using System.IO;
     using System.Linq;
     using System.Net;
-#if WINRT
+#if DNXCORE50
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core;
@@ -214,7 +214,7 @@ namespace Microsoft.OData.Client
             Debug.Assert((!this.CompletedSynchronously && !pereq.RequestCompletedSynchronously) || this.IsCompleted, "if CompletedSynchronously then MUST IsCompleted");
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>Synchronous web request</summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal void ExecuteQuery()
@@ -615,7 +615,7 @@ namespace Microsoft.OData.Client
                 int bufferLength = buffer.Length;
 
                 this.usingBuffer = true;
-#if WINRT
+#if DNXCORE50
                 asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, buffer, bufferOffset, bufferLength, this.AsyncEndRead, asyncStateBag);
 #else
                 asyncResult = BaseAsyncResult.InvokeAsync(httpResponseStream.BeginRead, buffer, bufferOffset, bufferLength, this.AsyncEndRead, asyncStateBag);
@@ -628,7 +628,7 @@ namespace Microsoft.OData.Client
             Debug.Assert((!this.CompletedSynchronously && !pereq.RequestCompletedSynchronously) || this.IsCompletedInternally || pereq.RequestCompleted, "AsyncEndGetResponse !IsCompleted");
         }
 
-#if WINRT
+#if DNXCORE50
         /// <summary>Handle responseStream.BeginRead and complete the read operation.</summary>
         /// <param name="task">Task that has completed.</param>
         /// <param name="asyncState">State associated with the Task.</param>
@@ -642,11 +642,11 @@ namespace Microsoft.OData.Client
         private void AsyncEndRead(IAsyncResult asyncResult)
 #endif
         {
-#if WINRT
+#if DNXCORE50
             IAsyncResult asyncResult = (IAsyncResult)task;
 #endif
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
-#if WINRT
+#if DNXCORE50
             AsyncStateBag asyncStateBag = asyncState as AsyncStateBag;
 #else
             AsyncStateBag asyncStateBag = asyncResult.AsyncState as AsyncStateBag;
@@ -665,7 +665,7 @@ namespace Microsoft.OData.Client
                 Stream outResponseStream = Util.NullCheck(this.outputResponseStream, InternalError.InvalidEndReadCopy);
 
                 byte[] buffer = Util.NullCheck(this.asyncStreamCopyBuffer, InternalError.InvalidEndReadBuffer);
-#if WINRT
+#if DNXCORE50
                 count = ((Task<int>)task).Result;
 #else
                 count = httpResponseStream.EndRead(asyncResult);

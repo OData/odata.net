@@ -238,10 +238,6 @@ namespace Microsoft.OData.Client
             switch (value)
             {
                 case HttpStack.Auto:
-#if ASTORIA_LIGHT
-                case HttpStack.ClientHttp:
-                case HttpStack.XmlHttp:
-#endif
                     return value;
                 default:
                     throw Error.ArgumentOutOfRange(parameterName);
@@ -384,34 +380,7 @@ namespace Microsoft.OData.Client
         internal static object ActivatorCreateInstance(Type type, params object[] arguments)
         {
             Debug.Assert(type != null, "type != null");
-#if ASTORIA_LIGHT
-            // Look up the constructor
-            // We don't do overload resolution, make sure that the specific type has only one constructor with specified number of arguments
-            int argumentCount = (arguments == null) ? 0 : arguments.Length;
-            IEnumerable<ConstructorInfo> constructors = type.GetInstanceConstructors(true /*isPublic*/);
-            ConstructorInfo constructor = null;
-            foreach (ConstructorInfo ci in constructors)
-            {
-                if (ci.GetParameters().Length == argumentCount)
-                {
-                    Debug.Assert(constructor == null, "Make sure that the specific type has only one constructor with specified argument count");
-                    constructor = ci;
-#if !DEBUG
-                    break;
-#endif
-                }
-            }
 
-            // A constructor should have been found, but we could run into a case with
-            // complex types where there is no default constructor. A better error
-            // message can be provided after localization freeze.
-            if (constructor == null)
-            {
-                throw new MissingMethodException();
-            }
-
-            return ConstructorInvoke(constructor, arguments);
-#else // ASTORIA_LIGHT
             // Different error messages occur for each call to activator.CreateInstance, when no parameters specified error message is more meaningful
             if (arguments.Length == 0)
             {
@@ -421,7 +390,6 @@ namespace Microsoft.OData.Client
             {
                 return Activator.CreateInstance(type, arguments);
             }
-#endif
         }
 
         /// <summary>
@@ -442,25 +410,8 @@ namespace Microsoft.OData.Client
                 throw new MissingMethodException();
 #endif
             }
-#if ASTORIA_LIGHT
-            int argumentCount = (arguments == null) ? 0 : arguments.Length;
-            ParameterExpression argumentsExpression = Expression.Parameter(typeof(object[]), "arguments");
-            Expression[] argumentExpressions = new Expression[argumentCount];
-            ParameterInfo[] parameters = constructor.GetParameters();
-            for (int i = 0; i < argumentExpressions.Length; i++)
-            {
-                argumentExpressions[i] = Expression.Constant(arguments[i], parameters[i].ParameterType);
-            }
 
-            Expression newExpression = Expression.New(constructor, argumentExpressions);
-            Expression<Func<object[], object>> lambda = Expression.Lambda<Func<object[], object>>(
-                Expression.Convert(newExpression, typeof(object)),
-                argumentsExpression);
-            object result = lambda.Compile()(arguments);
-            return result;
-#else
             return constructor.Invoke(arguments);
-#endif
         }
 
         /// <summary>

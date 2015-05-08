@@ -34,304 +34,6 @@ namespace Microsoft.OData.Client
         {
             // register known canonical method names
             Dictionary<String, SequenceMethod> map = new Dictionary<string, SequenceMethod>(EqualityComparer<string>.Default);
-#if ASTORIA_LIGHT_WP
-            map.Add(@"Sum(IQueryable`1<T>, Expression`1<Func`2<T, Double>>)->Double", SequenceMethod.SumDoubleSelector);
-            map.Add(@"Sum(IQueryable`1<T>, Expression`1<Func`2<T, Nullable`1<Double>>>)->Nullable`1<Double>", SequenceMethod.SumNullableDoubleSelector);
-            map.Add(@"Sum(IQueryable`1<T>, Expression`1<Func`2<T, Decimal>>)->Decimal", SequenceMethod.SumDecimalSelector);
-            map.Add(@"Sum(IQueryable`1<T>, Expression`1<Func`2<T, Nullable`1<Decimal>>>)->Nullable`1<Decimal>", SequenceMethod.SumNullableDecimalSelector);
-            map.Add(@"Average(IQueryable`1<T>, Expression`1<Func`2<T, Int32>>)->Double", SequenceMethod.AverageIntSelector);
-            map.Add(@"Average(IQueryable`1<T>, Expression`1<Func`2<T, Nullable`1<Int32>>>)->Nullable`1<Double>", SequenceMethod.AverageNullableIntSelector);
-            map.Add(@"Average(IQueryable`1<T>, Expression`1<Func`2<T, Single>>)->Single", SequenceMethod.AverageSingleSelector);
-            map.Add(@"Average(IQueryable`1<T>, Expression`1<Func`2<T, Nullable`1<Single>>>)->Nullable`1<Single>", SequenceMethod.AverageNullableSingleSelector);
-            map.Add(@"Average(IQueryable`1<T>, Expression`1<Func`2<T, Int64>>)->Double", SequenceMethod.AverageLongSelector);
-            map.Add(@"Average(IQueryable`1<T>, Expression`1<Func`2<T, Nullable`1<Int64>>>)->Nullable`1<Double>", SequenceMethod.AverageNullableLongSelector);
-            map.Add(@"Average(IQueryable`1<T>, Expression`1<Func`2<T, Double>>)->Double", SequenceMethod.AverageDoubleSelector);
-            map.Add(@"Average(IQueryable`1<T>, Expression`1<Func`2<T, Nullable`1<Double>>>)->Nullable`1<Double>", SequenceMethod.AverageNullableDoubleSelector);
-            map.Add(@"Average(IQueryable`1<T>, Expression`1<Func`2<T, Decimal>>)->Decimal", SequenceMethod.AverageDecimalSelector);
-            map.Add(@"Average(IQueryable`1<T>, Expression`1<Func`2<T, Nullable`1<Decimal>>>)->Nullable`1<Decimal>", SequenceMethod.AverageNullableDecimalSelector);
-            map.Add(@"Aggregate(IQueryable`1<T>, Expression`1<Func`3<T, T, T>>)->T", SequenceMethod.Aggregate);
-            map.Add(@"Aggregate(IQueryable`1<T>, T, Expression`1<Func`3<T, T, T>>)->T", SequenceMethod.AggregateSeed);
-            map.Add(@"Aggregate(IQueryable`1<T>, T, Expression`1<Func`3<T, T, T>>, Expression`1<Func`2<T, T>>)->T", SequenceMethod.AggregateSeedSelector);
-            map.Add(@"AsQueryable(IEnumerable`1<T>)->IQueryable`1<T>", SequenceMethod.AsQueryableGeneric);
-            map.Add(@"Where(IQueryable`1<T>, Expression`1<Func`2<T, Boolean>>)->IQueryable`1<T>", SequenceMethod.Where);
-            map.Add(@"Where(IQueryable`1<T>, Expression`1<Func`3<T, Int32, Boolean>>)->IQueryable`1<T>", SequenceMethod.WhereOrdinal);
-            map.Add(@"OfType(IQueryable)->IQueryable`1<T>", SequenceMethod.OfType);
-            map.Add(@"Cast(IQueryable)->IQueryable`1<T>", SequenceMethod.Cast);
-            map.Add(@"Select(IQueryable`1<T>, Expression`1<Func`2<T, T>>)->IQueryable`1<T>", SequenceMethod.Select);
-            map.Add(@"Select(IQueryable`1<T>, Expression`1<Func`3<T, Int32, T>>)->IQueryable`1<T>", SequenceMethod.SelectOrdinal);
-            map.Add(@"SelectMany(IQueryable`1<T>, Expression`1<Func`2<T, IEnumerable`1<T>>>)->IQueryable`1<T>", SequenceMethod.SelectMany);
-            map.Add(@"SelectMany(IQueryable`1<T>, Expression`1<Func`3<T, Int32, IEnumerable`1<T>>>)->IQueryable`1<T>", SequenceMethod.SelectManyOrdinal);
-            map.Add(@"SelectMany(IQueryable`1<T>, Expression`1<Func`3<T, Int32, IEnumerable`1<T>>>, Expression`1<Func`3<T, T, T>>)->IQueryable`1<T>", SequenceMethod.SelectManyOrdinalResultSelector);
-            map.Add(@"SelectMany(IQueryable`1<T>, Expression`1<Func`2<T, IEnumerable`1<T>>>, Expression`1<Func`3<T, T, T>>)->IQueryable`1<T>", SequenceMethod.SelectManyResultSelector);
-            map.Add(@"Join(IQueryable`1<T>, IEnumerable`1<T>, Expression`1<Func`2<T, T>>, Expression`1<Func`2<T, T>>, Expression`1<Func`3<T, T, T>>)->IQueryable`1<T>", SequenceMethod.Join);
-            map.Add(@"Join(IQueryable`1<T>, IEnumerable`1<T>, Expression`1<Func`2<T, T>>, Expression`1<Func`2<T, T>>, Expression`1<Func`3<T, T, T>>, IEqualityComparer`1<T>)->IQueryable`1<T>", SequenceMethod.JoinComparer);
-            map.Add(@"GroupJoin(IQueryable`1<T>, IEnumerable`1<T>, Expression`1<Func`2<T, T>>, Expression`1<Func`2<T, T>>, Expression`1<Func`3<T, IEnumerable`1<T>, T>>)->IQueryable`1<T>", SequenceMethod.GroupJoin);
-            map.Add(@"GroupJoin(IQueryable`1<T>, IEnumerable`1<T>, Expression`1<Func`2<T, T>>, Expression`1<Func`2<T, T>>, Expression`1<Func`3<T, IEnumerable`1<T>, T>>, IEqualityComparer`1<T>)->IQueryable`1<T>", SequenceMethod.GroupJoinComparer);
-            map.Add(@"OrderBy(IQueryable`1<T>, Expression`1<Func`2<T, T>>)->IOrderedQueryable`1<T>", SequenceMethod.OrderBy);
-            map.Add(@"OrderBy(IQueryable`1<T>, Expression`1<Func`2<T, T>>, IComparer`1<T>)->IOrderedQueryable`1<T>", SequenceMethod.OrderByComparer);
-            map.Add(@"OrderByDescending(IQueryable`1<T>, Expression`1<Func`2<T, T>>)->IOrderedQueryable`1<T>", SequenceMethod.OrderByDescending);
-            map.Add(@"OrderByDescending(IQueryable`1<T>, Expression`1<Func`2<T, T>>, IComparer`1<T>)->IOrderedQueryable`1<T>", SequenceMethod.OrderByDescendingComparer);
-            map.Add(@"ThenBy(IOrderedQueryable`1<T>, Expression`1<Func`2<T, T>>)->IOrderedQueryable`1<T>", SequenceMethod.ThenBy);
-            map.Add(@"ThenBy(IOrderedQueryable`1<T>, Expression`1<Func`2<T, T>>, IComparer`1<T>)->IOrderedQueryable`1<T>", SequenceMethod.ThenByComparer);
-            map.Add(@"ThenByDescending(IOrderedQueryable`1<T>, Expression`1<Func`2<T, T>>)->IOrderedQueryable`1<T>", SequenceMethod.ThenByDescending);
-            map.Add(@"ThenByDescending(IOrderedQueryable`1<T>, Expression`1<Func`2<T, T>>, IComparer`1<T>)->IOrderedQueryable`1<T>", SequenceMethod.ThenByDescendingComparer);
-            map.Add(@"Take(IQueryable`1<T>, Int32)->IQueryable`1<T>", SequenceMethod.Take);
-            map.Add(@"TakeWhile(IQueryable`1<T>, Expression`1<Func`2<T, Boolean>>)->IQueryable`1<T>", SequenceMethod.TakeWhile);
-            map.Add(@"TakeWhile(IQueryable`1<T>, Expression`1<Func`3<T, Int32, Boolean>>)->IQueryable`1<T>", SequenceMethod.TakeWhileOrdinal);
-            map.Add(@"Skip(IQueryable`1<T>, Int32)->IQueryable`1<T>", SequenceMethod.Skip);
-            map.Add(@"SkipWhile(IQueryable`1<T>, Expression`1<Func`2<T, Boolean>>)->IQueryable`1<T>", SequenceMethod.SkipWhile);
-            map.Add(@"SkipWhile(IQueryable`1<T>, Expression`1<Func`3<T, Int32, Boolean>>)->IQueryable`1<T>", SequenceMethod.SkipWhileOrdinal);
-            map.Add(@"GroupBy(IQueryable`1<T>, Expression`1<Func`2<T, T>>)->IQueryable`1<IGrouping`2<T, T>>", SequenceMethod.GroupBy);
-            map.Add(@"GroupBy(IQueryable`1<T>, Expression`1<Func`2<T, T>>, Expression`1<Func`2<T, T>>)->IQueryable`1<IGrouping`2<T, T>>", SequenceMethod.GroupByElementSelector);
-            map.Add(@"GroupBy(IQueryable`1<T>, Expression`1<Func`2<T, T>>, IEqualityComparer`1<T>)->IQueryable`1<IGrouping`2<T, T>>", SequenceMethod.GroupByComparer);
-            map.Add(@"GroupBy(IQueryable`1<T>, Expression`1<Func`2<T, T>>, Expression`1<Func`2<T, T>>, IEqualityComparer`1<T>)->IQueryable`1<IGrouping`2<T, T>>", SequenceMethod.GroupByElementSelectorComparer);
-            map.Add(@"GroupBy(IQueryable`1<T>, Expression`1<Func`2<T, T>>, Expression`1<Func`2<T, T>>, Expression`1<Func`3<T, IEnumerable`1<T>, T>>)->IQueryable`1<T>", SequenceMethod.GroupByElementSelectorResultSelector);
-            map.Add(@"GroupBy(IQueryable`1<T>, Expression`1<Func`2<T, T>>, Expression`1<Func`3<T, IEnumerable`1<T>, T>>)->IQueryable`1<T>", SequenceMethod.GroupByResultSelector);
-            map.Add(@"GroupBy(IQueryable`1<T>, Expression`1<Func`2<T, T>>, Expression`1<Func`3<T, IEnumerable`1<T>, T>>, IEqualityComparer`1<T>)->IQueryable`1<T>", SequenceMethod.GroupByResultSelectorComparer);
-            map.Add(@"GroupBy(IQueryable`1<T>, Expression`1<Func`2<T, T>>, Expression`1<Func`2<T, T>>, Expression`1<Func`3<T, IEnumerable`1<T>, T>>, IEqualityComparer`1<T>)->IQueryable`1<T>", SequenceMethod.GroupByElementSelectorResultSelectorComparer);
-            map.Add(@"Distinct(IQueryable`1<T>)->IQueryable`1<T>", SequenceMethod.Distinct);
-            map.Add(@"Distinct(IQueryable`1<T>, IEqualityComparer`1<T>)->IQueryable`1<T>", SequenceMethod.DistinctComparer);
-            map.Add(@"Concat(IQueryable`1<T>, IEnumerable`1<T>)->IQueryable`1<T>", SequenceMethod.Concat);
-            map.Add(@"Union(IQueryable`1<T>, IEnumerable`1<T>)->IQueryable`1<T>", SequenceMethod.Union);
-            map.Add(@"Union(IQueryable`1<T>, IEnumerable`1<T>, IEqualityComparer`1<T>)->IQueryable`1<T>", SequenceMethod.UnionComparer);
-            map.Add(@"Intersect(IQueryable`1<T>, IEnumerable`1<T>)->IQueryable`1<T>", SequenceMethod.Intersect);
-            map.Add(@"Intersect(IQueryable`1<T>, IEnumerable`1<T>, IEqualityComparer`1<T>)->IQueryable`1<T>", SequenceMethod.IntersectComparer);
-            map.Add(@"Except(IQueryable`1<T>, IEnumerable`1<T>)->IQueryable`1<T>", SequenceMethod.Except);
-            map.Add(@"Except(IQueryable`1<T>, IEnumerable`1<T>, IEqualityComparer`1<T>)->IQueryable`1<T>", SequenceMethod.ExceptComparer);
-            map.Add(@"First(IQueryable`1<T>)->T", SequenceMethod.First);
-            map.Add(@"First(IQueryable`1<T>, Expression`1<Func`2<T, Boolean>>)->T", SequenceMethod.FirstPredicate);
-            map.Add(@"FirstOrDefault(IQueryable`1<T>)->T", SequenceMethod.FirstOrDefault);
-            map.Add(@"FirstOrDefault(IQueryable`1<T>, Expression`1<Func`2<T, Boolean>>)->T", SequenceMethod.FirstOrDefaultPredicate);
-            map.Add(@"Last(IQueryable`1<T>)->T", SequenceMethod.Last);
-            map.Add(@"Last(IQueryable`1<T>, Expression`1<Func`2<T, Boolean>>)->T", SequenceMethod.LastPredicate);
-            map.Add(@"LastOrDefault(IQueryable`1<T>)->T", SequenceMethod.LastOrDefault);
-            map.Add(@"LastOrDefault(IQueryable`1<T>, Expression`1<Func`2<T, Boolean>>)->T", SequenceMethod.LastOrDefaultPredicate);
-            map.Add(@"Single(IQueryable`1<T>)->T", SequenceMethod.Single);
-            map.Add(@"Single(IQueryable`1<T>, Expression`1<Func`2<T, Boolean>>)->T", SequenceMethod.SinglePredicate);
-            map.Add(@"SingleOrDefault(IQueryable`1<T>)->T", SequenceMethod.SingleOrDefault);
-            map.Add(@"SingleOrDefault(IQueryable`1<T>, Expression`1<Func`2<T, Boolean>>)->T", SequenceMethod.SingleOrDefaultPredicate);
-            map.Add(@"ElementAt(IQueryable`1<T>, Int32)->T", SequenceMethod.ElementAt);
-            map.Add(@"ElementAtOrDefault(IQueryable`1<T>, Int32)->T", SequenceMethod.ElementAtOrDefault);
-            map.Add(@"DefaultIfEmpty(IQueryable`1<T>)->IQueryable`1<T>", SequenceMethod.DefaultIfEmpty);
-            map.Add(@"DefaultIfEmpty(IQueryable`1<T>, T)->IQueryable`1<T>", SequenceMethod.DefaultIfEmptyValue);
-            map.Add(@"Contains(IQueryable`1<T>, T)->Boolean", SequenceMethod.Contains);
-            map.Add(@"Contains(IQueryable`1<T>, T, IEqualityComparer`1<T>)->Boolean", SequenceMethod.ContainsComparer);
-            map.Add(@"Reverse(IQueryable`1<T>)->IQueryable`1<T>", SequenceMethod.Reverse);
-            map.Add(@"SequenceEqual(IQueryable`1<T>, IEnumerable`1<T>)->Boolean", SequenceMethod.SequenceEqual);
-            map.Add(@"SequenceEqual(IQueryable`1<T>, IEnumerable`1<T>, IEqualityComparer`1<T>)->Boolean", SequenceMethod.SequenceEqualComparer);
-            map.Add(@"Any(IQueryable`1<T>)->Boolean", SequenceMethod.Any);
-            map.Add(@"Any(IQueryable`1<T>, Expression`1<Func`2<T, Boolean>>)->Boolean", SequenceMethod.AnyPredicate);
-            map.Add(@"All(IQueryable`1<T>, Expression`1<Func`2<T, Boolean>>)->Boolean", SequenceMethod.All);
-            map.Add(@"Count(IQueryable`1<T>)->Int32", SequenceMethod.Count);
-            map.Add(@"Count(IQueryable`1<T>, Expression`1<Func`2<T, Boolean>>)->Int32", SequenceMethod.CountPredicate);
-            map.Add(@"LongCount(IQueryable`1<T>)->Int64", SequenceMethod.LongCount);
-            map.Add(@"LongCount(IQueryable`1<T>, Expression`1<Func`2<T, Boolean>>)->Int64", SequenceMethod.LongCountPredicate);
-            map.Add(@"Min(IQueryable`1<T>)->T", SequenceMethod.Min);
-            map.Add(@"Min(IQueryable`1<T>, Expression`1<Func`2<T, T>>)->T", SequenceMethod.MinSelector);
-            map.Add(@"Max(IQueryable`1<T>)->T", SequenceMethod.Max);
-            map.Add(@"Max(IQueryable`1<T>, Expression`1<Func`2<T, T>>)->T", SequenceMethod.MaxSelector);
-            map.Add(@"Sum(IQueryable`1<T>, Expression`1<Func`2<T, Int32>>)->Int32", SequenceMethod.SumIntSelector);
-            map.Add(@"Sum(IQueryable`1<T>, Expression`1<Func`2<T, Nullable`1<Int32>>>)->Nullable`1<Int32>", SequenceMethod.SumNullableIntSelector);
-            map.Add(@"Sum(IQueryable`1<T>, Expression`1<Func`2<T, Int64>>)->Int64", SequenceMethod.SumLongSelector);
-            map.Add(@"Sum(IQueryable`1<T>, Expression`1<Func`2<T, Nullable`1<Int64>>>)->Nullable`1<Int64>", SequenceMethod.SumNullableLongSelector);
-            map.Add(@"Sum(IQueryable`1<T>, Expression`1<Func`2<T, Single>>)->Single", SequenceMethod.SumSingleSelector);
-            map.Add(@"Sum(IQueryable`1<T>, Expression`1<Func`2<T, Nullable`1<Single>>>)->Nullable`1<Single>", SequenceMethod.SumNullableSingleSelector);
-            map.Add(@"AsQueryable(IEnumerable)->IQueryable", SequenceMethod.AsQueryable);
-            map.Add(@"Sum(IQueryable`1<Int32>)->Int32", SequenceMethod.SumInt);
-            map.Add(@"Sum(IQueryable`1<Nullable`1<Int32>>)->Nullable`1<Int32>", SequenceMethod.SumNullableInt);
-            map.Add(@"Sum(IQueryable`1<Int64>)->Int64", SequenceMethod.SumLong);
-            map.Add(@"Sum(IQueryable`1<Nullable`1<Int64>>)->Nullable`1<Int64>", SequenceMethod.SumNullableLong);
-            map.Add(@"Sum(IQueryable`1<Single>)->Single", SequenceMethod.SumSingle);
-            map.Add(@"Sum(IQueryable`1<Nullable`1<Single>>)->Nullable`1<Single>", SequenceMethod.SumNullableSingle);
-            map.Add(@"Sum(IQueryable`1<Double>)->Double", SequenceMethod.SumDouble);
-            map.Add(@"Sum(IQueryable`1<Nullable`1<Double>>)->Nullable`1<Double>", SequenceMethod.SumNullableDouble);
-            map.Add(@"Sum(IQueryable`1<Decimal>)->Decimal", SequenceMethod.SumDecimal);
-            map.Add(@"Sum(IQueryable`1<Nullable`1<Decimal>>)->Nullable`1<Decimal>", SequenceMethod.SumNullableDecimal);
-            map.Add(@"Average(IQueryable`1<Int32>)->Double", SequenceMethod.AverageInt);
-            map.Add(@"Average(IQueryable`1<Nullable`1<Int32>>)->Nullable`1<Double>", SequenceMethod.AverageNullableInt);
-            map.Add(@"Average(IQueryable`1<Int64>)->Double", SequenceMethod.AverageLong);
-            map.Add(@"Average(IQueryable`1<Nullable`1<Int64>>)->Nullable`1<Double>", SequenceMethod.AverageNullableLong);
-            map.Add(@"Average(IQueryable`1<Single>)->Single", SequenceMethod.AverageSingle);
-            map.Add(@"Average(IQueryable`1<Nullable`1<Single>>)->Nullable`1<Single>", SequenceMethod.AverageNullableSingle);
-            map.Add(@"Average(IQueryable`1<Double>)->Double", SequenceMethod.AverageDouble);
-            map.Add(@"Average(IQueryable`1<Nullable`1<Double>>)->Nullable`1<Double>", SequenceMethod.AverageNullableDouble);
-            map.Add(@"Average(IQueryable`1<Decimal>)->Decimal", SequenceMethod.AverageDecimal);
-            map.Add(@"Average(IQueryable`1<Nullable`1<Decimal>>)->Nullable`1<Decimal>", SequenceMethod.AverageNullableDecimal);
-            map.Add(@"First(IEnumerable`1<T>)->T", SequenceMethod.First);
-            map.Add(@"First(IEnumerable`1<T>, Func`2<T, Boolean>)->T", SequenceMethod.FirstPredicate);
-            map.Add(@"FirstOrDefault(IEnumerable`1<T>)->T", SequenceMethod.FirstOrDefault);
-            map.Add(@"FirstOrDefault(IEnumerable`1<T>, Func`2<T, Boolean>)->T", SequenceMethod.FirstOrDefaultPredicate);
-            map.Add(@"Last(IEnumerable`1<T>)->T", SequenceMethod.Last);
-            map.Add(@"Last(IEnumerable`1<T>, Func`2<T, Boolean>)->T", SequenceMethod.LastPredicate);
-            map.Add(@"LastOrDefault(IEnumerable`1<T>)->T", SequenceMethod.LastOrDefault);
-            map.Add(@"LastOrDefault(IEnumerable`1<T>, Func`2<T, Boolean>)->T", SequenceMethod.LastOrDefaultPredicate);
-            map.Add(@"Single(IEnumerable`1<T>)->T", SequenceMethod.Single);
-            map.Add(@"Single(IEnumerable`1<T>, Func`2<T, Boolean>)->T", SequenceMethod.SinglePredicate);
-            map.Add(@"SingleOrDefault(IEnumerable`1<T>)->T", SequenceMethod.SingleOrDefault);
-            map.Add(@"SingleOrDefault(IEnumerable`1<T>, Func`2<T, Boolean>)->T", SequenceMethod.SingleOrDefaultPredicate);
-            map.Add(@"ElementAt(IEnumerable`1<T>, Int32)->T", SequenceMethod.ElementAt);
-            map.Add(@"ElementAtOrDefault(IEnumerable`1<T>, Int32)->T", SequenceMethod.ElementAtOrDefault);
-            map.Add(@"Repeat(T, Int32)->IEnumerable`1<T>", SequenceMethod.NotSupported);
-            map.Add(@"Empty()->IEnumerable`1<T>", SequenceMethod.Empty);
-            map.Add(@"Any(IEnumerable`1<T>)->Boolean", SequenceMethod.Any);
-            map.Add(@"Any(IEnumerable`1<T>, Func`2<T, Boolean>)->Boolean", SequenceMethod.AnyPredicate);
-            map.Add(@"All(IEnumerable`1<T>, Func`2<T, Boolean>)->Boolean", SequenceMethod.All);
-            map.Add(@"Count(IEnumerable`1<T>)->Int32", SequenceMethod.Count);
-            map.Add(@"Count(IEnumerable`1<T>, Func`2<T, Boolean>)->Int32", SequenceMethod.CountPredicate);
-            map.Add(@"LongCount(IEnumerable`1<T>)->Int64", SequenceMethod.LongCount);
-            map.Add(@"LongCount(IEnumerable`1<T>, Func`2<T, Boolean>)->Int64", SequenceMethod.LongCountPredicate);
-            map.Add(@"Contains(IEnumerable`1<T>, T)->Boolean", SequenceMethod.Contains);
-            map.Add(@"Contains(IEnumerable`1<T>, T, IEqualityComparer`1<T>)->Boolean", SequenceMethod.ContainsComparer);
-            map.Add(@"Aggregate(IEnumerable`1<T>, Func`3<T, T, T>)->T", SequenceMethod.Aggregate);
-            map.Add(@"Aggregate(IEnumerable`1<T>, T, Func`3<T, T, T>)->T", SequenceMethod.AggregateSeed);
-            map.Add(@"Aggregate(IEnumerable`1<T>, T, Func`3<T, T, T>, Func`2<T, T>)->T", SequenceMethod.AggregateSeedSelector);
-            map.Add(@"Sum(IEnumerable`1<T>, Func`2<T, Int32>)->Int32", SequenceMethod.SumIntSelector);
-            map.Add(@"Sum(IEnumerable`1<T>, Func`2<T, Nullable`1<Int32>>)->Nullable`1<Int32>", SequenceMethod.SumNullableIntSelector);
-            map.Add(@"Sum(IEnumerable`1<T>, Func`2<T, Int64>)->Int64", SequenceMethod.SumLongSelector);
-            map.Add(@"Sum(IEnumerable`1<T>, Func`2<T, Nullable`1<Int64>>)->Nullable`1<Int64>", SequenceMethod.SumNullableLongSelector);
-            map.Add(@"Sum(IEnumerable`1<T>, Func`2<T, Single>)->Single", SequenceMethod.SumSingleSelector);
-            map.Add(@"Sum(IEnumerable`1<T>, Func`2<T, Nullable`1<Single>>)->Nullable`1<Single>", SequenceMethod.SumNullableSingleSelector);
-            map.Add(@"Sum(IEnumerable`1<T>, Func`2<T, Double>)->Double", SequenceMethod.SumDoubleSelector);
-            map.Add(@"Sum(IEnumerable`1<T>, Func`2<T, Nullable`1<Double>>)->Nullable`1<Double>", SequenceMethod.SumNullableDoubleSelector);
-            map.Add(@"Sum(IEnumerable`1<T>, Func`2<T, Decimal>)->Decimal", SequenceMethod.SumDecimalSelector);
-            map.Add(@"Sum(IEnumerable`1<T>, Func`2<T, Nullable`1<Decimal>>)->Nullable`1<Decimal>", SequenceMethod.SumNullableDecimalSelector);
-            map.Add(@"Min(IEnumerable`1<T>)->T", SequenceMethod.Min);
-            map.Add(@"Min(IEnumerable`1<T>, Func`2<T, Int32>)->Int32", SequenceMethod.MinIntSelector);
-            map.Add(@"Min(IEnumerable`1<T>, Func`2<T, Nullable`1<Int32>>)->Nullable`1<Int32>", SequenceMethod.MinNullableIntSelector);
-            map.Add(@"Min(IEnumerable`1<T>, Func`2<T, Int64>)->Int64", SequenceMethod.MinLongSelector);
-            map.Add(@"Min(IEnumerable`1<T>, Func`2<T, Nullable`1<Int64>>)->Nullable`1<Int64>", SequenceMethod.MinNullableLongSelector);
-            map.Add(@"Min(IEnumerable`1<T>, Func`2<T, Single>)->Single", SequenceMethod.MinSingleSelector);
-            map.Add(@"Min(IEnumerable`1<T>, Func`2<T, Nullable`1<Single>>)->Nullable`1<Single>", SequenceMethod.MinNullableSingleSelector);
-            map.Add(@"Min(IEnumerable`1<T>, Func`2<T, Double>)->Double", SequenceMethod.MinDoubleSelector);
-            map.Add(@"Min(IEnumerable`1<T>, Func`2<T, Nullable`1<Double>>)->Nullable`1<Double>", SequenceMethod.MinNullableDoubleSelector);
-            map.Add(@"Min(IEnumerable`1<T>, Func`2<T, Decimal>)->Decimal", SequenceMethod.MinDecimalSelector);
-            map.Add(@"Min(IEnumerable`1<T>, Func`2<T, Nullable`1<Decimal>>)->Nullable`1<Decimal>", SequenceMethod.MinNullableDecimalSelector);
-            map.Add(@"Min(IEnumerable`1<T>, Func`2<T, T>)->T", SequenceMethod.MinSelector);
-            map.Add(@"Max(IEnumerable`1<T>)->T", SequenceMethod.Max);
-            map.Add(@"Max(IEnumerable`1<T>, Func`2<T, Int32>)->Int32", SequenceMethod.MaxIntSelector);
-            map.Add(@"Max(IEnumerable`1<T>, Func`2<T, Nullable`1<Int32>>)->Nullable`1<Int32>", SequenceMethod.MaxNullableIntSelector);
-            map.Add(@"Max(IEnumerable`1<T>, Func`2<T, Int64>)->Int64", SequenceMethod.MaxLongSelector);
-            map.Add(@"Max(IEnumerable`1<T>, Func`2<T, Nullable`1<Int64>>)->Nullable`1<Int64>", SequenceMethod.MaxNullableLongSelector);
-            map.Add(@"Max(IEnumerable`1<T>, Func`2<T, Single>)->Single", SequenceMethod.MaxSingleSelector);
-            map.Add(@"Max(IEnumerable`1<T>, Func`2<T, Nullable`1<Single>>)->Nullable`1<Single>", SequenceMethod.MaxNullableSingleSelector);
-            map.Add(@"Max(IEnumerable`1<T>, Func`2<T, Double>)->Double", SequenceMethod.MaxDoubleSelector);
-            map.Add(@"Max(IEnumerable`1<T>, Func`2<T, Nullable`1<Double>>)->Nullable`1<Double>", SequenceMethod.MaxNullableDoubleSelector);
-            map.Add(@"Max(IEnumerable`1<T>, Func`2<T, Decimal>)->Decimal", SequenceMethod.MaxDecimalSelector);
-            map.Add(@"Max(IEnumerable`1<T>, Func`2<T, Nullable`1<Decimal>>)->Nullable`1<Decimal>", SequenceMethod.MaxNullableDecimalSelector);
-            map.Add(@"Max(IEnumerable`1<T>, Func`2<T, T>)->T", SequenceMethod.MaxSelector);
-            map.Add(@"Average(IEnumerable`1<T>, Func`2<T, Int32>)->Double", SequenceMethod.AverageIntSelector);
-            map.Add(@"Average(IEnumerable`1<T>, Func`2<T, Nullable`1<Int32>>)->Nullable`1<Double>", SequenceMethod.AverageNullableIntSelector);
-            map.Add(@"Average(IEnumerable`1<T>, Func`2<T, Int64>)->Double", SequenceMethod.AverageLongSelector);
-            map.Add(@"Average(IEnumerable`1<T>, Func`2<T, Nullable`1<Int64>>)->Nullable`1<Double>", SequenceMethod.AverageNullableLongSelector);
-            map.Add(@"Average(IEnumerable`1<T>, Func`2<T, Single>)->Single", SequenceMethod.AverageSingleSelector);
-            map.Add(@"Average(IEnumerable`1<T>, Func`2<T, Nullable`1<Single>>)->Nullable`1<Single>", SequenceMethod.AverageNullableSingleSelector);
-            map.Add(@"Average(IEnumerable`1<T>, Func`2<T, Double>)->Double", SequenceMethod.AverageDoubleSelector);
-            map.Add(@"Average(IEnumerable`1<T>, Func`2<T, Nullable`1<Double>>)->Nullable`1<Double>", SequenceMethod.AverageNullableDoubleSelector);
-            map.Add(@"Average(IEnumerable`1<T>, Func`2<T, Decimal>)->Decimal", SequenceMethod.AverageDecimalSelector);
-            map.Add(@"Average(IEnumerable`1<T>, Func`2<T, Nullable`1<Decimal>>)->Nullable`1<Decimal>", SequenceMethod.AverageNullableDecimalSelector);
-            map.Add(@"Where(IEnumerable`1<T>, Func`2<T, Boolean>)->IEnumerable`1<T>", SequenceMethod.Where);
-            map.Add(@"Where(IEnumerable`1<T>, Func`3<T, Int32, Boolean>)->IEnumerable`1<T>", SequenceMethod.WhereOrdinal);
-            map.Add(@"Select(IEnumerable`1<T>, Func`2<T, T>)->IEnumerable`1<T>", SequenceMethod.Select);
-            map.Add(@"Select(IEnumerable`1<T>, Func`3<T, Int32, T>)->IEnumerable`1<T>", SequenceMethod.SelectOrdinal);
-            map.Add(@"SelectMany(IEnumerable`1<T>, Func`2<T, IEnumerable`1<T>>)->IEnumerable`1<T>", SequenceMethod.SelectMany);
-            map.Add(@"SelectMany(IEnumerable`1<T>, Func`3<T, Int32, IEnumerable`1<T>>)->IEnumerable`1<T>", SequenceMethod.SelectManyOrdinal);
-            map.Add(@"SelectMany(IEnumerable`1<T>, Func`3<T, Int32, IEnumerable`1<T>>, Func`3<T, T, T>)->IEnumerable`1<T>", SequenceMethod.SelectManyOrdinalResultSelector);
-            map.Add(@"SelectMany(IEnumerable`1<T>, Func`2<T, IEnumerable`1<T>>, Func`3<T, T, T>)->IEnumerable`1<T>", SequenceMethod.SelectManyResultSelector);
-            map.Add(@"Take(IEnumerable`1<T>, Int32)->IEnumerable`1<T>", SequenceMethod.Take);
-            map.Add(@"TakeWhile(IEnumerable`1<T>, Func`2<T, Boolean>)->IEnumerable`1<T>", SequenceMethod.TakeWhile);
-            map.Add(@"TakeWhile(IEnumerable`1<T>, Func`3<T, Int32, Boolean>)->IEnumerable`1<T>", SequenceMethod.TakeWhileOrdinal);
-            map.Add(@"Skip(IEnumerable`1<T>, Int32)->IEnumerable`1<T>", SequenceMethod.Skip);
-            map.Add(@"SkipWhile(IEnumerable`1<T>, Func`2<T, Boolean>)->IEnumerable`1<T>", SequenceMethod.SkipWhile);
-            map.Add(@"SkipWhile(IEnumerable`1<T>, Func`3<T, Int32, Boolean>)->IEnumerable`1<T>", SequenceMethod.SkipWhileOrdinal);
-            map.Add(@"Join(IEnumerable`1<T>, IEnumerable`1<T>, Func`2<T, T>, Func`2<T, T>, Func`3<T, T, T>)->IEnumerable`1<T>", SequenceMethod.Join);
-            map.Add(@"Join(IEnumerable`1<T>, IEnumerable`1<T>, Func`2<T, T>, Func`2<T, T>, Func`3<T, T, T>, IEqualityComparer`1<T>)->IEnumerable`1<T>", SequenceMethod.JoinComparer);
-            map.Add(@"GroupJoin(IEnumerable`1<T>, IEnumerable`1<T>, Func`2<T, T>, Func`2<T, T>, Func`3<T, IEnumerable`1<T>, T>)->IEnumerable`1<T>", SequenceMethod.GroupJoin);
-            map.Add(@"GroupJoin(IEnumerable`1<T>, IEnumerable`1<T>, Func`2<T, T>, Func`2<T, T>, Func`3<T, IEnumerable`1<T>, T>, IEqualityComparer`1<T>)->IEnumerable`1<T>", SequenceMethod.GroupJoinComparer);
-            map.Add(@"OrderBy(IEnumerable`1<T>, Func`2<T, T>)->IOrderedEnumerable`1<T>", SequenceMethod.OrderBy);
-            map.Add(@"OrderBy(IEnumerable`1<T>, Func`2<T, T>, IComparer`1<T>)->IOrderedEnumerable`1<T>", SequenceMethod.OrderByComparer);
-            map.Add(@"OrderByDescending(IEnumerable`1<T>, Func`2<T, T>)->IOrderedEnumerable`1<T>", SequenceMethod.OrderByDescending);
-            map.Add(@"OrderByDescending(IEnumerable`1<T>, Func`2<T, T>, IComparer`1<T>)->IOrderedEnumerable`1<T>", SequenceMethod.OrderByDescendingComparer);
-            map.Add(@"ThenBy(IOrderedEnumerable`1<T>, Func`2<T, T>)->IOrderedEnumerable`1<T>", SequenceMethod.ThenBy);
-            map.Add(@"ThenBy(IOrderedEnumerable`1<T>, Func`2<T, T>, IComparer`1<T>)->IOrderedEnumerable`1<T>", SequenceMethod.ThenByComparer);
-            map.Add(@"ThenByDescending(IOrderedEnumerable`1<T>, Func`2<T, T>)->IOrderedEnumerable`1<T>", SequenceMethod.ThenByDescending);
-            map.Add(@"ThenByDescending(IOrderedEnumerable`1<T>, Func`2<T, T>, IComparer`1<T>)->IOrderedEnumerable`1<T>", SequenceMethod.ThenByDescendingComparer);
-            map.Add(@"GroupBy(IEnumerable`1<T>, Func`2<T, T>)->IEnumerable`1<IGrouping`2<T, T>>", SequenceMethod.GroupBy);
-            map.Add(@"GroupBy(IEnumerable`1<T>, Func`2<T, T>, IEqualityComparer`1<T>)->IEnumerable`1<IGrouping`2<T, T>>", SequenceMethod.GroupByComparer);
-            map.Add(@"GroupBy(IEnumerable`1<T>, Func`2<T, T>, Func`2<T, T>)->IEnumerable`1<IGrouping`2<T, T>>", SequenceMethod.GroupByElementSelector);
-            map.Add(@"GroupBy(IEnumerable`1<T>, Func`2<T, T>, Func`2<T, T>, IEqualityComparer`1<T>)->IEnumerable`1<IGrouping`2<T, T>>", SequenceMethod.GroupByElementSelectorComparer);
-            map.Add(@"GroupBy(IEnumerable`1<T>, Func`2<T, T>, Func`3<T, IEnumerable`1<T>, T>)->IEnumerable`1<T>", SequenceMethod.GroupByResultSelector);
-            map.Add(@"GroupBy(IEnumerable`1<T>, Func`2<T, T>, Func`2<T, T>, Func`3<T, IEnumerable`1<T>, T>)->IEnumerable`1<T>", SequenceMethod.GroupByElementSelectorResultSelector);
-            map.Add(@"GroupBy(IEnumerable`1<T>, Func`2<T, T>, Func`3<T, IEnumerable`1<T>, T>, IEqualityComparer`1<T>)->IEnumerable`1<T>", SequenceMethod.GroupByResultSelectorComparer);
-            map.Add(@"GroupBy(IEnumerable`1<T>, Func`2<T, T>, Func`2<T, T>, Func`3<T, IEnumerable`1<T>, T>, IEqualityComparer`1<T>)->IEnumerable`1<T>", SequenceMethod.GroupByElementSelectorResultSelectorComparer);
-            map.Add(@"Concat(IEnumerable`1<T>, IEnumerable`1<T>)->IEnumerable`1<T>", SequenceMethod.Concat);
-            map.Add(@"Distinct(IEnumerable`1<T>)->IEnumerable`1<T>", SequenceMethod.Distinct);
-            map.Add(@"Distinct(IEnumerable`1<T>, IEqualityComparer`1<T>)->IEnumerable`1<T>", SequenceMethod.DistinctComparer);
-            map.Add(@"Union(IEnumerable`1<T>, IEnumerable`1<T>)->IEnumerable`1<T>", SequenceMethod.Union);
-            map.Add(@"Union(IEnumerable`1<T>, IEnumerable`1<T>, IEqualityComparer`1<T>)->IEnumerable`1<T>", SequenceMethod.UnionComparer);
-            map.Add(@"Intersect(IEnumerable`1<T>, IEnumerable`1<T>)->IEnumerable`1<T>", SequenceMethod.Intersect);
-            map.Add(@"Intersect(IEnumerable`1<T>, IEnumerable`1<T>, IEqualityComparer`1<T>)->IEnumerable`1<T>", SequenceMethod.IntersectComparer);
-            map.Add(@"Except(IEnumerable`1<T>, IEnumerable`1<T>)->IEnumerable`1<T>", SequenceMethod.Except);
-            map.Add(@"Except(IEnumerable`1<T>, IEnumerable`1<T>, IEqualityComparer`1<T>)->IEnumerable`1<T>", SequenceMethod.ExceptComparer);
-            map.Add(@"Reverse(IEnumerable`1<T>)->IEnumerable`1<T>", SequenceMethod.Reverse);
-            map.Add(@"SequenceEqual(IEnumerable`1<T>, IEnumerable`1<T>)->Boolean", SequenceMethod.SequenceEqual);
-            map.Add(@"SequenceEqual(IEnumerable`1<T>, IEnumerable`1<T>, IEqualityComparer`1<T>)->Boolean", SequenceMethod.SequenceEqualComparer);
-            map.Add(@"AsEnumerable(IEnumerable`1<T>)->IEnumerable`1<T>", SequenceMethod.AsEnumerable);
-            map.Add(@"ToArray(IEnumerable`1<T>)->T[]", SequenceMethod.NotSupported);
-            map.Add(@"ToList(IEnumerable`1<T>)->List`1<T>", SequenceMethod.ToList);
-            map.Add(@"ToDictionary(IEnumerable`1<T>, Func`2<T, T>)->Dictionary`2<T, T>", SequenceMethod.NotSupported);
-            map.Add(@"ToDictionary(IEnumerable`1<T>, Func`2<T, T>, IEqualityComparer`1<T>)->Dictionary`2<T, T>", SequenceMethod.NotSupported);
-            map.Add(@"ToDictionary(IEnumerable`1<T>, Func`2<T, T>, Func`2<T, T>)->Dictionary`2<T, T>", SequenceMethod.NotSupported);
-            map.Add(@"ToDictionary(IEnumerable`1<T>, Func`2<T, T>, Func`2<T, T>, IEqualityComparer`1<T>)->Dictionary`2<T, T>", SequenceMethod.NotSupported);
-            map.Add(@"ToLookup(IEnumerable`1<T>, Func`2<T, T>)->ILookup`2<T, T>", SequenceMethod.NotSupported);
-            map.Add(@"ToLookup(IEnumerable`1<T>, Func`2<T, T>, IEqualityComparer`1<T>)->ILookup`2<T, T>", SequenceMethod.NotSupported);
-            map.Add(@"ToLookup(IEnumerable`1<T>, Func`2<T, T>, Func`2<T, T>)->ILookup`2<T, T>", SequenceMethod.NotSupported);
-            map.Add(@"ToLookup(IEnumerable`1<T>, Func`2<T, T>, Func`2<T, T>, IEqualityComparer`1<T>)->ILookup`2<T, T>", SequenceMethod.NotSupported);
-            map.Add(@"DefaultIfEmpty(IEnumerable`1<T>)->IEnumerable`1<T>", SequenceMethod.DefaultIfEmpty);
-            map.Add(@"DefaultIfEmpty(IEnumerable`1<T>, T)->IEnumerable`1<T>", SequenceMethod.DefaultIfEmptyValue);
-            map.Add(@"OfType(IEnumerable)->IEnumerable`1<T>", SequenceMethod.OfType);
-            map.Add(@"Cast(IEnumerable)->IEnumerable`1<T>", SequenceMethod.Cast);
-            map.Add(@"Range(Int32, Int32)->IEnumerable`1<Int32>", SequenceMethod.NotSupported);
-            map.Add(@"Sum(IEnumerable`1<Int32>)->Int32", SequenceMethod.SumInt);
-            map.Add(@"Sum(IEnumerable`1<Nullable`1<Int32>>)->Nullable`1<Int32>", SequenceMethod.SumNullableInt);
-            map.Add(@"Sum(IEnumerable`1<Int64>)->Int64", SequenceMethod.SumLong);
-            map.Add(@"Sum(IEnumerable`1<Nullable`1<Int64>>)->Nullable`1<Int64>", SequenceMethod.SumNullableLong);
-            map.Add(@"Sum(IEnumerable`1<Single>)->Single", SequenceMethod.SumSingle);
-            map.Add(@"Sum(IEnumerable`1<Nullable`1<Single>>)->Nullable`1<Single>", SequenceMethod.SumNullableSingle);
-            map.Add(@"Sum(IEnumerable`1<Double>)->Double", SequenceMethod.SumDouble);
-            map.Add(@"Sum(IEnumerable`1<Nullable`1<Double>>)->Nullable`1<Double>", SequenceMethod.SumNullableDouble);
-            map.Add(@"Sum(IEnumerable`1<Decimal>)->Decimal", SequenceMethod.SumDecimal);
-            map.Add(@"Sum(IEnumerable`1<Nullable`1<Decimal>>)->Nullable`1<Decimal>", SequenceMethod.SumNullableDecimal);
-            map.Add(@"Min(IEnumerable`1<Int32>)->Int32", SequenceMethod.MinInt);
-            map.Add(@"Min(IEnumerable`1<Nullable`1<Int32>>)->Nullable`1<Int32>", SequenceMethod.MinNullableInt);
-            map.Add(@"Min(IEnumerable`1<Int64>)->Int64", SequenceMethod.MinLong);
-            map.Add(@"Min(IEnumerable`1<Nullable`1<Int64>>)->Nullable`1<Int64>", SequenceMethod.MinNullableLong);
-            map.Add(@"Min(IEnumerable`1<Single>)->Single", SequenceMethod.MinSingle);
-            map.Add(@"Min(IEnumerable`1<Nullable`1<Single>>)->Nullable`1<Single>", SequenceMethod.MinNullableSingle);
-            map.Add(@"Min(IEnumerable`1<Double>)->Double", SequenceMethod.MinDouble);
-            map.Add(@"Min(IEnumerable`1<Nullable`1<Double>>)->Nullable`1<Double>", SequenceMethod.MinNullableDouble);
-            map.Add(@"Min(IEnumerable`1<Decimal>)->Decimal", SequenceMethod.MinDecimal);
-            map.Add(@"Min(IEnumerable`1<Nullable`1<Decimal>>)->Nullable`1<Decimal>", SequenceMethod.MinNullableDecimal);
-            map.Add(@"Max(IEnumerable`1<Int32>)->Int32", SequenceMethod.MaxInt);
-            map.Add(@"Max(IEnumerable`1<Nullable`1<Int32>>)->Nullable`1<Int32>", SequenceMethod.MaxNullableInt);
-            map.Add(@"Max(IEnumerable`1<Int64>)->Int64", SequenceMethod.MaxLong);
-            map.Add(@"Max(IEnumerable`1<Nullable`1<Int64>>)->Nullable`1<Int64>", SequenceMethod.MaxNullableLong);
-            map.Add(@"Max(IEnumerable`1<Double>)->Double", SequenceMethod.MaxDouble);
-            map.Add(@"Max(IEnumerable`1<Nullable`1<Double>>)->Nullable`1<Double>", SequenceMethod.MaxNullableDouble);
-            map.Add(@"Max(IEnumerable`1<Single>)->Single", SequenceMethod.MaxSingle);
-            map.Add(@"Max(IEnumerable`1<Nullable`1<Single>>)->Nullable`1<Single>", SequenceMethod.MaxNullableSingle);
-            map.Add(@"Max(IEnumerable`1<Decimal>)->Decimal", SequenceMethod.MaxDecimal);
-            map.Add(@"Max(IEnumerable`1<Nullable`1<Decimal>>)->Nullable`1<Decimal>", SequenceMethod.MaxNullableDecimal);
-            map.Add(@"Average(IEnumerable`1<Int32>)->Double", SequenceMethod.AverageInt);
-            map.Add(@"Average(IEnumerable`1<Nullable`1<Int32>>)->Nullable`1<Double>", SequenceMethod.AverageNullableInt);
-            map.Add(@"Average(IEnumerable`1<Int64>)->Double", SequenceMethod.AverageLong);
-            map.Add(@"Average(IEnumerable`1<Nullable`1<Int64>>)->Nullable`1<Double>", SequenceMethod.AverageNullableLong);
-            map.Add(@"Average(IEnumerable`1<Single>)->Single", SequenceMethod.AverageSingle);
-            map.Add(@"Average(IEnumerable`1<Nullable`1<Single>>)->Nullable`1<Single>", SequenceMethod.AverageNullableSingle);
-            map.Add(@"Average(IEnumerable`1<Double>)->Double", SequenceMethod.AverageDouble);
-            map.Add(@"Average(IEnumerable`1<Nullable`1<Double>>)->Nullable`1<Double>", SequenceMethod.AverageNullableDouble);
-            map.Add(@"Average(IEnumerable`1<Decimal>)->Decimal", SequenceMethod.AverageDecimal);
-            map.Add(@"Average(IEnumerable`1<Nullable`1<Decimal>>)->Nullable`1<Decimal>", SequenceMethod.AverageNullableDecimal);
-#else
             map.Add(@"Sum(IQueryable`1<T0>, Expression`1<Func`2<T0, Double>>)->Double", SequenceMethod.SumDoubleSelector);
             map.Add(@"Sum(IQueryable`1<T0>, Expression`1<Func`2<T0, Nullable`1<Double>>>)->Nullable`1<Double>", SequenceMethod.SumNullableDoubleSelector);
             map.Add(@"Sum(IQueryable`1<T0>, Expression`1<Func`2<T0, Decimal>>)->Decimal", SequenceMethod.SumDecimalSelector);
@@ -628,7 +330,7 @@ namespace Microsoft.OData.Client
             map.Add(@"Average(IEnumerable`1<Nullable`1<Double>>)->Nullable`1<Double>", SequenceMethod.AverageNullableDouble);
             map.Add(@"Average(IEnumerable`1<Decimal>)->Decimal", SequenceMethod.AverageDecimal);
             map.Add(@"Average(IEnumerable`1<Nullable`1<Decimal>>)->Nullable`1<Decimal>", SequenceMethod.AverageNullableDecimal);
-#endif
+
             // by redirection through canonical method names, determine sequence enum value
             // for all know LINQ operators
             s_methodMap = new Dictionary<MethodInfo, SequenceMethod>(EqualityComparer<MethodInfo>.Default);
@@ -769,41 +471,11 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies")]
         internal static string GetCanonicalMethodDescription(MethodInfo method)
         {
-#if ASTORIA_LIGHT_WP
-            if (method.IsGenericMethodDefinition)
-            {
-                // For methods that use open generic type parameters (e.g. Expression<Func<T1, T2>>, where T1 and T2 aren't concrete types),
-                // the .NET Compact Framework can't report as detailed type information as we need, so turn the MethodInfo into one with closed generic types only.
-                switch (method.GetGenericArguments().Length)
-                {
-                    case 1:
-                        method = method.MakeGenericMethod(typeof(Temp0));
-                        break;
-                    case 2:
-                        method = method.MakeGenericMethod(typeof(Temp0), typeof(Temp1));
-                        break;
-                    case 3:
-                        method = method.MakeGenericMethod(typeof(Temp0), typeof(Temp1), typeof(Temp2));
-                        break;
-                    case 4:
-                        method = method.MakeGenericMethod(typeof(Temp0), typeof(Temp1), typeof(Temp2), typeof(Temp3));
-                        break;
-                    default:
-                        System.Diagnostics.Debug.Assert(false, "Not expecting any LINQ methods with more than 3 generic type parameters");
-                        return null;
-                }
-            }
-#endif
             // retrieve all generic type arguments and assign them numbers based on order
             Dictionary<Type, int> genericArgumentOrdinals = null;
             if (method.IsGenericMethodDefinition)
             {
-#if ASTORIA_LIGHT_WP
-                Predicate<Type> isGenericParameterPredicate = (type) =>  type.IsGenericParameter || type == typeof(Temp0) || type == typeof(Temp1) || type == typeof(Temp2) || type == typeof(Temp3);
-#else
                 Predicate<Type> isGenericParameterPredicate = (type) => type.IsGenericParameter;
-
-#endif
                 genericArgumentOrdinals = method.GetGenericArguments()
                             .Where(t => isGenericParameterPredicate(t))
                             .Select((t, i) => new KeyValuePair<Type, int>(t, i))
@@ -831,34 +503,9 @@ namespace Microsoft.OData.Client
                 AppendCanonicalTypeDescription(method.ReturnType, genericArgumentOrdinals, description);
             }
 
-#if ASTORIA_LIGHT_WP
-            string normalizedName = description.ToString().Replace("Temp0", "T").Replace("Temp1", "T").Replace("Temp2", "T").Replace("Temp3", "T");
-            description.Clear();
-            description.Append(normalizedName);
-#endif
-
             return description.ToString();
         }
-
-#if ASTORIA_LIGHT_WP
-        // Private dummy classes required to support generic method creation in GetCanonicalMethodDescription
-        private class Temp0
-        {
-        }
-
-        private class Temp1
-        {
-        }
-
-        private class Temp2
-        {
-        }
-
-        private class Temp3
-        {
-        }
-#endif
-
+        
         private static void AppendCanonicalTypeDescription(Type type, Dictionary<Type, int> genericArgumentOrdinals, StringBuilder description)
         {
             int ordinal;
@@ -893,13 +540,8 @@ namespace Microsoft.OData.Client
         /// </summary>
         internal static IEnumerable<MethodInfo> GetAllLinqOperators()
         {
-#if ASTORIA_LIGHT_WP
-            return typeof(Queryable).GetMethods(BindingFlags.Static | BindingFlags.Public).Concat(
-                typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public));
-#else
             return typeof(Queryable).GetPublicStaticMethods().Concat(
                 typeof(Enumerable).GetPublicStaticMethods());
-#endif
         }
     }
 

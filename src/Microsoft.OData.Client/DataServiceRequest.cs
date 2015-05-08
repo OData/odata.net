@@ -137,7 +137,7 @@ namespace Microsoft.OData.Client
         /// <returns>instance of query components</returns>
         internal abstract QueryComponents QueryComponents(ClientEdmModel model);
 
-#if !ASTORIA_LIGHT && !PORTABLELIB// Synchronous methods not available
+#if !PORTABLELIB// Synchronous methods not available
         /// <summary>
         /// execute uri and materialize result
         /// </summary>

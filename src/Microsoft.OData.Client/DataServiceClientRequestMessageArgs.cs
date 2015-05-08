@@ -47,24 +47,6 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if ASTORIA_LIGHT
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DataServiceClientRequestMessageArgs"/> class.
-        /// </summary>
-        /// <param name="method">Method of the request.</param>
-        /// <param name="requestUri">The Request Uri.</param>
-        /// <param name="usePostTunneling">True if the request message must use POST verb for the request and pass the actual verb in X-HTTP-Method header, otherwise false.</param>
-        /// <param name="useDefaultCredentials">True if the default credentials need to be sent with the request. Otherwise false.</param>
-        /// <param name="headers">The set of headers for the request.</param>
-        /// <param name="httpStack">The http client stack to use.</param>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "useDefaultCredentials", Justification = "the parameter is used in the SL version.")]
-        public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool usePostTunneling, bool useDefaultCredentials, IDictionary<string, string> headers, HttpStack httpStack)
-            : this(method, requestUri, usePostTunneling, useDefaultCredentials, headers)
-        {
-            this.ClientHttpStack = httpStack;
-        }
-#endif
-
         /// <summary>
         /// Gets the method.
         /// </summary>
@@ -95,13 +77,6 @@ namespace Microsoft.OData.Client
                 return this.actualMethod;
             }
         }
-
-#if ASTORIA_LIGHT
-        /// <summary>
-        /// Gets the http stack.
-        /// </summary>
-        public HttpStack ClientHttpStack { get; private set; }
-#endif
 
         /// <summary>
         /// Gets a System.Boolean value that controls whether default credentials are sent with requests.

@@ -44,7 +44,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         public Uri RequestUri { get; private set; }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB // Synchronous methods not available
+#if !PORTABLELIB // Synchronous methods not available
         /// <summary>
         /// Executes the action and returns the results as a collection.
         /// </summary>
@@ -88,7 +88,7 @@ namespace Microsoft.OData.Client
             return Context.EndExecute<T>(asyncResult);
         }
         
-#if !ASTORIA_LIGHT && !PORTABLELIB // Synchronous methods not available
+#if !PORTABLELIB // Synchronous methods not available
         /// <summary>
         /// Executes the query and returns the results as a collection.
         /// </summary>

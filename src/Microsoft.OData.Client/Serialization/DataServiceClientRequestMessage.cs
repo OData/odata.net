@@ -61,7 +61,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         public abstract ICredentials Credentials { get; set; }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
         /// </summary>
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Client
         ///  Internet resource. 
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811", Justification = "Make code very confusing and cumbersome to write code for various platforms. Hence suppressing the message")]
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         public abstract bool SendChunked { get; set; }
 #else
         internal bool SendChunked { get; set; }
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Client
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         public abstract IODataResponseMessage EndGetResponse(IAsyncResult asyncResult);
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>
         /// Returns a response from an Internet resource.
         /// </summary>

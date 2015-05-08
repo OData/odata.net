@@ -344,7 +344,7 @@ namespace Microsoft.OData.Client
             {
                 return primitiveType.TypeConverter.ToString(propertyValue);
             }
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
             else if (propertyType.FullName == "System.Data.Linq.Binary")
             {
                 // For System.Data.Linq.Binary, it is a delay loaded type. Hence checking it based on name.

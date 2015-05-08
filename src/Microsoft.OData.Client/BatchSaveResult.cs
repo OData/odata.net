@@ -143,7 +143,7 @@ namespace Microsoft.OData.Client
             Debug.Assert((this.CompletedSynchronously && this.IsCompleted) || !this.CompletedSynchronously, "sync without complete");
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB  // Synchronous methods not available
+#if !PORTABLELIB  // Synchronous methods not available
         /// <summary>
         /// Synchronous batch request
         /// </summary>

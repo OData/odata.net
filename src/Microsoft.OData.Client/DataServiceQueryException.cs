@@ -9,7 +9,7 @@ namespace Microsoft.OData.Client
     using System;
 
     /// <summary>Exception that indicates an error occurred while querying the data service. </summary>
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
     [Serializable]
 #endif
     [System.Diagnostics.DebuggerDisplay("{Message}")]
@@ -18,7 +18,7 @@ namespace Microsoft.OData.Client
         #region Private fields
 
         /// <summary>Actual response object.</summary>
-#if !ASTORIA_LIGHT  && !PORTABLELIB
+#if !PORTABLELIB
         [NonSerialized]
 #endif
         private readonly QueryOperationResponse response;
@@ -58,7 +58,7 @@ namespace Microsoft.OData.Client
             this.response = response;
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
 #pragma warning disable 0628
         /// <summary>
         /// Initializes a new instance of the DataServiceQueryException class from the 

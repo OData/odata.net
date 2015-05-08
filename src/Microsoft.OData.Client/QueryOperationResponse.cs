@@ -124,7 +124,7 @@ namespace Microsoft.OData.Client
         internal static QueryOperationResponse GetInstance(Type elementType, HeaderCollection headers, DataServiceRequest query, MaterializeAtom results)
         {
             Type genericType = typeof(QueryOperationResponse<>).MakeGenericType(elementType);
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
             return (QueryOperationResponse)Activator.CreateInstance(
                 genericType,
                 BindingFlags.CreateInstance | BindingFlags.NonPublic | BindingFlags.Instance,

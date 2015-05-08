@@ -200,7 +200,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(this.entryIndex < this.ChangedEntries.Count || this.ChangedEntries.All(o => o.ContentGeneratedForSave), "didn't generate content for all entities/links");
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB// Synchronous methods not available
+#if !PORTABLELIB// Synchronous methods not available
         /// <summary>
         /// This starts the next change
         /// </summary>
@@ -706,14 +706,8 @@ namespace Microsoft.OData.Client
             headers.SetRequestVersion(version, this.RequestInfo.MaxProtocolVersionAsVersion);
             this.RequestInfo.Format.SetRequestAcceptHeader(headers);
 
-#if !ASTORIA_LIGHT
             ODataRequestMessageWrapper requestMessage = this.CreateRequestMessage(method, requestUri, headers, this.RequestInfo.HttpStack, descriptor, null /*contentId*/);
-#else
-            // In silverlight, irrespective of the value of HttpStack property, for stream requests (get or update), we use ClientHttp stack when
-            // creating MediaResource requests. This is the reason why he cannot just use the HttpStack value directly from the context and have
-            // to pass around with the request info.
-            ODataRequestMessageWrapper requestMessage = this.CreateRequestMessage(method, requestUri, headers, HttpStack.ClientHttp, descriptor, null /*contentId*/);
-#endif
+
             // TODO: since under the hood this is a header, we should put it in our dictionary of headers that the user gets in BuildingRequest
             // and later on handle the setting of the strongly named property on the underlying request
             requestMessage.SendChunked = sendChunked;
@@ -815,7 +809,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>
         /// copy the response data
         /// </summary>

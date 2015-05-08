@@ -62,13 +62,8 @@ namespace Microsoft.OData.Core.Query
                 int numberOfSegmentsToSkip = 0;
 
                 // Skip over the base URI segments
-#if SILVERLIGHT
-                numberOfSegmentsToSkip = serviceBaseUri.AbsolutePath.Split('/').Length;
-                string[] uriSegments = uri.AbsolutePath.Split('/');
-#else
                 numberOfSegmentsToSkip = serviceBaseUri.Segments.Length;
                 string[] uriSegments = uri.Segments;
-#endif
 
                 List<string> segments = new List<string>();
                 for (int i = numberOfSegmentsToSkip; i < uriSegments.Length; i++)

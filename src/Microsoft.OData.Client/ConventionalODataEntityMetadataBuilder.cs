@@ -36,9 +36,6 @@ namespace Microsoft.OData.Client
         /// <param name="entitySetName">Name of the entity set the entity belongs to.</param>
         /// <param name="entityInstance">The entity instance to build metadata for.</param>
         /// <param name="conventions">The user-specified conventions to use.</param>
-#if ASTORIA_LIGHT
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by unit tests")]
-#endif
         internal ConventionalODataEntityMetadataBuilder(Uri baseUri, string entitySetName, IEdmStructuredValue entityInstance, DataServiceUrlConventions conventions)
             : this(UriResolver.CreateFromBaseUri(baseUri, "baseUri"), entitySetName, entityInstance, conventions)
         {

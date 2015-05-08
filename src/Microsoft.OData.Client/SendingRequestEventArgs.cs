@@ -16,9 +16,6 @@ namespace Microsoft.OData.Client
     public class SendingRequestEventArgs : EventArgs
     {
         /// <summary>The web request reported through this event</summary>
-#if ASTORIA_LIGHT
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Justification = "Not used in Silverlight")]
-#endif
         private System.Net.WebRequest request;
 
         /// <summary>The request header collection.</summary>
@@ -32,17 +29,12 @@ namespace Microsoft.OData.Client
         internal SendingRequestEventArgs(System.Net.WebRequest request, System.Net.WebHeaderCollection requestHeaders)
         {
             // In Silverlight the request object is not accesible
-#if ASTORIA_LIGHT
-            Debug.Assert(null == request, "non-null request in SL.");
-#else
             Debug.Assert(null != request, "null request");
-#endif
             Debug.Assert(null != requestHeaders, "null requestHeaders");
             this.request = request;
             this.requestHeaders = requestHeaders;
         }
 
-#if !ASTORIA_LIGHT // Data.Services http stack
         /// <summary>Gets or sets the <see cref="T:System.Net.HttpWebRequest" /> instance about to be sent by the client library to the data service.</summary>
         /// <returns><see cref="T:System.Net.HttpWebRequest" />.</returns>
         public System.Net.WebRequest Request
@@ -64,7 +56,6 @@ namespace Microsoft.OData.Client
                 this.requestHeaders = value.Headers;
             }
         }
-#endif
 
         /// <summary>Gets the collection protocol headers that are associated with the request to the data service.</summary>
         /// <returns>A collection of protocol headers that are associated with the request.</returns>

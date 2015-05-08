@@ -383,7 +383,7 @@ namespace Microsoft.OData.Client
             RegisterKnownType(typeof(UInt32), null, EdmPrimitiveTypeKind.String, new UInt32TypeConverter(), false);
             RegisterKnownType(typeof(UInt64), null, EdmPrimitiveTypeKind.String, new UInt64TypeConverter(), false);
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
             // There is no static dependency on System.Data.Linq so we use a substitute type for the Binary type
             RegisterKnownType(typeof(BinaryTypeSub), XmlConstants.EdmBinaryTypeName, EdmPrimitiveTypeKind.Binary, new BinaryTypeConverter(), false);
 #endif
@@ -402,7 +402,7 @@ namespace Microsoft.OData.Client
             ptype = null;
             if (!clrMapping.TryGetValue(clrType, out ptype))
             {
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
                 if (IsBinaryType(clrType))
                 {
                     Debug.Assert(clrMapping.ContainsKey(typeof(BinaryTypeSub)), "BinaryTypeSub missing from the dictionary");
@@ -414,7 +414,7 @@ namespace Microsoft.OData.Client
             return ptype != null;
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB// System.Data.Linq not available
+#if !PORTABLELIB// System.Data.Linq not available
         /// <summary>
         /// Whether the <paramref name="type"/> is System.Data.Linq.Binary. 
         /// </summary>

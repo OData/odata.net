@@ -105,7 +105,7 @@ namespace Microsoft.OData.Client
             set { throw new NotSupportedException(); }
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
         /// </summary>
@@ -238,7 +238,7 @@ namespace Microsoft.OData.Client
             throw new NotImplementedException();
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>
         /// Returns a response from an Internet resource.
         /// </summary>

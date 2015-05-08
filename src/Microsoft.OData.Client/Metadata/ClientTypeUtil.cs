@@ -217,11 +217,8 @@ namespace Microsoft.OData.Client.Metadata
             ParameterExpression list = Expression.Parameter(typeof(object), "list");
             ParameterExpression item = Expression.Parameter(typeof(object), "element");
             Expression body = Expression.Call(Expression.Convert(list, listType), addMethod, Expression.Convert(item, listElementType));
-#if ASTORIA_LIGHT
-            LambdaExpression lambda = ExpressionHelpers.CreateLambda(body, list, item);
-#else
             LambdaExpression lambda = Expression.Lambda(body, list, item);
-#endif
+            
             return (Action<object, object>)lambda.Compile();
         }
 

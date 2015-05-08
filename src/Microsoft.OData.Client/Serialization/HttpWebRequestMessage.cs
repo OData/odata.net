@@ -164,11 +164,7 @@ namespace Microsoft.OData.Client
         {
             get
             {
-#if !ASTORIA_LIGHT
                 return this.httpRequest;
-#else
-                return this.httpRequest.GetUnderlyingHttpRequest();
-#endif
             }
         }
 
@@ -181,7 +177,7 @@ namespace Microsoft.OData.Client
             set { this.httpRequest.Credentials = value; }
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
         /// </summary>
@@ -235,7 +231,7 @@ namespace Microsoft.OData.Client
         /// <returns>Stream to which the request payload needs to be written.</returns>
         public override Stream GetStream()
         {
-#if ASTORIA_LIGHT || PORTABLELIB
+#if PORTABLELIB
             // not supported in async environments. Another IODataRequestMessage which buffers the request should be used.
             throw new NotSupportedException(Strings.ODataRequestMessage_GetStreamMethodNotSupported);
 #else
@@ -267,8 +263,7 @@ namespace Microsoft.OData.Client
         public override IAsyncResult BeginGetRequestStream(AsyncCallback callback, object state)
         {
             // Currently this method cannot get called from SendingRequest2 event - But if we expose these
-            // method in the future, this is a good check to have. Also this checks prevents us from writing
-            // a lot of #if ASTORIA_LIGHT code.
+            // method in the future, this is a good check to have.
             if (this.inSendingRequest2Event)
             {
                 throw new NotSupportedException(Strings.ODataRequestMessage_GetStreamMethodNotSupported);
@@ -318,21 +313,7 @@ namespace Microsoft.OData.Client
                     throw new NotSupportedException(Strings.Silverlight_BrowserHttp_NotSupported);
                 }
 #endif
-#if !ASTORIA_LIGHT
                 return new HttpWebResponseMessage(httpResponse);
-#else
-                // Required to do this as the Request could be made via xmlHttp and not have an HttpWebResponse.
-                System.Net.HttpWebResponse underlyingHttpResponse = httpResponse.GetUnderlyingHttpResponse();
-                if (underlyingHttpResponse != null)
-                {
-                    return new HttpWebResponseMessage(underlyingHttpResponse); 
-                }
-                else
-                {
-                    HeaderCollection headerCollection = new HeaderCollection(httpResponse.Headers);
-                    return new HttpWebResponseMessage(headerCollection, (int)httpResponse.StatusCode, httpResponse.GetResponseStream);
-                }
-#endif
             }
             catch (WebException webException)
             {
@@ -340,7 +321,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>
         /// Returns a response from an Internet resource.
         /// </summary>
@@ -408,7 +389,7 @@ namespace Microsoft.OData.Client
         /// <param name="headerValue">The header value.</param>
         internal static void SetAcceptCharset(HttpWebRequest httpWebRequest, string headerValue)
         {
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
             httpWebRequest.Headers[XmlConstants.HttpAcceptCharset] = headerValue;
 #endif
 #if PORTABLELIB
@@ -426,7 +407,7 @@ namespace Microsoft.OData.Client
         /// <param name="headerValue">The value of the user agent.</param>
         internal static void SetUserAgentHeader(HttpWebRequest httpWebRequest, string headerValue)
         {
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
             httpWebRequest.UserAgent = headerValue;
 #endif
 #if PORTABLELIB
@@ -472,10 +453,6 @@ namespace Microsoft.OData.Client
                 }
             }
 #endif
-#if ASTORIA_LIGHT
-            // Silverlight user agent cannot be set via a property, doesn't exist
-            httpWebRequest.Headers[XmlConstants.HttpUserAgent] = headerValue;
-#endif
         }
 
         /// <summary>
@@ -508,7 +485,6 @@ namespace Microsoft.OData.Client
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "args", Justification = "the parameter is used in the SL version.")]
         private static HttpWebRequest CreateRequest(string method, Uri requestUrl, DataServiceClientRequestMessageArgs args)
         {
-#if !ASTORIA_LIGHT
             HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(requestUrl);
 #if PORTABLELIB
             // Set same default as Silverlight when running silverlight in .Net Portable
@@ -516,13 +492,7 @@ namespace Microsoft.OData.Client
             {
                 httpRequest.UseDefaultCredentials = args.UseDefaultCredentials;
             }
-#endif
 #else
-            HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(requestUrl, args.ClientHttpStack);
-            httpRequest.UseDefaultCredentials = args.UseDefaultCredentials;
-#endif
-
-#if !ASTORIA_LIGHT && !PORTABLELIB
             // KeepAlive not available
             httpRequest.KeepAlive = true;
 #endif
@@ -583,7 +553,7 @@ namespace Microsoft.OData.Client
             {
                 return request.ContentType;
             }
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
             else if (string.Equals(headerName, XmlConstants.HttpContentLength, StringComparison.OrdinalIgnoreCase))
             {
                 return request.ContentLength.ToString(CultureInfo.InvariantCulture);
@@ -607,11 +577,7 @@ namespace Microsoft.OData.Client
             if (webException.Response != null)
             {
                 var httpResponse = (HttpWebResponse)webException.Response;
-#if ASTORIA_LIGHT
-                errorResponseMessage = new HttpWebResponseMessage(httpResponse.GetUnderlyingHttpResponse());
-#else
                 errorResponseMessage = new HttpWebResponseMessage(httpResponse);
-#endif
             }
 
             return new DataServiceTransportException(errorResponseMessage, webException);

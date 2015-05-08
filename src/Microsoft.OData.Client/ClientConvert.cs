@@ -68,7 +68,7 @@ namespace Microsoft.OData.Client
         internal static bool TryConvertBinaryToByteArray(object binaryValue, out byte[] converted)
         {
             Debug.Assert(binaryValue != null, "binaryValue != null");
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
             Type valueType = binaryValue.GetType();
             PrimitiveType ptype;
             if (PrimitiveType.TryGetPrimitiveType(valueType, out ptype) && valueType == BinaryTypeConverter.BinaryType)

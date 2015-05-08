@@ -585,7 +585,7 @@ namespace Microsoft.OData.Client
         private static void ValidateIteratorParameter(IEnumerable<T> items)
         {
             Util.CheckArgumentNull(items, "items");
-#if ASTORIA_LIGHT || PORTABLELIB
+#if PORTABLELIB
             DataServiceQuery<T> dsq = items as DataServiceQuery<T>;
             if (dsq != null)
             {
@@ -632,7 +632,7 @@ namespace Microsoft.OData.Client
         private void InternalLoadCollection(IEnumerable<T> items)
         {
             Debug.Assert(items != null, "items != null");
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
             // For SDP, we must execute the Query implicitly
             DataServiceQuery<T> query = items as DataServiceQuery<T>;
             if (query != null)

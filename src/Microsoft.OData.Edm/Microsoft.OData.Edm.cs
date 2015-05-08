@@ -352,7 +352,7 @@ namespace Microsoft.OData.Edm {
         ResourceManager resources;
 
         internal EntityRes() {
-#if !WINRT
+#if !DNXCORE50
             resources = new System.Resources.ResourceManager("Microsoft.OData.Edm", this.GetType().Assembly);
 #else
             resources = new System.Resources.ResourceManager("Microsoft.OData.Edm", this.GetType().GetTypeInfo().Assembly);

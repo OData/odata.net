@@ -275,7 +275,7 @@ namespace Microsoft.OData.Client {
         ResourceManager resources;
 
         internal TextRes() {
-#if !WINRT
+#if !DNXCORE50
             resources = new System.Resources.ResourceManager("Microsoft.OData.Client", this.GetType().Assembly);
 #else
             resources = new System.Resources.ResourceManager("Microsoft.OData.Client", this.GetType().GetTypeInfo().Assembly);

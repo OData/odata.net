@@ -61,22 +61,6 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if ASTORIA_LIGHT
-        /// <summary>
-        /// Initializes a new instance of <see cref="HeaderCollection"/>.
-        /// </summary>
-        /// <param name="headers">The initial set of headers for the collection.</param>
-        internal HeaderCollection(DataServicesHttp.WebHeaderCollection headers)
-            : this()
-        {
-            Debug.Assert(headers != null, "headers != null");
-            foreach (string name in headers.AllKeys)
-            {
-                this.SetHeader(name, headers[name]);
-            }
-        }
-#endif
-
         /// <summary>
         /// Initializes a new instance of <see cref="HeaderCollection"/> which is empty.
         /// </summary>
@@ -243,11 +227,9 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This method is an instance method and calls another instance method for non-silverlight scenearios.")]
         internal void SetUserAgent()
         {
-#if !ASTORIA_LIGHT
             // Add User-Agent header to every request - Since UserAgent field is not supported in silverlight,
             // doing this non-silverlight stacks only
             this.SetHeader(XmlConstants.HttpUserAgent, "Microsoft ADO.NET Data Services");
-#endif
         }
 
         /// <summary>

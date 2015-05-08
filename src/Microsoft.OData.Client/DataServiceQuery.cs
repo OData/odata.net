@@ -45,7 +45,7 @@ namespace Microsoft.OData.Client
             throw Error.NotImplemented();
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// <summary>Executes the query against the data service.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
         /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains the results of the query operation.</returns>
         /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Client
             return this.EndExecuteInternal(asyncResult);
         }
 
-#if !ASTORIA_LIGHT && !PORTABLELIB
+#if !PORTABLELIB
         /// Synchronous methods not available
         /// <summary>
         /// Returns an IEnumerable from an Internet resource. 

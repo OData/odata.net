@@ -6,7 +6,7 @@
     <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
     <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <DefineConstants>$(DefineConstants);ASTORIA_CLIENT;WINRT;</DefineConstants>
+    <DefineConstants>$(DefineConstants);ASTORIA_CLIENT;DNXCORE50;</DefineConstants>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
     <RootNamespace>System</RootNamespace>

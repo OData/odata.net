@@ -140,7 +140,7 @@ namespace <#= Configuration.ResourceClassNamespace #> {
         ResourceManager resources;
 
         internal <#= Configuration.ResourceClassName #>() {
-#if !WINRT
+#if !DNXCORE50
             resources = new System.Resources.ResourceManager("<#= Configuration.AssemblyName #>", this.GetType().Assembly);
 #else
             resources = new System.Resources.ResourceManager("<#= Configuration.AssemblyName #>", this.GetType().GetTypeInfo().Assembly);

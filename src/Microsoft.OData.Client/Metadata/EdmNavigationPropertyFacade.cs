@@ -157,7 +157,6 @@ namespace Microsoft.OData.Service.Client.Metadata
             return this.modelFacade.GetOrCreateEntityContainerFacade(serverTarget.Container).GetOrCreateEntitySetFacade(serverTarget);
         }
 
-#if !ASTORIA_LIGHT
         /// <summary>
         /// Unit test method for determining whether two facades are equivalent (ie: wrap the same server/client properties).
         /// </summary>
@@ -173,7 +172,6 @@ namespace Microsoft.OData.Service.Client.Metadata
                 && ReferenceEquals(other.clientProperty, this.clientProperty)
                 && ReferenceEquals(other.serverProperty, this.serverProperty);
         }
-#endif
 
         /// <summary>
         /// Creates an exception for a intentionally-unsupported part of the API.

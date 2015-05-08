@@ -13,9 +13,7 @@ namespace Microsoft.OData.Service
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if !ASTORIA_LIGHT
     using System.Dynamic;
-#endif
     using System.Linq;
     using System.Xml;
     using System.Text;
@@ -34,7 +32,6 @@ namespace Microsoft.OData.Service
         /// </summary>
         private static readonly Type[] unsupportedTypes = new Type[]
         {
-#if !ASTORIA_LIGHT  // System.Dynamic & tuples not available (as of SL 2.0)
                 typeof(IDynamicMetaObjectProvider),
                 typeof(Tuple<>),         // 1-Tuple
                 typeof(Tuple<,>),        // 2-Tuple
@@ -44,7 +41,6 @@ namespace Microsoft.OData.Service
                 typeof(Tuple<,,,,,>),    // 6-Tuple
                 typeof(Tuple<,,,,,,>),   // 7-Tuple
                 typeof(Tuple<,,,,,,,>)   // 8-Tuple
-#endif
         };
 
         /// <summary>

@@ -171,7 +171,6 @@ namespace Microsoft.OData.Client
             this.SetAcceptHeaderAndCharset(headers, XmlConstants.MimeAny);
         }
 
-#if !ASTORIA_LIGHT
         /// <summary>
         /// Sets the value of the Accept header for a count request (will set it to 'text/plain').
         /// </summary>
@@ -180,7 +179,6 @@ namespace Microsoft.OData.Client
         {
             this.SetAcceptHeaderAndCharset(headers, XmlConstants.MimeTextPlain);
         }
-#endif
 
         /// <summary>
         /// Sets the value of the Accept header for a count request (will set it to 'multipart/mixed').
