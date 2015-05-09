@@ -20,10 +20,18 @@ OData .NET library is open source at http://github.com/OData/odata.net</descript
     </dependencies>
   </metadata>
   <files>
+    <file src="Net45\Microsoft.OData.Core.dll" target="lib\net45" />
+    <file src="Net45\Microsoft.OData.Core.pdb" target="lib\net45" />
+    <file src="Net45\Microsoft.OData.Core.xml" target="lib\net45" />
+    <file src="Net45\1041\Microsoft.OData.Core.resources.dll" target="lib\net45\ja" />
     <file src=".NETPortable\v4.0\Microsoft.OData.Core\Microsoft.OData.Core.dll" target="lib\portable-net40+sl5+wp8+win8+wpa" />
     <file src=".NETPortable\v4.0\Microsoft.OData.Core\Microsoft.OData.Core.pdb" target="lib\portable-net40+sl5+wp8+win8+wpa" />
     <file src=".NETPortable\v4.0\Microsoft.OData.Core\Microsoft.OData.Core.xml" target="lib\portable-net40+sl5+wp8+win8+wpa" />
     <file src=".NETPortable\v4.0\Microsoft.OData.Core\1041\Microsoft.OData.Core.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\ja" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Core.Portable45\Microsoft.OData.Core.dll" target="lib\portable-net45+win8+wp8+wpa81+dnxcore50" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Core.Portable45\Microsoft.OData.Core.pdb" target="lib\portable-net45+win8+wp8+wpa81+dnxcore50" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Core.Portable45\Microsoft.OData.Core.xml" target="lib\portable-net45+win8+wp8+wpa81+dnxcore50" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Core.Portable45\1041\Microsoft.OData.Core.resources.dll" target="lib\portable-net45+win8+wp8+wpa81+dnxcore50\ja" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\**\*.cs" target="src\Microsoft.OData.Core" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" target="src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" target="src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" />
