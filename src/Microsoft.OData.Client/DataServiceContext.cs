@@ -222,7 +222,7 @@ namespace Microsoft.OData.Client
             this.UsingDataServiceCollection = false;
             this.EnableAtom = false;
             this.UsePostTunneling = false;
-            
+
             // Need to use the same defaults when running sl in portable lib as when running in SL normally.
 #if PORTABLELIB
             if (HttpWebRequestMessage.IsRunningOnSilverlight)
@@ -3270,7 +3270,7 @@ namespace Microsoft.OData.Client
             this.Format.SetRequestAcceptHeaderForStream(headers);
 
             BuildingRequestEventArgs requestMessageArgs = this.CreateRequestArgsAndFireBuildingRequest(XmlConstants.HttpMethodGet, requestUri, headers, HttpStack.Auto, streamDescriptor);
-            
+
             ODataRequestMessageWrapper requestMessage = this.CreateODataRequestMessage(requestMessageArgs, streamDescriptor);
 
             return new GetReadStreamResult(this, "GetReadStream", requestMessage, callback, state, streamDescriptor);

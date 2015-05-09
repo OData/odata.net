@@ -505,7 +505,7 @@ namespace Microsoft.OData.Client
 
             return description.ToString();
         }
-        
+
         private static void AppendCanonicalTypeDescription(Type type, Dictionary<Type, int> genericArgumentOrdinals, StringBuilder description)
         {
             int ordinal;

@@ -32,15 +32,15 @@ namespace Microsoft.OData.Service
         /// </summary>
         private static readonly Type[] unsupportedTypes = new Type[]
         {
-                typeof(IDynamicMetaObjectProvider),
-                typeof(Tuple<>),         // 1-Tuple
-                typeof(Tuple<,>),        // 2-Tuple
-                typeof(Tuple<,,>),       // 3-Tuple
-                typeof(Tuple<,,,>),      // 4-Tuple
-                typeof(Tuple<,,,,>),     // 5-Tuple
-                typeof(Tuple<,,,,,>),    // 6-Tuple
-                typeof(Tuple<,,,,,,>),   // 7-Tuple
-                typeof(Tuple<,,,,,,,>)   // 8-Tuple
+            typeof(IDynamicMetaObjectProvider),
+            typeof(Tuple<>),         // 1-Tuple
+            typeof(Tuple<,>),        // 2-Tuple
+            typeof(Tuple<,,>),       // 3-Tuple
+            typeof(Tuple<,,,>),      // 4-Tuple
+            typeof(Tuple<,,,,>),     // 5-Tuple
+            typeof(Tuple<,,,,,>),    // 6-Tuple
+            typeof(Tuple<,,,,,,>),   // 7-Tuple
+            typeof(Tuple<,,,,,,,>)   // 8-Tuple
         };
 
         /// <summary>

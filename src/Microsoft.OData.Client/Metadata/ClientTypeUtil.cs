@@ -218,7 +218,7 @@ namespace Microsoft.OData.Client.Metadata
             ParameterExpression item = Expression.Parameter(typeof(object), "element");
             Expression body = Expression.Call(Expression.Convert(list, listType), addMethod, Expression.Convert(item, listElementType));
             LambdaExpression lambda = Expression.Lambda(body, list, item);
-            
+
             return (Action<object, object>)lambda.Compile();
         }
 
