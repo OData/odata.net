@@ -261,6 +261,35 @@ namespace Microsoft.OData.Core
                     currentBuffer = this.AddNewBuffer();
                 }
 
+#if DNXCORE50
+                yield return inputStream.ReadAsync(currentBuffer.Buffer, currentBuffer.OffsetToWriteTo, currentBuffer.FreeBytes)
+                    .ContinueWith(t =>
+                    {
+                        try
+                        {
+                            int bytesRead = t.Result;
+                            if (bytesRead == 0)
+                            {
+                                this.inputStream = null;
+                            }
+                            else
+                            {
+                                currentBuffer.MarkBytesAsWritten(bytesRead);
+                            }
+                        }
+                        catch (Exception exception)
+                        {
+                            if (!ExceptionUtils.IsCatchableExceptionType(exception))
+                            {
+                                throw;
+                            }
+
+                            this.inputStream = null;
+                            throw;
+                        }
+                    });
+
+#else
                 yield return Task.Factory.FromAsync(
                     (asyncCallback, asyncState) => this.inputStream.BeginRead(
                         currentBuffer.Buffer,
@@ -294,6 +323,7 @@ namespace Microsoft.OData.Core
                         }
                     },
                     null);
+#endif
             }
         }
 

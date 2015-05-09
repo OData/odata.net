@@ -43,8 +43,6 @@
   <PropertyGroup Condition="'$(RedirectOutputToLocalBin)'=='' ">
     <!-- If we are in vs, we want to build web applications to bin, where vs expects to find them. -->
     <RedirectOutputToLocalBin Condition="'$(BuildingInsideVisualStudio)' == 'true' and $(ProjectTypeGuids.ToLower().Contains('{349c5851-65df-11da-9384-00065b846f21}'))">true</RedirectOutputToLocalBin>
-    <!-- If we are in vs, we want to build phone applications to bin, where vs expects to find them. -->
-    <RedirectOutputToLocalBin Condition="'$(BuildingInsideVisualStudio)' == 'true' and $(ProjectTypeGuids.ToLower().Contains('{fae04ec0-301f-11d3-bf4b-00c04f79efbc}'))">true</RedirectOutputToLocalBin>
     <RedirectOutputToLocalBin Condition="'$(RedirectOutputToLocalBin)'==''">false</RedirectOutputToLocalBin>
   </PropertyGroup>
 

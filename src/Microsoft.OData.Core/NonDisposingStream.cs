@@ -10,6 +10,10 @@ namespace Microsoft.OData.Core
     using System;
     using System.Diagnostics;
     using System.IO;
+#if DNXCORE50
+    using System.Threading;
+    using System.Threading.Tasks;
+#endif
     #endregion Namespaces
 
     /// <summary>
@@ -94,6 +98,18 @@ namespace Microsoft.OData.Core
             return this.innerStream.Read(buffer, offset, count);
         }
 
+#if DNXCORE50
+        /// <inheritdoc />
+        public async override Task<int> ReadAsync(
+            byte[] buffer,
+            int offset,
+            int count,
+            CancellationToken cancellationToken)
+        {
+            int bytesRead = await this.innerStream.ReadAsync(buffer, offset, count, cancellationToken);
+            return bytesRead;
+        }
+#else
         /// <summary>
         /// Begins a read operation from the stream.
         /// </summary>
@@ -117,6 +133,7 @@ namespace Microsoft.OData.Core
         {
             return this.innerStream.EndRead(asyncResult);
         }
+#endif
 
         /// <summary>
         /// Seeks the stream.
@@ -149,6 +166,13 @@ namespace Microsoft.OData.Core
             this.innerStream.Write(buffer, offset, count);
         }
 
+#if DNXCORE50
+        /// <inheritdoc />
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            return this.innerStream.WriteAsync(buffer, offset, count, cancellationToken);
+        }
+#else
         /// <summary>
         /// Begins an asynchronous write operation to the stream.
         /// </summary>
@@ -171,5 +195,6 @@ namespace Microsoft.OData.Core
         {
             this.innerStream.EndWrite(asyncResult);
         }
+#endif
     }
 }

@@ -638,7 +638,7 @@ namespace Microsoft.OData.Core.Metadata
             Debug.Assert(clrType != null, "clrType != null");
 
             // PERF
-            switch (Type.GetTypeCode(clrType))
+            switch (PlatformHelper.GetTypeCode(clrType))
             {
                 case TypeCode.Boolean:
                 case TypeCode.Byte:
@@ -1799,7 +1799,7 @@ namespace Microsoft.OData.Core.Metadata
         {
             Debug.Assert(clrType != null, "clrType != null");
 
-            TypeCode typeCode = Type.GetTypeCode(clrType);
+            TypeCode typeCode = PlatformHelper.GetTypeCode(clrType);
             switch (typeCode)
             {
                 case TypeCode.Boolean:

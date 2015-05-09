@@ -10,6 +10,10 @@ namespace Microsoft.OData.Core
     using System;
     using System.Diagnostics;
     using System.IO;
+#if DNXCORE50
+    using System.Threading;
+    using System.Threading.Tasks;
+#endif
     #endregion Namespaces
 
     /// <summary>
@@ -109,6 +113,14 @@ namespace Microsoft.OData.Core
             this.batchStream.Write(buffer, offset, count);
         }
 
+#if DNXCORE50
+        /// <inheritdoc />
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            this.ValidateNotDisposed();
+            return this.batchStream.WriteAsync(buffer, offset, count, cancellationToken);
+        }
+#else
         /// <summary>
         /// Writes to the stream.
         /// </summary>
@@ -133,6 +145,7 @@ namespace Microsoft.OData.Core
             this.ValidateNotDisposed();
             this.batchStream.EndWrite(asyncResult);
         }
+#endif
 
         /// <summary>
         /// Reads data from the stream. This operation is not supported by this stream.

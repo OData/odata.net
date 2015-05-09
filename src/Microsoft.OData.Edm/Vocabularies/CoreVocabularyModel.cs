@@ -122,7 +122,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// </summary>
         static CoreVocabularyModel()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            Assembly assembly = typeof(CoreVocabularyModel).GetAssembly();
 
             using (Stream stream = assembly.GetManifestResourceStream("CoreVocabularies.xml"))
             {

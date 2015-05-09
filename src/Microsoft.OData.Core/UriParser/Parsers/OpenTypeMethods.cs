@@ -726,7 +726,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private static Expression ExpressionAsObject(Expression expression)
         {
             Debug.Assert(expression != null, "expression != null");
-            return expression.Type.IsValueType ? Expression.Convert(expression, typeof(object)) : expression;
+            return expression.Type.IsValueType() ? Expression.Convert(expression, typeof(object)) : expression;
         }
 
         #endregion

@@ -374,10 +374,14 @@ namespace Microsoft.OData.Core
             public Task WriteToStreamAsync(Stream stream)
             {
                 Debug.Assert(stream != null, "stream != null");
+#if DNXCORE50
+                return stream.WriteAsync(this.buffer, 0, this.storedCount);
+#else
                 return Task.Factory.FromAsync(
                     (callback, state) => stream.BeginWrite(this.buffer, 0, this.storedCount, callback, state),
                     stream.EndWrite,
                     null);
+#endif
             }
 #endif
         }

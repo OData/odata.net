@@ -36,7 +36,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// </summary>
         static CapabilitiesVocabularyModel()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            Assembly assembly = typeof(CapabilitiesVocabularyModel).GetAssembly();
 
             using (Stream stream = assembly.GetManifestResourceStream("CapabilitiesVocabularies.xml"))
             {

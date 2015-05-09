@@ -26,7 +26,7 @@ namespace Microsoft.OData.Edm.PrimitiveValueConverters
         public object ConvertToUnderlyingType(object value)
         {
             var type = value.GetType();
-            var typeCode = Type.GetTypeCode(type);
+            var typeCode = PlatformHelper.GetTypeCode(type);
 
             switch (typeCode)
             {
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Edm.PrimitiveValueConverters
         public object ConvertFromUnderlyingType(object value)
         {
             var type = value.GetType();
-            var typeCode = Type.GetTypeCode(type);
+            var typeCode = PlatformHelper.GetTypeCode(type);
 
             switch (typeCode)
             {
