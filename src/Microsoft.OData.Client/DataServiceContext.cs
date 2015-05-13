@@ -3466,7 +3466,7 @@ namespace Microsoft.OData.Client
             static ClientEdmModelCache()
             {
                 IEnumerable<ODataProtocolVersion> protocolVersions =
-#if PORTABLELIB
+#if PORTABLELIB // Portable lib does not support Enum.GetValues()
  typeof(ODataProtocolVersion).GetFields().Where(f => f.IsLiteral).Select(f => f.GetValue(typeof(ODataProtocolVersion))).Cast<ODataProtocolVersion>();
 #else
  Enum.GetValues(typeof(ODataProtocolVersion)).Cast<ODataProtocolVersion>();
