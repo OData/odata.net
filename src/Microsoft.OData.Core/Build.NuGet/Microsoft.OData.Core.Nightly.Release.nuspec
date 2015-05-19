@@ -4,7 +4,7 @@
     <title>ODataLib</title>
     <id>Microsoft.OData.Core</id>
     <tags>wcf data services odata odatalib edmlib spatial ado.net ef entity framework open protocol wcfds wcfdataservices dataservices</tags>
-    <version>$VersionNuGetSemantic$-Nightly$NightlyBuildVersion$</version>
+    <version>$VersionFullSemantic$-Nightly$NightlyBuildVersion$</version>
     <authors>Microsoft Corporation</authors>
     <owners>Microsoft Corporation</owners>
     <licenseUrl>http://go.microsoft.com/?linkid=9809688</licenseUrl>
