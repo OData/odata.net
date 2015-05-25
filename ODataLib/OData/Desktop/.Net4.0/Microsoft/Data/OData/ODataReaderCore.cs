@@ -462,7 +462,7 @@ namespace Microsoft.Data.OData
                     this.inputContext.Model,
                     this.inputContext.MessageReaderSettings,
                     this.inputContext.Version,
-                    () => EdmTypeKind.Entity,
+                    () => EdmTypeKind.Entity, /* typeKindPeekedFromPayloadFunc */
                     out targetTypeKind,
                     out serializationTypeNameAnnotation);
 

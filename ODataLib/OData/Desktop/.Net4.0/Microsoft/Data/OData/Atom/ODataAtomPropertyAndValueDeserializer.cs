@@ -551,6 +551,8 @@ namespace Microsoft.Data.OData.Atom
             string payloadTypeName;
             bool isNull;
             this.ReadNonEntityValueAttributes(out payloadTypeName, out isNull);
+
+            // only read primitive (Edm.) type values, ignore collection/complex values.
             if ((string.IsNullOrEmpty(payloadTypeName) || payloadTypeName.StartsWith("Edm.", System.StringComparison.Ordinal)))
             {
                 IEdmPrimitiveTypeReference targetTypeReference = null;

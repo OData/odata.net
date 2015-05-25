@@ -999,15 +999,6 @@ namespace Microsoft.Data.OData.JsonLight
             }
             else
             {
-                if (targetTypeReference == null && targetTypeKind != EdmTypeKind.Primitive)
-                {
-                    // In JSON Light we have to always know the target type; either from an expected type specified in
-                    // the API or the metadata URI or from a payload type name.
-                    // NOTE: throw the same error message as we do for other cases where we don't have an expected
-                    //       type and don't find a payload type; see ReaderValidationUtils.ResolveAndValidateTargetTypeWithNoExpectedType.
-                    throw new ODataException(ODataErrorStrings.ReaderValidationUtils_ValueWithoutType);
-                }
-
                 Debug.Assert(
                     !valueIsJsonObject || this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
                     "If the value was an object the reader must be on either property or end object.");
@@ -1032,7 +1023,7 @@ namespace Microsoft.Data.OData.JsonLight
                         break;
 
                     case EdmTypeKind.Complex:
-                        Debug.Assert(targetTypeReference.IsComplex(), "Expected a complex type.");
+                        Debug.Assert(targetTypeReference == null || targetTypeReference.IsComplex(), "Expected null or a complex type.");
 
                         if (payloadTypeNameFromPropertyAnnotation)
                         {
@@ -1047,7 +1038,7 @@ namespace Microsoft.Data.OData.JsonLight
                         }
 
                         result = this.ReadComplexValue(
-                            targetTypeReference.AsComplex(),
+                            targetTypeReference == null ? null : targetTypeReference.AsComplex(),
                             payloadTypeName,
                             serializationTypeNameAnnotation,
                             duplicatePropertyNamesChecker);

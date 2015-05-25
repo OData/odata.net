@@ -125,7 +125,7 @@ namespace Microsoft.Data.OData.JsonLight
 
                                         EdmTypeKind targetTypeKind;
                                         SerializationTypeNameAnnotation serializationTypeNameAnnotation;
-                                        Func<EdmTypeKind> typeKindFromPayloadFunc = () => { throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonLightCollectionDeserializer_ReadCollectionStart_TypeKindFromPayloadFunc)); };
+                                        Func<EdmTypeKind> typeKindPeekedFromPayloadFunc = () => { throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonLightCollectionDeserializer_ReadCollectionStart_TypeKindFromPayloadFunc)); };
                                         actualItemTypeRef = ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
                                             EdmTypeKind.None,
                                             /*defaultPrimitivePayloadType*/ null,
@@ -134,7 +134,7 @@ namespace Microsoft.Data.OData.JsonLight
                                             this.Model,
                                             this.MessageReaderSettings,
                                             this.Version,
-                                            typeKindFromPayloadFunc,
+                                            typeKindPeekedFromPayloadFunc,
                                             out targetTypeKind,
                                             out serializationTypeNameAnnotation);
                                     }

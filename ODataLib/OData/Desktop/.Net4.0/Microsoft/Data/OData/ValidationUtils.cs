@@ -55,11 +55,6 @@ namespace Microsoft.Data.OData
             DebugUtils.CheckNoExternalCallers();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
-            if (value is ODataCollectionValue)
-            {
-                throw new ODataException(Strings.ValidationUtils_OpenCollectionProperty(propertyName));
-            }
-
             if (value is ODataStreamReferenceValue)
             {
                 throw new ODataException(Strings.ValidationUtils_OpenStreamProperty(propertyName));

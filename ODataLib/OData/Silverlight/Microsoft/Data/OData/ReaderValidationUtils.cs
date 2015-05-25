@@ -239,7 +239,7 @@ namespace Microsoft.Data.OData
                 throw new ODataException(Strings.ReaderValidationUtils_NonMatchingPropertyNames(payloadPropertyName, expectedPropertyName));
             }
         }
-        
+
         /// <summary>
         /// Validates that a property with the specified name exists on a given structured type.
         /// The structured type can be null if no metadata is available.
@@ -391,7 +391,7 @@ namespace Microsoft.Data.OData
         /// <param name="model">The model to use.</param>
         /// <param name="messageReaderSettings">The message reader settings to use.</param>
         /// <param name="version">The version of the payload being read.</param>
-        /// <param name="typeKindFromPayloadFunc">A func to compute the type kind from the payload shape if it could not be determined from the expected type or the payload type.</param>
+        /// <param name="typeKindPeekedFromPayloadFunc">A func to compute the type kind from the payload shape if it could not be determined from the expected type or the payload type.</param>
         /// <param name="targetTypeKind">The target type kind to be used to read the payload.</param>
         /// <param name="serializationTypeNameAnnotation">Potentially non-null instance of an annotation to put on the value reported from the reader.</param>
         /// <returns>
@@ -410,12 +410,12 @@ namespace Microsoft.Data.OData
             IEdmModel model,
             ODataMessageReaderSettings messageReaderSettings,
             ODataVersion version,
-            Func<EdmTypeKind> typeKindFromPayloadFunc,
+            Func<EdmTypeKind> typeKindPeekedFromPayloadFunc,
             out EdmTypeKind targetTypeKind,
             out SerializationTypeNameAnnotation serializationTypeNameAnnotation)
         {
             DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(typeKindFromPayloadFunc != null, "typeKindFromPayloadFunc != null");
+            Debug.Assert(typeKindPeekedFromPayloadFunc != null, "typeKindFromPayloadFunc != null");
 
             serializationTypeNameAnnotation = null;
 
@@ -436,12 +436,12 @@ namespace Microsoft.Data.OData
             // Compute the target type kind based on the expected type, the payload type kind
             // and a function to detect the target type kind from the shape of the payload.
             targetTypeKind = ComputeTargetTypeKind(
-                expectedTypeReference, 
+                expectedTypeReference,
                 /*forEntityValue*/ expectedTypeKind == EdmTypeKind.Entity,
-                payloadTypeName, 
-                payloadTypeKind, 
-                messageReaderSettings, 
-                typeKindFromPayloadFunc);
+                payloadTypeName,
+                payloadTypeKind,
+                messageReaderSettings,
+                typeKindPeekedFromPayloadFunc);
 
             // Resolve potential conflicts between payload and expected types and apply all the various behavior changing flags from settings
             IEdmTypeReference targetTypeReference;
@@ -660,7 +660,7 @@ namespace Microsoft.Data.OData
                 Debug.Assert(expectedTypeReference == null, "If we don't have a model, we must not have expected type either.");
                 return null;
             }
-            
+
             if (expectedTypeReference == null || useExpectedTypeOnlyForTypeResolution)
             {
                 Debug.Assert(payloadTypeName == null || payloadType != null, "The payload type must have resolved before we get here.");
@@ -751,8 +751,8 @@ namespace Microsoft.Data.OData
             else if (string.CompareOrdinal(scope.EntitySet.FullName(), metadataUriParseResult.EntitySet.FullName()) != 0)
             {
                 throw new ODataException(Strings.ReaderValidationUtils_MetadataUriValidationInvalidExpectedEntitySet(
-                    UriUtilsCommon.UriToString(metadataUriParseResult.MetadataUri), 
-                    metadataUriParseResult.EntitySet.FullName(), 
+                    UriUtilsCommon.UriToString(metadataUriParseResult.MetadataUri),
+                    metadataUriParseResult.EntitySet.FullName(),
                     scope.EntitySet.FullName()));
             }
 
@@ -762,7 +762,7 @@ namespace Microsoft.Data.OData
             {
                 scope.EntityType = payloadEntityType;
             }
-            else 
+            else
             {
                 if (scope.EntityType.IsAssignableFrom(payloadEntityType))
                 {
@@ -777,7 +777,7 @@ namespace Microsoft.Data.OData
                 }
             }
         }
-        
+
         /// <summary>
         /// Validates that the parsed metadata URI from the payload is consistent with the expected
         /// navigation property.
@@ -886,7 +886,6 @@ namespace Microsoft.Data.OData
             IEdmType payloadType)
         {
             // No expected type (for example an open property, but other scenarios are possible)
-            // We need some type to go on. We do have a model, so we must perform metadata validation and for that we need a type.
             if (payloadType == null)
             {
                 if (expectedTypeKind == EdmTypeKind.Entity)
@@ -894,7 +893,7 @@ namespace Microsoft.Data.OData
                     throw new ODataException(Strings.ReaderValidationUtils_EntryWithoutType);
                 }
 
-                throw new ODataException(Strings.ReaderValidationUtils_ValueWithoutType);
+                return null; // supports undeclared property
             }
 
             // Payload types are always nullable.
@@ -1165,8 +1164,8 @@ namespace Microsoft.Data.OData
                 if (payloadTypeKind != EdmTypeKind.None)
                 {
                     Debug.Assert(
-                        messageReaderSettings.ReaderBehavior.TypeResolver == null 
-                        || messageReaderSettings.ReaderBehavior.FormatBehaviorKind == ODataBehaviorKind.WcfDataServicesClient, 
+                        messageReaderSettings.ReaderBehavior.TypeResolver == null
+                        || messageReaderSettings.ReaderBehavior.FormatBehaviorKind == ODataBehaviorKind.WcfDataServicesClient,
                         "A custom type resolver is only supported in the client format behavior.");
 
                     // If we have a type kind based on the type name, use it.
@@ -1230,7 +1229,7 @@ namespace Microsoft.Data.OData
         /// <param name="payloadTypeKind">The type kind of the payload value.</param>
         /// <returns>true if the payload value kind must be verified, false otherwise.</returns>
         /// <remarks>This method deals with the strict versus lax behavior, as well as with the behavior when primitive type conversion is disabled.</remarks>
-        private static bool ShouldValidatePayloadTypeKind(ODataMessageReaderSettings messageReaderSettings,  IEdmTypeReference expectedValueTypeReference, EdmTypeKind payloadTypeKind)
+        private static bool ShouldValidatePayloadTypeKind(ODataMessageReaderSettings messageReaderSettings, IEdmTypeReference expectedValueTypeReference, EdmTypeKind payloadTypeKind)
         {
             DebugUtils.CheckNoExternalCallers();
 

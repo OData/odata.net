@@ -1485,21 +1485,8 @@ namespace Microsoft.Data.OData.JsonLight
             // We ignore the type name since we might not have the full model and thus might not be able to resolve it correctly.
             ValidateDataPropertyTypeNameAnnotation(entryState.DuplicatePropertyNamesChecker, propertyName);
 
-
-            if (this.MessageReaderSettings.IgnoreUndeclaredValueProperties
-                && (this.JsonReader.NodeType != JsonNodeType.StartObject)
-                && (this.JsonReader.NodeType != JsonNodeType.StartArray))
-            {
-                // for undeclared value (not supports complex or collection value)
-                // Open property - read it as such.
-                this.ReadOpenProperty(entryState, propertyName, propertyWithValue);
-            }
-            else
-            {
-                // Ignore the property value
-                this.JsonReader.SkipValue();
-            }
-
+            // Open property - read it as such.
+            this.ReadOpenProperty(entryState, propertyName, propertyWithValue);
             return null;
         }
 
