@@ -278,6 +278,14 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host/People(1)"));
             action.ShouldThrow<ODataException>().WithMessage(Strings.UriParser_FullUriMustBeRelative);
         }
+        [TestMethod]
+        public void AlternateKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(SocialSN = \'1\')")).ParsePath();
+            pathSegment.Should().HaveCount(2);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            pathSegment.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("SocialSN", "1"));
+        }
 
         [TestMethod]
         public void ParsePathShouldWork()

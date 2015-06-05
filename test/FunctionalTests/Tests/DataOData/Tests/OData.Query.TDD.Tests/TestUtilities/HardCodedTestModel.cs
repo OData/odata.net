@@ -133,6 +133,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             var FullyQualifiedNamespaceAddressTypeReference = new EdmComplexTypeReference(FullyQualifiedNamespaceAddress, true);
             var FullyQualifiedNamespaceOpenAddressTypeReference = new EdmComplexTypeReference(FullyQualifiedNamespaceOpenAddress, true);
             var FullyQualifiedNamespacePerson_ID = FullyQualifiedNamespacePerson.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
+            var FullyQualifiedNamespacePerson_SSN = FullyQualifiedNamespacePerson.AddStructuralProperty("SSN", EdmCoreModel.Instance.GetString(true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("Shoe", EdmCoreModel.Instance.GetString(true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("GeographyPoint", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("GeographyLineString", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyLineString, true));
@@ -196,6 +197,11 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
                 });
 
             var FullyQualifiedNamespacePerson_MyPet2Set = FullyQualifiedNamespacePerson.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyPet2Set", TargetMultiplicity = EdmMultiplicity.Many, Target = FullyQualifiedNamespacePet2, });
+
+            FullyQualifiedNamespacePerson.AddDeclaredAlternateKey(
+                model, new Dictionary<string, IEdmProperty>()
+                { {"SocialSN" , FullyQualifiedNamespacePerson_SSN}
+                });
             model.AddElement(FullyQualifiedNamespacePerson);
 
             FullyQualifiedNamespaceEmployee.AddStructuralProperty("WorkEmail", EdmCoreModel.Instance.GetString(true));
@@ -708,6 +714,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
 
             FullyQualifiedNamespaceContext.AddActionImport("MoveEveryone", FullyQualifiedNamespaceMoveEveryoneAction);
 
+            if (model != null)
+            {
+                return model;
+            }
             #endregion
 
             try
@@ -747,6 +757,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
                     throw new Exception("edmx:refernece must have a valid url." + uri.AbsoluteUri);
                 }, out parsedModel, out errors))
                 {
+                    (parsedModel.ReferencedModels.ElementAt(3).FindDeclaredType("Fully.Qualified.Namespace.Person") as IEdmEntityType).AddDeclaredAlternateKey(model, new Dictionary<string, IEdmProperty>()
+                    { {"SocialSN" , (parsedModel.ReferencedModels.ElementAt(3).FindDeclaredType("Fully.Qualified.Namespace.Person") as IEdmEntityType).FindProperty("SSN") }
+                    });
+
                     return parsedModel;
                 }
             }
@@ -894,7 +908,10 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
         <Key>
           <PropertyRef Name=""ID"" />
         </Key>
-        <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />        
+
+
+        <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""SSN"" Type=""Edm.String"" />
         <Property Name=""Shoe"" Type=""Edm.String"" />
         <Property Name=""GeographyPoint"" Type=""Edm.GeographyPoint"" SRID=""4326"" />
         <Property Name=""GeographyLineString"" Type=""Edm.GeographyLineString"" SRID=""4326"" />
