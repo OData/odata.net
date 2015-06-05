@@ -180,10 +180,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         /// <summary>Tries to convert values to the keys of the specified type.</summary>
         /// <param name="targetEntityType">The specified type.</param>
+        /// <param name="model">The model to be used.</param>
         /// <param name="keyPairs">The converted key-value pairs.</param>
         /// <param name="resolver">The resolver to use.</param>
         /// <returns>true if all values were converted; false otherwise.</returns>
-        internal bool TryConvertValues(IEdmEntityType targetEntityType, out IEnumerable<KeyValuePair<string, object>> keyPairs, ODataUriResolver resolver)
+        internal bool TryConvertValues(IEdmEntityType targetEntityType, IEdmModel model, out IEnumerable<KeyValuePair<string, object>> keyPairs, ODataUriResolver resolver)
         {
             Debug.Assert(!this.IsEmpty, "!this.IsEmpty -- caller should check");
             IList<IEdmStructuralProperty> keyProperties = targetEntityType.Key().ToList();
@@ -191,7 +192,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             if (this.NamedValues != null)
             {
-                keyPairs = resolver.ResolveKeys(targetEntityType, this.NamedValues, this.ConvertValueWrapper);
+                keyPairs = resolver.ResolveKeysOrAlternateKeys(targetEntityType, model, this.NamedValues, this.ConvertValueWrapper);
             }
             else
             {

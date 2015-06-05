@@ -41,21 +41,100 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="collectionNode">Already bound collection node.</param>
         /// <param name="namedValues">The named value tokens to bind.</param>
+        /// <param name="model">The model to be used.</param>
         /// <returns>The bound key lookup.</returns>
-        internal QueryNode BindKeyValues(EntityCollectionNode collectionNode, IEnumerable<NamedValue> namedValues)
+        internal QueryNode BindKeyValues(EntityCollectionNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model)
         {
             Debug.Assert(namedValues != null, "namedValues != null");
             Debug.Assert(collectionNode != null, "CollectionNode != null");
 
             IEdmEntityTypeReference collectionItemType = collectionNode.EntityItemType;
-            List<KeyPropertyValue> keyPropertyValues = new List<KeyPropertyValue>();
 
             IEdmEntityType collectionItemEntityType = collectionItemType.EntityDefinition();
+            QueryNode keyLookupNode;
 
+            if (TryBindToDeclaredKey(collectionNode, namedValues, model, collectionItemEntityType, out keyLookupNode) == true)
+            {
+                return keyLookupNode;
+            }
+            else if (TryBindToDeclaredAlternateKey(collectionNode, namedValues, model, collectionItemEntityType, out keyLookupNode) == true)
+            {
+                return keyLookupNode;
+            }
+            else
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemType.ODataFullName()));
+            }
+        }
+
+        /// <summary>
+        /// Tries to bind key values to a key lookup on a collection.
+        /// </summary>
+        /// <param name="collectionNode">Already bound collection node.</param>
+        /// <param name="namedValues">The named value tokens to bind.</param>
+        /// <param name="model">The model to be used.</param>
+        /// <param name="collectionItemEntityType">The type of a single item in a collection to apply the key value to.</param>
+        /// <param name="keyLookupNode">The bound key lookup.</param>
+        /// <returns>Returns true if binding succeeded.</returns>
+        private bool TryBindToDeclaredAlternateKey(EntityCollectionNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model, IEdmEntityType collectionItemEntityType, out QueryNode keyLookupNode)
+        {
+            IEnumerable<IDictionary<string, IEdmProperty>> alternateKeys = collectionItemEntityType.DeclaredAlternateKeys(model);
+            foreach (IDictionary<string, IEdmProperty> keys in alternateKeys)
+            {
+                if (TryBindToKeys(collectionNode, namedValues, model, collectionItemEntityType, keys, out keyLookupNode))
+                {
+                    return true;
+                }
+            }
+
+            keyLookupNode = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to bind key values to a key lookup on a collection.
+        /// </summary>
+        /// <param name="collectionNode">Already bound collection node.</param>
+        /// <param name="namedValues">The named value tokens to bind.</param>
+        /// <param name="model">The model to be used.</param>
+        /// <param name="collectionItemEntityType">The type of a single item in a collection to apply the key value to.</param>
+        /// <param name="keyLookupNode">The bound key lookup.</param>
+        /// <returns>Returns true if binding succeeded.</returns>
+        private bool TryBindToDeclaredKey(EntityCollectionNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model, IEdmEntityType collectionItemEntityType, out QueryNode keyLookupNode)
+        {
+            Dictionary<string, IEdmProperty> keys = new Dictionary<string, IEdmProperty>();
+            foreach (IEdmStructuralProperty property in collectionItemEntityType.Key())
+            {
+                keys[property.Name] = property;
+            }
+
+            return TryBindToKeys(collectionNode, namedValues, model, collectionItemEntityType, keys, out keyLookupNode);
+        }
+
+        /// <summary>
+        /// Binds key values to a key lookup on a collection.
+        /// </summary>
+        /// <param name="collectionNode">Already bound collection node.</param>
+        /// <param name="namedValues">The named value tokens to bind.</param>
+        /// <param name="model">The model to be used.</param>
+        /// <param name="collectionItemEntityType">The type of a single item in a collection to apply the key value to.</param>
+        /// <param name="keys">Dictionary of aliases to structural property names for the key.</param>
+        /// <param name="keyLookupNode">The bound key lookup.</param>
+        /// <returns>Returns true if binding succeeded.</returns>
+        private bool TryBindToKeys(EntityCollectionNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model, IEdmEntityType collectionItemEntityType, IDictionary<string, IEdmProperty> keys, out QueryNode keyLookupNode)
+        {
+            List<KeyPropertyValue> keyPropertyValues = new List<KeyPropertyValue>();
             HashSet<string> keyPropertyNames = new HashSet<string>(StringComparer.Ordinal);
             foreach (NamedValue namedValue in namedValues)
             {
-                KeyPropertyValue keyPropertyValue = this.BindKeyPropertyValue(namedValue, collectionItemEntityType);
+                KeyPropertyValue keyPropertyValue;
+
+                if (!this.TryBindKeyPropertyValue(namedValue, collectionItemEntityType, model, keys, out keyPropertyValue))
+                {
+                    keyLookupNode = null;
+                    return false;
+                }
+
                 Debug.Assert(keyPropertyValue != null, "keyPropertyValue != null");
                 Debug.Assert(keyPropertyValue.KeyProperty != null, "keyPropertyValue.KeyProperty != null");
 
@@ -70,15 +149,19 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             if (keyPropertyValues.Count == 0)
             {
                 // No key values specified, for example '/Customers()', do not include the key lookup at all
-                return collectionNode;
+                keyLookupNode = collectionNode;
+                return true;
             }
             else if (keyPropertyValues.Count != collectionItemEntityType.Key().Count())
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemType.ODataFullName()));
+                ////throw new ODataException(ODataErrorStrings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemType.ODataFullName()));
+                keyLookupNode = null;
+                return false;
             }
             else
             {
-                return new KeyLookupNode(collectionNode, new ReadOnlyCollection<KeyPropertyValue>(keyPropertyValues));
+                keyLookupNode = new KeyLookupNode(collectionNode, new ReadOnlyCollection<KeyPropertyValue>(keyPropertyValues));
+                return true;
             }
         }
 
@@ -87,8 +170,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="namedValue">The named value to bind.</param>
         /// <param name="collectionItemEntityType">The type of a single item in a collection to apply the key value to.</param>
+        /// <param name="model">The model to be used.</param>
+        /// <param name="keys">Dictionary of alias to keys.</param>
+        /// <param name="keyPropertyValue">The bound key property value node.</param>
         /// <returns>The bound key property value node.</returns>
-        private KeyPropertyValue BindKeyPropertyValue(NamedValue namedValue, IEdmEntityType collectionItemEntityType)
+        private bool TryBindKeyPropertyValue(NamedValue namedValue, IEdmEntityType collectionItemEntityType, IEdmModel model, IDictionary<string, IEdmProperty> keys, out KeyPropertyValue keyPropertyValue)
         {
             // These are exception checks because the data comes directly from the potentially user specified tree.
             ExceptionUtils.CheckArgumentNotNull(namedValue, "namedValue");
@@ -98,7 +184,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             IEdmProperty keyProperty = null;
             if (namedValue.Name == null)
             {
-                foreach (IEdmProperty p in collectionItemEntityType.Key())
+                foreach (IEdmProperty p in keys.Values)
                 {
                     if (keyProperty == null)
                     {
@@ -112,11 +198,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
             else
             {
-                keyProperty = collectionItemEntityType.Key().Where(k => string.CompareOrdinal(k.Name, namedValue.Name) == 0).SingleOrDefault();
+                keyProperty = keys.Where(k => string.CompareOrdinal(k.Key, namedValue.Name) == 0).SingleOrDefault().Value;
 
                 if (keyProperty == null)
                 {
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclaredOrNotKeyInKeyValue(namedValue.Name, collectionItemEntityType.ODataFullName()));
+                    keyPropertyValue = null;
+                    return false;
+                    ////throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclaredOrNotKeyInKeyValue(namedValue.Name, collectionItemEntityType.ODataFullName()));
                 }
             }
 
@@ -129,11 +217,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             value = MetadataBindingUtils.ConvertToTypeIfNeeded(value, keyPropertyType);
 
             Debug.Assert(keyProperty != null, "keyProperty != null");
-            return new KeyPropertyValue()
+            keyPropertyValue = new KeyPropertyValue()
             {
                 KeyProperty = keyProperty,
                 KeyValue = value
             };
+            return true;
         }
     }
 }
