@@ -115,7 +115,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
             ModelWithFunction.AddElement(EntityType);
             ModelWithFunction.AddElement(DerivedType);
             ModelWithFunction.AddElement(container);
-            
+
             EdmEntityTypeReference entityTypeReference = new EdmEntityTypeReference(EntityType, false);
             EdmCollectionTypeReference typeReference = new EdmCollectionTypeReference(new EdmCollectionType(entityTypeReference));
             EdmFunction function = new EdmFunction("Namespace", "Function", EdmCoreModel.Instance.GetBoolean(true), true, null, false);
@@ -913,6 +913,48 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
         }
         #endregion Inlinecount Tests
 
+        [TestMethod]
+        public void ShouldWriteAdditionalPropertyWhenFullValidationDisabled()
+        {
+            var entry = new ODataEntry
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "ID", Value = 102 },
+                    new ODataProperty { Name = "Name", Value = "Bob" },
+                    new ODataProperty { Name = "Prop1", Value = "Var1" }
+                },
+            };
+
+            ODataItem[] itemsToWrite = { entry };
+
+            Action action = () => this.GetWriterOutputForContentTypeAndKnobValue(
+                "application/json;odata.metadata=minimal",
+                true,
+                itemsToWrite,
+                Model,
+                EntitySet,
+                EntityType,
+                enableFullValidation: true);
+            action.ShouldThrow<ODataException>().WithMessage(
+                Strings.ValidationUtils_PropertyDoesNotExistOnType("Prop1", "Namespace.EntityType"));
+
+            string result = this.GetWriterOutputForContentTypeAndKnobValue(
+                "application/json;odata.metadata=minimal",
+                true,
+                itemsToWrite,
+                Model,
+                EntitySet,
+                EntityType,
+                enableFullValidation: false);
+            string expectedPayload = 
+                                  "{\"" +
+                                    "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/$entity\"," +
+                                    "\"ID\":102,\"Name\":\"Bob\",\"Prop1\":\"Var1\"" +
+                                  "}";
+            result.Should().Be(expectedPayload);
+        }
+
         // Ignore this until writing nested context URL is supported
         [Ignore]
         [TestMethod]
@@ -950,7 +992,17 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
         }
 
         #region Help Methods
-        private string GetWriterOutputForContentTypeAndKnobValue(string contentType, bool autoComputePayloadMetadataInJson, ODataItem[] itemsToWrite, EdmModel edmModel, IEdmEntitySetBase edmEntitySet, EdmEntityType edmEntityType, string selectClause = null, string expandClause = null, string resourcePath = null)
+        private string GetWriterOutputForContentTypeAndKnobValue(
+            string contentType,
+            bool autoComputePayloadMetadataInJson,
+            ODataItem[] itemsToWrite,
+            EdmModel edmModel,
+            IEdmEntitySetBase edmEntitySet,
+            EdmEntityType edmEntityType,
+            string selectClause = null,
+            string expandClause = null,
+            string resourcePath = null,
+            bool enableFullValidation = true)
         {
             MemoryStream outputStream = new MemoryStream();
             IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream };
@@ -958,6 +1010,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
             {
                 AutoComputePayloadMetadataInJson = autoComputePayloadMetadataInJson,
+                EnableFullValidation = enableFullValidation
             };
 
             var result = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause } }).ParseSelectAndExpand();

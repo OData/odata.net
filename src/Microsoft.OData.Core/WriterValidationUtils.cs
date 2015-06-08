@@ -79,9 +79,13 @@ namespace Microsoft.OData.Core
         /// <param name="propertyName">The name of the property to validate.</param>
         /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/> 
         /// or null if no metadata is available.</param>
+        /// <param name="throwOnMissingProperty">Whether throw exception on missing property.</param>
         /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/> 
         /// or null if no metadata is available.</returns>
-        internal static IEdmProperty ValidatePropertyDefined(string propertyName, IEdmStructuredType owningStructuredType)
+        internal static IEdmProperty ValidatePropertyDefined(
+            string propertyName,
+            IEdmStructuredType owningStructuredType,
+            bool throwOnMissingProperty = true)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
@@ -93,7 +97,7 @@ namespace Microsoft.OData.Core
             IEdmProperty property = owningStructuredType.FindProperty(propertyName);
 
             // verify that the property is declared if the type is not an open type.
-            if (!owningStructuredType.IsOpen && property == null)
+            if (throwOnMissingProperty && !owningStructuredType.IsOpen && property == null)
             {
                 throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.ODataFullName()));
             }

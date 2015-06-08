@@ -187,7 +187,10 @@ namespace Microsoft.OData.Core.JsonLight
                 }
             }
 
-            IEdmProperty edmProperty = !this.bypassValidation ? WriterValidationUtils.ValidatePropertyDefined(propertyName, owningType) : null;
+            IEdmProperty edmProperty = WriterValidationUtils.ValidatePropertyDefined(
+                propertyName,
+                owningType,
+                !this.bypassValidation);
             IEdmTypeReference propertyTypeReference = edmProperty == null ? null : edmProperty.Type;
 
             ODataValue value = property.ODataValue;
