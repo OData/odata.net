@@ -168,8 +168,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             Debug.Assert(targetEntityType != null, "targetEntityType != null");
 
             // Make sure the keys specified in the uri matches with the number of keys in the metadata
+            // unless the type also supports alternate keys in which case the validation is done during resolution
             var keyProperties = targetEntityType.Key().ToList();
-            if (keyProperties.Count != key.ValueCount)
+            if (keyProperties.Count != key.ValueCount && targetEntityType.DeclaredAlternateKeys(model).Count() == 0)
             {
                 NavigationPropertySegment currentNavPropSegment = segment as NavigationPropertySegment;
                 if (currentNavPropSegment != null)
