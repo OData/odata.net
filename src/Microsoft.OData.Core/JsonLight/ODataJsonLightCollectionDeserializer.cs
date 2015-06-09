@@ -80,7 +80,16 @@ namespace Microsoft.OData.Core.JsonLight
                             switch (propertyParsingResult)
                             {
                                 case PropertyParsingResult.ODataInstanceAnnotation:
-                                    throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
+                                    if (string.CompareOrdinal(ODataAnnotationNames.ODataCount, propertyName) != 0 &&
+                                        string.CompareOrdinal(ODataAnnotationNames.ODataNextLink, propertyName) != 0)
+                                    {
+                                        throw new ODataException(
+                                            ODataErrorStrings
+                                                .ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties
+                                                (propertyName));
+                                    }
+                                    this.JsonReader.SkipValue();
+                                    break;
 
                                 case PropertyParsingResult.CustomInstanceAnnotation:
                                     this.JsonReader.SkipValue();
