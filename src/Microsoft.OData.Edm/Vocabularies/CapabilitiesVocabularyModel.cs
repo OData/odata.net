@@ -14,8 +14,6 @@ using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Vocabularies.V1
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// Representing Capabilities Vocabulary Model.
     /// </summary>
@@ -32,6 +30,36 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         public static readonly IEdmValueTerm ChangeTrackingTerm;
 
         /// <summary>
+        /// The count restrictions term.
+        /// </summary>
+        public static readonly IEdmValueTerm CountRestrictionsTerm;
+
+        /// <summary>
+        /// The navigation restrictions term.
+        /// </summary>
+        public static readonly IEdmValueTerm NavigationRestrictionsTerm;
+
+        /// <summary>
+        /// The filter restrictions term.
+        /// </summary>
+        public static readonly IEdmValueTerm FilterRestrictionsTerm;
+
+        /// <summary>
+        /// The sort restrictions term.
+        /// </summary>
+        public static readonly IEdmValueTerm SortRestrictionsTerm;
+
+        /// <summary>
+        /// The expand restrictions term.
+        /// </summary>
+        public static readonly IEdmValueTerm ExpandRestrictionsTerm;
+
+        /// <summary>
+        /// The navigation type.
+        /// </summary>
+        public static readonly IEdmEnumType NavigationTypeType;
+
+        /// <summary>
         /// Parse Capabilities Vocabulary Model from CapabilitiesVocabularies.xml
         /// </summary>
         static CapabilitiesVocabularyModel()
@@ -46,6 +74,13 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             }
 
             ChangeTrackingTerm = Instance.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.ChangeTracking);
+            CountRestrictionsTerm = Instance.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.CountRestrictions);
+            NavigationRestrictionsTerm = Instance.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.NavigationRestrictions);
+            FilterRestrictionsTerm = Instance.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.FilterRestrictions);
+            SortRestrictionsTerm = Instance.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.SortRestrictions);
+            ExpandRestrictionsTerm = Instance.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.ExpandRestrictions);
+
+            NavigationTypeType = (IEdmEnumType)Instance.FindDeclaredType(CapabilitiesVocabularyConstants.NavigationType);
         }
     }
 }

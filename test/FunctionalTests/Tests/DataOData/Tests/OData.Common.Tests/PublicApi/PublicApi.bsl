@@ -1679,6 +1679,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static void SetCountRestrictionsAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmEntitySet target, bool isCountable, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] nonCountableProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] nonCountableNavigationProperties)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static void SetDescriptionAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable target, string description)
 
 	[
@@ -1694,7 +1699,22 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static void SetExpandRestrictionsAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmEntitySet target, bool isExpandable, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] nonExpandableProperties)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static void SetFilterRestrictionsAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmEntitySet target, bool isFilterable, bool isRequiresFilter, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] requiredProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] nonFilterableProperties)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static void SetLongDescriptionAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmVocabularyAnnotatable target, string description)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static void SetNavigationRestrictionsAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmEntitySet target, Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesNavigationType navigability, System.Collections.Generic.IEnumerable`1[[System.Tuple`2[[Microsoft.OData.Edm.IEdmNavigationProperty],[Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesNavigationType]]]] restrictedProperties)
 
 	[
 	ExtensionAttribute(),
@@ -1711,6 +1731,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	ExtensionAttribute(),
 	]
 	public static void SetPrimitiveValueConverter (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeDefinitionReference typeDefinition, Microsoft.OData.Edm.PrimitiveValueConverters.IPrimitiveValueConverter converter)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static void SetSortRestrictionsAnnotation (Microsoft.OData.Edm.Library.EdmModel model, Microsoft.OData.Edm.IEdmEntitySet target, bool isSortable, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] ascendingOnlyProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] descendingOnlyProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] nonSortableProperties)
 
 	[
 	ExtensionAttribute(),
@@ -3694,11 +3719,39 @@ public class Microsoft.OData.Edm.Library.Values.EdmTimeOfDayConstant : Microsoft
 	Microsoft.OData.Edm.Values.EdmValueKind ValueKind  { public virtual get; }
 }
 
+public enum Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesNavigationType : int {
+	None = 2
+	Recursive = 0
+	Single = 1
+}
+
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyConstants {
 	public static string ChangeTracking = "Org.OData.Capabilities.V1.ChangeTracking"
 	public static string ChangeTrackingExpandableProperties = "ExpandableProperties"
 	public static string ChangeTrackingFilterableProperties = "FilterableProperties"
 	public static string ChangeTrackingSupported = "Supported"
+	public static string CountRestrictions = "Org.OData.Capabilities.V1.CountRestrictions"
+	public static string CountRestrictionsCountable = "Countable"
+	public static string CountRestrictionsNonCountableNavigationProperties = "NonCountableNavigationProperties"
+	public static string CountRestrictionsNonCountableProperties = "NonCountableProperties"
+	public static string ExpandRestrictions = "Org.OData.Capabilities.V1.ExpandRestrictions"
+	public static string ExpandRestrictionsExpandable = "Expandable"
+	public static string ExpandRestrictionsNonExpandableProperties = "NonExpandableProperties"
+	public static string FilterRestrictions = "Org.OData.Capabilities.V1.FilterRestrictions"
+	public static string FilterRestrictionsFilterable = "Filterable"
+	public static string FilterRestrictionsNonFilterableProperties = "NonFilterableProperties"
+	public static string FilterRestrictionsRequiredProperties = "RequiredProperties"
+	public static string FilterRestrictionsRequiresFilter = "RequiresFilter"
+	public static string NavigationPropertyRestrictionNavigationProperty = "NavigationProperty"
+	public static string NavigationRestrictions = "Org.OData.Capabilities.V1.NavigationRestrictions"
+	public static string NavigationRestrictionsNavigability = "Navigability"
+	public static string NavigationRestrictionsRestrictedProperties = "RestrictedProperties"
+	public static string NavigationType = "Org.OData.Capabilities.V1.NavigationType"
+	public static string SortRestrictions = "Org.OData.Capabilities.V1.SortRestrictions"
+	public static string SortRestrictionsAscendingOnlyProperties = "AscendingOnlyProperties"
+	public static string SortRestrictionsDescendingOnlyProperties = "DescendingOnlyProperties"
+	public static string SortRestrictionsNonSortableProperties = "NonSortableProperties"
+	public static string SortRestrictionsSortable = "Sortable"
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants {
