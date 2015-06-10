@@ -1,4 +1,4 @@
-OData .NET Libraries ver. 6.12
+OData .NET Libraries ver. 6.13
 Copyright (c) Microsoft Corporation
 All rights reserved. 
 MIT License
