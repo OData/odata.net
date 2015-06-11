@@ -83,11 +83,9 @@ namespace Microsoft.OData.Core.JsonLight
                                     if (string.CompareOrdinal(ODataAnnotationNames.ODataCount, propertyName) != 0 &&
                                         string.CompareOrdinal(ODataAnnotationNames.ODataNextLink, propertyName) != 0)
                                     {
-                                        throw new ODataException(
-                                            ODataErrorStrings
-                                                .ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties
-                                                (propertyName));
+                                        throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
                                     }
+
                                     this.JsonReader.SkipValue();
                                     break;
 

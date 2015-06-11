@@ -26,8 +26,8 @@ namespace Microsoft.OData.Core
             set;
         }
 
-        /// <summary>Gets or sets the number of items in the feed.</summary>
-        /// <returns>The number of items in the feed.</returns>
+        /// <summary>Gets or sets the number of items in the collection.</summary>
+        /// <returns>The number of items in the collection.</returns>
         public long? Count
         {
             get;
