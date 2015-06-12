@@ -105,6 +105,18 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
             collectionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo { CollectionTypeName = "Collection(foo.bar)" });
             WriteAndValidate(collectionStart, this.items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: true, itemTypeReference: this.addressTypeReference);
         }
+
+        [TestMethod]
+        public void ShouldWriteCountAndNextLinkAnnotationOfComplexCollectionPropertyIfSpecified()
+        {
+            ODataCollectionStart collectionStart = new ODataCollectionStart()
+            {
+                Count = 3,
+                NextPageLink = new Uri("http://next-link")
+            };
+            collectionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo { CollectionTypeName = "Collection(foo.bar)" });
+            WriteAndValidate(collectionStart, this.items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"@odata.count\":3,\"@odata.nextLink\":\"http://next-link/\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: true, itemTypeReference: this.addressTypeReference);
+        }
         #endregion Without model
         #endregion Writing odata.context
 

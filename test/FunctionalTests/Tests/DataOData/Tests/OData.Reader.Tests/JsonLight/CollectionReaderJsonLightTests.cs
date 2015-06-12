@@ -129,6 +129,30 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
+                    DebugDescription = "OData instance annotations before collection property - should work.",
+                    PayloadEdmModel = model,
+                    PayloadElement = primitiveCollection.DeepCopy()
+                        .JsonRepresentation("{" +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(Edm.Int32)\"," +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":3," +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"http://next-link\"," +
+                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ 1, 2, 3 ] }")
+                        .ExpectedFunctionImport(primitiveCollectionResultOperation),
+                },
+                new PayloadReaderTestDescriptor(this.Settings)
+                {
+                    DebugDescription = "OData instance annotations after collection property - should work.",
+                    PayloadEdmModel = model,
+                    PayloadElement = primitiveCollection.DeepCopy()
+                        .JsonRepresentation("{" +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(Edm.Int32)\"," +
+                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ 1, 2, 3 ]," +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"http://next-link\"," +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":3}")
+                        .ExpectedFunctionImport(primitiveCollectionResultOperation),
+                },
+                new PayloadReaderTestDescriptor(this.Settings)
+                {
                     DebugDescription = "Custom property annotation before collection property - should work.",
                     PayloadEdmModel = model,
                     PayloadElement = primitiveCollection.DeepCopy()

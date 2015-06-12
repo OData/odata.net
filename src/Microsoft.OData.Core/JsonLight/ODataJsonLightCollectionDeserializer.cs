@@ -80,8 +80,7 @@ namespace Microsoft.OData.Core.JsonLight
                             switch (propertyParsingResult)
                             {
                                 case PropertyParsingResult.ODataInstanceAnnotation:
-                                    if (string.CompareOrdinal(ODataAnnotationNames.ODataCount, propertyName) != 0 &&
-                                        string.CompareOrdinal(ODataAnnotationNames.ODataNextLink, propertyName) != 0)
+                                    if (!IsValidODataAnnotationOfCollection(propertyName))
                                     {
                                         throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
                                     }
@@ -240,7 +239,15 @@ namespace Microsoft.OData.Core.JsonLight
                                     this.JsonReader.SkipValue();
                                     break;
 
-                                case PropertyParsingResult.ODataInstanceAnnotation:     // fall through
+                                case PropertyParsingResult.ODataInstanceAnnotation:
+                                    if (!IsValidODataAnnotationOfCollection(propertyName))
+                                    {
+                                        throw new ODataException(ODataErrorStrings.ODataJsonLightCollectionDeserializer_CannotReadCollectionEnd(propertyName));
+                                    }
+
+                                    this.JsonReader.SkipValue();
+                                    break;
+
                                 case PropertyParsingResult.PropertyWithoutValue:        // fall through
                                 case PropertyParsingResult.PropertyWithValue:           // fall through
                                 case PropertyParsingResult.MetadataReferenceProperty:
@@ -258,6 +265,17 @@ namespace Microsoft.OData.Core.JsonLight
                 // read the end-object node of the value containing the 'value' property
                 this.JsonReader.ReadEndObject();
             }
+        }
+
+        /// <summary>
+        /// Returns if a property is a valid OData annotation of a collection.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>If the property is a valid OData annotation of a collection.</returns>
+        private static bool IsValidODataAnnotationOfCollection(string propertyName)
+        {
+            return string.CompareOrdinal(ODataAnnotationNames.ODataCount, propertyName) == 0
+                || string.CompareOrdinal(ODataAnnotationNames.ODataNextLink, propertyName) == 0;
         }
     }
 }
