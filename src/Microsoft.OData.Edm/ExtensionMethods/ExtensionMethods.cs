@@ -1168,6 +1168,71 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Set Org.OData.Capabilities.V1.CountRestrictions to target.
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="target">The target entity set to set the inline annotation.</param>
+        /// <param name="isCountable">This entity set can be counted.</param>
+        /// <param name="nonCountableProperties">These collection properties do not allow /$count segments.</param>
+        /// <param name="nonCountableNavigationProperties">These navigation properties do not allow /$count segments.</param>
+        public static void SetCountRestrictionsAnnotation(this EdmModel model, IEdmEntitySet target, bool isCountable, IEnumerable<IEdmStructuralProperty> nonCountableProperties, IEnumerable<IEdmNavigationProperty> nonCountableNavigationProperties)
+        {
+            model.SetCountRestrictionsAnnotationImplementation(target, isCountable, nonCountableProperties, nonCountableNavigationProperties);
+        }
+
+        /// <summary>
+        /// Set Org.OData.Capabilities.V1.NavigationRestrictions to target.
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="target">The target entity set to set the inline annotation.</param>
+        /// <param name="navigability">This entity set supports navigability.</param>
+        /// <param name="restrictedProperties">These properties have navigation restrictions on.</param>
+        public static void SetNavigationRestrictionsAnnotation(this EdmModel model, IEdmEntitySet target, CapabilitiesNavigationType navigability, IEnumerable<Tuple<IEdmNavigationProperty, CapabilitiesNavigationType>> restrictedProperties)
+        {
+            model.SetNavigationRestrictionsAnnotationImplementation(target, navigability, restrictedProperties);
+        }
+
+        /// <summary>
+        /// Set Org.OData.Capabilities.V1.FilterRestrictions to target.
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="target">The target entity set to set the inline annotation.</param>
+        /// <param name="isFilterable">This entity set supports the $filter expressions.</param>
+        /// <param name="isRequiresFilter">This entity set requires $filter expressions.</param>
+        /// <param name="requiredProperties">These properties must be specified in the $filter clause.</param>
+        /// <param name="nonFilterableProperties">These properties cannot be used in $filter expressions.</param>
+        public static void SetFilterRestrictionsAnnotation(this EdmModel model, IEdmEntitySet target, bool isFilterable, bool isRequiresFilter, IEnumerable<IEdmStructuralProperty> requiredProperties, IEnumerable<IEdmStructuralProperty> nonFilterableProperties)
+        {
+            model.SetFilterRestrictionsAnnotationImplementation(target, isFilterable, isRequiresFilter, requiredProperties, nonFilterableProperties);
+        }
+
+        /// <summary>
+        /// Set Org.OData.Capabilities.V1.SortRestrictions to target.
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="target">The target entity set to set the inline annotation.</param>
+        /// <param name="isSortable">This entity set supports the $orderby expressions.</param>
+        /// <param name="ascendingOnlyProperties">These properties can only be used for sorting in ascending order.</param>
+        /// <param name="descendingOnlyProperties">These properties can only be used for sorting in descending order.</param>
+        /// <param name="nonSortableProperties">These properties cannot be used in $orderby expressions.</param>
+        public static void SetSortRestrictionsAnnotation(this EdmModel model, IEdmEntitySet target, bool isSortable, IEnumerable<IEdmStructuralProperty> ascendingOnlyProperties, IEnumerable<IEdmStructuralProperty> descendingOnlyProperties, IEnumerable<IEdmStructuralProperty> nonSortableProperties)
+        {
+            model.SetSortRestrictionsAnnotationImplementation(target, isSortable, ascendingOnlyProperties, descendingOnlyProperties, nonSortableProperties);
+        }
+
+        /// <summary>
+        /// Set Org.OData.Capabilities.V1.ExpandRestrictions to target.
+        /// </summary>
+        /// <param name="model">The model referenced to.</param>
+        /// <param name="target">The target entity set to set the inline annotation.</param>
+        /// <param name="isExpandable">This entity set supports the expand expressions.</param>
+        /// <param name="nonExpandableProperties">These properties cannot be used in $expand expressions.</param>
+        public static void SetExpandRestrictionsAnnotation(this EdmModel model, IEdmEntitySet target, bool isExpandable, IEnumerable<IEdmNavigationProperty> nonExpandableProperties)
+        {
+            model.SetExpandRestrictionsAnnotationImplementation(target, isExpandable, nonExpandableProperties);
+        }
+
+        /// <summary>
         /// Get type reference to the default UInt16 type definition.
         /// The default underlying type is <see cref="PrimitiveValueConverterConstants.DefaultUInt16UnderlyingType"/>.
         /// If the user has already defined his own UInt16, this method will not define anything and simply returns the type reference.
@@ -2744,6 +2809,136 @@ namespace Microsoft.OData.Edm
             IEdmValueTerm term = CapabilitiesVocabularyModel.ChangeTrackingTerm;
 
             Debug.Assert(term != null, "term!=null");
+            EdmAnnotation annotation = new EdmAnnotation(target, term, record);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+        }
+
+        private static void SetCountRestrictionsAnnotationImplementation(this EdmModel model, IEdmVocabularyAnnotatable target, bool isCountable, IEnumerable<IEdmStructuralProperty> nonCountableProperties, IEnumerable<IEdmNavigationProperty> nonCountableNavigationProperties)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+
+            nonCountableProperties = nonCountableProperties ?? EmptyStructuralProperties;
+            nonCountableNavigationProperties = nonCountableNavigationProperties ?? EmptyNavigationProperties;
+
+            IList<IEdmPropertyConstructor> properties = new List<IEdmPropertyConstructor>
+            {
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.CountRestrictionsCountable, new EdmBooleanConstant(isCountable)),
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.CountRestrictionsNonCountableProperties, new EdmCollectionExpression(nonCountableProperties.Select(p => new EdmPropertyPathExpression(p.Name)).ToArray())),
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.CountRestrictionsNonCountableNavigationProperties, new EdmCollectionExpression(nonCountableNavigationProperties.Select(p => new EdmNavigationPropertyPathExpression(p.Name)).ToArray()))
+            };
+
+            IEdmRecordExpression record = new EdmRecordExpression(properties);
+            IEdmValueTerm term = CapabilitiesVocabularyModel.CountRestrictionsTerm;
+            Debug.Assert(term != null, "term != null");
+
+            EdmAnnotation annotation = new EdmAnnotation(target, term, record);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+        }
+
+        private static void SetNavigationRestrictionsAnnotationImplementation(this EdmModel model, IEdmVocabularyAnnotatable target, CapabilitiesNavigationType navigability, IEnumerable<Tuple<IEdmNavigationProperty, CapabilitiesNavigationType>> restrictedProperties)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+
+            restrictedProperties = restrictedProperties ?? new Tuple<IEdmNavigationProperty, CapabilitiesNavigationType>[0];
+
+            string type = new EdmEnumTypeReference(CapabilitiesVocabularyModel.NavigationTypeType, false).ToStringLiteral((long)navigability);
+
+            IEnumerable<EdmRecordExpression> propertiesExpression = restrictedProperties.Select(p =>
+            {
+                var name = new EdmEnumTypeReference(CapabilitiesVocabularyModel.NavigationTypeType, false).ToStringLiteral((long)p.Item2);
+                return new EdmRecordExpression(new IEdmPropertyConstructor[]
+                {
+                    new EdmPropertyConstructor(CapabilitiesVocabularyConstants.NavigationPropertyRestrictionNavigationProperty, new EdmNavigationPropertyPathExpression(p.Item1.Name)),
+                    new EdmPropertyConstructor(CapabilitiesVocabularyConstants.NavigationRestrictionsNavigability, new EdmEnumMemberReferenceExpression(CapabilitiesVocabularyModel.NavigationTypeType.Members.Single(m => m.Name == name)))
+                });
+            });
+
+            EdmRecordExpression record = new EdmRecordExpression(new IEdmPropertyConstructor[]
+            {
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.NavigationRestrictionsNavigability, new EdmEnumMemberReferenceExpression(CapabilitiesVocabularyModel.NavigationTypeType.Members.Single(m => m.Name == type))),
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.NavigationRestrictionsRestrictedProperties, new EdmCollectionExpression(propertiesExpression))
+            });
+
+            IEdmValueTerm term = CapabilitiesVocabularyModel.NavigationRestrictionsTerm;
+            Debug.Assert(term != null, "term != null");
+
+            EdmAnnotation annotation = new EdmAnnotation(target, term, record);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+        }
+
+        private static void SetFilterRestrictionsAnnotationImplementation(this EdmModel model, IEdmVocabularyAnnotatable target, bool isFilterable, bool isRequiresFilter, IEnumerable<IEdmStructuralProperty> requiredProperties, IEnumerable<IEdmStructuralProperty> nonFilterableProperties)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+
+            requiredProperties = requiredProperties ?? EmptyStructuralProperties;
+            nonFilterableProperties = nonFilterableProperties ?? EmptyStructuralProperties;
+
+            IList<IEdmPropertyConstructor> properties = new List<IEdmPropertyConstructor>
+            {
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.FilterRestrictionsFilterable, new EdmBooleanConstant(isFilterable)),
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.FilterRestrictionsRequiresFilter, new EdmBooleanConstant(isRequiresFilter)),
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.FilterRestrictionsRequiredProperties, new EdmCollectionExpression(requiredProperties.Select(p => new EdmPropertyPathExpression(p.Name)).ToArray())),
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.FilterRestrictionsNonFilterableProperties, new EdmCollectionExpression(nonFilterableProperties.Select(p => new EdmPropertyPathExpression(p.Name)).ToArray()))
+            };
+
+            IEdmRecordExpression record = new EdmRecordExpression(properties);
+            IEdmValueTerm term = CapabilitiesVocabularyModel.FilterRestrictionsTerm;
+            Debug.Assert(term != null, "term != null");
+
+            EdmAnnotation annotation = new EdmAnnotation(target, term, record);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+        }
+
+        private static void SetSortRestrictionsAnnotationImplementation(this EdmModel model, IEdmVocabularyAnnotatable target, bool isSortable, IEnumerable<IEdmStructuralProperty> ascendingOnlyProperties, IEnumerable<IEdmStructuralProperty> descendingOnlyProperties, IEnumerable<IEdmStructuralProperty> nonSortableProperties)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+
+            ascendingOnlyProperties = ascendingOnlyProperties ?? EmptyStructuralProperties;
+            descendingOnlyProperties = descendingOnlyProperties ?? EmptyStructuralProperties;
+            nonSortableProperties = nonSortableProperties ?? EmptyStructuralProperties;
+
+            IList<IEdmPropertyConstructor> properties = new List<IEdmPropertyConstructor>
+            {
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.SortRestrictionsSortable, new EdmBooleanConstant(isSortable)),
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.SortRestrictionsAscendingOnlyProperties, new EdmCollectionExpression(ascendingOnlyProperties.Select(p => new EdmPropertyPathExpression(p.Name)).ToArray())),
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.SortRestrictionsDescendingOnlyProperties, new EdmCollectionExpression(descendingOnlyProperties.Select(p => new EdmPropertyPathExpression(p.Name)).ToArray())),
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.SortRestrictionsNonSortableProperties, new EdmCollectionExpression(nonSortableProperties.Select(p => new EdmPropertyPathExpression(p.Name)).ToArray()))
+            };
+
+            IEdmRecordExpression record = new EdmRecordExpression(properties);
+            IEdmValueTerm term = CapabilitiesVocabularyModel.SortRestrictionsTerm;
+            Debug.Assert(term != null, "term != null");
+
+            EdmAnnotation annotation = new EdmAnnotation(target, term, record);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+        }
+
+        private static void SetExpandRestrictionsAnnotationImplementation(this EdmModel model, IEdmVocabularyAnnotatable target, bool isExpandable, IEnumerable<IEdmNavigationProperty> nonExpandableProperties)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+
+            nonExpandableProperties = nonExpandableProperties ?? EmptyNavigationProperties;
+
+            IList<IEdmPropertyConstructor> properties = new List<IEdmPropertyConstructor>
+            {
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.ExpandRestrictionsExpandable, new EdmBooleanConstant(isExpandable)),
+                new EdmPropertyConstructor(CapabilitiesVocabularyConstants.ExpandRestrictionsNonExpandableProperties, new EdmCollectionExpression(nonExpandableProperties.Select(p => new EdmNavigationPropertyPathExpression(p.Name)).ToArray()))
+            };
+
+            IEdmRecordExpression record = new EdmRecordExpression(properties);
+            IEdmValueTerm term = CapabilitiesVocabularyModel.ExpandRestrictionsTerm;
+            Debug.Assert(term != null, "term != null");
+
             EdmAnnotation annotation = new EdmAnnotation(target, term, record);
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);

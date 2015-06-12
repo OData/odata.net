@@ -1606,6 +1606,976 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
+        public void TestCapabilitiesCountRestrictionsInlineAnnotationOnEntitySet()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType deptType = new EdmEntityType("DefaultNamespace", "Dept");
+            EdmStructuralProperty deptId = deptType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            deptType.AddKeys(deptId);
+            model.AddElement(deptType);
+
+            EdmEntityType personType = new EdmEntityType("DefaultNamespace", "Person");
+            EdmStructuralProperty personId = personType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            personType.AddKeys(personId);
+            IEdmStructuralProperty cardsProp = personType.AddStructuralProperty("Cards", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetSingle(false))));
+            IEdmStructuralProperty tokensProp = personType.AddStructuralProperty("Tokens", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetGuid(false))));
+            IEdmNavigationProperty myDeptsProp = personType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyDepts", Target = deptType, TargetMultiplicity = EdmMultiplicity.Many });
+            model.AddElement(personType);
+
+            EdmEntityContainer container = new EdmEntityContainer("DefaultNamespace", "Container");
+            IEdmEntitySet deptSet = container.AddEntitySet("Depts", deptType);
+            IEdmEntitySet peopleSet = container.AddEntitySet("People", personType);
+            model.AddElement(container);
+
+            model.SetCountRestrictionsAnnotation(deptSet, false, null, null);
+            model.SetCountRestrictionsAnnotation(peopleSet, true, new[] { cardsProp, tokensProp }, new[] { myDeptsProp });
+
+            IEnumerable<EdmError> errors;
+            StringWriter sw = new StringWriter();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.Encoding = System.Text.Encoding.UTF8;
+            XmlWriter xw = XmlWriter.Create(sw, settings);
+            model.TryWriteCsdl(xw, out errors);
+            xw.Flush();
+            xw.Close();
+            var actual = sw.ToString();
+
+            const string expected = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Dept"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityType Name=""Person"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Cards"" Type=""Collection(Edm.Single)"" Nullable=""false"" />
+    <Property Name=""Tokens"" Type=""Collection(Edm.Guid)"" Nullable=""false"" />
+    <NavigationProperty Name=""MyDepts"" Type=""Collection(DefaultNamespace.Dept)"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Depts"" EntityType=""DefaultNamespace.Dept"">
+      <Annotation Term=""Org.OData.Capabilities.V1.CountRestrictions"">
+        <Record>
+          <PropertyValue Property=""Countable"" Bool=""false"" />
+          <PropertyValue Property=""NonCountableProperties"">
+            <Collection />
+          </PropertyValue>
+          <PropertyValue Property=""NonCountableNavigationProperties"">
+            <Collection />
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+    <EntitySet Name=""People"" EntityType=""DefaultNamespace.Person"">
+      <Annotation Term=""Org.OData.Capabilities.V1.CountRestrictions"">
+        <Record>
+          <PropertyValue Property=""Countable"" Bool=""true"" />
+          <PropertyValue Property=""NonCountableProperties"">
+            <Collection>
+              <PropertyPath>Cards</PropertyPath>
+              <PropertyPath>Tokens</PropertyPath>
+            </Collection>
+          </PropertyValue>
+          <PropertyValue Property=""NonCountableNavigationProperties"">
+            <Collection>
+              <NavigationPropertyPath>MyDepts</NavigationPropertyPath>
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+  </EntityContainer>
+</Schema>";
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ParsingCapabilitiesCountRestrictionsInlineAnnotationOnEntitySet()
+        {
+            const string csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Dept"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityType Name=""Person"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Cards"" Type=""Collection(Edm.Single)"" Nullable=""false"" />
+    <Property Name=""Tokens"" Type=""Collection(Edm.Guid)"" Nullable=""false"" />
+    <NavigationProperty Name=""MyDepts"" Type=""Collection(DefaultNamespace.Dept)"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Depts"" EntityType=""DefaultNamespace.Dept"">
+      <Annotation Term=""Org.OData.Capabilities.V1.CountRestrictions"">
+        <Record>
+          <PropertyValue Property=""Countable"" Bool=""false"" />
+          <PropertyValue Property=""NonCountableProperties"">
+            <Collection />
+          </PropertyValue>
+          <PropertyValue Property=""NonCountableNavigationProperties"">
+            <Collection />
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+    <EntitySet Name=""People"" EntityType=""DefaultNamespace.Person"">
+      <Annotation Term=""Org.OData.Capabilities.V1.CountRestrictions"">
+        <Record>
+          <PropertyValue Property=""Countable"" Bool=""true"" />
+          <PropertyValue Property=""NonCountableProperties"">
+            <Collection>
+              <PropertyPath>Cards</PropertyPath>
+              <PropertyPath>Tokens</PropertyPath>
+            </Collection>
+          </PropertyValue>
+          <PropertyValue Property=""NonCountableNavigationProperties"">
+            <Collection>
+              <NavigationPropertyPath>MyDepts</NavigationPropertyPath>
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+  </EntityContainer>
+</Schema>";
+
+            IEdmModel parsedModel;
+            IEnumerable<EdmError> errors;
+            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            Assert.IsTrue(parsed, "parsed");
+            Assert.IsTrue(!errors.Any(), "No errors");
+
+            // EntitySet: People
+            var peopleSet = parsedModel.FindDeclaredEntitySet("People");
+            IEdmValueAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(peopleSet, CapabilitiesVocabularyModel.CountRestrictionsTerm).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+            IEdmRecordExpression record = annotation.Value as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            IEdmBooleanConstantExpression countable = record.FindProperty("Countable").Value as IEdmBooleanConstantExpression;
+            Assert.IsNotNull(countable);
+            Assert.IsTrue(countable.Value);
+            IEdmCollectionExpression nonCountableProperties = record.FindProperty("NonCountableProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(nonCountableProperties);
+            Assert.AreEqual("Cards|Tokens", String.Join("|", nonCountableProperties.Elements.Select(e => ((IEdmPathExpression)e).Path.Single())));
+            IEdmCollectionExpression nonCountableNavigationProperties = record.FindProperty("NonCountableNavigationProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(nonCountableNavigationProperties);
+            Assert.AreEqual(((IEdmPathExpression)nonCountableNavigationProperties.Elements.Single()).Path.Single(), "MyDepts");
+
+            // EntitySet: Depts
+            var deptsSet = parsedModel.FindDeclaredEntitySet("Depts");
+            annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(deptsSet, CapabilitiesVocabularyModel.CountRestrictionsTerm).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+            record = annotation.Value as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            countable = record.FindProperty("Countable").Value as IEdmBooleanConstantExpression;
+            Assert.IsNotNull(countable);
+            Assert.IsFalse(countable.Value);
+            nonCountableProperties = record.FindProperty("NonCountableProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(nonCountableProperties);
+            Assert.IsFalse(nonCountableProperties.Elements.Any());
+            nonCountableNavigationProperties = record.FindProperty("NonCountableNavigationProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(nonCountableNavigationProperties);
+            Assert.IsFalse(nonCountableNavigationProperties.Elements.Any());
+        }
+
+        [TestMethod]
+        public void TestCapabilitiesNavigationRestrictionsInlineAnnotationOnEntitySet()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType deptType = new EdmEntityType("DefaultNamespace", "Dept");
+            EdmStructuralProperty deptId = deptType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            deptType.AddKeys(deptId);
+            model.AddElement(deptType);
+
+            EdmEntityType personType = new EdmEntityType("DefaultNamespace", "Person");
+            EdmStructuralProperty personId = personType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            personType.AddKeys(personId);
+            IEdmNavigationProperty myDeptsProp = personType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyDepts", Target = deptType, TargetMultiplicity = EdmMultiplicity.Many });
+            model.AddElement(personType);
+
+            EdmEntityContainer container = new EdmEntityContainer("DefaultNamespace", "Container");
+            IEdmEntitySet deptSet = container.AddEntitySet("Depts", deptType);
+            IEdmEntitySet peopleSet = container.AddEntitySet("People", personType);
+            model.AddElement(container);
+
+            model.SetNavigationRestrictionsAnnotation(deptSet, CapabilitiesNavigationType.None, null);
+
+            Tuple<IEdmNavigationProperty, CapabilitiesNavigationType> navigationPropertyRestriction =
+                new Tuple<IEdmNavigationProperty, CapabilitiesNavigationType>(myDeptsProp, CapabilitiesNavigationType.Recursive);
+            model.SetNavigationRestrictionsAnnotation(peopleSet, CapabilitiesNavigationType.Recursive, new[] { navigationPropertyRestriction });
+
+            IEnumerable<EdmError> errors;
+            StringWriter sw = new StringWriter();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.Encoding = System.Text.Encoding.UTF8;
+            XmlWriter xw = XmlWriter.Create(sw, settings);
+            model.TryWriteCsdl(xw, out errors);
+            xw.Flush();
+            xw.Close();
+            var actual = sw.ToString();
+
+            const string expected = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Dept"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityType Name=""Person"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <NavigationProperty Name=""MyDepts"" Type=""Collection(DefaultNamespace.Dept)"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Depts"" EntityType=""DefaultNamespace.Dept"">
+      <Annotation Term=""Org.OData.Capabilities.V1.NavigationRestrictions"">
+        <Record>
+          <PropertyValue Property=""Navigability"">
+            <EnumMember>Org.OData.Capabilities.V1.NavigationType/None</EnumMember>
+          </PropertyValue>
+          <PropertyValue Property=""RestrictedProperties"">
+            <Collection />
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+    <EntitySet Name=""People"" EntityType=""DefaultNamespace.Person"">
+      <Annotation Term=""Org.OData.Capabilities.V1.NavigationRestrictions"">
+        <Record>
+          <PropertyValue Property=""Navigability"">
+            <EnumMember>Org.OData.Capabilities.V1.NavigationType/Recursive</EnumMember>
+          </PropertyValue>
+          <PropertyValue Property=""RestrictedProperties"">
+            <Collection>
+              <Record>
+                <PropertyValue Property=""NavigationProperty"" NavigationPropertyPath=""MyDepts"" />
+                <PropertyValue Property=""Navigability"">
+                  <EnumMember>Org.OData.Capabilities.V1.NavigationType/Recursive</EnumMember>
+                </PropertyValue>
+              </Record>
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+  </EntityContainer>
+</Schema>";
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ParsingCapabilitiesNavigationRestrictionsInlineAnnotationOnEntitySet()
+        {
+            const string csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Dept"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityType Name=""Person"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <NavigationProperty Name=""MyDepts"" Type=""Collection(DefaultNamespace.Dept)"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Depts"" EntityType=""DefaultNamespace.Dept"">
+      <Annotation Term=""Org.OData.Capabilities.V1.NavigationRestrictions"">
+        <Record>
+          <PropertyValue Property=""Navigability"">
+            <EnumMember>Org.OData.Capabilities.V1.NavigationType/None</EnumMember>
+          </PropertyValue>
+          <PropertyValue Property=""RestrictedProperties"">
+            <Collection />
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+    <EntitySet Name=""People"" EntityType=""DefaultNamespace.Person"">
+      <Annotation Term=""Org.OData.Capabilities.V1.NavigationRestrictions"">
+        <Record>
+          <PropertyValue Property=""Navigability"">
+            <EnumMember>Org.OData.Capabilities.V1.NavigationType/Single</EnumMember>
+          </PropertyValue>
+          <PropertyValue Property=""RestrictedProperties"">
+            <Collection>
+              <Record>
+                <PropertyValue Property=""NavigationProperty"" NavigationPropertyPath=""MyDepts"" />
+                <PropertyValue Property=""Navigability"">
+                  <EnumMember>Org.OData.Capabilities.V1.NavigationType/Recursive</EnumMember>
+                </PropertyValue>
+              </Record>
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+  </EntityContainer>
+</Schema>";
+
+            IEdmModel parsedModel;
+            IEnumerable<EdmError> errors;
+            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            Assert.IsTrue(parsed, "parsed");
+            Assert.IsTrue(!errors.Any(), "No errors");
+
+            // EntitySet: People
+            var peopleSet = parsedModel.FindDeclaredEntitySet("People");
+            IEdmValueAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(peopleSet, CapabilitiesVocabularyModel.NavigationRestrictionsTerm).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+            IEdmRecordExpression record = annotation.Value as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            IEdmEnumMemberExpression navigability = record.FindProperty("Navigability").Value as IEdmEnumMemberExpression;
+            Assert.IsNotNull(navigability);
+            Assert.AreEqual(1, navigability.EnumMembers.Count());
+            Assert.AreEqual("Single", navigability.EnumMembers.First().Name);
+
+            IEdmCollectionExpression restrictedProperties = record.FindProperty("RestrictedProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(restrictedProperties);
+            Assert.AreEqual(1, restrictedProperties.Elements.Count());
+
+            IEdmRecordExpression innerRecord = restrictedProperties.Elements.First() as IEdmRecordExpression;
+            Assert.IsNotNull(innerRecord);
+            IEdmEnumMemberExpression innnerNavigability = innerRecord.FindProperty("Navigability").Value as IEdmEnumMemberExpression;
+            Assert.IsNotNull(innnerNavigability);
+            Assert.AreEqual(1, innnerNavigability.EnumMembers.Count());
+            Assert.AreEqual("Recursive", innnerNavigability.EnumMembers.First().Name);
+
+            IEdmPathExpression innerNavigationProperty = innerRecord.FindProperty("NavigationProperty").Value as IEdmPathExpression;
+            Assert.IsNotNull(innerNavigationProperty);
+            Assert.AreEqual("MyDepts", innerNavigationProperty.Path.Single());
+
+            // EntitySet: Depts
+            var deptsSet = parsedModel.FindDeclaredEntitySet("Depts");
+            annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(deptsSet, CapabilitiesVocabularyModel.NavigationRestrictionsTerm).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+            record = annotation.Value as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            navigability = record.FindProperty("Navigability").Value as IEdmEnumMemberExpression;
+            Assert.IsNotNull(navigability);
+            Assert.AreEqual(1, navigability.EnumMembers.Count());
+            Assert.AreEqual("None", navigability.EnumMembers.First().Name);
+
+            restrictedProperties = record.FindProperty("RestrictedProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(restrictedProperties);
+            Assert.IsFalse(restrictedProperties.Elements.Any());
+        }
+
+        [TestMethod]
+        public void TestCapabilitiesFilterRestrictionsInlineAnnotationOnEntitySet()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType deptType = new EdmEntityType("DefaultNamespace", "Dept");
+            EdmStructuralProperty deptId = deptType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            deptType.AddKeys(deptId);
+            model.AddElement(deptType);
+
+            EdmEntityType personType = new EdmEntityType("DefaultNamespace", "Person");
+            EdmStructuralProperty personId = personType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            personType.AddKeys(personId);
+            IEdmStructuralProperty name = personType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String, true);
+            IEdmStructuralProperty email = personType.AddStructuralProperty("Email", EdmPrimitiveTypeKind.String, true);
+            IEdmStructuralProperty salary = personType.AddStructuralProperty("Salary", EdmPrimitiveTypeKind.Double, true);
+            model.AddElement(personType);
+
+            EdmEntityContainer container = new EdmEntityContainer("DefaultNamespace", "Container");
+            IEdmEntitySet deptSet = container.AddEntitySet("Depts", deptType);
+            IEdmEntitySet peopleSet = container.AddEntitySet("People", personType);
+            model.AddElement(container);
+
+            model.SetFilterRestrictionsAnnotation(deptSet, false, false, null, null);
+            model.SetFilterRestrictionsAnnotation(peopleSet, true, true, new[] { name, email }, new[] { salary });
+
+            IEnumerable<EdmError> errors;
+            StringWriter sw = new StringWriter();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.Encoding = System.Text.Encoding.UTF8;
+            XmlWriter xw = XmlWriter.Create(sw, settings);
+            model.TryWriteCsdl(xw, out errors);
+            xw.Flush();
+            xw.Close();
+            var actual = sw.ToString();
+
+            const string expected = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Dept"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityType Name=""Person"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Name"" Type=""Edm.String"" />
+    <Property Name=""Email"" Type=""Edm.String"" />
+    <Property Name=""Salary"" Type=""Edm.Double"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Depts"" EntityType=""DefaultNamespace.Dept"">
+      <Annotation Term=""Org.OData.Capabilities.V1.FilterRestrictions"">
+        <Record>
+          <PropertyValue Property=""Filterable"" Bool=""false"" />
+          <PropertyValue Property=""RequiresFilter"" Bool=""false"" />
+          <PropertyValue Property=""RequiredProperties"">
+            <Collection />
+          </PropertyValue>
+          <PropertyValue Property=""NonFilterableProperties"">
+            <Collection />
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+    <EntitySet Name=""People"" EntityType=""DefaultNamespace.Person"">
+      <Annotation Term=""Org.OData.Capabilities.V1.FilterRestrictions"">
+        <Record>
+          <PropertyValue Property=""Filterable"" Bool=""true"" />
+          <PropertyValue Property=""RequiresFilter"" Bool=""true"" />
+          <PropertyValue Property=""RequiredProperties"">
+            <Collection>
+              <PropertyPath>Name</PropertyPath>
+              <PropertyPath>Email</PropertyPath>
+            </Collection>
+          </PropertyValue>
+          <PropertyValue Property=""NonFilterableProperties"">
+            <Collection>
+              <PropertyPath>Salary</PropertyPath>
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+  </EntityContainer>
+</Schema>";
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ParsingCapabilitiesFilterRestrictionsInlineAnnotationOnEntitySet()
+        {
+            const string csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Dept"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityType Name=""Person"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Name"" Type=""Edm.String"" />
+    <Property Name=""Email"" Type=""Edm.String"" />
+    <Property Name=""Salary"" Type=""Edm.Double"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Depts"" EntityType=""DefaultNamespace.Dept"">
+      <Annotation Term=""Org.OData.Capabilities.V1.FilterRestrictions"">
+        <Record>
+          <PropertyValue Property=""Filterable"" Bool=""false"" />
+          <PropertyValue Property=""RequiresFilter"" Bool=""false"" />
+          <PropertyValue Property=""RequiredProperties"">
+            <Collection />
+          </PropertyValue>
+          <PropertyValue Property=""NonFilterableProperties"">
+            <Collection />
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+    <EntitySet Name=""People"" EntityType=""DefaultNamespace.Person"">
+      <Annotation Term=""Org.OData.Capabilities.V1.FilterRestrictions"">
+        <Record>
+          <PropertyValue Property=""Filterable"" Bool=""true"" />
+          <PropertyValue Property=""RequiresFilter"" Bool=""true"" />
+          <PropertyValue Property=""RequiredProperties"">
+            <Collection>
+              <PropertyPath>Name</PropertyPath>
+              <PropertyPath>Email</PropertyPath>
+            </Collection>
+          </PropertyValue>
+          <PropertyValue Property=""NonFilterableProperties"">
+            <Collection>
+              <PropertyPath>Salary</PropertyPath>
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+  </EntityContainer>
+</Schema>";
+
+            IEdmModel parsedModel;
+            IEnumerable<EdmError> errors;
+            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            Assert.IsTrue(parsed, "parsed");
+            Assert.IsTrue(!errors.Any(), "No errors");
+
+            // EntitySet: People
+            var peopleSet = parsedModel.FindDeclaredEntitySet("People");
+            IEdmValueAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(peopleSet, CapabilitiesVocabularyModel.FilterRestrictionsTerm).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+            IEdmRecordExpression record = annotation.Value as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            IEdmBooleanConstantExpression filterable = record.FindProperty("Filterable").Value as IEdmBooleanConstantExpression;
+            Assert.IsNotNull(filterable);
+            Assert.IsTrue(filterable.Value);
+
+            IEdmBooleanConstantExpression requiresFilter = record.FindProperty("RequiresFilter").Value as IEdmBooleanConstantExpression;
+            Assert.IsNotNull(requiresFilter);
+            Assert.IsTrue(requiresFilter.Value);
+
+            IEdmCollectionExpression requiredProperties = record.FindProperty("RequiredProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(requiredProperties);
+            Assert.AreEqual(2, requiredProperties.Elements.Count());
+            Assert.AreEqual("Name|Email", String.Join("|", requiredProperties.Elements.Select(e => ((IEdmPathExpression)e).Path.Single())));
+
+            IEdmCollectionExpression nonFilterableProperties = record.FindProperty("NonFilterableProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(nonFilterableProperties);
+            Assert.AreEqual(1, nonFilterableProperties.Elements.Count());
+            Assert.AreEqual("Salary", nonFilterableProperties.Elements.Select(e => ((IEdmPathExpression)e).Path.Single()).First());
+
+            // EntitySet: Depts
+            var deptsSet = parsedModel.FindDeclaredEntitySet("Depts");
+            annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(deptsSet, CapabilitiesVocabularyModel.FilterRestrictionsTerm).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+            record = annotation.Value as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+
+            filterable = record.FindProperty("Filterable").Value as IEdmBooleanConstantExpression;
+            Assert.IsNotNull(filterable);
+            Assert.IsFalse(filterable.Value);
+
+            requiresFilter = record.FindProperty("RequiresFilter").Value as IEdmBooleanConstantExpression;
+            Assert.IsNotNull(requiresFilter);
+            Assert.IsFalse(requiresFilter.Value);
+
+            requiredProperties = record.FindProperty("RequiredProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(requiredProperties);
+            Assert.IsFalse(requiredProperties.Elements.Any());
+
+            nonFilterableProperties = record.FindProperty("NonFilterableProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(nonFilterableProperties);
+            Assert.IsFalse(nonFilterableProperties.Elements.Any());
+        }
+
+        [TestMethod]
+        public void TestCapabilitiesSortRestrictionsInlineAnnotationOnEntitySet()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType deptType = new EdmEntityType("DefaultNamespace", "Dept");
+            EdmStructuralProperty deptId = deptType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            deptType.AddKeys(deptId);
+            model.AddElement(deptType);
+
+            EdmEntityType personType = new EdmEntityType("DefaultNamespace", "Person");
+            EdmStructuralProperty personId = personType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            personType.AddKeys(personId);
+            IEdmStructuralProperty name = personType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String, true);
+            IEdmStructuralProperty email = personType.AddStructuralProperty("Email", EdmPrimitiveTypeKind.String, true);
+            IEdmStructuralProperty salary = personType.AddStructuralProperty("Salary", EdmPrimitiveTypeKind.Double, true);
+            IEdmStructuralProperty token = personType.AddStructuralProperty("Token", EdmPrimitiveTypeKind.Guid, true);
+            model.AddElement(personType);
+
+            EdmEntityContainer container = new EdmEntityContainer("DefaultNamespace", "Container");
+            IEdmEntitySet deptSet = container.AddEntitySet("Depts", deptType);
+            IEdmEntitySet peopleSet = container.AddEntitySet("People", personType);
+            model.AddElement(container);
+
+            model.SetSortRestrictionsAnnotation(deptSet, false, null, null, null);
+            model.SetSortRestrictionsAnnotation(peopleSet, true, new[] { name }, new[] { email, token }, new[] { salary });
+
+            IEnumerable<EdmError> errors;
+            StringWriter sw = new StringWriter();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.Encoding = System.Text.Encoding.UTF8;
+            XmlWriter xw = XmlWriter.Create(sw, settings);
+            model.TryWriteCsdl(xw, out errors);
+            xw.Flush();
+            xw.Close();
+            var actual = sw.ToString();
+
+            const string expected = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Dept"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityType Name=""Person"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Name"" Type=""Edm.String"" />
+    <Property Name=""Email"" Type=""Edm.String"" />
+    <Property Name=""Salary"" Type=""Edm.Double"" />
+    <Property Name=""Token"" Type=""Edm.Guid"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Depts"" EntityType=""DefaultNamespace.Dept"">
+      <Annotation Term=""Org.OData.Capabilities.V1.SortRestrictions"">
+        <Record>
+          <PropertyValue Property=""Sortable"" Bool=""false"" />
+          <PropertyValue Property=""AscendingOnlyProperties"">
+            <Collection />
+          </PropertyValue>
+          <PropertyValue Property=""DescendingOnlyProperties"">
+            <Collection />
+          </PropertyValue>
+          <PropertyValue Property=""NonSortableProperties"">
+            <Collection />
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+    <EntitySet Name=""People"" EntityType=""DefaultNamespace.Person"">
+      <Annotation Term=""Org.OData.Capabilities.V1.SortRestrictions"">
+        <Record>
+          <PropertyValue Property=""Sortable"" Bool=""true"" />
+          <PropertyValue Property=""AscendingOnlyProperties"">
+            <Collection>
+              <PropertyPath>Name</PropertyPath>
+            </Collection>
+          </PropertyValue>
+          <PropertyValue Property=""DescendingOnlyProperties"">
+            <Collection>
+              <PropertyPath>Email</PropertyPath>
+              <PropertyPath>Token</PropertyPath>
+            </Collection>
+          </PropertyValue>
+          <PropertyValue Property=""NonSortableProperties"">
+            <Collection>
+              <PropertyPath>Salary</PropertyPath>
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+  </EntityContainer>
+</Schema>";
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ParsingCapabilitiesSortRestrictionsInlineAnnotationOnEntitySet()
+        {
+            const string csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Dept"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityType Name=""Person"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Name"" Type=""Edm.String"" />
+    <Property Name=""Email"" Type=""Edm.String"" />
+    <Property Name=""Salary"" Type=""Edm.Double"" />
+    <Property Name=""Token"" Type=""Edm.Guid"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Depts"" EntityType=""DefaultNamespace.Dept"">
+      <Annotation Term=""Org.OData.Capabilities.V1.SortRestrictions"">
+        <Record>
+          <PropertyValue Property=""Sortable"" Bool=""false"" />
+          <PropertyValue Property=""AscendingOnlyProperties"">
+            <Collection />
+          </PropertyValue>
+          <PropertyValue Property=""DescendingOnlyProperties"">
+            <Collection />
+          </PropertyValue>
+          <PropertyValue Property=""NonSortableProperties"">
+            <Collection />
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+    <EntitySet Name=""People"" EntityType=""DefaultNamespace.Person"">
+      <Annotation Term=""Org.OData.Capabilities.V1.SortRestrictions"">
+        <Record>
+          <PropertyValue Property=""Sortable"" Bool=""true"" />
+          <PropertyValue Property=""AscendingOnlyProperties"">
+            <Collection>
+              <PropertyPath>Name</PropertyPath>
+            </Collection>
+          </PropertyValue>
+          <PropertyValue Property=""DescendingOnlyProperties"">
+            <Collection>
+              <PropertyPath>Email</PropertyPath>
+              <PropertyPath>Token</PropertyPath>
+            </Collection>
+          </PropertyValue>
+          <PropertyValue Property=""NonSortableProperties"">
+            <Collection>
+              <PropertyPath>Salary</PropertyPath>
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+  </EntityContainer>
+</Schema>";
+
+            IEdmModel parsedModel;
+            IEnumerable<EdmError> errors;
+            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            Assert.IsTrue(parsed, "parsed");
+            Assert.IsTrue(!errors.Any(), "No errors");
+
+            // EntitySet: People
+            var peopleSet = parsedModel.FindDeclaredEntitySet("People");
+            IEdmValueAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(peopleSet, CapabilitiesVocabularyModel.SortRestrictionsTerm).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+            IEdmRecordExpression record = annotation.Value as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            IEdmBooleanConstantExpression sortable = record.FindProperty("Sortable").Value as IEdmBooleanConstantExpression;
+            Assert.IsNotNull(sortable);
+            Assert.IsTrue(sortable.Value);
+
+            IEdmCollectionExpression ascendingOnlyProperties = record.FindProperty("AscendingOnlyProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(ascendingOnlyProperties);
+            Assert.AreEqual(1, ascendingOnlyProperties.Elements.Count());
+            Assert.AreEqual("Name", ascendingOnlyProperties.Elements.Select(e => ((IEdmPathExpression)e).Path.Single()).First());
+
+            IEdmCollectionExpression descendingOnlyProperties = record.FindProperty("DescendingOnlyProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(descendingOnlyProperties);
+            Assert.AreEqual(2, descendingOnlyProperties.Elements.Count());
+            Assert.AreEqual("Email|Token", String.Join("|", descendingOnlyProperties.Elements.Select(e => ((IEdmPathExpression)e).Path.Single())));
+
+            IEdmCollectionExpression nonSortableProperties = record.FindProperty("NonSortableProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(nonSortableProperties);
+            Assert.AreEqual(1, nonSortableProperties.Elements.Count());
+            Assert.AreEqual("Salary", nonSortableProperties.Elements.Select(e => ((IEdmPathExpression)e).Path.Single()).First());
+
+            // EntitySet: Depts
+            var deptsSet = parsedModel.FindDeclaredEntitySet("Depts");
+            annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(deptsSet, CapabilitiesVocabularyModel.SortRestrictionsTerm).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+            record = annotation.Value as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+
+            sortable = record.FindProperty("Sortable").Value as IEdmBooleanConstantExpression;
+            Assert.IsNotNull(sortable);
+            Assert.IsFalse(sortable.Value);
+
+            ascendingOnlyProperties = record.FindProperty("AscendingOnlyProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(ascendingOnlyProperties);
+            Assert.IsFalse(ascendingOnlyProperties.Elements.Any());
+
+            descendingOnlyProperties = record.FindProperty("DescendingOnlyProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(descendingOnlyProperties);
+            Assert.IsFalse(descendingOnlyProperties.Elements.Any());
+
+            nonSortableProperties = record.FindProperty("NonSortableProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(nonSortableProperties);
+            Assert.IsFalse(nonSortableProperties.Elements.Any());
+        }
+
+        [TestMethod]
+        public void TestCapabilitiesExpandRestrictionsInlineAnnotationOnEntitySet()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType deptType = new EdmEntityType("DefaultNamespace", "Dept");
+            EdmStructuralProperty deptId = deptType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            deptType.AddKeys(deptId);
+            model.AddElement(deptType);
+
+            EdmEntityType personType = new EdmEntityType("DefaultNamespace", "Person");
+            EdmStructuralProperty personId = personType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            personType.AddKeys(personId);
+
+            IEdmNavigationProperty myDeptsProp = personType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyDepts", Target = deptType, TargetMultiplicity = EdmMultiplicity.ZeroOrOne });
+            IEdmNavigationProperty otherDeptsProp = personType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "OtherDepts", Target = deptType, TargetMultiplicity = EdmMultiplicity.Many });
+            model.AddElement(personType);
+
+            EdmEntityContainer container = new EdmEntityContainer("DefaultNamespace", "Container");
+            IEdmEntitySet deptSet = container.AddEntitySet("Depts", deptType);
+            IEdmEntitySet peopleSet = container.AddEntitySet("People", personType);
+            model.AddElement(container);
+
+            model.SetExpandRestrictionsAnnotation(deptSet, false, null);
+            model.SetExpandRestrictionsAnnotation(peopleSet, true, new[] { myDeptsProp, otherDeptsProp });
+
+            IEnumerable<EdmError> errors;
+            StringWriter sw = new StringWriter();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.Encoding = System.Text.Encoding.UTF8;
+            XmlWriter xw = XmlWriter.Create(sw, settings);
+            model.TryWriteCsdl(xw, out errors);
+            xw.Flush();
+            xw.Close();
+            var actual = sw.ToString();
+
+            const string expected = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Dept"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityType Name=""Person"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <NavigationProperty Name=""MyDepts"" Type=""DefaultNamespace.Dept"" />
+    <NavigationProperty Name=""OtherDepts"" Type=""Collection(DefaultNamespace.Dept)"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Depts"" EntityType=""DefaultNamespace.Dept"">
+      <Annotation Term=""Org.OData.Capabilities.V1.ExpandRestrictions"">
+        <Record>
+          <PropertyValue Property=""Expandable"" Bool=""false"" />
+          <PropertyValue Property=""NonExpandableProperties"">
+            <Collection />
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+    <EntitySet Name=""People"" EntityType=""DefaultNamespace.Person"">
+      <Annotation Term=""Org.OData.Capabilities.V1.ExpandRestrictions"">
+        <Record>
+          <PropertyValue Property=""Expandable"" Bool=""true"" />
+          <PropertyValue Property=""NonExpandableProperties"">
+            <Collection>
+              <NavigationPropertyPath>MyDepts</NavigationPropertyPath>
+              <NavigationPropertyPath>OtherDepts</NavigationPropertyPath>
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+  </EntityContainer>
+</Schema>";
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ParsingCapabilitiesExpandRestrictionsInlineAnnotationOnEntitySet()
+        {
+            const string csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Dept"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityType Name=""Person"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <NavigationProperty Name=""MyDepts"" Type=""DefaultNamespace.Dept"" />
+    <NavigationProperty Name=""OtherDepts"" Type=""Collection(DefaultNamespace.Dept)"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Depts"" EntityType=""DefaultNamespace.Dept"">
+      <Annotation Term=""Org.OData.Capabilities.V1.ExpandRestrictions"">
+        <Record>
+          <PropertyValue Property=""Expandable"" Bool=""false"" />
+          <PropertyValue Property=""NonExpandableProperties"">
+            <Collection />
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+    <EntitySet Name=""People"" EntityType=""DefaultNamespace.Person"">
+      <Annotation Term=""Org.OData.Capabilities.V1.ExpandRestrictions"">
+        <Record>
+          <PropertyValue Property=""Expandable"" Bool=""true"" />
+          <PropertyValue Property=""NonExpandableProperties"">
+            <Collection>
+              <NavigationPropertyPath>MyDepts</NavigationPropertyPath>
+              <NavigationPropertyPath>OtherDepts</NavigationPropertyPath>
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Annotation>
+    </EntitySet>
+  </EntityContainer>
+</Schema>";
+
+            IEdmModel parsedModel;
+            IEnumerable<EdmError> errors;
+            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            Assert.IsTrue(parsed, "parsed");
+            Assert.IsTrue(!errors.Any(), "No errors");
+
+            // EntitySet: People
+            var peopleSet = parsedModel.FindDeclaredEntitySet("People");
+            IEdmValueAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(peopleSet, CapabilitiesVocabularyModel.ExpandRestrictionsTerm).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+            IEdmRecordExpression record = annotation.Value as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            IEdmBooleanConstantExpression expandable = record.FindProperty("Expandable").Value as IEdmBooleanConstantExpression;
+            Assert.IsNotNull(expandable);
+            Assert.IsTrue(expandable.Value);
+
+            IEdmCollectionExpression nonExpandableProperties = record.FindProperty("NonExpandableProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(nonExpandableProperties);
+            Assert.AreEqual(2, nonExpandableProperties.Elements.Count());
+            Assert.AreEqual("MyDepts|OtherDepts", String.Join("|", nonExpandableProperties.Elements.Select(e => ((IEdmPathExpression)e).Path.Single())));
+
+            // EntitySet: Depts
+            var deptsSet = parsedModel.FindDeclaredEntitySet("Depts");
+            annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(deptsSet, CapabilitiesVocabularyModel.ExpandRestrictionsTerm).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+            record = annotation.Value as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+
+            expandable = record.FindProperty("Expandable").Value as IEdmBooleanConstantExpression;
+            Assert.IsNotNull(expandable);
+            Assert.IsFalse(expandable.Value);
+
+            nonExpandableProperties = record.FindProperty("NonExpandableProperties").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(nonExpandableProperties);
+            Assert.IsFalse(nonExpandableProperties.Elements.Any());
+        }
+
+        [TestMethod]
         public void EnumAnnotationSerializationTest()
         {
             EdmModel model = new EdmModel();
@@ -1726,16 +2696,16 @@ namespace EdmLibTests.FunctionalTests
   <Term Name=""Permission"" Type=""Ns.Permissions"" Nullable=""false"" />
   <EntityContainer Name=""Container"">
     <EntitySet Name=""People"" EntityType=""Ns.Person"">
-        <Annotation Term=""Org.OData.Capabilities.V1.NavigationRestrictions"">
+        <Annotation Term=""Org.OData.Capabilities.V2.NavigationRestrictions"">
             <Record>
                 <PropertyValue Property=""Navigability"">
-                    <EnumMember>Org.OData.Capabilities.V1.NavigationType/None Org.OData.Capabilities.V1.NavigationType/Single Org.OData.Capabilities.V1.NavigationType/Recursive</EnumMember>
+                    <EnumMember>Org.OData.Capabilities.V2.NavigationType/None Org.OData.Capabilities.V2.NavigationType/Single Org.OData.Capabilities.V2.NavigationType/Recursive</EnumMember>
                 </PropertyValue>
                 <PropertyValue Property=""RestrictedProperties"">
                     <Collection>
                         <Record>
                             <PropertyValue Property=""NavigationProperty"" NavigationPropertyPath=""Friends""/>
-                            <PropertyValue Property=""Navigability"" EnumMember=""Org.OData.Capabilities.V1.NavigationType/Recursive"" />
+                            <PropertyValue Property=""Navigability"" EnumMember=""Org.OData.Capabilities.V2.NavigationType/Recursive"" />
                         </Record>
                     </Collection>
                 </PropertyValue>
@@ -1778,6 +2748,7 @@ namespace EdmLibTests.FunctionalTests
             var navigabilityProperty = navigabilityRecord.FindProperty("Navigability");
             var navigabilityEnumExpression = (IEdmEnumMemberExpression)navigabilityProperty.Value;
 
+            // CAUTION: We intentionally name the Term as "...V2..." not "...V1..." to test the undefined terms.
             Assert.AreEqual(3, navigabilityEnumExpression.EnumMembers.Count());
             Assert.AreEqual("None", navigabilityEnumExpression.EnumMembers.First().Name);
             Assert.AreEqual("Single", navigabilityEnumExpression.EnumMembers.ElementAt(1).Name);
@@ -1791,7 +2762,6 @@ namespace EdmLibTests.FunctionalTests
 
             Assert.AreEqual(1, innerNavigabilityEnumExpression.EnumMembers.Count());
             Assert.AreEqual("Recursive", innerNavigabilityEnumExpression.EnumMembers.First().Name);
-
         }
 
         [TestMethod]
