@@ -1726,16 +1726,16 @@ namespace EdmLibTests.FunctionalTests
   <Term Name=""Permission"" Type=""Ns.Permissions"" Nullable=""false"" />
   <EntityContainer Name=""Container"">
     <EntitySet Name=""People"" EntityType=""Ns.Person"">
-        <Annotation Term=""Org.OData.Capabilities.V1.NavigationRestrictions"">
+        <Annotation Term=""Test.NavigationRestrictions"">
             <Record>
                 <PropertyValue Property=""Navigability"">
-                    <EnumMember>Org.OData.Capabilities.V1.NavigationType/None Org.OData.Capabilities.V1.NavigationType/Single Org.OData.Capabilities.V1.NavigationType/Recursive</EnumMember>
+                    <EnumMember>Test.NavigationType/None Test.NavigationType/Single Test.NavigationType/Recursive</EnumMember>
                 </PropertyValue>
                 <PropertyValue Property=""RestrictedProperties"">
                     <Collection>
                         <Record>
                             <PropertyValue Property=""NavigationProperty"" NavigationPropertyPath=""Friends""/>
-                            <PropertyValue Property=""Navigability"" EnumMember=""Org.OData.Capabilities.V1.NavigationType/Recursive"" />
+                            <PropertyValue Property=""Navigability"" EnumMember=""Test.NavigationType/Recursive"" />
                         </Record>
                     </Collection>
                 </PropertyValue>
