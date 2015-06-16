@@ -16,13 +16,10 @@ namespace EdmLibTests.FunctionalTests
     using System.Threading.Tasks;
     using System.Xml;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -238,6 +235,30 @@ namespace EdmLibTests.FunctionalTests
                     Interlocked.CompareExchange(ref parState.Target, target, null);
                     Assert.AreEqual(parState.Target, target);
                 });
+        }
+
+        [TestMethod]
+        public void ParseEnumTypeInParallel()
+        {
+            var color = new EdmEnumType("ns", "color");
+            color.AddMember("White", new EdmIntegerConstant(0));
+            int errorCount = 0;
+            Parallel.ForEach(
+                Enumerable.Range(0, 20),
+                index =>
+                {
+                    try
+                    {
+                        long data;
+                        color.TryParseEnum("White", false, out data);
+                    }
+                    catch (Exception)
+                    {
+                        Interlocked.Increment(ref errorCount);
+                    }
+                });
+
+            Assert.AreEqual(0, errorCount);
         }
 
         /*

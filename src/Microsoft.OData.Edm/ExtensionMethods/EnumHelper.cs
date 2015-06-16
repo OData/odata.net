@@ -281,20 +281,18 @@ namespace Microsoft.OData.Edm
 
         private static HashEntry GetHashEntry(IEdmEnumType enumType)
         {
-            HashEntry entry;
-            fieldInfoHash.TryGetValue(enumType, out entry);
-            if (entry == null)
+            if (fieldInfoHash.Count > MaxHashElements)
             {
-                if (fieldInfoHash.Count > MaxHashElements)
+                lock (fieldInfoHash)
                 {
-                    fieldInfoHash.Clear();
+                    if (fieldInfoHash.Count > MaxHashElements)
+                    {
+                        fieldInfoHash.Clear();
+                    }
                 }
-
-                entry = new HashEntry(null, null);
-                fieldInfoHash.Add(enumType, entry);
             }
 
-            return entry;
+            return EdmUtil.DictionaryGetOrUpdate(fieldInfoHash, enumType, type => new HashEntry(null, null));
         }
 
         private class HashEntry
