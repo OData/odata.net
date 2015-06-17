@@ -11,14 +11,10 @@
   </EnumType>
 
   <!-- Request Capabilities -->
-
-  <!-- Model validation failed as "The value of the property 'IEdmValueAnnotation.Value' must not be null."
-
   <Term Name="SupportedFormats" Type="Collection(Edm.String)">
     <Annotation Term="Core.Description" String="Media types of supported formats, including format parameters" />
-    <Annotation Term="Core.IsMediaType" />
+    <Annotation Term="Core.IsMediaType" Bool="true" />
   </Term>
-   -->
   
   <Term Name="AcceptableEncodings" Type="Collection(Edm.String)" AppliesTo="EntityContainer">
     <Annotation Term="Core.Description" String="List of acceptable compression methods for ($batch) requests, e.g. gzip" />
@@ -45,8 +41,6 @@
     <Annotation Term="Core.Description" String="Supports cross joins for the entity sets in this container" />
   </Term>
 
-  <!-- Model validation failed as "The value of the property 'IEdmValueAnnotation.Value' must not be null."
-
   <Term Name="CallbackSupported" Type="Capabilities.CallbackType" AppliesTo="EntityContainer EntitySet">
     <Annotation Term="Core.Description" String="Supports callbacks for the specified protocols" />
   </Term>
@@ -66,10 +60,9 @@
     </Property>
     <Property Name="DocumentationUrl" Type="Edm.String" Nullable="true">
       <Annotation Term="Core.Description" String="Human readable description of the meaning of the URL Template parameters" />
-      <Annotation Term="Core.IsURL" />
+      <Annotation Term="Core.IsURL" Bool="true" />
     </Property>
   </ComplexType>
-   -->
   
   <Term Name="ChangeTracking" Type="Capabilities.ChangeTrackingType" AppliesTo="EntityContainer EntitySet">
     <Annotation Term="Core.Description" String="Change tracking capabilities of this service or entity set" />
