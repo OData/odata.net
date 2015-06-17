@@ -30,6 +30,22 @@ namespace Microsoft.Test.Edm.TDD.Tests
         {
             const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Org.OData.Capabilities.V1"" Alias=""Capabilities"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <ComplexType Name=""CallbackType"">
+    <Property Name=""CallbackProtocols"" Type=""Collection(Capabilities.CallbackProtocol)"" />
+    <Annotation Term=""Core.Description"" String=""A non-empty collection lists the full set of supported protocols. A empty collection means 'only HTTP is supported'"" />
+  </ComplexType>
+  <ComplexType Name=""CallbackProtocol"">
+    <Property Name=""Id"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""Protcol Identifier"" />
+    </Property>
+    <Property Name=""UrlTemplate"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""URL Template including parameters. Parameters are enclosed in curly braces {} as defined in RFC6570"" />
+    </Property>
+    <Property Name=""DocumentationUrl"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""Human readable description of the meaning of the URL Template parameters"" />
+      <Annotation Term=""Core.IsURL"" Bool=""true"" />
+    </Property>
+  </ComplexType>
   <ComplexType Name=""ChangeTrackingType"">
     <Property Name=""Supported"" Type=""Edm.Boolean"" DefaultValue=""true"">
       <Annotation Term=""Core.Description"" String=""This entity set supports the odata.track-changes preference"" />
@@ -162,6 +178,10 @@ namespace Microsoft.Test.Edm.TDD.Tests
     <Member Name=""group"" Value=""16"" />
   </EnumType>
   <Term Name=""ConformanceLevel"" Type=""Capabilities.ConformanceLevelType"" AppliesTo=""EntityContainer"" />
+  <Term Name=""SupportedFormats"" Type=""Collection(Edm.String)"">
+    <Annotation Term=""Core.Description"" String=""Media types of supported formats, including format parameters"" />
+    <Annotation Term=""Core.IsMediaType"" Bool=""true"" />
+  </Term>
   <Term Name=""AcceptableEncodings"" Type=""Collection(Edm.String)"" AppliesTo=""EntityContainer"">
     <Annotation Term=""Core.Description"" String=""List of acceptable compression methods for ($batch) requests, e.g. gzip"" />
   </Term>
@@ -176,6 +196,9 @@ namespace Microsoft.Test.Edm.TDD.Tests
   </Term>
   <Term Name=""CrossJoinSupported"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntityContainer"">
     <Annotation Term=""Core.Description"" String=""Supports cross joins for the entity sets in this container"" />
+  </Term>
+  <Term Name=""CallbackSupported"" Type=""Capabilities.CallbackType"" AppliesTo=""EntityContainer EntitySet"">
+    <Annotation Term=""Core.Description"" String=""Supports callbacks for the specified protocols"" />
   </Term>
   <Term Name=""ChangeTracking"" Type=""Capabilities.ChangeTrackingType"" AppliesTo=""EntityContainer EntitySet"">
     <Annotation Term=""Core.Description"" String=""Change tracking capabilities of this service or entity set"" />
@@ -235,7 +258,7 @@ namespace Microsoft.Test.Edm.TDD.Tests
             xw.Flush();
             xw.Close();
             string output = sw.ToString();
-            Console.WriteLine(output);
+
             Assert.IsTrue(!errors.Any(), "No Errors");
             Assert.AreEqual(expectedText, output, "expectedText = output");
         }
@@ -424,6 +447,38 @@ namespace Microsoft.Test.Edm.TDD.Tests
             p = complexType.FindProperty("NonExpandableProperties");
             Assert.IsNotNull(p);
             Assert.AreEqual(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
+        }
+
+        [TestMethod]
+        public void TestCapabilitiesVocabularyConformanceLevel()
+        {
+            var confLevel = this.capVocModel.FindDeclaredValueTerm("Org.OData.Capabilities.V1.ConformanceLevel");
+            Assert.IsNotNull(confLevel);
+            Assert.AreEqual("Org.OData.Capabilities.V1", confLevel.Namespace);
+            Assert.AreEqual("ConformanceLevel", confLevel.Name);
+            Assert.AreEqual(EdmTermKind.Value, confLevel.TermKind);
+
+            var type = confLevel.Type;
+            Assert.AreEqual("Org.OData.Capabilities.V1.ConformanceLevelType", type.FullName());
+            Assert.AreEqual(EdmTypeKind.Enum, type.Definition.TypeKind);
+
+            var enumType = type.Definition as IEdmEnumType;
+            Assert.IsNotNull(enumType);
+            Assert.AreEqual(3, enumType.Members.Count());
+            Assert.AreEqual("Minimal|Intermediate|Advanced", String.Join("|", enumType.Members.Select(e => e.Name)));
+        }
+
+        [TestMethod]
+        public void TestCapabilitiesVocabularySupportedFormats()
+        {
+            var supportedFormats = this.capVocModel.FindDeclaredValueTerm("Org.OData.Capabilities.V1.SupportedFormats");
+            Assert.IsNotNull(supportedFormats);
+            Assert.AreEqual("Org.OData.Capabilities.V1", supportedFormats.Namespace);
+            Assert.AreEqual("SupportedFormats", supportedFormats.Name);
+            Assert.AreEqual(EdmTermKind.Value, supportedFormats.TermKind);
+
+            var type = supportedFormats.Type;
+            Assert.AreEqual("Collection(Edm.String)", type.FullName());
         }
     }
 }
