@@ -294,6 +294,39 @@ namespace Microsoft.Data.Edm
             return string.Equals(string1, string2, StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Query dictionary for certain key, and update it if not exist
+        /// </summary>
+        /// <typeparam name="TKey">Key type for dictionary</typeparam>
+        /// <typeparam name="TValue">Value type for dictionary</typeparam>
+        /// <param name="dictionary">The dictionary to look up</param>
+        /// <param name="key">The key property</param>
+        /// <param name="computeValue">The function to compute value if key not exist in dictionary</param>
+        /// <returns>The value for the key</returns>
+        internal static TValue DictionaryGetOrUpdate<TKey, TValue>(
+            IDictionary<TKey, TValue> dictionary,
+            TKey key,
+            Func<TKey, TValue> computeValue)
+        {
+            CheckArgumentNull(dictionary, "dictionary");
+            CheckArgumentNull(computeValue, "computeValue");
+
+            TValue val;
+            if (!dictionary.TryGetValue(key, out val))
+            {
+                lock (dictionary)
+                {
+                    if (!dictionary.TryGetValue(key, out val))
+                    {
+                        val = computeValue(key);
+                        dictionary.Add(key, val);
+                    }
+                }
+            }
+
+            return val;
+        }
+
         // Hack to alert FXCop that we do check for null.
         private sealed class ValidatedNotNullAttribute : Attribute
         {
