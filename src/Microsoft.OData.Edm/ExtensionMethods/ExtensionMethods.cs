@@ -1634,11 +1634,6 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(alternateKey, "alternateKey");
 
-            if (model.FindDeclaredType(type.ShortQualifiedName()) == null)
-            {
-                throw new InvalidOperationException(Edm.Strings.Bad_UnresolvedEntityType(type));
-            }
-
             EdmCollectionExpression annotationValue = model.GetAnnotationValue(type, AlternateKeysVocabularyModel.AlternateKeysTerm.Namespace, AlternateKeysVocabularyModel.AlternateKeysTerm.Name) as EdmCollectionExpression;
 
             List<IEdmExpression> alternateKeysCollection;
