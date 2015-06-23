@@ -332,7 +332,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
             }
             catch (ODataException ex)
             {
-                if(!TryResolveUsingAlternateKeys(type, model, namedValues, convertFunc, out convertedPairs))
+                if (!TryResolveUsingAlternateKeys(type, model, namedValues, convertFunc, out convertedPairs))
                 {
                     throw ex;
                 }
