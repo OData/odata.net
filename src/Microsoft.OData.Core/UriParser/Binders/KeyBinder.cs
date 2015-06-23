@@ -154,7 +154,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
             else if (keyPropertyValues.Count != collectionItemEntityType.Key().Count())
             {
-                ////throw new ODataException(ODataErrorStrings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemType.ODataFullName()));
                 keyLookupNode = null;
                 return false;
             }
@@ -204,7 +203,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 {
                     keyPropertyValue = null;
                     return false;
-                    ////throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclaredOrNotKeyInKeyValue(namedValue.Name, collectionItemEntityType.ODataFullName()));
                 }
             }
 

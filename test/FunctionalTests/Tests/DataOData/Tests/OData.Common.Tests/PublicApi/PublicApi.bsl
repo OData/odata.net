@@ -1179,6 +1179,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static void AddAlternateKey (Microsoft.OData.Edm.IEdmEntityType type, Microsoft.OData.Edm.IEdmModel model, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Edm.IEdmProperty]] alternateKey)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static Microsoft.OData.Edm.IEdmComplexType BaseComplexType (Microsoft.OData.Edm.IEdmComplexType type)
 
 	[
@@ -1210,6 +1215,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	ExtensionAttribute(),
 	]
 	public static Microsoft.OData.Edm.IEdmComplexType ComplexDefinition (Microsoft.OData.Edm.IEdmComplexTypeReference type)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Edm.IEdmProperty]]]] DeclaredAlternateKeys (Microsoft.OData.Edm.IEdmEntityType type, Microsoft.OData.Edm.IEdmModel model)
 
 	[
 	ExtensionAttribute(),
@@ -3694,6 +3704,22 @@ public class Microsoft.OData.Edm.Library.Values.EdmTimeOfDayConstant : Microsoft
 	Microsoft.OData.Edm.Values.EdmValueKind ValueKind  { public virtual get; }
 }
 
+public sealed class Microsoft.OData.Edm.Vocabularies.V1.AlternateKeysVocabularyConstants {
+	public static string AlternateKeys = "OData.Community.AlternateKeys.V1.AlternateKeys"
+	public static string AlternateKeyType = "OData.Community.AlternateKeys.V1.AlternateKey"
+	public static string AlternateKeyTypeKeyPropertyName = "Key"
+	public static string PropertyRefType = "OData.Community.AlternateKeys.V1.PropertyRef"
+	public static string PropertyRefTypeAliasPropertyName = "Alias"
+	public static string PropertyRefTypeNamePropertyName = "Name"
+}
+
+public sealed class Microsoft.OData.Edm.Vocabularies.V1.AlternateKeysVocabularyModel {
+	public static readonly Microsoft.OData.Edm.IEdmValueTerm AlternateKeysTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
+	public static readonly Microsoft.OData.Edm.IEdmComplexType AlternateKeyType = OData.Community.AlternateKeys.V1.AlternateKey
+	public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
+	public static readonly Microsoft.OData.Edm.IEdmComplexType PropertyRefType = OData.Community.AlternateKeys.V1.PropertyRef
+}
+
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyConstants {
 	public static string ChangeTracking = "Org.OData.Capabilities.V1.ChangeTracking"
 	public static string ChangeTrackingExpandableProperties = "ExpandableProperties"
@@ -5148,6 +5174,7 @@ public class Microsoft.OData.Core.UriParser.Metadata.ODataUriResolver {
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveBoundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier, Microsoft.OData.Edm.IEdmType bindingType)
 	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] namedValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
 	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IList`1[[System.String]] positionalValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
+	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeysOrAlternateKeys (Microsoft.OData.Edm.IEdmEntityType type, Microsoft.OData.Edm.IEdmModel model, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] namedValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
 	public virtual Microsoft.OData.Edm.IEdmNavigationSource ResolveNavigationSource (Microsoft.OData.Edm.IEdmModel model, string identifier)
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] ResolveOperationImports (Microsoft.OData.Edm.IEdmModel model, string identifier)
 	public virtual System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperationParameter],[Microsoft.OData.Core.UriParser.Semantic.SingleValueNode]] ResolveOperationParameters (Microsoft.OData.Edm.IEdmOperation operation, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.Semantic.SingleValueNode]] input)

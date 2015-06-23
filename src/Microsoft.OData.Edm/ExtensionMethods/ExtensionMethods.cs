@@ -1623,28 +1623,21 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets the declared alternate keys of the most defined entity with a declared key present.
+        /// Adds the key to the alternateKeys of this entity type.
         /// </summary>
         /// <param name="type">Reference to the calling object.</param>
         /// <param name="model">The model to be used.</param>
         /// <param name="alternateKey">Dictionary of alias and structural properties for the alternate key.</param>
-        public static void AddDeclaredAlternateKey(this IEdmEntityType type, IEdmModel model, IDictionary<string, IEdmProperty> alternateKey)
+        public static void AddAlternateKey(this IEdmEntityType type, IEdmModel model, IDictionary<string, IEdmProperty> alternateKey)
         {
             EdmUtil.CheckArgumentNull(type, "type");
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(alternateKey, "alternateKey");
 
-            ////if (model.FindDeclaredType(type.ShortQualifiedName()) != null)
-            ////{
-            ////    foreach (IEdmModel refModel in model.ReferencedModels)
-            ////    {
-            ////        if (refModel.FindDeclaredType(type.ShortQualifiedName()) != null)
-            ////        {
-            ////            type.AddDeclaredAlternateKey(refModel, alternateKey);
-            ////            return;
-            ////        }
-            ////    }
-            ////}
+            if (model.FindDeclaredType(type.ShortQualifiedName()) == null)
+            {
+                throw new InvalidOperationException(Edm.Strings.Bad_UnresolvedEntityType(type));
+            }
 
             EdmCollectionExpression annotationValue = model.GetAnnotationValue(type, AlternateKeysVocabularyModel.AlternateKeysTerm.Namespace, AlternateKeysVocabularyModel.AlternateKeysTerm.Name) as EdmCollectionExpression;
 
@@ -1675,14 +1668,7 @@ namespace Microsoft.OData.Edm
 
             alternateKeysCollection.Add(alternateKeyRecord);
 
-            ////annotation = new EdmAnnotation(type, AlternateKeysVocabularyModel.AlternateKeysTerm, new EdmCollectionExpression(alternateKeysCollection));
             model.SetAnnotationValue(type, AlternateKeysVocabularyModel.AlternateKeysTerm.Namespace, AlternateKeysVocabularyModel.AlternateKeysTerm.Name, new EdmCollectionExpression(alternateKeysCollection));
-
-            ////model.DirectValueAnnotationsManager.SetAnnotationValue(
-            ////    type,
-            ////    AlternateKeysVocabularyModel.AlternateKeysTerm.Namespace,
-            ////    AlternateKeysVocabularyModel.AlternateKeysTerm.Name,
-            ////     new EdmCollectionExpression(alternateKeysCollection));
         }
 
         /// <summary>
@@ -2664,8 +2650,7 @@ namespace Microsoft.OData.Edm
         private static IEnumerable<IDictionary<string, IEdmProperty>> GetDeclaredAlternateKeysForType(IEdmEntityType type, IEdmModel model)
         {
             object annotationValue = model.GetAnnotationValue(type, AlternateKeysVocabularyModel.AlternateKeysTerm.Namespace, AlternateKeysVocabularyModel.AlternateKeysTerm.Name);
-            ////IEdmValueAnnotation annotation = model.FindVocabularyAnnotations<IEdmValueAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
-            ////object annotationValue = model.DirectValueAnnotationsManager.GetAnnotationValue(type, AlternateKeysVocabularyModel.AlternateKeysTerm.Namespace, AlternateKeysVocabularyModel.AlternateKeysTerm.Name);
+
             if (annotationValue != null)
             {
                 List<IDictionary<string, IEdmProperty>> declaredAlternateKeys = new List<IDictionary<string, IEdmProperty>>();
@@ -2698,18 +2683,6 @@ namespace Microsoft.OData.Edm
 
                 return declaredAlternateKeys;
             }
-            ////else
-            ////{
-            ////    foreach (IEdmModel referencedModel in model.ReferencedModels)
-            ////    {
-            ////        if (referencedModel.FindDeclaredType(type.ShortQualifiedName()) != null)
-            ////        {
-            ////            IEnumerable<IDictionary<string, IEdmProperty>> alternateKeys = GetDeclaredAlternateKeysForType(type, referencedModel);
-            ////            if (alternateKeys != null)
-            ////                return alternateKeys;
-            ////        }
-            ////    }
-            ////}
 
             return null;
         }

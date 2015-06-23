@@ -276,13 +276,43 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// <returns>The resolved key list.</returns>
         public virtual IEnumerable<KeyValuePair<string, object>> ResolveKeys(IEdmEntityType type, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc)
         {
-            Dictionary<string, object> convertedPairs;
-            if (TryResolveUsingDeclaredKeys(type, namedValues, convertFunc, out convertedPairs))
+            var convertedPairs = new Dictionary<string, object>(StringComparer.Ordinal);
+            var keyProperties = type.Key().ToList();
+
+            foreach (IEdmStructuralProperty property in keyProperties)
             {
-                return convertedPairs;
+                string valueText;
+
+                if (EnableCaseInsensitive)
+                {
+                    var list = namedValues.Keys.Where(key => string.Equals(property.Name, key, StringComparison.OrdinalIgnoreCase)).ToList();
+                    if (list.Count > 1)
+                    {
+                        throw new ODataException(Strings.UriParserMetadata_MultipleMatchingKeysFound(property.Name));
+                    }
+                    else if (list.Count == 0)
+                    {
+                        throw ExceptionUtil.CreateSyntaxError();
+                    }
+
+                    valueText = namedValues[list.Single()];
+                }
+                else if (!namedValues.TryGetValue(property.Name, out valueText))
+                {
+                    throw ExceptionUtil.CreateSyntaxError();
+                }
+
+                //// Debug.Assert(property.Type.IsPrimitive() || property.Type.IsTypeDefinition(), "Keys can only be primitive or type definition");
+                object convertedValue = convertFunc(property.Type, valueText);
+                if (convertedValue == null)
+                {
+                    throw ExceptionUtil.CreateSyntaxError();
+                }
+
+                convertedPairs[property.Name] = convertedValue;
             }
 
-            throw ExceptionUtil.CreateSyntaxError();
+            return convertedPairs;
         }
 
         /// <summary>
@@ -295,17 +325,20 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// <returns>The resolved key list.</returns>
         public virtual IEnumerable<KeyValuePair<string, object>> ResolveKeysOrAlternateKeys(IEdmEntityType type, IEdmModel model, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc)
         {
-            Dictionary<string, object> convertedPairs;
-            if (TryResolveUsingDeclaredKeys(type, namedValues, convertFunc, out convertedPairs))
+            IEnumerable<KeyValuePair<string, object>> convertedPairs;
+            try
             {
-                return convertedPairs;
+                convertedPairs = ResolveKeys(type, namedValues, convertFunc);
             }
-            else if (TryResolveUsingAlternateKeys(type, model, namedValues, convertFunc, out convertedPairs))
+            catch (ODataException ex)
             {
-                return convertedPairs;
+                if(!TryResolveUsingAlternateKeys(type, model, namedValues, convertFunc, out convertedPairs))
+                {
+                    throw ex;
+                }
             }
 
-            throw ExceptionUtil.CreateSyntaxError();
+            return convertedPairs;
         }
 
         /// <summary>
@@ -332,27 +365,6 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         }
 
         /// <summary>
-        /// Try to resolve declared keys for certain entity set, this function would be called when key is specified as name value pairs. E.g. EntitySet(ID='key')
-        /// </summary>
-        /// <param name="type">Type for current entityset.</param>
-        /// <param name="namedValues">The dictionary of name value pairs.</param>
-        /// <param name="convertFunc">The convert function to be used for value converting.</param>
-        /// <param name="convertedPairs">The resolved key list.</param>
-        /// <returns>True if resolve succeeded.</returns>
-        private bool TryResolveUsingDeclaredKeys(IEdmEntityType type, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc, out Dictionary<string, object> convertedPairs)
-        {
-            var keyProperties = type.Key().ToList();
-            Dictionary<string, IEdmProperty> keyPropertiesMap = new Dictionary<string, IEdmProperty>();
-
-            foreach (var keyProperty in keyProperties)
-            {
-                keyPropertiesMap[keyProperty.Name] = keyProperty;
-            }
-
-            return TryResolveUsingKeys(type, namedValues, keyPropertiesMap, convertFunc, out convertedPairs);
-        }
-
-        /// <summary>
         /// Try to resolve alternate keys for certain entity set, this function would be called when key is specified as name value pairs. E.g. EntitySet(ID='key')
         /// </summary>
         /// <param name="type">Type for current entityset.</param>
@@ -361,7 +373,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// <param name="convertFunc">The convert function to be used for value converting.</param>
         /// <param name="convertedPairs">The resolved key list.</param>
         /// <returns>True if resolve succeeded.</returns>
-        private bool TryResolveUsingAlternateKeys(IEdmEntityType type, IEdmModel model, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc, out Dictionary<string, object> convertedPairs)
+        private bool TryResolveUsingAlternateKeys(IEdmEntityType type, IEdmModel model, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc, out IEnumerable<KeyValuePair<string, object>> convertedPairs)
         {
             IEnumerable<IDictionary<string, IEdmProperty>> alternateKeys = type.DeclaredAlternateKeys(model);
             foreach (IDictionary<string, IEdmProperty> keys in alternateKeys)
@@ -385,9 +397,9 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// <param name="convertFunc">The convert function to be used for value converting.</param>
         /// <param name="convertedPairs">The resolved key list.</param>
         /// <returns>True if resolve succeeded.</returns>
-        private bool TryResolveUsingKeys(IEdmEntityType type, IDictionary<string, string> namedValues, IDictionary<string, IEdmProperty> keyProperties, Func<IEdmTypeReference, string, object> convertFunc, out Dictionary<string, object> convertedPairs)
+        private bool TryResolveUsingKeys(IEdmEntityType type, IDictionary<string, string> namedValues, IDictionary<string, IEdmProperty> keyProperties, Func<IEdmTypeReference, string, object> convertFunc, out IEnumerable<KeyValuePair<string, object>> convertedPairs)
         {
-            convertedPairs = new Dictionary<string, object>(StringComparer.Ordinal);
+            Dictionary<string, object> pairs = new Dictionary<string, object>(StringComparer.Ordinal);
 
             foreach (KeyValuePair<string, IEdmProperty> kvp in keyProperties)
             {
@@ -404,7 +416,6 @@ namespace Microsoft.OData.Core.UriParser.Metadata
                     {
                         convertedPairs = null;
                         return false;
-                        ////throw ExceptionUtil.CreateSyntaxError();
                     }
 
                     valueText = namedValues[list.Single()];
@@ -413,21 +424,19 @@ namespace Microsoft.OData.Core.UriParser.Metadata
                 {
                     convertedPairs = null;
                     return false;
-                    ////throw ExceptionUtil.CreateSyntaxError();
                 }
 
-                ////Debug.Assert(property.Type.IsPrimitive() || property.Type.IsTypeDefinition(), "Keys can only be primitive or type definition");
                 object convertedValue = convertFunc(kvp.Value.Type, valueText);
                 if (convertedValue == null)
                 {
                     convertedPairs = null;
                     return false;
-                    ////throw ExceptionUtil.CreateSyntaxError();
                 }
 
-                convertedPairs[kvp.Key] = convertedValue;
+                pairs[kvp.Key] = convertedValue;
             }
 
+            convertedPairs = pairs;
             return true;
         }
     }

@@ -198,7 +198,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
 
             var FullyQualifiedNamespacePerson_MyPet2Set = FullyQualifiedNamespacePerson.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyPet2Set", TargetMultiplicity = EdmMultiplicity.Many, Target = FullyQualifiedNamespacePet2, });
 
-            FullyQualifiedNamespacePerson.AddDeclaredAlternateKey(
+            FullyQualifiedNamespacePerson.AddAlternateKey(
                 model, new Dictionary<string, IEdmProperty>()
                 { {"SocialSN" , FullyQualifiedNamespacePerson_SSN}
                 });
@@ -714,10 +714,6 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
 
             FullyQualifiedNamespaceContext.AddActionImport("MoveEveryone", FullyQualifiedNamespaceMoveEveryoneAction);
 
-            if (model != null)
-            {
-                return model;
-            }
             #endregion
 
             try
@@ -757,7 +753,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
                     throw new Exception("edmx:refernece must have a valid url." + uri.AbsoluteUri);
                 }, out parsedModel, out errors))
                 {
-                    (parsedModel.ReferencedModels.ElementAt(3).FindDeclaredType("Fully.Qualified.Namespace.Person") as IEdmEntityType).AddDeclaredAlternateKey(model, new Dictionary<string, IEdmProperty>()
+                    (parsedModel.ReferencedModels.ElementAt(3).FindDeclaredType("Fully.Qualified.Namespace.Person") as IEdmEntityType).AddAlternateKey(parsedModel, new Dictionary<string, IEdmProperty>()
                     { {"SocialSN" , (parsedModel.ReferencedModels.ElementAt(3).FindDeclaredType("Fully.Qualified.Namespace.Person") as IEdmEntityType).FindProperty("SSN") }
                     });
 
