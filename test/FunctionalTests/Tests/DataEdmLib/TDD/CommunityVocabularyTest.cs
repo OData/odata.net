@@ -8,6 +8,7 @@
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies.Community.V1;
     using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

@@ -302,7 +302,6 @@ namespace Microsoft.OData.Core.UriParser.Metadata
                     throw ExceptionUtil.CreateSyntaxError();
                 }
 
-                //// Debug.Assert(property.Type.IsPrimitive() || property.Type.IsTypeDefinition(), "Keys can only be primitive or type definition");
                 object convertedValue = convertFunc(property.Type, valueText);
                 if (convertedValue == null)
                 {

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Edm.Vocabularies.V1
+namespace Microsoft.OData.Edm.Vocabularies.Community.V1
 {
     /// <summary>
     /// Constant values for Alternate Keys Vocabulary

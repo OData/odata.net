@@ -22,6 +22,7 @@ using Microsoft.OData.Edm.Library.Values;
 using Microsoft.OData.Edm.PrimitiveValueConverters;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using ErrorStrings = Microsoft.OData.Edm.Strings;
 

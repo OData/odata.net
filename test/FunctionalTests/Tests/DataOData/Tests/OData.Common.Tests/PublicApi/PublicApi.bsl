@@ -1179,7 +1179,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static void AddAlternateKey (Microsoft.OData.Edm.IEdmEntityType type, Microsoft.OData.Edm.IEdmModel model, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Edm.IEdmProperty]] alternateKey)
+	public static void AddAlternateKey (Microsoft.OData.Edm.IEdmEntityType type, Microsoft.OData.Edm.Library.EdmModel model, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Edm.IEdmProperty]] alternateKey)
 
 	[
 	ExtensionAttribute(),
@@ -3704,22 +3704,6 @@ public class Microsoft.OData.Edm.Library.Values.EdmTimeOfDayConstant : Microsoft
 	Microsoft.OData.Edm.Values.EdmValueKind ValueKind  { public virtual get; }
 }
 
-public sealed class Microsoft.OData.Edm.Vocabularies.V1.AlternateKeysVocabularyConstants {
-	public static string AlternateKeys = "OData.Community.AlternateKeys.V1.AlternateKeys"
-	public static string AlternateKeyType = "OData.Community.AlternateKeys.V1.AlternateKey"
-	public static string AlternateKeyTypeKeyPropertyName = "Key"
-	public static string PropertyRefType = "OData.Community.AlternateKeys.V1.PropertyRef"
-	public static string PropertyRefTypeAliasPropertyName = "Alias"
-	public static string PropertyRefTypeNamePropertyName = "Name"
-}
-
-public sealed class Microsoft.OData.Edm.Vocabularies.V1.AlternateKeysVocabularyModel {
-	public static readonly Microsoft.OData.Edm.IEdmValueTerm AlternateKeysTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
-	public static readonly Microsoft.OData.Edm.IEdmComplexType AlternateKeyType = OData.Community.AlternateKeys.V1.AlternateKey
-	public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
-	public static readonly Microsoft.OData.Edm.IEdmComplexType PropertyRefType = OData.Community.AlternateKeys.V1.PropertyRef
-}
-
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyConstants {
 	public static string ChangeTracking = "Org.OData.Capabilities.V1.ChangeTracking"
 	public static string ChangeTrackingExpandableProperties = "ExpandableProperties"
@@ -3762,6 +3746,22 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel {
 	public static readonly Microsoft.OData.Edm.IEdmValueTerm MediaTypeTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
 	public static readonly Microsoft.OData.Edm.IEdmValueTerm RequiresTypeTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
 	public static readonly Microsoft.OData.Edm.IEdmValueTerm ResourcePathTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
+}
+
+public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysVocabularyConstants {
+	public static string AlternateKeys = "OData.Community.AlternateKeys.V1.AlternateKeys"
+	public static string AlternateKeyType = "OData.Community.AlternateKeys.V1.AlternateKey"
+	public static string AlternateKeyTypeKeyPropertyName = "Key"
+	public static string PropertyRefType = "OData.Community.AlternateKeys.V1.PropertyRef"
+	public static string PropertyRefTypeAliasPropertyName = "Alias"
+	public static string PropertyRefTypeNamePropertyName = "Name"
+}
+
+public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysVocabularyModel {
+	public static readonly Microsoft.OData.Edm.IEdmValueTerm AlternateKeysTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
+	public static readonly Microsoft.OData.Edm.IEdmComplexType AlternateKeyType = OData.Community.AlternateKeys.V1.AlternateKey
+	public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
+	public static readonly Microsoft.OData.Edm.IEdmComplexType PropertyRefType = OData.Community.AlternateKeys.V1.PropertyRef
 }
 
 public enum Microsoft.OData.Core.DeltaDeletedEntryReason : int {

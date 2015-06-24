@@ -13,8 +13,7 @@ using System.Xml;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
-
-namespace Microsoft.OData.Edm.Vocabularies.V1
+namespace Microsoft.OData.Edm.Vocabularies.Community.V1
 {
     /// <summary>
     /// Representing Core Vocabulary Model.
