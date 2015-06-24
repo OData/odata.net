@@ -34,6 +34,7 @@
   <ItemGroup>
     <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs" />
     <Compile Include="CapabilitiesVocabularyTest.cs" />
+    <Compile Include="CommunityVocabularyTest.cs" />
     <Compile Include="CoreVocabularyTest.cs" />
     <Compile Include="Csdl\CsdlSemanticsTypeDefinitionDefinitionTests.cs" />
     <Compile Include="Csdl\CsdlTypeDefinitionTests.cs" />

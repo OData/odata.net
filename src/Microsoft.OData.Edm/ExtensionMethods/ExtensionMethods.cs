@@ -1628,13 +1628,18 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Reference to the calling object.</param>
         /// <param name="model">The model to be used.</param>
         /// <param name="alternateKey">Dictionary of alias and structural properties for the alternate key.</param>
-        public static void AddAlternateKey(this IEdmEntityType type, IEdmModel model, IDictionary<string, IEdmProperty> alternateKey)
+        public static void AddAlternateKey(this IEdmEntityType type, EdmModel model, IDictionary<string, IEdmProperty> alternateKey)
         {
             EdmUtil.CheckArgumentNull(type, "type");
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(alternateKey, "alternateKey");
 
-            EdmCollectionExpression annotationValue = model.GetAnnotationValue(type, AlternateKeysVocabularyModel.AlternateKeysTerm.Namespace, AlternateKeysVocabularyModel.AlternateKeysTerm.Name) as EdmCollectionExpression;
+            EdmCollectionExpression annotationValue = null;
+            var ann = model.FindVocabularyAnnotations<IEdmValueAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
+            if (ann != null)
+            {
+                annotationValue = ann.Value as EdmCollectionExpression;
+            }
 
             List<IEdmExpression> alternateKeysCollection;
             if (annotationValue != null)
@@ -1663,7 +1668,13 @@ namespace Microsoft.OData.Edm
 
             alternateKeysCollection.Add(alternateKeyRecord);
 
-            model.SetAnnotationValue(type, AlternateKeysVocabularyModel.AlternateKeysTerm.Namespace, AlternateKeysVocabularyModel.AlternateKeysTerm.Name, new EdmCollectionExpression(alternateKeysCollection));
+            var annotation = new EdmAnnotation(
+                type,
+                AlternateKeysVocabularyModel.AlternateKeysTerm,
+                new EdmCollectionExpression(alternateKeysCollection));
+
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
         }
 
         /// <summary>
@@ -2644,13 +2655,13 @@ namespace Microsoft.OData.Edm
         /// <returns>Key of this type.</returns>
         private static IEnumerable<IDictionary<string, IEdmProperty>> GetDeclaredAlternateKeysForType(IEdmEntityType type, IEdmModel model)
         {
-            object annotationValue = model.GetAnnotationValue(type, AlternateKeysVocabularyModel.AlternateKeysTerm.Namespace, AlternateKeysVocabularyModel.AlternateKeysTerm.Name);
+            IEdmValueAnnotation annotationValue = model.FindVocabularyAnnotations<IEdmValueAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
 
             if (annotationValue != null)
             {
                 List<IDictionary<string, IEdmProperty>> declaredAlternateKeys = new List<IDictionary<string, IEdmProperty>>();
 
-                IEdmCollectionExpression keys = annotationValue as IEdmCollectionExpression;
+                IEdmCollectionExpression keys = annotationValue.Value as IEdmCollectionExpression;
                 foreach (IEdmRecordExpression key in keys.Elements)
                 {
                     Debug.Assert(key.Properties.FirstOrDefault() != null, "expected non null alternatekey");
@@ -2667,7 +2678,7 @@ namespace Microsoft.OData.Edm
                             Debug.Assert(key.Properties.FirstOrDefault().Value is IEdmCollectionExpression, "expected IEdmCollectionExpression type for Key Property");
 
                             string alias = ((IEdmStringConstantExpression)propertyRef.Properties.Where(p => p.Name == AlternateKeysVocabularyConstants.PropertyRefTypeAliasPropertyName).FirstOrDefault().Value).Value;
-                            string propertyName = ((EdmPropertyPathExpression)propertyRef.Properties.Where(p => p.Name == AlternateKeysVocabularyConstants.PropertyRefTypeNamePropertyName).FirstOrDefault().Value).Path.FirstOrDefault();
+                            string propertyName = ((IEdmPathExpression)propertyRef.Properties.Where(p => p.Name == AlternateKeysVocabularyConstants.PropertyRefTypeNamePropertyName).FirstOrDefault().Value).Path.FirstOrDefault();
 
                             alternateKey[alias] = type.FindProperty(propertyName);
                         }

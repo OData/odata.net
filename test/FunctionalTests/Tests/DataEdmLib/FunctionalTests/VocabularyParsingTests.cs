@@ -1606,6 +1606,77 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
+        public void TestCommunityAlternateKeysInlineAnnotationOnEntityType()
+        {
+            EdmModel model = new EdmModel();
+
+            var book = new EdmEntityType("ns", "book");
+            model.AddElement(book);
+            var prop1 = book.AddStructuralProperty("prop1", EdmPrimitiveTypeKind.Int32, false);
+            var prop2 = book.AddStructuralProperty("prop2", EdmPrimitiveTypeKind.Int32, false);
+            var prop3 = book.AddStructuralProperty("prop3", EdmPrimitiveTypeKind.Int32, false);
+            var prop4 = book.AddStructuralProperty("prop4", EdmPrimitiveTypeKind.Int32, false);
+            book.AddKeys(prop1);
+            book.AddAlternateKey(model, new Dictionary<string, IEdmProperty> { { "s2", prop2 } });
+            book.AddAlternateKey(model, new Dictionary<string, IEdmProperty> { { "s3", prop3 }, { "s4", prop4 } });
+
+
+            IEnumerable<EdmError> errors;
+            StringWriter sw = new StringWriter();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.Encoding = System.Text.Encoding.UTF8;
+            XmlWriter xw = XmlWriter.Create(sw, settings);
+            model.TryWriteCsdl(xw, out errors);
+            xw.Flush();
+            xw.Close();
+            var actual = sw.ToString();
+
+            const string expected = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""ns"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""book"">
+    <Key>
+      <PropertyRef Name=""prop1"" />
+    </Key>
+    <Property Name=""prop1"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""prop2"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""prop3"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""prop4"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Annotation Term=""OData.Community.AlternateKeys.V1.AlternateKeys"">
+      <Collection>
+        <Record Type=""OData.Community.AlternateKeys.V1.AlternateKey"">
+          <PropertyValue Property=""Key"">
+            <Collection>
+              <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+                <PropertyValue Property=""Alias"" String=""s2"" />
+                <PropertyValue Property=""Name"" PropertyPath=""prop2"" />
+              </Record>
+            </Collection>
+          </PropertyValue>
+        </Record>
+        <Record Type=""OData.Community.AlternateKeys.V1.AlternateKey"">
+          <PropertyValue Property=""Key"">
+            <Collection>
+              <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+                <PropertyValue Property=""Alias"" String=""s3"" />
+                <PropertyValue Property=""Name"" PropertyPath=""prop3"" />
+              </Record>
+              <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+                <PropertyValue Property=""Alias"" String=""s4"" />
+                <PropertyValue Property=""Name"" PropertyPath=""prop4"" />
+              </Record>
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Collection>
+    </Annotation>
+  </EntityType>
+</Schema>";
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void EnumAnnotationSerializationTest()
         {
             EdmModel model = new EdmModel();
