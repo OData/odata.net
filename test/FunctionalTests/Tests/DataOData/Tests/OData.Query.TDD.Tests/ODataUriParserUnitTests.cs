@@ -278,6 +278,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host/People(1)"));
             action.ShouldThrow<ODataException>().WithMessage(Strings.UriParser_FullUriMustBeRelative);
         }
+
         [TestMethod]
         public void AlternateKeyShouldWork()
         {

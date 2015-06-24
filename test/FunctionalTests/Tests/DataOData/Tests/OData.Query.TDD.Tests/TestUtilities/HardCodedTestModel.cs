@@ -753,11 +753,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
                     throw new Exception("edmx:refernece must have a valid url." + uri.AbsoluteUri);
                 }, out parsedModel, out errors))
                 {
-                    (parsedModel.ReferencedModels.ElementAt(3).FindDeclaredType("Fully.Qualified.Namespace.Person") as IEdmEntityType).AddAlternateKey(parsedModel, new Dictionary<string, IEdmProperty>()
-                    { {"SocialSN" , (parsedModel.ReferencedModels.ElementAt(3).FindDeclaredType("Fully.Qualified.Namespace.Person") as IEdmEntityType).FindProperty("SSN") }
-                    });
-
-                    return parsedModel;
+                   return parsedModel;
                 }
             }
             catch (Exception e)
@@ -904,8 +900,6 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
         <Key>
           <PropertyRef Name=""ID"" />
         </Key>
-
-
         <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""SSN"" Type=""Edm.String"" />
         <Property Name=""Shoe"" Type=""Edm.String"" />
@@ -944,6 +938,20 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
         <NavigationProperty Name=""MyContainedDog"" Type=""Fully.Qualified.Namespace.Dog"" ContainsTarget=""true"" />
         <NavigationProperty Name=""MyContainedChimeras"" Type=""Collection(Fully.Qualified.Namespace.Chimera)"" ContainsTarget=""true"" />
         <NavigationProperty Name=""MyPet2Set"" Type=""Collection(Fully.Qualified.Namespace.Pet2)"" />
+        <Annotation Term=""OData.Community.AlternateKeys.V1.AlternateKeys"">
+          <Collection>
+            <Record Type=""OData.Community.AlternateKeys.V1.AlternateKey"">
+              <PropertyValue Property=""Key"">
+                <Collection>
+                  <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+                    <PropertyValue Property=""Alias"" String=""SocialSN"" />
+                    <PropertyValue Property=""Name"" PropertyPath=""SSN"" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Collection>
+        </Annotation>
       </EntityType>
       <EntityType Name=""Employee"" BaseType=""Fully.Qualified.Namespace.Person"">
         <Property Name=""WorkEmail"" Type=""Edm.String"" />
