@@ -6,6 +6,8 @@
 
 namespace Microsoft.OData.Core
 {
+    using System;
+
     /// <summary>
     /// OData representation of a top-level collection.
     /// </summary>
@@ -19,6 +21,22 @@ namespace Microsoft.OData.Core
         /// <summary>Gets or sets the name of the collection (ATOM only).</summary>
         /// <returns>The name of the collection.</returns>
         public string Name
+        {
+            get;
+            set;
+        }
+
+        /// <summary>Gets or sets the number of items in the collection.</summary>
+        /// <returns>The number of items in the collection.</returns>
+        public long? Count
+        {
+            get;
+            set;
+        }
+
+        /// <summary>Gets or sets the URI representing the next page link.</summary>
+        /// <returns>The URI representing the next page link.</returns>
+        public Uri NextPageLink
         {
             get;
             set;

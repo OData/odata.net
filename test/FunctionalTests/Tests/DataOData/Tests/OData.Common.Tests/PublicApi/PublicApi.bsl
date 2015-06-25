@@ -4415,7 +4415,9 @@ public sealed class Microsoft.OData.Core.ODataBatchWriter : IODataBatchOperation
 public sealed class Microsoft.OData.Core.ODataCollectionStart : Microsoft.OData.Core.ODataAnnotatable {
 	public ODataCollectionStart ()
 
+	System.Nullable`1[[System.Int64]] Count  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 	string Name  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Uri NextPageLink  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 }
 
 public sealed class Microsoft.OData.Core.ODataCollectionStartSerializationInfo {

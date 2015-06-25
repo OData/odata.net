@@ -129,6 +129,30 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
+                    DebugDescription = "OData instance annotations before collection property - should work.",
+                    PayloadEdmModel = model,
+                    PayloadElement = primitiveCollection.DeepCopy()
+                        .JsonRepresentation("{" +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(Edm.Int32)\"," +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":3," +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"http://next-link\"," +
+                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ 1, 2, 3 ] }")
+                        .ExpectedFunctionImport(primitiveCollectionResultOperation),
+                },
+                new PayloadReaderTestDescriptor(this.Settings)
+                {
+                    DebugDescription = "OData instance annotations after collection property - should work.",
+                    PayloadEdmModel = model,
+                    PayloadElement = primitiveCollection.DeepCopy()
+                        .JsonRepresentation("{" +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(Edm.Int32)\"," +
+                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ 1, 2, 3 ]," +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"http://next-link\"," +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":3}")
+                        .ExpectedFunctionImport(primitiveCollectionResultOperation),
+                },
+                new PayloadReaderTestDescriptor(this.Settings)
+                {
                     DebugDescription = "Custom property annotation before collection property - should work.",
                     PayloadEdmModel = model,
                     PayloadElement = primitiveCollection.DeepCopy()
@@ -196,10 +220,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadElement = primitiveCollection.DeepCopy()
                         .JsonRepresentation("{" +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(Edm.Int32)\", " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":null, " +
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataEditLinkAnnotationName + "\":null, " +
                             "\"" + JsonLightConstants.ODataValuePropertyName + "\":[] }")
                         .ExpectedFunctionImport(primitiveCollectionResultOperation),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonLightConstants.ODataCountAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonLightConstants.ODataEditLinkAnnotationName)
                 },                
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -209,9 +233,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         .JsonRepresentation("{" +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(Edm.Int32)\", " +
                             "\"" + JsonLightConstants.ODataValuePropertyName + "\":[], " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":null }")
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataEditLinkAnnotationName + "\":null }")
                         .ExpectedFunctionImport(primitiveCollectionResultOperation),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightCollectionDeserializer_CannotReadCollectionEnd", JsonLightConstants.ODataCountAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightCollectionDeserializer_CannotReadCollectionEnd", JsonLightConstants.ODataEditLinkAnnotationName)
                 },                
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -222,9 +246,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(Edm.Int32)\", " +
                             "\"" + JsonLightConstants.ODataValuePropertyName + "\":[], " +
 
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":null }")
+                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataEditLinkAnnotationName + "\":null }")
                         .ExpectedFunctionImport(primitiveCollectionResultOperation),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightCollectionDeserializer_CannotReadCollectionEnd", JsonLightConstants.ODataCountAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightCollectionDeserializer_CannotReadCollectionEnd", JsonLightConstants.ODataEditLinkAnnotationName)
                 },                
             };
 

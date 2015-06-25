@@ -796,16 +796,16 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         private string WriteAndVerifyCollection(StreamResponseMessage responseMessage, ODataCollectionWriter odataWriter,
                                                 bool hasModel, string mimeType)
         {
-            var collctionStart = new ODataCollectionStart() { Name = "BackupContactInfo" };
+            var collectionStart = new ODataCollectionStart() { Name = "BackupContactInfo", Count = 12, NextPageLink = new Uri("http://localhost")};
             if (!hasModel)
             {
-                collctionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo()
+                collectionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo()
                 {
                     CollectionTypeName = "Collection(" + NameSpace + "ContactDetails)"
                 });
             }
 
-            odataWriter.WriteStart(collctionStart);
+            odataWriter.WriteStart(collectionStart);
             odataWriter.WriteItem(WritePayloadHelper.CreatePrimaryContactODataComplexValue());
             odataWriter.WriteEnd();
 
