@@ -315,32 +315,6 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         }
 
         /// <summary>
-        /// Resolve keys for certain entity set, this function would be called when key is specified as name value pairs. E.g. EntitySet(ID='key')
-        /// </summary>
-        /// <param name="type">Type for current entityset.</param>
-        /// <param name="model">The model to be used.</param>
-        /// <param name="namedValues">The dictionary of name value pairs.</param>
-        /// <param name="convertFunc">The convert function to be used for value converting.</param>
-        /// <returns>The resolved key list.</returns>
-        public virtual IEnumerable<KeyValuePair<string, object>> ResolveKeysOrAlternateKeys(IEdmEntityType type, IEdmModel model, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc)
-        {
-            IEnumerable<KeyValuePair<string, object>> convertedPairs;
-            try
-            {
-                convertedPairs = ResolveKeys(type, namedValues, convertFunc);
-            }
-            catch (ODataException ex)
-            {
-                if (!TryResolveUsingAlternateKeys(type, model, namedValues, convertFunc, out convertedPairs))
-                {
-                    throw ex;
-                }
-            }
-
-            return convertedPairs;
-        }
-
-        /// <summary>
         /// Resolve an operation parameter's name with case insensitive enabled
         /// </summary>
         /// <param name="operation">The operation.</param>
@@ -361,82 +335,6 @@ namespace Microsoft.OData.Core.UriParser.Metadata
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Try to resolve alternate keys for certain entity set, this function would be called when key is specified as name value pairs. E.g. EntitySet(ID='key')
-        /// </summary>
-        /// <param name="type">Type for current entityset.</param>
-        /// <param name="model">The model to be used.</param>
-        /// <param name="namedValues">The dictionary of name value pairs.</param>
-        /// <param name="convertFunc">The convert function to be used for value converting.</param>
-        /// <param name="convertedPairs">The resolved key list.</param>
-        /// <returns>True if resolve succeeded.</returns>
-        private bool TryResolveUsingAlternateKeys(IEdmEntityType type, IEdmModel model, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc, out IEnumerable<KeyValuePair<string, object>> convertedPairs)
-        {
-            IEnumerable<IDictionary<string, IEdmProperty>> alternateKeys = type.DeclaredAlternateKeys(model);
-            foreach (IDictionary<string, IEdmProperty> keys in alternateKeys)
-            {
-                if (TryResolveUsingKeys(type, namedValues, keys, convertFunc, out convertedPairs))
-                {
-                    return true;
-                }
-            }
-
-            convertedPairs = null;
-            return false;
-        }
-
-        /// <summary>
-        /// Try to resolve keys for certain entity set, this function would be called when key is specified as name value pairs. E.g. EntitySet(ID='key')
-        /// </summary>
-        /// <param name="type">Type for current entityset.</param>
-        /// <param name="namedValues">The dictionary of name value pairs.</param>
-        /// <param name="keyProperties">Dictionary of alias to key properties.</param>
-        /// <param name="convertFunc">The convert function to be used for value converting.</param>
-        /// <param name="convertedPairs">The resolved key list.</param>
-        /// <returns>True if resolve succeeded.</returns>
-        private bool TryResolveUsingKeys(IEdmEntityType type, IDictionary<string, string> namedValues, IDictionary<string, IEdmProperty> keyProperties, Func<IEdmTypeReference, string, object> convertFunc, out IEnumerable<KeyValuePair<string, object>> convertedPairs)
-        {
-            Dictionary<string, object> pairs = new Dictionary<string, object>(StringComparer.Ordinal);
-
-            foreach (KeyValuePair<string, IEdmProperty> kvp in keyProperties)
-            {
-                string valueText;
-
-                if (EnableCaseInsensitive)
-                {
-                    var list = namedValues.Keys.Where(key => string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase)).ToList();
-                    if (list.Count > 1)
-                    {
-                        throw new ODataException(Strings.UriParserMetadata_MultipleMatchingKeysFound(kvp.Key));
-                    }
-                    else if (list.Count == 0)
-                    {
-                        convertedPairs = null;
-                        return false;
-                    }
-
-                    valueText = namedValues[list.Single()];
-                }
-                else if (!namedValues.TryGetValue(kvp.Key, out valueText))
-                {
-                    convertedPairs = null;
-                    return false;
-                }
-
-                object convertedValue = convertFunc(kvp.Value.Type, valueText);
-                if (convertedValue == null)
-                {
-                    convertedPairs = null;
-                    return false;
-                }
-
-                pairs[kvp.Key] = convertedValue;
-            }
-
-            convertedPairs = pairs;
-            return true;
         }
     }
 }

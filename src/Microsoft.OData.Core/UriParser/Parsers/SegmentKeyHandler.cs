@@ -28,12 +28,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="previous">Segment on which to compose.</param>
         /// <param name="previousKeySegment">The parent node's key segment.</param>
         /// <param name="parenthesisExpression">Parenthesis expression of segment.</param>
-        /// <param name="model">The model to be used.</param>
         /// <param name="keySegment">The key segment that was created if the key was non-empty.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <param name="resolver">The resolver to use.</param>
         /// <returns>Whether the key was non-empty.</returns>
-        internal static bool TryCreateKeySegmentFromParentheses(ODataPathSegment previous, KeySegment previousKeySegment, string parenthesisExpression, IEdmModel model, out ODataPathSegment keySegment, bool enableUriTemplateParsing = false, ODataUriResolver resolver = null)
+        internal static bool TryCreateKeySegmentFromParentheses(ODataPathSegment previous, KeySegment previousKeySegment, string parenthesisExpression, out ODataPathSegment keySegment, bool enableUriTemplateParsing = false, ODataUriResolver resolver = null)
         {
             Debug.Assert(parenthesisExpression != null, "parenthesisExpression != null");
             Debug.Assert(previous != null, "segment!= null");
@@ -61,7 +60,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return false;
             }
 
-            keySegment = CreateKeySegment(previous, previousKeySegment, key, model, resolver);
+            keySegment = CreateKeySegment(previous, previousKeySegment, key, resolver);
             return true;
         }
 
@@ -72,12 +71,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="previous">The previous segment.</param>
         /// <param name="previousKeySegment">The parent node's key segment.</param>
         /// <param name="urlConvention">The current url convention for the server.</param>
-        /// <param name="model">The model to be used.</param>
         /// <param name="keySegment">The key segment that was created if the segment could be interpreted as a key.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <param name="resolver">The resolver to use.</param>
         /// <returns>Whether or not the segment was interpreted as a key.</returns>
-        internal static bool TryHandleSegmentAsKey(string segmentText, ODataPathSegment previous, KeySegment previousKeySegment, UrlConvention urlConvention, IEdmModel model, out KeySegment keySegment, bool enableUriTemplateParsing = false, ODataUriResolver resolver = null)
+        internal static bool TryHandleSegmentAsKey(string segmentText, ODataPathSegment previous, KeySegment previousKeySegment, UrlConvention urlConvention, out KeySegment keySegment, bool enableUriTemplateParsing = false, ODataUriResolver resolver = null)
         {
             Debug.Assert(previous != null, "previous != null");
             Debug.Assert(urlConvention != null, "urlConvention != null");
@@ -118,7 +116,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // Previously KeyAsSegment only allows single key, but we can also leverage related key finder to auto fill
             // missed key value from referential constraint information, which would be done in CreateKeySegment.
             // CreateKeySegment method will check whether key properties are missing after taking in related key values.
-            keySegment = CreateKeySegment(previous, previousKeySegment, SegmentArgumentParser.FromSegment(segmentText, enableUriTemplateParsing), model, resolver);
+            keySegment = CreateKeySegment(previous, previousKeySegment, SegmentArgumentParser.FromSegment(segmentText, enableUriTemplateParsing), resolver);
 
             return true;
         }
@@ -150,10 +148,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="segment">The segment to apply the key to.</param>
         /// <param name="previousKeySegment">The parent node's key segment.</param>
         /// <param name="key">The key to apply.</param>
-        /// <param name="model">The model to be used.</param>
         /// <param name="resolver">The resolver to use.</param>
         /// <returns>The newly created key segment.</returns>
-        private static KeySegment CreateKeySegment(ODataPathSegment segment, KeySegment previousKeySegment, SegmentArgumentParser key, IEdmModel model, ODataUriResolver resolver)
+        private static KeySegment CreateKeySegment(ODataPathSegment segment, KeySegment previousKeySegment, SegmentArgumentParser key, ODataUriResolver resolver)
         {
             Debug.Assert(segment != null, "segment != null");
             Debug.Assert(key != null && !key.IsEmpty, "key != null && !key.IsEmpty");
@@ -168,9 +165,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             Debug.Assert(targetEntityType != null, "targetEntityType != null");
 
             // Make sure the keys specified in the uri matches with the number of keys in the metadata
-            // unless the type also supports alternate keys in which case the validation is done during resolution
             var keyProperties = targetEntityType.Key().ToList();
-            if (keyProperties.Count != key.ValueCount && targetEntityType.DeclaredAlternateKeys(model).Count() == 0)
+            if (keyProperties.Count != key.ValueCount)
             {
                 NavigationPropertySegment currentNavPropSegment = segment as NavigationPropertySegment;
                 if (currentNavPropSegment != null)
@@ -178,8 +174,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     key = KeyFinder.FindAndUseKeysFromRelatedSegment(key, keyProperties, currentNavPropSegment.NavigationProperty, previousKeySegment);
                 }
 
-                // if we still didn't find any keys, then throw an error.
-                if (keyProperties.Count != key.ValueCount && resolver.GetType() == typeof(ODataUriResolver))
+                // if we still didn't find any keys, then throw an error unless resolver supports alternate keys in which case the validation is done during resolution
+                if (keyProperties.Count != key.ValueCount && resolver.GetType() == typeof(ODataUriResolver) && resolver.GetType() != typeof(AlternateKeysODataUriResolver))
                 {
                     throw ExceptionUtil.CreateBadRequestError(ErrorStrings.BadRequest_KeyCountMismatch(targetEntityType.FullName()));
                 }
@@ -191,7 +187,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             IEnumerable<KeyValuePair<string, object>> keyPairs;
-            if (!key.TryConvertValues(targetEntityType, model, out keyPairs, resolver))
+            if (!key.TryConvertValues(targetEntityType, out keyPairs, resolver))
             {
                 throw ExceptionUtil.CreateSyntaxError();
             }

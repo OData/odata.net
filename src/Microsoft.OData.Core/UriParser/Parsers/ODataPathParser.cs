@@ -415,7 +415,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             KeySegment previousKeySegment = this.FindPreviousKeySegment();
 
             KeySegment keySegment;
-            if (!this.nextSegmentMustReferToMetadata && SegmentKeyHandler.TryHandleSegmentAsKey(segmentText, previous, previousKeySegment, this.configuration.UrlConventions.UrlConvention, this.configuration.Model, out keySegment, this.configuration.EnableUriTemplateParsing, this.configuration.Resolver))
+            if (!this.nextSegmentMustReferToMetadata && SegmentKeyHandler.TryHandleSegmentAsKey(segmentText, previous, previousKeySegment, this.configuration.UrlConventions.UrlConvention, out keySegment, this.configuration.EnableUriTemplateParsing, this.configuration.Resolver))
             {
                 this.parsedSegments.Add(keySegment);
                 return true;
@@ -624,7 +624,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             ODataPathSegment keySegment;
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
             KeySegment previousKeySegment = this.FindPreviousKeySegment();
-            if (!SegmentKeyHandler.TryCreateKeySegmentFromParentheses(previous, previousKeySegment, parenthesesSection, this.configuration.Model, out keySegment, this.configuration.EnableUriTemplateParsing, this.configuration.Resolver))
+            if (!SegmentKeyHandler.TryCreateKeySegmentFromParentheses(previous, previousKeySegment, parenthesesSection, out keySegment, this.configuration.EnableUriTemplateParsing, this.configuration.Resolver))
             {
                 return false;
             }

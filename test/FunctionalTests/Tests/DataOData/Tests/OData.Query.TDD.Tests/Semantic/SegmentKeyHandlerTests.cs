@@ -54,7 +54,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         public void SegmentWithSingleDollarSignIsNotAKey()
         {
             KeySegment keySegment;
-            SegmentKeyHandler.TryHandleSegmentAsKey("$ref", this.multipleResultSegmentWithSingleKey, null, keyAsSegmentConvention, HardCodedTestModel.TestModel, out keySegment).Should().BeFalse();
+            SegmentKeyHandler.TryHandleSegmentAsKey("$ref", this.multipleResultSegmentWithSingleKey, null, keyAsSegmentConvention, out keySegment).Should().BeFalse();
         }
 
         [TestMethod]
@@ -62,7 +62,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         {
             KeySegment keySegment;
             Action action = ()=>
-            SegmentKeyHandler.TryHandleSegmentAsKey("key", this.multipleResultSegmentWithCompositeKey, null, keyAsSegmentConvention, HardCodedTestModel.TestModel, out keySegment);
+            SegmentKeyHandler.TryHandleSegmentAsKey("key", this.multipleResultSegmentWithCompositeKey, null, keyAsSegmentConvention, out keySegment);
             action.ShouldThrow<ODataException>("The number of keys specified in the URI does not match number of key properties for the resource 'Fully.Qualified.Namespace.Lion'.");
         }
 
@@ -70,21 +70,21 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
         public void SegmentWithSingleResultIsNotAKey()
         {
             KeySegment keySegment;
-            SegmentKeyHandler.TryHandleSegmentAsKey("key", this.singleResultSegmentWithSingleKey, null, keyAsSegmentConvention, HardCodedTestModel.TestModel, out keySegment).Should().BeFalse();
+            SegmentKeyHandler.TryHandleSegmentAsKey("key", this.singleResultSegmentWithSingleKey, null, keyAsSegmentConvention, out keySegment).Should().BeFalse();
         }
 
         [TestMethod]
         public void IfBehaviorKnobIsTurnedOffThenNoSegmentIsAKey()
         {
             KeySegment keySegment;
-            SegmentKeyHandler.TryHandleSegmentAsKey("key", this.multipleResultSegmentWithSingleKey, null, defaultConvention, HardCodedTestModel.TestModel, out keySegment).Should().BeFalse();
+            SegmentKeyHandler.TryHandleSegmentAsKey("key", this.multipleResultSegmentWithSingleKey, null, defaultConvention, out keySegment).Should().BeFalse();
         }
 
         [TestMethod]
         public void SegmentKeyShouldUnescapeDollarSign()
         {
             KeySegment keySegment;
-            SegmentKeyHandler.TryHandleSegmentAsKey("$$ref", this.multipleResultSegmentWithSingleKey, null, keyAsSegmentConvention, HardCodedTestModel.TestModel, out keySegment).Should().BeTrue();
+            SegmentKeyHandler.TryHandleSegmentAsKey("$$ref", this.multipleResultSegmentWithSingleKey, null, keyAsSegmentConvention, out keySegment).Should().BeTrue();
             keySegment.Should().NotBeSameAs(this.multipleResultSegmentWithSingleKey);
             keySegment.Should().NotBeNull();
             keySegment.Keys.Should().HaveCount(1);
@@ -106,7 +106,6 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()),
                 "10",
-				HardCodedTestModel.TestModel,
                 out keySegment).Should().BeTrue();
             keySegment.ShouldBeKeySegment(new KeyValuePair<string, object>("ID1", 0), new KeyValuePair<string, object>("ID2", 10));
         }
@@ -126,7 +125,6 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()),
                 "10",
-				HardCodedTestModel.TestModel,
                 out keySegment);
             implicitKeyWithOutRefIntegrityConstraint.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetLionType().ODataFullName()));
         }
