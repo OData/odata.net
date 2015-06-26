@@ -42,7 +42,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
             var collectionNode = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
             var namedValues = new[] { new NamedValue(null, new LiteralToken(123)) };
 
-			var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
+            var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
             results.ShouldBeKeyLookupQueryNode().And.KeyPropertyValues.Single().KeyValue.Should().Be(FakeBindMethods.KeyBinderConstantToken);
         }
 
@@ -52,7 +52,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
             var collectionNode = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
             var namedValues = new[] { new NamedValue("ID", new LiteralToken(123)) };
 
-			var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
+            var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
             results.ShouldBeKeyLookupQueryNode().And.KeyPropertyValues.Single().KeyValue.Should().Be(FakeBindMethods.KeyBinderConstantToken);
         }
 
@@ -62,7 +62,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
             var collectionNode = new EntitySetNode(HardCodedTestModel.GetLionSet());
             var namedValues = new[] { new NamedValue(null, new LiteralToken(123)), new NamedValue(null, new LiteralToken(456)), };
 
-			Action bind = () => this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
+            Action bind = () => this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
             bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties(HardCodedTestModel.GetLionSet().EntityType().ODataFullName()));
         }
 
@@ -72,7 +72,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
             var collectionNode = new EntitySetNode(HardCodedTestModel.GetLionSet());
             var namedValues = new[] { new NamedValue("ID1", new LiteralToken(123)) };
 
-			Action bind = () => this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
+            Action bind = () => this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
             bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemType.ODataFullName()));
         }
 
@@ -82,7 +82,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
             var collectionNode = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
             var namedValues = new NamedValue[0];
 
-			var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
+            var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
             results.ShouldBeEntitySetQueryNode(HardCodedTestModel.GetPeopleSet());
         }
 
@@ -92,7 +92,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
             var collectionNode = new EntitySetNode(HardCodedTestModel.GetLionSet());
             var namedValues = new[] { new NamedValue("ID1", new LiteralToken(123)), new NamedValue("ID2", new LiteralToken(456)) };
 
-			var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
+            var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
             results.ShouldBeKeyLookupQueryNode().And.KeyPropertyValues.Count().Should().Be(2);
         }
 
@@ -102,7 +102,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic
             var collectionNode = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
             var namedValues = new[] { new NamedValue("ID", new LiteralToken(123)) };
 
-			var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
+            var results = this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
             results.ShouldBeKeyLookupQueryNode().And.KeyPropertyValues.Single().KeyValue.Should().Be(FakeBindMethods.KeyBinderConstantToken);
         }
 

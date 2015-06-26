@@ -22,6 +22,7 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.OData.Edm.Library.Expressions;
     using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies.Community.V1;
     using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT
@@ -1620,7 +1621,6 @@ namespace EdmLibTests.FunctionalTests
             book.AddAlternateKey(model, new Dictionary<string, IEdmProperty> { { "s2", prop2 } });
             book.AddAlternateKey(model, new Dictionary<string, IEdmProperty> { { "s3", prop3 }, { "s4", prop4 } });
 
-
             IEnumerable<EdmError> errors;
             StringWriter sw = new StringWriter();
             XmlWriterSettings settings = new XmlWriterSettings();
@@ -1675,6 +1675,108 @@ namespace EdmLibTests.FunctionalTests
 
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void ParsingCommunityAlternateKeysInlineAnnotationOnEntityType()
+        {
+            const string csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""ns"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""book"">
+    <Key>
+      <PropertyRef Name=""prop1"" />
+    </Key>
+    <Property Name=""prop1"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""prop2"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""prop3"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""prop4"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Annotation Term=""OData.Community.AlternateKeys.V1.AlternateKeys"">
+      <Collection>
+        <Record Type=""OData.Community.AlternateKeys.V1.AlternateKey"">
+          <PropertyValue Property=""Key"">
+            <Collection>
+              <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+                <PropertyValue Property=""Alias"" String=""s2"" />
+                <PropertyValue Property=""Name"" PropertyPath=""prop2"" />
+              </Record>
+            </Collection>
+          </PropertyValue>
+        </Record>
+        <Record Type=""OData.Community.AlternateKeys.V1.AlternateKey"">
+          <PropertyValue Property=""Key"">
+            <Collection>
+              <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+                <PropertyValue Property=""Alias"" String=""s3"" />
+                <PropertyValue Property=""Name"" PropertyPath=""prop3"" />
+              </Record>
+              <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+                <PropertyValue Property=""Alias"" String=""s4"" />
+                <PropertyValue Property=""Name"" PropertyPath=""prop4"" />
+              </Record>
+            </Collection>
+          </PropertyValue>
+        </Record>
+      </Collection>
+    </Annotation>
+  </EntityType>
+</Schema>";
+
+            IEdmModel parsedModel;
+            IEnumerable<EdmError> errors;
+            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            Assert.IsTrue(parsed, "parsed");
+            Assert.IsTrue(!errors.Any(), "No errors");
+
+            var bookType = parsedModel.FindDeclaredType("ns.book");
+            Assert.IsNotNull(bookType);
+            IEdmValueAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(bookType, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+            IEdmCollectionExpression collect = annotation.Value as IEdmCollectionExpression;
+            Assert.IsNotNull(collect);
+            Assert.AreEqual(2, collect.Elements.Count());
+
+            // #1
+            var record = collect.Elements.First() as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            IEdmCollectionExpression keyCollection = record.FindProperty("Key").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(keyCollection);
+            Assert.AreEqual(1, keyCollection.Elements.Count());
+            IEdmRecordExpression element = keyCollection.Elements.First() as IEdmRecordExpression;
+            Assert.IsNotNull(element);
+            IEdmStringConstantExpression alias = element.FindProperty("Alias").Value as IEdmStringConstantExpression;
+            Assert.IsNotNull(alias);
+            Assert.AreEqual("s2", alias.Value);
+            IEdmPathExpression name = element.FindProperty("Name").Value as IEdmPathExpression;
+            Assert.IsNotNull(name);
+            Assert.AreEqual("prop2", name.Path.Single());
+
+            // #2
+            record = collect.Elements.Last() as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            keyCollection = record.FindProperty("Key").Value as IEdmCollectionExpression;
+            Assert.IsNotNull(keyCollection);
+            Assert.AreEqual(2, keyCollection.Elements.Count());
+
+            // #2.1
+            element = keyCollection.Elements.First() as IEdmRecordExpression;
+            Assert.IsNotNull(element);
+            alias = element.FindProperty("Alias").Value as IEdmStringConstantExpression;
+            Assert.IsNotNull(alias);
+            Assert.AreEqual("s3", alias.Value);
+            name = element.FindProperty("Name").Value as IEdmPathExpression;
+            Assert.IsNotNull(name);
+            Assert.AreEqual("prop3", name.Path.Single());
+
+            // #2.2
+            element = keyCollection.Elements.Last() as IEdmRecordExpression;
+            Assert.IsNotNull(element);
+            alias = element.FindProperty("Alias").Value as IEdmStringConstantExpression;
+            Assert.IsNotNull(alias);
+            Assert.AreEqual("s4", alias.Value);
+            name = element.FindProperty("Name").Value as IEdmPathExpression;
+            Assert.IsNotNull(name);
+            Assert.AreEqual("prop4", name.Path.Single());
+        }
+
 
         [TestMethod]
         public void EnumAnnotationSerializationTest()

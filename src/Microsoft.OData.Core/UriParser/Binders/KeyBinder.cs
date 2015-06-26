@@ -47,17 +47,18 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             Debug.Assert(namedValues != null, "namedValues != null");
             Debug.Assert(collectionNode != null, "CollectionNode != null");
+            Debug.Assert(model != null, "model != null");
 
             IEdmEntityTypeReference collectionItemType = collectionNode.EntityItemType;
 
             IEdmEntityType collectionItemEntityType = collectionItemType.EntityDefinition();
             QueryNode keyLookupNode;
 
-            if (TryBindToDeclaredKey(collectionNode, namedValues, model, collectionItemEntityType, out keyLookupNode) == true)
+            if (TryBindToDeclaredKey(collectionNode, namedValues, model, collectionItemEntityType, out keyLookupNode))
             {
                 return keyLookupNode;
             }
-            else if (TryBindToDeclaredAlternateKey(collectionNode, namedValues, model, collectionItemEntityType, out keyLookupNode) == true)
+            else if (TryBindToDeclaredAlternateKey(collectionNode, namedValues, model, collectionItemEntityType, out keyLookupNode))
             {
                 return keyLookupNode;
             }

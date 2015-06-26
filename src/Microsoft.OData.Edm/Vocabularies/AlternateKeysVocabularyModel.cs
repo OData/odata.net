@@ -16,12 +16,12 @@ using Microsoft.OData.Edm.Validation;
 namespace Microsoft.OData.Edm.Vocabularies.Community.V1
 {
     /// <summary>
-    /// Representing Core Vocabulary Model.
+    /// Representing Alternate Keys Vocabulary Model.
     /// </summary>
     public static class AlternateKeysVocabularyModel
     {
         /// <summary>
-        /// The EDM model with core vocabularies.
+        /// The EDM model with alternate keys vocabulary.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
         public static readonly IEdmModel Instance;
@@ -45,7 +45,7 @@ namespace Microsoft.OData.Edm.Vocabularies.Community.V1
         public static readonly IEdmComplexType PropertyRefType;
 
         /// <summary>
-        /// Parse Alternate Keys Vocabulary Model from CoreVocabularies.xml
+        /// Parse Alternate Keys Vocabulary Model from AlternateKeysVocabularies.xml
         /// </summary>
         static AlternateKeysVocabularyModel()
         {

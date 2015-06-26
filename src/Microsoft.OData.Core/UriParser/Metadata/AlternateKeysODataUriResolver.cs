@@ -16,7 +16,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
     using Microsoft.OData.Edm;
 
     /// <summary>
-    /// Implementation for resolving a literal value without qualified namespace to enum type.
+    /// Implementation for resolving alternate keys defined in the model.
     /// </summary>
     public sealed class AlternateKeysODataUriResolver : ODataUriResolver
     {
@@ -35,8 +35,8 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         }
 
         /// <summary>
-        /// Resolve keys for certain entity set, this function would be called when key is specified as name value pairs. E.g. EntitySet(ID='key')
-        /// Enum value could omit type name prefix using this resolver.
+        /// Resolve keys for certain entity type, this function would be called when key is specified as name value pairs. E.g. EntitySet(ID='key')
+        /// Alternate keys should be resolved using the namedValues.
         /// </summary>
         /// <param name="type">Type for current entityset.</param>
         /// <param name="namedValues">The dictionary of name value pairs.</param>
@@ -49,11 +49,11 @@ namespace Microsoft.OData.Core.UriParser.Metadata
             {
                 convertedPairs = base.ResolveKeys(type, namedValues, convertFunc);
             }
-            catch (ODataException ex)
+            catch (ODataException /*exception*/)
             {
-                if (!TryResolveUsingAlternateKeys(type, namedValues, convertFunc, out convertedPairs))
+                if (!TryResolveAlternateKeys(type, namedValues, convertFunc, out convertedPairs))
                 {
-                    throw ex;
+                    throw;
                 }
             }
 
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// <param name="convertFunc">The convert function to be used for value converting.</param>
         /// <param name="convertedPairs">The resolved key list.</param>
         /// <returns>True if resolve succeeded.</returns>
-        private bool TryResolveUsingAlternateKeys(IEdmEntityType type, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc, out IEnumerable<KeyValuePair<string, object>> convertedPairs)
+        private bool TryResolveAlternateKeys(IEdmEntityType type, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc, out IEnumerable<KeyValuePair<string, object>> convertedPairs)
         {
             IEnumerable<IDictionary<string, IEdmProperty>> alternateKeys = type.DeclaredAlternateKeys(model);
             foreach (IDictionary<string, IEdmProperty> keys in alternateKeys)

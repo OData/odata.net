@@ -2653,7 +2653,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="type">Reference to the calling object.</param>
         /// <param name="model">The model to be used.</param>
-        /// <returns>Key of this type.</returns>
+        /// <returns>Alternate keys of this type.</returns>
         private static IEnumerable<IDictionary<string, IEdmProperty>> GetDeclaredAlternateKeysForType(IEdmEntityType type, IEdmModel model)
         {
             IEdmValueAnnotation annotationValue = model.FindVocabularyAnnotations<IEdmValueAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
