@@ -1216,7 +1216,7 @@ namespace EdmLibTests.FunctionalTests
             bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), Enumerable.Empty<IEdmModel>(), settings, out model, out errors);
             Assert.AreEqual(true, parsed);
             Assert.AreEqual(0, errors.Count());
-            Assert.AreEqual(3, model.ReferencedModels.Count());
+            Assert.AreEqual(4, model.ReferencedModels.Count());
         }
 
         [TestMethod]
@@ -1291,7 +1291,6 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsNotNull(c2Type);
             Assert.AreEqual(c2Type, property2.Type.Definition);
         }
-
 
         [TestMethod]
         public void EdmxReaderEntitysEnumKeyTest()

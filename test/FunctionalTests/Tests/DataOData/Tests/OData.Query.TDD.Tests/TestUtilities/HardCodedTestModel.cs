@@ -133,6 +133,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             var FullyQualifiedNamespaceAddressTypeReference = new EdmComplexTypeReference(FullyQualifiedNamespaceAddress, true);
             var FullyQualifiedNamespaceOpenAddressTypeReference = new EdmComplexTypeReference(FullyQualifiedNamespaceOpenAddress, true);
             var FullyQualifiedNamespacePerson_ID = FullyQualifiedNamespacePerson.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
+            var FullyQualifiedNamespacePerson_SSN = FullyQualifiedNamespacePerson.AddStructuralProperty("SSN", EdmCoreModel.Instance.GetString(true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("Shoe", EdmCoreModel.Instance.GetString(true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("GeographyPoint", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("GeographyLineString", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyLineString, true));
@@ -196,6 +197,11 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
                 });
 
             var FullyQualifiedNamespacePerson_MyPet2Set = FullyQualifiedNamespacePerson.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyPet2Set", TargetMultiplicity = EdmMultiplicity.Many, Target = FullyQualifiedNamespacePet2, });
+
+            FullyQualifiedNamespacePerson.AddAlternateKey(
+                model, new Dictionary<string, IEdmProperty>()
+                { {"SocialSN" , FullyQualifiedNamespacePerson_SSN}
+                });
             model.AddElement(FullyQualifiedNamespacePerson);
 
             FullyQualifiedNamespaceEmployee.AddStructuralProperty("WorkEmail", EdmCoreModel.Instance.GetString(true));
@@ -747,7 +753,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
                     throw new Exception("edmx:refernece must have a valid url." + uri.AbsoluteUri);
                 }, out parsedModel, out errors))
                 {
-                    return parsedModel;
+                   return parsedModel;
                 }
             }
             catch (Exception e)
@@ -894,7 +900,8 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
         <Key>
           <PropertyRef Name=""ID"" />
         </Key>
-        <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />        
+        <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""SSN"" Type=""Edm.String"" />
         <Property Name=""Shoe"" Type=""Edm.String"" />
         <Property Name=""GeographyPoint"" Type=""Edm.GeographyPoint"" SRID=""4326"" />
         <Property Name=""GeographyLineString"" Type=""Edm.GeographyLineString"" SRID=""4326"" />
@@ -931,6 +938,20 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
         <NavigationProperty Name=""MyContainedDog"" Type=""Fully.Qualified.Namespace.Dog"" ContainsTarget=""true"" />
         <NavigationProperty Name=""MyContainedChimeras"" Type=""Collection(Fully.Qualified.Namespace.Chimera)"" ContainsTarget=""true"" />
         <NavigationProperty Name=""MyPet2Set"" Type=""Collection(Fully.Qualified.Namespace.Pet2)"" />
+        <Annotation Term=""OData.Community.AlternateKeys.V1.AlternateKeys"">
+          <Collection>
+            <Record Type=""OData.Community.AlternateKeys.V1.AlternateKey"">
+              <PropertyValue Property=""Key"">
+                <Collection>
+                  <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+                    <PropertyValue Property=""Alias"" String=""SocialSN"" />
+                    <PropertyValue Property=""Name"" PropertyPath=""SSN"" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Collection>
+        </Annotation>
       </EntityType>
       <EntityType Name=""Employee"" BaseType=""Fully.Qualified.Namespace.Person"">
         <Property Name=""WorkEmail"" Type=""Edm.String"" />
