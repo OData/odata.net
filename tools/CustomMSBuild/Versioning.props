@@ -29,7 +29,7 @@
   <!-- For T4 -->
   <PropertyGroup>
     <T4VersionMajor>2</T4VersionMajor>
-    <T4VersionMinor>3</T4VersionMinor>
+    <T4VersionMinor>4</T4VersionMinor>
     <T4VersionBuildNumber>0</T4VersionBuildNumber>
     <T4VersionFullSemantic>$(T4VersionMajor).$(T4VersionMinor).$(T4VersionBuildNumber)</T4VersionFullSemantic>
     <VersionT4Semantic>$(T4VersionFullSemantic)</VersionT4Semantic>

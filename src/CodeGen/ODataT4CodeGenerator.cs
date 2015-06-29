@@ -40,7 +40,7 @@ namespace Microsoft.OData.Client.Design.T4
         {
 
 /*
-OData Client T4 Template ver. 2.3.0
+OData Client T4 Template ver. 2.4.0
 Copyright (c) Microsoft Corporation
 All rights reserved. 
 MIT License
@@ -1011,7 +1011,7 @@ public class CodeGenerationContext
 public abstract class ODataClientTemplate : TemplateBase
 {
     protected readonly string singleSuffix = "Single";
-    protected const string T4Version  = "2.3.0";
+    protected const string T4Version  = "2.4.0";
 
     /// <summary>
     /// The code generation context.
