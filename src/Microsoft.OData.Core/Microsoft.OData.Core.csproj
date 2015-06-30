@@ -425,6 +425,7 @@
     <Compile Include="UriParser\InternalErrorCodes.cs" />
     <Compile Include="UriParser\KeyPropertyValue.cs" />
     <Compile Include="UriParser\LiteralUtils.cs" />
+    <Compile Include="UriParser\Metadata\AlternateKeysODataUriResolver.cs" />
     <Compile Include="UriParser\Metadata\StringAsEnumResolver.cs" />
     <Compile Include="UriParser\Metadata\ODataUriResolver.cs" />
     <Compile Include="UriParser\Metadata\UnqualifiedODataUriResolver.cs" />

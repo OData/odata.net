@@ -240,7 +240,9 @@
     <Compile Include="PrimitiveValueConverters\PrimitiveValueConverterConstants.cs" />
     <Compile Include="Vocabularies\CapabilitiesVocabularyConstants.cs" />
     <Compile Include="Vocabularies\CapabilitiesVocabularyModel.cs" />
+    <Compile Include="Vocabularies\AlternateKeysVocabularyConstants.cs" />
     <Compile Include="Vocabularies\CoreVocabularyConstants.cs" />
+    <Compile Include="Vocabularies\AlternateKeysVocabularyModel.cs" />
     <Compile Include="Vocabularies\CoreVocabularyModel.cs" />
     <Compile Include="Vocabularis\CapabilitiesVocabularyConstants.cs" />
     <Compile Include="Vocabularis\CoreVocabularyConstants.cs" />
@@ -542,6 +544,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Vocabularies\CoreVocabularies.xml">
       <LogicalName>CoreVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vocabularies\AlternateKeysVocabularies.xml">
+      <LogicalName>AlternateKeysVocabularies.xml</LogicalName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
