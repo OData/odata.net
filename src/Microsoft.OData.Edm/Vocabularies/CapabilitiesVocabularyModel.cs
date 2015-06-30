@@ -14,8 +14,6 @@ using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Vocabularies.V1
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// Representing Capabilities Vocabulary Model.
     /// </summary>

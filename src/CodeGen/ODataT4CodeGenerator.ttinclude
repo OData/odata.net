@@ -36,6 +36,7 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <#@ Import Namespace="Microsoft.OData.Edm.Library" #>
 <#@ Import Namespace="Microsoft.OData.Edm.Values" #>
 <#@ Import Namespace="Microsoft.OData.Edm.Vocabularies.V1" #>
+<#@ Import Namespace="Microsoft.OData.Edm.Vocabularies.Community.V1" #>
 <#@ Import Namespace="System.Text"#>
 <#@ Import Namespace="System.Net"#>
 <#
@@ -886,7 +887,10 @@ public class CodeGenerationContext
         ret.AddRange(getElementFromOneModelFunc(mainModel));
         foreach (var tmp in mainModel.ReferencedModels)
         {
-            if (tmp is EdmCoreModel || tmp.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrencyControl) != null || tmp.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.ChangeTracking) != null)
+            if (tmp is EdmCoreModel ||
+                tmp.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrencyControl) != null ||
+                tmp.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.ChangeTracking) != null ||
+                tmp.FindDeclaredValueTerm(AlternateKeysVocabularyConstants.AlternateKeys) != null)
             {
                 continue;
             }
