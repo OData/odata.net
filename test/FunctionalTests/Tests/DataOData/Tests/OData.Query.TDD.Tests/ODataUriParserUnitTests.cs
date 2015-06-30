@@ -13,6 +13,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.Test.OData.Query.TDD.Tests.TestUtilities;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -277,6 +278,57 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
         {
             Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host/People(1)"));
             action.ShouldThrow<ODataException>().WithMessage(Strings.UriParser_FullUriMustBeRelative);
+        }
+
+        [TestMethod]
+        public void AlternateKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(SocialSN = \'1\')"))
+            {
+                Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
+            }.ParsePath();
+
+            pathSegment.Should().HaveCount(2);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            pathSegment.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("SocialSN", "1"));
+        }
+
+        [TestMethod]
+        public void CompositeAlternateKeyShouldWork()
+        {
+            Uri fullUri = new Uri("http://host/People(NameAlias=\'anyName\',FirstNameAlias=\'anyFirst\')");
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), fullUri)
+            {
+                Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
+            }.ParsePath();
+
+            pathSegment.Should().HaveCount(2);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            pathSegment.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("NameAlias", "anyName"), new KeyValuePair<string, object>("FirstNameAlias", "anyFirst"));
+        }
+
+        [TestMethod]
+        public void CompositeAlternateKeyShouldFailOnlyWithPartialAlternateKey()
+        {
+            Uri fullUri = new Uri("http://host/People(NameAlias=\'anyName\')");
+            Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), fullUri)
+            {
+                Resolver = new ODataUriResolver()
+            }.ParsePath();
+
+            action.ShouldThrow<ODataException>().WithMessage("Bad Request - Error in query syntax.");
+        }
+
+        [TestMethod]
+        public void AlternateKeyShouldFailWithDefaultUriResolver()
+        {
+            Uri fullUri = new Uri("http://host/People(SocialSN = \'1\')");
+            Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), fullUri)
+            {
+                Resolver = new ODataUriResolver()
+            }.ParsePath();
+
+            action.ShouldThrow<ODataException>().WithMessage("Bad Request - Error in query syntax.");
         }
 
         [TestMethod]

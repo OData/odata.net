@@ -302,7 +302,6 @@ namespace Microsoft.OData.Core.UriParser.Metadata
                     throw ExceptionUtil.CreateSyntaxError();
                 }
 
-                //// Debug.Assert(property.Type.IsPrimitive() || property.Type.IsTypeDefinition(), "Keys can only be primitive or type definition");
                 object convertedValue = convertFunc(property.Type, valueText);
                 if (convertedValue == null)
                 {
@@ -316,7 +315,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         }
 
         /// <summary>
-        /// Resolve an operatin parameter's name with case insensitive enabled
+        /// Resolve an operation parameter's name with case insensitive enabled
         /// </summary>
         /// <param name="operation">The operation.</param>
         /// <param name="identifier">Name for the parameter.</param>
@@ -329,7 +328,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
             {
                 throw new ODataException(Strings.UriParserMetadata_MultipleMatchingParametersFound(identifier));
             }
-            
+
             if (list.Count == 1)
             {
                 return list.Single();
