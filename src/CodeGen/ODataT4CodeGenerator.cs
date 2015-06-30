@@ -24,6 +24,7 @@ namespace Microsoft.OData.Client.Design.T4
     using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Values;
     using Microsoft.OData.Edm.Vocabularies.V1;
+    using Microsoft.OData.Edm.Vocabularies.Community.V1;
     using System.Text;
     using System.Net;
     
@@ -993,7 +994,10 @@ public class CodeGenerationContext
         ret.AddRange(getElementFromOneModelFunc(mainModel));
         foreach (var tmp in mainModel.ReferencedModels)
         {
-            if (tmp is EdmCoreModel || tmp.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrencyControl) != null || tmp.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.ChangeTracking) != null)
+            if (tmp is EdmCoreModel ||
+                tmp.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrencyControl) != null ||
+                tmp.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.ChangeTracking) != null ||
+                tmp.FindDeclaredValueTerm(CommunityVocabularyConstants.AlternateKeys) != null)
             {
                 continue;
             }

@@ -104,7 +104,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 // Doing key lookup on the collection navigation property
                 if (namedValues != null)
                 {
-                    return keyBinder.BindKeyValues(collectionNavigationNode, namedValues);
+                    return keyBinder.BindKeyValues(collectionNavigationNode, namedValues, state.Model);
                 }
 
                 // Otherwise it's just a normal collection of entities

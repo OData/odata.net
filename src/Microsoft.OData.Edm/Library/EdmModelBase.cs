@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Annotations;
+using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Edm.Library
@@ -46,6 +47,11 @@ namespace Microsoft.OData.Edm.Library
             if (CapabilitiesVocabularyModel.Instance != null)
             {
                 this.referencedEdmModels.Add(CapabilitiesVocabularyModel.Instance);
+            }
+
+            if (CommunityVocabularyModel.Instance != null)
+            {
+                this.referencedEdmModels.Add(CommunityVocabularyModel.Instance);
             }
 
             this.annotationsManager = annotationsManager;

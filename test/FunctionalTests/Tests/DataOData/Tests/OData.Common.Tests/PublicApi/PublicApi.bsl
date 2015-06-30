@@ -1179,6 +1179,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static void AddAlternateKey (Microsoft.OData.Edm.IEdmEntityType type, Microsoft.OData.Edm.Library.EdmModel model, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Edm.IEdmProperty]] alternateKey)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static Microsoft.OData.Edm.IEdmComplexType BaseComplexType (Microsoft.OData.Edm.IEdmComplexType type)
 
 	[
@@ -1210,6 +1215,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	ExtensionAttribute(),
 	]
 	public static Microsoft.OData.Edm.IEdmComplexType ComplexDefinition (Microsoft.OData.Edm.IEdmComplexTypeReference type)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Edm.IEdmProperty]]]] DeclaredAlternateKeys (Microsoft.OData.Edm.IEdmEntityType type, Microsoft.OData.Edm.IEdmModel model)
 
 	[
 	ExtensionAttribute(),
@@ -3738,6 +3748,20 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel {
 	public static readonly Microsoft.OData.Edm.IEdmValueTerm ResourcePathTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
 }
 
+public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.CommunityVocabularyConstants {
+	public static string AlternateKeys = "OData.Community.AlternateKeys.V1.AlternateKeys"
+	public static string AlternateKeyType = "OData.Community.AlternateKeys.V1.AlternateKey"
+	public static string AlternateKeyTypeKeyPropertyName = "Key"
+	public static string PropertyRefType = "OData.Community.AlternateKeys.V1.PropertyRef"
+	public static string PropertyRefTypeAliasPropertyName = "Alias"
+	public static string PropertyRefTypeNamePropertyName = "Name"
+}
+
+public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.CommunityVocabularyModel {
+	public static readonly Microsoft.OData.Edm.IEdmValueTerm AlternateKeysTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
+	public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
+}
+
 public enum Microsoft.OData.Core.DeltaDeletedEntryReason : int {
 	Changed = 1
 	Deleted = 0
@@ -5163,6 +5187,12 @@ public class Microsoft.OData.Core.UriParser.Metadata.UnqualifiedODataUriResolver
 
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveBoundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier, Microsoft.OData.Edm.IEdmType bindingType)
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveUnboundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier)
+}
+
+public sealed class Microsoft.OData.Core.UriParser.Metadata.AlternateKeysODataUriResolver : Microsoft.OData.Core.UriParser.Metadata.ODataUriResolver {
+	public AlternateKeysODataUriResolver (Microsoft.OData.Edm.IEdmModel model)
+
+	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] namedValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
 }
 
 public sealed class Microsoft.OData.Core.UriParser.Metadata.StringAsEnumResolver : Microsoft.OData.Core.UriParser.Metadata.ODataUriResolver {

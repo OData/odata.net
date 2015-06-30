@@ -15,6 +15,7 @@ using Microsoft.OData.Edm.Csdl.Parsing;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Edm.Csdl
@@ -357,9 +358,9 @@ namespace Microsoft.OData.Edm.Csdl
                     continue;
                 }
 
-                if (tmp.Uri != null
-                    && (tmp.Uri.EndsWith(CoreVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal))
-                        || tmp.Uri.EndsWith(CapabilitiesVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal))
+                if (tmp.Uri != null && (tmp.Uri.EndsWith(CoreVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal) ||
+                    tmp.Uri.EndsWith(CapabilitiesVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal) ||
+                    tmp.Uri.EndsWith(CommunityVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal)))
                 {
                     continue;
                 }
