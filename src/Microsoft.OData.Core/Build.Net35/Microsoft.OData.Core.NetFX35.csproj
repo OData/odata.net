@@ -1198,6 +1198,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\LiteralUtils.cs">
       <Link>Microsoft\OData\Core\UriParser\LiteralUtils.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Metadata\AlternateKeysODataUriResolver.cs">
+      <Link>Microsoft\OData\Core\UriParser\Metadata\AlternateKeysODataUriResolver.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Metadata\StringAsEnumResolver.cs">
       <Link>Microsoft\OData\Core\UriParser\Metadata\StringAsEnumResolver.cs</Link>
     </Compile>
