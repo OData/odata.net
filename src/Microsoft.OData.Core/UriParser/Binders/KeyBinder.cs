@@ -103,7 +103,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>Returns true if binding succeeded.</returns>
         private bool TryBindToDeclaredKey(EntityCollectionNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model, IEdmEntityType collectionItemEntityType, out QueryNode keyLookupNode)
         {
-            Dictionary<string, IEdmProperty> keys = new Dictionary<string, IEdmProperty>();
+            Dictionary<string, IEdmProperty> keys = new Dictionary<string, IEdmProperty>(StringComparer.Ordinal);
             foreach (IEdmStructuralProperty property in collectionItemEntityType.Key())
             {
                 keys[property.Name] = property;
