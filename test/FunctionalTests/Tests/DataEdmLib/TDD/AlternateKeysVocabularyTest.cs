@@ -18,9 +18,9 @@ namespace Microsoft.Test.Edm.TDD.Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class CommunityVocabularyTest
+    public class AlternateKeysVocabularyTest
     {
-        private readonly IEdmModel model = CommunityVocabularyModel.Instance;
+        private readonly IEdmModel model = AlternateKeysVocabularyModel.Instance;
 
         [TestMethod]
         public void TestAlternateKeysVocabularyModel()
@@ -47,7 +47,7 @@ namespace Microsoft.Test.Edm.TDD.Tests
 
             var alternateKeysTerm = model.FindDeclaredValueTerm("OData.Community.AlternateKeys.V1.AlternateKeys");
             Assert.IsNotNull(alternateKeysTerm);
-            Assert.AreEqual(CommunityVocabularyModel.AlternateKeysTerm, alternateKeysTerm);
+            Assert.AreEqual(AlternateKeysVocabularyModel.AlternateKeysTerm, alternateKeysTerm);
             Assert.AreEqual("OData.Community.AlternateKeys.V1", alternateKeysTerm.Namespace);
             Assert.AreEqual("AlternateKeys", alternateKeysTerm.Name);
             Assert.AreEqual(EdmTermKind.Value, alternateKeysTerm.TermKind);

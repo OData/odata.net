@@ -1600,13 +1600,13 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the declared alternate keys of the most defined entity with a declared key present.
         /// </summary>
-        /// <param name="type">Reference to the calling object.</param>
         /// <param name="model">The model to be used.</param>
+        /// <param name="type">Reference to the calling object.</param>
         /// <returns>Alternate Keys of this type.</returns>
-        public static IEnumerable<IDictionary<string, IEdmProperty>> DeclaredAlternateKeys(this IEdmEntityType type, IEdmModel model)
+        public static IEnumerable<IDictionary<string, IEdmProperty>> GetAlternateKeysAnnotation(this IEdmModel model, IEdmEntityType type)
         {
-            EdmUtil.CheckArgumentNull(type, "type");
             EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(type, "type");
 
             IEdmEntityType checkingType = type;
             while (checkingType != null)
@@ -1626,17 +1626,17 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Adds the alternate keys to this entity type.
         /// </summary>
-        /// <param name="type">Reference to the calling object.</param>
         /// <param name="model">The model to be used.</param>
+        /// <param name="type">Reference to the calling object.</param>
         /// <param name="alternateKey">Dictionary of alias and structural properties for the alternate key.</param>
-        public static void AddAlternateKey(this IEdmEntityType type, EdmModel model, IDictionary<string, IEdmProperty> alternateKey)
+        public static void AddAlternateKeyAnnotation(this EdmModel model, IEdmEntityType type, IDictionary<string, IEdmProperty> alternateKey)
         {
-            EdmUtil.CheckArgumentNull(type, "type");
             EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(type, "type");
             EdmUtil.CheckArgumentNull(alternateKey, "alternateKey");
 
             EdmCollectionExpression annotationValue = null;
-            var ann = model.FindVocabularyAnnotations<IEdmValueAnnotation>(type, CommunityVocabularyModel.AlternateKeysTerm).FirstOrDefault();
+            var ann = model.FindVocabularyAnnotations<IEdmValueAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
             if (ann != null)
             {
                 annotationValue = ann.Value as EdmCollectionExpression;
@@ -1649,21 +1649,21 @@ namespace Microsoft.OData.Edm
             foreach (KeyValuePair<string, IEdmProperty> kvp in alternateKey)
             {
                 IEdmRecordExpression propertyRef = new EdmRecordExpression(
-                    new EdmComplexTypeReference(CommunityVocabularyModel.PropertyRefType, false),
-                    new EdmPropertyConstructor(CommunityVocabularyConstants.PropertyRefTypeAliasPropertyName, new EdmStringConstant(kvp.Key)),
-                    new EdmPropertyConstructor(CommunityVocabularyConstants.PropertyRefTypeNamePropertyName, new EdmPropertyPathExpression(kvp.Value.Name)));
+                    new EdmComplexTypeReference(AlternateKeysVocabularyModel.PropertyRefType, false),
+                    new EdmPropertyConstructor(AlternateKeysVocabularyConstants.PropertyRefTypeAliasPropertyName, new EdmStringConstant(kvp.Key)),
+                    new EdmPropertyConstructor(AlternateKeysVocabularyConstants.PropertyRefTypeNamePropertyName, new EdmPropertyPathExpression(kvp.Value.Name)));
                 propertyRefs.Add(propertyRef);
             }
 
             EdmRecordExpression alternateKeyRecord = new EdmRecordExpression(
-                new EdmComplexTypeReference(CommunityVocabularyModel.AlternateKeyType, false),
-                new EdmPropertyConstructor(CommunityVocabularyConstants.AlternateKeyTypeKeyPropertyName, new EdmCollectionExpression(propertyRefs)));
+                new EdmComplexTypeReference(AlternateKeysVocabularyModel.AlternateKeyType, false),
+                new EdmPropertyConstructor(AlternateKeysVocabularyConstants.AlternateKeyTypeKeyPropertyName, new EdmCollectionExpression(propertyRefs)));
 
             alternateKeysCollection.Add(alternateKeyRecord);
 
             var annotation = new EdmAnnotation(
                 type,
-                CommunityVocabularyModel.AlternateKeysTerm,
+                AlternateKeysVocabularyModel.AlternateKeysTerm,
                 new EdmCollectionExpression(alternateKeysCollection));
 
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
@@ -2648,7 +2648,7 @@ namespace Microsoft.OData.Edm
         /// <returns>Alternate Keys of this type.</returns>
         private static IEnumerable<IDictionary<string, IEdmProperty>> GetDeclaredAlternateKeysForType(IEdmEntityType type, IEdmModel model)
         {
-            IEdmValueAnnotation annotationValue = model.FindVocabularyAnnotations<IEdmValueAnnotation>(type, CommunityVocabularyModel.AlternateKeysTerm).FirstOrDefault();
+            IEdmValueAnnotation annotationValue = model.FindVocabularyAnnotations<IEdmValueAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
 
             if (annotationValue != null)
             {
@@ -2659,7 +2659,7 @@ namespace Microsoft.OData.Edm
 
                 foreach (IEdmRecordExpression key in keys.Elements.OfType<IEdmRecordExpression>())
                 {
-                    var edmPropertyConstructor = key.Properties.FirstOrDefault(e => e.Name == CommunityVocabularyConstants.AlternateKeyTypeKeyPropertyName);
+                    var edmPropertyConstructor = key.Properties.FirstOrDefault(e => e.Name == AlternateKeysVocabularyConstants.AlternateKeyTypeKeyPropertyName);
                     if (edmPropertyConstructor != null)
                     {
                         IEdmCollectionExpression collectionExpression = edmPropertyConstructor.Value as IEdmCollectionExpression;
@@ -2668,11 +2668,11 @@ namespace Microsoft.OData.Edm
                         IDictionary<string, IEdmProperty> alternateKey = new Dictionary<string, IEdmProperty>();
                         foreach (IEdmRecordExpression propertyRef in collectionExpression.Elements.OfType<IEdmRecordExpression>())
                         {
-                            var aliasProp = propertyRef.Properties.FirstOrDefault(e => e.Name == CommunityVocabularyConstants.PropertyRefTypeAliasPropertyName);
+                            var aliasProp = propertyRef.Properties.FirstOrDefault(e => e.Name == AlternateKeysVocabularyConstants.PropertyRefTypeAliasPropertyName);
                             Debug.Assert(aliasProp != null, "expected non null Alias Property");
                             string alias = ((IEdmStringConstantExpression)aliasProp.Value).Value;
 
-                            var nameProp = propertyRef.Properties.FirstOrDefault(e => e.Name == CommunityVocabularyConstants.PropertyRefTypeNamePropertyName);
+                            var nameProp = propertyRef.Properties.FirstOrDefault(e => e.Name == AlternateKeysVocabularyConstants.PropertyRefTypeNamePropertyName);
                             Debug.Assert(nameProp != null, "expected non null Name Property");
                             string propertyName = ((IEdmPathExpression)nameProp.Value).Path.FirstOrDefault();
 
