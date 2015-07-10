@@ -176,6 +176,52 @@ Then, Developers can replace the default client message with `CustomizedClientRe
     };
     dataServiceContext.PeoplePlus.ByKey("Jason").GetValue();
 
+## OnEntryStarting ##
+
+`OnEntryStarting` is a method of the `RequestPipeline`.
+
+`public DataServiceClientRequestPipelineConfiguration OnEntryStarting(Action<WritingEntryArgs> action)`
+
+Developer can use this function to control the information of an `ODataEntry` to be serialized.
+
+### Modify ODataEntry properties ###
+
+Following code provides a sample to add properties to an `ODataEntry`.
+
+    public static void AddProperties(this ODataEntry entry, params ODataProperty[] newProperties)
+    {
+        var odataProps = entry.Properties as List<ODataProperty>;
+        if (odataProps == null)
+        {
+            odataProps = new List<ODataProperty>(entry.Properties);
+        }
+
+        odataProps.AddRange(newProperties);
+        entry.Properties = odataProps;
+    }
+
+### Set `OnEntryStarting` ###
+
+Then, to add new properties in the `OdataEntry` info, developers can call `AddProperties` in `OnEntryStarting`.
+
+    public void UpdateEntryInfo()
+    {
+        DefaultContainer container = new DefaultContainer(new Uri("..."));
+
+        container.Configurations.RequestPipeline.OnEntryStarting(
+            args =>
+            {
+                args.Entry.AddProperties(new ODataProperty
+                {
+                    Name = "NewProperty",
+                    Value = 1
+                });
+            });
+        var product = new Product();
+        container.AddToProducts(product);
+        container.SaveChanges();
+    }
+
 ## More client hooks in RequestPipeline && ResponsePipeline ##
 
 These two configurations provide more other client hooks in request pipeline and response pipeline.
