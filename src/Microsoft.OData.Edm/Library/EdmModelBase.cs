@@ -49,9 +49,9 @@ namespace Microsoft.OData.Edm.Library
                 this.referencedEdmModels.Add(CapabilitiesVocabularyModel.Instance);
             }
 
-            if (CommunityVocabularyModel.Instance != null)
+            if (AlternateKeysVocabularyModel.Instance != null)
             {
-                this.referencedEdmModels.Add(CommunityVocabularyModel.Instance);
+                this.referencedEdmModels.Add(AlternateKeysVocabularyModel.Instance);
             }
 
             this.annotationsManager = annotationsManager;

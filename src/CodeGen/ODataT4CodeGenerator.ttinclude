@@ -890,7 +890,7 @@ public class CodeGenerationContext
             if (tmp is EdmCoreModel ||
                 tmp.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrencyControl) != null ||
                 tmp.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.ChangeTracking) != null ||
-                tmp.FindDeclaredValueTerm(CommunityVocabularyConstants.AlternateKeys) != null)
+                tmp.FindDeclaredValueTerm(AlternateKeysVocabularyConstants.AlternateKeys) != null)
             {
                 continue;
             }

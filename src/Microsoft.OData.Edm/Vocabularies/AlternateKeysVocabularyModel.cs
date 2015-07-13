@@ -1,10 +1,9 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CommunityVocabularyModel.cs" company="Microsoft">
+// <copyright file="AlternateKeysVocabularyModel.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -17,9 +16,9 @@ using Microsoft.OData.Edm.Validation;
 namespace Microsoft.OData.Edm.Vocabularies.Community.V1
 {
     /// <summary>
-    /// Representing Community Vocabulary Model.
+    /// Representing Alternate Keys Vocabulary Model.
     /// </summary>
-    public static class CommunityVocabularyModel
+    public static class AlternateKeysVocabularyModel
     {
         /// <summary>
         /// The EDM model with Alternate Keys vocabularies.
@@ -46,26 +45,26 @@ namespace Microsoft.OData.Edm.Vocabularies.Community.V1
         internal static readonly IEdmComplexType PropertyRefType;
 
         /// <summary>
-        /// Parse Community Vocabulary Model from CommunityVocabularies.xml
+        /// Parse Alternate Keys Vocabulary Model from AlternateKeysVocabularies.xml
         /// </summary>
-        static CommunityVocabularyModel()
+        static AlternateKeysVocabularyModel()
         {
-            Assembly assembly = typeof(CommunityVocabularyModel).GetAssembly();
+            Assembly assembly = typeof(AlternateKeysVocabularyModel).GetAssembly();
 
-            using (Stream stream = assembly.GetManifestResourceStream("CommunityVocabularies.xml"))
+            using (Stream stream = assembly.GetManifestResourceStream("AlternateKeysVocabularies.xml"))
             {
                 IEnumerable<EdmError> errors;
-                Debug.Assert(stream != null, "CommunityVocabularies.xml: stream!=null");
+                Debug.Assert(stream != null, "AlternateKeysVocabularies.xml: stream!=null");
                 CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
             }
 
-            AlternateKeysTerm = Instance.FindDeclaredValueTerm(CommunityVocabularyConstants.AlternateKeys);
+            AlternateKeysTerm = Instance.FindDeclaredValueTerm(AlternateKeysVocabularyConstants.AlternateKeys);
             Debug.Assert(AlternateKeysTerm != null, "Expected Alternate Key term");
 
-            AlternateKeyType = Instance.FindDeclaredType(CommunityVocabularyConstants.AlternateKeyType) as IEdmComplexType;
+            AlternateKeyType = Instance.FindDeclaredType(AlternateKeysVocabularyConstants.AlternateKeyType) as IEdmComplexType;
             Debug.Assert(AlternateKeyType != null, "Expected Alternate Key type");
 
-            PropertyRefType = Instance.FindDeclaredType(CommunityVocabularyConstants.PropertyRefType) as IEdmComplexType;
+            PropertyRefType = Instance.FindDeclaredType(AlternateKeysVocabularyConstants.PropertyRefType) as IEdmComplexType;
             Debug.Assert(PropertyRefType != null, "Expected Alternate Key property ref type");
         }
     }

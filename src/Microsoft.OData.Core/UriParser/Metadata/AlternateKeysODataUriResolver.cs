@@ -65,7 +65,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// <returns>True if resolve succeeded.</returns>
         private bool TryResolveAlternateKeys(IEdmEntityType type, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc, out IEnumerable<KeyValuePair<string, object>> convertedPairs)
         {
-            IEnumerable<IDictionary<string, IEdmProperty>> alternateKeys = type.DeclaredAlternateKeys(model);
+            IEnumerable<IDictionary<string, IEdmProperty>> alternateKeys = model.GetAlternateKeysAnnotation(type);
             foreach (IDictionary<string, IEdmProperty> keys in alternateKeys)
             {
                 if (TryResolveKeys(type, namedValues, keys, convertFunc, out convertedPairs))

@@ -198,12 +198,12 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
 
             var FullyQualifiedNamespacePerson_MyPet2Set = FullyQualifiedNamespacePerson.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyPet2Set", TargetMultiplicity = EdmMultiplicity.Many, Target = FullyQualifiedNamespacePet2, });
 
-            FullyQualifiedNamespacePerson.AddAlternateKey(model, new Dictionary<string, IEdmProperty>()
+            model.AddAlternateKeyAnnotation(FullyQualifiedNamespacePerson, new Dictionary<string, IEdmProperty>()
             {
                 {"SocialSN", FullyQualifiedNamespacePerson_SSN}
             });
 
-            FullyQualifiedNamespacePerson.AddAlternateKey(model, new Dictionary<string, IEdmProperty>()
+            model.AddAlternateKeyAnnotation(FullyQualifiedNamespacePerson, new Dictionary<string, IEdmProperty>()
             {
                 {"NameAlias", FullyQualifiedNamespacePerson_Name},
                 {"FirstNameAlias", FullyQualifiedNamespacePerson_FirstName}

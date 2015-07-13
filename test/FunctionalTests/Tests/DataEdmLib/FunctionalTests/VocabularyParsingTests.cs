@@ -1618,8 +1618,8 @@ namespace EdmLibTests.FunctionalTests
             var prop3 = book.AddStructuralProperty("prop3", EdmPrimitiveTypeKind.Int32, false);
             var prop4 = book.AddStructuralProperty("prop4", EdmPrimitiveTypeKind.Int32, false);
             book.AddKeys(prop1);
-            book.AddAlternateKey(model, new Dictionary<string, IEdmProperty> { { "s2", prop2 } });
-            book.AddAlternateKey(model, new Dictionary<string, IEdmProperty> { { "s3", prop3 }, { "s4", prop4 } });
+            model.AddAlternateKeyAnnotation(book, new Dictionary<string, IEdmProperty> { { "s2", prop2 } });
+            model.AddAlternateKeyAnnotation(book, new Dictionary<string, IEdmProperty> { { "s3", prop3 }, { "s4", prop4 } });
 
             IEnumerable<EdmError> errors;
             StringWriter sw = new StringWriter();
@@ -1728,7 +1728,7 @@ namespace EdmLibTests.FunctionalTests
 
             var bookType = parsedModel.FindDeclaredType("ns.book");
             Assert.IsNotNull(bookType);
-            IEdmValueAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(bookType, CommunityVocabularyModel.AlternateKeysTerm).FirstOrDefault();
+            IEdmValueAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(bookType, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
             Assert.IsNotNull(annotation);
             IEdmCollectionExpression collect = annotation.Value as IEdmCollectionExpression;
             Assert.IsNotNull(collect);

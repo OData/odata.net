@@ -360,7 +360,7 @@ namespace Microsoft.OData.Edm.Csdl
 
                 if (tmp.Uri != null && (tmp.Uri.EndsWith(CoreVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal) ||
                     tmp.Uri.EndsWith(CapabilitiesVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal) ||
-                    tmp.Uri.EndsWith(CommunityVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal)))
+                    tmp.Uri.EndsWith(AlternateKeysVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal)))
                 {
                     continue;
                 }
@@ -372,7 +372,7 @@ namespace Microsoft.OData.Edm.Csdl
                     continue;
                 }
 
-                // recusively use EdmxReader to parse sub edm:
+                // recursively use EdmxReader to parse sub edm:
                 EdmxReader referencedEdmxReader = new EdmxReader(referencedXmlReader, /*getReferencedModelReaderFunc*/ null);
                 referencedEdmxReader.source = tmp.Uri;
                 referencedEdmxReader.ignoreUnexpectedAttributesAndElements = this.ignoreUnexpectedAttributesAndElements;
@@ -401,7 +401,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="edmxVersion">The edmxVersion out.</param>
         /// <param name="csdlModel">The CsdlModel out.</param>
-        /// <returns>Ture if succeeded.</returns>
+        /// <returns>True if succeeded.</returns>
         private bool TryParseEdmxFileToCsdlModel(out Version edmxVersion, out CsdlModel csdlModel)
         {
             edmxVersion = null;

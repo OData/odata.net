@@ -79,7 +79,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>Returns true if binding succeeded.</returns>
         private bool TryBindToDeclaredAlternateKey(EntityCollectionNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model, IEdmEntityType collectionItemEntityType, out QueryNode keyLookupNode)
         {
-            IEnumerable<IDictionary<string, IEdmProperty>> alternateKeys = collectionItemEntityType.DeclaredAlternateKeys(model);
+            IEnumerable<IDictionary<string, IEdmProperty>> alternateKeys = model.GetAlternateKeysAnnotation(collectionItemEntityType);
             foreach (IDictionary<string, IEdmProperty> keys in alternateKeys)
             {
                 if (TryBindToKeys(collectionNode, namedValues, model, collectionItemEntityType, keys, out keyLookupNode))
