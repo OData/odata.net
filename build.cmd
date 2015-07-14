@@ -42,26 +42,20 @@ echo.
 echo **** BUILD SUCCESSFUL ***
 goto Test
 
-
-
 :Test
 set NUGETPACK=%~dp0\sln\packages
 pushd %~dp0bin\AnyCPU\Debug\Test\Desktop\
 setlocal
 
-
 echo ************starting to run test**********
 
 copy /y %NUGETPACK%\EntityFramework.4.3.1\lib\net40\EntityFramework.dll
 
-
 set MSTest="%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.exe"
 
-
-
 %MSTest% /testcontainer:Microsoft.Test.Data.Services.DDBasics.dll  ^
-	   /testcontainer:Microsoft.OData.Client.Design.T4.UnitTests.dll ^
-	   /testcontainer:AstoriaUnitTests.TDDUnitTests.dll ^
+       /testcontainer:Microsoft.OData.Client.Design.T4.UnitTests.dll ^
+       /testcontainer:AstoriaUnitTests.TDDUnitTests.dll ^
        /testcontainer:EdmLibTests.dll ^
        /testcontainer:Microsoft.OData.Client.TDDUnitTests.dll ^
        /testcontainer:Microsoft.Spatial.TDDUnitTests.dll ^
@@ -84,8 +78,6 @@ set MSTest="%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.
        /testcontainer:Microsoft.Test.OData.User.Tests.dll ^
        /testcontainer:TestCategoryAttributeCheck.dll 
   
-
-
 pause>nul
 
 popd
