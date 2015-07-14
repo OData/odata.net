@@ -1,23 +1,18 @@
 @echo off
-pushd %~dp0
 setlocal
-
-goto Test
-
-if exist bin goto build
-mkdir bin
 
 :Build
 
+echo **********starting to build the project**********
 set MSBuild="%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe"
 if not exist %MSBuild% @set MSBuild="%ProgramFiles%\MSBuild\12.0\Bin\MSBuild.exe"
 
-set TESTLOG=BuildResult.txt
+set BUILDLOG=BuildResult.txt
 
 :BuildFull
 echo *** Build Microsoft.Odata.Full ***
 
-%MSBuild% sln/Microsoft.OData.Full.sln /m /nr:false  /p:Platform="Any CPU" /p:Desktop=true /v:M /fl /flp:LogFile=bin\msbuild.log;Verbosity=Normal > TESTLOG
+%MSBuild% sln/Microsoft.OData.Full.sln /m /nr:false  /p:Platform="Any CPU" /p:Desktop=true /v:M /fl /flp:LogFile=bin\msbuild.log;Verbosity=Normal > BUILDLOG
 
 if %ERRORLEVEL% neq 0 goto BuildFail
 goto BuildE2E
@@ -26,7 +21,7 @@ goto BuildE2E
 :BuildE2E
 echo *** Build Microsoft.Odata.E2E ***
 
-%MSBuild% sln/Microsoft.OData.E2E.sln /m /nr:false  /p:Platform="Any CPU" /p:Desktop=true /v:M /fl /flp:LogFile=bin\msbuild.log;Verbosity=Normal >> TESTLOG
+%MSBuild% sln/Microsoft.OData.E2E.sln /m /nr:false  /p:Platform="Any CPU" /p:Desktop=true /v:M /fl /flp:LogFile=bin\msbuild.log;Verbosity=Normal >> BUILDLOG
 
 if %ERRORLEVEL% neq 0 goto BuildFail
 goto BuildSuccess
@@ -35,23 +30,24 @@ goto BuildSuccess
 :BuildFail
 echo.
 echo *** BUILD FAILED ***
-goto Test
+goto :EOF
 
 :BuildSuccess
 echo.
 echo **** BUILD SUCCESSFUL ***
-goto Test
+
 
 :Test
 set NUGETPACK=%~dp0\sln\packages
-pushd %~dp0bin\AnyCPU\Debug\Test\Desktop\
-setlocal
+cd bin\AnyCPU\Debug\Test\Desktop\
 
-echo ************starting to run test**********
+echo **********starting to run test**********
 
 copy /y %NUGETPACK%\EntityFramework.4.3.1\lib\net40\EntityFramework.dll
 
 set MSTest="%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.exe"
+set TESTLOG=TESTResult.txt
+
 
 %MSTest% /testcontainer:Microsoft.Test.Data.Services.DDBasics.dll  ^
        /testcontainer:Microsoft.OData.Client.Design.T4.UnitTests.dll ^
@@ -76,8 +72,6 @@ set MSTest="%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.
        /testcontainer:AstoriaUnitTests.dll ^
        /testcontainer:AstoriaClientUnitTests.dll ^
        /testcontainer:Microsoft.Test.OData.User.Tests.dll ^
-       /testcontainer:TestCategoryAttributeCheck.dll 
+       /testcontainer:TestCategoryAttributeCheck.dll > TESTLOG
   
-pause>nul
-
-popd
+endlocal
