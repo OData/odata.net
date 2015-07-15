@@ -1,4 +1,4 @@
-﻿<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="OData.Community.AlternateKeys.V1" Alias="Keys">
+﻿<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="OData.Community.Keys.V1" Alias="Keys">
   <Term AppliesTo="EntityType" Type="Collection(Keys.AlternateKey)" Name="AlternateKeys">
     <Annotation Term="Core.Description" String="Communicates available alternate keys"/>
   </Term>

@@ -3749,7 +3749,7 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel {
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysVocabularyConstants {
-	public static string AlternateKeys = "OData.Community.AlternateKeys.V1.AlternateKeys"
+	public static string AlternateKeys = "OData.Community.Keys.V1.AlternateKeys"
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysVocabularyModel {
