@@ -945,26 +945,26 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
         <NavigationProperty Name=""MyContainedDog"" Type=""Fully.Qualified.Namespace.Dog"" ContainsTarget=""true"" />
         <NavigationProperty Name=""MyContainedChimeras"" Type=""Collection(Fully.Qualified.Namespace.Chimera)"" ContainsTarget=""true"" />
         <NavigationProperty Name=""MyPet2Set"" Type=""Collection(Fully.Qualified.Namespace.Pet2)"" />
-        <Annotation Term=""OData.Community.AlternateKeys.V1.AlternateKeys"">
+        <Annotation Term=""OData.Community.Keys.V1.AlternateKeys"">
           <Collection>
-            <Record Type=""OData.Community.AlternateKeys.V1.AlternateKey"">
+            <Record Type=""OData.Community.Keys.V1.AlternateKey"">
               <PropertyValue Property=""Key"">
                 <Collection>
-                  <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+                  <Record Type=""OData.Community.Keys.V1.PropertyRef"">
                     <PropertyValue Property=""Alias"" String=""SocialSN"" />
                     <PropertyValue Property=""Name"" PropertyPath=""SSN"" />
                   </Record>
                 </Collection>
               </PropertyValue>
             </Record>
-            <Record Type=""OData.Community.AlternateKeys.V1.AlternateKey"">
+            <Record Type=""OData.Community.Keys.V1.AlternateKey"">
               <PropertyValue Property=""Key"">
                 <Collection>
-                  <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+                  <Record Type=""OData.Community.Keys.V1.PropertyRef"">
                     <PropertyValue Property=""Alias"" String=""NameAlias"" />
                     <PropertyValue Property=""Name"" PropertyPath=""Name"" />
                   </Record>
-                  <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+                  <Record Type=""OData.Community.Keys.V1.PropertyRef"">
                     <PropertyValue Property=""Alias"" String=""FirstNameAlias"" />
                     <PropertyValue Property=""Name"" PropertyPath=""FirstName"" />
                   </Record>

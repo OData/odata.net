@@ -26,7 +26,7 @@ namespace Microsoft.Test.Edm.TDD.Tests
         public void TestAlternateKeysVocabularyModel()
         {
             const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<Schema Namespace=""OData.Community.AlternateKeys.V1"" Alias=""Keys"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+<Schema Namespace=""OData.Community.Keys.V1"" Alias=""Keys"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <ComplexType Name=""AlternateKey"">
     <Property Name=""Key"" Type=""Collection(Keys.PropertyRef)"">
       <Annotation Term=""Core.Description"" String=""The set of properties that make up this key"" />
@@ -45,10 +45,10 @@ namespace Microsoft.Test.Edm.TDD.Tests
   </Term>
 </Schema>";
 
-            var alternateKeysTerm = model.FindDeclaredValueTerm("OData.Community.AlternateKeys.V1.AlternateKeys");
+            var alternateKeysTerm = model.FindDeclaredValueTerm("OData.Community.Keys.V1.AlternateKeys");
             Assert.IsNotNull(alternateKeysTerm);
             Assert.AreEqual(AlternateKeysVocabularyModel.AlternateKeysTerm, alternateKeysTerm);
-            Assert.AreEqual("OData.Community.AlternateKeys.V1", alternateKeysTerm.Namespace);
+            Assert.AreEqual("OData.Community.Keys.V1", alternateKeysTerm.Namespace);
             Assert.AreEqual("AlternateKeys", alternateKeysTerm.Name);
             Assert.AreEqual(EdmTermKind.Value, alternateKeysTerm.TermKind);
 

@@ -1642,26 +1642,26 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""prop2"" Type=""Edm.Int32"" Nullable=""false"" />
     <Property Name=""prop3"" Type=""Edm.Int32"" Nullable=""false"" />
     <Property Name=""prop4"" Type=""Edm.Int32"" Nullable=""false"" />
-    <Annotation Term=""OData.Community.AlternateKeys.V1.AlternateKeys"">
+    <Annotation Term=""OData.Community.Keys.V1.AlternateKeys"">
       <Collection>
-        <Record Type=""OData.Community.AlternateKeys.V1.AlternateKey"">
+        <Record Type=""OData.Community.Keys.V1.AlternateKey"">
           <PropertyValue Property=""Key"">
             <Collection>
-              <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+              <Record Type=""OData.Community.Keys.V1.PropertyRef"">
                 <PropertyValue Property=""Alias"" String=""s2"" />
                 <PropertyValue Property=""Name"" PropertyPath=""prop2"" />
               </Record>
             </Collection>
           </PropertyValue>
         </Record>
-        <Record Type=""OData.Community.AlternateKeys.V1.AlternateKey"">
+        <Record Type=""OData.Community.Keys.V1.AlternateKey"">
           <PropertyValue Property=""Key"">
             <Collection>
-              <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+              <Record Type=""OData.Community.Keys.V1.PropertyRef"">
                 <PropertyValue Property=""Alias"" String=""s3"" />
                 <PropertyValue Property=""Name"" PropertyPath=""prop3"" />
               </Record>
-              <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+              <Record Type=""OData.Community.Keys.V1.PropertyRef"">
                 <PropertyValue Property=""Alias"" String=""s4"" />
                 <PropertyValue Property=""Name"" PropertyPath=""prop4"" />
               </Record>
@@ -1689,26 +1689,26 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""prop2"" Type=""Edm.Int32"" Nullable=""false"" />
     <Property Name=""prop3"" Type=""Edm.Int32"" Nullable=""false"" />
     <Property Name=""prop4"" Type=""Edm.Int32"" Nullable=""false"" />
-    <Annotation Term=""OData.Community.AlternateKeys.V1.AlternateKeys"">
+    <Annotation Term=""OData.Community.Keys.V1.AlternateKeys"">
       <Collection>
-        <Record Type=""OData.Community.AlternateKeys.V1.AlternateKey"">
+        <Record Type=""OData.Community.Keys.V1.AlternateKey"">
           <PropertyValue Property=""Key"">
             <Collection>
-              <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+              <Record Type=""OData.Community.Keys.V1.PropertyRef"">
                 <PropertyValue Property=""Alias"" String=""s2"" />
                 <PropertyValue Property=""Name"" PropertyPath=""prop2"" />
               </Record>
             </Collection>
           </PropertyValue>
         </Record>
-        <Record Type=""OData.Community.AlternateKeys.V1.AlternateKey"">
+        <Record Type=""OData.Community.Keys.V1.AlternateKey"">
           <PropertyValue Property=""Key"">
             <Collection>
-              <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+              <Record Type=""OData.Community.Keys.V1.PropertyRef"">
                 <PropertyValue Property=""Alias"" String=""s3"" />
                 <PropertyValue Property=""Name"" PropertyPath=""prop3"" />
               </Record>
-              <Record Type=""OData.Community.AlternateKeys.V1.PropertyRef"">
+              <Record Type=""OData.Community.Keys.V1.PropertyRef"">
                 <PropertyValue Property=""Alias"" String=""s4"" />
                 <PropertyValue Property=""Name"" PropertyPath=""prop4"" />
               </Record>
