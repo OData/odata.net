@@ -33,111 +33,111 @@ $RollingTests = "Microsoft.Test.Data.Services.DDBasics.dll" ,
 $E2ETests = "Microsoft.Test.OData.Tests.Client.dll",
        "PortableTests\Microsoft.Test.OData.Tests.Client.Portable.Desktop.dll",
        "Microsoft.Test.OData.PluggableFormat.dll"
-$ODataLocTests = "ODataLocTests.dll"
+$ODataLocTests = ,"ODataLocTests.dll"
 
 Function CleanUp
 {
-	Write-Host 'killing TaupoAstoriaRunner as it should no longer be running'
-	taskkill /F /IM "TaupoAstoriaRunner.exe" 1>$null 2>$null
+    Write-Host 'killing TaupoAstoriaRunner as it should no longer be running'
+    taskkill /F /IM "TaupoAstoriaRunner.exe" 1>$null 2>$null
 
-	Write-Host 'killing TaupoConsoleRunner as it should no longer be running'
-	taskkill /F /IM "TaupoConsoleRunner.exe" 	1>$null 2>$null
+    Write-Host 'killing TaupoConsoleRunner as it should no longer be running'
+    taskkill /F /IM "TaupoConsoleRunner.exe" 1>$null 2>$null
 
-	Write-Host 'killing MSTest as it should no longer be running'
-	taskkill /F /IM "MsTest.exe" 1>$null 2>$null
+    Write-Host 'killing MSTest as it should no longer be running'
+    taskkill /F /IM "MsTest.exe" 1>$null 2>$null
 
-	Write-Host 'killing LSbuild as it should no longer be running'
-	taskkill /F /IM "LSbuild.exe" 1>$null 2>$null
+    Write-Host 'killing LSbuild as it should no longer be running'
+    taskkill /F /IM "LSbuild.exe" 1>$null 2>$null
 
-	Write-Host 'Stopping code coverage gathering...'
-	taskkill /f /im VSPerfMon.exe 1>$null 2>$null
+    Write-Host 'Stopping code coverage gathering...'
+    taskkill /f /im VSPerfMon.exe 1>$null 2>$null
 
-	Write-Host 'Killing WinHttpAutoProxySvc as it overflows due to large amount of web calls'
-	taskkill /F /FI "SERVICES eq WinHttpAutoProxySvc" >$null
+    Write-Host 'Killing WinHttpAutoProxySvc as it overflows due to large amount of web calls'
+    taskkill /F /FI "SERVICES eq WinHttpAutoProxySvc" >$null
 
-	net stop w3svc 1>$null 2>$null
+    net stop w3svc 1>$null 2>$null
 
-	Write-Host 'Minimize SQLExpress memory footprint'
-	net stop "SQL Server (SQLEXPRESS)"  2>$null
-	net start "SQL Server (SQLEXPRESS)" 2>$null
-	
-	Write-Host 'Clean Done'
+    Write-Host 'Minimize SQLExpress memory footprint'
+    net stop "SQL Server (SQLEXPRESS)"  2>$null
+    net start "SQL Server (SQLEXPRESS)" 2>$null
+    
+    Write-Host 'Clean Done'
 }
 Function BuildSolution ($sln)
 {
-	Write-Host "*** Building $sln ***"
-	$slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
-	& $MSBUILD $slnpath /t:rebuild /m /nr:false /fl "/p:Platform=Any CPU" /p:Desktop=true /flp:LogFile=msbuild.log /flp:Verbosity=Normal >> $BUILDLOG
-	if($LASTEXITCODE -eq 0)
-	{
-		BuildSuccess ($sln)
+    Write-Host "*** Building $sln ***"
+    $slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
+    & $MSBUILD $slnpath /t:rebuild /m /nr:false /fl "/p:Platform=Any CPU" /p:Desktop=true /flp:LogFile=msbuild.log /flp:Verbosity=Normal >> $BUILDLOG
+    if($LASTEXITCODE -eq 0)
+    {
+        BuildSuccess ($sln)
     }
     else
     {
         BuildFail ($sln)
-	}
+    }
 }
 Function BuildSuccess ($sln)
 {
-	Write-Host "Build $sln SUCCESS" -ForegroundColor Green
+    Write-Host "Build $sln SUCCESS" -ForegroundColor Green
 }
 Function BuildFail ($sln)
 {
-	Write-Host "Build $sln FAILED" -ForegroundColor Red
-	exit
+    Write-Host "Build $sln FAILED" -ForegroundColor Red
+    exit
 }
 Function RestoringFile ($file , $target)
 {
-	Write-Host "Restoring $file"
-	Copy-Item -Path $file -Destination $target -Force
+    Write-Host "Restoring $file"
+    Copy-Item -Path $file -Destination $target -Force
 }
 Function RunTest ($title , $testdir)
 {
-	Write-Host "**********Running $title***********"
-	foreach ($test in $testdir)
-	{
-		Write-Host "Running $test"
-		& $MSTEST /testcontainer:$test >> $TESTLOG
-	}
+    Write-Host "**********Running $title***********"
+    foreach ($test in $testdir)
+    {
+        Write-Host "Running $test"
+        & $MSTEST /testcontainer:$test >> $TESTLOG
+    }
 }
 Function TestSummary
 {
-	Write-Host 'Collecting test results'
-	Write-Output "<Playlist Version=`"1.0`">" | Out-File $ENLISTMENT_ROOT\bas.playlist
-	$file = Get-Content -Path $ENLISTMENT_ROOT\TestResult.txt
-	$pass = 0
-	$fail = 0
-	$trxfile = New-Object -TypeName System.Collections.ArrayList
-	foreach ($line in $file)
-	{
-		if ($line -match ".*Passed.*") 
-		{
-			$pass = $pass + 1
-		}
-		elseif ($line -match ".*Failed\s+(.*)")
-		{
-			$fail = $fail + 1
-			$output = "<Add Test=`"" + $Matches[1] + "`" />"
-			Write-Output $output  | Out-File -Append $ENLISTMENT_ROOT\bas.playlist
-		}
-		elseif ($line -match ".*Results file: (.*)")
-		{
-			[void]$trxfile.Add($Matches[1])
-		}
-	}
-	Write-Host "Passed :`t$pass"
-	Write-Host "Failed :`t$fail"
-	Write-Host "---------------"
-	Write-Host "Total :`t$($pass + $fail)"
-	Write-Host "For more information, please open the following test result files:"
-	foreach ($trx in $trxfile)
-	{
-		Write-Host $trx
-	}
-	Write-Output "</Playlist>" | Out-File -Append "$ENLISTMENT_ROOT\bas.playlist"
-	Write-Host "To replay failed tests, please open the following playlist file:"
-	Write-Host "$ENLISTMENT_ROOT\bas.playlist"
-	rm $TESTLOG
+    Write-Host 'Collecting test results'
+    Write-Output "<Playlist Version=`"1.0`">" | Out-File $ENLISTMENT_ROOT\bas.playlist
+    $file = Get-Content -Path $ENLISTMENT_ROOT\TestResult.txt
+    $pass = 0
+    $fail = 0
+    $trxfile = New-Object -TypeName System.Collections.ArrayList
+    foreach ($line in $file)
+    {
+        if ($line -match ".*Passed.*") 
+        {
+            $pass = $pass + 1
+        }
+        elseif ($line -match ".*Failed\s+(.*)")
+        {
+            $fail = $fail + 1
+            $output = "<Add Test=`"" + $Matches[1] + "`" />"
+            Write-Output $output  | Out-File -Append $ENLISTMENT_ROOT\bas.playlist
+        }
+        elseif ($line -match ".*Results file: (.*)")
+        {
+            [void]$trxfile.Add($Matches[1])
+        }
+    }
+    Write-Host "Passed :`t$pass"
+    Write-Host "Failed :`t$fail"
+    Write-Host "---------------"
+    Write-Host "Total :`t$($pass + $fail)"
+    Write-Host "For more information, please open the following test result files:"
+    foreach ($trx in $trxfile)
+    {
+        Write-Host $trx
+    }
+    Write-Output "</Playlist>" | Out-File -Append "$ENLISTMENT_ROOT\bas.playlist"
+    Write-Host "To replay failed tests, please open the following playlist file:"
+    Write-Host "$ENLISTMENT_ROOT\bas.playlist"
+    rm $TESTLOG
 }
 
 CleanUp 
@@ -155,7 +155,7 @@ RestoringFile -file "$NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.
 RunTest -title 'Rolling Tests' -testdir $RollingTests
 RestoringFile -file "$NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll" -target $TESTDIR
 RunTest -title 'E2E Tests' -testdir $E2ETests
-RunTest -title 'ODataLocTests' -testdir $ODataLocTest
+RunTest -title 'ODataLocTests' -testdir $ODataLocTests
 TestSummary 
 $TEST_END_TIME = Get-Date
 
