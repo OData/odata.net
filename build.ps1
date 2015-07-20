@@ -1,17 +1,17 @@
 if (($args.Count -eq 0) -or ($args[0] -match 'Nightly')) 
 {
-	$script:TestType = 'Nightly'
-	$CONFIGURATION = 'Release'
+    $TestType = 'Nightly'
+    $CONFIGURATION = 'Release'
 }
 elseif ($args[0] -match 'Rolling')
 {
-	$script:TestType = "Rolling"
-	$CONFIGURATION = 'Debug'
+    $TestType = "Rolling"
+    $CONFIGURATION = 'Debug'
 }
 else 
 {
-	Write-Host 'Please choose Nightly Test or Rolling Test!' -ForegroundColor Red
-	exit
+    Write-Host 'Please choose Nightly Test or Rolling Test!' -ForegroundColor Red
+    exit
 }
 $PROGRAMFILESX86 = [Environment]::GetFolderPath("ProgramFilesX86")
 $env:ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
@@ -25,34 +25,35 @@ $TESTLOG = $ENLISTMENT_ROOT + "\TestResult.txt"
 $TESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$CONFIGURATION\Test\Desktop"
 $PRODUCTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Product\Desktop"
 $NUGETPACK = $ENLISTMENT_ROOT + "\sln\packages"
-$RollingTestSuite =         "Microsoft.Test.Data.Services.DDBasics.dll",
-        "Microsoft.OData.Client.Design.T4.UnitTests.dll",
-        "AstoriaUnitTests.TDDUnitTests.dll",
-        "EdmLibTests.dll",
-        "Microsoft.OData.Client.TDDUnitTests.dll",
-        "Microsoft.Spatial.TDDUnitTests.dll",
-        "Microsoft.Test.Edm.TDD.Tests.dll",
-        "Microsoft.Test.OData.TDD.Tests.dll",
-        "Microsoft.Test.OData.Query.TDD.Tests.dll",
-        "Microsoft.Test.Taupo.OData.Common.Tests.dll",
-        "Microsoft.Test.Taupo.OData.Query.Tests.dll",
-        "Microsoft.Test.Taupo.OData.Reader.Tests.dll",
-        "Microsoft.Test.Taupo.OData.Writer.Tests.dll",
-        "Microsoft.Test.Taupo.OData.Scenario.Tests.dll",
-        "AstoriaUnitTests.ClientCSharp.dll",
-        "Microsoft.Data.NamedStream.UnitTests.dll",
-        "Microsoft.Data.ServerUnitTests1.UnitTests.dll",
-        "Microsoft.Data.ServerUnitTests2.UnitTests.dll",
-        "RegressionUnitTests.dll",
-        "Microsoft.Test.OData.PluggableFormat.Tests.dll"
-$NightlyTestSuite = $RollingTestSuite ,
-        "Microsoft.Data.MetadataObjectModel.UnitTests.dll",
-        "AstoriaUnitTests.dll",
-        "AstoriaClientUnitTests.dll",
-        "Microsoft.Test.OData.User.Tests.dll",
-        "TestCategoryAttributeCheck.dll"
-$E2eTestSuite = "Microsoft.Test.OData.Tests.Client.dll", 
-        "PortableTests\Microsoft.Test.OData.Tests.Client.Portable.Desktop.dll"
+$RollingTestSuite = "/testcontainer:Microsoft.Test.Data.Services.DDBasics.dll", 
+        "/testcontainer:Microsoft.OData.Client.Design.T4.UnitTests.dll", 
+        "/testcontainer:AstoriaUnitTests.TDDUnitTests.dll", 
+        "/testcontainer:EdmLibTests.dll", 
+        "/testcontainer:Microsoft.OData.Client.TDDUnitTests.dll", 
+        "/testcontainer:Microsoft.Spatial.TDDUnitTests.dll", 
+        "/testcontainer:Microsoft.Test.Edm.TDD.Tests.dll", 
+        "/testcontainer:Microsoft.Test.OData.TDD.Tests.dll", 
+        "/testcontainer:Microsoft.Test.OData.Query.TDD.Tests.dll", 
+        "/testcontainer:Microsoft.Test.Taupo.OData.Common.Tests.dll", 
+        "/testcontainer:Microsoft.Test.Taupo.OData.Query.Tests.dll", 
+        "/testcontainer:Microsoft.Test.Taupo.OData.Reader.Tests.dll", 
+        "/testcontainer:Microsoft.Test.Taupo.OData.Writer.Tests.dll", 
+        "/testcontainer:Microsoft.Test.Taupo.OData.Scenario.Tests.dll", 
+        "/testcontainer:AstoriaUnitTests.ClientCSharp.dll", 
+        "/testcontainer:Microsoft.Data.NamedStream.UnitTests.dll", 
+        "/testcontainer:Microsoft.Data.ServerUnitTests1.UnitTests.dll", 
+        "/testcontainer:Microsoft.Data.ServerUnitTests2.UnitTests.dll", 
+        "/testcontainer:RegressionUnitTests.dll", 
+        "/testcontainer:Microsoft.Test.OData.PluggableFormat.Tests.dll"
+$AddtionalNightlyTestSuite = "/testcontainer:Microsoft.Data.MetadataObjectModel.UnitTests.dll", 
+        "/testcontainer:AstoriaUnitTests.dll", 
+        "/testcontainer:AstoriaClientUnitTests.dll", 
+        "/testcontainer:Microsoft.Test.OData.User.Tests.dll", 
+        "/testcontainer:TestCategoryAttributeCheck.dll"
+[System.Collections.ArrayList]$NightlyTestSuite=$RollingTestSuite
+foreach ($test in $AddtionalNightlyTestSuite) {$null=$NightlyTestSuite.Add($test)}
+
+$E2eTestSuite = "/testcontainer:Microsoft.Test.OData.Tests.Client.dll"
 $FxCopRulesOptions = "/rule:$FxCopDir\Rules\DesignRules.dll",
         "/rule:$FxCopDir\Rules\NamingRules.dll",
         "/rule:$FxCopDir\Rules\PerformanceRules.dll",
@@ -70,11 +71,12 @@ $DataWebRulesOption = "/rule:$TESTDIR\DataWebRules.dll"
 
 
 Function Cleanup 
-{	
-	cd $ENLISTMENT_ROOT\tools\Scripts	
-	Write-Host "Dropping stale databases..."
-	cscript "$ENLISTMENT_ROOT\tools\Scripts\artdbclean.js" //Nologo
-	cd $ENLISTMENT_ROOT
+{    
+    cd $ENLISTMENT_ROOT\tools\Scripts    
+    Write-Host "Dropping stale databases..."
+    cscript "$ENLISTMENT_ROOT\tools\Scripts\artdbclean.js" //Nologo
+    cd $ENLISTMENT_ROOT
+    Write-Host "Clean Done" -ForegroundColor Yellow
 }
 Function CleanBeforeScorch
 {
@@ -102,20 +104,20 @@ Function CleanBeforeScorch
     net stop "SQL Server (SQLEXPRESS)"  2>$null
     net start "SQL Server (SQLEXPRESS)" 2>$null
     
-    Write-Host 'Clean Done'
+    Write-Host "Clean Done" -ForegroundColor Yellow
 }
 Function RunBuild ($sln)
 {
     Write-Host "*** Building $sln ***"
     $slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
-	if ($script:TestType -eq 'Nightly')
-	{
-		$Conf = "/p:Configuration=Release"
-	}
-	else
-	{
-		$Conf = "/p:Configuration=Debug"
-	}
+    if ($TestType -eq 'Nightly')
+    {
+        $Conf = "/p:Configuration=Release"
+    }
+    else
+    {
+        $Conf = "/p:Configuration=Debug"
+    }
     & $MSBUILD $slnpath /t:rebuild /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true /flp:LogFile=msbuild.log /flp:Verbosity=Normal >> $BUILDLOG
     if($LASTEXITCODE -eq 0)
     {
@@ -124,8 +126,8 @@ Function RunBuild ($sln)
     else
     {
         Write-Host "Build $sln FAILED" -ForegroundColor Red
-    	Cleanup
-		exit
+        Cleanup
+        exit
     }
 }
 Function RestoringFile ($file , $target)
@@ -136,16 +138,12 @@ Function RestoringFile ($file , $target)
 Function RunTest ($title , $testdir)
 {
     Write-Host "**********Running $title***********"
-    foreach ($test in $testdir)
+    & $MSTEST $testdir >> $TESTLOG
+    if($LASTEXITCODE -ne 0)
     {
-        Write-Host "Running $test"
-        & $MSTEST /testcontainer:$test >> $TESTLOG
-		if($LASTEXITCODE -ne 0)
-    	{
-        	Write-Host "Run $test FAILED" -ForegroundColor Red
-    		Cleanup
-			exit
-    	}
+        Write-Host "Run $title FAILED" -ForegroundColor Red
+        Cleanup
+        exit
     }
 }
 Function TestSummary
@@ -158,17 +156,17 @@ Function TestSummary
     $trxfile = New-Object -TypeName System.Collections.ArrayList
     foreach ($line in $file)
     {
-        if ($line -match ".*Passed.*") 
+        if ($line -match "Passed.*") 
         {
             $pass = $pass + 1
         }
-        elseif ($line -match ".*Failed\s+(.*)")
+        elseif ($line -match "Failed\s+(.*)")
         {
             $fail = $fail + 1
             $output = "<Add Test=`"" + $Matches[1] + "`" />"
             Write-Output $output  | Out-File -Append $ENLISTMENT_ROOT\bas.playlist
         }
-        elseif ($line -match ".*Results file: (.*)")
+        elseif ($line -match "Results file: (.*)")
         {
             [void]$trxfile.Add($Matches[1])
         }
@@ -185,52 +183,66 @@ Function TestSummary
     Write-Output "</Playlist>" | Out-File -Append "$ENLISTMENT_ROOT\bas.playlist"
     Write-Host "To replay failed tests, please open the following playlist file:"
     Write-Host "$ENLISTMENT_ROOT\bas.playlist"
-    rm $TESTLOG
+    if (Test-Path $TESTLOG)
+    {
+        rm $TESTLOG
+    }
 }
 Function BuildProcess
 {
-	Write-Host '**********Start To Build The Project*********'
-	$script:BUILD_START_TIME = Get-Date
-	RunBuild ('Microsoft.Odata.Full.sln')
-	RunBuild ('Microsoft.OData.Net35.sln')
-	RunBuild ('Microsoft.OData.Net45.sln')
-	RunBuild ('Microsoft.OData.Portable45.sln')
-	RunBuild ('Microsoft.OData.CodeGen.sln')
-	RunBuild ('Microsoft.Odata.E2E.sln')
-	$script:BUILD_END_TIME = Get-Date
+    Write-Host '**********Start To Build The Project*********'
+    $script:BUILD_START_TIME = Get-Date
+    if (Test-Path $BUILDLOG)
+    {
+        rm $BUILDLOG
+    }
+    RunBuild ('Microsoft.Odata.Full.sln')
+    RunBuild ('Microsoft.OData.Net35.sln')
+    RunBuild ('Microsoft.OData.Net45.sln')
+    RunBuild ('Microsoft.OData.Portable45.sln')
+    RunBuild ('Microsoft.OData.CodeGen.sln')
+    RunBuild ('Microsoft.Odata.E2E.sln')
+    Write-Host "Build Done" -ForegroundColor Yellow
+    $script:BUILD_END_TIME = Get-Date
 }
 Function TestProcess
 {
-	Write-Host '**********Start To Run The Test*********'
-	$script:TEST_START_TIME = Get-Date
-	cd $TESTDIR
-	RestoringFile -file "$NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll" -target $TESTDIR
-	if ($script:TestType -eq 'Nightly')
-	{
-		RunTest -title 'Nightly Test' -testdir $NightlyTestSuite
-	}
-	elseif ($script:TestType -eq 'Rolling')
-	{
-		RunTest -title 'Rolling Tests' -testdir $RollingTestSuite
-	}
-	else
-	{
-		Write-Host 'Error : TestType' -ForegroundColor Red
-		Cleanup
-		exit
-	}
-	RestoringFile -file "$NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll" -target $TESTDIR
-	RunTest -title 'E2E Tests' -testdir $E2eTestSuite
-	TestSummary 
-	$script:TEST_END_TIME = Get-Date
-	cd $ENLISTMENT_ROOT
+    Write-Host '**********Start To Run The Test*********'
+    if (Test-Path $TESTLOG)
+    {
+        rm $TESTLOG
+    }
+    $script:TEST_START_TIME = Get-Date
+    cd $TESTDIR
+    RestoringFile -file "$NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll" -target $TESTDIR
+    if ($TestType -eq 'Nightly')
+    {
+        RunTest -title 'Nightly Test' -testdir $NightlyTestSuite
+    }
+    elseif ($TestType -eq 'Rolling')
+    {
+        RunTest -title 'Rolling Tests' -testdir $RollingTestSuite
+    }
+    else
+    {
+        Write-Host 'Error : TestType' -ForegroundColor Red
+        Cleanup
+        exit
+    }
+    RestoringFile -file "$NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll" -target $TESTDIR
+    RunTest -title 'E2E Tests' -testdir $E2eTestSuite
+    Write-Host "Test Done" -ForegroundColor Yellow
+    TestSummary 
+    $script:TEST_END_TIME = Get-Date
+    cd $ENLISTMENT_ROOT
 }
 Function FxCopProcess
 {
-	& $FXCOP "/f:$ProductDir\Microsoft.Spatial.dll" "/o:$ENLISTMENT_ROOT\SpatialFxCopReport.xml"  $DataWebRulesOption $FxCopRulesOptions
-	& $FXCOP "/f:$ProductDir\Microsoft.OData.Core.dll" "/o:$ENLISTMENT_ROOT\CoreFxCopReport.xml"  $FxCopRulesOptions
-	& $FXCOP "/f:$ProductDir\Microsoft.OData.Edm.dll" "/o:$ENLISTMENT_ROOT\EdmFxCopReport.xml"  $FxCopRulesOptions
-	& $FXCOP "/f:$ProductDir\Microsoft.OData.Client.dll.dll" "/o:$ENLISTMENT_ROOT\ClientFxCopReport.xml"  $DataWebRulesOption $FxCopRulesOptions
+    Write-Host '**********Start To FxCop*********'
+    & $FXCOP "/f:$ProductDir\Microsoft.Spatial.dll" "/o:$ENLISTMENT_ROOT\SpatialFxCopReport.xml"  $DataWebRulesOption $FxCopRulesOptions 1>$null 2>$null
+    & $FXCOP "/f:$ProductDir\Microsoft.OData.Core.dll" "/o:$ENLISTMENT_ROOT\CoreFxCopReport.xml"  $FxCopRulesOptions 1>$null 2>$null
+    & $FXCOP "/f:$ProductDir\Microsoft.OData.Edm.dll" "/o:$ENLISTMENT_ROOT\EdmFxCopReport.xml"  $FxCopRulesOptions 1>$null 2>$null
+    & $FXCOP "/f:$ProductDir\Microsoft.OData.Client.dll" "/o:$ENLISTMENT_ROOT\ClientFxCopReport.xml"  $DataWebRulesOption $FxCopRulesOptions 1>$null 2>$null
 }
 
 # Main Process
