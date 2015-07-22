@@ -12,7 +12,7 @@ else
 {
     Write-Host 'Please choose Nightly Test or Rolling Test!' -ForegroundColor Red
     exit
-}
+}   
 $PROGRAMFILESX86 = [Environment]::GetFolderPath("ProgramFilesX86")
 $env:ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
@@ -89,8 +89,8 @@ Function CleanBeforeScorch
     Write-Host 'killing MSTest as it should no longer be running'
     taskkill /F /IM "MsTest.exe" 1>$null 2>$null
 
-    Write-Host 'killing LSbuild as it should no longer be running'
-    taskkill /F /IM "LSbuild.exe" 1>$null 2>$null
+    Write-Host 'killing MSbuild as it should no longer be running'
+    taskkill /F /IM "MSbuild.exe" 1>$null 2>$null
 
     Write-Host 'Stopping code coverage gathering...'
     taskkill /f /im VSPerfMon.exe 1>$null 2>$null
@@ -135,21 +135,12 @@ Function RestoringFile ($file , $target)
     Write-Host "Restoring $file"
     Copy-Item -Path $file -Destination $target -Force
 }
-Function RunTest ($title , $testdir)
-{
-    Write-Host "**********Running $title***********"
-    & $MSTEST $testdir >> $TESTLOG
-    if($LASTEXITCODE -ne 0)
-    {
-        Write-Host "Run $title FAILED" -ForegroundColor Red
-        Cleanup
-        exit
-    }
-}
-Function TestSummary
+
+Function TestSummary ($title)
 {
     Write-Host 'Collecting test results'
-    Write-Output "<Playlist Version=`"1.0`">" | Out-File $ENLISTMENT_ROOT\bas.playlist
+    $playlist = "$ENLISTMENT_ROOT\$title" + "_bas.playlist"
+    Write-Output "<Playlist Version=`"1.0`">" | Out-File $playlist
     $file = Get-Content -Path $ENLISTMENT_ROOT\TestResult.txt
     $pass = 0
     $fail = 0
@@ -164,29 +155,46 @@ Function TestSummary
         {
             $fail = $fail + 1
             $output = "<Add Test=`"" + $Matches[1] + "`" />"
-            Write-Output $output  | Out-File -Append $ENLISTMENT_ROOT\bas.playlist
+            Write-Output $output  | Out-File -Append $playlist
         }
         elseif ($line -match "Results file: (.*)")
         {
             [void]$trxfile.Add($Matches[1])
         }
     }
-    Write-Host "Passed :`t$pass"
-    Write-Host "Failed :`t$fail"
-    Write-Host "---------------"
-    Write-Host "Total :`t$($pass + $fail)"
+    Write-Host "The summary of $title :" -ForegroundColor Green
+    Write-Host "Passed :`t$pass"  -ForegroundColor Green
+    Write-Host "Failed :`t$fail"  -ForegroundColor Green
+    Write-Host "---------------"  -ForegroundColor Green
+    Write-Host "Total :`t$($pass + $fail)"  -ForegroundColor Green
     Write-Host "For more information, please open the following test result files:"
     foreach ($trx in $trxfile)
     {
         Write-Host $trx
     }
-    Write-Output "</Playlist>" | Out-File -Append "$ENLISTMENT_ROOT\bas.playlist"
+    Write-Output "</Playlist>" | Out-File -Append $playlist
     Write-Host "To replay failed tests, please open the following playlist file:"
-    Write-Host "$ENLISTMENT_ROOT\bas.playlist"
+    Write-Host $playlist
     if (Test-Path $TESTLOG)
     {
         rm $TESTLOG
     }
+}
+Function RunTest ($title , $testdir)
+{
+    Write-Host "**********Running $title***********"
+    if (Test-Path $TESTLOG)
+    {
+        rm $TESTLOG
+    }
+    & $MSTEST $testdir >> $TESTLOG
+    if($LASTEXITCODE -ne 0)
+    {
+        Write-Host "Run $title FAILED" -ForegroundColor Red
+        Cleanup
+        exit
+    }
+    TestSummary -title $title
 }
 Function BuildProcess
 {
@@ -208,20 +216,16 @@ Function BuildProcess
 Function TestProcess
 {
     Write-Host '**********Start To Run The Test*********'
-    if (Test-Path $TESTLOG)
-    {
-        rm $TESTLOG
-    }
     $script:TEST_START_TIME = Get-Date
     cd $TESTDIR
     RestoringFile -file "$NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll" -target $TESTDIR
     if ($TestType -eq 'Nightly')
     {
-        RunTest -title 'Nightly Test' -testdir $NightlyTestSuite
+        RunTest -title 'NightlyTests' -testdir $NightlyTestSuite
     }
     elseif ($TestType -eq 'Rolling')
     {
-        RunTest -title 'Rolling Tests' -testdir $RollingTestSuite
+        RunTest -title 'RollingTests' -testdir $RollingTestSuite
     }
     else
     {
@@ -230,9 +234,8 @@ Function TestProcess
         exit
     }
     RestoringFile -file "$NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll" -target $TESTDIR
-    RunTest -title 'E2E Tests' -testdir $E2eTestSuite
+    RunTest -title 'E2ETests' -testdir $E2eTestSuite
     Write-Host "Test Done" -ForegroundColor Yellow
-    TestSummary 
     $script:TEST_END_TIME = Get-Date
     cd $ENLISTMENT_ROOT
 }
@@ -243,6 +246,12 @@ Function FxCopProcess
     & $FXCOP "/f:$ProductDir\Microsoft.OData.Core.dll" "/o:$ENLISTMENT_ROOT\CoreFxCopReport.xml"  $FxCopRulesOptions 1>$null 2>$null
     & $FXCOP "/f:$ProductDir\Microsoft.OData.Edm.dll" "/o:$ENLISTMENT_ROOT\EdmFxCopReport.xml"  $FxCopRulesOptions 1>$null 2>$null
     & $FXCOP "/f:$ProductDir\Microsoft.OData.Client.dll" "/o:$ENLISTMENT_ROOT\ClientFxCopReport.xml"  $DataWebRulesOption $FxCopRulesOptions 1>$null 2>$null
+    Write-Host "For more information, please open the following test result files:"
+    Write-Host "$ENLISTMENT_ROOT\SpatialFxCopReport.xml"
+    Write-Host "$ENLISTMENT_ROOT\CoreFxCopReport.xml"
+    Write-Host "$ENLISTMENT_ROOT\EdmFxCopReport.xml"
+    Write-Host "$ENLISTMENT_ROOT\ClientFxCopReport.xml"
+    Write-Host "FxCop Done" -ForegroundColor Yellow
 }
 
 # Main Process
