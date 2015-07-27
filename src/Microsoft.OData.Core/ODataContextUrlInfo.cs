@@ -49,15 +49,20 @@ namespace Microsoft.OData.Core
             get
             {
                 string navigationPath = null;
-                if (this.isContained && this.odataUri != null && this.odataUri.Path != null)
+                if (this.odataUri != null && this.odataUri.Path != null)
                 {
                     ODataPath odataPath = this.odataUri.Path.TrimEndingTypeSegment().TrimEndingKeySegment();
-                    if (!(odataPath.LastSegment is NavigationPropertySegment))
+                    if (odataPath.LastSegment is NavigationPropertySegment)
                     {
-                        throw new ODataException(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
+                        navigationPath = odataPath.ToContextUrlPathString();
                     }
-
-                    navigationPath = odataPath.ToContextUrlPathString();
+                    else
+                    {
+                        if (this.isContained)
+                        {
+                            throw new ODataException(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
+                        }
+                    }
                 }
 
                 return navigationPath ?? this.navigationSource;

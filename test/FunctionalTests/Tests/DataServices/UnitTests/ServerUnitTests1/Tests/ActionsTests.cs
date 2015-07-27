@@ -2022,7 +2022,7 @@ namespace AstoriaUnitTests.Tests.Server
                 {
                     RequestUri = "/Foo(1)/Bar",
                     Payload = "{ \"ID\" : 100 }",
-                    ExpectedResponse = "{\"@odata.context\":\"http://host/$metadata#Foo/$entity\",\"ID\":100}",
+                    ExpectedResponse = "{\"@odata.context\":\"http://host/$metadata#Foo(1)/Bar/$entity\",\"ID\":100}",
                     ExpectedStatusCode = 201,
                 }
             };

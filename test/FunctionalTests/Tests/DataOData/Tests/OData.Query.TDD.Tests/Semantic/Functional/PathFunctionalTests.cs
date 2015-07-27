@@ -570,9 +570,8 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
             var model = ModelBuildingHelpers.GetModelWithNavPropWithNoTargetSet();
 
             // We want a descriptive error message, and do NOT want a ODataUriParserException so the service implementor does not blindly surface this to users
-            Action parse = () => new ODataUriParser(model, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Vegetables(1)/GenesModified")).ParsePath();
-            parse.ShouldThrow<ODataException>().WithMessage("The target Entity Set of Navigation Property 'GenesModified' could not be found. This is most likely an error in the IEdmModel.").
-                And.GetType().Should().Be<ODataException>();
+            var path = new ODataUriParser(model, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Vegetables(1)/GenesModified")).ParsePath();
+            Assert.AreEqual(path.LastSegment.Identifier, "GenesModified");
         }
 
         [TestMethod]

@@ -1183,13 +1183,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 var navigationProperty = (IEdmNavigationProperty)property;
                 IEdmNavigationSource navigationSource = previous.TargetEdmNavigationSource.FindNavigationTarget(navigationProperty);
 
-                // If we can't compute the target navigation source, then throw
-                if (navigationSource is IEdmUnknownEntitySet)
-                {
-                    // Specifically not throwing ODataUriParserException since it's more an an internal server error
-                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_TargetEntitySetNotFound(property.Name));
-                }
-
                 segment = new NavigationPropertySegment(navigationProperty, navigationSource);
             }
             else
