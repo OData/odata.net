@@ -12,48 +12,26 @@ else
 {
     Write-Host 'Please choose Nightly Test or Rolling Test!' -ForegroundColor Red
     exit
-}   
+}  
 $PROGRAMFILESX86 = [Environment]::GetFolderPath("ProgramFilesX86")
 $env:ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
+$LOGDIR = $ENLISTMENT_ROOT + "\bin"
 $MSBUILD = $PROGRAMFILESX86 + "\MSBuild\12.0\Bin\MSBuild.exe"
 $MSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.exe"
 $FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 12.0\Team Tools\Static Analysis Tools\FxCop"
 $FXCOP = $FXCOPDIR + "\FxCopCmd.exe"
-$BUILDLOG = $ENLISTMENT_ROOT + "\BuildResult.txt"
-$TESTLOG = $ENLISTMENT_ROOT + "\TestResult.txt"
+$BUILDLOG = $LOGDIR + "\msbuild.log"
+$TESTLOG = $LOGDIR + "\mstest.log"
 $TESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$CONFIGURATION\Test\Desktop"
 $PRODUCTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Product\Desktop"
 $NUGETPACK = $ENLISTMENT_ROOT + "\sln\packages"
-$RollingTestSuite = "/testcontainer:Microsoft.Test.Data.Services.DDBasics.dll", 
-        "/testcontainer:Microsoft.OData.Client.Design.T4.UnitTests.dll", 
-        "/testcontainer:AstoriaUnitTests.TDDUnitTests.dll", 
-        "/testcontainer:EdmLibTests.dll", 
-        "/testcontainer:Microsoft.OData.Client.TDDUnitTests.dll", 
-        "/testcontainer:Microsoft.Spatial.TDDUnitTests.dll", 
-        "/testcontainer:Microsoft.Test.Edm.TDD.Tests.dll", 
-        "/testcontainer:Microsoft.Test.OData.TDD.Tests.dll", 
-        "/testcontainer:Microsoft.Test.OData.Query.TDD.Tests.dll", 
-        "/testcontainer:Microsoft.Test.Taupo.OData.Common.Tests.dll", 
-        "/testcontainer:Microsoft.Test.Taupo.OData.Query.Tests.dll", 
-        "/testcontainer:Microsoft.Test.Taupo.OData.Reader.Tests.dll", 
-        "/testcontainer:Microsoft.Test.Taupo.OData.Writer.Tests.dll", 
-        "/testcontainer:Microsoft.Test.Taupo.OData.Scenario.Tests.dll", 
-        "/testcontainer:AstoriaUnitTests.ClientCSharp.dll", 
-        "/testcontainer:Microsoft.Data.NamedStream.UnitTests.dll", 
-        "/testcontainer:Microsoft.Data.ServerUnitTests1.UnitTests.dll", 
-        "/testcontainer:Microsoft.Data.ServerUnitTests2.UnitTests.dll", 
-        "/testcontainer:RegressionUnitTests.dll", 
-        "/testcontainer:Microsoft.Test.OData.PluggableFormat.Tests.dll"
-$AddtionalNightlyTestSuite = "/testcontainer:Microsoft.Data.MetadataObjectModel.UnitTests.dll", 
-        "/testcontainer:AstoriaUnitTests.dll", 
-        "/testcontainer:AstoriaClientUnitTests.dll", 
-        "/testcontainer:Microsoft.Test.OData.User.Tests.dll", 
-        "/testcontainer:TestCategoryAttributeCheck.dll"
+$RollingTestSuite = , "/testcontainer:Microsoft.Test.OData.PluggableFormat.Tests.dll"
+$AddtionalNightlyTestSuite = ,"/testcontainer:TestCategoryAttributeCheck.dll"
 [System.Collections.ArrayList]$NightlyTestSuite=$RollingTestSuite
-foreach ($test in $AddtionalNightlyTestSuite) {$null=$NightlyTestSuite.Add($test)}
+foreach ($test in $AddtionalNightlyTestSuite) {[void]$NightlyTestSuite.Add($test)}
 
-$E2eTestSuite = "/testcontainer:Microsoft.Test.OData.Tests.Client.dll"
+$E2eTestSuite = ,"/testcontainer:Microsoft.Test.OData.Tests.Client.dll"
 $FxCopRulesOptions = "/rule:$FxCopDir\Rules\DesignRules.dll",
         "/rule:$FxCopDir\Rules\NamingRules.dll",
         "/rule:$FxCopDir\Rules\PerformanceRules.dll",
@@ -68,7 +46,6 @@ $FxCopRulesOptions = "/rule:$FxCopDir\Rules\DesignRules.dll",
         "/ruleid:-Microsoft.Design#CA2210", 
         "/ruleid:-Microsoft.Performance#CA1814"
 $DataWebRulesOption = "/rule:$TESTDIR\DataWebRules.dll"
-
 
 Function Cleanup 
 {    
@@ -118,7 +95,7 @@ Function RunBuild ($sln)
     {
         $Conf = "/p:Configuration=Debug"
     }
-    & $MSBUILD $slnpath /t:rebuild /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true /flp:LogFile=msbuild.log /flp:Verbosity=Normal >> $BUILDLOG
+    & $MSBUILD $slnpath /t:rebuild /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
     if($LASTEXITCODE -eq 0)
     {
         Write-Host "Build $sln SUCCESS" -ForegroundColor Green
@@ -126,6 +103,8 @@ Function RunBuild ($sln)
     else
     {
         Write-Host "Build $sln FAILED" -ForegroundColor Red
+        Write-Host "For more information, please open the following test result files:"
+        Write-Host "$LOGDIR\msbuild.log"
         Cleanup
         exit
     }
@@ -135,18 +114,81 @@ Function RestoringFile ($file , $target)
     Write-Host "Restoring $file"
     Copy-Item -Path $file -Destination $target -Force
 }
-
-Function TestSummary ($title)
+Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
+{    
+    Write-Output "<Playlist Version=`"1.0`">" | Out-File $playlist
+    Write-Output "@echo off" | Out-File -Encoding ascii $reruncmd
+    Write-Output "cd $TESTDIR" | Out-File -Append -Encoding ascii $reruncmd
+    $rerun = "`"$MSTEST`""
+    if ($TestType -eq 'Nightly')
+    {
+        foreach ($dll in $NightlyTestSuite) 
+        {
+            $rerun += " $dll" 
+        }
+    }
+    else
+    {
+        foreach ($dll in $RollingTestSuite) 
+        {
+            $rerun += " $dll" 
+        }
+    }
+    foreach($case in $failedtest1)
+    {
+        $name = $case.split('.')[-1]
+        $rerun += " /test:$name"
+        $output = "<Add Test=`"" + $case + "`" />"
+        Write-Output $output  | Out-File -Append $playlist
+    }    
+    Write-Output "copy /y $NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll ." | Out-File -Append -Encoding ascii $reruncmd
+    Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
+    $rerun = "`"$MSTEST`""
+    foreach ($dll in $E2eTestSuite)
+    {
+        $rerun += " $dll" 
+    }    
+    foreach($case in $failedtest2)
+    {
+        $name = $case.split('.')[-1]
+        $rerun += " /test:$name"
+        $output = "<Add Test=`"" + $case + "`" />"
+        Write-Output $output  | Out-File -Append $playlist
+    }
+    Write-Output "copy /y $NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll ." | Out-File -Append -Encoding ascii $reruncmd
+    Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
+    Write-Output "cd $LOGDIR" | Out-File -Append -Encoding ascii $reruncmd
+    Write-Output "</Playlist>" | Out-File -Append $playlist
+    Write-Host "There are some test cases failed!" -ForegroundColor Red
+    Write-Host "To replay failed tests, please open the following playlist file:" -ForegroundColor Red
+    Write-Host $playlist -ForegroundColor Red
+    Write-Host "To rerun failed tests, please run the following script:" -ForegroundColor Red
+    Write-Host $reruncmd -ForegroundColor Red
+}
+Function TestSummary
 {
     Write-Host 'Collecting test results'
-    $playlist = "$ENLISTMENT_ROOT\$title" + "_bas.playlist"
-    Write-Output "<Playlist Version=`"1.0`">" | Out-File $playlist
-    $file = Get-Content -Path $ENLISTMENT_ROOT\TestResult.txt
+    $playlist = "$LOGDIR\FailedTests.playlist"
+    $reruncmd = "$LOGDIR\rerun.cmd"
+    if (Test-Path $playlist)
+    {
+        rm $playlist
+    }
+    if (Test-Path $reruncmd)
+    {
+        rm $reruncmd
+    }
+    
+    $file = Get-Content -Path $TESTLOG
     $pass = 0
     $fail = 0
     $trxfile = New-Object -TypeName System.Collections.ArrayList
+    $failedtest1 = New-Object -TypeName System.Collections.ArrayList
+    $failedtest2 = New-Object -TypeName System.Collections.ArrayList
+    $part = 1
     foreach ($line in $file)
     {
+    
         if ($line -match "Passed.*") 
         {
             $pass = $pass + 1
@@ -154,12 +196,19 @@ Function TestSummary ($title)
         elseif ($line -match "Failed\s+(.*)")
         {
             $fail = $fail + 1
-            $output = "<Add Test=`"" + $Matches[1] + "`" />"
-            Write-Output $output  | Out-File -Append $playlist
+            if ($part -eq 1)
+            {
+                [void]$failedtest1.Add($Matches[1])
+            }
+            else
+            {    
+                [void]$failedtest2.Add($Matches[1])
+            }
         }
         elseif ($line -match "Results file: (.*)")
         {
             [void]$trxfile.Add($Matches[1])
+            $part = 2
         }
     }
     Write-Host "The summary of $title :" -ForegroundColor Green
@@ -172,29 +221,25 @@ Function TestSummary ($title)
     {
         Write-Host $trx
     }
-    Write-Output "</Playlist>" | Out-File -Append $playlist
-    Write-Host "To replay failed tests, please open the following playlist file:"
-    Write-Host $playlist
-    if (Test-Path $TESTLOG)
+    $failedtest1.count
+    $failedtest2.count
+    if ($fail -gt 0)
     {
-        rm $TESTLOG
+        FailedTestLog -playlist $playlist -reruncmd $reruncmd -failedtest1 $failedtest1 -failedtest2 $failedtest2 
+    }
+    else
+    {
+        Write-Host "Congratulation! All of the tests passed!" -ForegroundColor Green
     }
 }
 Function RunTest ($title , $testdir)
 {
     Write-Host "**********Running $title***********"
-    if (Test-Path $TESTLOG)
-    {
-        rm $TESTLOG
-    }
     & $MSTEST $testdir >> $TESTLOG
     if($LASTEXITCODE -ne 0)
     {
         Write-Host "Run $title FAILED" -ForegroundColor Red
-        Cleanup
-        exit
     }
-    TestSummary -title $title
 }
 Function BuildProcess
 {
@@ -216,6 +261,10 @@ Function BuildProcess
 Function TestProcess
 {
     Write-Host '**********Start To Run The Test*********'
+    if (Test-Path $TESTLOG)
+    {
+        rm $TESTLOG
+    }
     $script:TEST_START_TIME = Get-Date
     cd $TESTDIR
     RestoringFile -file "$NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll" -target $TESTDIR
@@ -236,26 +285,31 @@ Function TestProcess
     RestoringFile -file "$NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll" -target $TESTDIR
     RunTest -title 'E2ETests' -testdir $E2eTestSuite
     Write-Host "Test Done" -ForegroundColor Yellow
+    TestSummary
     $script:TEST_END_TIME = Get-Date
     cd $ENLISTMENT_ROOT
 }
 Function FxCopProcess
 {
     Write-Host '**********Start To FxCop*********'
-    & $FXCOP "/f:$ProductDir\Microsoft.Spatial.dll" "/o:$ENLISTMENT_ROOT\SpatialFxCopReport.xml"  $DataWebRulesOption $FxCopRulesOptions 1>$null 2>$null
-    & $FXCOP "/f:$ProductDir\Microsoft.OData.Core.dll" "/o:$ENLISTMENT_ROOT\CoreFxCopReport.xml"  $FxCopRulesOptions 1>$null 2>$null
-    & $FXCOP "/f:$ProductDir\Microsoft.OData.Edm.dll" "/o:$ENLISTMENT_ROOT\EdmFxCopReport.xml"  $FxCopRulesOptions 1>$null 2>$null
-    & $FXCOP "/f:$ProductDir\Microsoft.OData.Client.dll" "/o:$ENLISTMENT_ROOT\ClientFxCopReport.xml"  $DataWebRulesOption $FxCopRulesOptions 1>$null 2>$null
+    & $FXCOP "/f:$ProductDir\Microsoft.Spatial.dll" "/o:$LOGDIR\SpatialFxCopReport.xml"  $DataWebRulesOption $FxCopRulesOptions 1>$null 2>$null
+    & $FXCOP "/f:$ProductDir\Microsoft.OData.Core.dll" "/o:$LOGDIR\CoreFxCopReport.xml"  $FxCopRulesOptions 1>$null 2>$null
+    & $FXCOP "/f:$ProductDir\Microsoft.OData.Edm.dll" "/o:$LOGDIR\EdmFxCopReport.xml"  $FxCopRulesOptions 1>$null 2>$null
+    & $FXCOP "/f:$ProductDir\Microsoft.OData.Client.dll" "/o:$LOGDIR\ClientFxCopReport.xml"  $DataWebRulesOption $FxCopRulesOptions 1>$null 2>$null
     Write-Host "For more information, please open the following test result files:"
-    Write-Host "$ENLISTMENT_ROOT\SpatialFxCopReport.xml"
-    Write-Host "$ENLISTMENT_ROOT\CoreFxCopReport.xml"
-    Write-Host "$ENLISTMENT_ROOT\EdmFxCopReport.xml"
-    Write-Host "$ENLISTMENT_ROOT\ClientFxCopReport.xml"
+    Write-Host "$LOGDIR\SpatialFxCopReport.xml"
+    Write-Host "$LOGDIR\CoreFxCopReport.xml"
+    Write-Host "$LOGDIR\EdmFxCopReport.xml"
+    Write-Host "$LOGDIR\ClientFxCopReport.xml"
     Write-Host "FxCop Done" -ForegroundColor Yellow
 }
 
 # Main Process
 
+if (! (Test-Path $LOGDIR))
+{
+    mkdir $LOGDIR 1>$null
+}
 CleanBeforeScorch 
 BuildProcess
 TestProcess
