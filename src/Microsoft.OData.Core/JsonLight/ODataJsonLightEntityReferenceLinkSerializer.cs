@@ -73,6 +73,8 @@ namespace Microsoft.OData.Core.JsonLight
 
             this.JsonWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataId);
             this.JsonWriter.WriteValue(this.UriToString(entityReferenceLink.Url));
+
+            this.InstanceAnnotationWriter.WriteInstanceAnnotations(entityReferenceLink.InstanceAnnotations);
             this.JsonWriter.EndObjectScope();
         }
 

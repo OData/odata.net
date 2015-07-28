@@ -8,7 +8,9 @@ namespace Microsoft.OData.Core
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     #endregion Namespaces
 
     /// <summary>
@@ -25,5 +27,15 @@ namespace Microsoft.OData.Core
             get;
             set;
         }
+
+        /// <summary>
+        /// Collection of custom instance annotations.
+        /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "We want to allow the same instance annotation collection instance to be shared across ODataLib OM instances.")]
+        public ICollection<ODataInstanceAnnotation> InstanceAnnotations
+        {
+            get { return this.GetInstanceAnnotations(); }
+            set { this.SetInstanceAnnotations(value); }
+        }        
     }
 }

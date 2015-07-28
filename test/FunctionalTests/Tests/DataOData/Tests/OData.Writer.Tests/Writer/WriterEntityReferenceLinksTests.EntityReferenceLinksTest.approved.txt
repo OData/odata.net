@@ -7,7 +7,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -21,7 +21,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -33,7 +33,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -45,7 +45,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -173,7 +173,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -187,7 +187,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -199,7 +199,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -211,7 +211,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -277,7 +277,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -291,7 +291,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -303,7 +303,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -315,7 +315,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -431,7 +431,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -445,7 +445,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -457,7 +457,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -469,7 +469,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -605,7 +605,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -619,7 +619,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -631,7 +631,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -643,7 +643,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -709,7 +709,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -723,7 +723,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -735,7 +735,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -747,7 +747,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -875,7 +875,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -889,7 +889,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -901,7 +901,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -913,7 +913,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1049,7 +1049,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1063,7 +1063,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1075,7 +1075,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1087,7 +1087,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1153,7 +1153,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1167,7 +1167,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1179,7 +1179,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1191,7 +1191,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1319,7 +1319,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1333,7 +1333,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1345,7 +1345,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1357,7 +1357,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1493,7 +1493,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1507,7 +1507,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1519,7 +1519,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1531,7 +1531,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1597,7 +1597,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1611,7 +1611,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1623,7 +1623,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1635,7 +1635,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1763,7 +1763,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1777,7 +1777,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1789,7 +1789,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1801,7 +1801,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1937,7 +1937,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1951,7 +1951,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1963,7 +1963,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -1975,7 +1975,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2041,7 +2041,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2055,7 +2055,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2067,7 +2067,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2079,7 +2079,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2207,7 +2207,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2221,7 +2221,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2233,7 +2233,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2245,7 +2245,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2381,7 +2381,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2395,7 +2395,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2407,7 +2407,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2419,7 +2419,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2485,7 +2485,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2499,7 +2499,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2511,7 +2511,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2523,7 +2523,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2651,7 +2651,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2665,7 +2665,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2677,7 +2677,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2689,7 +2689,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2825,7 +2825,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2839,7 +2839,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2851,7 +2851,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2863,7 +2863,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2929,7 +2929,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2943,7 +2943,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2955,7 +2955,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -2967,7 +2967,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -3095,7 +3095,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -3109,7 +3109,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -3121,7 +3121,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -3133,7 +3133,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -3269,7 +3269,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -3283,7 +3283,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -3295,7 +3295,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -3307,7 +3307,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -3373,7 +3373,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -3387,7 +3387,7 @@ Model Present: true
     },{
       "@odata.id":"linkresult2"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -3399,7 +3399,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
@@ -3411,7 +3411,7 @@ Model Present: true
     {
       "@odata.id":"http://odata.org/linkresult1"
     },{
-      "@odata.id":"http://odata.org/linkresult3"
+      "@odata.id":"http://odata.org/linkresult3","@TestModel.unknown":123,"@custom.name":456
     }
   ]
 }
