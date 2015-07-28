@@ -187,3 +187,192 @@ Model Present: true
   "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"relative"
 }
 
+Combination: 49; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"http://odata.org/linkresult","@TestModel.unknown":123,"@custom.name":456}
+
+Combination: 50; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"http://odata.org/linkresult","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 51; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"http://odata.org/linkresult","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 52; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"http://odata.org/linkresult","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 53; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><m:ref m:context="http://odata.org/$metadata#$ref" id="http://odata.org/linkresult" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 54; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<m:ref m:context="http://odata.org/$metadata#$ref" id="http://odata.org/linkresult" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 55; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<m:ref m:context="http://odata.org/$metadata#$ref" id="http://odata.org/linkresult" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 56; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<m:ref m:context="http://odata.org/$metadata#$ref" id="http://odata.org/linkresult" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 57; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"http://odata.org/linkresult","@TestModel.unknown":123,"@custom.name":456}
+
+Combination: 58; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"http://odata.org/linkresult","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 59; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"http://odata.org/linkresult","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 60; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"http://odata.org/linkresult","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 61; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><m:ref m:context="http://odata.org/$metadata#$ref" id="http://odata.org/linkresult" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 62; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<m:ref m:context="http://odata.org/$metadata#$ref" id="http://odata.org/linkresult" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 63; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<m:ref m:context="http://odata.org/$metadata#$ref" id="http://odata.org/linkresult" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 64; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<m:ref m:context="http://odata.org/$metadata#$ref" id="http://odata.org/linkresult" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 65; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"http://odata.org/linkresult","@TestModel.unknown":123,"@custom.name":456}
+
+Combination: 66; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"http://odata.org/linkresult","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 67; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"http://odata.org/linkresult","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 68; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"http://odata.org/linkresult","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 69; TestConfiguration = Format: Atom, Request: True, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?><m:ref m:context="http://odata.org/$metadata#$ref" id="http://odata.org/linkresult" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 70; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<m:ref m:context="http://odata.org/$metadata#$ref" id="http://odata.org/linkresult" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 71; TestConfiguration = Format: Atom, Request: True, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<m:ref m:context="http://odata.org/$metadata#$ref" id="http://odata.org/linkresult" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 72; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Model Present: false
+<?xml version="1.0" encoding="utf-8"?>
+<m:ref m:context="http://odata.org/$metadata#$ref" id="http://odata.org/linkresult" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" />
+
+Combination: 73; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"relative","@TestModel.unknown":123,"@custom.name":456}
+
+Combination: 74; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"relative","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 75; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"relative","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 76; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"relative","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 81; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"relative","@TestModel.unknown":123,"@custom.name":456}
+
+Combination: 82; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"relative","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 83; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"relative","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 84; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"relative","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 89; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"relative","@TestModel.unknown":123,"@custom.name":456}
+
+Combination: 90; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"relative","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 91; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"relative","@TestModel.unknown":123,"@custom.name":456
+}
+
+Combination: 92; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{
+  "@odata.context":"http://odata.org/$metadata#$ref","@odata.id":"relative","@TestModel.unknown":123,"@custom.name":456
+}
+

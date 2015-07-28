@@ -4473,6 +4473,7 @@ DebuggerDisplayAttribute(),
 public sealed class Microsoft.OData.Core.ODataEntityReferenceLink : Microsoft.OData.Core.ODataItem {
 	public ODataEntityReferenceLink ()
 
+	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
 	System.Uri Url  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 }
 

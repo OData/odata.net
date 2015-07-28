@@ -38,10 +38,18 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [TestMethod, Variation(Description = "Test $ref payloads that return a single link.")]
         public void EntityReferenceLinkTest()
         {
+            ODataEntityReferenceLink entityReferenceLink1 = new ODataEntityReferenceLink{ Url = new Uri("http://odata.org/linkresult")};
+            ODataEntityReferenceLink entityReferenceLink2 = new ODataEntityReferenceLink { Url = new Uri("relative", UriKind.Relative) };
+            ODataEntityReferenceLink entityReferenceLink3 = new ODataEntityReferenceLink{ Url = new Uri("http://odata.org/linkresult")};
+            entityReferenceLink3.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestModel.unknown", new ODataPrimitiveValue(123)));
+            entityReferenceLink3.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.name", new ODataPrimitiveValue(456)));
+            ODataEntityReferenceLink entityReferenceLink4 = new ODataEntityReferenceLink{ Url = new Uri("relative", UriKind.Relative)};
+            entityReferenceLink4.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestModel.unknown", new ODataPrimitiveValue(123)));
+            entityReferenceLink4.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.name", new ODataPrimitiveValue(456)));
+            
             ODataEntityReferenceLink[] resultLinks = new ODataEntityReferenceLink[]
             {
-                new ODataEntityReferenceLink { Url = new Uri("http://odata.org/linkresult") },
-                new ODataEntityReferenceLink { Url = new Uri("relative", UriKind.Relative) },
+                entityReferenceLink1, entityReferenceLink2, entityReferenceLink3, entityReferenceLink4
             };
 
             this.CombinatorialEngineProvider.RunCombinations(
@@ -67,6 +75,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                     testConfiguration = testConfiguration.CloneAndApplyBehavior(behaviorKind);
                     testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
+
+                    if (!testConfiguration.IsRequest)
+                    {
+                        testConfiguration.MessageWriterSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+                    }
 
                     TestWriterUtils.WriteAndVerifyTopLevelContent(
                         testDescriptor,
@@ -121,6 +134,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ODataEntityReferenceLink entityReferenceLink1 = new ODataEntityReferenceLink { Url = new Uri(resultUri1String) };
             ODataEntityReferenceLink entityReferenceLink2 = new ODataEntityReferenceLink { Url = new Uri(resultUri2String, UriKind.Relative) };
             ODataEntityReferenceLink entityReferenceLink3 = new ODataEntityReferenceLink { Url = new Uri(resultUri3String) };
+            entityReferenceLink3.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestModel.unknown", new ODataPrimitiveValue(123)));
+            entityReferenceLink3.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.name", new ODataPrimitiveValue(456)));
 
             Uri nextPageLink = new Uri("http://odata.org/nextpage");
             Uri relativeNextPageLink = new Uri("relative-nextpage", UriKind.Relative);
@@ -130,7 +145,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ODataEntityReferenceLink[][] inputReferenceLinks = new ODataEntityReferenceLink[][]
             {
                 new ODataEntityReferenceLink[] { entityReferenceLink1, entityReferenceLink2, entityReferenceLink3 },
-                new ODataEntityReferenceLink[] { entityReferenceLink1, entityReferenceLink3 },
+                new ODataEntityReferenceLink[] { entityReferenceLink1, entityReferenceLink3},
                 new ODataEntityReferenceLink[] { entityReferenceLink1 },
                 new ODataEntityReferenceLink[0],
                 null
@@ -155,6 +170,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                     testConfiguration = testConfiguration.Clone();
                     testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
+                    if (!testConfiguration.IsRequest)
+                    {
+                        testConfiguration.MessageWriterSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+                    }
 
                     // When writing JSON lite, always provide a model and a non-null nav prop.
                     // The error cases when a model isn't provided or the nav prop is null are tested in JsonLightEntityReferenceLinkWriterTests

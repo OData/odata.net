@@ -73,6 +73,8 @@
     <Compile Include="Common\ODataSpatialTypeUtil.cs" />
     <Compile Include="Common\PayloadValueConverters.cs" />
     <Compile Include="MediaTypeResolverTests.cs" />
+    <Compile Include="ObjectModel\ODataEntityReferenceLinkTests.cs" />
+    <Compile Include="ObjectModel\ODataEntityReferenceLinksTests.cs" />
     <Compile Include="Reader\Atom\ODataAtomServiceDocumentDeserializerTests.cs" />
     <Compile Include="Reader\JsonLight\DateReaderJsonLightTests.cs" />
     <Compile Include="Reader\JsonLight\ODataJsonLightServiceDocumentDeserializerTests.cs" />

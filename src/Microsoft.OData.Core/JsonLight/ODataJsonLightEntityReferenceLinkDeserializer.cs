@@ -15,13 +15,14 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Core.Metadata;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
     #endregion Namespaces
 
     /// <summary>
     /// OData JsonLight deserializer for entity reference links.
     /// </summary>
-    internal sealed class ODataJsonLightEntityReferenceLinkDeserializer : ODataJsonLightDeserializer
+    internal sealed class ODataJsonLightEntityReferenceLinkDeserializer : ODataJsonLightPropertyAndValueDeserializer
     {
         /// <summary>
         /// Constructor.
@@ -410,7 +411,19 @@ namespace Microsoft.OData.Core.JsonLight
                                 break;
 
                             case PropertyParsingResult.CustomInstanceAnnotation:
-                                this.JsonReader.SkipValue();
+                                if (entityReferenceLink[0] == null)
+                                {
+                                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(ODataAnnotationNames.ODataId));
+                                }
+
+                                Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+                                this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
+                                ODataAnnotationNames.ValidateIsCustomAnnotationName(propertyName);
+                                   Debug.Assert(
+                                    !this.MessageReaderSettings.ShouldSkipAnnotation(propertyName),
+                                    "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(propertyName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
+                                object annotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, propertyName);
+                                entityReferenceLink[0].InstanceAnnotations.Add(new ODataInstanceAnnotation(propertyName, annotationValue.ToODataValue()));
                                 break;
 
                             case PropertyParsingResult.PropertyWithValue:
