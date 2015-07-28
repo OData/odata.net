@@ -141,7 +141,7 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
         $output = "<Add Test=`"" + $case + "`" />"
         Write-Output $output  | Out-File -Append $playlist
     }    
-    Write-Output "copy /y $NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll ." | Out-File -Append -Encoding ascii $reruncmd
+    Write-Output "copy /y $NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll ." | Out-File -Append -Encoding ascii $reruncmd
     Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
     $rerun = "`"$MSTEST`""
     foreach ($dll in $E2eTestSuite)
