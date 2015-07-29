@@ -516,18 +516,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmVocabularyAnnotation WrapVocabularyAnnotation(CsdlAnnotation annotation, CsdlSemanticsSchema schema, IEdmVocabularyAnnotatable targetContext, CsdlSemanticsAnnotations annotationsContext, string qualifier)
         {
-            CsdlSemanticsVocabularyAnnotation result;
-
-            // Guarantee that multiple calls to wrap a given annotation all return the same object.
-            if (this.wrappedAnnotations.TryGetValue(annotation, out result))
-            {
-                return result;
-            }
-
-            result = (CsdlSemanticsVocabularyAnnotation)new CsdlSemanticsValueAnnotation(schema, targetContext, annotationsContext, annotation, qualifier);
-
-            this.wrappedAnnotations[annotation] = result;
-            return result;
+            return EdmUtil.DictionaryGetOrUpdate(
+                this.wrappedAnnotations,
+                annotation,
+                ann =>  (CsdlSemanticsVocabularyAnnotation)new CsdlSemanticsValueAnnotation(schema, targetContext, annotationsContext, ann, qualifier)
+                );
         }
 
         private void AddSchema(CsdlSchema schema)
