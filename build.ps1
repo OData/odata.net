@@ -26,8 +26,31 @@ $TESTLOG = $LOGDIR + "\mstest.log"
 $TESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$CONFIGURATION\Test\Desktop"
 $PRODUCTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Product\Desktop"
 $NUGETPACK = $ENLISTMENT_ROOT + "\sln\packages"
-$RollingTestSuite = , "/testcontainer:Microsoft.Test.OData.PluggableFormat.Tests.dll"
-$AddtionalNightlyTestSuite = ,"/testcontainer:TestCategoryAttributeCheck.dll"
+$RollingTestSuite = "/testcontainer:Microsoft.Test.Data.Services.DDBasics.dll", 
+        "/testcontainer:Microsoft.OData.Client.Design.T4.UnitTests.dll", 
+        "/testcontainer:AstoriaUnitTests.TDDUnitTests.dll", 
+        "/testcontainer:EdmLibTests.dll", 
+        "/testcontainer:Microsoft.OData.Client.TDDUnitTests.dll", 
+        "/testcontainer:Microsoft.Spatial.TDDUnitTests.dll", 
+        "/testcontainer:Microsoft.Test.Edm.TDD.Tests.dll", 
+        "/testcontainer:Microsoft.Test.OData.TDD.Tests.dll", 
+        "/testcontainer:Microsoft.Test.OData.Query.TDD.Tests.dll", 
+        "/testcontainer:Microsoft.Test.Taupo.OData.Common.Tests.dll", 
+        "/testcontainer:Microsoft.Test.Taupo.OData.Query.Tests.dll", 
+        "/testcontainer:Microsoft.Test.Taupo.OData.Reader.Tests.dll", 
+        "/testcontainer:Microsoft.Test.Taupo.OData.Writer.Tests.dll", 
+        "/testcontainer:Microsoft.Test.Taupo.OData.Scenario.Tests.dll", 
+        "/testcontainer:AstoriaUnitTests.ClientCSharp.dll", 
+        "/testcontainer:Microsoft.Data.NamedStream.UnitTests.dll", 
+        "/testcontainer:Microsoft.Data.ServerUnitTests1.UnitTests.dll", 
+        "/testcontainer:Microsoft.Data.ServerUnitTests2.UnitTests.dll", 
+        "/testcontainer:RegressionUnitTests.dll", 
+        "/testcontainer:Microsoft.Test.OData.PluggableFormat.Tests.dll"
+$AddtionalNightlyTestSuite = "/testcontainer:Microsoft.Data.MetadataObjectModel.UnitTests.dll", 
+        "/testcontainer:AstoriaUnitTests.dll", 
+        "/testcontainer:AstoriaClientUnitTests.dll", 
+        "/testcontainer:Microsoft.Test.OData.User.Tests.dll", 
+        "/testcontainer:TestCategoryAttributeCheck.dll"
 [System.Collections.ArrayList]$NightlyTestSuite=$RollingTestSuite
 foreach ($test in $AddtionalNightlyTestSuite) {[void]$NightlyTestSuite.Add($test)}
 
@@ -140,9 +163,13 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
         $rerun += " /test:$name"
         $output = "<Add Test=`"" + $case + "`" />"
         Write-Output $output  | Out-File -Append $playlist
-    }    
-    Write-Output "copy /y $NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll ." | Out-File -Append -Encoding ascii $reruncmd
-    Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
+    } 
+    # build the command only if failed tests exist
+    if ($failedtest1.count -gt 0)
+    {
+        Write-Output "copy /y $NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll ." | Out-File -Append -Encoding ascii $reruncmd
+        Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
+    }
     $rerun = "`"$MSTEST`""
     foreach ($dll in $E2eTestSuite)
     {
@@ -155,8 +182,12 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
         $output = "<Add Test=`"" + $case + "`" />"
         Write-Output $output  | Out-File -Append $playlist
     }
-    Write-Output "copy /y $NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll ." | Out-File -Append -Encoding ascii $reruncmd
-    Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
+    # build the command only if failed tests exist
+    if ($failedtest2.count -gt 0)
+    {
+        Write-Output "copy /y $NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll ." | Out-File -Append -Encoding ascii $reruncmd
+        Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
+    }
     Write-Output "cd $LOGDIR" | Out-File -Append -Encoding ascii $reruncmd
     Write-Output "</Playlist>" | Out-File -Append $playlist
     Write-Host "There are some test cases failed!" -ForegroundColor Red
@@ -189,11 +220,11 @@ Function TestSummary
     foreach ($line in $file)
     {
     
-        if ($line -match "Passed.*") 
+        if ($line -match "^Passed.*") 
         {
             $pass = $pass + 1
         }
-        elseif ($line -match "Failed\s+(.*)")
+        elseif ($line -match "^Failed\s+(.*)")
         {
             $fail = $fail + 1
             if ($part -eq 1)
@@ -205,7 +236,7 @@ Function TestSummary
                 [void]$failedtest2.Add($Matches[1])
             }
         }
-        elseif ($line -match "Results file: (.*)")
+        elseif ($line -match "^Results file: (.*)")
         {
             [void]$trxfile.Add($Matches[1])
             $part = 2
@@ -221,8 +252,6 @@ Function TestSummary
     {
         Write-Host $trx
     }
-    $failedtest1.count
-    $failedtest2.count
     if ($fail -gt 0)
     {
         FailedTestLog -playlist $playlist -reruncmd $reruncmd -failedtest1 $failedtest1 -failedtest2 $failedtest2 
@@ -303,7 +332,6 @@ Function FxCopProcess
     Write-Host "$LOGDIR\ClientFxCopReport.xml"
     Write-Host "FxCop Done" -ForegroundColor Yellow
 }
-
 # Main Process
 
 if (! (Test-Path $LOGDIR))
