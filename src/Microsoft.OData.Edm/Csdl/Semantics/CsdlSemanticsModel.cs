@@ -519,8 +519,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return EdmUtil.DictionaryGetOrUpdate(
                 this.wrappedAnnotations,
                 annotation,
-                ann =>  (CsdlSemanticsVocabularyAnnotation)new CsdlSemanticsValueAnnotation(schema, targetContext, annotationsContext, ann, qualifier)
-                );
+                ann => new CsdlSemanticsValueAnnotation(schema, targetContext, annotationsContext, ann, qualifier));
         }
 
         private void AddSchema(CsdlSchema schema)
