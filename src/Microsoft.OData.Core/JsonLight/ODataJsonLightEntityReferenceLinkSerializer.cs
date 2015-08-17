@@ -110,6 +110,8 @@ namespace Microsoft.OData.Core.JsonLight
                 this.WriteNextLinkAnnotation(entityReferenceLinks.NextPageLink);
             }
 
+            this.InstanceAnnotationWriter.WriteInstanceAnnotations(entityReferenceLinks.InstanceAnnotations);
+
             // "value":
             this.JsonWriter.WriteValuePropertyName();
 
@@ -128,7 +130,6 @@ namespace Microsoft.OData.Core.JsonLight
 
             // "]"
             this.JsonWriter.EndArrayScope();
-
 
             if (!wroteNextLink && entityReferenceLinks.NextPageLink != null)
             {

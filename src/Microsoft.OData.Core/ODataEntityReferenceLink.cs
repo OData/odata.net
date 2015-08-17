@@ -31,7 +31,6 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Collection of custom instance annotations.
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "We want to allow the same instance annotation collection instance to be shared across ODataLib OM instances.")]
         public ICollection<ODataInstanceAnnotation> InstanceAnnotations
         {
             get { return this.GetInstanceAnnotations(); }

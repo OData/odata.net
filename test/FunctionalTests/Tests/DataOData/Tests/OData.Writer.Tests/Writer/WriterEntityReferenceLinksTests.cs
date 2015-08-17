@@ -142,6 +142,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             long?[] inputCounts = new long?[] { null, 1, 3, -1, -3, 0, long.MaxValue, long.MinValue};
             Uri[] inputNextLinks = new Uri[] { nextPageLink, relativeNextPageLink, null };
+            ODataInstanceAnnotation[][] inputAnnotations = new ODataInstanceAnnotation[][]
+            {
+                new ODataInstanceAnnotation[0],
+                new ODataInstanceAnnotation[]
+                {
+                    new ODataInstanceAnnotation("TestModel.annotation", new ODataPrimitiveValue(321)),
+                    new ODataInstanceAnnotation("custom.annotation", new ODataPrimitiveValue(654))
+                }
+            };
             ODataEntityReferenceLink[][] inputReferenceLinks = new ODataEntityReferenceLink[][]
             {
                 new ODataEntityReferenceLink[] { entityReferenceLink1, entityReferenceLink2, entityReferenceLink3 },
@@ -150,12 +159,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new ODataEntityReferenceLink[0],
                 null
             };
-
             var testCases = inputCounts.SelectMany(
                 inputCount => inputNextLinks.SelectMany(
                     inputNextLink => inputReferenceLinks.Select(
-                        inputReferenceLink => new ODataEntityReferenceLinks { Count = inputCount, Links = inputReferenceLink, NextPageLink = inputNextLink })));
-
+                        (inputReferenceLink, index) => new ODataEntityReferenceLinks { Count = inputCount, Links = inputReferenceLink, NextPageLink = inputNextLink, InstanceAnnotations = inputAnnotations[index == 1 ? 1 : 0]})));
+       
             var testDescriptors = testCases.Select(
                 testCase =>
                     new PayloadWriterTestDescriptor<ODataEntityReferenceLinks>(this.Settings, testCase, this.CreateExpectedCallback(testCase, /*forceNextLinkAndCountAtEnd*/ false)));

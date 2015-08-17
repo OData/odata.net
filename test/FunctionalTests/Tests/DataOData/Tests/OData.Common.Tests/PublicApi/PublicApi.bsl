@@ -4481,6 +4481,7 @@ public sealed class Microsoft.OData.Core.ODataEntityReferenceLinks : Microsoft.O
 	public ODataEntityReferenceLinks ()
 
 	System.Nullable`1[[System.Int64]] Count  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
+	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Core.ODataEntityReferenceLink]] Links  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 	System.Uri NextPageLink  { [CompilerGeneratedAttribute(),]public get; [CompilerGeneratedAttribute(),]public set; }
 }

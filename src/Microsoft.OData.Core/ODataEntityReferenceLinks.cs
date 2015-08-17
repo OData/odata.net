@@ -9,6 +9,7 @@ namespace Microsoft.OData.Core
     #region Namespaces
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     #endregion Namespaces
 
     /// <summary>
@@ -41,5 +42,14 @@ namespace Microsoft.OData.Core
             get;
             set;
         }
+
+        /// <summary>
+        /// Collection of custom instance annotations.
+        /// </summary>
+        public ICollection<ODataInstanceAnnotation> InstanceAnnotations
+        {
+            get { return this.GetInstanceAnnotations(); }
+            set { this.SetInstanceAnnotations(value); }
+        }        
     }
 }

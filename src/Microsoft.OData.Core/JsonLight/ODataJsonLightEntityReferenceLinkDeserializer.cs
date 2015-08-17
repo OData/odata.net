@@ -255,7 +255,14 @@ namespace Microsoft.OData.Core.JsonLight
                                 break;
 
                             case PropertyParsingResult.CustomInstanceAnnotation:
-                                this.JsonReader.SkipValue();
+                                Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+                                this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
+                                ODataAnnotationNames.ValidateIsCustomAnnotationName(propertyName);
+                                Debug.Assert(
+                                    !this.MessageReaderSettings.ShouldSkipAnnotation(propertyName),
+                                    "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(propertyName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
+                                object annotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, propertyName);
+                                links.InstanceAnnotations.Add(new ODataInstanceAnnotation(propertyName, annotationValue.ToODataValue()));
                                 break;
 
                             case PropertyParsingResult.PropertyWithValue:
@@ -419,7 +426,7 @@ namespace Microsoft.OData.Core.JsonLight
                                 Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
                                 this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
                                 ODataAnnotationNames.ValidateIsCustomAnnotationName(propertyName);
-                                   Debug.Assert(
+                                Debug.Assert(
                                     !this.MessageReaderSettings.ShouldSkipAnnotation(propertyName),
                                     "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(propertyName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
                                 object annotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, propertyName);

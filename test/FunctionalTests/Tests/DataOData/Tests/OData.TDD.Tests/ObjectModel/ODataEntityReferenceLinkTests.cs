@@ -114,7 +114,7 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
         }
 
         [TestMethod]
-        public void ReadForEntityReferenceLinkRequestIDAppearBeforeContextShouldThrow()
+        public void ReadForEntityReferenceLinkIDAppearBeforeContextShouldThrow()
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.id\":\"http://host/Customers(1)\",\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@TestNamespace.unknown\":123,\"@custom.annotation\":456}");
             Action readResult = () => deserializer.ReadEntityReferenceLink();
@@ -122,7 +122,7 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
         }
 
         [TestMethod]
-        public void ReadForEntityReferenceLinkRequestWithoutIDButAnnotationShouldThrow()
+        public void ReadForEntityReferenceLinkWithoutIDButAnnotationShouldThrow()
         {
             string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odataa.unknown\":123}";
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
@@ -131,7 +131,7 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
         }
 
         [TestMethod]
-        public void ReadForEntityReferenceLinkRequestOnlyContextShouldThrow()
+        public void ReadForEntityReferenceLinkOnlyContextShouldThrow()
         {
             string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\"}";
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
@@ -140,7 +140,7 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
         }
 
         [TestMethod]
-        public void ReadForEntityReferenceLinkRequestWithEmptyPayloadShouldThrow()
+        public void ReadForEntityReferenceLinkWithEmptyPayloadShouldThrow()
         {
             string payload = "{}";
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
@@ -149,12 +149,37 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
         }
 
         [TestMethod]
-        public void ReadForEntityReferenceLinkRequestAnnotationAppearBeforeIDShouldThrow()
+        public void ReadForEntityReferenceLinkAnnotationAppearBeforeIDShouldThrow()
         {
             string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@TestNamespace.unknown\":123,\"@odata.id\":\"http://host/Customers(1)\",\"@custom.annotation\":456}";
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
             Action readResult = () => deserializer.ReadEntityReferenceLink();
             readResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(ODataAnnotationNames.ODataId));
+        }
+
+        [TestMethod]
+        public void ReadForEntityReferenceLinkWithDuplicateAnnotationNameShouldThrow()
+        {
+            string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odata.id\":\"http://host/Customers(1)\",\"@TestNamespace.unknown\":123,\"@TestNamespace.unknown\":456}";
+            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
+            Action readResult = () => deserializer.ReadEntityReferenceLink();
+            readResult.ShouldThrow<ODataException>().WithMessage(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed("TestNamespace.unknown"));
+        }
+
+        [TestMethod]
+        public void WriteForEntityReferenceLinkWithDuplicateAnnotationNameShouldThrow()
+        {
+            ODataEntityReferenceLink referencelink = new ODataEntityReferenceLink
+            {
+                Url = new Uri("http://host/Customers(1)")
+            };
+            referencelink.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.unknown", new ODataPrimitiveValue(123)));
+            referencelink.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.unknown", new ODataPrimitiveValue(456)));
+            string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odata.id\":\"http://host/Customers(1)\",\"@TestNamespace.unknown\":123,\"@TestNamespace.unknown\":456}";
+            Action writeResult = () => WriteAndValidate(referencelink, expectedPayload, writingResponse: false);
+            writeResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.unknown"));
+            writeResult = () => WriteAndValidate(referencelink, expectedPayload, writingResponse: true);
+            writeResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.unknown"));
         }
 
         [TestMethod]

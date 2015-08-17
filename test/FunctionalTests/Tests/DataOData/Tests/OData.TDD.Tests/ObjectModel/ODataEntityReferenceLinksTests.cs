@@ -22,16 +22,17 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
     using Microsoft.Test.OData.TDD.Tests.Common;
     using Microsoft.OData.Core.Json;
     using System.Diagnostics;
+    using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     [TestClass]
-    public class OdataEntityReferenceLinksTests
+    public class ODataEntityReferenceLinksTests
     {
         private readonly static IEdmModel EdmModel;
         private readonly static ODataMessageReaderSettings MessageReaderSettingsReadAndValidateCustomInstanceAnnotations;
         private static readonly EdmEntityType EntityType;
         private static readonly EdmEntitySet EntitySet;
 
-        static OdataEntityReferenceLinksTests()
+        static ODataEntityReferenceLinksTests()
         {
             EdmModel tmpModel = new EdmModel();
             EdmComplexType complexType = new EdmComplexType("TestNamespace", "TestComplexType");
@@ -62,6 +63,14 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
         }
 
         [TestMethod]
+        public void InstanceAnnotationsPropertyShouldNotBeNullAtCreation()
+        {
+            ODataEntityReferenceLinks referencelinks = new ODataEntityReferenceLinks();
+            referencelinks.InstanceAnnotations.Should().NotBeNull();
+            referencelinks.InstanceAnnotations.Count.Should().Be(0);
+        }
+
+        [TestMethod]
         public void ShouldBeAbleToSetLinksReferenceLinks()
         {
             ODataEntityReferenceLink link = new ODataEntityReferenceLink
@@ -78,7 +87,7 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
         }
 
         [TestMethod]
-        public void ShouldWriteForEntityReferenceLinksRequestWithSingleLink()
+        public void ShouldWriteForEntityReferenceLinksWithSingleLink()
         {
             ODataEntityReferenceLink link = new ODataEntityReferenceLink
             {
@@ -95,7 +104,7 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
         }
 
         [TestMethod]
-        public void ShouldWriteForEntityReferenceLinksRequestWithMultpleLinks()
+        public void ShouldWriteForEntityReferenceLinksWithMultpleLinks()
         {
             ODataEntityReferenceLink link1 = new ODataEntityReferenceLink
             {
@@ -119,7 +128,34 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
         }
 
         [TestMethod]
-        public void ShouldReadForEntityReferenceLinkRequesttWithSingleLink()
+        public void ShouldWriteForEntityReferenceLinksWithReferenceLinksAnnotaions()
+        {
+            ODataEntityReferenceLink link1 = new ODataEntityReferenceLink
+            {
+                Url = new Uri("http://host/Customers(1)")
+            };
+            link1.InstanceAnnotations.Add(new ODataInstanceAnnotation("Is.New", new ODataPrimitiveValue(true)));
+            ODataEntityReferenceLink link2 = new ODataEntityReferenceLink
+            {
+                Url = new Uri("http://host/Customers(2)")
+            };
+            link2.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.unknown", new ODataPrimitiveValue(123)));
+            link2.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.annotation", new ODataPrimitiveValue(456)));
+
+            ODataEntityReferenceLinks referencelinks = new ODataEntityReferenceLinks()
+            {
+                Links = new[] { link1, link2 }
+            };
+
+            referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.name", new ODataPrimitiveValue(321)));
+            referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.name", new ODataPrimitiveValue(654)));
+            string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@TestNamespace.name\":321,\"@custom.name\":654,\"value\":[{\"@odata.id\":\"http://host/Customers(1)\",\"@Is.New\":true},{\"@odata.id\":\"http://host/Customers(2)\",\"@TestNamespace.unknown\":123,\"@custom.annotation\":456}]}";
+            WriteAndValidate(referencelinks, expectedPayload, writingResponse: false);
+            WriteAndValidate(referencelinks, expectedPayload, writingResponse: true);
+        }
+
+        [TestMethod]
+        public void ShouldReadForEntityReferenceLinksWithSingleLink()
         {
             ODataEntityReferenceLink link = new ODataEntityReferenceLink
             {
@@ -136,7 +172,7 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
         }
 
         [TestMethod]
-        public void ShouldReadForEntityReferenceLinkRequestWithMultpleLinks()
+        public void ShouldReadForEntityReferenceLinksWithMultpleLinks()
         {
             ODataEntityReferenceLink link1 = new ODataEntityReferenceLink
             {
@@ -160,7 +196,74 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
         }
 
         [TestMethod]
-        public void ShouldReadAndWriteForEntityReferenceLinksRequest()
+        public void ShouldReadForEntityReferenceLinksWithReferenceLinksAnnotations()
+        {
+            ODataEntityReferenceLink link1 = new ODataEntityReferenceLink
+            {
+                Url = new Uri("http://host/Customers(1)")
+            };
+            link1.InstanceAnnotations.Add(new ODataInstanceAnnotation("Is.New", new ODataPrimitiveValue(true)));
+            ODataEntityReferenceLink link2 = new ODataEntityReferenceLink
+            {
+                Url = new Uri("http://host/Customers(2)")
+            };
+            link2.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.unknown", new ODataPrimitiveValue(123)));
+            link2.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.annotation", new ODataPrimitiveValue(456)));
+
+            ODataEntityReferenceLinks referencelinks = new ODataEntityReferenceLinks()
+            {
+                Links = new[] { link1, link2 }
+            };
+
+            referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.name", new ODataPrimitiveValue(321)));
+            referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.name", new ODataPrimitiveValue(654)));
+            string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@TestNamespace.name\":321,\"value\":[{\"@odata.id\":\"http://host/Customers(1)\",\"@Is.New\":true},{\"@odata.id\":\"http://host/Customers(2)\",\"@TestNamespace.unknown\":123,\"@custom.annotation\":456}],\"@custom.name\":654}";
+   
+            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
+            ODataEntityReferenceLinks links = deserializer.ReadEntityReferenceLinks();
+            SameEntityReferenceLinks(referencelinks, links);
+        }
+
+        [TestMethod]
+        public void ReadForEntityReferenceLinksWithDuplicateAnnotationNameShouldThrow()
+        {
+            string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@TestNamespace.name\":321,\"@TestNamespace.name\":654,\"value\":[{\"@odata.id\":\"http://host/Customers(1)\",\"@Is.New\":true},{\"@odata.id\":\"http://host/Customers(2)\",\"@TestNamespace.unknown\":123,\"@custom.annotation\":456}]}";
+            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
+            Action readResult = () => deserializer.ReadEntityReferenceLinks();
+            readResult.ShouldThrow<ODataException>().WithMessage(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed("TestNamespace.name"));
+        }
+
+        [TestMethod]
+        public void WriteForEntityReferenceLinksWithDuplicateAnnotationNameShouldThrow()
+        {
+            ODataEntityReferenceLink link1 = new ODataEntityReferenceLink
+            {
+                Url = new Uri("http://host/Customers(1)")
+            };
+            link1.InstanceAnnotations.Add(new ODataInstanceAnnotation("Is.New", new ODataPrimitiveValue(true)));
+            ODataEntityReferenceLink link2 = new ODataEntityReferenceLink
+            {
+                Url = new Uri("http://host/Customers(2)")
+            };
+            link2.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.unknown", new ODataPrimitiveValue(123)));
+            link2.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.annotation", new ODataPrimitiveValue(456)));
+
+            ODataEntityReferenceLinks referencelinks = new ODataEntityReferenceLinks()
+            {
+                Links = new[] { link1, link2 }
+            };
+
+            referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.name", new ODataPrimitiveValue(321)));
+            referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.name", new ODataPrimitiveValue(654)));
+            string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@TestNamespace.name\":321,\"@TestNamespace.name\":654,\"value\":[{\"@odata.id\":\"http://host/Customers(1)\",\"@Is.New\":true},{\"@odata.id\":\"http://host/Customers(2)\",\"@TestNamespace.unknown\":123,\"@custom.annotation\":456}]}";
+            Action writeResult = () => WriteAndValidate(referencelinks, expectedPayload, writingResponse: false);
+            writeResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.name"));
+            writeResult = () => WriteAndValidate(referencelinks, expectedPayload, writingResponse: true);
+            writeResult.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.name"));
+        }
+
+        [TestMethod]
+        public void ShouldReadAndWriteForEntityReferenceLinks()
         {
             string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"value\":[{\"@odata.id\":\"http://host/Customers(1)\",\"@Is.New\":true}]}";
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
@@ -170,7 +273,7 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
         }
 
         [TestMethod]
-        public void ShouldWriteAndReadForEntityReferenceLinkRequest()
+        public void ShouldWriteAndReadForEntityReferenceLinks()
         {
             ODataEntityReferenceLink link1 = new ODataEntityReferenceLink
             {
@@ -194,6 +297,44 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
             SameEntityReferenceLinks(referencelinks, links);
         }
 
+        [TestMethod]
+        public void ShouldReadAndWriteForEntityReferenceLinksWithReferenceLinksAnnotation()
+        {
+            string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@TestNamespace.name\":321,\"@custom.name\":654,\"value\":[{\"@odata.id\":\"http://host/Customers(1)\",\"@Is.New\":true},{\"@odata.id\":\"http://host/Customers(2)\",\"@TestNamespace.unknown\":123,\"@custom.annotation\":456}]}";
+            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
+            ODataEntityReferenceLinks links = deserializer.ReadEntityReferenceLinks();
+            WriteAndValidate(links, payload, writingResponse: false);
+            WriteAndValidate(links, payload, writingResponse: true);
+        }
+
+        [TestMethod]
+        public void ShouldWriteAndReadForEntityReferenceLinksWithReferenceLinksAnnotation()
+        {
+            ODataEntityReferenceLink link1 = new ODataEntityReferenceLink
+            {
+                Url = new Uri("http://host/Customers(1)")
+            };
+            link1.InstanceAnnotations.Add(new ODataInstanceAnnotation("Is.New", new ODataPrimitiveValue(true)));
+            ODataEntityReferenceLink link2 = new ODataEntityReferenceLink
+            {
+                Url = new Uri("http://host/Customers(2)")
+            };
+            link2.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.unknown", new ODataPrimitiveValue(123)));
+            link2.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.annotation", new ODataPrimitiveValue(456)));
+
+            ODataEntityReferenceLinks referencelinks = new ODataEntityReferenceLinks()
+            {
+                Links = new[] { link1, link2 }
+            };
+
+            referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.name", new ODataPrimitiveValue(321)));
+            referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.name", new ODataPrimitiveValue(654)));
+            
+            string midplayoad = WriteToString(referencelinks, writingResponse: false);
+            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(midplayoad);
+            ODataEntityReferenceLinks links = deserializer.ReadEntityReferenceLinks();
+            SameEntityReferenceLinks(referencelinks, links);
+        }
         [TestMethod]
         public void WriteTopLevelEntityReferenceLinks()
         {
@@ -233,6 +374,17 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
             Assert.AreEqual(expectedPayload, payload);
         }
 
+        private static void SameInstanceAnnotations(ICollection<ODataInstanceAnnotation> InstanceAnnotations1, ICollection<ODataInstanceAnnotation> InstanceAnnotations2)
+        {
+            InstanceAnnotations1.Count.Should().Equals(InstanceAnnotations2.Count);
+            foreach (ODataInstanceAnnotation instanceannotation in InstanceAnnotations1)
+            {
+                ODataInstanceAnnotation annotation = InstanceAnnotations2.SingleOrDefault(ia => ia.Name == instanceannotation.Name.ToString());
+                annotation.Should().NotBeNull();
+                TestUtils.AssertODataValueAreEqual(instanceannotation.Value, annotation.Value);
+            }
+        }
+
         private static void SameEntityReferenceLinks(ODataEntityReferenceLinks links1, ODataEntityReferenceLinks links2)
         {
             links1.Should().NotBeNull();
@@ -244,6 +396,7 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
             {
                 SameEntityReferenceLink(links1.Links.ElementAt(i), links2.Links.ElementAt(i));
             }
+            SameInstanceAnnotations(links1.InstanceAnnotations, links2.InstanceAnnotations);
         }
 
         private static void SameEntityReferenceLink(ODataEntityReferenceLink link1, ODataEntityReferenceLink link2)
@@ -251,11 +404,7 @@ namespace Microsoft.Test.OData.TDD.Tests.ObjectModel
             link1.Should().NotBeNull();
             link2.Should().NotBeNull();
             link1.Url.ToString().Should().Be(link2.Url.ToString());
-            link1.InstanceAnnotations.Count.Should().Equals(link2.InstanceAnnotations.Count);
-            foreach (ODataInstanceAnnotation instanceannotation in link1.InstanceAnnotations)
-            {
-                TestUtils.AssertODataValueAreEqual(instanceannotation.Value, link2.InstanceAnnotations.Single(ia => ia.Name == instanceannotation.Name.ToString()).Value);
-            }
+            SameInstanceAnnotations(link1.InstanceAnnotations, link2.InstanceAnnotations);
         }
 
         private static string WriteToString(ODataEntityReferenceLinks referencelinks, bool writingResponse = true, bool synchronous = true)
