@@ -8,12 +8,5 @@
     <NugetPackBasePath>$(OutputRootDir)\Product</NugetPackBasePath>
     <NuGetPackSpecFile>Microsoft.OData.Edm.Net35.$(Configuration).nuspec</NuGetPackSpecFile>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Build.Net35\Microsoft.OData.Edm.NetFX35.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Project>{69A15676-2469-4315-9617-F0FFC04D310D}</Project>
-      <Name>Microsoft.OData.Edm.NetFX35</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(BuildExtensionsPath)\NoTarget.targets" />
 </Project>

@@ -8,12 +8,5 @@
     <NugetPackBasePath>$(OutputRootDir)\Product</NugetPackBasePath>
     <NuGetPackSpecFile>Microsoft.Spatial.Net35.$(Configuration).nuspec</NuGetPackSpecFile>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Build.Net35\Microsoft.Spatial.NetFX35.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Project>{1104C2E4-076F-47AA-8121-03015AE70630}</Project>
-      <Name>Microsoft.Spatial.NetFX35</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(BuildExtensionsPath)\NoTarget.targets" />
 </Project>

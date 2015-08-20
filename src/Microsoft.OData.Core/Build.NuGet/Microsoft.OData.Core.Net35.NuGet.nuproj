@@ -8,12 +8,5 @@
     <NugetPackBasePath>$(OutputRootDir)\Product</NugetPackBasePath>
     <NuGetPackSpecFile>Microsoft.OData.Core.Net35.$(Configuration).nuspec</NuGetPackSpecFile>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Build.Net35\Microsoft.OData.Core.NetFX35.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Project>{E7B15F0C-0442-458D-9D16-69F3272420BF}</Project>
-      <Name>Microsoft.OData.Core.NetFX35</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(BuildExtensionsPath)\NoTarget.targets" />
 </Project>
