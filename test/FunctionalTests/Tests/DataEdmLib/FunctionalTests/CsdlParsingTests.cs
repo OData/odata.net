@@ -3744,5 +3744,29 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(out validationErrors);
             Assert.AreEqual(validationErrors.Single().ErrorMessage, "An element with the name 'MyNS.Person' is already defined.");
         }
+
+        [TestMethod]
+        public void ValidationOnModelWithComputedAnnotation()
+        {
+            var csdl =
+@"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""Grumble"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <ComplexType Name=""Smod"">
+    <Property Name=""Id"" Type=""Edm.Int32"" />
+    <Property Name=""TimeStampValue"" Type=""Edm.Binary"">
+    <Annotation Bool=""true"" Term=""Org.OData.Core.V1.Computed""/>
+    <Annotation Bool=""false"" Term=""Org.OData.Core.V1.IsURL""/>
+    <Annotation Term=""Org.OData.Measurements.V1.Unit"" String=""Kilograms"" />
+    </Property>
+  </ComplexType>
+</Schema>";
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+            Assert.IsTrue(parsed, "parsed");
+            Assert.AreEqual(0, errors.Count());
+            bool valid = model.Validate(out errors);
+            Assert.IsTrue(valid, "valid");
+        }
     }
 }

@@ -50,6 +50,7 @@ namespace Microsoft.OData.Edm.Validation
         public static bool TryCast(this IEdmExpression expression, IEdmTypeReference type, IEdmType context, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
         {
             EdmUtil.CheckArgumentNull(expression, "expression");
+            type = type.AsActualTypeReference();
 
             // If we don't have a type to assert this passes vacuously.
             if (type == null || type.TypeKind() == EdmTypeKind.None)
