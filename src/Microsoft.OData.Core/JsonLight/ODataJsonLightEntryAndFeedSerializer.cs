@@ -54,7 +54,14 @@ namespace Microsoft.OData.Core.JsonLight
             string typeName = this.JsonLightOutputContext.TypeNameOracle.GetEntryTypeNameForWriting(entryState.GetOrCreateTypeContext(this.Model, this.WritingResponse).ExpectedEntityTypeName, entry);
             if (typeName != null)
             {
-                ODataJsonLightWriterUtils.WriteODataTypeInstanceAnnotation(this.JsonWriter, typeName);
+                if (typeName.StartsWith("ODataAggregation.DynamicTypes."))
+                {
+                    ODataJsonLightWriterUtils.WriteODataIdAnnotation(this.JsonWriter, @"""""");
+                }
+                else
+                {
+                    ODataJsonLightWriterUtils.WriteODataTypeInstanceAnnotation(this.JsonWriter, typeName);
+                }
             }
 
             // Write the "@odata.id": "Entity Id"

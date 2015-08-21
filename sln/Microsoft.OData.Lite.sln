@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.User.Tests", "..\test\FunctionalTests\Tests\DataOData\Tests\OData.User.Tests\Microsoft.Test.OData.User.Tests.csproj", "{C4FE2DC2-AB0A-4B32-8E38-4535E6F1585F}"
 EndProject
@@ -57,6 +57,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.PluggableFormat", "..\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj", "{1D872F31-6100-4C76-999E-ED948E2CD248}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.PluggableFormat.Tests", "..\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj", "{1D872F31-6100-4C76-999E-ED948E2CD249}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationTestProject", "..\test\FunctionalTests\Tests\DataOData\Tests\AggregationTestProject\AggregationTestProject.csproj", "{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -497,6 +499,24 @@ Global
 		{1D872F31-6100-4C76-999E-ED948E2CD249}.Release|x64.Build.0 = Release|x64
 		{1D872F31-6100-4C76-999E-ED948E2CD249}.Release|x86.ActiveCfg = Release|x86
 		{1D872F31-6100-4C76-999E-ED948E2CD249}.Release|x86.Build.0 = Release|x86
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Cover|Any CPU.ActiveCfg = Release|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Cover|Any CPU.Build.0 = Release|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Cover|x64.ActiveCfg = Release|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Cover|x64.Build.0 = Release|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Cover|x86.ActiveCfg = Release|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Cover|x86.Build.0 = Release|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Debug|x64.Build.0 = Debug|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Debug|x86.Build.0 = Debug|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Release|x64.ActiveCfg = Release|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Release|x64.Build.0 = Release|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Release|x86.ActiveCfg = Release|Any CPU
+		{1C8EB844-4E3F-4C44-ACA5-B2FC53C809A1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

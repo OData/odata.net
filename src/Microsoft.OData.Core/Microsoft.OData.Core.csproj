@@ -46,6 +46,16 @@
     <Compile Include="AnnotationFilterPattern.cs" />
     <Compile Include="AsyncBufferedStream.cs" />
     <Compile Include="AtomAndVerboseJsonTypeNameOracle.cs" />
+    <Compile Include="Aggregation\AggregationTransformationBase.cs" />
+    <Compile Include="Aggregation\AggregationTransientEntityAnnotation.cs" />
+    <Compile Include="Aggregation\ApplyAggregateClause.cs" />
+    <Compile Include="Aggregation\ApplyClause.cs" />
+    <Compile Include="Aggregation\ApplyFilterClause.cs" />
+    <Compile Include="Aggregation\ApplyGroupbyClause.cs" />
+    <Compile Include="Aggregation\ApplyParser.cs" />
+    <Compile Include="Aggregation\AssemblyInfo.cs" />
+    <Compile Include="Aggregation\ExpressionClause.cs" />
+    <Compile Include="Aggregation\Extensions.cs" />
     <Compile Include="Atom\AtomCategoriesMetadata.cs" />
     <Compile Include="Atom\AtomCategoryMetadata.cs" />
     <Compile Include="Atom\AtomConstants.cs" />
