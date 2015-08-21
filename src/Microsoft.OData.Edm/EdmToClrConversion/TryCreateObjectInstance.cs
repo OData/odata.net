@@ -11,7 +11,7 @@ using Microsoft.OData.Edm.Values;
 namespace Microsoft.OData.Edm.EdmToClrConversion
 {
     /// <summary>
-    /// Represents a delegate for creating an instance of CLR type based on <see cref="IEdmValue"/> and <see cref="Type"/>.
+    /// Represents a delegate for creating an instance of CLR type based on <see cref="IEdmValue"/> and <see cref="System.Type"/>.
     /// The delegate can be used to create CLR instances of polymorphic types.
     /// </summary>
     /// <param name="edmValue">The <see cref="IEdmStructuredValue"/> for which the <paramref name="objectInstance"/> needs to be created.</param>
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
         out bool objectInstanceInitialized);
 
     /// <summary>
-    /// Represents a delegate to get property info of a CLR type based on the property name and <see cref=" Type"/>.
+    /// Represents a delegate to get property info of a CLR type based on the property name and <see cref="System.Type"/>.
     /// </summary>
     /// <param name="clrType">The CLR type which contains the property info.</param>
     /// <param name="edmName">The property name which might be server side name or client side name.</param>

@@ -34,7 +34,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Creates a new instance of <see cref="ODataPath"/> containing the given segments.
         /// </summary>
         /// <param name="segments">The segments that make up the path.</param>
-        /// <exception cref="Error.ArgumentNull">Throws if input segments is null.</exception>
+        /// <exception cref="ArgumentNullException">Throws if input segments is null.</exception>
         public ODataPath(IEnumerable<ODataPathSegment> segments)
         {
             ExceptionUtils.CheckArgumentNotNull(segments, "segments");
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Creates a new instance of <see cref="ODataPath"/> containing the given segments.
         /// </summary>
         /// <param name="segments">The segments that make up the path.</param>
-        /// <exception cref="Error.ArgumentNull">Throws if input segments is null.</exception>
+        /// <exception cref="ArgumentNullException">Throws if input segments is null.</exception>
         public ODataPath(params ODataPathSegment[] segments)
             : this((IEnumerable<ODataPathSegment>)segments)
         {

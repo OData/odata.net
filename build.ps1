@@ -17,9 +17,9 @@ $PROGRAMFILESX86 = [Environment]::GetFolderPath("ProgramFilesX86")
 $env:ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $LOGDIR = $ENLISTMENT_ROOT + "\bin"
-$MSBUILD = $PROGRAMFILESX86 + "\MSBuild\12.0\Bin\MSBuild.exe"
-$MSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.exe"
-$FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 12.0\Team Tools\Static Analysis Tools\FxCop"
+$MSBUILD = $PROGRAMFILESX86 + "\MSBuild\14.0\Bin\MSBuild.exe"
+$MSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Common7\IDE\MSTest.exe"
+$FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\FxCop"
 $FXCOP = $FXCOPDIR + "\FxCopCmd.exe"
 $BUILDLOG = $LOGDIR + "\msbuild.log"
 $TESTLOG = $LOGDIR + "\mstest.log"
@@ -281,7 +281,7 @@ Function BuildProcess
     RunBuild ('Microsoft.Odata.Full.sln')
     RunBuild ('Microsoft.OData.Net35.sln')
     RunBuild ('Microsoft.OData.Net45.sln')
-    RunBuild ('Microsoft.OData.Portable45.sln')
+    #RunBuild ('Microsoft.OData.Portable45.sln')
     RunBuild ('Microsoft.OData.CodeGen.sln')
     RunBuild ('Microsoft.Odata.E2E.sln')
     Write-Host "Build Done" -ForegroundColor Yellow
