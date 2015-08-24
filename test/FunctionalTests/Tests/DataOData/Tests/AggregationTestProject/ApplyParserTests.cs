@@ -10,17 +10,14 @@ using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Xbehave;
-//using Xunit;
 using Xunit;
 using Xunit.Extensions;
 using System.Diagnostics.CodeAnalysis;
 using AggregationTestProject.Common;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AggregationTestProject
 {
-    [TestClass]
     public class ApplyParserTests
     {
 
@@ -173,7 +170,6 @@ namespace AggregationTestProject
 
         [Scenario]
         [PropertyData("GetNoTrasformations")]
-        [TestMethod]
         public void NoTrasformationsThrowsODataException()
         {
             string query = "Product/TaxRate";
@@ -414,9 +410,9 @@ namespace AggregationTestProject
         }
 
         [Scenario]
-        //[InlineData("$apply=filter(Timestamp gt cast(2014-11-25T12:39:05Z, Edm.DateTimeOffset))")]
-        public void CastingDoesNotRequireSpace(string query)
+        public void CastingDoesNotRequireSpace()
         {
+            var query = "$apply=filter(Timestamp gt cast(2014-11-25T12:39:05Z, Edm.DateTimeOffset))";
             var model =
                 Common.TestModelBuilder.CreateModel(new Type[] { typeof(Category), typeof(Product), typeof(Sales) });
             IEdmType edmType = model.FindDeclaredType(typeof(Sales).FullName);
