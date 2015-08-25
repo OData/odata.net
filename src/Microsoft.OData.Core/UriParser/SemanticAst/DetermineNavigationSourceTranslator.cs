@@ -63,6 +63,18 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
+        /// Determine the NavigationSource of a SingletonSegment
+        /// </summary>
+        /// <param name="segment">The SingletonSegment to look in.</param>
+        /// <returns>The IEdmNavigationSource of this SingletonSegment</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override IEdmNavigationSource Translate(SingletonSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return segment.Singleton;
+        }
+
+        /// <summary>
         /// Determine the NavigationSource of a KeySegment
         /// </summary>
         /// <param name="segment">The KeySegment to look in.</param>

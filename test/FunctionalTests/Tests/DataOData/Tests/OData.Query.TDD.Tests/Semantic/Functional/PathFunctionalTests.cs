@@ -34,6 +34,15 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Dogs");
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetDogsSet());
+            path.NavigationSource().Should().Be(HardCodedTestModel.GetDogsSet());
+        }
+
+        [TestMethod]
+        public void SimpleSingleton()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("Boss");
+            path.LastSegment.ShouldBeSingletonSegment(HardCodedTestModel.GetBossSingleton());
+            path.NavigationSource().Should().Be(HardCodedTestModel.GetBossSingleton());
         }
 
         [TestMethod]
@@ -42,6 +51,15 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
             var path = PathFunctionalTestsUtil.RunParsePath("GetCoolPeople");
             path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetCoolPeople()).
                 And.EntitySet.Should().Be(HardCodedTestModel.GetPeopleSet());
+            path.NavigationSource().Should().Be(HardCodedTestModel.GetPeopleSet());
+        }
+
+        [TestMethod]
+        public void SimpleNavigationPropertyLinkSegment()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("People(7)/MyDog/$ref");
+            path.LastSegment.ShouldBeNavigationPropertyLinkSegment(HardCodedTestModel.GetPersonMyDogNavProp());
+            path.NavigationSource().Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
         [TestMethod]
@@ -229,6 +247,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
         {
             var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$/$/People/1/$/$/MyDog/$/$/MyPeople/$/$/$count/$/$")) { UrlConventions = ODataUrlConventions.KeyAsSegment }.ParsePath();
             path.LastSegment.ShouldBeCountSegment();
+            path.NavigationSource().Should().BeNull();
         }
 
         [TestMethod]
@@ -282,6 +301,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.Paint");
             path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetPersonPaintAction()).
                 And.EntitySet.Should().BeSameAs(HardCodedTestModel.GetPaintingsSet());
+            path.NavigationSource().Should().Be(HardCodedTestModel.GetPaintingsSet());
         }
 
         [TestMethod]
@@ -561,6 +581,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/MyDog");
             path.LastSegment.ShouldBeNavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp()).
                 And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetDogsSet());
+            path.NavigationSource().Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
         // TODO： everywhere we call FindNavigationTarget() use a helper and throw the right exception
@@ -601,6 +622,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
             var path = PathFunctionalTestsUtil.RunParsePath("People(2)/Fully.Qualified.Namespace.Employee");
             path.LastSegment.ShouldBeTypeSegment(HardCodedTestModel.GetEmployeeType()).
                 And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
+            path.NavigationSource().Should().Be(HardCodedTestModel.GetPeopleSet());
         }
 
         [TestMethod]
@@ -644,6 +666,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
             var path = PathFunctionalTestsUtil.RunParsePath("Dogs(1)/MyPeople(2)");
             path.LastSegment.ShouldBeSimpleKeySegment(2)
                 .And.NavigationSource.Should().BeSameAs(HardCodedTestModel.GetPeopleSet());
+            path.NavigationSource().Should().Be(HardCodedTestModel.GetPeopleSet());
         }
 
         [TestMethod]
@@ -940,6 +963,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
         {
             var path = PathFunctionalTestsUtil.RunParsePath("$batch");
             path.LastSegment.ShouldBeBatchSegment();
+            path.NavigationSource().Should().BeNull();
         }
 
         [TestMethod]
@@ -988,6 +1012,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
         {
             var path = PathFunctionalTestsUtil.RunParsePath("$metadata");
             path.LastSegment.ShouldBeMetadataSegment();
+            path.NavigationSource().Should().BeNull();
         }
 
         [TestMethod]
@@ -1034,6 +1059,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/MyAddress/$value");
             path.LastSegment.ShouldBeValueSegment();
+            path.NavigationSource().Should().BeNull();
         }
 
         [TestMethod]
@@ -1090,6 +1116,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
             path.FirstSegment.ShouldBeBatchReferenceSegment(HardCodedTestModel.GetDogType())
                 .And.ContentId.Should().Be("$42");
             path.LastSegment.ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
+            path.FirstSegment.TranslateWith(new DetermineNavigationSourceTranslator()).Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
         [Ignore]
@@ -1148,6 +1175,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
         {
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/Prop.With.Periods");
             path.LastSegment.ShouldBePropertySegment(HardCodedTestModel.GetPersonPropWithPeriods());
+            path.NavigationSource().Should().BeNull();
         }
 
         [TestMethod]
@@ -1155,6 +1183,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.Semantic.Functional
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Paintings(1)/Not.A.Type.Or.Operation");
             path.LastSegment.ShouldBeOpenPropertySegment("Not.A.Type.Or.Operation");
+            path.NavigationSource().Should().BeNull();
         }
 
         [TestMethod]
