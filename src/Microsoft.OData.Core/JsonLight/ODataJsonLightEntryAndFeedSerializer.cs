@@ -12,6 +12,7 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Core.Json;
+    using Edm.Library;
     #endregion Namespaces
 
     /// <summary>
@@ -54,9 +55,9 @@ namespace Microsoft.OData.Core.JsonLight
             string typeName = this.JsonLightOutputContext.TypeNameOracle.GetEntryTypeNameForWriting(entryState.GetOrCreateTypeContext(this.Model, this.WritingResponse).ExpectedEntityTypeName, entry);
             if (typeName != null)
             {
-                if (typeName.StartsWith("ODataAggregation.DynamicTypes."))
+                if (entryState.EntityType is BaseOpenEntityType)
                 {
-                    ODataJsonLightWriterUtils.WriteODataIdAnnotation(this.JsonWriter, @"""""");
+                    ODataJsonLightWriterUtils.WriteODataIdAnnotation(this.JsonWriter, @"null");
                 }
                 else
                 {

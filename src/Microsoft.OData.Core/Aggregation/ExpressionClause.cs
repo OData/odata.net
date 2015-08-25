@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core.Aggregation
         private readonly RangeVariable rangeVariable;
 
         /// <summary>
-        /// Creates a <see cref="FilterClause"/>.
+        /// Creates a <see cref="ExpressionClause"/>.
         /// </summary>
         /// <param name="expression">The expression - this should evaluate to a single value. Cannot be null.</param>
         /// <param name="rangeVariable">The parameter for the expression which represents a single value from the collection. Cannot be null.</param>

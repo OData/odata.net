@@ -772,13 +772,14 @@ namespace Microsoft.OData.Core
         /// <returns>The validated entity type.</returns>
         protected IEdmEntityType ValidateEntryType(ODataEntry entry)
         {
-            if (entry.TypeName == null && this.CurrentScope.EntityType != null)
-            {
-                return this.CurrentScope.EntityType;
-            }
+            return this.CurrentScope.EntityType;
+            //if (entry.TypeName == null && this.CurrentScope.EntityType != null)
+            //{
+            //    return this.CurrentScope.EntityType;
+            //}
 
-            // TODO: Clean up handling of expected types/sets during writing
-            return (IEdmEntityType)TypeNameOracle.ResolveAndValidateTypeName(this.outputContext.Model, entry.TypeName, EdmTypeKind.Entity);
+            //// TODO: Clean up handling of expected types/sets during writing
+            //return (IEdmEntityType)TypeNameOracle.ResolveAndValidateTypeName(this.outputContext.Model, entry.TypeName, EdmTypeKind.Entity);
         }
 
         /// <summary>
