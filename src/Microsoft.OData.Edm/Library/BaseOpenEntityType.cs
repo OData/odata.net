@@ -97,7 +97,7 @@ namespace Microsoft.OData.Edm.Library
 
         public IEdmProperty FindProperty(string name)
         {
-            return new EdmStructuralProperty(this, name, EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Int32, true));
+            return new EdmStructuralProperty(this, name, EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.String, true));
         }
     }
 
