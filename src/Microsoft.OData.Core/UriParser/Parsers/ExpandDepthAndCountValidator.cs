@@ -67,7 +67,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.UriParser_ExpandDepthExceeded(currentDepth, this.maxDepth));
             }
 
-            foreach (var expandItem in expandTree.SelectedItems.OfType<ExpandedNavigationSelectItem>())
+            foreach (ExpandedNavigationSelectItem expandItem in expandTree.SelectedItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)))
             {
                 this.currentCount++;
                 if (this.currentCount > this.maxCount)
@@ -76,6 +76,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
 
                 this.EnsureMaximumCountAndDepthAreNotExceeded(expandItem.SelectAndExpand, currentDepth + 1);
+            }
+
+            this.currentCount += expandTree.SelectedItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)).Count();
+            if (this.currentCount > this.maxCount)
+            {
+                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.UriParser_ExpandCountExceeded(this.currentCount, this.maxCount));
             }
         }
     }

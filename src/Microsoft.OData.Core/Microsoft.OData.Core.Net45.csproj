@@ -493,6 +493,7 @@
     <Compile Include="UriParser\SemanticAst\EntitySetNode.cs" />
     <Compile Include="UriParser\SemanticAst\EntitySetSegment.cs" />
     <Compile Include="UriParser\SemanticAst\ExpandedNavigationSelectItem.cs" />
+    <Compile Include="UriParser\SemanticAst\ExpandedReferenceSelectItem.cs" />
     <Compile Include="UriParser\SemanticAst\FilterClause.cs" />
     <Compile Include="UriParser\SemanticAst\KeyLookupNode.cs" />
     <Compile Include="UriParser\SemanticAst\KeySegment.cs" />
