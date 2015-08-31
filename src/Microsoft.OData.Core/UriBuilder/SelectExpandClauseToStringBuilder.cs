@@ -46,7 +46,7 @@ namespace Microsoft.OData.Core.UriBuilder
             isFirstSelectItem = false;
 
             string expandClause = null;
-            foreach (ExpandedNavigationSelectItem expandSelectItem in selectExpandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>())
+            foreach (ExpandedNavigationSelectItem expandSelectItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)))
             {
                 if (string.IsNullOrEmpty(expandClause))
                 {
@@ -58,6 +58,20 @@ namespace Microsoft.OData.Core.UriBuilder
                 }
 
                 expandClause += this.Translate(expandSelectItem);
+            }
+
+            foreach (ExpandedReferenceSelectItem expandSelectItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)))
+            {
+                if (string.IsNullOrEmpty(expandClause))
+                {
+                    expandClause = firstFlag ? expandClause : string.Concat("$expand", ExpressionConstants.SymbolEqual);
+                }
+                else
+                {
+                    expandClause += ExpressionConstants.SymbolComma;
+                }
+
+                expandClause += this.Translate(expandSelectItem) + "/$ref";
             }
 
             if (string.IsNullOrEmpty(expandClause))
@@ -115,6 +129,40 @@ namespace Microsoft.OData.Core.UriBuilder
         public override string Translate(ExpandedNavigationSelectItem item)
         {
             NodeToStringBuilder nodeToStringBuilder = new NodeToStringBuilder();
+            string res = string.Empty;
+            if (item.SelectAndExpand != null)
+            {
+                string selectExpand = this.TranslateSelectExpandClause(item.SelectAndExpand, false);
+                res = string.Concat(res, !string.IsNullOrEmpty(res) && !string.IsNullOrEmpty(selectExpand) ? ";" : null, selectExpand);
+            }
+
+            if (item.LevelsOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += ExpressionConstants.QueryOptionLevels;
+                res += ExpressionConstants.SymbolEqual;
+                res += NodeToStringBuilder.TranslateLevelsClause(item.LevelsOption);
+            }
+
+            string currentExpandClause = Translate((ExpandedReferenceSelectItem)item);
+            if (currentExpandClause.EndsWith(")"))
+            {
+                return currentExpandClause.Insert(currentExpandClause.Length - 1, string.IsNullOrEmpty(res) ? string.Empty : ";" + res);
+            }
+            else
+            {
+                return string.Concat(currentExpandClause, string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen));
+            }
+        }
+
+        /// <summary>
+        /// Translate an ExpandedReferenceSelectItem
+        /// </summary>
+        /// <param name="item">the item to Translate</param>
+        /// <returns>Defined by the implementer</returns>
+        public override string Translate(ExpandedReferenceSelectItem item)
+        {
+            NodeToStringBuilder nodeToStringBuilder = new NodeToStringBuilder();
             string currentExpandClause = String.Join("/", item.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
             string res = string.Empty;
             if (item.FilterOption != null)
@@ -126,12 +174,6 @@ namespace Microsoft.OData.Core.UriBuilder
             {
                 res += string.IsNullOrEmpty(res) ? null : ";";
                 res += "$orderby=" + nodeToStringBuilder.TranslateOrderByClause(item.OrderByOption);
-            }
-
-            if (item.SelectAndExpand != null)
-            {
-                string selectExpand = this.TranslateSelectExpandClause(item.SelectAndExpand, false);
-                res = string.Concat(res, !string.IsNullOrEmpty(res) && !string.IsNullOrEmpty(selectExpand) ? ";" : null, selectExpand);
             }
 
             if (item.TopOption != null)
@@ -167,14 +209,6 @@ namespace Microsoft.OData.Core.UriBuilder
                 res += "$search";
                 res += ExpressionConstants.SymbolEqual;
                 res += nodeToStringBuilder.TranslateSearchClause(item.SearchOption);
-            }
-
-            if (item.LevelsOption != null)
-            {
-                res += string.IsNullOrEmpty(res) ? null : ";";
-                res += ExpressionConstants.QueryOptionLevels;
-                res += ExpressionConstants.SymbolEqual;
-                res += NodeToStringBuilder.TranslateLevelsClause(item.LevelsOption);
             }
 
             return string.Concat(currentExpandClause, string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen));

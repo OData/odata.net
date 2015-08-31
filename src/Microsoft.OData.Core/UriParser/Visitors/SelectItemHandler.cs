@@ -49,5 +49,14 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Handle an ExpandedReferenceSelectItem
+        /// </summary>
+        /// <param name="item">the item to Handle</param>
+        public virtual void Handle(ExpandedReferenceSelectItem item)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

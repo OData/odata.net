@@ -22,6 +22,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
         private readonly SelectExpandClause treeWithDepth1;
         private readonly SelectExpandClause emptyTree;
         private readonly SelectExpandClause treeWithWidth2;
+        private readonly SelectExpandClause treeWithWidth2AndWithRefOption;
         private readonly SelectExpandClause treeWithDepthAndWidth2WithRepeatedParent;
         private readonly SelectExpandClause bigComplexTree;
 
@@ -34,6 +35,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             this.treeWithDepth2 = new SelectExpandClause(new[] { new ExpandedNavigationSelectItem(pathToPerson, HardCodedTestModel.GetPeopleSet(), this.treeWithDepth1) }, true);
             var pathToLions = new ODataExpandPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyLionsNavProp(), HardCodedTestModel.GetLionSet()));
             this.treeWithWidth2 = new SelectExpandClause(new[] { new ExpandedNavigationSelectItem(pathToMyDog, HardCodedTestModel.GetDogsSet(), this.emptyTree), new ExpandedNavigationSelectItem(pathToLions, HardCodedTestModel.GetLionSet(), this.emptyTree) }, true);
+            this.treeWithWidth2AndWithRefOption = new SelectExpandClause(new[] { new ExpandedReferenceSelectItem(pathToMyDog, HardCodedTestModel.GetDogsSet()), new ExpandedNavigationSelectItem(pathToLions, HardCodedTestModel.GetLionSet(), this.emptyTree) }, true);
             this.treeWithDepthAndWidth2WithRepeatedParent = new SelectExpandClause(new[] { new ExpandedNavigationSelectItem(pathToPerson, HardCodedTestModel.GetPeopleSet(), this.treeWithWidth2) }, true);
             var pathToPaintings = new ODataExpandPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyPaintingsNavProp(), HardCodedTestModel.GetPaintingsSet()));
             this.bigComplexTree = new SelectExpandClause(new[] { 
@@ -82,6 +84,18 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
         public void ValidatorShouldNotFailIfNumberOfExpandItemsMatchesSetting()
         {
             ValidatorShouldNotThrow(this.treeWithWidth2, maxCount: 2);
+        }
+
+        [TestMethod]
+        public void ValidatorShouldFailIfNumberOfExpandItemsExceedsSettingWhichWithRefOption()
+        {
+            ValidatorShouldThrow(this.treeWithWidth2AndWithRefOption , ODataErrorStrings.UriParser_ExpandCountExceeded(2, 1), maxCount: 1);
+        }
+
+        [TestMethod]
+        public void ValidatorShouldNotFailIfNumberOfExpandItemsMatchesSettingWhichWithRefOption()
+        {
+            ValidatorShouldNotThrow(this.treeWithWidth2AndWithRefOption, maxCount: 2);
         }
 
         [TestMethod]

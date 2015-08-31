@@ -50,11 +50,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// Assumes the lexer is positioned at the beginning of the term to parse.
         /// When done, the lexer will be positioned at whatever is after the identifier. 
         /// </summary>
+        /// <param name="allowRef">Whether the $ref operation is valid in this token.</param>
         /// <returns>parsed query token</returns>
-        internal PathSegmentToken ParseTerm()
+        internal PathSegmentToken ParseTerm(bool allowRef = false)
         {
             int pathLength;
-            PathSegmentToken token = this.ParseSegment(null);
+            PathSegmentToken token = this.ParseSegment(null, allowRef);
             if (token != null)
             {
                 pathLength = 1;
@@ -79,7 +80,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     break;
                 }
 
-                token = this.ParseSegment(token);
+                token = this.ParseSegment(token, allowRef);
                 if (token != null)
                 {
                     this.CheckPathLength(++pathLength);
@@ -106,10 +107,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// and the star token to other methods.
         /// </summary>
         /// <param name="previousSegment">Previously parsed PathSegmentToken, or null if this is the first token.</param>
+        /// <param name="allowRef">Whether the $ref operation is valid in this token.</param>
         /// <returns>A parsed PathSegmentToken representing the next segment in this path.</returns>
-        private PathSegmentToken ParseSegment(PathSegmentToken previousSegment)
+        private PathSegmentToken ParseSegment(PathSegmentToken previousSegment, bool allowRef)
         {
-            if (this.lexer.CurrentToken.Text.StartsWith("$", StringComparison.CurrentCulture))
+            if (this.lexer.CurrentToken.Text.StartsWith("$", StringComparison.Ordinal) && (!allowRef || this.lexer.CurrentToken.Text != UriQueryConstants.RefSegment))
             {
                 throw new ODataException(ODataErrorStrings.UriSelectParser_SystemTokenInSelectExpand(this.lexer.CurrentToken.Text, this.lexer.ExpressionText));
             }

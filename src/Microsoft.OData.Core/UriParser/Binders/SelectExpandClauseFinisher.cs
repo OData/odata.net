@@ -29,7 +29,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // if there are selects for this level, then we need to add nav prop select items for each
             // expanded nav prop
             IEnumerable<ODataSelectPath> selectedPaths = selectItems.OfType<PathSelectItem>().Select(item => item.SelectedPath);
-            foreach (ExpandedNavigationSelectItem navigationSelect in selectItems.OfType<ExpandedNavigationSelectItem>())
+            foreach (ExpandedNavigationSelectItem navigationSelect in selectItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)))
             {
                 if (anyPathSelectItems && !selectedPaths.Any(x => x.Equals(navigationSelect.PathToNavigationProperty.ToSelectPath())))
                 {
@@ -37,6 +37,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
 
                 AddExplicitNavPropLinksWhereNecessary(navigationSelect.SelectAndExpand);
+            }
+
+            foreach (ExpandedReferenceSelectItem navigationSelect in selectItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)))
+            {
+                if (anyPathSelectItems && !selectedPaths.Any(x => x.Equals(navigationSelect.PathToNavigationProperty.ToSelectPath())))
+                {
+                    clause.AddToSelectedItems(new PathSelectItem(navigationSelect.PathToNavigationProperty.ToSelectPath()));
+                }
             }
         }
     }

@@ -128,7 +128,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             this.isSelect = false;
 
             var termParser = new SelectExpandTermParser(this.lexer, this.MaxPathDepth, this.isSelect);
-            PathSegmentToken pathToken = termParser.ParseTerm();
+            PathSegmentToken pathToken = termParser.ParseTerm(allowRef: true);
 
             string optionsText = null;
             if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.OpenParen)

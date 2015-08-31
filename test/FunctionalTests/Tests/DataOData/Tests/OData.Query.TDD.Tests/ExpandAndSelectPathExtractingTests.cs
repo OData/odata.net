@@ -13,9 +13,11 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
     using FluentAssertions;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     [TestClass]
     public class ExpandAndSelectPathExtractingTests
@@ -252,6 +254,34 @@ namespace Microsoft.Test.OData.Query.TDD.Tests
             const string expectedExpandClause = "FQ.NS.Derived/DerivedNavigation($expand=DerivedNavigation($select=Derived))";
             const string expectedSelect = "";
             this.ParseAndExtract(expandClauseText: expandClauseText, expectedExpandClauseFromOM: expectedExpandClause, expectedSelectClauseFromOM: expectedSelect);
+        }
+
+        [TestMethod]
+        public void ExpandPropertiesWithTypeSegmentWithDuplicteSelectTestWithRefOperation()
+        {
+            const string expandClauseText = "FQ.NS.Derived/Navigation1/$ref,FQ.NS.Derived/Navigation1/$ref";
+            const string expectedExpandClause = "FQ.NS.Derived/Navigation1/$ref";
+            this.ParseAndExtract(expandClauseText: expandClauseText, expectedExpandClauseFromOM: expectedExpandClause);
+        }
+
+        [TestMethod]
+        public void ExpandNavigationThatIsNotSelectedAutomaticallySelectsLinkWithRefOperation()
+        {
+            const string selectClauseText = "FQ.NS.Derived/Navigation2";
+            const string expandClauseText = "FQ.NS.Derived/Navigation1/$ref";
+            const string expectedSelectClause = "FQ.NS.Derived/Navigation2,FQ.NS.Derived/Navigation1";
+            const string expectedExpandClause = "FQ.NS.Derived/Navigation1/$ref";
+            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: expandClauseText, expectedSelectClauseFromOM: expectedSelectClause, expectedExpandClauseFromOM: expectedExpandClause);
+        }
+
+        [TestMethod]
+        public void ExpandNavigationThatIsSelectedButAlsoInExpandWithRefOperation()
+        {
+            const string selectClauseText = "FQ.NS.Derived/Navigation1,FQ.NS.Derived/Navigation2";
+            const string expandClauseText = "FQ.NS.Derived/Navigation1/$ref";
+            const string expectedSelectClause = "FQ.NS.Derived/Navigation1,FQ.NS.Derived/Navigation2";
+            const string expectedExpandClause = "FQ.NS.Derived/Navigation1/$ref";
+            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: expandClauseText, expectedSelectClauseFromOM: expectedSelectClause, expectedExpandClauseFromOM: expectedExpandClause);
         }
 
         private void ParseAndExtract(string expandClauseText = null, string selectClauseText = null, string expectedExpandClauseFromOM = null, string expectedSelectClauseFromOM = null)
