@@ -58,7 +58,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
         /// <param name="tracker">The tracker to track if instance annotations are written.</param>
-        /// <param name="ignoreFilter">Whether to ingore the filter in settings.</param>
+        /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
         internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, InstanceAnnotationWriteTracker tracker, bool ignoreFilter = false, string propertyName = null)
         {
@@ -106,7 +106,7 @@ namespace Microsoft.OData.Core
         /// Writes an instance annotation.
         /// </summary>
         /// <param name="instanceAnnotation">The instance annotation to write.</param>
-        /// <param name="ignoreFilter">Whether to ingore the filter in settings.</param>
+        /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
         internal void WriteInstanceAnnotation(ODataInstanceAnnotation instanceAnnotation, bool ignoreFilter = false, string propertyName = null)
         {

@@ -52,7 +52,7 @@ namespace Microsoft.OData.Edm.Csdl
         private string source;
 
         /// <summary>
-        /// Construcotr
+        /// Constructor
         /// </summary>
         /// <param name="reader">the XmlReader for current Edm doc</param>
         /// <param name="getReferencedModelReaderFunc">The function to load referenced model xml. If null, will stop loading the referenced model.</param>

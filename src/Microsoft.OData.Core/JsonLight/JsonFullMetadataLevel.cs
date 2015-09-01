@@ -92,8 +92,6 @@ namespace Microsoft.OData.Core.JsonLight
             return new JsonMinimalMetadataTypeNameOracle();
         }
 
-
-
         /// <summary>
         /// Creates the metadata builder for the given entry. If such a builder is set, asking for payload
         /// metadata properties (like EditLink) of the entry may return a value computed by convention, 
@@ -105,7 +103,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="actualEntityType">The entity type of the entry.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="isResponse">true if the entity metadata builder to create should be for a response payload; false for a request.</param>
-        /// <param name="keyAsSegment">true if keys should go in seperate segments in auto-generated URIs, false if they should go in parentheses.
+        /// <param name="keyAsSegment">true if keys should go in separate segments in auto-generated URIs, false if they should go in parentheses.
         /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
         /// <param name="odataUri">The OData Uri.</param>
         /// <returns>The created metadata builder.</returns>

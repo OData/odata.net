@@ -66,7 +66,7 @@ namespace Microsoft.OData.Core.Json
         /// Stack of scopes.
         /// </summary>
         /// <remarks>
-        /// At the begining the Root scope is pushed to the stack and stays there for the entire parsing 
+        /// At the beginning the Root scope is pushed to the stack and stays there for the entire parsing 
         ///   (so that we don't have to check for empty stack and also to track the number of root-level values)
         /// Each time a new object or array is started the Object or Array scope is pushed to the stack.
         /// If a property inside an Object is found, the Property scope is pushed to the stack.
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Core.Json
             Object,
 
             /// <summary>
-            /// Property scope - after the property name and colon and througout the value.
+            /// Property scope - after the property name and colon and throughout the value.
             /// </summary>
             /// <remarks>This scope is pushed when a property name and colon is found.
             /// The scope remains on the stack while the property value is parsed, but once the property value ends, it's immediately removed

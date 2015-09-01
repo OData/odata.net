@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm.Csdl
     using System.Diagnostics;
 
     /// <summary>
-    /// Represents whether a vocabulary annotation should be serialized within the element it applies to or in a seperate section of the CSDL.
+    /// Represents whether a vocabulary annotation should be serialized within the element it applies to or in a separate section of the CSDL.
     /// </summary>
     public enum EdmVocabularyAnnotationSerializationLocation
     {
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Edm.Csdl
         Inline,
 
         /// <summary>
-        /// The annotation should be serialized in a seperate section.
+        /// The annotation should be serialized in a separate section.
         /// </summary>
         OutOfLine
     }

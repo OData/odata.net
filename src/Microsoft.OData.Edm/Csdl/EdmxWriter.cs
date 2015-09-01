@@ -45,7 +45,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="model">Model to be written.</param>
         /// <param name="writer">XmlWriter the generated EDMX will be written to.</param>
         /// <param name="target">Target implementation of the EDMX being generated.</param>
-        /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successfull. </param>
+        /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
         public static bool TryWriteEdmx(IEdmModel model, XmlWriter writer, EdmxTarget target, out IEnumerable<EdmError> errors)
         {

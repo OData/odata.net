@@ -41,7 +41,7 @@ namespace Microsoft.OData.Core.Json
         internal static readonly NumberFormatInfo ODataNumberFormatInfo;
 
         /// <summary>
-        /// Const tick value for caculating tick values.
+        /// Const tick value for calculating tick values.
         /// </summary>
         private static readonly long JsonDateTimeMinTimeTicks = (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks;
 

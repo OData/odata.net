@@ -93,7 +93,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Deterine if the underlying type of the enum type is interger type (byte, sbyte, int16, int32, int64).
+        /// Determine if the underlying type of the enum type is integer type (byte, sbyte, int16, int32, int64).
         /// </summary>
         /// <param name="enumType">The enum type.</param>
         /// <returns>True if the underlying type of enum type is integer type.</returns>
