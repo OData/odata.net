@@ -26,7 +26,7 @@ namespace Microsoft.OData.Core.Json
         /// <param name="writeInstanceAnnotationsDelegate">Action to write the instance annotations.</param>
         /// <param name="error">The error instance to write.</param>
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
-        /// <param name="maxInnerErrorDepth">The maximumum number of nested inner errors to allow.</param>
+        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         /// <param name="writingJsonLight">true if we're writing JSON lite, false if we're writing verbose JSON.</param>
         internal static void WriteError(IJsonWriter jsonWriter, Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate, ODataError error, bool includeDebugInformation, int maxInnerErrorDepth, bool writingJsonLight)
         {
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Core.Json
         /// <param name="innerError">Inner error details that will be included in debug mode (if present).</param>
         /// <param name="instanceAnnotations">Instance annotations for this error.</param>
         /// <param name="writeInstanceAnnotationsDelegate">Action to write the instance annotations.</param>
-        /// <param name="maxInnerErrorDepth">The maximumum number of nested inner errors to allow.</param>
+        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         /// <param name="writingJsonLight">true if we're writing JSON lite, false if we're writing verbose JSON.</param>
         private static void WriteError(IJsonWriter jsonWriter, string code, string message, ODataInnerError innerError, IEnumerable<ODataInstanceAnnotation> instanceAnnotations, Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate, int maxInnerErrorDepth, bool writingJsonLight)
         {
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Core.Json
         /// <param name="innerError">Inner error details.</param>
         /// <param name="innerErrorPropertyName">The property name for the inner error property.</param>
         /// <param name="recursionDepth">The number of times this method has been called recursively.</param>
-        /// <param name="maxInnerErrorDepth">The maximumum number of nested inner errors to allow.</param>
+        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         private static void WriteInnerError(IJsonWriter jsonWriter, ODataInnerError innerError, string innerErrorPropertyName, int recursionDepth, int maxInnerErrorDepth)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");

@@ -469,7 +469,7 @@ namespace Microsoft.OData.Core.Json
             }
 
             /// <summary>
-            /// What to write at teh end of this scope.
+            /// What to write at the end of this scope.
             /// </summary>
             public string EndString
             {

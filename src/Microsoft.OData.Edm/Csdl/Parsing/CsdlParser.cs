@@ -85,7 +85,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             // Do not move on to other readers if errors were encountered
             this.success &= !docParser.HasErrors;
 
-            // Gather any errors that occured, regardless of success
+            // Gather any errors that occurred, regardless of success
             this.errorsList.AddRange(docParser.Errors);
 
             if (docParser.Result != null)

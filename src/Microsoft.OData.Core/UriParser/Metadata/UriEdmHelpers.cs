@@ -149,7 +149,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         }
 
         /// <summary>
-        /// Is this a valid binding type. i.e. is this an entity, entity colleciton, or complex type.
+        /// Is this a valid binding type. i.e. is this an entity, entity collection, or complex type.
         /// </summary>
         /// <param name="bindingType">the binding type</param>
         /// <returns>true if this binding type is valid</returns>

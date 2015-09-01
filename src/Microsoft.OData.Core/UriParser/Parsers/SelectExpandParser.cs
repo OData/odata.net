@@ -108,7 +108,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Parses a single term in a comma seperated list of things to select.
+        /// Parses a single term in a comma separated list of things to select.
         /// </summary>
         /// <returns>A token representing thing to select.</returns>
         private PathSegmentToken ParseSingleSelectTerm()
@@ -120,7 +120,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Parses a single term in a comma seperated list of things to expand.
+        /// Parses a single term in a comma separated list of things to expand.
         /// </summary>
         /// <returns>A token representing thing to expand.</returns>
         private ExpandTermToken ParseSingleExpandTerm()
@@ -153,11 +153,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Parsed a comma seperated list of $select or $expand terms.
+        /// Parsed a comma separated list of $select or $expand terms.
         /// </summary>
         /// <typeparam name="TFinalToken">The type of the final token to produce.</typeparam>
         /// <typeparam name="TTermToken">The type of the term tokens that are fed into the final token.</typeparam>
-        /// <param name="ctor">A method to contruct the final token from the term tokens.</param>
+        /// <param name="ctor">A method to construct the final token from the term tokens.</param>
         /// <param name="termParsingFunc">A method to parse each individual term.</param>
         /// <returns>A token representing the entire $expand or $select clause syntactically.</returns>
         private TFinalToken ParseCommaSeperatedList<TFinalToken, TTermToken>(Func<IEnumerable<TTermToken>, TFinalToken> ctor, Func<TTermToken> termParsingFunc)
@@ -182,7 +182,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // Process first term
             termTokens.Add(termParsingFunc());
 
-            // If it was a list of terms, then commas will be seperating them
+            // If it was a list of terms, then commas will be separating them
             while (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Comma)
             {
                 // Move over the ',' to the next term

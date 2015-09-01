@@ -61,7 +61,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 #endregion
 
         /// <summary>
-        /// Translate a <see cref="ODataPathSegment"/> using an implemntation of<see cref="PathSegmentTranslator{T}"/>.
+        /// Translate a <see cref="ODataPathSegment"/> using an implementation of<see cref="PathSegmentTranslator{T}"/>.
         /// </summary>
         /// <typeparam name="T">Type that the translator will return after visiting this token.</typeparam>
         /// <param name="translator">An implementation of the translator interface.</param>
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// Copies over all the values of the internal-only properties from one segment to another.
         /// </summary>
-        /// <param name="other">Ther segment to copy from.</param>
+        /// <param name="other">The segment to copy from.</param>
         internal void CopyValuesFrom(ODataPathSegment other)
         {
             Debug.Assert(other != null, "other != null");
