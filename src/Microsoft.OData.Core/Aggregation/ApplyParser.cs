@@ -153,10 +153,10 @@ namespace Microsoft.OData.Core.Aggregation
         {
             query = IsolateQuery(query, UriQueryConstants.AggregateTransformation);
             string aggregatableProperty;
-            string aggregationMethod;
+            AggregationVerb aggregationVerb;
             string alias;
             
-            aggregatableProperty = GetAggregatableProperty(query, true, out alias, out aggregationMethod);
+            aggregatableProperty = GetAggregatableProperty(query, true, out alias, out aggregationVerb);
 
             //create an projection Expression to the property 
             var AggregatablePropertyExpression = ODataQueryOptionParser.ParseExpressionImplementation(
@@ -169,7 +169,7 @@ namespace Microsoft.OData.Core.Aggregation
             {
                 AggregatablePropertyExpression = AggregatablePropertyExpression,
                 Alias = alias,
-                AggregationMethod = aggregationMethod,
+                AggregationVerb = aggregationVerb,
                 AggregatableProperty = aggregatableProperty,
                 Apply = apply
             };
@@ -183,7 +183,7 @@ namespace Microsoft.OData.Core.Aggregation
         /// <param name="alias">The alias found</param>
         /// <param name="aggregationMethod">The aggregation method found</param>
         /// <returns>The aggregated property, aggregation method and alias as defined in the query</returns>
-        private static string GetAggregatableProperty(string query, bool validate, out string alias, out string aggregationMethod)
+        private static string GetAggregatableProperty(string query, bool validate, out string alias, out AggregationVerb aggregationMethod)
         {
             string aggregatableProperty;
             var verbs = query.Split(' ');
@@ -202,7 +202,29 @@ namespace Microsoft.OData.Core.Aggregation
                 }
             }
 
-            aggregationMethod = verbs[withIndex + 1];
+            var aggregationMethodText = verbs[withIndex + 1];
+
+            switch (aggregationMethodText)
+            {
+                case ExpressionConstants.SumKeyword:
+                    aggregationMethod = AggregationVerb.Sum;
+                    break;
+                case ExpressionConstants.MinKeyword:
+                    aggregationMethod = AggregationVerb.Min;
+                    break;
+                case ExpressionConstants.MaxKeyword:
+                    aggregationMethod = AggregationVerb.Max;
+                    break;
+                case ExpressionConstants.AverageKeyword:
+                    aggregationMethod = AggregationVerb.Average;
+                    break;
+                case ExpressionConstants.CountDistinctKeyword:
+                    aggregationMethod = AggregationVerb.CountDistinct;
+                    break;
+                default:
+                    throw new ODataException("Syntax error: aggregation query does not contain a valid aggregation verb after the 'with' statement");
+            }                      
+
             aggregatableProperty = verbs[0];
             if (withIndex == 1)
             {
@@ -267,13 +289,14 @@ namespace Microsoft.OData.Core.Aggregation
                     selectedStatements[selectedStatements.Count() - 1] + withStatement;
             }
 
-            string aggregationMethod, alias;
+            AggregationVerb aggregationVerb;
+            string alias;
             List<ExpressionClause> aggregatablePropertyExpressions = null;
             try
             {
                 aggregatablePropertyExpressions =
                             selectedStatements.Select(statement => ODataQueryOptionParser.ParseExpressionImplementation(
-                                GetAggregatableProperty(statement, false, out alias, out aggregationMethod),
+                                GetAggregatableProperty(statement, false, out alias, out aggregationVerb),
                                 oDataUriParserConfiguration,
                                 edmType,
                                 edmNavigationSource)).ToList();

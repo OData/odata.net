@@ -578,6 +578,7 @@
     <Compile Include="UriParser\SyntacticAst\StringLiteralToken.cs" />
     <Compile Include="UriParser\SyntacticAst\SystemToken.cs" />
     <Compile Include="UriParser\SyntacticAst\UnaryOperatorToken.cs" />
+    <Compile Include="UriParser\AggregationVerb.cs" />
     <Compile Include="UriParser\TreeNodeKinds\BinaryOperatorKind.cs" />
     <Compile Include="UriParser\TreeNodeKinds\ExpressionTokenKind.cs" />
     <Compile Include="UriParser\TreeNodeKinds\QueryNodeKind.cs" />

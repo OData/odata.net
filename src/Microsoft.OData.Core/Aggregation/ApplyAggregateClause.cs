@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.OData.Core.Aggregation;
 using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 
 namespace Microsoft.OData.Core.UriParser.Semantic
 {
@@ -18,9 +19,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         public string AggregatableProperty { get; set; }
 
         /// <summary>
-        /// Gets the name of the Aggregation Method
+        /// Gets and sets the verb of the Aggregation method.
         /// </summary>
-        public string AggregationMethod { get; set; }
+        public AggregationVerb AggregationVerb { get; set; }
 
         /// <summary>
         /// Gets the alias

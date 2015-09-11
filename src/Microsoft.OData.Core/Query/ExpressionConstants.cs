@@ -195,5 +195,20 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>"all" keyword for expressions.</summary>
         internal const string KeywordAll = "all";
+
+        /// <summary>"sum" keyword for expressions.</summary>
+        internal const string SumKeyword = "sum";
+
+        /// <summary>"min" keyword for expressions.</summary>
+        internal const string MinKeyword = "min";
+
+        /// <summary>"max" keyword for expressions.</summary>
+        internal const string MaxKeyword = "max";
+
+        /// <summary>"average" keyword for expressions.</summary>
+        internal const string AverageKeyword = "average";
+
+        /// <summary>"countdistinct" keyword for expressions.</summary>
+        internal const string CountDistinctKeyword = "countdistinct";
     }
 }
