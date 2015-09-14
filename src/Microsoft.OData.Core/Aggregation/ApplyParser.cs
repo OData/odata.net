@@ -175,6 +175,8 @@ namespace Microsoft.OData.Core.Aggregation
             };
         }
 
+        private static char[] _aggregateablePropertySeparators = new char[] { ' ' };
+
         /// <summary>
         /// Get the name of the aggregated property, aggregation method and alias as defined in the query as <see cref="string"/>
         /// </summary>
@@ -186,7 +188,7 @@ namespace Microsoft.OData.Core.Aggregation
         private static string GetAggregatableProperty(string query, bool validate, out string alias, out AggregationVerb aggregationMethod)
         {
             string aggregatableProperty;
-            var verbs = query.Split(' ');
+            var verbs = query.Split(_aggregateablePropertySeparators, StringSplitOptions.RemoveEmptyEntries);
             alias = verbs.Last();
             int withIndex = verbs.Find("with");
             if (validate)
