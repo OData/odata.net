@@ -291,14 +291,12 @@ namespace Microsoft.OData.Core.Aggregation
                     selectedStatements[selectedStatements.Count() - 1] + withStatement;
             }
 
-            AggregationVerb aggregationVerb;
-            string alias;
             List<ExpressionClause> aggregatablePropertyExpressions = null;
             try
             {
                 aggregatablePropertyExpressions =
                             selectedStatements.Select(statement => ODataQueryOptionParser.ParseExpressionImplementation(
-                                GetAggregatableProperty(statement, false, out alias, out aggregationVerb),
+                                statement.Trim(), // Just use property, expressions more complex that property are prohibited by 3.10.1 of the spec
                                 oDataUriParserConfiguration,
                                 edmType,
                                 edmNavigationSource)).ToList();
