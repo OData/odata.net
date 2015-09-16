@@ -24,6 +24,10 @@ public static class Configuration
 	// This flag indicates whether to ignore unexpected elements and attributes in the metadata document and generate
 	// the client code if any. The value must be set to true or false.
 	public const bool IgnoreUnexpectedElementsAndAttributes = true;
+	
+	// If the server is using self-signed SSL/TLS certificates this flag enables the T4 template to
+	// ignore this error when retrieving the metadata document
+	public const bool IgnoreInvalidTlsCertificate = false;
 }
 
 public static class Customization
