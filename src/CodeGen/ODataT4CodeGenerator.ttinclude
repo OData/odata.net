@@ -317,6 +317,9 @@ private void ApplyParametersFromConfigurationClass()
     this.ValidateAndSetTargetLanguageFromString(Configuration.TargetLanguage);
     this.EnableNamingAlias = Configuration.EnableNamingAlias;
     this.IgnoreUnexpectedElementsAndAttributes = Configuration.IgnoreUnexpectedElementsAndAttributes;
+    
+	if(Configuration.IgnoreInvalidTlsCertificates)
+		ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, error) => true;
 }
 
 /// <summary>
