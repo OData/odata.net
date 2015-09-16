@@ -95,6 +95,21 @@ namespace Microsoft.OData.Core.UriParser.Visitors
             throw new NotImplementedException();
         }
 
+        public T Visit(AggregateToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T Visit(GroupByToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T Visit(AggregateStatementToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Visits a LambdaToken
         /// </summary>

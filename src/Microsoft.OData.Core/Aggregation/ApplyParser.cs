@@ -208,19 +208,19 @@ namespace Microsoft.OData.Core.Aggregation
 
             switch (aggregationMethodText)
             {
-                case ExpressionConstants.SumKeyword:
+                case ExpressionConstants.KeywordSum:
                     aggregationMethod = AggregationVerb.Sum;
                     break;
-                case ExpressionConstants.MinKeyword:
+                case ExpressionConstants.KeywordMin:
                     aggregationMethod = AggregationVerb.Min;
                     break;
-                case ExpressionConstants.MaxKeyword:
+                case ExpressionConstants.KeywordMax:
                     aggregationMethod = AggregationVerb.Max;
                     break;
-                case ExpressionConstants.AverageKeyword:
+                case ExpressionConstants.KeywordAverage:
                     aggregationMethod = AggregationVerb.Average;
                     break;
-                case ExpressionConstants.CountDistinctKeyword:
+                case ExpressionConstants.KeywordCountDistinct:
                     aggregationMethod = AggregationVerb.CountDistinct;
                     break;
                 default:

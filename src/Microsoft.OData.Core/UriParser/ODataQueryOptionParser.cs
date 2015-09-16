@@ -152,6 +152,10 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             this.applyClause = ApplyParser.ParseApplyImplementation(applyQuery, this.Configuration, this.targetEdmType, this.targetNavigationSource);
+            
+            // TODO: Update - This call is only here currently to verify the tokenizer of apply until we complete implementing the binder.
+            ParseApplyImplementation(applyQuery, this.Configuration, this.targetEdmType, this.targetNavigationSource);
+
             return this.applyClause;
         }
 
@@ -312,6 +316,17 @@ namespace Microsoft.OData.Core.UriParser
             FilterClause boundNode = filterBinder.BindFilter(filterToken);
 
             return boundNode;
+        }
+
+        public static void ParseApplyImplementation(string apply, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
+        {
+            ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
+            ExceptionUtils.CheckArgumentNotNull(elementType, "elementType");
+            ExceptionUtils.CheckArgumentNotNull(apply, "apply");
+
+            // Get the syntactic representation of the filter expression
+            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveBuiltinIdentifier);
+            var applyTokens = expressionParser.ParseApply(apply);                     
         }
 
         /// <summary>

@@ -144,5 +144,27 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <param name="tokenIn">The FunctionParameterTokenb to bind</param>
         /// <returns>A FunctionParametertoken bound to this UnaryOperatorToken</returns>
         T Visit(FunctionParameterToken tokenIn);
+
+        /// <summary>
+        /// Visits a AggregateStatementToken
+        /// </summary>
+        /// <param name="tokenIn">The AggregateStatementToken to bind</param>
+        /// <returns>A T node bound to this AggregateStatementToken</returns>
+        T Visit(AggregateToken tokenIn);
+
+        /// <summary>
+        /// Visits a AggregateStatementToken
+        /// </summary>
+        /// <param name="tokenIn">The AggregateStatementToken to bind</param>
+        /// <returns>A T node bound to this AggregateStatementToken</returns>
+        T Visit(AggregateStatementToken tokenIn);
+
+
+        /// <summary>
+        /// Visits a AggregateStatementToken
+        /// </summary>
+        /// <param name="tokenIn">The AggregateStatementToken to bind</param>
+        /// <returns>A T node bound to this AggregateStatementToken</returns>
+        T Visit(GroupByToken tokenIn);
     }
 }

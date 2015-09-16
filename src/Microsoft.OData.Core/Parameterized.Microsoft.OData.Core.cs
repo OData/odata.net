@@ -4611,6 +4611,41 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "'as' expected at position {0} in '{1}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_AsExpected(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_AsExpected, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "'as' expected at position {0} in '{1}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_WithExpected(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_WithExpected, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Unrecognized with '{0}' at '{1}' in '{2}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_UnrecognizedWithVerb(object p0, object p1, object p2) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_UnrecognizedWithVerb, p0, p1, p2);
+        }
+
+        /// <summary>
+        /// A string like "Expression expected at position {0} in '{1}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_PropertyPathExpected(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_PropertyPathExpected, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "'{0}' expected at position {1} in '{2}'."
+        /// </summary>
+        internal static string UriQueryExpressionParser_KeywordOrIdentifierExpected(object p0, object p1, object p2) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.UriQueryExpressionParser_KeywordOrIdentifierExpected, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "The URI '{0}' is not valid because it is not based on '{1}'."
         /// </summary>
         internal static string UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri(object p0, object p1) {

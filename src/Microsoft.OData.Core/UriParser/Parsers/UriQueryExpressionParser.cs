@@ -160,6 +160,187 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             return this.ParseExpressionText(filter);
         }
 
+        internal IEnumerable<QueryToken> ParseApply(string apply)
+        {
+            Debug.Assert(apply != null, "apply != null");
+
+            this.recursionDepth = 0;
+            this.lexer = CreateLexerForFilterOrOrderByExpression(apply);
+
+            List<QueryToken> transformationTokens = new List<QueryToken>();
+            while (true)
+            {
+                switch (this.lexer.CurrentToken.GetIdentifier())
+                {
+                    case ExpressionConstants.KeywordAggregate:                        
+                        transformationTokens.Add(ParseAggregate());
+                        break;
+                    case ExpressionConstants.KeywordFilter:
+                        transformationTokens.Add(ParseApplyFilter());
+                        break;
+                    case ExpressionConstants.KeywordGroupBy:
+                        transformationTokens.Add(ParseGroupBy());
+                        break;                 
+                    default:
+                        var supportedKeywords = string.Join("|", ExpressionConstants.KeywordAggregate , ExpressionConstants.KeywordFilter , ExpressionConstants.KeywordGroupBy);
+                        throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));                        
+                }
+                // '/' indicates there are more transformations
+                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Slash)
+                {
+                    break;
+                }
+
+                this.lexer.NextToken();
+            }
+
+            this.lexer.ValidateToken(ExpressionTokenKind.End);
+
+            return new ReadOnlyCollection<QueryToken>(transformationTokens);
+        }
+
+        // parses $apply aggregate tranformation (.e.g. aggregate(UnitPrice with sum as TotalUnitPrice)
+        internal AggregateToken ParseAggregate()
+        {
+            // "aggregate"         
+            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordAggregate));
+            lexer.NextToken();
+
+            // '('
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            // series of statements separates by commas
+            var statements = new List<AggregateStatementToken>();
+            while (true)
+            {                
+                statements.Add(this.ParseAggregateStatement());
+
+                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
+                {
+                    break;
+                }
+            }
+
+            // ")"
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            return new AggregateToken(statements);      
+        }
+
+        internal AggregateStatementToken ParseAggregateStatement()
+        {
+            // expression
+            QueryToken expression = this.ParseExpression();
+
+            // "with" verb
+            AggregationVerb verb = this.ParseAggregateWith();
+
+            // "as" alias
+            var alias = this.ParseAggregateAs();
+
+            return new AggregateStatementToken(expression, verb, alias.Text);
+        }
+
+        // parses $apply groupby tranformation (.e.g. groupby(ProductID, CategoryId, aggregate(UnitPrice with sum as TotalUnitPrice))
+        internal GroupByToken ParseGroupBy()
+        {
+            // "groupby"         
+            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordGroupBy));
+            lexer.NextToken();
+
+            // '('
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            // '('
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            // properties
+            var properties = new List<EndPathToken>();
+            while (true)
+            {
+                var expression = this.ParsePrimary() as EndPathToken;
+
+                if (expression == null)
+                {
+                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_ExpressionExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                }
+
+                properties.Add(expression);
+
+                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
+                {
+                    break;
+                }
+
+                this.lexer.NextToken();
+            }
+
+            // ")"
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            // optional aggregate 
+            AggregateToken aggregate = null;
+
+            // "," (comma)
+            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Comma)
+            {
+                this.lexer.NextToken();
+
+                if (TokenIdentifierIs(ExpressionConstants.KeywordAggregate))
+                {
+                    aggregate = this.ParseAggregate();
+                }
+                else
+                {
+                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(ExpressionConstants.KeywordAggregate, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                }
+            }
+
+            // ")"
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            return new GroupByToken(properties, aggregate);
+        }
+
+        // parses $apply filter tranformation (.e.g. filter(ProductName eq 'Aniseed Syrup'))
+        internal QueryToken ParseApplyFilter()
+        {
+            // "filter"         
+            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordFilter));
+            lexer.NextToken();
+
+            // '(' expression ')'
+            return this.ParseParenExpression();          
+        }
+
         /// <summary>
         /// Parse expression text into Token.
         /// </summary>
@@ -732,6 +913,60 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             return new InnerPathToken(propertyName, parent, null);
         }
+
+        private AggregationVerb ParseAggregateWith()
+        {
+            if (!TokenIdentifierIs(ExpressionConstants.KeywordWith))
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_WithExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            lexer.NextToken();
+
+            AggregationVerb verb;            
+
+            switch (lexer.CurrentToken.GetIdentifier())
+            {
+                case ExpressionConstants.KeywordAverage:
+                    verb = AggregationVerb.Average;
+                    break;
+                case ExpressionConstants.KeywordCountDistinct:
+                    verb = AggregationVerb.CountDistinct;
+                    break;
+                case ExpressionConstants.KeywordMax:
+                    verb = AggregationVerb.Max;
+                    break;
+                case ExpressionConstants.KeywordMin:
+                    verb = AggregationVerb.Min;
+                    break;
+                case ExpressionConstants.KeywordSum:
+                    verb = AggregationVerb.Average;
+                    break;
+                default:
+                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithVerb(lexer.CurrentToken.GetIdentifier(), this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            lexer.NextToken();
+
+            return verb;
+        }
+
+        private StringLiteralToken ParseAggregateAs()
+        {
+            if (!TokenIdentifierIs(ExpressionConstants.KeywordAs))
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_AsExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            lexer.NextToken();           
+
+            var alias = new StringLiteralToken(lexer.CurrentToken.Text);
+
+            lexer.NextToken();
+
+            return alias;
+        }
+
 
         /// <summary>
         /// Checks that the current token has the specified identifier.
