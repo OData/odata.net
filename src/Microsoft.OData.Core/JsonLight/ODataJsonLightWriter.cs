@@ -338,7 +338,10 @@ namespace Microsoft.OData.Core.JsonLight
                 string propertyName = this.ParentNavigationLink.Name;
 
                 this.ValidateNoDeltaLinkForExpandedFeed(feed);
-                this.ValidateNoCustomInstanceAnnotationsForExpandedFeed(feed);
+                if (feed.Id != null)
+                {
+                    this.ValidateNoCustomInstanceAnnotationsForExpandedFeed(feed);
+                }
 
                 if (this.jsonLightOutputContext.WritingResponse)
                 {
@@ -347,6 +350,12 @@ namespace Microsoft.OData.Core.JsonLight
 
                     // Write the next link if it's available.
                     this.WriteFeedNextLink(feed, propertyName);
+
+                    if (feed.Id == null)
+                    {
+                        // Write custom instance annotations
+                        this.jsonLightEntryAndFeedSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(feed.InstanceAnnotations, this.CurrentFeedScope.InstanceAnnotationWriteTracker, false, propertyName);
+                    }
 
                     // And then write the property name to start the value. 
                     jsonWriter.WriteName(propertyName);
@@ -418,7 +427,10 @@ namespace Microsoft.OData.Core.JsonLight
                 string propertyName = this.ParentNavigationLink.Name;
 
                 this.ValidateNoDeltaLinkForExpandedFeed(feed);
-                this.ValidateNoCustomInstanceAnnotationsForExpandedFeed(feed);
+                if (feed.Id != null)
+                {
+                    this.ValidateNoCustomInstanceAnnotationsForExpandedFeed(feed);
+                }
 
                 if (this.jsonLightOutputContext.WritingResponse)
                 {

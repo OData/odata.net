@@ -214,6 +214,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         public static void WriteReferenceLink(ODataWriter writer, object element, IEdmNavigationSource entitySource, ODataVersion targetVersion, ODataNavigationLink navigationLink)
         {
             ODataEntry entry = ODataObjectModelConverter.ConvertToODataEntityReferenceLink (element, entitySource, targetVersion);
+            entry.InstanceAnnotations.Add(new ODataInstanceAnnotation("Link.AnnotationByEntry", new ODataPrimitiveValue(true)));
             writer.WriteStart(entry);
             writer.WriteEnd();
         }
@@ -226,9 +227,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         {
             IEnumerable<ODataEntry> links = ODataObjectModelConverter.ConvertToODataEntityReferenceLinks (element, entitySource, targetVersion);
             var feed = new ODataFeed { };
+            feed.InstanceAnnotations.Add(new ODataInstanceAnnotation("Links.AnnotationByFeed", new ODataPrimitiveValue(true)));
             writer.WriteStart(feed);
             foreach (var entry in links)
             {
+                entry.InstanceAnnotations.Add(new ODataInstanceAnnotation("Link.AnnotationInLinks", new ODataPrimitiveValue(true)));
                 writer.WriteStart(entry);
                 writer.WriteEnd();
             }

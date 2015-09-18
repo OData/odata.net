@@ -112,6 +112,7 @@
     <Compile Include="CodeGenerationTests\CustomizeNamingTest.cs" />
     <Compile Include="CodeGenerationTests\T4DelayQueryTest.cs" />
     <Compile Include="EdmDateAndTimeOfDay\DateAndTimeOfDayCRUDTestings.cs" />
+    <Compile Include="QueryOptionTests\EntityReferenceLinkTests.cs" />
     <Compile Include="ModelReferenceTests\ModelReferenceClientTests.cs" />
     <Compile Include="ModelReferenceTests\ModelReferenceCUDTests.cs" />
     <Compile Include="ModelReferenceTests\ModelReferenceQueryTests.cs" />
