@@ -172,7 +172,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 switch (this.lexer.CurrentToken.GetIdentifier())
                 {
-                    case ExpressionConstants.KeywordAggregate:                        
+                    case ExpressionConstants.KeywordAggregate:
                         transformationTokens.Add(ParseAggregate());
                         break;
                     case ExpressionConstants.KeywordFilter:
@@ -180,10 +180,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         break;
                     case ExpressionConstants.KeywordGroupBy:
                         transformationTokens.Add(ParseGroupBy());
-                        break;                 
+                        break;
                     default:
-                        var supportedKeywords = string.Join("|", ExpressionConstants.KeywordAggregate , ExpressionConstants.KeywordFilter , ExpressionConstants.KeywordGroupBy);
-                        throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));                        
+                        var supportedKeywords = string.Join("|", ExpressionConstants.KeywordAggregate, ExpressionConstants.KeywordFilter, ExpressionConstants.KeywordGroupBy);
+                        throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
                 }
                 // '/' indicates there are more transformations
                 if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Slash)
@@ -217,7 +217,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // series of statements separates by commas
             var statements = new List<AggregateStatementToken>();
             while (true)
-            {                
+            {
                 statements.Add(this.ParseAggregateStatement());
 
                 if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
@@ -234,7 +234,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             this.lexer.NextToken();
 
-            return new AggregateToken(statements);      
+            return new AggregateToken(statements);
         }
 
         internal AggregateStatementToken ParseAggregateStatement()
@@ -301,6 +301,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
+            this.lexer.NextToken();
+
             // optional aggregate 
             AggregateToken aggregate = null;
 
@@ -338,7 +340,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             lexer.NextToken();
 
             // '(' expression ')'
-            return this.ParseParenExpression();          
+            return this.ParseParenExpression();
         }
 
         /// <summary>
@@ -923,7 +925,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             lexer.NextToken();
 
-            AggregationVerb verb;            
+            AggregationVerb verb;
 
             switch (lexer.CurrentToken.GetIdentifier())
             {
@@ -958,7 +960,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 throw ParseError(ODataErrorStrings.UriQueryExpressionParser_AsExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
-            lexer.NextToken();           
+            lexer.NextToken();
 
             var alias = new StringLiteralToken(lexer.CurrentToken.Text);
 

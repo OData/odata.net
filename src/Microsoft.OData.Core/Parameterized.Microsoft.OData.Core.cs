@@ -4929,6 +4929,41 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "$apply/aggregate expression '{0}' operation does not support value type '{1}'."
+        /// </summary>
+        internal static string ApplyBinder_AggregateStatementIncompatibleTypeForVerb(object p0, object p1) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_AggregateStatementIncompatibleTypeForVerb, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "$apply/aggregate does not support verb '{0}'."
+        /// </summary>
+        internal static string ApplyBinder_UnsupportedAggregateVerb(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_UnsupportedAggregateVerb, p0);
+        }
+
+        /// <summary>
+        /// A string like "$apply/aggregate expression '{0}' must evaluate to a single value."
+        /// </summary>
+        internal static string ApplyBinder_AggregateStatementNotSingleValue(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_AggregateStatementNotSingleValue, p0);
+        }
+
+        /// <summary>
+        /// A string like "$apply/groupby grouping expression '{0}' must evaluate to a property access value."
+        /// </summary>
+        internal static string ApplyBinder_GroupByPropertyNotPropertyAccessValue(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_GroupByPropertyNotPropertyAccessValue, p0);
+        }
+
+        /// <summary>
+        /// A string like "$apply clause does not support type '{0}'."
+        /// </summary>
+        internal static string ApplyBinder_UnsupportedType(object p0) {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ApplyBinder_UnsupportedType, p0);
+        }
+
+        /// <summary>
         /// A string like "Cannot find a suitable overload for function '{0}' that takes '{1}' arguments."
         /// </summary>
         internal static string FunctionCallBinder_CannotFindASuitableOverload(object p0, object p1) {

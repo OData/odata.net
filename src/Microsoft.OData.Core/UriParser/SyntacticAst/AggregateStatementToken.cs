@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="OrderByToken.cs" company="Microsoft">
+// <copyright file="AggregateStatementToken.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -24,7 +24,7 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
 
             this._expression = expression;
             this._withVerb = withVerb;
-            this._alias = alias;
+            this._asAlias = alias;
         }
        
         public override QueryTokenKind Kind
@@ -46,11 +46,11 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
             get { return this._expression; }
         }
 
-        private readonly string _alias;
+        private readonly string _asAlias;
 
-        public string Alias
+        public string AsAlias
         {
-            get { return this._alias; }
+            get { return this._asAlias; }
         }
        
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="OrderByToken.cs" company="Microsoft">
+// <copyright file="GroupByToken.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
             get { return QueryTokenKind.GroupBy; }
         }
 
-        public IEnumerable<QueryToken> Properties
+        public IEnumerable<EndPathToken> Properties
         {
             get { return this.properties; }
         }

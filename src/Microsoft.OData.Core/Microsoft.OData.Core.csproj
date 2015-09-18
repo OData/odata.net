@@ -397,6 +397,7 @@
     <Compile Include="UriBuilder\ODataUriBuilder.cs" />
     <Compile Include="UriBuilder\PathSegmentToResourcePathTranslator.cs" />
     <Compile Include="UriBuilder\SelectExpandClauseToStringBuilder.cs" />
+    <Compile Include="UriParser\Binders\ApplyBinder2.cs" />
     <Compile Include="UriParser\Binders\BinaryOperatorBinder.cs" />
     <Compile Include="UriParser\Binders\BinderBase.cs" />
     <Compile Include="UriParser\Binders\BindingState.cs" />
@@ -477,8 +478,11 @@
     <Compile Include="UriParser\QueryOptionUtils.cs" />
     <Compile Include="UriParser\ReadOnlyEnumerableForUriParser.cs" />
     <Compile Include="UriParser\SearchLexer.cs" />
+    <Compile Include="UriParser\SemanticAst\AggregateNode2.cs" />
+    <Compile Include="UriParser\SemanticAst\AggregateStatementNode2.cs" />
     <Compile Include="UriParser\SemanticAst\AllNode.cs" />
     <Compile Include="UriParser\SemanticAst\AnyNode.cs" />
+    <Compile Include="UriParser\SemanticAst\ApplyClause2.cs" />
     <Compile Include="UriParser\SemanticAst\BatchReferenceSegment.cs" />
     <Compile Include="UriParser\SemanticAst\BatchSegment.cs" />
     <Compile Include="UriParser\SemanticAst\BinaryOperatorNode.cs" />
@@ -503,6 +507,7 @@
     <Compile Include="UriParser\SemanticAst\EntitySetSegment.cs" />
     <Compile Include="UriParser\SemanticAst\ExpandedNavigationSelectItem.cs" />
     <Compile Include="UriParser\SemanticAst\FilterClause.cs" />
+    <Compile Include="UriParser\SemanticAst\GroupByNode2.cs" />
     <Compile Include="UriParser\SemanticAst\KeyLookupNode.cs" />
     <Compile Include="UriParser\SemanticAst\KeySegment.cs" />
     <Compile Include="UriParser\SemanticAst\LambdaNode.cs" />

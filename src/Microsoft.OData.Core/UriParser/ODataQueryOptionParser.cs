@@ -318,7 +318,7 @@ namespace Microsoft.OData.Core.UriParser
             return boundNode;
         }
 
-        public static void ParseApplyImplementation(string apply, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
+        public static ApplyClause2 ParseApplyImplementation(string apply, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             ExceptionUtils.CheckArgumentNotNull(elementType, "elementType");
@@ -326,7 +326,17 @@ namespace Microsoft.OData.Core.UriParser
 
             // Get the syntactic representation of the filter expression
             UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveBuiltinIdentifier);
-            var applyTokens = expressionParser.ParseApply(apply);                     
+            var applyTokens = expressionParser.ParseApply(apply);
+
+            // Bind it to metadata
+            var state = new BindingState(configuration);
+            state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(elementType.ToTypeReference(), navigationSource);
+            state.RangeVariables.Push(state.ImplicitRangeVariable);
+            var binder = new MetadataBinder(state);
+            var applyBinder = new ApplyBinder2(binder.Bind, state);
+            var boundNode = applyBinder.BindApply(applyTokens);
+
+            return boundNode;
         }
 
         /// <summary>
