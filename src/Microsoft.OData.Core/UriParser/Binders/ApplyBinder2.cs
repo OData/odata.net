@@ -123,7 +123,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                             throw new ODataException(ODataErrorStrings.ApplyBinder_AggregateStatementIncompatibleTypeForVerb(expression, expressionPrimitiveKind));
                     }
                 case AggregationVerb.CountDistinct:
-                    return Microsoft.OData.Edm.Library.EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Int32, false);
+                    return Microsoft.OData.Edm.Library.EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Int64, false);
                 case AggregationVerb.Max:
                     return expressionType;
                 case AggregationVerb.Min:
@@ -155,13 +155,19 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 groupByType.AddStructuralProperty(property.Property.Name, property.GetEdmTypeReference());
             }
 
-            var groupByTypeReference = (IEdmTypeReference)ToEdmTypeReference(groupByType, true);
+            
 
             AggregateNode2 aggregate = null;
             if (token.Aggregate != null)
             {
                 aggregate = BindAggregateToken(token.Aggregate);
+                // Add aggregation properties to the result type
+                foreach(var property in (aggregate.TypeReference.Definition as IEdmStructuredType).Properties())
+                {
+                    groupByType.AddStructuralProperty(property.Name, property.Type);
+                }
             }
+            var groupByTypeReference = (IEdmTypeReference)ToEdmTypeReference(groupByType, true);
 
             // TODO: Determine source
             return new GroupByNode2(properties, aggregate, groupByTypeReference, null);

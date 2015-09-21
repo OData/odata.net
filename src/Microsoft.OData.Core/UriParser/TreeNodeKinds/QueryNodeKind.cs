@@ -168,7 +168,7 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// <summary>
         /// A grouping of values by properties
         /// </summary>
-        GroupBy = InternalQueryNodeKind.Aggregate
+        GroupBy = InternalQueryNodeKind.GroupBy
     }
 
     /// <summary>

@@ -942,7 +942,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     verb = AggregationVerb.Min;
                     break;
                 case ExpressionConstants.KeywordSum:
-                    verb = AggregationVerb.Average;
+                    verb = AggregationVerb.Sum;
                     break;
                 default:
                     throw ParseError(ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithVerb(lexer.CurrentToken.GetIdentifier(), this.lexer.CurrentToken.Position, this.lexer.ExpressionText));

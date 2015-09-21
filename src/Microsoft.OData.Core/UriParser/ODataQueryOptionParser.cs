@@ -49,7 +49,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>
         /// Apply clause for aggregate queries 
         /// </summary>
-        private ApplyClause applyClause;
+        private ApplyClause2 applyClause;
         #endregion private fields
 
         #region constructor
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Core.UriParser
         /// the text into semantic nodes using the constructed mode.
         /// </summary>
         /// <returns>A <see cref="ApplyClause"/> representing the aggregation query.</returns>
-        public ApplyClause ParseApply()
+        public ApplyClause2 ParseApply()
         {
             if (this.applyClause != null)
             {
@@ -151,7 +151,7 @@ namespace Microsoft.OData.Core.UriParser
                 return null;
             }
 
-            this.applyClause = ApplyParser.ParseApplyImplementation(applyQuery, this.Configuration, this.targetEdmType, this.targetNavigationSource);
+            this.applyClause = ParseApplyImplementation(applyQuery, this.Configuration, this.targetEdmType, this.targetNavigationSource);
             
             // TODO: Update - This call is only here currently to verify the tokenizer of apply until we complete implementing the binder.
             ParseApplyImplementation(applyQuery, this.Configuration, this.targetEdmType, this.targetNavigationSource);
