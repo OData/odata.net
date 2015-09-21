@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Csdl.CsdlSemantics;
+
 namespace Microsoft.Test.Edm.TDD.Tests
 {
     using System;
@@ -13,6 +15,7 @@ namespace Microsoft.Test.Edm.TDD.Tests
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
+    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -194,11 +197,11 @@ namespace Microsoft.Test.Edm.TDD.Tests
   <Term Name=""IsolationSupported"" Type=""Capabilities.IsolationLevel"" AppliesTo=""EntityContainer"">
     <Annotation Term=""Core.Description"" String=""Supported odata.isolation levels"" />
   </Term>
-  <Term Name=""CrossJoinSupported"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntityContainer"">
-    <Annotation Term=""Core.Description"" String=""Supports cross joins for the entity sets in this container"" />
-  </Term>
   <Term Name=""CallbackSupported"" Type=""Capabilities.CallbackType"" AppliesTo=""EntityContainer EntitySet"">
     <Annotation Term=""Core.Description"" String=""Supports callbacks for the specified protocols"" />
+  </Term>
+  <Term Name=""CrossJoinSupported"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntityContainer"">
+    <Annotation Term=""Core.Description"" String=""Supports cross joins for the entity sets in this container"" />
   </Term>
   <Term Name=""ChangeTracking"" Type=""Capabilities.ChangeTrackingType"" AppliesTo=""EntityContainer EntitySet"">
     <Annotation Term=""Core.Description"" String=""Change tracking capabilities of this service or entity set"" />
@@ -261,6 +264,49 @@ namespace Microsoft.Test.Edm.TDD.Tests
 
             Assert.IsTrue(!errors.Any(), "No Errors");
             Assert.AreEqual(expectedText, output, "expectedText = output");
+        }
+
+        [TestMethod]
+        public void TestCapabilitiesVocabularyReferenceCoreVocabularyTypesAndTerms()
+        {
+            foreach (string name in new[] { "AsynchronousRequestsSupported", "BatchContinueOnErrorSupported" })
+            {
+                var term = this.capVocModel.FindDeclaredValueTerm("Org.OData.Capabilities.V1." + name);
+                Assert.IsNotNull(term);
+
+                // Core.Tag
+                Assert.IsNotNull(term.Type);
+
+                Assert.AreEqual(EdmTypeKind.TypeDefinition, term.Type.Definition.TypeKind);
+                Assert.AreEqual("Org.OData.Core.V1.Tag", term.Type.Definition.FullTypeName());
+
+                // Core.Description
+                var annotations = this.capVocModel.FindDeclaredVocabularyAnnotations(term).ToList();
+                Assert.AreEqual(1, annotations.Count());
+                var description = annotations.SingleOrDefault(a => a.Term is CsdlSemanticsValueTerm && a.Term.Name == "Description");
+                Assert.IsNotNull(description);
+                Assert.AreEqual("Org.OData.Core.V1", description.Term.Namespace);
+            }
+        }
+
+        [TestMethod]
+        public void TestCapabilitiesVocabularyReferenceMultiCoreVocabularyTerms()
+        {
+            var supportedFormats = this.capVocModel.FindDeclaredValueTerm("Org.OData.Capabilities.V1.SupportedFormats");
+            Assert.IsNotNull(supportedFormats);
+
+            var annotations = this.capVocModel.FindDeclaredVocabularyAnnotations(supportedFormats).ToList();
+            Assert.AreEqual(2, annotations.Count());
+
+            // Core.Description
+            var description = annotations.SingleOrDefault(a => a.Term is CsdlSemanticsValueTerm && a.Term.Name == "Description");
+            Assert.IsNotNull(description);
+            Assert.AreEqual("Org.OData.Core.V1", description.Term.Namespace);
+
+            // Core.IsMediaType
+            var isMediaType = annotations.SingleOrDefault(a => a.Term is CsdlSemanticsValueTerm && a.Term.Name == "IsMediaType");
+            Assert.IsNotNull(isMediaType);
+            Assert.AreEqual("Org.OData.Core.V1", isMediaType.Term.Namespace);
         }
 
         [TestMethod]
