@@ -224,6 +224,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 {
                     break;
                 }
+
+                this.lexer.NextToken();
             }
 
             // ")"
