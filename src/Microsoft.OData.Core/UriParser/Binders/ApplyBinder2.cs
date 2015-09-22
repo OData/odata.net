@@ -56,7 +56,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     default: //assumes filter
                         var filterClause = this._filterBinder.BindFilter(token);
                         resultType = filterClause.Expression.TypeReference;
-                        transformations.Add(filterClause.Expression);
+                        transformations.Add(filterClause);
                         break;
                 }
             }
@@ -137,7 +137,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         private GroupByNode2 BindGroupByToken(GroupByToken token)
         {
-            var groupByType = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: null, isAbstract: false, isOpen: true);
+            var groupingType = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: null, isAbstract: false, isOpen: true);
+            var resultType = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: null, isAbstract: false, isOpen: true);
 
             var properties = new List<SingleValuePropertyAccessNode>();
 
@@ -152,25 +153,29 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
                 properties.Add(property);
 
-                groupByType.AddStructuralProperty(property.Property.Name, property.GetEdmTypeReference());
+                groupingType.AddStructuralProperty(property.Property.Name, property.GetEdmTypeReference());
+                resultType.AddStructuralProperty(property.Property.Name, property.GetEdmTypeReference());
             }
 
-            
+            var groupingTypeReference = (IEdmTypeReference)ToEdmTypeReference(groupingType, true);
+
 
             AggregateNode2 aggregate = null;
             if (token.Aggregate != null)
             {
                 aggregate = BindAggregateToken(token.Aggregate);
-                // Add aggregation properties to the result type
+                
+
                 foreach(var property in (aggregate.TypeReference.Definition as IEdmStructuredType).Properties())
                 {
-                    groupByType.AddStructuralProperty(property.Name, property.Type);
+                    resultType.AddStructuralProperty(property.Name, property.Type);
                 }
             }
-            var groupByTypeReference = (IEdmTypeReference)ToEdmTypeReference(groupByType, true);
+
+            var resultingTypeReference = (IEdmTypeReference)ToEdmTypeReference(resultType, true);
 
             // TODO: Determine source
-            return new GroupByNode2(properties, aggregate, groupByTypeReference, null);
+            return new GroupByNode2(properties, groupingTypeReference, aggregate, resultingTypeReference, null);
 
         }
 

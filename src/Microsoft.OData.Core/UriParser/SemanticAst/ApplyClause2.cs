@@ -9,11 +9,13 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     using Edm;
     using System.Collections.Generic;
     using System.Linq;
+    using TreeNodeKinds;
+    using System;
 
     /// <summary>
     /// Represents the set of transformations to perform as part of $apply.
     /// </summary>
-    public class ApplyClause2
+    public class ApplyClause2 : QueryNode
     {
         public ApplyClause2(IEnumerable<QueryNode> transformations, IEdmTypeReference typeReference)
         {
@@ -45,6 +47,14 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             {
 
                 return this._typeReference;
+            }
+        }
+
+        public override QueryNodeKind Kind
+        {
+            get
+            {
+                return QueryNodeKind.Apply;
             }
         }
     }

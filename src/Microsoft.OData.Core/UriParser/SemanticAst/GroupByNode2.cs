@@ -12,16 +12,18 @@ using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 
 namespace Microsoft.OData.Core.UriParser.Semantic
 {
-    public sealed class GroupByNode2 : SingleValueNode
+    public sealed class GroupByNode2 : QueryNode
     {
-        public GroupByNode2(IEnumerable<SingleValuePropertyAccessNode> groupingProperties, AggregateNode2 aggregate, IEdmTypeReference typeReference, CollectionNode source)
+        public GroupByNode2(IEnumerable<SingleValuePropertyAccessNode> groupingProperties, IEdmTypeReference groupingTypeReference, AggregateNode2 aggregate, IEdmTypeReference typeReference, CollectionNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(groupingProperties, "groupingProperties");
+            ExceptionUtils.CheckArgumentNotNull(groupingTypeReference, "groupingTypeReference");
             // OK for aggregate to be null
             ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
             // OK for source to be null
 
             this._groupingProperties = groupingProperties;
+            this._groupingTypeReference = groupingTypeReference;
             this._aggregate = aggregate;
             this._typeReference = typeReference;
             this._source = source;
@@ -58,17 +60,34 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             }
         }
 
-        internal override InternalQueryNodeKind InternalKind
+        public override QueryNodeKind Kind
         {
             get
             {
-                return InternalQueryNodeKind.GroupBy;
+                return QueryNodeKind.GroupBy;
+            }
+        }
+
+        private readonly IEdmTypeReference _groupingTypeReference;
+
+        /// <summary>
+        /// Gets the type resulting from the grouping properties.
+        /// </summary>
+        public IEdmTypeReference GroupingTypeReference
+        {
+            get
+            {
+
+                return this._groupingTypeReference;
             }
         }
 
         private readonly IEdmTypeReference _typeReference;
 
-        public override IEdmTypeReference TypeReference
+        /// <summary>
+        /// Gets the type resulting from the grouping properties and aggregate.
+        /// </summary>
+        public IEdmTypeReference TypeReference
         {
             get
             {

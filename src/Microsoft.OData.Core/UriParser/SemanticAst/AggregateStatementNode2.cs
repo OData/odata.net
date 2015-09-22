@@ -9,7 +9,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     using TreeNodeKinds;
     using Microsoft.OData.Edm;
 
-    public sealed class AggregateStatementNode2 : SingleValueNode
+    public sealed class AggregateStatementNode2 : QueryNode
     {
         public AggregateStatementNode2(SingleValueNode expression, AggregationVerb withVerb, SingleValuePropertyAccessNode from, string asAlias, IEdmTypeReference typeReference, CollectionNode source)
         {
@@ -77,17 +77,17 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             }
         }
 
-        internal override InternalQueryNodeKind InternalKind
+        public override QueryNodeKind Kind
         {
             get
             {
-                return InternalQueryNodeKind.AggregateStatement;
+                return QueryNodeKind.AggregateStatement;
             }
         }
 
         private readonly IEdmTypeReference _typeReference;
 
-        public override IEdmTypeReference TypeReference
+        public IEdmTypeReference TypeReference
         {
             get
             {

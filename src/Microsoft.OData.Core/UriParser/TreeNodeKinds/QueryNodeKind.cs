@@ -163,12 +163,22 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// <summary>
         /// An aggregation statement as part of an aggregate node.
         /// </summary>
-        AggregateStatement = InternalQueryNodeKind.Aggregate,
+        AggregateStatement = InternalQueryNodeKind.AggregateStatement,
 
         /// <summary>
         /// A grouping of values by properties
         /// </summary>
-        GroupBy = InternalQueryNodeKind.GroupBy
+        GroupBy = InternalQueryNodeKind.GroupBy,
+
+        /// <summary>
+        /// A $filter or $apply/filter
+        /// </summary>
+        Filter = InternalQueryNodeKind.Filter,
+
+        /// <summary>
+        /// A $apply
+        /// </summary>
+        Apply = InternalQueryNodeKind.Apply
     }
 
     /// <summary>
@@ -315,7 +325,7 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// Cast on a single value.
         /// </summary>
         SingleValueCast = 27,
-       
+
         /// <summary>
         /// Aggregations of values
         /// </summary>
@@ -329,6 +339,16 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// <summary>
         /// A grouping of values by properties
         /// </summary>
-        GroupBy = 30
+        GroupBy = 30,
+
+        /// <summary>
+        /// A filter clause
+        /// </summary>
+        Filter = 31,
+
+        /// <summary>
+        /// An apply clause
+        /// </summary>
+        Apply = 32,
     }
 }
