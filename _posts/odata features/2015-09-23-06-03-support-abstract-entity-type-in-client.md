@@ -22,14 +22,15 @@ model.AddElement(orderType);
 
 # Output model
 
-    <EntityType Name=""AbstractEntity"" Abstract=""true"" />
-    <EntityType Name=""Order"" BaseType=""DefaultNS.AbstractEntity"">
+    <EntityType Name="AbstractEntity" Abstract="true" />
+    <EntityType Name="Order" BaseType="DefaultNS.AbstractEntity">
       <Key>
-        <PropertyRef Name=""OrderID"" />
+        <PropertyRef Name="OrderID" />
       </Key>
     </EntityType>
       
 # Client generated proxy file
+T4 would auto-generate code for abstract entity type like:
 
 {% highlight csharp %}
 [global::Microsoft.OData.Client.EntityType()]
