@@ -16,7 +16,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Collections.Generic;
     using Edm.Library;
 
-    internal sealed class ApplyBinder2
+    internal sealed class ApplyBinder
     {
         private readonly MetadataBinder.QueryTokenVisitor _bindMethod;
 
@@ -24,14 +24,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         private readonly FilterBinder _filterBinder;
      
-        internal ApplyBinder2(MetadataBinder.QueryTokenVisitor bindMethod, BindingState state)
+        internal ApplyBinder(MetadataBinder.QueryTokenVisitor bindMethod, BindingState state)
         {
             this._bindMethod = bindMethod;
             this._state = state;
             this._filterBinder = new FilterBinder(bindMethod, state);
         }
        
-        internal ApplyClause2 BindApply(IEnumerable<QueryToken> tokens)
+        internal ApplyClause BindApply(IEnumerable<QueryToken> tokens)
         {
             ExceptionUtils.CheckArgumentNotNull(tokens, "applyTokens");
 
@@ -60,12 +60,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
             }
 
-            return new ApplyClause2(transformations, resultType);
+            return new ApplyClause(transformations, resultType);
         }
 
-        private AggregateNode2 BindAggregateToken(AggregateToken token)
+        private AggregateNode BindAggregateToken(AggregateToken token)
         {
-            var statements = new List<AggregateStatementNode2>();
+            var statements = new List<AggregateStatementNode>();
             foreach (var statementToken in token.Statements)
             {
                 statements.Add(BindAggregateStatementToken(statementToken));
@@ -73,10 +73,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             var typeReference = CreateAggregateTypeReference(statements);
 
-            return new AggregateNode2(statements, typeReference);
+            return new AggregateNode(statements, typeReference);
         }
 
-        private AggregateStatementNode2 BindAggregateStatementToken(AggregateStatementToken token)
+        private AggregateStatementNode BindAggregateStatementToken(AggregateStatementToken token)
         {
             var expression = this._bindMethod(token.Expression) as SingleValueNode;
 
@@ -88,10 +88,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             var typeReference = CreateAggregateStatementTypeReference(expression, token.WithVerb);
 
             // TODO: Determine source
-            return new AggregateStatementNode2(expression, token.WithVerb, null, token.AsAlias, typeReference, null);
+            return new AggregateStatementNode(expression, token.WithVerb, null, token.AsAlias, typeReference, null);
         }
 
-        private static IEdmTypeReference CreateAggregateTypeReference(IEnumerable<AggregateStatementNode2> statements)
+        private static IEdmTypeReference CreateAggregateTypeReference(IEnumerable<AggregateStatementNode> statements)
         {
             var type = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: null, isAbstract: false, isOpen: true);
             foreach (var statement in statements)
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
         }
 
-        private GroupByNode2 BindGroupByToken(GroupByToken token)
+        private GroupByNode BindGroupByToken(GroupByToken token)
         {
             var groupingType = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: null, isAbstract: false, isOpen: true);
             var resultType = new EdmEntityType(string.Empty, "DynamicTypeWrapper", baseType: null, isAbstract: false, isOpen: true);
@@ -159,7 +159,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             var groupingTypeReference = (IEdmTypeReference)ToEdmTypeReference(groupingType, true);
 
 
-            AggregateNode2 aggregate = null;
+            AggregateNode aggregate = null;
             if (token.Aggregate != null)
             {
                 aggregate = BindAggregateToken(token.Aggregate);
@@ -174,7 +174,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             var resultingTypeReference = (IEdmTypeReference)ToEdmTypeReference(resultType, true);
 
             // TODO: Determine source
-            return new GroupByNode2(properties, groupingTypeReference, aggregate, resultingTypeReference, null);
+            return new GroupByNode(properties, groupingTypeReference, aggregate, resultingTypeReference, null);
 
         }
 

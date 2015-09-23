@@ -10,9 +10,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     using Microsoft.OData.Edm;
     using System.Collections.Generic;
 
-    public sealed class AggregateNode2 : QueryNode
+    public sealed class AggregateNode : QueryNode
     {
-        public AggregateNode2(IEnumerable<AggregateStatementNode2> statements, IEdmTypeReference typeReference)
+        public AggregateNode(IEnumerable<AggregateStatementNode> statements, IEdmTypeReference typeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(statements, "statements");
             ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
@@ -21,9 +21,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             this._typeReference = typeReference;        
         }
 
-        private readonly IEnumerable<AggregateStatementNode2> _statements;
+        private readonly IEnumerable<AggregateStatementNode> _statements;
 
-        public IEnumerable<AggregateStatementNode2> Statements
+        public IEnumerable<AggregateStatementNode> Statements
         {
             get {
                 return _statements;

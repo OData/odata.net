@@ -15,9 +15,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     /// <summary>
     /// Represents the set of transformations to perform as part of $apply.
     /// </summary>
-    public class ApplyClause2 : QueryNode
+    public class ApplyClause : QueryNode
     {
-        public ApplyClause2(IEnumerable<QueryNode> transformations, IEdmTypeReference typeReference)
+        public ApplyClause(IEnumerable<QueryNode> transformations, IEdmTypeReference typeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(transformations, "transformations");
             ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");

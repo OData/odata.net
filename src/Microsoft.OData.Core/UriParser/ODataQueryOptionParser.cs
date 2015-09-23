@@ -47,7 +47,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>
         /// Apply clause for aggregate queries 
         /// </summary>
-        private ApplyClause2 applyClause;
+        private ApplyClause applyClause;
         #endregion private fields
 
         #region constructor
@@ -132,8 +132,8 @@ namespace Microsoft.OData.Core.UriParser
         /// Parses a apply clause on the given full Uri, binding
         /// the text into semantic nodes using the constructed mode.
         /// </summary>
-        /// <returns>A <see cref="ApplyClause2"/> representing the aggregation query.</returns>
-        public ApplyClause2 ParseApply()
+        /// <returns>A <see cref="ApplyClause"/> representing the aggregation query.</returns>
+        public ApplyClause ParseApply()
         {
             if (this.applyClause != null)
             {
@@ -313,7 +313,7 @@ namespace Microsoft.OData.Core.UriParser
             return boundNode;
         }
 
-        public static ApplyClause2 ParseApplyImplementation(string apply, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
+        public static ApplyClause ParseApplyImplementation(string apply, ODataUriParserConfiguration configuration, IEdmType elementType, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             ExceptionUtils.CheckArgumentNotNull(elementType, "elementType");
@@ -328,7 +328,7 @@ namespace Microsoft.OData.Core.UriParser
             state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(elementType.ToTypeReference(), navigationSource);
             state.RangeVariables.Push(state.ImplicitRangeVariable);
             var binder = new MetadataBinder(state);
-            var applyBinder = new ApplyBinder2(binder.Bind, state);
+            var applyBinder = new ApplyBinder(binder.Bind, state);
             var boundNode = applyBinder.BindApply(applyTokens);
 
             return boundNode;

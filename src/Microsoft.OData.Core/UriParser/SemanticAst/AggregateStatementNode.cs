@@ -9,9 +9,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     using TreeNodeKinds;
     using Microsoft.OData.Edm;
 
-    public sealed class AggregateStatementNode2 : QueryNode
+    public sealed class AggregateStatementNode : QueryNode
     {
-        public AggregateStatementNode2(SingleValueNode expression, AggregationVerb withVerb, SingleValuePropertyAccessNode from, string asAlias, IEdmTypeReference typeReference, CollectionNode source)
+        public AggregateStatementNode(SingleValueNode expression, AggregationVerb withVerb, SingleValuePropertyAccessNode from, string asAlias, IEdmTypeReference typeReference, CollectionNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             // OK for from to be null
