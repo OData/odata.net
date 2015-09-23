@@ -164,10 +164,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             Debug.Assert(apply != null, "apply != null");
 
+            List<QueryToken> transformationTokens = new List<QueryToken>();
+
+            if (string.IsNullOrEmpty(apply))
+            {
+                return transformationTokens;
+            }
+
             this.recursionDepth = 0;
             this.lexer = CreateLexerForFilterOrOrderByExpression(apply);
 
-            List<QueryToken> transformationTokens = new List<QueryToken>();
             while (true)
             {
                 switch (this.lexer.CurrentToken.GetIdentifier())

@@ -157,6 +157,9 @@
     <Compile Include="Semantic\SelectOM\WildcardSelectionItemTests.cs" />
     <Compile Include="Semantic\SemanticTreeVisitorUnitTests.cs" />
     <Compile Include="Semantic\TypePromotionUtilsTests.cs" />
+    <Compile Include="Syntactic\AggregateStatementTokenUnitTests.cs" />
+    <Compile Include="Syntactic\GroupByTokenUnitTests.cs" />
+    <Compile Include="Syntactic\AggregateTokenUnitTests.cs" />
     <Compile Include="Syntactic\EndPathTokenUnitTests.cs" />
     <Compile Include="Syntactic\ExpandOptionParserTests.cs" />
     <Compile Include="Syntactic\ExpandTermTokenUnitTests.cs" />

@@ -95,17 +95,32 @@ namespace Microsoft.OData.Core.UriParser.Visitors
             throw new NotImplementedException();
         }
 
-        public T Visit(AggregateToken tokenIn)
+        /// <summary>
+        /// Visits an AggregateToken
+        /// </summary>
+        /// <param name="tokenIn">The AggregateToken to visit</param>
+        /// <returns>A T bound to this AggregateToken</returns>
+        public virtual T Visit(AggregateToken tokenIn)
         {
             throw new NotImplementedException();
         }
 
-        public T Visit(GroupByToken tokenIn)
+        /// <summary>
+        /// Visits a GroupByToken
+        /// </summary>
+        /// <param name="tokenIn">The GroupByToken to visit</param>
+        /// <returns>A T bound to this GroupByToken</returns>
+        public virtual T Visit(GroupByToken tokenIn)
         {
             throw new NotImplementedException();
         }
 
-        public T Visit(AggregateStatementToken tokenIn)
+        /// <summary>
+        /// Visits an AggregateStatementToken
+        /// </summary>
+        /// <param name="tokenIn">The AggregateStatementToken to visit</param>
+        /// <returns>A T bound to this AggregateStatementToken</returns>
+        public virtual T Visit(AggregateStatementToken tokenIn)
         {
             throw new NotImplementedException();
         }
