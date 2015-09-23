@@ -13,7 +13,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
-    using Aggregation;
     using System.Collections.Generic;
     using Edm.Library;
 
