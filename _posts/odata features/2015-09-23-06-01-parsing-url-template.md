@@ -14,6 +14,7 @@ For example:
 # Uri templates
 
 There are three kind of Uri template:
+
 1. Key template:  ~/Customers({key})
 2. Function parameter template: ~/Customers/Default.MyFunction(name={name})
 3. Path template: ~/Customers/{dynamicProperty}
