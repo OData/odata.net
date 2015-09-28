@@ -121,7 +121,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                 responseMessage.AddPreferenceApplied(ServiceConstants.Preference_TrackChanging);
             }
 
-            responseMessage.PreferenceAppliedHeader().AnnotationFilter = "*";
             responseMessage.SetStatusCode(HttpStatusCode.OK);
 
             using (var messageWriter = this.CreateMessageWriter(responseMessage))
@@ -144,7 +143,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     }
 
                     ODataEntityReferenceLinks linksCollection = new ODataEntityReferenceLinks() { Links = links, NextPageLink = this.QueryContext.NextLink };
-                    linksCollection.InstanceAnnotations.Add(new ODataInstanceAnnotation ("Links.Annotation" , new ODataPrimitiveValue(true)));
+                    linksCollection.InstanceAnnotations.Add(new ODataInstanceAnnotation("Links.Annotation", new ODataPrimitiveValue(true)));
                     messageWriter.WriteEntityReferenceLinks(linksCollection);
                 }
                 else if (this.QueryContext.Target.IsReference && this.QueryContext.Target.TypeKind == EdmTypeKind.Entity)

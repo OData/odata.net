@@ -156,6 +156,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
 
             var queryRequestMessage = new HttpWebRequestMessage(new Uri(baseUri.AbsoluteUri + uri, UriKind.Absolute));
             queryRequestMessage.SetHeader("Accept", mimeType);
+            queryRequestMessage.SetHeader("Prefer", string.Format("{0}={1}", IncludeAnnotation, "*"));
 
             var queryResponseMessage = queryRequestMessage.GetResponse();
             Assert.AreEqual(200, queryResponseMessage.StatusCode);
@@ -177,6 +178,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
 
             var queryRequestMessage = new HttpWebRequestMessage(new Uri(baseUri.AbsoluteUri + uri, UriKind.Absolute));
             queryRequestMessage.SetHeader("Accept", mimeType);
+            queryRequestMessage.SetHeader("Prefer", string.Format("{0}={1}", IncludeAnnotation, "*"));
 
             var queryResponseMessage = queryRequestMessage.GetResponse();
             Assert.AreEqual(200, queryResponseMessage.StatusCode);

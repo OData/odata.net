@@ -227,11 +227,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         {
             IEnumerable<ODataEntry> links = ODataObjectModelConverter.ConvertToODataEntityReferenceLinks (element, entitySource, targetVersion);
             var feed = new ODataFeed { };
-            feed.InstanceAnnotations.Add(new ODataInstanceAnnotation("Links.AnnotationByFeed", new ODataPrimitiveValue(true)));
             writer.WriteStart(feed);
             foreach (var entry in links)
             {
-                entry.InstanceAnnotations.Add(new ODataInstanceAnnotation("Link.AnnotationInLinks", new ODataPrimitiveValue(true)));
+                entry.InstanceAnnotations.Add(new ODataInstanceAnnotation("Link.AnnotationByFeed", new ODataPrimitiveValue(true)));
                 writer.WriteStart(entry);
                 writer.WriteEnd();
             }

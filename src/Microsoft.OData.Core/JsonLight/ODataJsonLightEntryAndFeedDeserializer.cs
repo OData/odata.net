@@ -902,15 +902,6 @@ namespace Microsoft.OData.Core.JsonLight
                 }
             }
 
-            Dictionary<string, object> customPropertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetCustomPropertyAnnotations(navigationLink.Name);
-            if (customPropertyAnnotations != null)
-            {
-                foreach (KeyValuePair<string, object> propertyAnnotation in customPropertyAnnotations)
-                {
-                    expandedFeed.InstanceAnnotations.Add(new ODataInstanceAnnotation(propertyAnnotation.Key, propertyAnnotation.Value.ToODataValue()));
-                }
-            }
-
             return ODataJsonLightReaderNavigationLinkInfo.CreateExpandedFeedLinkInfo(navigationLink, navigationProperty, expandedFeed);
         }
 
