@@ -70,6 +70,8 @@ model.SetPayloadValueConverter(new DateTimeOffsetCustomFormatPrimitivePayloadVal
 
 <strong>3. Serialize</strong>
 
+The new `ConvertToPayloadValue` would be used to write the DateTimeOffset type value.
+
 {% highlight csharp %}
 var df = EdmCoreModel.Instance.GetDateTimeOffset(false);
 
@@ -83,19 +85,22 @@ result.Should().Be("\"Thu, 12 Apr 2012 18:43:10 GMT\"");
 {% endhighlight %}
 
 <strong>4. Deserialize</strong>
+
+The new `ConvertFromPayloadValue` would be used to read `Birthday` which is defined as DateTimeOffset in model.
+
 {% highlight csharp %}
-  const string payload =
-      "{" +
-      "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
-      "\"@odata.id\":\"http://mytest\"," +
-      "\"Id\":0," +
-      "\"Birthday\":\"Thu, 12 Apr 2012 18:43:10 GMT\"" +
-      "}";
+const string payload =
+"{" +
+"\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
+"\"@odata.id\":\"http://mytest\"," +
+"\"Id\":0," +
+"\"Birthday\":\"Thu, 12 Apr 2012 18:43:10 GMT\"" +
+"}";
 
-  ODataEntry entry = null;
-  this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+ODataEntry entry = null;
+this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
 
-  IList<ODataProperty> propertyList = entry.Properties.ToList();
-  var birthday = propertyList[1].Value as DateTimeOffset?;
-  birthday.Value.Should().Be(new DateTimeOffset(2012, 4, 12, 18, 43, 10, TimeSpan.Zero));
+IList<ODataProperty> propertyList = entry.Properties.ToList();
+var birthday = propertyList[1].Value as DateTimeOffset?;
+birthday.Value.Should().Be(new DateTimeOffset(2012, 4, 12, 18, 43, 10, TimeSpan.Zero));
 {% endhighlight %}
