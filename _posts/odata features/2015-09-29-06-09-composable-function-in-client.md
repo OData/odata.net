@@ -6,6 +6,7 @@ category: "6. OData Features"
 ---
 
 Composable function (function import) can have additional path segments and query options as appropriate for the returned type.
+
 ### Unbound composable function
 For example, we have model:
 
