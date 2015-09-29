@@ -62,10 +62,10 @@ using (var messageWriter = new ODataMessageWriter(message, settings, model))
 }
 {% endhighlight %}
 
-The payload would be like:
+`Prop1` can be shown in the payload:
 
     {"@odata.context":"http://example.org/odata.svc/$metadata#EntitySet/$entity",
         "ID":102,
         "Name":"Bob",
-        "Prop1":"Var1
+        "Prop1":"Var1"
     }
