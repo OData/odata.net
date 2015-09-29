@@ -17,10 +17,8 @@ ODataCollectionWriter writer = messageWriter.CreateODataCollectionWriter(element
 
 ODataCollectionStart collectionStart = new ODataCollectionStart();
 
-<strong>
 collectionStart.NextPageLink = new Uri("http://any");
 collectionStart.Count = 5;
-</strong>
 
 writer.WriteStart(collectionStart);
 
