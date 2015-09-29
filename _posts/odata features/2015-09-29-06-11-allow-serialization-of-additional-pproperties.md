@@ -62,7 +62,7 @@ using (var messageWriter = new ODataMessageWriter(message, settings, model))
 }
 {% endhighlight %}
 
-`Prop1` can be shown in the payload:
+Then `Prop1` can be shown in the payload:
 
     {"@odata.context":"http://example.org/odata.svc/$metadata#EntitySet/$entity",
         "ID":102,
