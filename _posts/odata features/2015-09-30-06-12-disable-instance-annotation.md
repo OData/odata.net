@@ -10,6 +10,7 @@ From 6.12.0, OData .Net client is able to disable instance annotation materializ
 Let's have an example to demonstrate:
 
 The response payload for the example is:
+
     {
      "@odata.context":"http://localhost/$metadata#People/$entity",
      "PersonID":1,
