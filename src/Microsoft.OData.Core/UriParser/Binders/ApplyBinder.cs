@@ -23,17 +23,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private readonly BindingState _state;
 
         private readonly FilterBinder _filterBinder;
-     
+
         internal ApplyBinder(MetadataBinder.QueryTokenVisitor bindMethod, BindingState state)
         {
             this._bindMethod = bindMethod;
             this._state = state;
             this._filterBinder = new FilterBinder(bindMethod, state);
         }
-       
+
         internal ApplyClause BindApply(IEnumerable<QueryToken> tokens)
         {
-            ExceptionUtils.CheckArgumentNotNull(tokens, "applyTokens");
+            ExceptionUtils.CheckArgumentNotNull(tokens, "tokens");
 
             List<QueryNode> transformations = new List<QueryNode>();
 
@@ -115,10 +115,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         case EdmPrimitiveTypeKind.Int32:
                         case EdmPrimitiveTypeKind.Int64:
                         case EdmPrimitiveTypeKind.Double:
-                            return Microsoft.OData.Edm.Library.EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, expressionType.IsNullable);                        
+                            return Microsoft.OData.Edm.Library.EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, expressionType.IsNullable);
                         case EdmPrimitiveTypeKind.Decimal:
                             return Microsoft.OData.Edm.Library.EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Decimal, expressionType.IsNullable);
-                        default:                            
+                        default:
                             throw new ODataException(ODataErrorStrings.ApplyBinder_AggregateStatementIncompatibleTypeForVerb(expression, expressionPrimitiveKind));
                     }
                 case AggregationVerb.CountDistinct:
@@ -129,7 +129,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     return expressionType;
                 case AggregationVerb.Sum:
                     return expressionType;
-                default:                    
+                default:
                     throw new ODataException(ODataErrorStrings.ApplyBinder_UnsupportedAggregateVerb(withVerb));
             }
         }
@@ -158,14 +158,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             var groupingTypeReference = (IEdmTypeReference)ToEdmTypeReference(groupingType, true);
 
-
             AggregateNode aggregate = null;
             if (token.Aggregate != null)
             {
                 aggregate = BindAggregateToken(token.Aggregate);
-                
 
-                foreach(var property in (aggregate.TypeReference.Definition as IEdmStructuredType).Properties())
+                foreach (var property in (aggregate.TypeReference.Definition as IEdmStructuredType).Properties())
                 {
                     resultType.AddStructuralProperty(property.Name, property.Type);
                 }
@@ -194,7 +192,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     return new EdmEnumTypeReference(edmType as IEdmEnumType, isNullable);
                 case EdmTypeKind.Primitive:
                     return Microsoft.OData.Edm.Library.EdmCoreModel.Instance.GetPrimitive((edmType as IEdmPrimitiveType).PrimitiveKind, isNullable);
-                default:                    
+                default:
                     throw new ODataException(ODataErrorStrings.ApplyBinder_UnsupportedType(edmType.TypeKind));
             }
         }
