@@ -968,10 +968,20 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="text">The text for the next segment.</param>
         private void CreateNextSegment(string text)
         {
+            string identifier;
+            string parenthesisExpression;
+            ExtractSegmentIdentifierAndParenthesisExpression(text, out identifier, out parenthesisExpression); 
+            
+            IEdmType targetEdmType = UriEdmHelpers.FindTypeFromModel(this.configuration.Model, identifier, this.configuration.Resolver);
+            
             // before treating this as a property, try to handle it as a key property value, unless it was preceeded by an escape-marker segment ('$').
-            if (this.TryHandleAsKeySegment(text))
+            // But only do this if the segment can't be interpreted as a type, so look up the type first
+            if (targetEdmType == null)
             {
-                return;
+                if (this.TryHandleAsKeySegment(text))
+                {
+                    return;
+                }
             }
 
             // Parse as path template segment if EnableUriTemplateParsing is enabled.
@@ -1002,11 +1012,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 return;
             }
-
-            string identifier;
-            string parenthesisExpression;
-            ExtractSegmentIdentifierAndParenthesisExpression(text, out identifier, out parenthesisExpression);
-
+            
             if (previous.SingleResult)
             {
                 // if its not one of the recognized special segments, then it must be a property, type-segment, or key value.
@@ -1039,7 +1045,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             // If the property resolution failed, and the previous segment was targeting an entity, then we should
             // try and resolve the identifier as type name.
-            if (this.TryCreateTypeNameSegment(previous, identifier, parenthesisExpression))
+            if (this.TryCreateTypeNameSegment(previous, identifier, parenthesisExpression, targetEdmType))
             {
                 return;
             }
@@ -1096,12 +1102,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="previous">previous segment info.</param>
         /// <param name="identifier">The current raw segment identifier being interpreted.</param>
         /// <param name="parenthesisExpression">Parenthesis expression of this segment.</param>
+        /// <param name="targetEdmType">The IEdmType of the segment to be created. </param>
         /// <returns>Whether or not a type segment was created for the identifier.</returns>
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri parsing does not go through the same resolvers/settings that payload reading/writing does.")]
-        private bool TryCreateTypeNameSegment(ODataPathSegment previous, string identifier, string parenthesisExpression)
+        private bool TryCreateTypeNameSegment(ODataPathSegment previous, string identifier, string parenthesisExpression, IEdmType targetEdmType)
         {
-            IEdmType targetEdmType;
-            if (previous.TargetEdmType == null || (targetEdmType = UriEdmHelpers.FindTypeFromModel(this.configuration.Model, identifier, this.configuration.Resolver)) == null)
+            if (previous.TargetEdmType == null || targetEdmType == null)
             {
                 return false;
             }

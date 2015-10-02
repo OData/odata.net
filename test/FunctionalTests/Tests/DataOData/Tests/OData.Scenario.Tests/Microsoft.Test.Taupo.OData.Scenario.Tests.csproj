@@ -235,6 +235,9 @@
     <None Include="UriParser\Path\PathTests.PathTypeSegmentToNavigation.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="UriParser\Path\PathTests.PathTypeSegmentWithKeyAsSegmentEnabled.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="UriParser\SelectTests\Select.SelectAll.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
