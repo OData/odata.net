@@ -25,6 +25,16 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
     public class JsonLightWriterIntegrationTests
     {
         [TestMethod]
+        public void ShouldBeAbleToWriteEntryWithIdOnly()
+        {
+            IEdmEntityType entityType = GetEntityType();
+            IEdmEntitySet entitySet = GetEntitySet(entityType);
+            const string expected = "{\"@odata.id\":\"http://test.org/EntitySet('1')\"}";
+            var actual = WriteJsonLightEntry(true, null, false, new ODataEntry() {Id = new Uri("http://test.org/EntitySet('1')")}, entitySet, entityType);
+            actual.Should().Be(expected);
+        }
+
+        [TestMethod]
         public void ShouldBeAbleToWriteEntryInRequestWithoutSpecifyingEntitySetOrMetadataDocumentUri()
         {
             IEdmEntityType entityType = GetEntityType();

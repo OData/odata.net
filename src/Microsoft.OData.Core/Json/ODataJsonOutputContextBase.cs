@@ -196,7 +196,7 @@ namespace Microsoft.OData.Core.Json
                     // The TextWriter.Flush (Which is in fact StreamWriter.Flush) will call the underlying Stream.Flush.
                     this.jsonWriter.Flush();
 
-                    // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitely.
+                    // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
                         this.asynchronousOutputStream.FlushSync();

@@ -30,13 +30,13 @@ namespace Microsoft.OData.Core.Json
         /// <summary>
         /// Adds the specified action to the current entry.
         /// </summary>
-        /// <param name="action">The action whcih is fully populated with the data from the payload.</param>
+        /// <param name="action">The action which is fully populated with the data from the payload.</param>
         void AddActionToEntry(ODataAction action);
 
         /// <summary>
         /// Adds the specified function to the current entry.
         /// </summary>
-        /// <param name="function">The function whcih is fully populated with the data from the payload.</param>
+        /// <param name="function">The function which is fully populated with the data from the payload.</param>
         void AddFunctionToEntry(ODataFunction function);
     }
 }

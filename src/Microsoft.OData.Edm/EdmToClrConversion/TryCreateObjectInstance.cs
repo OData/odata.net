@@ -42,7 +42,7 @@ namespace Microsoft.OData.Edm.EdmToClrConversion
         out PropertyInfo propertyInfo);
 
     /// <summary>
-    /// Represents a delegate to get CLR type name based on the edm type name and <see cref=" IEdmModel"/>.
+    /// Represents a delegate to get CLR type name based on the edm type name and <see cref="IEdmModel"/>.
     /// </summary>
     /// <param name="edmModel">The <see cref="IEdmModel"/> used to find the type name.</param>
     /// <param name="edmTypeName">The edm type name.</param>

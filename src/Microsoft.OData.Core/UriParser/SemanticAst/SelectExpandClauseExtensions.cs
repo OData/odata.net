@@ -102,7 +102,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             List<string> selectList = selectExpandClause.GetCurrentLevelSelectList();
             List<T> expandList = new List<T>();
 
-            foreach (ExpandedNavigationSelectItem expandSelectItem in selectExpandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>())
+            foreach (ExpandedNavigationSelectItem expandSelectItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)))
             {
                 string currentExpandClause = String.Join("/", expandSelectItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
                 T subResult = default(T);
@@ -112,6 +112,18 @@ namespace Microsoft.OData.Core.UriParser.Semantic
                 }
 
                 var expandItem = processSubResult(currentExpandClause, subResult);
+                if (expandItem != null)
+                {
+                    expandList.Add(expandItem);
+                }
+            }
+
+            foreach (ExpandedReferenceSelectItem expandSelectItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)))
+            {
+                string currentExpandClause = String.Join("/", expandSelectItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
+                currentExpandClause += "/$ref";
+
+                var expandItem = processSubResult(currentExpandClause, default(T));
                 if (expandItem != null)
                 {
                     expandList.Add(expandItem);
@@ -171,7 +183,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private static string BuildExpandsForNode(SelectExpandClause selectExpandClause)
         {
             List<string> currentLevelExpandClauses = new List<string>();
-            foreach (ExpandedNavigationSelectItem expandItem in selectExpandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>())
+            foreach (ExpandedNavigationSelectItem expandItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)))
             {
                 string currentExpandClause = String.Join("/", expandItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
                 string expandStr;
@@ -181,6 +193,13 @@ namespace Microsoft.OData.Core.UriParser.Semantic
                     currentExpandClause += "(" + expandStr + ")";
                 }
 
+                currentLevelExpandClauses.Add(currentExpandClause);
+            }
+
+            foreach (ExpandedReferenceSelectItem expandItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)))
+            {
+                string currentExpandClause = String.Join("/", expandItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
+                currentExpandClause += "/$ref";
                 currentLevelExpandClauses.Add(currentExpandClause);
             }
 

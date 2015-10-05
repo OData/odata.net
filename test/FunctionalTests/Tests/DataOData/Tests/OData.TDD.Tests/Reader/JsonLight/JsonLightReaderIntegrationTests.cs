@@ -50,6 +50,14 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
         }
 
         [TestMethod]
+        public void ShouldBeAbleToReadEntryWithIdOnly()
+        {
+            const string payload = "{" + ContextUrl + ",\"@odata.id\":\"entryId\"}";
+            var actual = ReadJsonLightEntry(payload, FullMetadata, readingResponse: true);
+            actual.Id.Should().Be("http://www.example.com/defaultService.svc/entryId");
+        }
+
+        [TestMethod]
         public void ShouldBeAbleToReadTransientEntryInFullMetadataLevel()
         {
             const string payload = "{" + ContextUrl + ",\"@odata.id\":null}";
@@ -61,7 +69,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
         public void ShouldBeAbleToReadTransientEntryInMinimalMetadataLevel()
         {
             const string payload = "{" + ContextUrl + ",\"@odata.id\":null}";
-            var actual = ReadJsonLightEntry(payload, FullMetadata, readingResponse: true);
+            var actual = ReadJsonLightEntry(payload, MinimalMetadata, readingResponse: true);
             actual.IsTransient.Should().BeTrue();
         }
 

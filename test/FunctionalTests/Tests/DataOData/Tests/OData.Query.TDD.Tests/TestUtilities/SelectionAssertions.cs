@@ -48,6 +48,14 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.TestUtilities
             return new AndConstraint<ExpandedNavigationSelectItem>(expansion);
         }
 
+        public static AndConstraint<ExpandedReferenceSelectItem> ShouldBeExpansionWithRefFor(this SelectItem item, IEdmNavigationProperty navigationProperty)
+        {
+            item.Should().BeOfType<ExpandedReferenceSelectItem>();
+            var expansion = item.As<ExpandedReferenceSelectItem>();
+            expansion.PathToNavigationProperty.LastSegment.As<NavigationPropertySegment>().NavigationProperty.Should().BeSameAs(navigationProperty);
+            return new AndConstraint<ExpandedReferenceSelectItem>(expansion);
+        }
+
         public static AndConstraint<ExpandedNavigationSelectItem> ShouldBeExpansionFor(this SelectItem item, ODataPath path)
         {
             item.Should().BeOfType<ExpandedNavigationSelectItem>();

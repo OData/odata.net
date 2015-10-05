@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ExpandedNavigationSelectItem.cs" company="Microsoft">
+// <copyright file="ExpandedReferenceSelectItem.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -10,19 +10,18 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     using Microsoft.OData.Edm;
 
     /// <summary>
-    /// This represents one level of expansion for a particular expansion tree.
+    /// This represents one level of expansion for a particular expansion tree with $ref operation.
     /// </summary>
-    public sealed class ExpandedNavigationSelectItem : ExpandedReferenceSelectItem
+    public class ExpandedReferenceSelectItem : SelectItem
     {
         /// <summary>
-        /// Create an Expand item using a nav prop, its entity set and a SelectExpandClause 
+        /// Create an Expand item using a nav prop, its entity set
         /// </summary>
         /// <param name="pathToNavigationProperty">the path to the navigation property for this expand item, including any type segments</param>
         /// <param name="navigationSource">the navigation source for this ExpandItem</param>
-        /// <param name="selectExpandOption">This level select and any sub expands for this expand item.</param>
         /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
-        public ExpandedNavigationSelectItem(ODataExpandPath pathToNavigationProperty, IEdmNavigationSource navigationSource, SelectExpandClause selectExpandOption)
-            : this(pathToNavigationProperty, navigationSource, selectExpandOption, null, null, null, null, null, null, null)
+        public ExpandedReferenceSelectItem(ODataExpandPath pathToNavigationProperty, IEdmNavigationSource navigationSource)
+            : this(pathToNavigationProperty, navigationSource, null, null, null, null, null, null)
         {
         }
 
@@ -31,38 +30,56 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         /// <param name="pathToNavigationProperty">the path to the navigation property for this expand item, including any type segments</param>
         /// <param name="navigationSource">the navigation source for this expand level.</param>
-        /// <param name="selectAndExpand">This level select and any sub expands for this expand item.</param>
         /// <param name="filterOption">A filter clause for this expand (can be null)</param>
         /// <param name="orderByOption">An Orderby clause for this expand (can be null)</param>
         /// <param name="topOption">A top clause for this expand (can be null)</param>
         /// <param name="skipOption">A skip clause for this expand (can be null)</param>
         /// <param name="countOption">An query count clause for this expand (can be null)</param>
         /// <param name="searchOption">An levels clause for this expand (can be null)</param>
-        /// <param name="levelsOption">An levels clause for this expand (can be null)</param>
         /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
-        public ExpandedNavigationSelectItem(
+        public ExpandedReferenceSelectItem(
              ODataExpandPath pathToNavigationProperty,
              IEdmNavigationSource navigationSource,
-             SelectExpandClause selectAndExpand,
              FilterClause filterOption,
              OrderByClause orderByOption,
              long? topOption,
              long? skipOption,
              bool? countOption,
-             SearchClause searchOption,
-             LevelsClause levelsOption)
-            : base(pathToNavigationProperty, navigationSource, filterOption, orderByOption, topOption, skipOption, countOption, searchOption)
+             SearchClause searchOption)
         {
             ExceptionUtils.CheckArgumentNotNull(pathToNavigationProperty, "pathToNavigationProperty");
 
-            this.SelectAndExpand = selectAndExpand;
-            this.LevelsOption = levelsOption;
+            this.PathToNavigationProperty = pathToNavigationProperty;
+            this.NavigationSource = navigationSource;
+            this.FilterOption = filterOption;
+            this.OrderByOption = orderByOption;
+            this.TopOption = topOption;
+            this.SkipOption = skipOption;
+            this.CountOption = countOption;
+            this.SearchOption = searchOption;
         }
 
         /// <summary>
-        /// The select and expand clause for this expanded navigation.
+        /// Gets the Path for this expand level.
+        /// This path includes zero or more type segments followed by exactly one Navigation Property.
         /// </summary>
-        public SelectExpandClause SelectAndExpand       
+        public ODataExpandPath PathToNavigationProperty
+        {
+            get; private set;
+        }
+
+        /// <summary>
+        /// Gets the navigation source for this level.
+        /// </summary>
+        public IEdmNavigationSource NavigationSource
+        {
+            get; private set;
+        }
+
+        /// <summary>
+        /// The filter clause for this expand item
+        /// </summary>
+        public FilterClause FilterOption
         {
             get; private set;
         }
@@ -70,9 +87,41 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// Gets the levels clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
         /// </summary>
-        public LevelsClause LevelsOption
+        public SearchClause SearchOption
         {
-           get; private set;
+            get; private set;
+        }
+
+        /// <summary>
+        /// Gets the orderby clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
+        /// </summary>
+        public OrderByClause OrderByOption
+        {
+            get; private set;
+        }
+
+        /// <summary>
+        /// Gets the top clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
+        /// </summary>
+        public long? TopOption
+        {
+            get; private set;
+        }
+
+        /// <summary>
+        /// Gets the skip clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
+        /// </summary>
+        public long? SkipOption
+        {
+            get; private set;
+        }
+
+        /// <summary>
+        /// Gets the count clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
+        /// </summary>
+        public bool? CountOption
+        {
+            get; private set;
         }
 
         /// <summary>

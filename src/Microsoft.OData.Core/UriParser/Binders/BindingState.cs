@@ -41,7 +41,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private int BindingRecursionDepth;
 
         /// <summary>
-        /// Collection of query option tokens associated with the currect query being processed.
+        /// Collection of query option tokens associated with the current query being processed.
         /// If a given query option is bound it should be removed from this collection.
         /// </summary>
         private List<CustomQueryOptionToken> queryOptions;
@@ -109,7 +109,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Collection of query option tokens associated with the currect query being processed.
+        /// Collection of query option tokens associated with the current query being processed.
         /// If a given query option is bound it should be removed from this collection.
         /// </summary>
         internal List<CustomQueryOptionToken> QueryOptions

@@ -69,7 +69,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         /// Resolve operation's parameters. Using this extension, enum value could be written as string value.
         /// </summary>
         /// <param name="operation">Current operation for parameters.</param>
-        /// <param name="input">A dictionary the paramenter list.</param>
+        /// <param name="input">A dictionary the parameter list.</param>
         /// <returns>A dictionary containing resolved parameters.</returns>
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Parameter type is needed here to check whether can be convert from source")]
         public override IDictionary<IEdmOperationParameter, SingleValueNode> ResolveOperationParameters(IEdmOperation operation, IDictionary<string, SingleValueNode> input)

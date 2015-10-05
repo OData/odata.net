@@ -14,6 +14,7 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.UriBuilder
     using Microsoft.OData.Core;
     using Microsoft.OData.Core.UriBuilder;
     using Microsoft.OData.Core.UriParser;
+    using System.Collections.Generic;
 
     [TestClass]
     public class SelectExpandBuilderTests
@@ -548,6 +549,26 @@ namespace Microsoft.Test.OData.Query.TDD.Tests.UriBuilder
             Uri queryUri = new Uri("People?$select=Name,MyOpenAddress/Test,MyDog&$expand=MyDog($select=Color)", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlConventions.Default, settings);
             Assert.AreEqual("http://gobbledygook/People?$select=" + Uri.EscapeDataString("Name,MyOpenAddress/Test,MyDog") + "&$expand=" + Uri.EscapeDataString("MyDog($select=Color)"), actualUri.OriginalString);
+        }
+
+        [TestMethod]
+        public void TranslateSelectExpandClauseForExpandItemShouldWork()
+        {
+            string expandClause = "MyDog($filter=Color eq 'Brown';$orderby=Color;$expand=MyPeople/$ref)";
+            var topLeveItem = new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), new Dictionary<string, string> { { "$expand", expandClause }, { "$select","" } }).ParseSelectAndExpand();
+            SelectExpandClauseToStringBuilder translater = new SelectExpandClauseToStringBuilder();
+            string result = translater.TranslateSelectExpandClause(topLeveItem, false);
+            Assert.AreEqual("$expand=" + expandClause, result);
+        }
+
+        [TestMethod]
+        public void TranslateSelectExpandClauseWithoutExpandRefOptionShouldWork()
+        {
+            string expandClause = "MyDog($expand=MyPeople/$ref)";
+            var topLeveItem = new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), new Dictionary<string, string> { { "$expand", expandClause }, { "$select", "" } }).ParseSelectAndExpand();
+            SelectExpandClauseToStringBuilder translater = new SelectExpandClauseToStringBuilder();
+            string result = translater.TranslateSelectExpandClause(topLeveItem, false);
+            Assert.AreEqual("$expand=" + expandClause, result);
         }
         #endregion
 

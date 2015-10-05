@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
@@ -114,7 +115,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             List<SelectItem> expandedTerms = new List<SelectItem>();
             if (tokenIn.ExpandTerms.Single().ExpandOption != null)
             {
-                expandedTerms.AddRange(tokenIn.ExpandTerms.Single().ExpandOption.ExpandTerms.Select(this.GenerateExpandItem).Where(expandedNavigationSelectItem => expandedNavigationSelectItem != null).Cast<SelectItem>());
+                expandedTerms.AddRange(tokenIn.ExpandTerms.Single().ExpandOption.ExpandTerms.Select(this.GenerateExpandItem).Where(expandedNavigationSelectItem => expandedNavigationSelectItem != null));
             }
 
             // if there are any select items at this level then allSelected is false, otherwise it's true.
@@ -136,7 +137,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>a SelectExpand clause based on this ExpandToken</returns>
         private SelectExpandClause BindSubLevel(ExpandToken tokenIn)
         {
-            List<SelectItem> expandTerms = tokenIn.ExpandTerms.Select(this.GenerateExpandItem).Where(expandedNavigationSelectItem => expandedNavigationSelectItem != null).Cast<SelectItem>().ToList();
+            List<SelectItem> expandTerms = tokenIn.ExpandTerms.Select(this.GenerateExpandItem).Where(expandedNavigationSelectItem => expandedNavigationSelectItem != null).ToList();
 
             return new SelectExpandClause(expandTerms, true);
         }
@@ -180,14 +181,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="tokenIn">the expandTerm token to visit</param>
         /// <returns>the expand item for this expand term token.</returns>
-        private ExpandedNavigationSelectItem GenerateExpandItem(ExpandTermToken tokenIn)
+        private SelectItem GenerateExpandItem(ExpandTermToken tokenIn)
         {
             ExceptionUtils.CheckArgumentNotNull(tokenIn, "tokenIn");
 
             // ensure that we're always dealing with proper V4 syntax
             if (tokenIn.PathToNavProp.NextToken != null && !tokenIn.PathToNavProp.IsNamespaceOrContainerQualified())
             {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
+                if (tokenIn.PathToNavProp.NextToken.Identifier != UriQueryConstants.RefSegment || tokenIn.PathToNavProp.NextToken.NextToken != null)
+                {
+                    throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
+                }
             }
 
             PathSegmentToken currentToken = tokenIn.PathToNavProp;
@@ -213,26 +217,22 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationProperty(currentToken.Identifier, currentLevelEntityType.ODataFullName()));
             }
 
+            bool isRef = false;
             if (firstNonTypeToken.NextToken != null)
             {
                 // lastly... make sure that, since we're on a NavProp, that the next token isn't null.
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
+                if (firstNonTypeToken.NextToken.Identifier == UriQueryConstants.RefSegment)
+                {
+                    isRef = true;
+                }
+                else
+                {
+                    throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
+                }
             }
 
             pathSoFar.Add(new NavigationPropertySegment(currentNavProp, /*entitySet*/null));
             ODataExpandPath pathToNavProp = new ODataExpandPath(pathSoFar);
-
-            SelectExpandClause subSelectExpand;
-            if (tokenIn.ExpandOption != null)
-            {
-                subSelectExpand = this.GenerateSubExpand(currentNavProp, tokenIn);
-            }
-            else
-            {
-                subSelectExpand = BuildDefaultSubExpand();
-            }
-
-            subSelectExpand = this.DecorateExpandWithSelect(subSelectExpand, currentNavProp, tokenIn.SelectOption);
 
             IEdmNavigationSource targetNavigationSource = null;
             if (this.NavigationSource != null)
@@ -258,8 +258,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 orderbyOption = orderByBinder.BindOrderBy(binder.BindingState, tokenIn.OrderByOptions);
             }
 
-            LevelsClause levelsOption = this.ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
-
             SearchClause searchOption = null;
             if (tokenIn.SearchOption != null)
             {
@@ -268,6 +266,24 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 searchOption = searchBinder.BindSearch(tokenIn.SearchOption);
             }
 
+            if (isRef)
+            {
+                return new ExpandedReferenceSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption);
+            }
+
+            SelectExpandClause subSelectExpand;
+            if (tokenIn.ExpandOption != null)
+            {
+                subSelectExpand = this.GenerateSubExpand(currentNavProp, tokenIn);
+            }
+            else
+            {
+                subSelectExpand = BuildDefaultSubExpand();
+            }
+
+            subSelectExpand = this.DecorateExpandWithSelect(subSelectExpand, currentNavProp, tokenIn.SelectOption);
+
+            LevelsClause levelsOption = this.ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
             return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, subSelectExpand, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, levelsOption);
         }
 

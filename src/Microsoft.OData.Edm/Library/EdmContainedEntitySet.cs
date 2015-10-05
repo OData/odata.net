@@ -24,7 +24,7 @@ namespace Microsoft.OData.Edm.Library
         /// Initializes a new instance of the <see cref="EdmContainedEntitySet"/> class.
         /// </summary>
         /// <param name="parentNavigationSource">The <see cref="IEdmNavigationSource"/> that container element belongs to</param>
-        /// <param name="navigationProperty">An <see cref="IEdmNavigationProperty"/> containing the navagation property definition of the contained element</param>
+        /// <param name="navigationProperty">An <see cref="IEdmNavigationProperty"/> containing the navigation property definition of the contained element</param>
         public EdmContainedEntitySet(IEdmNavigationSource parentNavigationSource, IEdmNavigationProperty navigationProperty)
             : base(navigationProperty.Name, navigationProperty.ToEntityType())
         {

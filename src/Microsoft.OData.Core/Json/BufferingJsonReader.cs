@@ -29,7 +29,7 @@ namespace Microsoft.OData.Core.Json
         protected BufferedNode currentBufferedNode;
 
         /// <summary>
-        /// The maximumum number of recursive internalexception objects to allow when reading in-stream errors.
+        /// The maximum number of recursive internalexception objects to allow when reading in-stream errors.
         /// </summary>
         private readonly int maxInnerErrorDepth;
 

@@ -5278,6 +5278,23 @@ public sealed class Microsoft.OData.Core.UriParser.Semantic.RangeVariableKind {
 	public static int Nonentity = 1
 }
 
+public class Microsoft.OData.Core.UriParser.Semantic.ExpandedReferenceSelectItem : Microsoft.OData.Core.UriParser.Semantic.SelectItem {
+	public ExpandedReferenceSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+	public ExpandedReferenceSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.Semantic.FilterClause filterOption, Microsoft.OData.Core.UriParser.Semantic.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.Core.UriParser.Semantic.SearchClause searchOption)
+
+	System.Nullable`1[[System.Boolean]] CountOption  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.UriParser.Semantic.FilterClause FilterOption  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.UriParser.Semantic.OrderByClause OrderByOption  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath PathToNavigationProperty  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.UriParser.Semantic.SearchClause SearchOption  { [CompilerGeneratedAttribute(),]public get; }
+	System.Nullable`1[[System.Int64]] SkipOption  { [CompilerGeneratedAttribute(),]public get; }
+	System.Nullable`1[[System.Int64]] TopOption  { [CompilerGeneratedAttribute(),]public get; }
+
+	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.SelectItemHandler handler)
+	public virtual T TranslateWith (SelectItemTranslator`1 translator)
+}
+
 public class Microsoft.OData.Core.UriParser.Semantic.NamedFunctionParameterNode : Microsoft.OData.Core.UriParser.Semantic.QueryNode {
 	public NamedFunctionParameterNode (string name, Microsoft.OData.Core.UriParser.Semantic.QueryNode value)
 
@@ -5532,20 +5549,12 @@ public sealed class Microsoft.OData.Core.UriParser.Semantic.EntitySetSegment : M
 	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
 }
 
-public sealed class Microsoft.OData.Core.UriParser.Semantic.ExpandedNavigationSelectItem : Microsoft.OData.Core.UriParser.Semantic.SelectItem {
+public sealed class Microsoft.OData.Core.UriParser.Semantic.ExpandedNavigationSelectItem : Microsoft.OData.Core.UriParser.Semantic.ExpandedReferenceSelectItem {
 	public ExpandedNavigationSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause selectExpandOption)
 	public ExpandedNavigationSelectItem (Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause selectAndExpand, Microsoft.OData.Core.UriParser.Semantic.FilterClause filterOption, Microsoft.OData.Core.UriParser.Semantic.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.Core.UriParser.Semantic.SearchClause searchOption, Microsoft.OData.Core.UriParser.Semantic.LevelsClause levelsOption)
 
-	System.Nullable`1[[System.Boolean]] CountOption  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.FilterClause FilterOption  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.LevelsClause LevelsOption  { public get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.OrderByClause OrderByOption  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.ODataExpandPath PathToNavigationProperty  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.SearchClause SearchOption  { public get; }
-	Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause SelectAndExpand  { public get; }
-	System.Nullable`1[[System.Int64]] SkipOption  { public get; }
-	System.Nullable`1[[System.Int64]] TopOption  { public get; }
+	Microsoft.OData.Core.UriParser.Semantic.LevelsClause LevelsOption  { [CompilerGeneratedAttribute(),]public get; }
+	Microsoft.OData.Core.UriParser.Semantic.SelectExpandClause SelectAndExpand  { [CompilerGeneratedAttribute(),]public get; }
 
 	public virtual void HandleWith (Microsoft.OData.Core.UriParser.Visitors.SelectItemHandler handler)
 	public virtual T TranslateWith (SelectItemTranslator`1 translator)
@@ -6006,6 +6015,7 @@ public abstract class Microsoft.OData.Core.UriParser.Visitors.SelectItemHandler 
 	protected SelectItemHandler ()
 
 	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.ExpandedNavigationSelectItem item)
+	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.ExpandedReferenceSelectItem item)
 	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.NamespaceQualifiedWildcardSelectItem item)
 	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.PathSelectItem item)
 	public virtual void Handle (Microsoft.OData.Core.UriParser.Semantic.WildcardSelectItem item)
@@ -6015,6 +6025,7 @@ public abstract class Microsoft.OData.Core.UriParser.Visitors.SelectItemTranslat
 	protected SelectItemTranslator`1 ()
 
 	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.ExpandedNavigationSelectItem item)
+	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.ExpandedReferenceSelectItem item)
 	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.NamespaceQualifiedWildcardSelectItem item)
 	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.PathSelectItem item)
 	public virtual T Translate (Microsoft.OData.Core.UriParser.Semantic.WildcardSelectItem item)
