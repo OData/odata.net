@@ -49,6 +49,7 @@ namespace Microsoft.OData.Core
         /// <param name="filter">Any $filter option for this uri. Can be null.</param>
         /// <param name="orderby">Any $orderby option for this uri. Can be null</param>
         /// <param name="search">Any $search option for this uri. Can be null</param>
+        /// <param name="apply">Any $apply option for this uri. Can be null</param>
         /// <param name="skip">Any $skip option for this uri. Can be null.</param>
         /// <param name="top">Any $top option for this uri. Can be null.</param>
         /// <param name="queryCount">Any query $count option for this uri. Can be null.</param>
@@ -60,6 +61,7 @@ namespace Microsoft.OData.Core
             FilterClause filter,
             OrderByClause orderby,
             SearchClause search,
+            ApplyClause apply,
             long? skip,
             long? top,
             bool? queryCount)
@@ -71,6 +73,7 @@ namespace Microsoft.OData.Core
             this.Filter = filter;
             this.OrderBy = orderby;
             this.Search = search;
+            this.Apply = apply;
             this.Skip = skip;
             this.Top = top;
             this.QueryCount = queryCount;
@@ -139,7 +142,8 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Gets or sets any $select or $expand option for this uri.
         /// </summary>
-        public SelectExpandClause SelectAndExpand { get; set; }
+        public SelectExpandClause SelectAndExpand { get;
+            set; }
 
         /// <summary>
         /// Gets or sets any $filter option for this uri.
@@ -155,6 +159,11 @@ namespace Microsoft.OData.Core
         /// Gets or sets any $search option for this uri.
         /// </summary>
         public SearchClause Search { get; set; }
+
+        /// <summary>
+        /// Gets or sets any $apply option for this uri.
+        /// </summary>
+        public ApplyClause Apply { get; set; }
 
         /// <summary>
         /// Gets or sets any $skip option for this uri.
@@ -206,6 +215,7 @@ namespace Microsoft.OData.Core
                 Path = Path,
                 CustomQueryOptions = CustomQueryOptions,
                 SelectAndExpand = SelectAndExpand,
+                Apply = Apply,
                 Filter = Filter,
                 OrderBy = OrderBy,
                 Search = Search,
