@@ -1266,6 +1266,11 @@ namespace Microsoft.OData.Edm
         public static string FullName(this IEdmSchemaElement element)
         {
             EdmUtil.CheckArgumentNull(element, "element");
+            if (element is DynamicEdmType)
+            {
+                return null;
+            }
+
             return (element.Namespace ?? String.Empty) + "." + (element.Name ?? String.Empty);
         }
 
