@@ -59,6 +59,7 @@
     <Compile Include="ODataUriParserUnitTests.cs" />
     <Compile Include="ODataUriUtilsTest.cs" />
     <Compile Include="ODataUrlConventionsTests.cs" />
+    <Compile Include="Semantic\Binders\ApplyBinderTests.cs" />
     <Compile Include="Semantic\Binders\BinaryOperatorBinderTests.cs" />
     <Compile Include="Semantic\Binders\DottedIdentifierBinderTests.cs" />
     <Compile Include="Semantic\Binders\EndPathBinderTests.cs" />
