@@ -775,7 +775,7 @@ namespace Microsoft.OData.Core
         {
             //return this.CurrentScope.EntityType;
             if (entry.TypeName == null && this.CurrentScope.EntityType != null
-                || this.CurrentScope.EntityType is BaseOpenEntityType)
+                || this.CurrentScope.EntityType is DynamicEdmType)
             {
                 return this.CurrentScope.EntityType;
             }

@@ -43,7 +43,7 @@
     <Compile Include="Csdl\Parsing\Ast\CsdlEnumMemberExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsEnumMemberExpression.cs" />
     <Compile Include="Interfaces\Expressions\IEdmEnumMemberExpression.cs" />
-    <Compile Include="Library\BaseOpenEntityType.cs" />
+    <Compile Include="Library\DynamicEntityType.cs" />
     <Compile Include="Library\Expressions\EdmEnumMemberExpression.cs" />
     <Compile Include="Library\TimeOfDay.cs" />
     <Compile Include="PrimitiveValueConverters\PassThroughPrimitiveValueConverter.cs" />

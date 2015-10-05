@@ -2370,6 +2370,45 @@ namespace Microsoft.OData.Edm
         }
         #endregion
 
+        #region DynamicEntityType
+        /// <summary>
+        /// Create DynamicEntityType definition based on CLr type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static IEdmEntityType GetDynamicEntityType(this Type type)
+        {
+            var edmType = new DynamicEdmType(type.Name);
+
+            foreach (var prop in type.GetPublicProperties(instanceOnly: false))
+            {
+                var propEdmType = EdmCoreModel.Instance.FindDeclaredType(GetNonNullableType(prop.PropertyType).Name) as IEdmPrimitiveType;
+                edmType.AddStructuralProperty(prop.Name, EdmCoreModel.Instance.GetPrimitive(propEdmType.PrimitiveKind, IsNullableType(prop.PropertyType)));
+            }
+
+            return edmType;
+        }
+        #endregion
+
+        /// <summary>Checks whether the specified type is a generic nullable type.</summary>
+        /// <param name="type">Type to check.</param>
+        /// <returns>true if <paramref name="type"/> is nullable; false otherwise.</returns>
+        internal static bool IsNullableType(Type type)
+        {
+            return type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+        }
+
+        /// <summary>Gets a non-nullable version of the specified type.</summary>
+        /// <param name="type">Type to get non-nullable version for.</param>
+        /// <returns>
+        /// <paramref name="type"/> if type is a reference type or a 
+        /// non-nullable type; otherwise, the underlying value type.
+        /// </returns>
+        internal static Type GetNonNullableType(Type type)
+        {
+            return Nullable.GetUnderlyingType(type) ?? type;
+        }
+
         internal static bool TryGetRelativeEntitySetPath(IEdmElement element, Collection<EdmError> foundErrors, IEdmPathExpression pathExpression, IEdmModel model, IEnumerable<IEdmOperationParameter> parameters, out IEdmOperationParameter parameter, out IEnumerable<IEdmNavigationProperty> relativePath, out IEdmEntityType lastEntityType)
         {
             parameter = null;
