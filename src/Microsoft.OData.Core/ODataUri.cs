@@ -142,8 +142,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Gets or sets any $select or $expand option for this uri.
         /// </summary>
-        public SelectExpandClause SelectAndExpand { get;
-            set; }
+        public SelectExpandClause SelectAndExpand { get; set; }
 
         /// <summary>
         /// Gets or sets any $filter option for this uri.
