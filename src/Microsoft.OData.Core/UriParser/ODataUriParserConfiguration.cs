@@ -14,7 +14,7 @@ namespace Microsoft.OData.Core.UriParser
     /// <summary>
     /// Internal class for storing all the configuration information about the URI parser. Allows us to flow these values around without passing an actual parser.
     /// </summary>
-    public sealed class ODataUriParserConfiguration
+    internal sealed class ODataUriParserConfiguration
     {
         /// <summary>
         /// Model to use for metadata binding.

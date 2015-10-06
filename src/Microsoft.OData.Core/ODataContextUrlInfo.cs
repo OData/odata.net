@@ -187,7 +187,7 @@ namespace Microsoft.OData.Core
                 {
                     isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
                     navigationSource = typeContext.NavigationSourceName,
-                    TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedEntityTypeName || odataUri.Apply != null ? null : typeContext.ExpectedEntityTypeName,
+                    TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedEntityTypeName ? null : typeContext.ExpectedEntityTypeName,
                     TypeName = typeContext.NavigationSourceEntityTypeName,
                     IncludeFragmentItemSelector = isSingle && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
                     odataUri = odataUri

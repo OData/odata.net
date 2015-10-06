@@ -54,7 +54,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         break;
                     default: //assumes filter
                         var filterClause = this._filterBinder.BindFilter(token);
-                        resultType = filterClause.Expression.TypeReference;
+                        resultType = filterClause.ItemType;
                         transformations.Add(filterClause);
                         break;
                 }
