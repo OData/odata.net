@@ -14,18 +14,18 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 {
     public sealed class GroupByNode : QueryNode
     {
-        public GroupByNode(IEnumerable<SingleValuePropertyAccessNode> groupingProperties, IEdmTypeReference groupingTypeReference, AggregateNode aggregate, IEdmTypeReference typeReference, CollectionNode source)
+        public GroupByNode(IEnumerable<SingleValuePropertyAccessNode> groupingProperties, IEdmTypeReference groupingItemType, AggregateNode aggregate, IEdmTypeReference itemType, CollectionNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(groupingProperties, "groupingProperties");
-            ExceptionUtils.CheckArgumentNotNull(groupingTypeReference, "groupingTypeReference");
+            ExceptionUtils.CheckArgumentNotNull(groupingItemType, "groupingItemType");
             // OK for aggregate to be null
-            ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
+            ExceptionUtils.CheckArgumentNotNull(itemType, "itemType");
             // OK for source to be null
 
             this._groupingProperties = groupingProperties;
-            this._groupingTypeReference = groupingTypeReference;
+            this._groupingItemType = groupingItemType;
             this._aggregate = aggregate;
-            this._typeReference = typeReference;
+            this._itemType = itemType;
             this._source = source;
         }
 
@@ -68,31 +68,31 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             }
         }
 
-        private readonly IEdmTypeReference _groupingTypeReference;
+        private readonly IEdmTypeReference _groupingItemType;
 
         /// <summary>
         /// Gets the type resulting from the grouping properties.
         /// </summary>
-        public IEdmTypeReference GroupingTypeReference
+        public IEdmTypeReference GroupingItemType
         {
             get
             {
 
-                return this._groupingTypeReference;
+                return this._groupingItemType;
             }
         }
 
-        private readonly IEdmTypeReference _typeReference;
+        private readonly IEdmTypeReference _itemType;
 
         /// <summary>
         /// Gets the type resulting from the grouping properties and aggregate.
         /// </summary>
-        public IEdmTypeReference TypeReference
+        public IEdmTypeReference ItemType
         {
             get
             {
 
-                return this._typeReference;
+                return this._itemType;
             }
         }
     }

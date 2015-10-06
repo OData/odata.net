@@ -66,7 +66,7 @@
             statement.WithVerb.Should().Be(AggregationVerb.Sum);
             statement.AsAlias.Should().Be("TotalPrice");
 
-            VerifyDynamicTypeReferenceNames(aggregate.TypeReference, new string[] { "TotalPrice" });
+            VerifyDynamicTypeReferenceNames(aggregate.ItemType, new string[] { "TotalPrice" });
         }
       
         [TestMethod]
@@ -111,7 +111,7 @@
           
             var aggregate = groupBy.Aggregate;
             aggregate.Should().NotBeNull();            
-            VerifyDynamicTypeReferenceNames(aggregate.TypeReference, new string[] { "TotalPrice" });
+            VerifyDynamicTypeReferenceNames(aggregate.ItemType, new string[] { "TotalPrice" });
         }
 
         [TestMethod]

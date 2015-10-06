@@ -44,12 +44,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 {
                     case TreeNodeKinds.QueryTokenKind.Aggregate:
                         var aggregate = BindAggregateToken((AggregateToken)(token));
-                        resultType = aggregate.TypeReference;
+                        resultType = aggregate.ItemType;
                         transformations.Add(aggregate);
                         break;
                     case TreeNodeKinds.QueryTokenKind.GroupBy:
                         var groupBy = BindGroupByToken((GroupByToken)(token));
-                        resultType = groupBy.TypeReference;
+                        resultType = groupBy.ItemType;
                         transformations.Add(groupBy);
                         break;
                     default: //assumes filter
@@ -163,7 +163,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 aggregate = BindAggregateToken(token.Aggregate);
 
-                foreach (var property in (aggregate.TypeReference.Definition as IEdmStructuredType).Properties())
+                foreach (var property in (aggregate.ItemType.Definition as IEdmStructuredType).Properties())
                 {
                     resultType.AddStructuralProperty(property.Name, property.Type);
                 }
