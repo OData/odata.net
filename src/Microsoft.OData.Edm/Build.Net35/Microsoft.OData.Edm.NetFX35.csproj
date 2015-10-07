@@ -1496,6 +1496,9 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\..\PlatformHelper.cs">
       <Link>Microsoft\OData\Edm\PlatformHelper.cs</Link>
     </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Library\DynamicEdmType.cs" >
+       <Link>Microsoft\OData\Edm\Library\DynamicEdmType.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(AssemblyKeysCSharpFilePath)">

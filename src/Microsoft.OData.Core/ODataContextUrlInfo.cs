@@ -312,7 +312,7 @@ namespace Microsoft.OData.Core
             if (applyClause != null)
             {
                 // TODO: Support multilevel as soon as TypeReference will have it
-                string contextUri = string.Join(",", (applyClause.TypeReference.Definition as IEdmStructuredType).Properties().Select(prop => prop.Name));
+                string contextUri = string.Join(",", (applyClause.TypeReference.Definition as IEdmStructuredType).Properties().Select(prop => prop.Name).ToArray());
                 return ODataConstants.ContextUriProjectionStart + contextUri + ODataConstants.ContextUriProjectionEnd;
             }
 

@@ -188,7 +188,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         transformationTokens.Add(ParseGroupBy());
                         break;
                     default:
-                        var supportedKeywords = string.Join("|", ExpressionConstants.KeywordAggregate, ExpressionConstants.KeywordFilter, ExpressionConstants.KeywordGroupBy);
+                        var supportedKeywords = string.Join("|", new string[] { ExpressionConstants.KeywordAggregate, ExpressionConstants.KeywordFilter, ExpressionConstants.KeywordGroupBy });
                         throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
                 }
                 // '/' indicates there are more transformations

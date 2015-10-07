@@ -388,6 +388,8 @@
     <Compile Include="UriBuilder\ODataUriBuilder.cs" />
     <Compile Include="UriBuilder\PathSegmentToResourcePathTranslator.cs" />
     <Compile Include="UriBuilder\SelectExpandClauseToStringBuilder.cs" />
+    <Compile Include="UriParser\AggregationVerb.cs" />
+    <Compile Include="UriParser\Binders\ApplyBinder.cs" />
     <Compile Include="UriParser\Binders\BinaryOperatorBinder.cs" />
     <Compile Include="UriParser\Binders\BinderBase.cs" />
     <Compile Include="UriParser\Binders\BindingState.cs" />
@@ -468,8 +470,11 @@
     <Compile Include="UriParser\QueryOptionUtils.cs" />
     <Compile Include="UriParser\ReadOnlyEnumerableForUriParser.cs" />
     <Compile Include="UriParser\SearchLexer.cs" />
+    <Compile Include="UriParser\SemanticAst\AggregateNode.cs" />
+    <Compile Include="UriParser\SemanticAst\AggregateStatementNode.cs" />
     <Compile Include="UriParser\SemanticAst\AllNode.cs" />
     <Compile Include="UriParser\SemanticAst\AnyNode.cs" />
+    <Compile Include="UriParser\SemanticAst\ApplyClause.cs" />
     <Compile Include="UriParser\SemanticAst\BatchReferenceSegment.cs" />
     <Compile Include="UriParser\SemanticAst\BatchSegment.cs" />
     <Compile Include="UriParser\SemanticAst\BinaryOperatorNode.cs" />
@@ -494,6 +499,7 @@
     <Compile Include="UriParser\SemanticAst\EntitySetSegment.cs" />
     <Compile Include="UriParser\SemanticAst\ExpandedNavigationSelectItem.cs" />
     <Compile Include="UriParser\SemanticAst\FilterClause.cs" />
+    <Compile Include="UriParser\SemanticAst\GroupByNode.cs" />
     <Compile Include="UriParser\SemanticAst\KeyLookupNode.cs" />
     <Compile Include="UriParser\SemanticAst\KeySegment.cs" />
     <Compile Include="UriParser\SemanticAst\LambdaNode.cs" />
@@ -544,6 +550,8 @@
     <Compile Include="UriParser\SemanticAst\UriTemplateExpression.cs" />
     <Compile Include="UriParser\SemanticAst\ValueSegment.cs" />
     <Compile Include="UriParser\SemanticAst\WildcardSelectItem.cs" />
+    <Compile Include="UriParser\SyntacticAst\AggregateStatementToken.cs" />
+    <Compile Include="UriParser\SyntacticAst\AggregateToken.cs" />
     <Compile Include="UriParser\SyntacticAst\AllToken.cs" />
     <Compile Include="UriParser\SyntacticAst\AnyToken.cs" />
     <Compile Include="UriParser\SyntacticAst\BinaryOperatorToken.cs" />
@@ -555,6 +563,7 @@
     <Compile Include="UriParser\SyntacticAst\FunctionCallToken.cs" />
     <Compile Include="UriParser\SyntacticAst\FunctionParameterAliasToken.cs" />
     <Compile Include="UriParser\SyntacticAst\FunctionParameterToken.cs" />
+    <Compile Include="UriParser\SyntacticAst\GroupByToken.cs" />
     <Compile Include="UriParser\SyntacticAst\InnerPathToken.cs" />
     <Compile Include="UriParser\SyntacticAst\LambdaToken.cs" />
     <Compile Include="UriParser\SyntacticAst\LiteralToken.cs" />
