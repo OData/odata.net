@@ -12,13 +12,13 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 
     public sealed class AggregateNode : QueryNode
     {
-        public AggregateNode(IEnumerable<AggregateStatementNode> statements, IEdmTypeReference typeReference)
+        public AggregateNode(IEnumerable<AggregateStatementNode> statements, IEdmTypeReference itemType)
         {
             ExceptionUtils.CheckArgumentNotNull(statements, "statements");
-            ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
+            ExceptionUtils.CheckArgumentNotNull(itemType, "itemType");
 
             this._statements = statements;
-            this._typeReference = typeReference;        
+            this._itemType = itemType;        
         }
 
         private readonly IEnumerable<AggregateStatementNode> _statements;
@@ -38,14 +38,14 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             }
         }
 
-        private readonly IEdmTypeReference _typeReference;
+        private readonly IEdmTypeReference _itemType;
 
-        public IEdmTypeReference TypeReference
+        public IEdmTypeReference ItemType
         {
             get
             {
 
-                return this._typeReference;
+                return this._itemType;
             }
         }
     }

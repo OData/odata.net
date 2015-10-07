@@ -16,6 +16,7 @@ namespace Microsoft.OData.Core
     using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
+    using Edm.Library;
     #endregion Namespaces
 
     /// <summary>
@@ -83,7 +84,19 @@ namespace Microsoft.OData.Core
         {
             get
             {
-                return this.odataUri != null ? CreateSelectExpandContextUriSegment(this.odataUri.SelectAndExpand) : null;
+                if (this.odataUri != null)
+                {
+                    // TODO: Figure out how to deal with $select after $apply
+                    if (this.odataUri.Apply != null)
+                    {
+                        return CreateApplyUriSegment(this.odataUri.Apply);
+                    }
+                    else
+                    {
+                        return CreateSelectExpandContextUriSegment(this.odataUri.SelectAndExpand);
+                    }
+                }
+                return null;
             }
         }
 
@@ -292,6 +305,18 @@ namespace Microsoft.OData.Core
 
             IEdmPrimitiveTypeReference primitiveValueTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(primitive.Value.GetType());
             return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.ODataFullName();
+        }
+
+        private static string CreateApplyUriSegment(ApplyClause applyClause)
+        {
+            if (applyClause != null)
+            {
+                // TODO: Support multilevel as soon as TypeReference will have it
+                string contextUri = string.Join(",", (applyClause.TypeReference.Definition as IEdmStructuredType).Properties().Select(prop => prop.Name));
+                return ODataConstants.ContextUriProjectionStart + contextUri + ODataConstants.ContextUriProjectionEnd;
+            }
+
+            return string.Empty;
         }
 
         #region SelectAndExpand Convert
